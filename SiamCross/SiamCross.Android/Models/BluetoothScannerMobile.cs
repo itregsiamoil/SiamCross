@@ -12,7 +12,7 @@ using SiamCross.Droid.Models;
 [assembly: Dependency(typeof(BluetoothScannerMobile))]
 namespace SiamCross.Droid.Models
 {
-    public class BluetoothScannerMobile : IBluetoothScaner
+    public class BluetoothScannerMobile : IBluetoothScanner
     {
         private IAdapter _adapter;
         private IBluetoothLE _bluetoothBLE;
@@ -41,21 +41,21 @@ namespace SiamCross.Droid.Models
 
         private async void StartScann()
         {
-            if (_bluetoothBLE.State == BluetoothState.Off)
-            {
-            }
-            else
-            {
-                _adapter.ScanTimeout = 10000;
-                _adapter.ScanMode = ScanMode.Balanced;
+            //if (_bluetoothBLE.State == BluetoothState.Off)
+            //{
+            //}
+            //else
+            //{
+            //    _adapter.ScanTimeout = 10000;
+            //    _adapter.ScanMode = ScanMode.Balanced;
 
-                _adapter.DeviceDiscovered += (obj, a) =>
-                {
-                    Received?.Invoke(a.Device.Name, a.Device);
-                };
+            //    _adapter.DeviceDiscovered += (obj, a) =>
+            //    {
+            //        Received?.Invoke(a.Device.Name, a.Device);
+            //    };
 
-                await _adapter.StartScanningForDevicesAsync();
-            }
+            //    await _adapter.StartScanningForDevicesAsync();
+            //}
         }
 
         public void Stop()

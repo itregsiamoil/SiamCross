@@ -11,7 +11,7 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(SiamCross.WPF.Models.BluetoothScanerPC))]
 namespace SiamCross.WPF.Models
 {
-    public class BluetoothScanerPC : IBluetoothScaner
+    public class BluetoothScanerPC : IBluetoothScanner
     {
         public BluetoothLEAdvertisementWatcher Watcher { get; set; }
 

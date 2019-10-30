@@ -12,7 +12,7 @@ namespace SiamCross.ViewModels
     public class MainPageViewModel : BaseViewModel
     {
         private MainPageModel _mainPageModel = new MainPageModel();
-        private IBluetoothScaner _bluetoothScaner;
+        private IBluetoothScanner _bluetoothScaner;
         public ObservableCollection<string> ListViewBtItems { get; set; }
         public string Count
         {
@@ -53,10 +53,10 @@ namespace SiamCross.ViewModels
 
         public MainPageViewModel()
         {
-            _bluetoothScaner = DependencyService.Get<IBluetoothScaner>();
-            _bluetoothScaner.Received += OnDeviceDetected;
-            ListViewBtItems = new ObservableCollection<string>();
-            _bluetoothScaner.Start();
+                _bluetoothScaner = DependencyService.Get<IBluetoothScanner>();
+                _bluetoothScaner.Received += OnDeviceDetected;
+                ListViewBtItems = new ObservableCollection<string>();
+                _bluetoothScaner.Start();
         }
     }
 }
