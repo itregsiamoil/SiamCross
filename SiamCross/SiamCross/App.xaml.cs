@@ -7,11 +7,36 @@ namespace SiamCross
 {
     public partial class App : Application
     {
+        public static NavigationPage NavigationPage { get; private set; }
+        public static RootPage RootPage;
+        public static bool MenuIsPresented
+        {
+            get
+            {
+                return RootPage.IsPresented;
+            }
+            set
+            {
+                RootPage.IsPresented = value;
+            }
+        }
+
+        private void CallMain()
+        {
+            var menuPage = new MenuPage();
+            NavigationPage = new NavigationPage(new Home());
+            RootPage = new RootPage();
+            RootPage.Master = menuPage;
+            RootPage.Detail = NavigationPage;
+            MainPage = RootPage;
+        }
+
         public App()
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            // MainPage = new MainPage();
+            CallMain();
         }
 
         protected override void OnStart()
