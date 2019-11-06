@@ -23,7 +23,7 @@ namespace SiamCross
 
         private void CallMain()
         {
-            var menuPage = new MenuPage();
+            var menuPage = new MenuPage() { Title = "Menu" };
             NavigationPage = new NavigationPage(new Home());
             RootPage = new RootPage();
             RootPage.Master = menuPage;
