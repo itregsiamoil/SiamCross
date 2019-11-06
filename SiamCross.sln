@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SiamCross.Android", "SiamCross\SiamCross.Android\SiamCross.Android.csproj", "{DACC3C49-C98D-4EA1-A409-D75A45A28CBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SiamCross", "SiamCross\SiamCross\SiamCross.csproj", "{9CB87D99-4818-43DC-88E0-AC8201361C85}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SiamCross.WPF", "SiamCross\SiamCross.WPF\SiamCross.WPF.csproj", "{79FD6415-7D32-4115-8BCF-60B1DE777697}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DACC3C49-C98D-4EA1-A409-D75A45A28CBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DACC3C49-C98D-4EA1-A409-D75A45A28CBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DACC3C49-C98D-4EA1-A409-D75A45A28CBA}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{DACC3C49-C98D-4EA1-A409-D75A45A28CBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DACC3C49-C98D-4EA1-A409-D75A45A28CBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DACC3C49-C98D-4EA1-A409-D75A45A28CBA}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{9CB87D99-4818-43DC-88E0-AC8201361C85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CB87D99-4818-43DC-88E0-AC8201361C85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CB87D99-4818-43DC-88E0-AC8201361C85}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{9CB87D99-4818-43DC-88E0-AC8201361C85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CB87D99-4818-43DC-88E0-AC8201361C85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CB87D99-4818-43DC-88E0-AC8201361C85}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{79FD6415-7D32-4115-8BCF-60B1DE777697}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79FD6415-7D32-4115-8BCF-60B1DE777697}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79FD6415-7D32-4115-8BCF-60B1DE777697}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79FD6415-7D32-4115-8BCF-60B1DE777697}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {46BE25B0-5FEE-44A9-BF3A-441BF946B748}
+	EndGlobalSection
+EndGlobal
