@@ -246,6 +246,3 @@ C:\SiamCross\SiamCross\SiamCross.Android\obj\Debug\81\stamp\_CopyIntermediateAss
 C:\SiamCross\SiamCross\SiamCross.Android\obj\Debug\81\stamp\_CopyMdbFiles.stamp
 C:\SiamCross\SiamCross\SiamCross.Android\obj\Debug\81\stamp\_CopyPdbFiles.stamp
 C:\SiamCross\SiamCross\SiamCross.Android\obj\Debug\81\stamp\_ResolveLibraryProjectImports.stamp
-C:\SiamCross\SiamCross\SiamCross.Android\obj\Debug\81\android\assets\machine.config
-C:\SiamCross\SiamCross\SiamCross.Android\obj\Debug\81\stamp\_CompileToDalvik.stamp
-C:\SiamCross\SiamCross\SiamCross.Android\obj\Debug\81\stamp\_GeneratePackageManagerJava.stamp
