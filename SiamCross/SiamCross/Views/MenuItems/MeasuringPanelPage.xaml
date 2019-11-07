@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SiamCross.Views.ClinicInformation">
+             x:Class="SiamCross.Views.MenuItems.MeasuringPanelPage"
+             Title="Измерения">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Info"
+            <Label Text="Измерения"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
         </StackLayout>

@@ -2,6 +2,7 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using SiamCross.Views;
+using SiamCross.Views.MenuItems;
 
 namespace SiamCross
 {
@@ -23,8 +24,8 @@ namespace SiamCross
 
         private void CallMain()
         {
-            var menuPage = new MenuPage();
-            NavigationPage = new NavigationPage(new Home());
+            var menuPage = new MenuPage() { Title = "SiamServiceMenu" };
+            NavigationPage = new NavigationPage(new ControlPanelPage());
             RootPage = new RootPage();
             RootPage.Master = menuPage;
             RootPage.Detail = NavigationPage;

@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace SiamCross.Views
+namespace SiamCross.Views.MenuItems.SearchPanelTabs
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class Home : ContentPage
+    public partial class BoundingTab : ContentPage
     {
-        public Home()
+        public BoundingTab()
         {
             InitializeComponent();
         }

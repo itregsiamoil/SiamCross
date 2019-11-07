@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SiamCross.ViewModels
 {
-    public class MainPageViewModel : BaseViewModel
+    public class SearchViewModel : BaseViewModel
     {
         private MainPageModel _mainPageModel = new MainPageModel();
         private IBluetoothScanner _bluetoothScaner;
@@ -51,7 +51,7 @@ namespace SiamCross.ViewModels
             return _mainPageModel.DeviceDict[name];
         }
 
-        public MainPageViewModel()
+        public SearchViewModel()
         {
                 _bluetoothScaner = DependencyService.Get<IBluetoothScanner>();
                 _bluetoothScaner.Received += OnDeviceDetected;
