@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MvvmCross.Plugin.Messenger;
 using SiamCross.Models.Scanners;
 
 namespace SiamCross.Services
@@ -11,9 +12,13 @@ namespace SiamCross.Services
 
         private readonly IBluetoothScanner _scanner;
 
-        public ScannedDevicesService(IBluetoothScanner scanner)
+        private readonly IMvxMessenger _messenger;
+
+        public ScannedDevicesService(IBluetoothScanner scanner,
+                                     IMvxMessenger messenger)
         {
             _scanner = scanner;
+            _messenger = messenger;
             _scanner.Received += ScannerReceived;
             _devices = new List<ScannedDeviceInfo>();
         }
@@ -30,6 +35,7 @@ namespace SiamCross.Services
             if (!_devices.Contains(deviceInfo))
             {
                 _devices.Add(deviceInfo);
+                _messenger.Publish(new ScannedDevicesListChangedMessage(this));
             }
         }
 
