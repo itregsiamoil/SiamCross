@@ -7,6 +7,10 @@ namespace SiamCross.Services
 {
     public interface IScannedDevicesService
     {
+        void StartScan();
+
+        void StopScan();
+
         IEnumerable<ScannedDeviceInfo> GetScannedDevices();
     }
 }

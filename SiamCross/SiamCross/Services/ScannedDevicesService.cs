@@ -43,5 +43,15 @@ namespace SiamCross.Services
         {
             return _devices;
         }
+
+        public void StartScan()
+        {
+            _scanner.Start();
+        }
+
+        public void StopScan()
+        {
+            _scanner.Stop();
+        }
     }
 }
