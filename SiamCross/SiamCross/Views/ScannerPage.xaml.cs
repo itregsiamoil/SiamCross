@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiamCross.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,12 @@ namespace SiamCross.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ScannerPage : ContentPage
     {
-        public ScannerPage()
+        public ScannerViewModel ScannerVM { get; private set; }
+        public ScannerPage(ScannerViewModel vm)
         {
             InitializeComponent();
+            ScannerVM = vm;
+            this.BindingContext = ScannerVM;
         }
     }
 }

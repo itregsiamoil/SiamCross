@@ -2,6 +2,10 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using SiamCross.Views;
+using SiamCross.ViewModels;
+using MvvmCross;
+using SiamCross.Services;
+using MvvmCross.Plugin.Messenger;
 
 namespace SiamCross
 {
@@ -23,7 +27,7 @@ namespace SiamCross
 
         private void CallMain()
         {
-            var menuPage = new MenuPage();
+            var menuPage = new MenuPage() { Title = "Title" };
             NavigationPage = new NavigationPage(new Home());
             RootPage = new RootPage();
             RootPage.Master = menuPage;
@@ -36,7 +40,10 @@ namespace SiamCross
             InitializeComponent();
 
             // MainPage = new MainPage();
-            CallMain();
+            var vm = new ScannerViewModel(DependencyService.Resolve<IScannedDevicesService>(),
+                Mvx.IoCProvider.Resolve<IMvxMessenger>());
+            MainPage = new ScannerPage(vm);
+           // CallMain();
         }
 
         protected override void OnStart()

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using MvvmCross.Plugin.Messenger;
 using SiamCross.Models.Scanners;
+using SiamCross.Services;
+using Xamarin.Forms;
 
 namespace SiamCross.Services
 {

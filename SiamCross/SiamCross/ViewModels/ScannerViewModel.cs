@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SiamCross.ViewModels
 {
-    class ScannerViewModel : BaseViewModel
+    public class ScannerViewModel : BaseViewModel
     {
         private readonly IScannedDevicesService _service;
 
@@ -25,6 +25,7 @@ namespace SiamCross.ViewModels
             _token =
                 messenger.SubscribeOnMainThread<ScannedDevicesListChangedMessage>
                 ( m => RefreshDevicesList());
+            _service.StartScan();
         }
 
         public void RefreshDevicesList()
