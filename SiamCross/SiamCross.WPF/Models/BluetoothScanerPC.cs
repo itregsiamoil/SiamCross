@@ -7,6 +7,7 @@ using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
 using SiamCross.Models;
 using Xamarin.Forms;
+using SiamCross.Models.Scanners;
 
 [assembly: Dependency(typeof(SiamCross.WPF.Models.BluetoothScanerPC))]
 namespace SiamCross.WPF.Models

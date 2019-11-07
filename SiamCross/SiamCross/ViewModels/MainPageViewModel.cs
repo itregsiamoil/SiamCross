@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
-using SiamCross.Models;
+using SiamCross.Models.Scanners;
 using Xamarin.Forms;
 using System.Threading;
 using System.Threading.Tasks;
+using SiamCross.Models;
 
 namespace SiamCross.ViewModels
 {

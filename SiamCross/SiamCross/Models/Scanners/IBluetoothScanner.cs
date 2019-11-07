@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SiamCross.Models
+namespace SiamCross.Models.Scanners
 {
     public interface IBluetoothScanner
     {

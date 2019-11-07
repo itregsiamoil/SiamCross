@@ -8,6 +8,7 @@ using ScanMode = Plugin.BLE.Abstractions.Contracts.ScanMode;
 using SiamCross.Models;
 using Xamarin.Forms;
 using SiamCross.Droid.Models;
+using SiamCross.Models.Scanners;
 
 [assembly: Dependency(typeof(BluetoothScannerMobile))]
 namespace SiamCross.Droid.Models
