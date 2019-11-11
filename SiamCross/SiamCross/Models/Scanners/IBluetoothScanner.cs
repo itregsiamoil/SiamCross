@@ -8,6 +8,6 @@ namespace SiamCross.Models.Scanners
     {
         void Start();
         void Stop();
-        event Action<string, object> Received;
+        event Action<ScannedDeviceInfo> Received;
     }
 }

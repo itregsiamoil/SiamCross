@@ -22,18 +22,17 @@ namespace SiamCross.Services
             _devices = new List<ScannedDeviceInfo>();
         }
 
-        private void ScannerReceived(string name, object bluetoothArgs)
+        private void ScannerReceived(ScannedDeviceInfo info)
         {
-            if (name == null || bluetoothArgs == null)
+            if (info.Name == null || info.BluetoothArgs == null || info.Name == "")
             {
                 return;
             }
 
-            var deviceInfo = new ScannedDeviceInfo(name, bluetoothArgs);
 
-            if (!_devices.Contains(deviceInfo))
+            if (!_devices.Contains(info))
             {
-                _devices.Add(deviceInfo);
+                _devices.Add(info);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ScannedDevices)));
             }
         }

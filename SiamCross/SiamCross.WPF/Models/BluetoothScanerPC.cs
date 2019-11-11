@@ -36,10 +36,10 @@ namespace SiamCross.WPF.Models
         private void OnRecieved(BluetoothLEAdvertisementWatcher sender,
             BluetoothLEAdvertisementReceivedEventArgs args)
         {
-            Received?.Invoke(args.Advertisement.LocalName, args);
+            Received?.Invoke(new ScannedDeviceInfo(args.Advertisement.LocalName, args, BluetoothType.Le));
         }
 
-        public event Action<string, object> Received;
+        public event Action<ScannedDeviceInfo> Received;
 
         public void Start()
         {

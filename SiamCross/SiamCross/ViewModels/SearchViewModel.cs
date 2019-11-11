@@ -23,9 +23,9 @@ namespace SiamCross.ViewModels
             }
         }
 
-        private void OnDeviceDetected(string name, object bluetoothArgs)
+        private void OnDeviceDetected(ScannedDeviceInfo deviceInfo)
         {
-            Add(name, bluetoothArgs);
+            Add(deviceInfo.Name, deviceInfo.BluetoothArgs);
         }
 
         private void Add(string name, object bluetoothArgs)

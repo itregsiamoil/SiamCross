@@ -6,11 +6,19 @@
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Обнаруженные устройства: " FontSize="Medium" />
-                <Label Text="{Binding Count}" />
-                <ListView x:Name="deviceList"
-                    HasUnevenRows="True"
-                     ItemsSource="{Binding ListViewBtItems}">
-                </ListView>
-            </StackLayout>
+            <ListView x:Name="devicesList" ItemsSource="{Binding ScannedDevices}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <StackLayout>
+                                    <Label Text="{Binding Name}" FontSize="Medium"></Label>
+                                </StackLayout>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

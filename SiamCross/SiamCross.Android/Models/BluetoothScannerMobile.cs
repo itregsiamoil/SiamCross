@@ -26,7 +26,7 @@ namespace SiamCross.Droid.Models
             _socketAdapter = BluetoothAdapter.DefaultAdapter;
         }
 
-        public event Action<string, object> Received;
+        public event Action<ScannedDeviceInfo> Received;
 
         public void Start()
         {
@@ -34,7 +34,19 @@ namespace SiamCross.Droid.Models
 
             foreach (var device in devices)
             {
-                Received?.Invoke(device.Name, devices);
+                BluetoothType bluetoothType = BluetoothType.Le;
+                switch(device.Type)
+                {
+                    case BluetoothDeviceType.Classic:
+                        bluetoothType = BluetoothType.Classic;
+                        break;
+                    case BluetoothDeviceType.Le:
+                        bluetoothType = BluetoothType.Le;
+                        break;
+                }
+         
+
+                Received?.Invoke(new ScannedDeviceInfo(device.Name, device, bluetoothType));
             }
 
             StartScann();
@@ -52,7 +64,7 @@ namespace SiamCross.Droid.Models
 
                 _adapter.DeviceDiscovered += (obj, a) =>
                 {
-                    Received?.Invoke(a.Device.Name, a.Device);
+                    Received?.Invoke(new ScannedDeviceInfo(a.Device.Name, a.Device, BluetoothType.Le));
                 };
 
                 await _adapter.StartScanningForDevicesAsync();

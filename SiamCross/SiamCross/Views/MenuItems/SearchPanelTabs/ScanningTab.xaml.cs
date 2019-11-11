@@ -16,7 +16,7 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
         public ScanningTab()
         {
             InitializeComponent();
-            this.BindingContext = new SearchViewModel();
+            this.BindingContext = new ScannerViewModel();
         }
     }
 }
