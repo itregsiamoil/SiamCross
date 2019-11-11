@@ -70,6 +70,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
+    <Compile Include="Models\BluetoothClassicAdapterMobile.cs" />
+    <Compile Include="Models\BluetoothLeAdapterMobile.cs" />
     <Compile Include="Models\BluetoothScannerMobile.cs" />
     <Compile Include="Models\Scan.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
