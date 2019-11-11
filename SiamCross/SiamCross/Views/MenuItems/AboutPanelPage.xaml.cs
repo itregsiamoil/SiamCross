@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace SiamCross.Views
+namespace SiamCross.Views.MenuItems
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ClinicInformation : ContentPage
+    public partial class AboutPanelPage : ContentPage
     {
-        public ClinicInformation()
+        public AboutPanelPage()
         {
             InitializeComponent();
         }

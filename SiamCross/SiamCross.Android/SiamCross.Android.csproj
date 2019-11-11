@@ -45,6 +45,7 @@
   <ItemGroup>
     <Reference Include="Mono.Android" />
     <Reference Include="Mono.Android.Export" />
+    <Reference Include="Mono.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -54,12 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MvvmCross.Plugin.BLE">
-      <Version>2.2.0-pre2</Version>
+      <Version>2.1.1</Version>
     </PackageReference>
-    <PackageReference Include="Plugin.BLE">
-      <Version>2.2.0-pre2</Version>
-    </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="4.3.0.908675" />
     <PackageReference Include="Xamarin.Android.Support.Design" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Android.Support.v4" Version="28.0.0.3" />
@@ -67,7 +64,9 @@
     <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Android.Support.Core.Utils" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Android.Support.CustomTabs" Version="28.0.0.3" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.3.1" />
+    <PackageReference Include="Xamarin.Forms">
+      <Version>4.4.0.936621-pre1</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -110,7 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SiamCross\SiamCross.csproj">
-      <Project>{4F3F516C-0C1C-487E-B8C5-5F65C980867D}</Project>
+      <Project>{9cb87d99-4818-43dc-88e0-ac8201361c85}</Project>
       <Name>SiamCross</Name>
     </ProjectReference>
   </ItemGroup>

@@ -12,7 +12,7 @@ namespace SiamCross.Views
         public MainPage()
         {
             InitializeComponent();
-            this.BindingContext = new MainPageViewModel();
+            this.BindingContext = new SearchViewModel();
         }
     }
 }

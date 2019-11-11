@@ -5,6 +5,7 @@ using SiamCross.Views;
 using SiamCross.ViewModels;
 using SiamCross.Services;
 
+using SiamCross.Views.MenuItems;
 
 namespace SiamCross
 {
@@ -28,6 +29,8 @@ namespace SiamCross
         {
             var menuPage = new MenuPage() { Title = "Title" };
             NavigationPage = new NavigationPage(new Home());
+            var menuPage = new MenuPage() { Title = "SiamServiceMenu" };
+            NavigationPage = new NavigationPage(new ControlPanelPage());
             RootPage = new RootPage();
             RootPage.Master = menuPage;
             RootPage.Detail = NavigationPage;
