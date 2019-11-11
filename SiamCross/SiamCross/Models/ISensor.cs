@@ -10,5 +10,6 @@ namespace SiamCross.Models
         bool Alive { get; }
         void QuickReport();
         void StartMeasurement();
+        SensorData SensorData { get; }
     }
 }

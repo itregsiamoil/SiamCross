@@ -8,9 +8,9 @@
             <Label Text="Панель управления"
                 VerticalOptions="StartAndExpand" 
                 HorizontalOptions="StartAndExpand" />
-            <ListView x:Name="deviceList"
+            <ListView x:Name="sensorList"
                 HasUnevenRows="True"
-                ItemsSource="{Binding ListViewBtItems}">
+                ItemsSource="{Binding SensorsData}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
