@@ -2,6 +2,7 @@
 using SiamCross.Services;
 using System.Collections.ObjectModel;
 using Xamarin.Forms;
+using System.ComponentModel;
 
 namespace SiamCross.ViewModels
 {
@@ -19,7 +20,7 @@ namespace SiamCross.ViewModels
             _service.StartScan();
         }
 
-        private void ServicePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void ServicePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             Device.BeginInvokeOnMainThread(() =>
             {
