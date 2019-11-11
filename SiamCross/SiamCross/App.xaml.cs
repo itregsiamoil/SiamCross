@@ -3,9 +3,8 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using SiamCross.Views;
 using SiamCross.ViewModels;
-using MvvmCross;
 using SiamCross.Services;
-using MvvmCross.Plugin.Messenger;
+
 
 namespace SiamCross
 {
@@ -40,10 +39,7 @@ namespace SiamCross
             InitializeComponent();
 
             // MainPage = new MainPage();
-            var vm = new ScannerViewModel(DependencyService.Resolve<IScannedDevicesService>(),
-                Mvx.IoCProvider.Resolve<IMvxMessenger>());
-            MainPage = new ScannerPage(vm);
-           // CallMain();
+            CallMain();
         }
 
         protected override void OnStart()

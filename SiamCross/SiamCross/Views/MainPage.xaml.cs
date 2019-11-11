@@ -1,14 +1,5 @@
-﻿using MvvmCross;
-using MvvmCross.Plugin.Messenger;
-using SiamCross.Models.Scanners;
-using SiamCross.Services;
-using SiamCross.ViewModels;
-using System;
-using System.Collections.Generic;
+﻿using SiamCross.ViewModels;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace SiamCross.Views
@@ -21,9 +12,7 @@ namespace SiamCross.Views
         public MainPage()
         {
             InitializeComponent();
-            DependencyService.Resolve<IBluetoothScanner>();
-            this.BindingContext = new ScannerViewModel(DependencyService.Resolve<IScannedDevicesService>(), 
-                Mvx.IoCProvider.Resolve<IMvxMessenger>());
+            this.BindingContext = new MainPageViewModel();
         }
     }
 }

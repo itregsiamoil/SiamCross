@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MvvmCross.Plugin.Messenger;
-using SiamCross.Models.Scanners;
+﻿using SiamCross.Models.Scanners;
 using SiamCross.Services;
+using System.Collections.Generic;
+using System.ComponentModel;
 using Xamarin.Forms;
 
+[assembly: Dependency(typeof(ScannedDevicesService))]
 namespace SiamCross.Services
 {
     public class ScannedDevicesService : IScannedDevicesService
@@ -14,13 +13,11 @@ namespace SiamCross.Services
 
         private readonly IBluetoothScanner _scanner;
 
-        private readonly IMvxMessenger _messenger;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public ScannedDevicesService(IBluetoothScanner scanner,
-                                     IMvxMessenger messenger)
+        public ScannedDevicesService()
         {
-            _scanner = scanner;
-            _messenger = messenger;
+            _scanner = DependencyService.Get<IBluetoothScanner>();
             _scanner.Received += ScannerReceived;
             _devices = new List<ScannedDeviceInfo>();
         }
@@ -37,13 +34,13 @@ namespace SiamCross.Services
             if (!_devices.Contains(deviceInfo))
             {
                 _devices.Add(deviceInfo);
-                _messenger.Publish(new ScannedDevicesListChangedMessage(this));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ScannedDevices)));
             }
         }
 
-        public IEnumerable<ScannedDeviceInfo> GetScannedDevices()
+        public IEnumerable<ScannedDeviceInfo> ScannedDevices
         {
-            return _devices;
+            get => _devices;
         }
 
         public void StartScan()

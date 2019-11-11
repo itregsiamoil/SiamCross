@@ -53,9 +53,6 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MvvmCross">
-      <Version>6.4.1</Version>
-    </PackageReference>
     <PackageReference Include="MvvmCross.Plugin.BLE">
       <Version>2.2.0-pre2</Version>
     </PackageReference>

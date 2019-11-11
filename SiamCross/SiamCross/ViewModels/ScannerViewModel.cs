@@ -1,11 +1,7 @@
-﻿using MvvmCross.Plugin.Messenger;
-using SiamCross.Models.Scanners;
+﻿using SiamCross.Models.Scanners;
 using SiamCross.Services;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
-using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
@@ -13,28 +9,26 @@ namespace SiamCross.ViewModels
     {
         private readonly IScannedDevicesService _service;
 
-        private readonly MvxSubscriptionToken _token;
-
         public ObservableCollection<ScannedDeviceInfo> ScannedDevices { get; }
 
-        public ScannerViewModel(IScannedDevicesService service, 
-                                IMvxMessenger messenger)
+        public ScannerViewModel()
         {
-            _service = service;
+            _service = DependencyService.Resolve<IScannedDevicesService>();
             ScannedDevices = new ObservableCollection<ScannedDeviceInfo>();
-            _token =
-                messenger.SubscribeOnMainThread<ScannedDevicesListChangedMessage>
-                ( m => RefreshDevicesList());
+            _service.PropertyChanged += ServicePropertyChanged;
             _service.StartScan();
         }
 
-        public void RefreshDevicesList()
+        private void ServicePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            ScannedDevices.Clear();
-            foreach (var deviceInfo in _service.GetScannedDevices())
+            Device.BeginInvokeOnMainThread(() =>
             {
-                ScannedDevices.Add(deviceInfo);
-            }
+                ScannedDevices.Clear();
+                foreach (var deviceInfo in _service.ScannedDevices)
+                {
+                    ScannedDevices.Add(deviceInfo);
+                }
+            });
         }
     }
 }
