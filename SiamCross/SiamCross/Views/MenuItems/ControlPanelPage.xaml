@@ -6,8 +6,25 @@
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Панель управления"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+                VerticalOptions="StartAndExpand" 
+                HorizontalOptions="StartAndExpand" />
+            <ListView x:Name="deviceList"
+                HasUnevenRows="True"
+                ItemsSource="{Binding ListViewBtItems}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <StackLayout>
+                                    <Label Text="{Binding Name}" FontSize="18" />
+                                    <Label Text="{Binding Type}" />
+                                    <Label Text="{Binding Status}" />
+                                </StackLayout>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

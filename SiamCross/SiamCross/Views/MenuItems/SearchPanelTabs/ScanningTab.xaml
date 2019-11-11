@@ -8,8 +8,8 @@
             <Label Text="Обнаруженные устройства: " FontSize="Medium" />
                 <Label Text="{Binding Count}" />
                 <ListView x:Name="deviceList"
-              HasUnevenRows="True"
-              ItemsSource="{Binding ListViewBtItems}">
+                    HasUnevenRows="True"
+                     ItemsSource="{Binding ListViewBtItems}">
                 </ListView>
             </StackLayout>
     </ContentPage.Content>

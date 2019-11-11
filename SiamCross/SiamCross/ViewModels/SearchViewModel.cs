@@ -53,10 +53,10 @@ namespace SiamCross.ViewModels
 
         public SearchViewModel()
         {
-                _bluetoothScaner = DependencyService.Get<IBluetoothScanner>();
-                _bluetoothScaner.Received += OnDeviceDetected;
-                ListViewBtItems = new ObservableCollection<string>();
-                _bluetoothScaner.Start();
+            _bluetoothScaner = DependencyService.Get<IBluetoothScanner>();
+            _bluetoothScaner.Received += OnDeviceDetected;
+            ListViewBtItems = new ObservableCollection<string>();
+            _bluetoothScaner.Start();
         }
     }
 }
