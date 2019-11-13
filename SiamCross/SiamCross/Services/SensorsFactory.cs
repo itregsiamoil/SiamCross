@@ -12,7 +12,7 @@ namespace SiamCross.Services
         {
             if (deviceInfo.Name.Contains("DDIN"))
             {
-                return new Ddin2Sensor();
+                return new Ddin2Sensor(deviceInfo);
             }
             return null;
         }

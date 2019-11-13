@@ -26,7 +26,8 @@ namespace SiamCross.WPF
             InitializeComponent();
 
             Forms.Init();
-            LoadApplication(new SiamCross.App());
+            LoadApplication(new SiamCross.App(new Setup()));
         }
+
     }
 }

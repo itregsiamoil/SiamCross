@@ -8,7 +8,7 @@ using SiamCross.Models;
 
 namespace SiamCross.ViewModels
 {
-    public class ScannerViewModel : BaseViewModel
+    public class ScannerViewModel : IViewModel
     {
         private readonly IScannedDevicesService _service;
 
@@ -26,9 +26,11 @@ namespace SiamCross.ViewModels
 
         private ISensor _sensor;
 
-        public ScannerViewModel()
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public ScannerViewModel(IScannedDevicesService service)
         {
-            _service = DependencyService.Resolve<IScannedDevicesService>();
+            _service = service;
             ScannedDevices = new ObservableCollection<ScannedDeviceInfo>();
             ClassicDevices = new ObservableCollection<ScannedDeviceInfo>();
 

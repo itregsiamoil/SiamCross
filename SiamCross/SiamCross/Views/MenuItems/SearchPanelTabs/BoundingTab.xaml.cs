@@ -18,7 +18,8 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
         public BoundingTab()
         {
             InitializeComponent();
-            _viewModel = new ScannerViewModel();
+            var vm = new ViewModel<ScannerViewModel>();
+            _viewModel = vm.GetViewModel;
             this.BindingContext = _viewModel;
         }
 

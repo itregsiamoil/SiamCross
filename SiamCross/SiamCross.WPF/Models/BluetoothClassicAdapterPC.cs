@@ -10,10 +10,10 @@ using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 using Xamarin.Forms;
 
-[assembly: Dependency(typeof(BluetoothAdapterClassicPC))]
+[assembly: Dependency(typeof(BluetoothClassicAdapterPC))]
 namespace SiamCross.WPF.Models
 {
-    public class BluetoothAdapterClassicPC : IBluetoothClassicAdapter
+    public class BluetoothClassicAdapterPC : IBluetoothClassicAdapter
     {
         private DataWriter _writer;
         private DataReader _reader;
@@ -24,7 +24,7 @@ namespace SiamCross.WPF.Models
 
         public event Action<byte[]> DataReceived;
 
-        public BluetoothAdapterClassicPC(ScannedDeviceInfo deviceInfo)
+        public BluetoothClassicAdapterPC(ScannedDeviceInfo deviceInfo)
         {
             _deviceInfo = deviceInfo;
         }
