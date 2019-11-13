@@ -97,7 +97,7 @@ namespace SiamCross.Droid.Models
         }
 
         public async Task SendData(byte[] data)
-        {
+        { 
             await _writeCharacteristic.WriteAsync(data);
         }
 
