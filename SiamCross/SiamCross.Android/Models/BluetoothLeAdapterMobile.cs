@@ -14,12 +14,14 @@ using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.Exceptions;
 using SiamCross.Droid.Models;
 using SiamCross.Models;
+using SiamCross.Models.Scanners;
+using SiamCross.Models.Adapters;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(BluetoothLeAdapterMobile))]
 namespace SiamCross.Droid.Models
 {
-    public class BluetoothLeAdapterMobile : IBluetoothAdapter
+    public class BluetoothLeAdapterMobile : IBluetoothLeAdapter
     {
         private IAdapter _adapter;
         private IBluetoothLE _bluetoothBLE;
@@ -32,38 +34,28 @@ namespace SiamCross.Droid.Models
         private const string _writeCharacteristicGuid = "569a2001-b87f-490c-92cb-11ba5ea5167";
         private const string _readCharacteristicGuid = "569a2000-b87f-490c-92cb-11ba5ea5167";
         private const string _serviceGuid = "569a1101-b87f-490c-92cb-11ba5ea5167c";
+        private ScannedDeviceInfo _deviceInfo;
 
-        public BluetoothLeAdapterMobile()
+        public BluetoothLeAdapterMobile(ScannedDeviceInfo deviceInfo)
         {
             _bluetoothBLE = CrossBluetoothLE.Current;
             _adapter = CrossBluetoothLE.Current.Adapter;
+            _deviceInfo = deviceInfo;
         }
 
-        public async Task Connect(object connectArgs)
+        public async Task Connect()
         {
+            var connectArgs = _deviceInfo.BluetoothArgs;
             for (int i = 0; i < 5; i++)
             {
                 try
                 {
-                    if (connectArgs is string)
-                    {
-                        await ConnectG(connectArgs as string);
-                    }
-                    else if (connectArgs is IDevice)
-                    {
-                        await ConnectD(connectArgs as IDevice);
-                    }
-                    else
-                    {
-                        throw new Exception("Invalid argument!");
-                    }
-                    await Task.Delay(2000);
+                    await ConnectD(connectArgs as IDevice);
+
                     break;
                 }
-                catch
-                {
-                    await Task.Delay(2000);
-                }
+                catch{}
+                await Task.Delay(2000);
             }
         }
 
@@ -129,7 +121,6 @@ namespace SiamCross.Droid.Models
             {
                 
             }
-            
         }
 
         public event Action<byte[]> DataReceived;

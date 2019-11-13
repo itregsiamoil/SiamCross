@@ -5,7 +5,7 @@ namespace SiamCross.Models
 {
     public interface IBluetoothAdapter
     {
-        Task Connect(object connectArgs);
+        Task Connect();
 
         Task SendData(byte[] data);
 
