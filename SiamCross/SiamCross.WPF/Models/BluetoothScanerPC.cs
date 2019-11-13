@@ -55,7 +55,10 @@ namespace SiamCross.WPF.Models
                     BluetoothDevice.GetDeviceSelectorFromPairingState(true));
             foreach (var device in pairedDevices)
             {
-                Received?.Invoke(new ScannedDeviceInfo(device.Name, device, BluetoothType.Classic));
+                //if (device.IsEnabled)
+                //{
+                    Received?.Invoke(new ScannedDeviceInfo(device.Name, device, BluetoothType.Classic));
+                //}
             }
         }
 

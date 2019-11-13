@@ -25,8 +25,11 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
         private void ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             ScannedDeviceInfo device = (ScannedDeviceInfo)e.SelectedItem;
-            _viewModel.SelectedDevice = device;
-            Console.WriteLine(_viewModel.SelectedDevice.Name);
+            if (device != null)
+            {
+                _viewModel.SelectedDevice = device;
+                Console.WriteLine(_viewModel.SelectedDevice.Name);
+            }
         }
     }
 }
