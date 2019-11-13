@@ -3,6 +3,7 @@ using SiamCross.Services;
 using System.Collections.ObjectModel;
 using Xamarin.Forms;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace SiamCross.ViewModels
 {
@@ -12,10 +13,41 @@ namespace SiamCross.ViewModels
 
         public ObservableCollection<ScannedDeviceInfo> ScannedDevices { get; }
 
+        public ObservableCollection<ScannedDeviceInfo> ClassicDevices { get; }
+
+        public ICommand Connect { get; private set; }
+
+        public ICommand SendMessage { get; private set; }
+
+        public ICommand Disconnect { get; private set; }
+
+        public ScannedDeviceInfo SelectedDevice { get; set;} 
+                
         public ScannerViewModel()
         {
             _service = DependencyService.Resolve<IScannedDevicesService>();
             ScannedDevices = new ObservableCollection<ScannedDeviceInfo>();
+            ClassicDevices = new ObservableCollection<ScannedDeviceInfo>();
+
+            Connect = new Command(
+                execute: () => 
+                {
+                    
+                });
+
+            SendMessage = new Command(
+                execute: () =>
+                {
+
+                });
+
+            Disconnect = new Command(
+                execute: () =>
+                {
+
+                });
+
+
             _service.PropertyChanged += ServicePropertyChanged;
             _service.StartScan();
         }
@@ -25,9 +57,17 @@ namespace SiamCross.ViewModels
             Device.BeginInvokeOnMainThread(() =>
             {
                 ScannedDevices.Clear();
+                ClassicDevices.Clear();
                 foreach (var deviceInfo in _service.ScannedDevices)
                 {
-                    ScannedDevices.Add(deviceInfo);
+                    if (deviceInfo.BluetoothType == Models.BluetoothType.Classic)
+                    {
+                        ClassicDevices.Add(deviceInfo);
+                    }
+                    else
+                    {
+                        ScannedDevices.Add(deviceInfo);
+                    }
                 }
             });
         }

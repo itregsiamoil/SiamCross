@@ -5,6 +5,23 @@
              Title="Classic">
     <ContentPage.Content>
         <StackLayout>
+            <Label Text="Обнаруженные устройства: " FontSize="Medium" />
+            <ListView x:Name="devicesList" ItemsSource="{Binding ClassicDevices}" ItemSelected="ItemSelected">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <StackLayout>
+                                    <Label Text="{Binding Name}" FontSize="Medium"></Label>
+                                </StackLayout>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button Text="Connect" Command="{Binding Connect}"></Button>
+            <Button Text="SendMessage" Command="{Binding SendMessage}"></Button>
+            <Button Text="Disconnect" Command="{Binding Disconnect}"></Button>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
