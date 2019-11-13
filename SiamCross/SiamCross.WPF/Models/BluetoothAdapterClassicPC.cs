@@ -1,28 +1,37 @@
 ﻿using SiamCross.Models;
+using SiamCross.Models.Adapters;
+using SiamCross.Models.Scanners;
+using SiamCross.WPF.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Devices.Enumeration;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
+using Xamarin.Forms;
 
+[assembly: Dependency(typeof(BluetoothAdapterClassicPC))]
 namespace SiamCross.WPF.Models
 {
-    public class BluetoothAdapterClassicPC : IBluetoothAdapter
+    public class BluetoothAdapterClassicPC : IBluetoothClassicAdapter
     {
         private DataWriter _writer;
         private DataReader _reader;
         private StreamSocket _socket;
         private RfcommDeviceService _service;
 
+        private readonly ScannedDeviceInfo _deviceInfo;
+
         public event Action<byte[]> DataReceived;
 
-        public async Task Connect(object connectArgs)
+        public BluetoothAdapterClassicPC(ScannedDeviceInfo deviceInfo)
         {
+            _deviceInfo = deviceInfo;
+        }
+
+        public async Task Connect()
+        {
+            var connectArgs = _deviceInfo.BluetoothArgs;
             if (connectArgs is DeviceInformation deviceInfo)
             {
                 try
@@ -67,6 +76,7 @@ namespace SiamCross.WPF.Models
                 _writer = new DataWriter(_socket.OutputStream);
                 _reader = new DataReader(_socket.InputStream);
 
+                Console.WriteLine($"Send DATA: {BitConverter.ToString(data)}");
                 _writer.WriteBytes(data);
 
                 await _writer.StoreAsync();

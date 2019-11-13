@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using Xamarin.Forms;
 using System.ComponentModel;
 using System.Windows.Input;
+using SiamCross.Models;
 
 namespace SiamCross.ViewModels
 {
@@ -21,8 +22,10 @@ namespace SiamCross.ViewModels
 
         public ICommand Disconnect { get; private set; }
 
-        public ScannedDeviceInfo SelectedDevice { get; set;} 
-                
+        public ScannedDeviceInfo SelectedDevice { get; set;}
+
+        private ISensor _sensor;
+
         public ScannerViewModel()
         {
             _service = DependencyService.Resolve<IScannedDevicesService>();
@@ -30,21 +33,35 @@ namespace SiamCross.ViewModels
             ClassicDevices = new ObservableCollection<ScannedDeviceInfo>();
 
             Connect = new Command(
-                execute: () => 
+                execute: async () => 
                 {
-                    
+                    if (SelectedDevice != null)
+                    {
+                        _sensor = SensorsFactory.CreateSensor(SelectedDevice);
+                        if (_sensor != null)
+                        {
+                            await _sensor.BluetoothAdapter.Connect();
+                        }
+                    }
                 });
 
             SendMessage = new Command(
-                execute: () =>
+                execute: async () =>
                 {
-
+                    var message = new byte[]
+                    {
+                        0x0D, 0x0A,
+                        0x01, 0x01,
+                        0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
+                        0x90, 0x67
+                    };
+                    await _sensor.BluetoothAdapter.SendData(message);
                 });
 
             Disconnect = new Command(
-                execute: () =>
+                execute: async () =>
                 {
-
+                    await _sensor.BluetoothAdapter.Disconnect();
                 });
 
 

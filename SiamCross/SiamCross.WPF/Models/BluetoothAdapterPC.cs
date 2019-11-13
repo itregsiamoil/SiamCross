@@ -1,14 +1,19 @@
 ﻿using SiamCross.Models;
+using SiamCross.Models.Adapters;
+using SiamCross.Models.Scanners;
+using SiamCross.WPF.Models;
 using System;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Storage.Streams;
+using Xamarin.Forms;
 
+[assembly: Dependency(typeof(BluetoothLeAdapterPC))]
 namespace SiamCross.WPF.Models
 {
-    public class BluetoothAdapterPC : IBluetoothAdapter
+    public class BluetoothLeAdapterPC : IBluetoothLeAdapter
     {
         /// <summary>
         /// Характеристика чтения
@@ -35,10 +40,18 @@ namespace SiamCross.WPF.Models
         /// </summary>
         private DataWriter byteDataWriter = new DataWriter();
 
+        private readonly ScannedDeviceInfo _deviceInfo;
+
         public event Action<byte[]> DataReceived;
 
-        public async Task Connect(object connectArgs)
+        public BluetoothLeAdapterPC(ScannedDeviceInfo deviceInfo)
         {
+            _deviceInfo = deviceInfo;
+        }
+
+        public async Task Connect()
+        {
+            var connectArgs = _deviceInfo.BluetoothArgs;
             if (connectArgs is BluetoothLEAdvertisementReceivedEventArgs recivedDevice)
             {
                 for (int i = 0; i < 3; i++)

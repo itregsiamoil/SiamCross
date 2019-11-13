@@ -1,7 +1,6 @@
-﻿using System;
+﻿using SiamCross.Models;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using SiamCross.Models;
 
 namespace SiamCross.Services
 {
