@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SiamCross.Models;
+using SiamCross.Services;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace SiamCross.ViewModels
 {
     public class ControlPanelPageViewModel : BaseViewModel
     {
-        public ObservableCollection<string> ListViewDevices { get; set; }
+        public ObservableCollection<SensorData> SensorsData { get; }
+
+        public ControlPanelPageViewModel()
+        {
+            SensorsData = new ObservableCollection<SensorData>();
+            foreach (var sensor in SensorsService.Instance.Sensors)
+            {
+                SensorsData.Add(sensor.SensorData);
+            }
+        }
     }
 }
