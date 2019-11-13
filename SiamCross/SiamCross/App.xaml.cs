@@ -1,15 +1,11 @@
-﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using SiamCross.Views;
-using SiamCross.ViewModels;
-using SiamCross.Services;
-
-using SiamCross.Views.MenuItems;
-using Xamarin.Forms.Internals;
-using Autofac;
-using System.Collections.Generic;
+﻿using Autofac;
 using Autofac.Core;
+using SiamCross.Views;
+using SiamCross.Views.MenuItems;
+using System;
+using System.Collections.Generic;
+using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross
 {
