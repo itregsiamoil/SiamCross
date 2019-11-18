@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
+
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.Exceptions;
@@ -24,12 +26,10 @@ namespace SiamCross.Droid.Models
     public class BluetoothLeAdapterMobile : IBluetoothLeAdapter
     {
         private IAdapter _adapter;
-        private IBluetoothLE _bluetoothBLE;
         private IDevice _device;
         private IService _targetService;
         private ICharacteristic _writeCharacteristic;
         private ICharacteristic _readCharacteristic;
-        private string _addres;
 
         private const string _writeCharacteristicGuid = "569a2001-b87f-490c-92cb-11ba5ea5167";
         private const string _readCharacteristicGuid = "569a2000-b87f-490c-92cb-11ba5ea5167";
@@ -38,7 +38,6 @@ namespace SiamCross.Droid.Models
 
         public BluetoothLeAdapterMobile(ScannedDeviceInfo deviceInfo)
         {
-            _bluetoothBLE = CrossBluetoothLE.Current;
             _adapter = CrossBluetoothLE.Current.Adapter;
             _deviceInfo = deviceInfo;
         }
@@ -51,7 +50,7 @@ namespace SiamCross.Droid.Models
                 try
                 {
                     await ConnectD(connectArgs as IDevice);
-
+                    ConnectSucceed?.Invoke();
                     break;
                 }
                 catch{}
@@ -80,22 +79,6 @@ namespace SiamCross.Droid.Models
             }
         }
 
-        private async Task ConnectG(string guidString)
-        {
-            var guid = new Guid(guidString);
-            try
-            {
-                await _adapter.ConnectToKnownDeviceAsync(guid);
-                await Initialize();
-
-            }
-            catch (DeviceConnectionException ex)
-            {
-                //Could not connect to the device
-                //DisplayAlert("Notice", ex.Message.ToString(), "OK");
-            }
-        }
-
         public async Task SendData(byte[] data)
         { 
             await _writeCharacteristic.WriteAsync(data);
@@ -119,10 +102,19 @@ namespace SiamCross.Droid.Models
         {
             if (_device != null)
             {
-                
+                _writeCharacteristic = null;
+                _readCharacteristic = null;
+                _adapter = null;
+
+                _device.Dispose();
+                _targetService.Dispose();
+
+                _device = null;
+                _targetService = null;
             }
         }
 
         public event Action<byte[]> DataReceived;
+        public event Action ConnectSucceed;
     }
 }

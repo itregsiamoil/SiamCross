@@ -10,7 +10,7 @@ namespace SiamCross.Services
         private static readonly Lazy<SensorsService> _instance =
             new Lazy<SensorsService>(() => new SensorsService());
 
-        public SensorsService()
+        private SensorsService()
         {
             _sensors = new List<ISensor>();
         }
