@@ -1,20 +1,21 @@
-﻿using SiamCross.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using SiamCross.Models;
 
 namespace SiamCross.Services
 {
-    public sealed class SensorService 
+    public sealed class SensorsService 
     {
-        private static readonly Lazy<SensorService> _instance =
-            new Lazy<SensorService>(() => new SensorService());
+        private static readonly Lazy<SensorsService> _instance =
+            new Lazy<SensorsService>(() => new SensorsService());
 
-        public SensorService()
+        private SensorsService()
         {
             _sensors = new List<ISensor>();
         }
 
-        public static SensorService Instance { get => _instance.Value; }
+        public static SensorsService Instance { get => _instance.Value; }
 
         private List<ISensor> _sensors;
 

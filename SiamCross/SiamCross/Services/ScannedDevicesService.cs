@@ -49,7 +49,7 @@ namespace SiamCross.Services
 
         public void StopScan()
         {
-            _scanner.Stop();
+            _scanner.Stop();            
         }
     }
 }
