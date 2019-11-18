@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using SiamCross.AppObjects;
 using SiamCross.Models.Adapters;
+using SiamCross.Models.Scanners;
 using SiamCross.WPF.Models;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ namespace SiamCross.WPF
     {
         protected override void RegisterDependencies(ContainerBuilder cb)
         {
+            cb.RegisterType<BluetoothScanerPC>().As<IBluetoothScanner>();
+
             base.RegisterDependencies(cb);
 
             cb.RegisterType<BluetoothClassicAdapterPC>().As<IBluetoothClassicAdapter>();

@@ -16,7 +16,7 @@ namespace SiamCross.Models
 
         public Ddin2Sensor(ScannedDeviceInfo deviceInfo)
         {
-            BluetoothAdapter = bluetoothAdapter;
+            //BluetoothAdapter = bluetoothAdapter;
         }
 
         public bool Alive => throw new NotImplementedException();

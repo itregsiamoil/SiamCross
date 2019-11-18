@@ -20,9 +20,6 @@
     <Compile Update="Views\MenuItems\MeasuringPanelPage.xaml.cs">
       <DependentUpon>MeasuringPanelPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\MenuItems\SearchPanelTabs\BondingTab.xaml.cs">
-      <DependentUpon>BondingTab.xaml</DependentUpon>
-    </Compile>
     <Compile Update="Views\MenuItems\SearchPanelTabs\BoundingTab.xaml.cs">
       <DependentUpon>BoundingTab.xaml</DependentUpon>
     </Compile>
@@ -42,9 +39,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MenuItems\SearchPanelPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\MenuItems\SearchPanelTabs\BondingTab.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MenuItems\SearchPanelTabs\BoundingTab.xaml">

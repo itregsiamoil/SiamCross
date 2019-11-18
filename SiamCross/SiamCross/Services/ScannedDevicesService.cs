@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Xamarin.Forms;
 
-[assembly: Dependency(typeof(ScannedDevicesService))]
 namespace SiamCross.Services
 {
     public class ScannedDevicesService : IScannedDevicesService
@@ -15,9 +14,9 @@ namespace SiamCross.Services
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ScannedDevicesService()
+        public ScannedDevicesService(IBluetoothScanner scanner)
         {
-            _scanner = DependencyService.Get<IBluetoothScanner>();
+            _scanner = scanner;
             _scanner.Received += ScannerReceived;
             _devices = new List<ScannedDeviceInfo>();
         }
