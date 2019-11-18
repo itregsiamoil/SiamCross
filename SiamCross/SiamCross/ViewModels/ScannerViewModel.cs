@@ -39,7 +39,7 @@ namespace SiamCross.ViewModels
                 {
                     if (SelectedDevice != null)
                     {
-                        _sensor = SensorsFactory.CreateSensor(SelectedDevice);
+                        _sensor = SensorFactory.CreateSensor(SelectedDevice);
                         if (_sensor != null)
                         {
                             await _sensor.BluetoothAdapter.Connect();

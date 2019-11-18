@@ -1,4 +1,5 @@
-﻿using SiamCross.Models.Scanners;
+﻿using SiamCross.AppObjects;
+using SiamCross.Models.Scanners;
 using SiamCross.ViewModels;
 using System;
 using System.Collections.Generic;

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SiamCross.Services
 {
-    public static class SensorsFactory
+    public static class SensorFactory
     {
         public static ISensor CreateSensor(ScannedDeviceInfo deviceInfo)
         {
