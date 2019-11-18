@@ -58,10 +58,12 @@ namespace SiamCross.Droid.Models
                 _inputStreamReader = new InputStreamReader(_inStream);
                 _reader = new BufferedReader(_inputStreamReader);
 
-                //await Task.Delay(2000);
+                await Task.Delay(2000);
 
                 _readTask = new Task(() => BackgroundRead());
                 _readTask.Start();
+
+                ConnectSucceed?.Invoke();
             }
             catch(Java.IO.IOException e)
             {
@@ -79,15 +81,15 @@ namespace SiamCross.Droid.Models
             Close(_outStream);
         }
 
-        private void Close(IDisposable aConnectedObject)
+        private void Close(IDisposable connectedObject)
         {
-            if (aConnectedObject == null)
+            if (connectedObject == null)
             {
                 return;
             }
             try
             {
-                aConnectedObject.Dispose();
+                connectedObject.Dispose();
             }
             catch (Exception)
             {
@@ -95,7 +97,7 @@ namespace SiamCross.Droid.Models
                 throw;
             }
 
-            aConnectedObject = null;
+            connectedObject = null;
         }
 
 
@@ -120,5 +122,6 @@ namespace SiamCross.Droid.Models
         }
 
         public event Action<byte[]> DataReceived;
+        public event Action ConnectSucceed;
     }
 }
