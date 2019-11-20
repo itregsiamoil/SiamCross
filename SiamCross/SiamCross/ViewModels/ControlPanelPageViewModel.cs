@@ -12,7 +12,7 @@ namespace SiamCross.ViewModels
         public ControlPanelPageViewModel()
         {
             SensorsData = new ObservableCollection<SensorData>();
-            foreach (var sensor in SensorsService.Instance.Sensors)
+            foreach (var sensor in SensorService.Instance.Sensors)
             {
                 SensorsData.Add(sensor.SensorData);
             }

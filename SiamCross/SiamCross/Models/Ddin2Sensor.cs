@@ -15,7 +15,7 @@ namespace SiamCross.Models
             get;
         }
 
-        public Ddin2Sensor(ScannedDeviceInfo deviceInfo)
+        public Ddin2Sensor(ScannedDeviceInfo deviceInfo, IBluetoothClassicAdapter bluetoothClassicAdapter)
         {
            // BluetoothAdapter = bluetoothAdapter;
         }
