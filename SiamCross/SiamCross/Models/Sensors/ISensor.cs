@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using SiamCross.Models.Tools;
 
 namespace SiamCross.Models
@@ -12,7 +13,7 @@ namespace SiamCross.Models
 
         event Action<SensorData> Notify;
 
-        void QuickReport();
+        Task QuickReport();
         void StartMeasurement();
         SensorData SensorData { get; }
     }

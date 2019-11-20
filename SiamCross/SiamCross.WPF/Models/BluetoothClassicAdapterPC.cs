@@ -44,6 +44,7 @@ namespace SiamCross.WPF.Models
                     await _socket.ConnectAsync(
                         _service.ConnectionHostName,
                         _service.ConnectionServiceName);
+                    ConnectSucceed?.Invoke();
                 }
                 catch (Exception ex)
                 {

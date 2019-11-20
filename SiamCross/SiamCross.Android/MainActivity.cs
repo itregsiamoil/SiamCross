@@ -47,7 +47,7 @@ namespace SiamCross.Droid
                 ActivityCompat.RequestPermissions(this, locationPermissions, locationPermissionsRequestCode);
             }
 
-            LoadApplication(new App());
+            LoadApplication(new App(new Setup()));
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {

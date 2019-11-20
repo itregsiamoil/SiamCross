@@ -5,17 +5,19 @@ using SiamCross.Models;
 
 namespace SiamCross.Services
 {
-    public sealed class SensorsService 
+    public sealed class SensorService 
     {
-        private static readonly Lazy<SensorsService> _instance =
-            new Lazy<SensorsService>(() => new SensorsService());
+        private static readonly Lazy<SensorService> _instance =
+            new Lazy<SensorService>(() => new SensorService());
 
-        private SensorsService()
+        public int SensorsCount => _sensors.Count;
+
+        private SensorService()
         {
             _sensors = new List<ISensor>();
         }
 
-        public static SensorsService Instance { get => _instance.Value; }
+        public static SensorService Instance { get => _instance.Value; }
 
         private List<ISensor> _sensors;
 
@@ -23,6 +25,14 @@ namespace SiamCross.Services
 
         public void AddSensor(ISensor sensor)
         {
+            foreach(var currentSensor in Sensors)
+            {
+                if(currentSensor.SensorData.Name == sensor.SensorData.Name)
+                {
+                    return;
+                }
+            }
+
             _sensors.Add(sensor);
         }
     }

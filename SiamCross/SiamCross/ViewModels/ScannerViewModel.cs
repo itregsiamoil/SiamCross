@@ -18,16 +18,6 @@ namespace SiamCross.ViewModels
 
         public ObservableCollection<ScannedDeviceInfo> ClassicDevices { get; }
 
-        public ICommand Connect { get; private set; }
-
-        public ICommand SendMessage { get; private set; }
-
-        public ICommand Disconnect { get; private set; }
-
-        public ScannedDeviceInfo SelectedDevice { get; set;}
-
-        private ISensor _sensor;
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ScannerViewModel(IScannedDevicesService service, IMvxMessenger messenger)
@@ -37,37 +27,37 @@ namespace SiamCross.ViewModels
             ScannedDevices = new ObservableCollection<ScannedDeviceInfo>();
             ClassicDevices = new ObservableCollection<ScannedDeviceInfo>();
 
-            Connect = new Command(
-                execute: async () => 
-                {
-                    if (SelectedDevice != null)
-                    {
-                        _sensor = SensorFactory.CreateSensor(SelectedDevice);
-                        if (_sensor != null)
-                        {
-                            await _sensor.BluetoothAdapter.Connect();
-                        }
-                    }
-                });
+            //Connect = new Command(
+            //    execute: async () => 
+            //    {
+            //        if (SelectedDevice != null)
+            //        {
+            //            _sensor = SensorFactory.CreateSensor(SelectedDevice);
+            //            if (_sensor != null)
+            //            {
+            //                await _sensor.BluetoothAdapter.Connect();
+            //            }
+            //        }
+            //    });
 
-            SendMessage = new Command(
-                execute: async () =>
-                {
-                    var message = new byte[]
-                    {
-                        0x0D, 0x0A,
-                        0x01, 0x01,
-                        0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
-                        0x90, 0x67
-                    };
-                    await _sensor.BluetoothAdapter.SendData(message);
-                });
+            //SendMessage = new Command(
+            //    execute: async () =>
+            //    {
+            //        var message = new byte[]
+            //        {
+            //            0x0D, 0x0A,
+            //            0x01, 0x01,
+            //            0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
+            //            0x90, 0x67
+            //        };
+            //        await _sensor.BluetoothAdapter.SendData(message);
+            //    });
 
-            Disconnect = new Command(
-                execute: async () =>
-                {
-                    await _sensor.BluetoothAdapter.Disconnect();
-                });
+            //Disconnect = new Command(
+            //    execute: async () =>
+            //    {
+            //        await _sensor.BluetoothAdapter.Disconnect();
+            //    });
 
 
             _service.PropertyChanged += ServicePropertyChanged;

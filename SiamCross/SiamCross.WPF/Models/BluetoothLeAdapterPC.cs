@@ -72,10 +72,12 @@ namespace SiamCross.WPF.Models
                                 + Environment.NewLine);
                             await EnableCccdCharacteristics(result);  // CCCD Enable
                             DefineWriteReadCharacteristics(result);
-                            //ConnectCompleted?.Invoke();
+                            ConnectSucceed?.Invoke();
+
                             break;
                         }
                         await Task.Delay(300);
+
                     }
                     catch (Exception ex)
                     {

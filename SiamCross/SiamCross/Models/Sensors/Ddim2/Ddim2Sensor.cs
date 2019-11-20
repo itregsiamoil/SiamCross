@@ -17,7 +17,7 @@ namespace SiamCross.Models.Sensors.Ddim2
         private Ddim2QuickReportBuilder _reportBuilder;
         private Ddim2Parser _parser;
 
-        private Task LiveTask;
+        private Task _liveTask;
 
         public Ddim2Sensor(IBluetoothAdapter adapter, SensorData sensorData)
         {
@@ -31,8 +31,8 @@ namespace SiamCross.Models.Sensors.Ddim2
 
             BluetoothAdapter.ConnectSucceed += ConnectHandler;
 
-            LiveTask = new Task(() => Execute(_cancellToken.Token));
-            LiveTask.Start();
+            _liveTask = new Task(() => ExecuteAsync(_cancellToken.Token));
+            _liveTask.Start();
         }
 
         private void ConnectHandler()
@@ -66,26 +66,30 @@ namespace SiamCross.Models.Sensors.Ddim2
             Notify?.Invoke(SensorData);
         }
 
-        public void QuickReport()
+        public async Task QuickReport()
         {
-            BluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["BatteryVoltage"]);
-            BluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["Тemperature"]);
-            BluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["LoadChanel"]);
-            BluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["AccelerationChanel"]);
+            await BluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["BatteryVoltage"]);
+            await BluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["Тemperature"]);
+            await BluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["LoadChanel"]);
+            await BluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["AccelerationChanel"]);
         }
 
-        private void Execute(CancellationToken cancellationToken)
+        private async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             while(!cancellationToken.IsCancellationRequested)
             {
                 if(Alive)
                 {
-                    QuickReport();
+                    await QuickReport();
+                    await Task.Delay(1000);
                 }
                 else
                 {
-                    BluetoothAdapter.Connect();
-                    Task.Delay(4000);
+                    SensorData.Status = "Нет связи";
+                    Notify?.Invoke(SensorData);
+
+                    await BluetoothAdapter.Connect();
+                    await Task.Delay(4000);
                 }
             }
         }
