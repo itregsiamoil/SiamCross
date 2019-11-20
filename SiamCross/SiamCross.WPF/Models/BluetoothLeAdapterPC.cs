@@ -43,6 +43,7 @@ namespace SiamCross.WPF.Models
         private readonly ScannedDeviceInfo _deviceInfo;
 
         public event Action<byte[]> DataReceived;
+        public event Action ConnectSucceed;
 
         public BluetoothLeAdapterPC(ScannedDeviceInfo deviceInfo)
         {
@@ -71,10 +72,12 @@ namespace SiamCross.WPF.Models
                                 + Environment.NewLine);
                             await EnableCccdCharacteristics(result);  // CCCD Enable
                             DefineWriteReadCharacteristics(result);
-                            //ConnectCompleted?.Invoke();
+                            ConnectSucceed?.Invoke();
+
                             break;
                         }
                         await Task.Delay(300);
+
                     }
                     catch (Exception ex)
                     {

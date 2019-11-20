@@ -6,7 +6,9 @@
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Обнаруженные устройства: " FontSize="Medium" />
-            <ListView x:Name="devicesList" ItemsSource="{Binding ScannedDevices}">
+            <ListView x:Name="devicesList" 
+                      ItemsSource="{Binding ScannedDevices}"
+                      ItemSelected ="ItemSelected">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

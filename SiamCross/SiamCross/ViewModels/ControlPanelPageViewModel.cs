@@ -1,10 +1,11 @@
 ﻿using SiamCross.Models;
 using SiamCross.Services;
 using System.Collections.ObjectModel;
+using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
-    public class ControlPanelPageViewModel : BaseViewModel
+    public class ControlPanelPageViewModel : BaseViewModel, IViewModel
     {
         public ObservableCollection<SensorData> SensorsData { get; }
 
@@ -14,6 +15,18 @@ namespace SiamCross.ViewModels
             foreach (var sensor in SensorService.Instance.Sensors)
             {
                 SensorsData.Add(sensor.SensorData);
+            }
+        }
+
+        public void SensorsDataChanged(SensorData data)
+        {
+            foreach (var sensorData in SensorsData)
+            {
+                if(sensorData.Id == data.Id)
+                {
+                    sensorData.Status = data.Status;
+                    NotifyPropertyChanged(nameof(SensorsData));
+                }
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiamCross.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,8 @@ namespace SiamCross.Views.MenuItems
     {
         public ControlPanelPage()
         {
+            var vm = new ViewModel<ControlPanelPageViewModel>();
+            BindingContext = vm.GetViewModel;
             InitializeComponent();
         }
     }

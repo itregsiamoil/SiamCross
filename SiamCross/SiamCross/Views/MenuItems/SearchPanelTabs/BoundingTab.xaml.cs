@@ -29,8 +29,8 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
             ScannedDeviceInfo device = (ScannedDeviceInfo)e.SelectedItem;
             if (device != null)
             {
-                _viewModel.SelectedDevice = device;
-                Console.WriteLine(_viewModel.SelectedDevice.Name);
+               // _viewModel.SelectedDevice = device;
+              //  Console.WriteLine(_viewModel.SelectedDevice.Name);
             }
         }
     }

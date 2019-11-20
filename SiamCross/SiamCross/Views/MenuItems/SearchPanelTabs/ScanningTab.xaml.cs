@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SiamCross.Models.Scanners;
+using SiamCross.Services;
 using SiamCross.ViewModels;
 
 using Xamarin.Forms;
@@ -18,6 +20,15 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
             InitializeComponent();
             var vm = new ViewModel<ScannerViewModel>();
             this.BindingContext = vm.GetViewModel;
+        }
+
+        public void ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            if (e.SelectedItem != null)
+            {
+                SensorService.Instance.AddSensor(
+                    SensorFactory.CreateSensor((ScannedDeviceInfo)e.SelectedItem));
+            }
         }
     }
 }

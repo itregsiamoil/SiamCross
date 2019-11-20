@@ -23,6 +23,7 @@ namespace SiamCross.WPF.Models
         private readonly ScannedDeviceInfo _deviceInfo;
 
         public event Action<byte[]> DataReceived;
+        public event Action ConnectSucceed;
 
         public BluetoothClassicAdapterPC(ScannedDeviceInfo deviceInfo)
         {
@@ -43,6 +44,7 @@ namespace SiamCross.WPF.Models
                     await _socket.ConnectAsync(
                         _service.ConnectionHostName,
                         _service.ConnectionServiceName);
+                    ConnectSucceed?.Invoke();
                 }
                 catch (Exception ex)
                 {
