@@ -14,14 +14,16 @@ namespace SiamCross.Models
             get;
         }
 
-        public Ddin2Sensor(ScannedDeviceInfo deviceInfo)
+        public Ddin2Sensor(ScannedDeviceInfo deviceInfo, IBluetoothAdapter bluetoothAdapter)
         {
-            //BluetoothAdapter = bluetoothAdapter;
+            BluetoothAdapter = bluetoothAdapter;
         }
 
         public bool Alive => throw new NotImplementedException();
 
         public SensorData SensorData => throw new NotImplementedException();
+
+        public event Action<SensorData> Notify;
 
         public void QuickReport()
         {
@@ -29,6 +31,11 @@ namespace SiamCross.Models
         }
 
         public void StartMeasurement()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
         {
             throw new NotImplementedException();
         }

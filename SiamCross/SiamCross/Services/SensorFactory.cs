@@ -1,4 +1,8 @@
-﻿using SiamCross.Models;
+﻿using Autofac;
+using Autofac.Core;
+using SiamCross.AppObjects;
+using SiamCross.Models;
+using SiamCross.Models.Adapters;
 using SiamCross.Models.Scanners;
 using System;
 using System.Collections.Generic;
@@ -12,7 +16,9 @@ namespace SiamCross.Services
         {
             if (deviceInfo.Name.Contains("DDIN"))
             {
-                return new Ddin2Sensor(deviceInfo);
+                var ddin2 = new Ddin2Sensor(deviceInfo,
+                    AppContainer.Container.Resolve<IBluetoothClassicAdapter>(new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)));
+                return ddin2;
             }
             return null;
         }

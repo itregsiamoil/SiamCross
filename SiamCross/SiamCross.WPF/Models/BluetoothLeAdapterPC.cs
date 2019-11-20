@@ -43,6 +43,7 @@ namespace SiamCross.WPF.Models
         private readonly ScannedDeviceInfo _deviceInfo;
 
         public event Action<byte[]> DataReceived;
+        public event Action ConnectSucceed;
 
         public BluetoothLeAdapterPC(ScannedDeviceInfo deviceInfo)
         {
