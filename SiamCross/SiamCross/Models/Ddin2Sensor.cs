@@ -3,6 +3,7 @@ using SiamCross.Models.Scanners;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace SiamCross.Models
@@ -14,9 +15,9 @@ namespace SiamCross.Models
             get;
         }
 
-        public Ddin2Sensor(ScannedDeviceInfo deviceInfo, IBluetoothAdapter bluetoothAdapter)
+        public Ddin2Sensor(ScannedDeviceInfo deviceInfo, IBluetoothClassicAdapter bluetoothClassicAdapter)
         {
-            BluetoothAdapter = bluetoothAdapter;
+           // BluetoothAdapter = bluetoothAdapter;
         }
 
         public bool Alive => throw new NotImplementedException();
@@ -25,7 +26,7 @@ namespace SiamCross.Models
 
         public event Action<SensorData> Notify;
 
-        public void QuickReport()
+        public Task QuickReport()
         {
             throw new NotImplementedException();
         }
