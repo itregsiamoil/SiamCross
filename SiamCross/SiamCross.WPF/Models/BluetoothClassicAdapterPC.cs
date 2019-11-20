@@ -49,6 +49,7 @@ namespace SiamCross.WPF.Models
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
+                    throw ex;
                 }
             }
         }
@@ -68,6 +69,7 @@ namespace SiamCross.WPF.Models
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                throw ex;
             }
         }
 
@@ -93,6 +95,7 @@ namespace SiamCross.WPF.Models
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                throw ex;
             }
         }
     }

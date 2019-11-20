@@ -5,12 +5,14 @@ using Xamarin.Forms;
 using System.ComponentModel;
 using System.Windows.Input;
 using SiamCross.Models;
+using MvvmCross.Plugin.Messenger;
 
 namespace SiamCross.ViewModels
 {
     public class ScannerViewModel : IViewModel
     {
         private readonly IScannedDevicesService _service;
+        private readonly IMvxMessenger _messenger;
 
         public ObservableCollection<ScannedDeviceInfo> ScannedDevices { get; }
 
@@ -18,9 +20,10 @@ namespace SiamCross.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ScannerViewModel(IScannedDevicesService service)
+        public ScannerViewModel(IScannedDevicesService service, IMvxMessenger messenger)
         {
             _service = service;
+            _messenger = messenger;
             ScannedDevices = new ObservableCollection<ScannedDeviceInfo>();
             ClassicDevices = new ObservableCollection<ScannedDeviceInfo>();
 
