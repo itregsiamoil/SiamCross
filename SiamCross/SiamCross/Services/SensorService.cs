@@ -23,8 +23,19 @@ namespace SiamCross.Services
 
         public IEnumerable<ISensor> Sensors => _sensors;
 
+        public event Action<SensorData> SensorAdded;
+
+        public event Action<SensorData> SensorDataChanged;
+
+        public void SensorDataChangedHandler(SensorData data)
+        {
+            SensorDataChanged?.Invoke(data);
+        }
+
         public void AddSensor(ISensor sensor)
         {
+            if (sensor == null) return;
+
             foreach(var currentSensor in Sensors)
             {
                 if(currentSensor.SensorData.Name == sensor.SensorData.Name)
@@ -34,6 +45,7 @@ namespace SiamCross.Services
             }
 
             _sensors.Add(sensor);
+            SensorAdded?.Invoke(sensor.SensorData);
         }
     }
 }

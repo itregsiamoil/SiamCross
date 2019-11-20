@@ -1,5 +1,6 @@
 ﻿using SiamCross.AppObjects;
 using SiamCross.Models.Scanners;
+using SiamCross.Services;
 using SiamCross.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -24,13 +25,13 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
             this.BindingContext = _viewModel;
         }
 
-        private void ItemSelected(object sender, SelectedItemChangedEventArgs e)
+
+        public void ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            ScannedDeviceInfo device = (ScannedDeviceInfo)e.SelectedItem;
-            if (device != null)
+            if (e.SelectedItem != null)
             {
-               // _viewModel.SelectedDevice = device;
-              //  Console.WriteLine(_viewModel.SelectedDevice.Name);
+                SensorService.Instance.AddSensor(
+                    SensorFactory.CreateSensor((ScannedDeviceInfo)e.SelectedItem));
             }
         }
     }

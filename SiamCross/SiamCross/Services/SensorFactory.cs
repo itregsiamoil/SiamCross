@@ -29,11 +29,23 @@ namespace SiamCross.Services
             {
                 if (deviceInfo.BluetoothType == BluetoothType.Le)
                 {
-                    return new Ddim2Sensor(
+                    var sensor =  new Ddim2Sensor(
                         AppContainer.Container.Resolve<IBluetoothLeAdapter>
                         (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                         new SensorData(SensorService.Instance.SensorsCount,
                         deviceInfo.Name, "Динамограф", ""));
+                    sensor.Notify += SensorService.Instance.SensorDataChangedHandler;
+                    return sensor;
+                }
+                else if (deviceInfo.BluetoothType == BluetoothType.Classic)
+                {
+                    var sensor = new Ddim2Sensor(
+                        AppContainer.Container.Resolve<IBluetoothClassicAdapter>
+                        (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
+                        new SensorData(SensorService.Instance.SensorsCount,
+                        deviceInfo.Name, "Динамограф", ""));
+                    sensor.Notify += SensorService.Instance.SensorDataChangedHandler;
+                    return sensor;
                 }
             }
 
