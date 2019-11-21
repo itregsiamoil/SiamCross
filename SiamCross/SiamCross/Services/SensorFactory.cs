@@ -27,6 +27,7 @@ namespace SiamCross.Services
                     (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                     new SensorData(SensorService.Instance.SensorsCount,
                                    deviceInfo.Name, "Динамограф", ""));
+                ddin2.Notify += SensorService.Instance.SensorDataChangedHandler;
                 return ddin2;
             }
             else if(deviceInfo.Name.Contains("DDIM"))
