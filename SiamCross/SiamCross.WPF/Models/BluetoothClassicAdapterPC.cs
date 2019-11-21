@@ -1,27 +1,28 @@
-﻿using SiamCross.Models;
+﻿using InTheHand.Net;
+using InTheHand.Net.Sockets;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Scanners;
 using SiamCross.WPF.Models;
 using System;
+using System.IO;
 using System.Threading.Tasks;
-using Windows.Devices.Bluetooth;
-using Windows.Devices.Bluetooth.Rfcomm;
-using Windows.Devices.Enumeration;
-using Windows.Networking.Sockets;
-using Windows.Storage.Streams;
 using Xamarin.Forms;
+using System.Linq;
+using System.Diagnostics;
 
 [assembly: Dependency(typeof(BluetoothClassicAdapterPC))]
 namespace SiamCross.WPF.Models
 {
     public class BluetoothClassicAdapterPC : IBluetoothClassicAdapter
     {
-        private DataWriter _writer;
-        private DataReader _reader;
-        private StreamSocket _socket;
-        private RfcommDeviceService _service;
+        private static readonly Guid _siamServiceUuid
+            = new Guid("{00001101-0000-1000-8000-00805f9b34fb}");
 
         private readonly ScannedDeviceInfo _deviceInfo;
+
+        private BluetoothClient _bluetoothClient;
+
+        private Stream _stream;
 
         public event Action<byte[]> DataReceived;
         public event Action ConnectSucceed;
@@ -33,101 +34,100 @@ namespace SiamCross.WPF.Models
 
         public async Task Connect()
         {
-            var connectArgs = _deviceInfo.BluetoothArgs;
-            if (connectArgs is DeviceInformation deviceInfo)
+            await Task.Run(() =>
             {
-                try
+                if (_deviceInfo.BluetoothArgs is BluetoothDeviceInfo device)
                 {
-                    var device = await BluetoothDevice.FromIdAsync(deviceInfo.Id);
-                    var services = await device.GetRfcommServicesForIdAsync(RfcommServiceId.FromUuid(RfcommServiceId.SerialPort.Uuid), BluetoothCacheMode.Uncached);
-                    //_service = await RfcommDeviceService.FromIdAsync(deviceInfo.Id);
-                    Console.WriteLine("Bluetooth adress: " + device.BluetoothAddress);
-                    Console.WriteLine(services.Services.Count);
-                    _service = services.Services[0];
-                    _socket = new StreamSocket();
-                    Console.WriteLine(_service.ConnectionHostName);
-                    Console.WriteLine(_service.ConnectionServiceName);
-                    await _socket.ConnectAsync(
-                        _service.ConnectionHostName,
-                        _service.ConnectionServiceName);
+                    try
+                    {
+                        Guid serviceClass = _siamServiceUuid;
 
-                    _writer = new DataWriter(_socket.OutputStream);
-                    _reader = new DataReader(_socket.InputStream);
+                        var endPoint = new BluetoothEndPoint(device.DeviceAddress, serviceClass);
 
-                    ConnectSucceed?.Invoke();
-
-                    Task taskListen = Task.Run(
-                        async () => ListenForMessagesAsync(_socket));
-                    taskListen.ConfigureAwait(false);
-                    
+                        _bluetoothClient = new BluetoothClient();
+                        _bluetoothClient.Connect(endPoint);
+                        _stream = _bluetoothClient.GetStream();
+                        ConnectSucceed?.Invoke();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    throw ex;
-                }
-            }
+            });
+            
         }
 
         public async Task Disconnect()
         {
-            try
+            await Task.Run(() =>
             {
-                await _socket.CancelIOAsync();
-
-                _socket.Dispose();
-                _socket = null;
-
-                _service.Dispose();
-                _service = null;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                throw ex;
-            }
+                _stream.Close();
+                _stream.Dispose();
+                _stream = null;
+                _bluetoothClient.Close();
+                _bluetoothClient.Dispose();
+                _bluetoothClient = null;
+            });
         }
 
         public async Task SendData(byte[] data)
         {
             try
             {
+                short dataLength = BitConverter.ToInt16(new byte[] { data[8], data[9] }, 0);
+                if (data[3] == 1)//Команда чтения
+                {
+                    await _stream?.WriteAsync(data, 0, data.Length);
 
-                Console.WriteLine($"Send DATA: {BitConverter.ToString(data)}");
-                _writer.WriteBytes(data);
+                    await Task.Delay(300);
 
-                await _writer.StoreAsync();
+                    int messageLength = 14 + dataLength;
 
-                await Task.Delay(300);
+                    byte[] readBuffer = new byte[messageLength];
+
+                    int readLength = await _stream?.ReadAsync(readBuffer, 0, readBuffer.Length);
+
+                    if (readLength > 0)
+                    {
+                        if (readBuffer[3] == 81)
+                        {
+                            DataReceived?.Invoke(readBuffer.Take(14).ToArray());
+                        }
+                        else
+                        {
+                            DataReceived?.Invoke(readBuffer);
+                        }
+                    }
+                }
+                else if (data[3] == 2)//Команда записи
+                {
+                    await _stream?.WriteAsync(data, 0, data.Length);
+
+                    await Task.Delay(300);
+
+                    int messageLength = 14;
+
+                    byte[] readBuffer = new byte[messageLength];
+
+                    int readLength = await _stream?.ReadAsync(readBuffer, 0, readBuffer.Length);
+
+                    if (readLength > 0)
+                    {
+                        if (readBuffer[3] == 2)
+                        {
+                            DataReceived?.Invoke(readBuffer.Take(12).ToArray());
+                        }
+                        else
+                        {
+                            DataReceived?.Invoke(readBuffer);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                throw ex;
-            }
-        }
-
-        private async Task ListenForMessagesAsync(StreamSocket localSocket)
-        {
-            while(localSocket != null)
-            {
-                try
-                {
-                    _reader.InputStreamOptions = InputStreamOptions.Partial;
-
-                    byte[] readData = new byte[10];
-                    uint s = await _reader.LoadAsync(1);
-                    Console.WriteLine(s);
-                    var data = _reader.ReadString(s);
-                    //Console.WriteLine(BitConverter.GetBytes(data));
-                    //DataReceived?.Invoke(BitConverter.GetBytes(data));
-                    Console.WriteLine(data);
-                    await Task.Delay(300);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(ex.Message);
-                }
+                Debug.WriteLine(ex.Message);
             }
         }
     }
