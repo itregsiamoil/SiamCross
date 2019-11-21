@@ -4,6 +4,7 @@ using SiamCross.Models.Scanners;
 using SiamCross.WPF.Models;
 using System;
 using System.Threading.Tasks;
+using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Devices.Enumeration;
 using Windows.Networking.Sockets;
@@ -37,14 +38,28 @@ namespace SiamCross.WPF.Models
             {
                 try
                 {
-                    _service = await RfcommDeviceService.FromIdAsync(deviceInfo.Id);
-
+                    var device = await BluetoothDevice.FromIdAsync(deviceInfo.Id);
+                    var services = await device.GetRfcommServicesForIdAsync(RfcommServiceId.FromUuid(RfcommServiceId.SerialPort.Uuid), BluetoothCacheMode.Uncached);
+                    //_service = await RfcommDeviceService.FromIdAsync(deviceInfo.Id);
+                    Console.WriteLine("Bluetooth adress: " + device.BluetoothAddress);
+                    Console.WriteLine(services.Services.Count);
+                    _service = services.Services[0];
                     _socket = new StreamSocket();
-
+                    Console.WriteLine(_service.ConnectionHostName);
+                    Console.WriteLine(_service.ConnectionServiceName);
                     await _socket.ConnectAsync(
                         _service.ConnectionHostName,
                         _service.ConnectionServiceName);
+
+                    _writer = new DataWriter(_socket.OutputStream);
+                    _reader = new DataReader(_socket.InputStream);
+
                     ConnectSucceed?.Invoke();
+
+                    Task taskListen = Task.Run(
+                        async () => ListenForMessagesAsync(_socket));
+                    taskListen.ConfigureAwait(false);
+                    
                 }
                 catch (Exception ex)
                 {
@@ -77,8 +92,6 @@ namespace SiamCross.WPF.Models
         {
             try
             {
-                _writer = new DataWriter(_socket.OutputStream);
-                _reader = new DataReader(_socket.InputStream);
 
                 Console.WriteLine($"Send DATA: {BitConverter.ToString(data)}");
                 _writer.WriteBytes(data);
@@ -86,16 +99,35 @@ namespace SiamCross.WPF.Models
                 await _writer.StoreAsync();
 
                 await Task.Delay(300);
-
-                byte[] readData = new byte[_reader.UnconsumedBufferLength];
-                _reader.ReadBytes(readData);
-                Console.WriteLine($"Read DATA: {BitConverter.ToString(readData)}");
-                DataReceived?.Invoke(readData);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 throw ex;
+            }
+        }
+
+        private async Task ListenForMessagesAsync(StreamSocket localSocket)
+        {
+            while(localSocket != null)
+            {
+                try
+                {
+                    _reader.InputStreamOptions = InputStreamOptions.Partial;
+
+                    byte[] readData = new byte[10];
+                    uint s = await _reader.LoadAsync(1);
+                    Console.WriteLine(s);
+                    var data = _reader.ReadString(s);
+                    //Console.WriteLine(BitConverter.GetBytes(data));
+                    //DataReceived?.Invoke(BitConverter.GetBytes(data));
+                    Console.WriteLine(data);
+                    await Task.Delay(300);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
             }
         }
     }
