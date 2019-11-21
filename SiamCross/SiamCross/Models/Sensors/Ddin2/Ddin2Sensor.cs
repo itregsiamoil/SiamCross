@@ -6,23 +6,23 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace SiamCross.Models
+namespace SiamCross.Models.Sensors.Ddin2
 {
     public class Ddin2Sensor : ISensor
     {
-        public IBluetoothAdapter BluetoothAdapter
+        public IBluetoothAdapter BluetoothAdapter { get; }
+        
+        public SensorData SensorData { get; }
+
+        public bool Alive { get; private set; }
+        
+        public Ddin2Sensor(IBluetoothAdapter bluetoothAdapter, SensorData sensorData)
         {
-            get;
+            Alive = false;
+            BluetoothAdapter = bluetoothAdapter;
+            SensorData = sensorData;
+            // BluetoothAdapter = bluetoothAdapter;
         }
-
-        public Ddin2Sensor(ScannedDeviceInfo deviceInfo, IBluetoothClassicAdapter bluetoothClassicAdapter)
-        {
-           // BluetoothAdapter = bluetoothAdapter;
-        }
-
-        public bool Alive => throw new NotImplementedException();
-
-        public SensorData SensorData => throw new NotImplementedException();
 
         public event Action<SensorData> Notify;
 
