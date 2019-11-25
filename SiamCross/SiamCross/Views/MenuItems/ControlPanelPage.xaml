@@ -16,17 +16,9 @@
                         <ViewCell>
                             <ViewCell.View>
                                 <StackLayout>
-                                    <Label Text="{Binding Name}" FontSize="18" HorizontalTextAlignment="Start"/>
-                                    <Label Text="{Binding Type}" HorizontalTextAlignment="Start"/>
-                                    <StackLayout>
-                                        <CollectionView ItemsSource="{Binding Parameters}">
-                                            <CollectionView.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Label Text="{Binding Path=Value}"/>
-                                                </DataTemplate>
-                                            </CollectionView.ItemTemplate>
-                                        </CollectionView>
-                                    </StackLayout>
+                                    <Label Text="{Binding Name}" FontSize="18" />
+                                    <Label Text="{Binding Type}" />
+                                    <Label Text="{Binding Status}" />
                                 </StackLayout>
                             </ViewCell.View>
                         </ViewCell>

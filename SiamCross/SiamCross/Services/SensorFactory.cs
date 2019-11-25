@@ -1,25 +1,32 @@
 ﻿using Autofac;
+using Autofac.Core;
 using SiamCross.AppObjects;
 using SiamCross.Models;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Ddim2;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using SiamCross.AppObjects;
+using Autofac;
+using SiamCross.Models.Adapters;
 using SiamCross.Models.Sensors.Ddin2;
 
 namespace SiamCross.Services
 {
     public static class SensorFactory
     {
-        private static readonly string _initString = "Напряжение: \n Температура: \n Нагрузка: \n Ускорение";
         public static ISensor CreateSensor(ScannedDeviceInfo deviceInfo)
         {
+
             if (deviceInfo.Name.Contains("DDIN"))
             {
                 var ddin2 = new Ddin2Sensor(
                     AppContainer.Container.Resolve<IBluetoothClassicAdapter>
                     (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                     new SensorData(SensorService.Instance.SensorsCount,
-                                   deviceInfo.Name, "Динамограф", _initString));
+                                   deviceInfo.Name, "Динамограф", ""));
                 ddin2.Notify += SensorService.Instance.SensorDataChangedHandler;
                 return ddin2;
             }
@@ -31,7 +38,7 @@ namespace SiamCross.Services
                         AppContainer.Container.Resolve<IBluetoothLeAdapter>
                         (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                         new SensorData(SensorService.Instance.SensorsCount,
-                        deviceInfo.Name, "Динамограф", _initString));
+                        deviceInfo.Name, "Динамограф", ""));
                     sensor.Notify += SensorService.Instance.SensorDataChangedHandler;
                     return sensor;
                 }
@@ -41,7 +48,7 @@ namespace SiamCross.Services
                         AppContainer.Container.Resolve<IBluetoothClassicAdapter>
                         (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                         new SensorData(SensorService.Instance.SensorsCount,
-                        deviceInfo.Name, "Динамограф", _initString));
+                        deviceInfo.Name, "Динамограф", ""));
                     sensor.Notify += SensorService.Instance.SensorDataChangedHandler;
                     return sensor;
                 }
