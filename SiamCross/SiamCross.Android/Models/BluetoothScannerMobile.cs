@@ -9,6 +9,8 @@ using SiamCross.Models;
 using Xamarin.Forms;
 using SiamCross.Droid.Models;
 using SiamCross.Models.Scanners;
+using System.Threading.Tasks;
+using System.Threading;
 
 [assembly: Dependency(typeof(BluetoothScannerMobile))]
 namespace SiamCross.Droid.Models
@@ -64,11 +66,66 @@ namespace SiamCross.Droid.Models
 
                 _adapter.DeviceDiscovered += (obj, a) =>
                 {
+                    if(obj == null || a == null || a.Device == null || a.Device.Name == null)
+                    {
+                        return;
+                    }
+
                     Received?.Invoke(new ScannedDeviceInfo(a.Device.Name, a.Device, BluetoothType.Le));
+                    System.Diagnostics.Debug.WriteLine("Finded device" + a.Device.Name);
+
+                    //if (a.Device.Name.Contains("170"))
+                    //{
+                    //    _device = a.Device;
+                    ////   try
+                    // //    {
+                    //    _adapter.ConnectToDeviceAsync(_device, new Plugin.BLE.Abstractions.ConnectParameters(true, true));
+                    // //      }
+                    //  //   catch (Exception e)
+                    //  //  {
+                    //    //    System.Diagnostics.Debug.WriteLine(e.Message);
+                    //   // }
+                    //    Task.Delay(2000);
+                    //    Initialize();
+                    //}
                 };
 
                 await _adapter.StartScanningForDevicesAsync();
             }
+        }
+
+        private IDevice _device;
+        private IService _targetService;
+        private ICharacteristic _writeCharacteristic;
+        private ICharacteristic _readCharacteristic;
+
+        private const string _writeCharacteristicGuid = "569a2001-b87f-490c-92cb-11ba5ea5167";
+        private const string _readCharacteristicGuid = "569a2000-b87f-490c-92cb-11ba5ea5167";
+        private const string _serviceGuid = "569a1101-b87f-490c-92cb-11ba5ea5167c";
+        private ScannedDeviceInfo _deviceInfo;
+
+        private async Task Initialize()
+        {
+          //  try
+           // {
+                //_targetService = await _device.GetServiceAsync(Guid.Parse(_serviceGuid));
+                //IService asd = await _device.GetServiceAsync(Guid.Parse(_serviceGuid));
+            
+                IReadOnlyList<IService> qwe = _device.GetServicesAsync().Result;
+           // }
+           // catch (Exception e)
+           // {
+             //   System.Diagnostics.Debug.WriteLine(e.Message);
+           // }
+
+            _writeCharacteristic = await _targetService.GetCharacteristicAsync(new Guid(_writeCharacteristicGuid));
+            _readCharacteristic = await _targetService.GetCharacteristicAsync(new Guid(_readCharacteristicGuid));
+            _readCharacteristic.ValueUpdated += (o, args) =>
+            {
+                //DataReceived?.Invoke(args.Characteristic.Value);
+            };
+
+            await _readCharacteristic.StartUpdatesAsync();
         }
 
         public void Stop()

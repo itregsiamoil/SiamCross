@@ -13,6 +13,7 @@ using Autofac;
 using SiamCross.AppObjects;
 using SiamCross.Droid.Models;
 using SiamCross.Models.Adapters;
+using SiamCross.Models.Scanners;
 
 namespace SiamCross.Droid
 {
@@ -20,6 +21,7 @@ namespace SiamCross.Droid
     {
         protected override void RegisterDependencies(ContainerBuilder cb)
         {
+            cb.RegisterType<BluetoothScannerMobile>().As<IBluetoothScanner>();
             base.RegisterDependencies(cb);
 
             cb.RegisterType<BluetoothClassicAdapterMobile>().As<IBluetoothClassicAdapter>();

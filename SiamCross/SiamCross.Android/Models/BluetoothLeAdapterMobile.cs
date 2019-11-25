@@ -19,6 +19,7 @@ using SiamCross.Models;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Adapters;
 using Xamarin.Forms;
+using Plugin.BLE.Abstractions.EventArgs;
 
 [assembly: Dependency(typeof(BluetoothLeAdapterMobile))]
 namespace SiamCross.Droid.Models
@@ -44,39 +45,36 @@ namespace SiamCross.Droid.Models
 
         public async Task Connect()
         {
-            var connectArgs = _deviceInfo.BluetoothArgs;
-            for (int i = 0; i < 5; i++)
-            {
-                try
-                {
-                    await ConnectD(connectArgs as IDevice);
-                    ConnectSucceed?.Invoke();
-                    break;
-                }
-                catch{}
-                await Task.Delay(2000);
-            }
-        }
 
-        private async Task ConnectD(IDevice device)
-        {
-            try
-            {
-                if (device != null)
-                {
-                    await _adapter.ConnectToDeviceAsync(device);
-                    await Initialize();
-                }
-                else
-                {
-                    //DisplayAlert("Notice", "No Device selected !", "OK");
-                }
-            }
-            catch (DeviceConnectionException ex)
-            {
-                //Could not connect to the device
-                // DisplayAlert("Notice", ex.Message.ToString(), "OK");
-            }
+
+            //try
+            //{
+            //    System.Diagnostics.Debug.WriteLine("Запуск процедуры подключения LE адаптера");
+            //    _device = (IDevice)_deviceInfo.BluetoothArgs;
+            //    System.Diagnostics.Debug.WriteLine("Device привелся к своему типу");
+            //    if (_device == null)
+            //    {
+            //        System.Diagnostics.Debug.WriteLine("Device был null");
+            //        return;
+            //    }
+            //    else
+            //    {
+            //        System.Diagnostics.Debug.WriteLine("Device был НЕ null");
+            //    }
+                
+            //    await _adapter.ConnectToDeviceAsync(_device);
+            //    await Initialize();
+            //    ConnectSucceed?.Invoke();
+            //}
+            //catch (DeviceConnectionException ex)
+            //{
+            //    System.Diagnostics.Debug.WriteLine($"Ошибка соединения LE адаптера DeviceConnectionExcezion");
+            //}
+            //catch(Exception e)
+            //{
+            //    System.Diagnostics.Debug.WriteLine($"Исключение{e.Message}");
+            //    throw new Exception();
+            //}
         }
 
         public async Task SendData(byte[] data)

@@ -38,6 +38,7 @@ namespace SiamCross.Models.Sensors.Ddim2
         private void ConnectHandler()
         {
             Alive = true;
+            System.Diagnostics.Debug.WriteLine("Ддим2 успешно подключен!");
         }
 
         private void ReceiveHandler(string commandName, string dataValue)
@@ -76,6 +77,7 @@ namespace SiamCross.Models.Sensors.Ddim2
 
         private async Task ExecuteAsync(CancellationToken cancellationToken)
         {
+            await Task.Delay(2000);
             while(!cancellationToken.IsCancellationRequested)
             {
                 if(Alive)
