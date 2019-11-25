@@ -1,16 +1,9 @@
 ﻿using Autofac;
-using Autofac.Core;
 using SiamCross.AppObjects;
 using SiamCross.Models;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Ddim2;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using SiamCross.AppObjects;
-using Autofac;
-using SiamCross.Models.Adapters;
 using SiamCross.Models.Sensors.Ddin2;
 
 namespace SiamCross.Services

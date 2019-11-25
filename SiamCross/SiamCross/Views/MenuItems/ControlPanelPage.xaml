@@ -10,6 +10,7 @@
                 HorizontalOptions="StartAndExpand" />
             <ListView x:Name="sensorList"
                 HasUnevenRows="True"
+                Margin="5"
                 ItemsSource="{Binding SensorsData}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -18,7 +19,10 @@
                                 <StackLayout>
                                     <Label Text="{Binding Name}" FontSize="18" />
                                     <Label Text="{Binding Type}" />
-                                    <Label Text="{Binding Status}" />
+                                    <Label Text="{Binding Status}"/>
+                                    <Label/>
+                                    <Label/>
+                                    <Label/>
                                 </StackLayout>
                             </ViewCell.View>
                         </ViewCell>
