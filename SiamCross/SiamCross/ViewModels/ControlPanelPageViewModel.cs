@@ -30,23 +30,19 @@ namespace SiamCross.ViewModels
         {
             Device.BeginInvokeOnMainThread(() =>
             {
-                SensorData sens = null;
-                foreach (var sensorData in SensorsData)
-                {
-                    if (sensorData.Id == data.Id)
-                    {
-                        sens = sensorData;
+                //if (!data.FirstTime) return;
 
-                    }
-                }
-                if (sens != null)
-                {
-                    SensorsData.Remove(sens);
-                    SensorsData.Add(data);
-                }
+                //for (int i = 0; i < SensorsData.Count; i++)
+                //{
+                //    if (data.Id == SensorsData[i].Id)
+                //    {
+                //        SensorsData[i] = data;
+                //        data.FirstTime = false;
+                //    }
+                //}
 
-                //  sensorData.Status = data.Status;
-                NotifyPropertyChanged(nameof(SensorsData));
+                ////  sensorData.Status = data.Status;
+                //NotifyPropertyChanged(nameof(SensorsData));
             });
             
         }

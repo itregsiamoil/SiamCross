@@ -1,12 +1,24 @@
-﻿namespace SiamCross.Models
+﻿using System.ComponentModel;
+
+namespace SiamCross.Models
 {
-    public class SensorData
+    public class SensorData : INotifyPropertyChanged
     {
         public string Name { get; private set; }
 
         public string Type { get; private set; }
 
-        public string Status { get; set; }
+        private string _status;
+
+        public string Status
+        {
+            get => _status;
+            set
+            {
+                _status = value;
+                PropertyChanged(this, new PropertyChangedEventArgs(nameof(Status)));
+            }
+        }
 
         public int Id { get; private set; }
 
@@ -17,5 +29,7 @@
             Type = type;
             Status = status;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
     }
 }
