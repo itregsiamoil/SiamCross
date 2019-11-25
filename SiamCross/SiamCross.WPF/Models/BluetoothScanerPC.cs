@@ -9,6 +9,7 @@ using SiamCross.Models;
 using Xamarin.Forms;
 using SiamCross.Models.Scanners;
 using Windows.Devices.Enumeration;
+using InTheHand.Net.Sockets;
 
 [assembly: Dependency(typeof(SiamCross.WPF.Models.BluetoothScanerPC))]
 namespace SiamCross.WPF.Models
@@ -48,17 +49,24 @@ namespace SiamCross.WPF.Models
             Watcher.Start();
         }
 
-        private async Task FindPairedDevices()
+        private void FindPairedDevices()
         {
-            DeviceInformationCollection pairedDevices =
-                await DeviceInformation.FindAllAsync(
-                    BluetoothDevice.GetDeviceSelectorFromPairingState(true));
-            foreach (var device in pairedDevices)
+            BluetoothDeviceInfo[] devices;
+            using (var client = new BluetoothClient())
             {
-                //if (device.IsEnabled)
-                //{
-                    Received?.Invoke(new ScannedDeviceInfo(device.Name, device, BluetoothType.Classic));
-                //}
+                int maxDevices = 255;
+                bool authenticated = false;
+                bool remembered = true;
+                bool unknown = false;
+                bool discoverableOnly = false;
+
+                devices = client.DiscoverDevices(maxDevices,
+                    authenticated, remembered, unknown, discoverableOnly);
+            }
+            
+            foreach (var device in devices)
+            {
+                Received?.Invoke(new ScannedDeviceInfo(device.DeviceName, device, BluetoothType.Classic));
             }
         }
 
