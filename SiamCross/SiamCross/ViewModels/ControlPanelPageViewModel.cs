@@ -2,6 +2,7 @@
 using SiamCross.Services;
 using System.Collections.ObjectModel;
 using Xamarin.Forms;
+using System.Linq;
 
 namespace SiamCross.ViewModels
 {
@@ -12,10 +13,6 @@ namespace SiamCross.ViewModels
         public ControlPanelPageViewModel()
         {
             SensorsData = new ObservableCollection<SensorData>();
-            foreach (var sensor in SensorService.Instance.Sensors)
-            {
-                SensorsData.Add(sensor.SensorData);
-            }
 
             SensorService.Instance.SensorAdded += SensorAdded;
             SensorService.Instance.SensorDataChanged += SensorsDataChanged;
@@ -30,23 +27,32 @@ namespace SiamCross.ViewModels
         {
             Device.BeginInvokeOnMainThread(() =>
             {
-                SensorData sens = null;
-                foreach (var sensorData in SensorsData)
-                {
-                    if (sensorData.Id == data.Id)
-                    {
-                        sens = sensorData;
+                //SensorData sens = null;
+                //foreach (var sensorData in SensorsData)
+                //{
+                //    if (sensorData.Id == data.Id)
+                //    {
+                //        sens = sensorData;
 
-                    }
-                }
-                if (sens != null)
-                {
-                    SensorsData.Remove(sens);
-                    SensorsData.Add(data);
-                }
+                //    }
+                //}
+                //if (sens != null)
+                //{
+                //    SensorsData.Remove(sens);
+                //    SensorsData.Add(data);
+                //}
 
                 //  sensorData.Status = data.Status;
-                NotifyPropertyChanged(nameof(SensorsData));
+                //NotifyPropertyChanged(nameof(SensorsData));
+
+                //for (int i = 0; i < SensorsData.Count; i++)
+                //{
+                //    if (data.Id == SensorsData[i].Id)
+                //    {
+                //        SensorsData[i] = data;
+                //        NotifyPropertyChanged(nameof(SensorsData));
+                //    }
+                //}
             });
             
         }

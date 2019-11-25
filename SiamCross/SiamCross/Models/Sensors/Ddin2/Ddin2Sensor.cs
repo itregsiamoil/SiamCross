@@ -78,21 +78,30 @@ namespace SiamCross.Models.Sensors.Ddin2
                     break;
                 case "BatteryVoltage":
                     _reportBuilder.BatteryVoltage = dataValue;
+                    SensorData.Params[0] = _reportBuilder.BatteryVoltage;
+                    Notify?.Invoke(SensorData);
                     break;
                 case "Тemperature":
                     _reportBuilder.Temperature = dataValue;
+                    SensorData.Params[1] = _reportBuilder.Temperature;
+                    Notify?.Invoke(SensorData);
                     break;
                 case "LoadChanel":
                     _reportBuilder.Load = dataValue;
+                    SensorData.Params[2] = _reportBuilder.Load;
+                    Notify?.Invoke(SensorData);
                     break;
                 case "AccelerationChanel":
                     _reportBuilder.Acceleration = dataValue;
+                    SensorData.Params[3] = _reportBuilder.Acceleration;
+                    Notify?.Invoke(SensorData);
                     break;
-                default: return;
+                default:
+                    return;
             }
 
-            SensorData.Status = _reportBuilder.GetReport();
-            Notify?.Invoke(SensorData);
+            //SensorData.Status = _reportBuilder.GetReport();
+            //Notify?.Invoke(SensorData);
         }
 
 
