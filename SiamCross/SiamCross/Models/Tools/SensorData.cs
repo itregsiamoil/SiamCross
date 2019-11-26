@@ -16,7 +16,7 @@ namespace SiamCross.Models
             set
             {
                 _status = value;
-                PropertyChanged(this, new PropertyChangedEventArgs(nameof(Status)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
             }
         }
 

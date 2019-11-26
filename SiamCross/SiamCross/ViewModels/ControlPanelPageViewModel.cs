@@ -1,7 +1,9 @@
 ﻿using SiamCross.Models;
 using SiamCross.Services;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 using Xamarin.Forms;
+using System.Linq;
 
 namespace SiamCross.ViewModels
 {
@@ -19,6 +21,22 @@ namespace SiamCross.ViewModels
 
             SensorService.Instance.SensorAdded += SensorAdded;
             SensorService.Instance.SensorDataChanged += SensorsDataChanged;
+        }
+
+        public ICommand DeleteSensorCommand
+        {
+            get => new Command<int>(DeleteSensorHandler);
+        }
+
+        private void DeleteSensorHandler(int id)
+        {
+            var sensorData = SensorsData.FirstOrDefault(s => s.Id == id);
+            if (sensorData != null)
+            {
+                SensorsData.Remove(sensorData);
+            }
+            var sensor = SensorService.Instance.Sensors.FirstOrDefault(s => s.SensorData.Id == id);
+            SensorService.Instance.Sensors.ToList().Remove(sensor);
         }
 
         private void SensorAdded(SensorData sensorData)
