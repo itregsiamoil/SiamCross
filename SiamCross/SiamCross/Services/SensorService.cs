@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using SiamCross.Models;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SiamCross.Services
 {
@@ -46,6 +48,16 @@ namespace SiamCross.Services
 
             _sensors.Add(sensor);
             SensorAdded?.Invoke(sensor.SensorData);
+        }
+
+        public async Task DeleteSensor(int id)
+        {
+            var sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
+            if (sensor != null)
+            {
+                await sensor.BluetoothAdapter.Disconnect();
+                _sensors.Remove(sensor);
+            }
         }
     }
 }

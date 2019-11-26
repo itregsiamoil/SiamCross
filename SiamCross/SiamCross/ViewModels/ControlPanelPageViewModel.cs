@@ -28,15 +28,14 @@ namespace SiamCross.ViewModels
             get => new Command<int>(DeleteSensorHandler);
         }
 
-        private void DeleteSensorHandler(int id)
+        private async void DeleteSensorHandler(int id)
         {
             var sensorData = SensorsData.FirstOrDefault(s => s.Id == id);
             if (sensorData != null)
             {
                 SensorsData.Remove(sensorData);
             }
-            var sensor = SensorService.Instance.Sensors.FirstOrDefault(s => s.SensorData.Id == id);
-            SensorService.Instance.Sensors.ToList().Remove(sensor);
+            await SensorService.Instance.DeleteSensor(id);
         }
 
         private void SensorAdded(SensorData sensorData)
