@@ -71,5 +71,12 @@ namespace SiamCross.Models.Sensors.Ddin2
         {
             return BatteryVoltage + Temperature + Load + Acceleration;
         }
+        public void Clear()
+        {
+            BatteryVoltage = "";
+            Temperature = "";
+            Load = "";
+            Acceleration = "";
+        }
     }
 }
