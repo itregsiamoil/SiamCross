@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using SiamCross.Models;
+using SiamCross.Models.Scanners;
 
 namespace SiamCross.Services
 {
@@ -32,20 +33,24 @@ namespace SiamCross.Services
             SensorDataChanged?.Invoke(data);
         }
 
-        public void AddSensor(ISensor sensor)
+        public void AddSensor(ScannedDeviceInfo deviceInfo)
         {
-            if (sensor == null) return;
-
-            foreach(var currentSensor in Sensors)
+            foreach(var sensor in Sensors)
             {
-                if(currentSensor.SensorData.Name == sensor.SensorData.Name)
+                if(sensor.SensorData.Name == deviceInfo.Name)
                 {
                     return;
                 }
             }
 
-            _sensors.Add(sensor);
-            SensorAdded?.Invoke(sensor.SensorData);
+            var addebleSensor = SensorFactory.CreateSensor(deviceInfo);
+            if (addebleSensor == null)
+            {
+                return;
+            }
+
+            _sensors.Add(addebleSensor);
+            SensorAdded?.Invoke(addebleSensor.SensorData);
         }
     }
 }
