@@ -30,8 +30,9 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
         {
             if (e.SelectedItem != null)
             {
-                SensorService.Instance.AddSensor(
-                    SensorFactory.CreateSensor((ScannedDeviceInfo)e.SelectedItem));
+                SensorService.Instance.AddSensor((ScannedDeviceInfo)e.SelectedItem);
+                App.NavigationPage.Navigation.PopToRootAsync();
+                App.MenuIsPresented = false;
             }
         }
     }
