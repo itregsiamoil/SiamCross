@@ -44,11 +44,18 @@ namespace SiamCross.Droid.Models
 
         public async Task Connect()
         {
-            Disconnect();
+            //await Disconnect();
             _bluetoothDevice = (BluetoothDevice)_scannedDeviceInfo.BluetoothArgs;
             try
             {
-                _socket = _bluetoothDevice.CreateRfcommSocketToServiceRecord(_bluetoothDevice.GetUuids()[0].Uuid);
+                _bluetoothDevice.FetchUuidsWithSdp();
+                _socket = _bluetoothDevice.CreateRfcommSocketToServiceRecord(UUID.FromString(_uuid)/*/_bluetoothDevice.GetUuids()[0].Uuid/*/);
+          
+                if(_socket == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Soccet was null!");
+                    return;
+                }
 
                 _socket.Connect();
 
@@ -69,13 +76,17 @@ namespace SiamCross.Droid.Models
             catch(Java.IO.IOException e)
             {
                 System.Diagnostics.Debug.WriteLine(e.Message);
-                Disconnect();
+              //  await Disconnect();
             }
         }
 
         public async Task Disconnect()
         {
-            _cancellToken.Cancel();
+            if(_cancellToken != null)
+            {
+                _cancellToken.Cancel();
+            }
+            
             Close(_socket);
             Close(_inStream);
             Close(_inputStreamReader);

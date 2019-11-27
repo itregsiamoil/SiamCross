@@ -74,20 +74,23 @@ namespace SiamCross.Droid.Models
                     Received?.Invoke(new ScannedDeviceInfo(a.Device.Name, a.Device, BluetoothType.Le));
                     System.Diagnostics.Debug.WriteLine("Finded device" + a.Device.Name);
 
-                    //if (a.Device.Name.Contains("170"))
-                    //{
-                    //    _device = a.Device;
-                    ////   try
-                    // //    {
-                    //    _adapter.ConnectToDeviceAsync(_device, new Plugin.BLE.Abstractions.ConnectParameters(true, true));
-                    // //      }
-                    //  //   catch (Exception e)
-                    //  //  {
-                    //    //    System.Diagnostics.Debug.WriteLine(e.Message);
-                    //   // }
-                    //    Task.Delay(2000);
-                    //    Initialize();
-                    //}
+                    if (a.Device.Name.Contains("170"))
+                    {
+                        _device = a.Device;
+                        try
+                        {
+                            var sens = _adapter.ConnectedDevices.Count;
+                            //_adapter.ConnectToDeviceAsync(_device, new Plugin.BLE.Abstractions.ConnectParameters(true, true));
+                            _adapter.ConnectToKnownDeviceAsync(_device.Id);
+                            var sens1 = _adapter.ConnectedDevices.Count;
+                        }
+                        catch (Exception e)
+                        {
+                            System.Diagnostics.Debug.WriteLine(e.Message);
+                        }
+                        Task.Delay(2000);
+                        Initialize();
+                    }
                 };
 
                 await _adapter.StartScanningForDevicesAsync();
