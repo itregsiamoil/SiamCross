@@ -23,6 +23,7 @@
                                             <RowDefinition Height="20"></RowDefinition>
                                             <RowDefinition Height="20"></RowDefinition>
                                             <RowDefinition Height="2*"></RowDefinition>
+                                            <RowDefinition Height="5"></RowDefinition>
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="3*"></ColumnDefinition>
@@ -35,8 +36,10 @@
                                                 Command="{Binding Path=BindingContext.DeleteSensorCommand, 
                                             Source={x:Reference ControlPanel}}"
                                                 CommandParameter="{Binding Id}" 
-                                                VerticalOptions="FillAndExpand" Text="Удалить" 
-                                                Grid.Row="0"  Grid.RowSpan="3" Grid.Column="1"></Button>
+                                                VerticalOptions="FillAndExpand"  Text="Удалить" 
+                                                HeightRequest="50"
+                                                WidthRequest="100"
+                                                Grid.Row="2" Grid.Column="1"></Button>
                                     </Grid>
                                 </StackLayout>
                             </ViewCell.View>

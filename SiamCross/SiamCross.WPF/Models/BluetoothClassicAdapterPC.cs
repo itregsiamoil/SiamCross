@@ -62,11 +62,11 @@ namespace SiamCross.WPF.Models
         {
             await Task.Run(() =>
             {
-                _stream.Close();
-                _stream.Dispose();
+                _stream?.Close();
+                _stream?.Dispose();
                 _stream = null;
-                _bluetoothClient.Close();
-                _bluetoothClient.Dispose();
+                _bluetoothClient?.Close();
+                _bluetoothClient?.Dispose();
                 _bluetoothClient = null;
             });
         }
