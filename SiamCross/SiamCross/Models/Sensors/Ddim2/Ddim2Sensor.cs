@@ -83,7 +83,7 @@ namespace SiamCross.Models.Sensors.Ddim2
                 if(Alive)
                 {
                     await QuickReport();
-                    await Task.Delay(1000);
+                    await Task.Delay(1500);
                 }
                 else
                 {
