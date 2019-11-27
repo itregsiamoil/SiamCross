@@ -46,8 +46,12 @@ namespace SiamCross.WPF.Models
 
                         _bluetoothClient = new BluetoothClient();
                         _bluetoothClient.Connect(endPoint);
-                        _stream = _bluetoothClient.GetStream();
-                        ConnectSucceed?.Invoke();
+
+                        if (_bluetoothClient.Connected)
+                        {
+                            _stream = _bluetoothClient.GetStream();
+                            ConnectSucceed?.Invoke();
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -62,11 +66,11 @@ namespace SiamCross.WPF.Models
         {
             await Task.Run(() =>
             {
-                _stream?.Close();
-                _stream?.Dispose();
+                _stream.Close();
+                _stream.Dispose();
                 _stream = null;
-                _bluetoothClient?.Close();
-                _bluetoothClient?.Dispose();
+                _bluetoothClient.Close();
+                _bluetoothClient.Dispose();
                 _bluetoothClient = null;
             });
         }
