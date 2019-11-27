@@ -26,10 +26,12 @@ namespace SiamCross.WPF.Models
 
         public event Action<byte[]> DataReceived;
         public event Action ConnectSucceed;
-
+        public event Action ConnectFailed;
+        private int test;
         public BluetoothClassicAdapterPC(ScannedDeviceInfo deviceInfo)
         {
             _deviceInfo = deviceInfo;
+            test = new Random().Next();
         }
 
         public async Task Connect()
@@ -128,6 +130,7 @@ namespace SiamCross.WPF.Models
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+                ConnectFailed?.Invoke();
             }
         }
     }
