@@ -32,7 +32,7 @@ namespace SiamCross.Models.Sensors.Ddin2
             _parser.MessageReceived += MessageReceivedHandler;
             BluetoothAdapter.ConnectSucceed += ConnectSucceedHandler;
 
-            _liveTask = new Task(() => LiveWhileAsync(_cancellToken.Token));
+            _liveTask = new Task( async () => await LiveWhileAsync(_cancellToken.Token));
             _liveTask.Start();
         }
 

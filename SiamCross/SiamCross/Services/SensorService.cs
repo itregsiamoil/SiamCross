@@ -63,6 +63,7 @@ namespace SiamCross.Services
             {
                 await sensor.BluetoothAdapter.Disconnect();
                 _sensors.Remove(sensor);
+                sensor.Dispose();
             }
         }
     }
