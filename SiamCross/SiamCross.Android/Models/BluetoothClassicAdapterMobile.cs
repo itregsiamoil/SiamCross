@@ -132,6 +132,7 @@ namespace SiamCross.Droid.Models
         public async Task SendData(byte[] data)
         {
              await _outStream.WriteAsync(data);
+             await Task.Delay(300);
         }
 
         public event Action<byte[]> DataReceived;
