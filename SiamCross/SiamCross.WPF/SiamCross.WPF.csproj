@@ -57,6 +57,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.WindowsRuntime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DirectWindowsWinmd.Net.10.0.15063.0\lib\net45\System.Runtime.WindowsRuntime.dll</HintPath>
     </Reference>

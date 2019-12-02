@@ -31,7 +31,7 @@ namespace SiamCross.Models.Sensors.Ddim2
             BluetoothAdapter.ConnectSucceed += ConnectHandler;
             BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
 
-            _liveTask = new Task(async () => await ExecuteAsync(_cancellToken.Token));
+            _liveTask = new Task(() => ExecuteAsync(_cancellToken.Token));
             _liveTask.Start();
         }
 
@@ -99,7 +99,7 @@ namespace SiamCross.Models.Sensors.Ddim2
                     Notify?.Invoke(SensorData);
 
                     await BluetoothAdapter.Connect();
-                    await Task.Delay(4000);
+                    await Task.Delay(1000);
                 }
             }
         }
