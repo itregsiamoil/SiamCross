@@ -47,7 +47,7 @@ namespace SiamCross.Droid.Models
             //await Disconnect();
             _bluetoothDevice = (BluetoothDevice)_scannedDeviceInfo.BluetoothArgs;
             try
-            {
+            {               
                 _bluetoothDevice.FetchUuidsWithSdp();
                 _socket = _bluetoothDevice.CreateRfcommSocketToServiceRecord(UUID.FromString(_uuid)/*/_bluetoothDevice.GetUuids()[0].Uuid/*/);
           

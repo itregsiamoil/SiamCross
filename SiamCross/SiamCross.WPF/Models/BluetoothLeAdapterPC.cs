@@ -169,8 +169,8 @@ namespace SiamCross.WPF.Models
             reader.ReadBytes(input);
             DataReceived?.Invoke(input);
 
-            Console.WriteLine("Was read: " + BitConverter.ToString(input).Replace("-", "")
-                                + Environment.NewLine);
+         //   Console.WriteLine("Was read: " + BitConverter.ToString(input).Replace("-", "")
+         //                       + Environment.NewLine);
         }
 
         public async Task Disconnect()
@@ -222,12 +222,12 @@ namespace SiamCross.WPF.Models
                 switch (result)
                 {
                     case GattCommunicationStatus.Success:
-                        Console.WriteLine("Was send: "
-                                   + BitConverter.ToString(data).Replace("-", "")
-                                   + Environment.NewLine);
+                   //     Console.WriteLine("Was send: "
+                   //                + BitConverter.ToString(data).Replace("-", "")
+                   //                + Environment.NewLine);
                         break;
                     default:
-                        Console.WriteLine(result.ToString() + Environment.NewLine);
+                    //    Console.WriteLine(result.ToString() + Environment.NewLine);
                         break;
                 }
             }

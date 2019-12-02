@@ -46,12 +46,15 @@ namespace SiamCross.WPF.Models
 
                         _bluetoothClient = new BluetoothClient();
                         _bluetoothClient.Connect(endPoint);
-                        _stream = _bluetoothClient.GetStream();
-                        ConnectSucceed?.Invoke();
+                        if(_bluetoothClient.Connected)
+                        {
+                            _stream = _bluetoothClient.GetStream();
+                            ConnectSucceed?.Invoke();
+                        }
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine("BluetoothClassicAdapter.SendData: " + ex.Message);
+                        Debug.WriteLine("BluetoothClassicAdapter.Connect: " + ex.Message);
                     }
                 }
             });
