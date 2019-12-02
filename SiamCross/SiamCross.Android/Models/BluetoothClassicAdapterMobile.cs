@@ -78,7 +78,7 @@ namespace SiamCross.Droid.Models
             }
             catch(Java.IO.IOException e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile " + e.Message);
               //  await Disconnect();
             }
         }
@@ -140,7 +140,7 @@ namespace SiamCross.Droid.Models
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapter: " + e.Message);
                 ConnectFailed?.Invoke();
             }
              await Task.Delay(300);

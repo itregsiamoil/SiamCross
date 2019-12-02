@@ -39,12 +39,16 @@ namespace SiamCross.Models.Sensors.Ddin2
 
         private void ConnectFailedHandler()
         {
-            //Alive = false;
+            Alive = false;
         }
 
         private void ConnectSucceedHandler()
         {
+            _parser = new Ddin2Parser();
+            _parser.MessageReceived += MessageReceivedHandler;
+
             Alive = true;
+            System.Diagnostics.Debug.WriteLine("Ддин2 успешно подключен!");
         }
 
         private async Task LiveWhileAsync(CancellationToken cancellationToken)

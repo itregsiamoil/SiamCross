@@ -37,11 +37,14 @@ namespace SiamCross.Models.Sensors.Ddim2
 
         private void ConnectFailedHandler()
         {
-            //Alive = false;
+            Alive = false;
         }
 
         private void ConnectHandler()
         {
+            _parser = new Ddim2Parser();
+            _parser.MessageReceived += ReceiveHandler;
+
             Alive = true;
             System.Diagnostics.Debug.WriteLine("Ддим2 успешно подключен!");
         }
