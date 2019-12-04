@@ -39,11 +39,9 @@ namespace SiamCross.WPF.Models
             _deviceInfo = deviceInfo;
         }
 
-        private const string _queryString = "SELECT * FROM Win32_PnPSignedDriver";
-
         public async Task Connect()
         {
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
                 if (_deviceInfo.BluetoothArgs is BluetoothDeviceInfo device)
                 {
@@ -55,11 +53,10 @@ namespace SiamCross.WPF.Models
 
                         _bluetoothClient = new BluetoothClient();
                         _bluetoothClient.Connect(endPoint);
+                        
                         if(_bluetoothClient.Connected)
                         {
                             _stream = _bluetoothClient.GetStream();
-
-                            await Task.Delay(2000);
 
                             _cancellToken = new CancellationTokenSource();
                             _readTask = new Task(() => BackgroundRead(_cancellToken));
