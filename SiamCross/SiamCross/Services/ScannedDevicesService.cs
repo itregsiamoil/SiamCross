@@ -14,6 +14,11 @@ namespace SiamCross.Services
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public void Test()
+        {
+            _scanner.Test();
+        }
+
         public ScannedDevicesService(IBluetoothScanner scanner)
         {
             _scanner = scanner;

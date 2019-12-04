@@ -11,6 +11,7 @@ using SiamCross.Droid.Models;
 using SiamCross.Models.Scanners;
 using System.Threading.Tasks;
 using System.Threading;
+using Plugin.BLE.Abstractions;
 
 [assembly: Dependency(typeof(BluetoothScannerMobile))]
 namespace SiamCross.Droid.Models
@@ -20,6 +21,7 @@ namespace SiamCross.Droid.Models
         private IAdapter _adapter;
         private IBluetoothLE _bluetoothBLE;
         private BluetoothAdapter _socketAdapter;
+        private List<IDevice> _deviceList = new List<IDevice>();
 
         public BluetoothScannerMobile()
         {
@@ -37,7 +39,7 @@ namespace SiamCross.Droid.Models
             foreach (var device in devices)
             {
                 BluetoothType bluetoothType = BluetoothType.Le;
-                switch(device.Type)
+                switch (device.Type)
                 {
                     case BluetoothDeviceType.Classic:
                         bluetoothType = BluetoothType.Classic;
@@ -46,7 +48,7 @@ namespace SiamCross.Droid.Models
                         bluetoothType = BluetoothType.Le;
                         break;
                 }
-         
+
 
                 Received?.Invoke(new ScannedDeviceInfo(device.Name, device, bluetoothType));
             }
@@ -66,7 +68,7 @@ namespace SiamCross.Droid.Models
 
                 _adapter.DeviceDiscovered += (obj, a) =>
                 {
-                    if(obj == null || a == null || a.Device == null || a.Device.Name == null)
+                    if (obj == null || a == null || a.Device == null || a.Device.Name == null)
                     {
                         return;
                     }
@@ -77,19 +79,8 @@ namespace SiamCross.Droid.Models
                     if (a.Device.Name.Contains("170"))
                     {
                         _device = a.Device;
-                        try
-                        {
-                            var sens = _adapter.ConnectedDevices.Count;
-                            //_adapter.ConnectToDeviceAsync(_device, new Plugin.BLE.Abstractions.ConnectParameters(true, true));
-                            _adapter.ConnectToKnownDeviceAsync(_device.Id);
-                            var sens1 = _adapter.ConnectedDevices.Count;
-                        }
-                        catch (Exception e)
-                        {
-                            System.Diagnostics.Debug.WriteLine(e.Message);
-                        }
-                        Task.Delay(2000);
-                        Initialize();
+                        _deviceList.Add(_device);
+                        // Initialize();
                     }
                 };
 
@@ -107,28 +98,69 @@ namespace SiamCross.Droid.Models
         private const string _serviceGuid = "569a1101-b87f-490c-92cb-11ba5ea5167c";
         private ScannedDeviceInfo _deviceInfo;
 
-        private async Task Initialize()
+        public async Task Test()
         {
-          //  try
-           // {
-                //_targetService = await _device.GetServiceAsync(Guid.Parse(_serviceGuid));
-                //IService asd = await _device.GetServiceAsync(Guid.Parse(_serviceGuid));
-            
-                IReadOnlyList<IService> qwe = _device.GetServicesAsync().Result;
-           // }
-           // catch (Exception e)
-           // {
-             //   System.Diagnostics.Debug.WriteLine(e.Message);
-           // }
-
-            _writeCharacteristic = await _targetService.GetCharacteristicAsync(new Guid(_writeCharacteristicGuid));
-            _readCharacteristic = await _targetService.GetCharacteristicAsync(new Guid(_readCharacteristicGuid));
-            _readCharacteristic.ValueUpdated += (o, args) =>
+            try
             {
-                //DataReceived?.Invoke(args.Characteristic.Value);
-            };
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    _adapter.StopScanningForDevicesAsync();
+                    var connectParams = new ConnectParameters(true, true);
+                    _adapter.ConnectToKnownDeviceAsync(_deviceList[0].Id, connectParams);
+                });
 
-            await _readCharacteristic.StartUpdatesAsync();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+            }
+            await Task.Delay(5000);
+            // await Task.Delay(3000);
+            IReadOnlyList<IService> qwe;
+            try
+            {
+                qwe = _deviceList[0].GetServicesAsync().Result;
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+            }
+            await Task.Delay(5000);
+            var asdasd = _adapter.ConnectedDevices.Count;
+        }
+
+        private void Initialize()
+        {
+            //  try
+            // {
+            //_targetService = await _device.GetServiceAsync(Guid.Parse(_serviceGuid));
+            //IService asd = await _device.GetServiceAsync(Guid.Parse(_serviceGuid));
+            try
+            {
+                var connectParams = new ConnectParameters(true, true);
+                _adapter.StopScanningForDevicesAsync();
+                _adapter.ConnectToKnownDeviceAsync(_deviceList[0].Id, connectParams);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+            }
+            // await Task.Delay(3000);
+            IReadOnlyList<IService> qwe = _device.GetServicesAsync().Result;
+            // }
+            // catch (Exception e)
+            // {
+            //   System.Diagnostics.Debug.WriteLine(e.Message);
+            // }
+
+            //_writeCharacteristic = await _targetService.GetCharacteristicAsync(new Guid(_writeCharacteristicGuid));
+            //_readCharacteristic = await _targetService.GetCharacteristicAsync(new Guid(_readCharacteristicGuid));
+            //_readCharacteristic.ValueUpdated += (o, args) =>
+            //{
+            //    //DataReceived?.Invoke(args.Characteristic.Value);
+            //};
+
+            //await _readCharacteristic.StartUpdatesAsync();
         }
 
         public void Stop()

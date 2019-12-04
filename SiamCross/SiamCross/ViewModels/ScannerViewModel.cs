@@ -10,7 +10,8 @@ namespace SiamCross.ViewModels
 {
     public class ScannerViewModel : IViewModel
     {
-        private readonly IScannedDevicesService _service;
+        private  IScannedDevicesService _service;
+
 
         public ObservableCollection<ScannedDeviceInfo> ScannedDevices { get; }
 
@@ -23,6 +24,9 @@ namespace SiamCross.ViewModels
             _service = service;
             ScannedDevices = new ObservableCollection<ScannedDeviceInfo>();
             ClassicDevices = new ObservableCollection<ScannedDeviceInfo>();
+
+
+            Test = new Command(Test__);
 
             //Connect = new Command(
             //    execute: async () => 
@@ -59,6 +63,12 @@ namespace SiamCross.ViewModels
 
             _service.PropertyChanged += ServicePropertyChanged;
             _service.StartScan();
+        }
+
+        public ICommand Test { get; set; }
+        private void Test__()
+        {
+            _service.Test();
         }
 
         private void ServicePropertyChanged(object sender, PropertyChangedEventArgs e)
