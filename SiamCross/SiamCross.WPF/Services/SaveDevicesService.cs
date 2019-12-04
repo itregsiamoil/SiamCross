@@ -7,10 +7,7 @@ using SiamCross.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.Devices.Bluetooth.Advertisement;
 
 namespace SiamCross.WPF.Services
 {
@@ -48,13 +45,13 @@ namespace SiamCross.WPF.Services
                                 }
                                 break;
                             case BluetoothType.Le:
-                                if (device.BluetoothArgs is BluetoothLEAdvertisementReceivedEventArgs argsLe)
+                                if (device.BluetoothArgs is ulong LEAddress)
                                 {
                                     var savedDevice = new SavedDevice
                                     {
                                         BluetoothType = BluetoothType.Le,
                                         DeviceName = device.Name,
-                                        DeviceAddress = argsLe.BluetoothAddress.ToString()
+                                        DeviceAddress = LEAddress.ToString()
                                     };
                                     var jsonString = JsonConvert.SerializeObject(savedDevice,
                                         _settings);
@@ -71,49 +68,57 @@ namespace SiamCross.WPF.Services
 
         public async Task<IEnumerable<ScannedDeviceInfo>> LoadDevices()
         {
-            throw new NotImplementedException();
-            //await Task.Run(() =>
-            //{
-            //    var devicesInfo = new List<ScannedDeviceInfo>();
+            //throw new NotImplementedException();
+            var devicesInfo = new List<ScannedDeviceInfo>();
 
-            //    var file = new StreamReader(
-            //        Path.Combine(Directory.GetCurrentDirectory(), "SavedDevices.json"));
+            await Task.Run(() =>
+            {
+                var file = new StreamReader(
+                    Path.Combine(Directory.GetCurrentDirectory(), "SavedDevices.json"));
 
-            //    if (file != null)
-            //    {
-            //        while(!file.EndOfStream)
-            //        {
-            //            var line = file.ReadLine();
+                if (file != null)
+                {
+                    while (!file.EndOfStream)
+                    {
+                        var line = file.ReadLine();
 
-            //            object item = JsonConvert.DeserializeObject(
-            //                line, _settings);
+                        object item = JsonConvert.DeserializeObject(
+                            line, _settings);
 
-            //            switch (item)
-            //            {
-            //                case SavedDevice readDevice:
-            //                    switch (readDevice.BluetoothType)
-            //                    {
-            //                        case BluetoothType.Classic:
-            //                            BluetoothAddress addr = BluetoothAddress.Parse(readDevice.DeviceAddress);
-            //                            if (addr == null) break;
-            //                            BluetoothDeviceInfo deviceInfo = new BluetoothDeviceInfo(addr);
-            //                            if (deviceInfo == null) break;
-            //                            devicesInfo.Add(new ScannedDeviceInfo(
-            //                                readDevice.DeviceName, devicesInfo, BluetoothType.Classic));
-            //                            break;
-            //                        case BluetoothType.Le:
-            //                            var args = new BluetoothLEAdvertisementReceivedEventArgs();
-            //                            break;
-            //                        default:
-            //                            break;
-            //                    }
-            //                    break;
-            //                default:
-            //                    break;
-            //            }
-            //        }
-            //    }
-            //});
+                        switch (item)
+                        {
+                            case SavedDevice readDevice:
+                                switch (readDevice.BluetoothType)
+                                {
+                                    case BluetoothType.Classic:
+                                        BluetoothAddress addr = BluetoothAddress.Parse(readDevice.DeviceAddress);
+                                        if (addr == null) break;
+                                        BluetoothDeviceInfo deviceInfo = new BluetoothDeviceInfo(addr);
+                                        if (deviceInfo == null) break;
+                                        devicesInfo.Add(new ScannedDeviceInfo(
+                                            readDevice.DeviceName, devicesInfo, BluetoothType.Classic));
+                                        break;
+                                    case BluetoothType.Le:
+                                        if (UInt64.TryParse(
+                                            readDevice.DeviceAddress, out ulong address))
+                                        {
+                                            devicesInfo.Add(new ScannedDeviceInfo(
+                                                readDevice.DeviceName, address, BluetoothType.Le));
+                                        }
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                file.Close();
+            });
+
+            return devicesInfo;
         }
     }
 }
