@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SiamCross.Models.Scanners
 {
@@ -10,6 +11,8 @@ namespace SiamCross.Models.Scanners
 
         void Stop();
 
+        Task Test();
+ 
         event Action<ScannedDeviceInfo> Received;
     }
 }
