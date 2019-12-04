@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using SiamCross.Models;
 using SiamCross.Models.Scanners;
@@ -52,7 +53,14 @@ namespace SiamCross.Services
             }
 
             _sensors.Add(addebleSensor);
+            
             SensorAdded?.Invoke(addebleSensor.SensorData);
+
+            new Thread(async () =>
+            {
+                await SaveDevicesService.SaveDevices(
+                    _sensors.Select(s => s?.ScannedDeviceInfo));
+            }).Start();
         }
 
 
@@ -65,6 +73,35 @@ namespace SiamCross.Services
                 _sensors.Remove(sensor);
                 sensor.Dispose();
             }
+            new Thread(async () =>
+            {
+                await SaveDevicesService.SaveDevices(
+                    _sensors.Select(s => s?.ScannedDeviceInfo));
+            }).Start();
+        }
+
+        public ISaveDevicesService SaveDevicesService { get; set; }
+
+        public void LoadSavedDevices()
+        {
+            if (SaveDevicesService == null) return;
+
+            var thread = new Thread(async () => 
+            {
+                var savedDevices = await SaveDevicesService.LoadDevices();
+
+                foreach (var device in savedDevices)
+                {
+                    var addebleSensor = SensorFactory.CreateSensor(device);
+                    if (addebleSensor == null)
+                    {
+                        return;
+                    }
+                    _sensors.Add(addebleSensor);
+                    SensorAdded?.Invoke(addebleSensor.SensorData);
+                }
+            });
+            thread.Start();
         }
     }
 }

@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors;
 
 namespace SiamCross.Models.Sensors.Ddim2
 {
     public class Ddim2Sensor : ISensor
     {
-        private CancellationTokenSource _cancellToken =
-            new CancellationTokenSource();
+        private CancellationTokenSource _cancellToken;
         public IBluetoothAdapter BluetoothAdapter { get; }
         public bool Alive { get; private set; }
         public SensorData SensorData { get; }
+        public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
+
         private Ddim2QuickReportBuilder _reportBuilder;
         private Ddim2Parser _parser;
 
@@ -31,6 +33,7 @@ namespace SiamCross.Models.Sensors.Ddim2
             BluetoothAdapter.ConnectSucceed += ConnectHandler;
             BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
 
+            _cancellToken = new CancellationTokenSource();
             _liveTask = new Task(() => ExecuteAsync(_cancellToken.Token));
             _liveTask.Start();
         }

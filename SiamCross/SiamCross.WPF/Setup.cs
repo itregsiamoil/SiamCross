@@ -2,7 +2,9 @@
 using SiamCross.AppObjects;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Scanners;
+using SiamCross.Services;
 using SiamCross.WPF.Models;
+using SiamCross.WPF.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +23,7 @@ namespace SiamCross.WPF
 
             cb.RegisterType<BluetoothClassicAdapterPC>().As<IBluetoothClassicAdapter>();
             cb.RegisterType<BluetoothLeAdapterPC>().As<IBluetoothLeAdapter>();
+            cb.RegisterType<SaveDevicesServicePC>().As<ISaveDevicesService>();
         }
     }
 }

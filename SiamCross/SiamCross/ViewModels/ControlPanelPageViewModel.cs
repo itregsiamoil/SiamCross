@@ -11,7 +11,7 @@ namespace SiamCross.ViewModels
     {
         public ObservableCollection<SensorData> SensorsData { get; }
 
-        public ControlPanelPageViewModel()
+        public ControlPanelPageViewModel(ISaveDevicesService saveDevicesService)
         {
             SensorsData = new ObservableCollection<SensorData>();
             foreach (var sensor in SensorService.Instance.Sensors)
@@ -21,6 +21,8 @@ namespace SiamCross.ViewModels
 
             SensorService.Instance.SensorAdded += SensorAdded;
             SensorService.Instance.SensorDataChanged += SensorsDataChanged;
+            SensorService.Instance.SaveDevicesService = saveDevicesService;
+            SensorService.Instance.LoadSavedDevices();
         }
 
         public ICommand DeleteSensorCommand

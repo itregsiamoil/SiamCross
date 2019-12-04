@@ -4,14 +4,17 @@ using Newtonsoft.Json;
 using SiamCross.Models;
 using SiamCross.Models.Scanners;
 using SiamCross.Services;
+using SiamCross.WPF.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
+[assembly: Dependency(typeof(SaveDevicesServicePC))]
 namespace SiamCross.WPF.Services
 {
-    public class SaveDevicesService : ISaveDevicesService
+    public class SaveDevicesServicePC : ISaveDevicesService
     {
         private static readonly JsonSerializerSettings
             _settings = new JsonSerializerSettings
@@ -93,10 +96,10 @@ namespace SiamCross.WPF.Services
                                     case BluetoothType.Classic:
                                         BluetoothAddress addr = BluetoothAddress.Parse(readDevice.DeviceAddress);
                                         if (addr == null) break;
-                                        BluetoothDeviceInfo deviceInfo = new BluetoothDeviceInfo(addr);
-                                        if (deviceInfo == null) break;
+                                        BluetoothDeviceInfo deviceArgs = new BluetoothDeviceInfo(addr);
+                                        if (deviceArgs == null) break;
                                         devicesInfo.Add(new ScannedDeviceInfo(
-                                            readDevice.DeviceName, devicesInfo, BluetoothType.Classic));
+                                            readDevice.DeviceName, deviceArgs, BluetoothType.Classic));
                                         break;
                                     case BluetoothType.Le:
                                         if (UInt64.TryParse(
