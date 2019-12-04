@@ -19,9 +19,6 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button Text="Connect" Command="{Binding Connect}"></Button>
-            <Button Text="SendMessage" Command="{Binding SendMessage}"></Button>
-            <Button Text="Disconnect" Command="{Binding Disconnect}"></Button>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
