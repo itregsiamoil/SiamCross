@@ -9,7 +9,7 @@ namespace SiamCross.Models.Sensors.Ddin2
         private Ddin2Parser _parser;
         private Ddin2QuickReportBuiler _reportBuilder;
         private Task _liveTask;
-        private static CancellationTokenSource _cancellToken =
+        private CancellationTokenSource _cancellToken =
             new CancellationTokenSource();
 
         public IBluetoothAdapter BluetoothAdapter { get; }
@@ -31,9 +31,24 @@ namespace SiamCross.Models.Sensors.Ddin2
             BluetoothAdapter.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += MessageReceivedHandler;
             BluetoothAdapter.ConnectSucceed += ConnectSucceedHandler;
+            BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
 
             _liveTask = new Task( async () => await LiveWhileAsync(_cancellToken.Token));
             _liveTask.Start();
+        }
+
+        private void ConnectFailedHandler()
+        {
+            Alive = false;
+        }
+
+        private void ConnectSucceedHandler()
+        {
+            _parser = new Ddin2Parser();
+            _parser.MessageReceived += MessageReceivedHandler;
+
+            Alive = true;
+            System.Diagnostics.Debug.WriteLine("Ддин2 успешно подключен!");
         }
 
         private async Task LiveWhileAsync(CancellationToken cancellationToken)
@@ -62,11 +77,6 @@ namespace SiamCross.Models.Sensors.Ddin2
             await BluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["Тemperature"]);
             await BluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["LoadChanel"]);
             await BluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["AccelerationChanel"]);
-        }
-
-        private void ConnectSucceedHandler()
-        {
-            Alive = true;
         }
 
         private void MessageReceivedHandler(string commandName, string dataValue)

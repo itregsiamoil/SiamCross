@@ -47,7 +47,7 @@ namespace SiamCross.Droid.Models
             //await Disconnect();
             _bluetoothDevice = (BluetoothDevice)_scannedDeviceInfo.BluetoothArgs;
             try
-            {
+            {               
                 _bluetoothDevice.FetchUuidsWithSdp();
                 _socket = _bluetoothDevice.CreateRfcommSocketToServiceRecord(UUID.FromString(_uuid)/*/_bluetoothDevice.GetUuids()[0].Uuid/*/);
           
@@ -57,7 +57,10 @@ namespace SiamCross.Droid.Models
                     return;
                 }
 
-                _socket.Connect();
+                if (!_socket.IsConnected)
+                {
+                    _socket.Connect();
+                }
 
                 _outStream = _socket.OutputStream;
                 _inStream = _socket.InputStream;
@@ -75,7 +78,7 @@ namespace SiamCross.Droid.Models
             }
             catch(Java.IO.IOException e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile " + e.Message);
               //  await Disconnect();
             }
         }
@@ -112,7 +115,7 @@ namespace SiamCross.Droid.Models
             connectedObject = null;
         }
 
-        private static CancellationTokenSource _cancellToken;
+        private CancellationTokenSource _cancellToken;
 
         private void BackgroundRead(CancellationTokenSource _cancellToken)
         {
@@ -131,11 +134,20 @@ namespace SiamCross.Droid.Models
 
         public async Task SendData(byte[] data)
         {
-             await _outStream.WriteAsync(data);
+            try
+            {
+                await _outStream.WriteAsync(data);
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapter: " + e.Message);
+                ConnectFailed?.Invoke();
+            }
              await Task.Delay(300);
         }
 
         public event Action<byte[]> DataReceived;
         public event Action ConnectSucceed;
+        public event Action ConnectFailed;
     }
 }

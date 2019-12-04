@@ -44,6 +44,7 @@ namespace SiamCross.WPF.Models
 
         public event Action<byte[]> DataReceived;
         public event Action ConnectSucceed;
+        public event Action ConnectFailed;
 
         public BluetoothLeAdapterPC(ScannedDeviceInfo deviceInfo)
         {
@@ -55,36 +56,32 @@ namespace SiamCross.WPF.Models
             var connectArgs = _deviceInfo.BluetoothArgs;
             if (connectArgs is BluetoothLEAdvertisementReceivedEventArgs recivedDevice)
             {
-                for (int i = 0; i < 3; i++)
+                try
                 {
-                    try
+                    _bluetoothLeDevice =
+                    await BluetoothLEDevice.FromBluetoothAddressAsync(recivedDevice.BluetoothAddress);
+                    GattDeviceServicesResult result =
+                        await _bluetoothLeDevice.GetGattServicesAsync();
+
+                    if (result.Status == GattCommunicationStatus.Success)
                     {
-                        _bluetoothLeDevice =
-                        await BluetoothLEDevice.FromBluetoothAddressAsync(recivedDevice.BluetoothAddress);
-                        GattDeviceServicesResult result =
-                            await _bluetoothLeDevice.GetGattServicesAsync();
-
-                        if (result.Status == GattCommunicationStatus.Success)
-                        {
-                            _recivedDevice = recivedDevice;
-                            Console.WriteLine("Connect with " + recivedDevice.Advertisement.LocalName
-                                + Environment.NewLine + "Address: " + recivedDevice.BluetoothAddress
-                                + Environment.NewLine);
-                            await EnableCccdCharacteristics(result);  // CCCD Enable
-                            DefineWriteReadCharacteristics(result);
-                            ConnectSucceed?.Invoke();
-
-                            break;
-                        }
-                        await Task.Delay(300);
-
+                        _recivedDevice = recivedDevice;
+                        Console.WriteLine("Connect with " + recivedDevice.Advertisement.LocalName
+                            + Environment.NewLine + "Address: " + recivedDevice.BluetoothAddress
+                            + Environment.NewLine);
+                        await EnableCccdCharacteristics(result);  // CCCD Enable
+                        DefineWriteReadCharacteristics(result);
+                        ConnectSucceed?.Invoke();
                     }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        Console.WriteLine($"Ошибка подключения. Попытка № {i}");
-                    }
+                    await Task.Delay(300);
+
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine($"Ошибка подключения!");
+                }
+
             }
         }
 
@@ -172,8 +169,8 @@ namespace SiamCross.WPF.Models
             reader.ReadBytes(input);
             DataReceived?.Invoke(input);
 
-            Console.WriteLine("Was read: " + BitConverter.ToString(input).Replace("-", "")
-                                + Environment.NewLine);
+         //   Console.WriteLine("Was read: " + BitConverter.ToString(input).Replace("-", "")
+         //                       + Environment.NewLine);
         }
 
         public async Task Disconnect()
@@ -225,18 +222,19 @@ namespace SiamCross.WPF.Models
                 switch (result)
                 {
                     case GattCommunicationStatus.Success:
-                        Console.WriteLine("Was send: "
-                                   + BitConverter.ToString(data).Replace("-", "")
-                                   + Environment.NewLine);
+                   //     Console.WriteLine("Was send: "
+                   //                + BitConverter.ToString(data).Replace("-", "")
+                   //                + Environment.NewLine);
                         break;
                     default:
-                        Console.WriteLine(result.ToString() + Environment.NewLine);
+                    //    Console.WriteLine(result.ToString() + Environment.NewLine);
                         break;
                 }
             }
             catch
             {
                 Console.WriteLine("Ошибка соединения с устройством!");
+                ConnectFailed?.Invoke(); //////////////////////////////////////////////! Не протестированно
             };
         }
 
@@ -269,6 +267,7 @@ namespace SiamCross.WPF.Models
             catch
             {
                 Console.WriteLine("Ошибка соединения с устройством!");
+                ConnectFailed?.Invoke(); //////////////////////////////////////////////! Не протестированно
             };
         }
     }

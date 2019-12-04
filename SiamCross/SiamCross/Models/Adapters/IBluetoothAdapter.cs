@@ -10,5 +10,6 @@ namespace SiamCross.Models
         Task SendData(byte[] data);
         event Action<byte[]> DataReceived;
         event Action ConnectSucceed;
+        event Action ConnectFailed;
     }
 }

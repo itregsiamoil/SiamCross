@@ -9,7 +9,7 @@ namespace SiamCross.Models.Sensors.Ddim2
 {
     public class Ddim2Sensor : ISensor
     {
-        private static CancellationTokenSource _cancellToken =
+        private CancellationTokenSource _cancellToken =
             new CancellationTokenSource();
         public IBluetoothAdapter BluetoothAdapter { get; }
         public bool Alive { get; private set; }
@@ -18,7 +18,6 @@ namespace SiamCross.Models.Sensors.Ddim2
         private Ddim2Parser _parser;
 
         private Task _liveTask;
-
         public Ddim2Sensor(IBluetoothAdapter adapter, SensorData sensorData)
         {
             Alive = false;
@@ -30,13 +29,22 @@ namespace SiamCross.Models.Sensors.Ddim2
             _parser.MessageReceived += ReceiveHandler;
 
             BluetoothAdapter.ConnectSucceed += ConnectHandler;
+            BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
 
             _liveTask = new Task(() => ExecuteAsync(_cancellToken.Token));
             _liveTask.Start();
         }
 
+        private void ConnectFailedHandler()
+        {
+            Alive = false;
+        }
+
         private void ConnectHandler()
         {
+            _parser = new Ddim2Parser();
+            _parser.MessageReceived += ReceiveHandler;
+
             Alive = true;
             System.Diagnostics.Debug.WriteLine("Ддим2 успешно подключен!");
         }
@@ -91,7 +99,7 @@ namespace SiamCross.Models.Sensors.Ddim2
                     Notify?.Invoke(SensorData);
 
                     await BluetoothAdapter.Connect();
-                    await Task.Delay(4000);
+                    await Task.Delay(1000);
                 }
             }
         }

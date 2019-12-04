@@ -114,5 +114,6 @@ namespace SiamCross.Droid.Models
 
         public event Action<byte[]> DataReceived;
         public event Action ConnectSucceed;
+        public event Action ConnectFailed;///////////////////////////////!!!!!!!!!!!!!!!!!!!!!!!!
     }
 }
