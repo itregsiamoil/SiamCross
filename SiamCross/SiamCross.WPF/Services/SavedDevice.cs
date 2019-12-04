@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SiamCross.Models;
 
 namespace SiamCross.WPF.Services
 {
@@ -8,5 +9,7 @@ namespace SiamCross.WPF.Services
         public string DeviceName;
 
         public string DeviceAddress;
+
+        public BluetoothType BluetoothType;
     }
 }

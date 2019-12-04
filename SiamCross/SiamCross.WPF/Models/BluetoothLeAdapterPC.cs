@@ -54,20 +54,19 @@ namespace SiamCross.WPF.Models
         public async Task Connect()
         {
             var connectArgs = _deviceInfo.BluetoothArgs;
-            if (connectArgs is BluetoothLEAdvertisementReceivedEventArgs recivedDevice)
+            if (connectArgs is ulong address)
             {
                 try
                 {
                     _bluetoothLeDevice =
-                    await BluetoothLEDevice.FromBluetoothAddressAsync(recivedDevice.BluetoothAddress);
+                    await BluetoothLEDevice.FromBluetoothAddressAsync(address);
                     GattDeviceServicesResult result =
                         await _bluetoothLeDevice.GetGattServicesAsync();
 
                     if (result.Status == GattCommunicationStatus.Success)
                     {
-                        _recivedDevice = recivedDevice;
-                        Console.WriteLine("Connect with " + recivedDevice.Advertisement.LocalName
-                            + Environment.NewLine + "Address: " + recivedDevice.BluetoothAddress
+                        Console.WriteLine("Connect with " + _bluetoothLeDevice.Name
+                            + Environment.NewLine + "Address: " + _bluetoothLeDevice.BluetoothAddress
                             + Environment.NewLine);
                         await EnableCccdCharacteristics(result);  // CCCD Enable
                         DefineWriteReadCharacteristics(result);
