@@ -26,8 +26,6 @@ namespace SiamCross.ViewModels
             ClassicDevices = new ObservableCollection<ScannedDeviceInfo>();
 
 
-            Test = new Command(Test__);
-
             //Connect = new Command(
             //    execute: async () => 
             //    {
@@ -66,11 +64,7 @@ namespace SiamCross.ViewModels
         }
 
         public ICommand Test { get; set; }
-        private void Test__()
-        {
-            _service.Test();
-        }
-
+        public ICommand Check { get; set; }
         private void ServicePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             Device.BeginInvokeOnMainThread(() =>

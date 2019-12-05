@@ -22,6 +22,7 @@
                 </ListView.ItemTemplate>
             </ListView>
             <Button Text="Test" Command="{Binding Test}"></Button>
+            <Button Text="Check" Command="{Binding Check}"></Button>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

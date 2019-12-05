@@ -32,8 +32,8 @@ namespace SiamCross.Droid.Models
         private ICharacteristic _writeCharacteristic;
         private ICharacteristic _readCharacteristic;
 
-        private const string _writeCharacteristicGuid = "569a2001-b87f-490c-92cb-11ba5ea5167";
-        private const string _readCharacteristicGuid = "569a2000-b87f-490c-92cb-11ba5ea5167";
+        private const string _writeCharacteristicGuid = "569a2001-b87f-490c-92cb-11ba5ea5167c";
+        private const string _readCharacteristicGuid = "569a2000-b87f-490c-92cb-11ba5ea5167c";
         private const string _serviceGuid = "569a1101-b87f-490c-92cb-11ba5ea5167c";
         private ScannedDeviceInfo _deviceInfo;
 
@@ -41,59 +41,90 @@ namespace SiamCross.Droid.Models
         {
             _adapter = CrossBluetoothLE.Current.Adapter;
             _deviceInfo = deviceInfo;
+            _device = (IDevice)deviceInfo.BluetoothArgs;
         }
 
         public async Task Connect()
         {
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+
+                bool isTryGuid = false;
+                await _adapter.StopScanningForDevicesAsync();
+                try
+                {
+                    await _adapter.ConnectToDeviceAsync(_device);
+                }
+                catch (Exception e)
+                {
+                    isTryGuid = true;
+                    System.Diagnostics.Debug.WriteLine("Ошибка подключения по аргументам поиска: " + e.Message +
+                        ". Попытка подклучения по Guid...");
+                }
+                if (isTryGuid)
+                {
+                    try
+                    {
+                        await _adapter.ConnectToKnownDeviceAsync(_device.Id);
+                    }
+                    catch (Exception e)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Ошибка подключения по Guid: " + e.Message);
+                    }
+                }
 
 
-            //try
-            //{
-            //    System.Diagnostics.Debug.WriteLine("Запуск процедуры подключения LE адаптера");
-            //    _device = (IDevice)_deviceInfo.BluetoothArgs;
-            //    System.Diagnostics.Debug.WriteLine("Device привелся к своему типу");
-            //    if (_device == null)
-            //    {
-            //        System.Diagnostics.Debug.WriteLine("Device был null");
-            //        return;
-            //    }
-            //    else
-            //    {
-            //        System.Diagnostics.Debug.WriteLine("Device был НЕ null");
-            //    }
-                
-            //    await _adapter.ConnectToDeviceAsync(_device);
-            //    await Initialize();
-            //    ConnectSucceed?.Invoke();
-            //}
-            //catch (DeviceConnectionException ex)
-            //{
-            //    System.Diagnostics.Debug.WriteLine($"Ошибка соединения LE адаптера DeviceConnectionExcezion");
-            //}
-            //catch(Exception e)
-            //{
-            //    System.Diagnostics.Debug.WriteLine($"Исключение{e.Message}");
-            //    throw new Exception();
-            //}
+                _device = _adapter.ConnectedDevices.Where(x => x.Id == (_deviceInfo.BluetoothArgs as IDevice).Id).LastOrDefault();
+                if(_device == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Ошибка соединения BLE - _device был null");
+                    ConnectFailed();
+                    return;
+                }
+                await Initialize();
+            });
         }
 
         public async Task SendData(byte[] data)
-        { 
-            await _writeCharacteristic.WriteAsync(data);
+        {
+            try
+            {
+                await _writeCharacteristic.WriteAsync(data);
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("Ошибка отправки сообщения BLE: " + e.Message);
+                ConnectFailed();
+            }
         }
 
         private async Task Initialize()
         {
-            _targetService = await _device.GetServiceAsync(new Guid(_serviceGuid));
-
-            _writeCharacteristic = await _targetService.GetCharacteristicAsync(new Guid(_writeCharacteristicGuid));
-            _readCharacteristic = await _targetService.GetCharacteristicAsync(new Guid(_readCharacteristicGuid));
-            _readCharacteristic.ValueUpdated += (o, args) =>
+            try
             {
-                DataReceived?.Invoke(args.Characteristic.Value);
-            };
+                _targetService = await _device.GetServiceAsync(Guid.Parse(_serviceGuid));
 
-            await _readCharacteristic.StartUpdatesAsync();
+                var serv = await _targetService.GetCharacteristicsAsync();
+                foreach(var ch in serv)
+                {
+                    System.Diagnostics.Debug.WriteLine(ch.Id);
+                }
+
+                _writeCharacteristic = await _targetService.GetCharacteristicAsync(Guid.Parse(_writeCharacteristicGuid));
+                _readCharacteristic = await _targetService.GetCharacteristicAsync(Guid.Parse(_readCharacteristicGuid));
+                _readCharacteristic.ValueUpdated += (o, args) =>
+                {
+                    DataReceived?.Invoke(args.Characteristic.Value);
+                };
+
+                await _readCharacteristic.StartUpdatesAsync();
+                ConnectSucceed();
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("Ошибка инициализации: " + e.Message);
+                await Disconnect();
+            }
         }
 
         public async Task Disconnect()

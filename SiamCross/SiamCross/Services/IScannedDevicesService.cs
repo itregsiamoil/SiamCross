@@ -12,8 +12,6 @@ namespace SiamCross.Services
 
         void StopScan();
 
-        void Test();
-
         IEnumerable<ScannedDeviceInfo> ScannedDevices { get; }
     }
 }
