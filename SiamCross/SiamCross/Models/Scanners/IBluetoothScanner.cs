@@ -11,8 +11,6 @@ namespace SiamCross.Models.Scanners
 
         void Stop();
 
-        Task Test();
- 
         event Action<ScannedDeviceInfo> Received;
     }
 }
