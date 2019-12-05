@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using SiamCross.Models.Scanners;
 
 namespace SiamCross.Models.Sensors.Ddin2
 {
@@ -17,6 +18,7 @@ namespace SiamCross.Models.Sensors.Ddin2
         public SensorData SensorData { get; }
 
         public bool Alive { get; private set; }
+        public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
 
         public event Action<SensorData> Notify;
 

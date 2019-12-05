@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
 
 namespace SiamCross.Models
@@ -16,5 +17,7 @@ namespace SiamCross.Models
         Task QuickReport();
         void StartMeasurement();
         SensorData SensorData { get; }
+
+        ScannedDeviceInfo ScannedDeviceInfo { get; set; }
     }
 }

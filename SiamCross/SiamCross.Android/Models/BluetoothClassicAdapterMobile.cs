@@ -40,15 +40,22 @@ namespace SiamCross.Droid.Models
         {
             _scannedDeviceInfo = deviceInfo;
             _reader = null;
+            _bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
         }
+
+        private BluetoothAdapter _bluetoothAdapter;
 
         public async Task Connect()
         {
             //await Disconnect();
-            _bluetoothDevice = (BluetoothDevice)_scannedDeviceInfo.BluetoothArgs;
+            if (_scannedDeviceInfo.BluetoothArgs is string address)
+            {
+                _bluetoothDevice = _bluetoothAdapter.GetRemoteDevice(address);
+            }
+            if (_bluetoothDevice == null) return;
             try
             {               
-                _bluetoothDevice.FetchUuidsWithSdp();
+                _bluetoothDevice.FetchUuidsWithSdp(); 
                 _socket = _bluetoothDevice.CreateRfcommSocketToServiceRecord(UUID.FromString(_uuid)/*/_bluetoothDevice.GetUuids()[0].Uuid/*/);
           
                 if(_socket == null)

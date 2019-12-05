@@ -21,6 +21,7 @@ namespace SiamCross.Services
                     new SensorData(SensorService.Instance.SensorsCount,
                                    deviceInfo.Name, "Динамограф", ""));
                 ddin2.Notify += SensorService.Instance.SensorDataChangedHandler;
+                ddin2.ScannedDeviceInfo = deviceInfo;
                 return ddin2;
             }
             else if(deviceInfo.Name.Contains("DDIM"))
@@ -33,6 +34,7 @@ namespace SiamCross.Services
                         new SensorData(SensorService.Instance.SensorsCount,
                         deviceInfo.Name, "Динамограф", ""));
                     sensor.Notify += SensorService.Instance.SensorDataChangedHandler;
+                    sensor.ScannedDeviceInfo = deviceInfo;
                     return sensor;
                 }
                 else if (deviceInfo.BluetoothType == BluetoothType.Classic)
@@ -43,6 +45,7 @@ namespace SiamCross.Services
                         new SensorData(SensorService.Instance.SensorsCount,
                         deviceInfo.Name, "Динамограф", ""));
                     sensor.Notify += SensorService.Instance.SensorDataChangedHandler;
+                    sensor.ScannedDeviceInfo = deviceInfo;
                     return sensor;
                 }
             }

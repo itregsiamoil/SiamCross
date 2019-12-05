@@ -12,8 +12,10 @@ using Android.Widget;
 using Autofac;
 using SiamCross.AppObjects;
 using SiamCross.Droid.Models;
+using SiamCross.Droid.Services;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Scanners;
+using SiamCross.Services;
 
 namespace SiamCross.Droid
 {
@@ -26,6 +28,7 @@ namespace SiamCross.Droid
 
             cb.RegisterType<BluetoothClassicAdapterMobile>().As<IBluetoothClassicAdapter>();
             cb.RegisterType<BluetoothLeAdapterMobile>().As<IBluetoothLeAdapter>();
+            cb.RegisterType<SaveDevicesServiceMobile>().As<ISaveDevicesService>();
         }
     }    
 }
