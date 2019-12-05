@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SiamCross.Models;
 
-namespace SiamCross.WPF.Services
+namespace SiamCross.Services
 {
     [JsonObject(MemberSerialization.Fields)]
     public class SavedDevice

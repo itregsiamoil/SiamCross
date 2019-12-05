@@ -100,8 +100,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Services\SavedDevice.cs" />
-    <Compile Include="Services\SaveDevicesService.cs" />
+    <Compile Include="Services\SaveDevicesServicePC.cs" />
     <Compile Include="Setup.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

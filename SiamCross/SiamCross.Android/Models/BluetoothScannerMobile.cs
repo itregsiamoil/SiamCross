@@ -48,7 +48,7 @@ namespace SiamCross.Droid.Models
                 }
          
 
-                Received?.Invoke(new ScannedDeviceInfo(device.Name, device, bluetoothType));
+                Received?.Invoke(new ScannedDeviceInfo(device.Name, device.Address, bluetoothType));
             }
 
             StartScann();
