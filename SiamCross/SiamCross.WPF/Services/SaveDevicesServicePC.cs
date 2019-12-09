@@ -74,10 +74,13 @@ namespace SiamCross.WPF.Services
             //throw new NotImplementedException();
             var devicesInfo = new List<ScannedDeviceInfo>();
 
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "SavedDevices.json");
+
             await Task.Run(() =>
             {
-                var file = new StreamReader(
-                    Path.Combine(Directory.GetCurrentDirectory(), "SavedDevices.json"));
+                if (!File.Exists(path)) return;
+
+                var file = new StreamReader(path);
 
                 if (file != null)
                 {
