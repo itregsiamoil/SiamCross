@@ -75,126 +75,13 @@ namespace SiamCross.Droid.Models
 
                     Received?.Invoke(new ScannedDeviceInfo(a.Device.Name, a.Device, BluetoothType.Le));
                     System.Diagnostics.Debug.WriteLine("Finded device" + a.Device.Name);
-
-                    if (a.Device.Name.Contains("MODEM"))
-                    {
-                        //_device = a.Device;
-                        _deviceList.Add(a.Device);
-                        // Initialize();
-                    }
                 };
 
                 if (!_bluetoothBLE.Adapter.IsScanning)
                 {
                     await _adapter.StartScanningForDevicesAsync();
-
                 }
             }
-        }
-
-        private IDevice _device;
-        private IService _targetService;
-        private ICharacteristic _writeCharacteristic;
-        private ICharacteristic _readCharacteristic;
-
-        private const string _writeCharacteristicGuid = "569a2001-b87f-490c-92cb-11ba5ea5167";
-        private const string _readCharacteristicGuid = "569a2000-b87f-490c-92cb-11ba5ea5167";
-        private const string _serviceGuid = "569a1101-b87f-490c-92cb-11ba5ea5167c";
-        private ScannedDeviceInfo _deviceInfo;
-
-        public async Task Test()
-        {
-            Device.BeginInvokeOnMainThread( async () =>
-            {
-                IReadOnlyList<IService> qwe;
-                bool isTryGuid = false;
-                await _adapter.StopScanningForDevicesAsync();
-                try
-                {
-                    await _adapter.ConnectToDeviceAsync(_deviceList[0]);
-                    qwe = await _adapter.ConnectedDevices[0].GetServicesAsync();
-
-                    System.Diagnostics.Debug.WriteLine($"||||||||||||||||||||||||||||||||||||||  {qwe.Count}  ||||||||||||||||||||||||||||||||||");
-                }
-                catch (Exception e)
-                {
-                    isTryGuid = true;
-                    System.Diagnostics.Debug.WriteLine(e.Message);
-                }
-                if(isTryGuid)
-                {
-                    try
-                    {
-                        await _adapter.ConnectToKnownDeviceAsync(_deviceList[0].Id);
-                        qwe = await _adapter.ConnectedDevices[0].GetServicesAsync();
-
-                        System.Diagnostics.Debug.WriteLine($"||||||||||||||||||||||||||||||||||||||  {qwe.Count}  ||||||||||||||||||||||||||||||||||");
-                    }
-                    catch (Exception e)
-                    {
-                        System.Diagnostics.Debug.WriteLine(e.Message);
-                    }
-                }
-            });
-
-            //IReadOnlyList<IService> qwe;
-            //try
-            //{
-            //    qwe = await _adapter.ConnectedDevices[0].GetServicesAsync();
-            //}
-            //catch (Exception e)
-            //{
-            //    System.Diagnostics.Debug.WriteLine(e.Message);
-            //}
-            //var asdasd = _adapter.ConnectedDevices.Count;
-        }
-
-        public void Check()
-        {
-            IReadOnlyList<IService> qwe;
-            try
-            {
-                qwe = _adapter.ConnectedDevices[0].GetServicesAsync().Result;
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-            }
-            var asdasd = _adapter.ConnectedDevices.Count;
-        }
-
-        private void Initialize()
-        {
-            //  try
-            // {
-            //_targetService = await _device.GetServiceAsync(Guid.Parse(_serviceGuid));
-            //IService asd = await _device.GetServiceAsync(Guid.Parse(_serviceGuid));
-            try
-            {
-                var connectParams = new ConnectParameters(true, true);
-                _adapter.StopScanningForDevicesAsync();
-                _adapter.ConnectToKnownDeviceAsync(_deviceList[0].Id, connectParams);
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-            }
-            // await Task.Delay(3000);
-            IReadOnlyList<IService> qwe = _device.GetServicesAsync().Result;
-            // }
-            // catch (Exception e)
-            // {
-            //   System.Diagnostics.Debug.WriteLine(e.Message);
-            // }
-
-            //_writeCharacteristic = await _targetService.GetCharacteristicAsync(new Guid(_writeCharacteristicGuid));
-            //_readCharacteristic = await _targetService.GetCharacteristicAsync(new Guid(_readCharacteristicGuid));
-            //_readCharacteristic.ValueUpdated += (o, args) =>
-            //{
-            //    //DataReceived?.Invoke(args.Characteristic.Value);
-            //};
-
-            //await _readCharacteristic.StartUpdatesAsync();
         }
 
         public void Stop()

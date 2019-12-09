@@ -123,7 +123,7 @@ namespace SiamCross.Droid.Models
             catch(Exception e)
             {
                 System.Diagnostics.Debug.WriteLine("Ошибка инициализации: " + e.Message);
-                await Disconnect();
+             //   await Disconnect();
             }
         }
 
@@ -136,7 +136,7 @@ namespace SiamCross.Droid.Models
                 _adapter = null;
 
                 _device.Dispose();
-                _targetService.Dispose();
+                _targetService?.Dispose();
 
                 _device = null;
                 _targetService = null;
