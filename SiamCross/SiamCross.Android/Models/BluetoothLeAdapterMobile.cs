@@ -38,15 +38,31 @@ namespace SiamCross.Droid.Models
         private const string _serviceGuid = "569a1101-b87f-490c-92cb-11ba5ea5167c";
         private ScannedDeviceInfo _deviceInfo;
 
+        private static List<string> _connectQueue;
+
         public BluetoothLeAdapterMobile(ScannedDeviceInfo deviceInfo)
         {
             _adapter = CrossBluetoothLE.Current.Adapter;
             _deviceInfo = deviceInfo;
             _deviceGuid = (Guid)deviceInfo.BluetoothArgs;
+
+            if(_connectQueue == null)
+            {
+                _connectQueue = new List<string>();
+            }
         }
 
         public async Task Connect()
         {
+            if(_connectQueue.Contains(_deviceInfo.Name))
+            {
+                return;
+            }
+            else
+            {
+                _connectQueue.Add(_deviceInfo.Name);
+            }
+
             Device.BeginInvokeOnMainThread(async () =>
             {
                 await _adapter.StopScanningForDevicesAsync();
@@ -58,6 +74,8 @@ namespace SiamCross.Droid.Models
                 {
                     System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения по Guid "
                         + _deviceInfo.Name + ": " + e.Message);
+                    _connectQueue.Remove(_deviceInfo.Name);
+                    return;
                 }
 
                 _device = _adapter.ConnectedDevices.Where(x => x.Id == _deviceGuid)
@@ -67,6 +85,7 @@ namespace SiamCross.Droid.Models
                     System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect"
                         + _deviceInfo.Name + "ошибка соединения BLE - _device был null");
                     ConnectFailed();
+                    _connectQueue.Remove(_deviceInfo.Name);
                     return;
                 }
                 await Initialize();
@@ -94,12 +113,14 @@ namespace SiamCross.Droid.Models
 
                 await _readCharacteristic.StartUpdatesAsync();
                 ConnectSucceed();
+                _connectQueue.Remove(_deviceInfo.Name);
             }
             catch(Exception e)
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect " 
                     + _deviceInfo.Name + " ошибка инициализации: " + e.Message);
                 await Disconnect();
+                _connectQueue.Remove(_deviceInfo.Name);
             }
         }
 
