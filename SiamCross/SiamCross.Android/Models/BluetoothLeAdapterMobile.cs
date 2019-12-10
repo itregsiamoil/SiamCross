@@ -62,7 +62,7 @@ namespace SiamCross.Droid.Models
 
                 _device = _adapter.ConnectedDevices.Where(x => x.Id == _deviceGuid)
                     .LastOrDefault();
-                if (_deviceGuid == null)
+                if (_device == null)
                 {
                     System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect"
                         + _deviceInfo.Name + "ошибка соединения BLE - _device был null");

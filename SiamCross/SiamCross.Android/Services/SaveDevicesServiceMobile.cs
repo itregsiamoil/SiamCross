@@ -67,6 +67,13 @@ namespace SiamCross.Droid.Services
                                             readDevice.DeviceName, address, BluetoothType.Classic));
                                         break;
                                     case BluetoothType.Le:
+                                        string addressLe = readDevice.DeviceAddress;
+                                        if (addressLe == null) break;
+                                        if (Guid.TryParse(addressLe, out Guid addressGuid))
+                                        {
+                                            devicesInfo.Add(new ScannedDeviceInfo(
+                                                readDevice.DeviceName, addressGuid, BluetoothType.Le));
+                                        }
                                         break;
                                     default:
                                         break;
@@ -114,7 +121,18 @@ namespace SiamCross.Droid.Services
                                 }
                                 break;
                             case BluetoothType.Le:
-
+                                if (device.BluetoothArgs is Guid addressGuid)
+                                {
+                                    var savedDevice = new SavedDevice
+                                    {
+                                        DeviceAddress = addressGuid.ToString(),
+                                        DeviceName = device.Name,
+                                        BluetoothType = BluetoothType.Le
+                                    };
+                                    var jsonString = JsonConvert.SerializeObject(
+                                        savedDevice, _settings);
+                                    file.WriteLine(jsonString);
+                                }
                                 break;
                             default:
                                 break;
