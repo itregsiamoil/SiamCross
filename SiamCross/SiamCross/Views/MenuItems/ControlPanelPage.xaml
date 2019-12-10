@@ -6,9 +6,6 @@
              Title="Панель управления">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Панель управления"
-                VerticalOptions="StartAndExpand" 
-                HorizontalOptions="StartAndExpand" />
             <ListView x:Name="sensorList"
                 HasUnevenRows="True"
                 Margin="5"
