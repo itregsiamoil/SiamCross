@@ -28,6 +28,7 @@ namespace SiamCross.Droid.Models
     {
         private IAdapter _adapter;
         private IDevice _device;
+        private Guid _deviceGuid;
         private IService _targetService;
         private ICharacteristic _writeCharacteristic;
         private ICharacteristic _readCharacteristic;
@@ -41,61 +42,35 @@ namespace SiamCross.Droid.Models
         {
             _adapter = CrossBluetoothLE.Current.Adapter;
             _deviceInfo = deviceInfo;
-            _device = (IDevice)deviceInfo.BluetoothArgs;
+            _deviceGuid = (Guid)deviceInfo.BluetoothArgs;
         }
 
         public async Task Connect()
         {
             Device.BeginInvokeOnMainThread(async () =>
             {
-
-                bool isTryGuid = false;
                 await _adapter.StopScanningForDevicesAsync();
                 try
                 {
-                    await _adapter.ConnectToDeviceAsync(_device);
+                    await _adapter.ConnectToKnownDeviceAsync(_deviceGuid);
                 }
                 catch (Exception e)
                 {
-                    isTryGuid = true;
-                    System.Diagnostics.Debug.WriteLine("Ошибка подключения по аргументам поиска: " + e.Message +
-                        ". Попытка подклучения по Guid...");
-                }
-                if (isTryGuid)
-                {
-                    try
-                    {
-                        await _adapter.ConnectToKnownDeviceAsync(_device.Id);
-                    }
-                    catch (Exception e)
-                    {
-                        System.Diagnostics.Debug.WriteLine("Ошибка подключения по Guid: " + e.Message);
-                    }
+                    System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения по Guid "
+                        + _deviceInfo.Name + ": " + e.Message);
                 }
 
-
-                _device = _adapter.ConnectedDevices.Where(x => x.Id == (_deviceInfo.BluetoothArgs as IDevice).Id).LastOrDefault();
-                if(_device == null)
+                _device = _adapter.ConnectedDevices.Where(x => x.Id == _deviceGuid)
+                    .LastOrDefault();
+                if (_deviceGuid == null)
                 {
-                    System.Diagnostics.Debug.WriteLine("Ошибка соединения BLE - _device был null");
+                    System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect"
+                        + _deviceInfo.Name + "ошибка соединения BLE - _device был null");
                     ConnectFailed();
                     return;
                 }
                 await Initialize();
             });
-        }
-
-        public async Task SendData(byte[] data)
-        {
-            try
-            {
-                await _writeCharacteristic.WriteAsync(data);
-            }
-            catch(Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine("Ошибка отправки сообщения BLE: " + e.Message);
-                ConnectFailed();
-            }
         }
 
         private async Task Initialize()
@@ -122,21 +97,35 @@ namespace SiamCross.Droid.Models
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine("Ошибка инициализации: " + e.Message);
+                System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect " 
+                    + _deviceInfo.Name + " ошибка инициализации: " + e.Message);
                 await Disconnect();
+            }
+        }
+
+        public async Task SendData(byte[] data)
+        {
+            try
+            {
+                await _writeCharacteristic.WriteAsync(data);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("Ошибка отправки сообщения BLE: " + e.Message);
+                ConnectFailed();
             }
         }
 
         public async Task Disconnect()
         {
-            if (_device != null)
+            if (_deviceGuid != null)
             {
                 _writeCharacteristic = null;
                 _readCharacteristic = null;
                 _adapter = null;
 
                 _device.Dispose();
-                _targetService.Dispose();
+                _targetService?.Dispose();
 
                 _device = null;
                 _targetService = null;

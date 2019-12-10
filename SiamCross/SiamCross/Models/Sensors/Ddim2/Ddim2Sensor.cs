@@ -102,7 +102,7 @@ namespace SiamCross.Models.Sensors.Ddim2
                     Notify?.Invoke(SensorData);
 
                     await BluetoothAdapter.Connect();
-                    await Task.Delay(1000);
+                    await Task.Delay(4000);
                 }
             }
         }
