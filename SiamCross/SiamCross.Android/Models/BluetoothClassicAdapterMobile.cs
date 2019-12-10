@@ -21,7 +21,7 @@ using SiamCross.Models.Adapters;
 
 namespace SiamCross.Droid.Models
 {
-    public class BluetoothClassicAdapterMobile : IBluetoothClassicAdapter
+    public class BluetoothClassicAdapterMobile : BroadcastReceiver, IBluetoothClassicAdapter
     {
         private BluetoothDevice _bluetoothDevice;
         private BluetoothSocket _socket;
@@ -51,22 +51,25 @@ namespace SiamCross.Droid.Models
             if (_scannedDeviceInfo.BluetoothArgs is string address)
             {
                 _bluetoothDevice = _bluetoothAdapter.GetRemoteDevice(address);
-            }
+                            }
             if (_bluetoothDevice == null) return;
             try
             {               
-                _bluetoothDevice.FetchUuidsWithSdp(); 
+                //_bluetoothDevice.FetchUuidsWithSdp(); 
                 _socket = _bluetoothDevice.CreateRfcommSocketToServiceRecord(UUID.FromString(_uuid)/*/_bluetoothDevice.GetUuids()[0].Uuid/*/);
-          
-                if(_socket == null)
+                //_socket = _bluetoothDevice.CreateInsecureRfcommSocketToServiceRecord(UUID.FromString(_uuid)/*/_bluetoothDevice.GetUuids()[0].Uuid/*/);
+
+                if (_socket == null)
                 {
-                    System.Diagnostics.Debug.WriteLine("Soccet was null!");
+                    System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile.Connect " 
+                        + _scannedDeviceInfo.Name + ": _socket was null!");
                     return;
                 }
 
                 if (!_socket.IsConnected)
                 {
-                    _socket.Connect();
+                    
+                    await _socket.ConnectAsync();
                 }
 
                 _outStream = _socket.OutputStream;
@@ -85,8 +88,9 @@ namespace SiamCross.Droid.Models
             }
             catch(Java.IO.IOException e)
             {
-                System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile " + e.Message);
-              //  await Disconnect();
+                System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile.Connect " 
+                    + _scannedDeviceInfo.Name + ": "  + e.Message);
+                await Disconnect();
             }
         }
 
@@ -147,10 +151,15 @@ namespace SiamCross.Droid.Models
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapter: " + e.Message);
+                System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapter.SendData  " + _scannedDeviceInfo.Name + ": " + e.Message);
                 ConnectFailed?.Invoke();
             }
              await Task.Delay(300);
+        }
+
+        public override void OnReceive(Context context, Intent intent)
+        {
+            throw new NotImplementedException();
         }
 
         public event Action<byte[]> DataReceived;
