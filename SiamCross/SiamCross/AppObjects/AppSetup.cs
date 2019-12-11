@@ -23,6 +23,7 @@ namespace SiamCross.AppObjects
 
             cb.RegisterType<ScannerViewModel>().SingleInstance();
             cb.RegisterType<ControlPanelPageViewModel>().SingleInstance();
+            cb.RegisterType<Ddin2MeasurementViewModel>().AsSelf();
             //   cb.RegisterType<ScannerViewModel>().SingleInstance();
         }
     }

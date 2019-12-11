@@ -1,9 +1,5 @@
-﻿using SiamCross.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SiamCross.Models;
+using SiamCross.ViewModels;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -18,6 +14,18 @@ namespace SiamCross.Views.MenuItems
             var vm = new ViewModel<ControlPanelPageViewModel>();
             BindingContext = vm.GetViewModel;
             InitializeComponent();
+        }
+
+        private void sensorList_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            if (e.Item != null)
+            {
+                if (e.Item is SensorData sensorData)
+                {
+                    App.NavigationPage.Navigation.PushModalAsync(
+                        new Ddin2MeasurementPage(sensorData), true);
+                }
+            }
         }
     }
 }
