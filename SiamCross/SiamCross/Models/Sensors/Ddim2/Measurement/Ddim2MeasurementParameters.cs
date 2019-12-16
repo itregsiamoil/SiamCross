@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SiamCross.Models.Sensors.Ddin2.Measurement
+namespace SiamCross.Models.Sensors.Ddim2.Measurement
 {
     public struct Ddim2MeasurementParameters
     {
