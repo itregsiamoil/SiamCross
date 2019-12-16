@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models;
 using SiamCross.ViewModels;
+using SiamCross.Views.MenuItems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
