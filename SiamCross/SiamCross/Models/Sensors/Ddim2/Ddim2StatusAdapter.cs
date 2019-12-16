@@ -7,7 +7,7 @@ namespace SiamCross.Models.Sensors.Ddim2
 {
     public class Ddim2StatusAdapter
     {
-        public Ddim2MeasurementStatusState SrtingStatusToEnum(string stringStatus)
+        public Ddim2MeasurementStatusState StringStatusToEnum(string stringStatus)
         {
             if (!string.IsNullOrEmpty(stringStatus))
             {
@@ -22,6 +22,23 @@ namespace SiamCross.Models.Sensors.Ddim2
             }
 
             return Ddim2MeasurementStatusState.Empty; //stub
+        }
+
+        public string StringStatusToReport(string stringStatus)
+        {
+            if (!string.IsNullOrEmpty(stringStatus))
+            {
+                switch (stringStatus)
+                {
+                    case "0": return "Датчик свободен"; 
+                    case "1": return "Старт измерения";
+                    case "2": return "Расчет";
+                    case "4": return "Экспорт";
+                    case "5": return "Ошибка";
+                }
+            }
+
+            return "Датчик свободен"; //stub
         }
     }
 }

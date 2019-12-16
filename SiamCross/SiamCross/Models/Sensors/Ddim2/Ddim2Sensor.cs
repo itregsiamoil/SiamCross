@@ -17,6 +17,9 @@ namespace SiamCross.Models.Sensors.Ddim2
         public SensorData SensorData { get; }
         public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
 
+        private Ddim2StatusAdapter _statusAdapter;
+        Ddim2MeasurementManager _measurementManager;
+
         private bool IsMeasurement { get; set; } 
 
         private Ddim2QuickReportBuilder _reportBuilder;
@@ -31,6 +34,7 @@ namespace SiamCross.Models.Sensors.Ddim2
             BluetoothAdapter = adapter;
             _parser = new Ddim2Parser();
             _reportBuilder = new Ddim2QuickReportBuilder();
+            _statusAdapter = new Ddim2StatusAdapter();
             BluetoothAdapter.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += ReceiveHandler;
 
@@ -61,7 +65,11 @@ namespace SiamCross.Models.Sensors.Ddim2
             switch (commandName) // TODO: replace to enum 
             {
                 case "DeviceStatus":
-                    SensorData.Status = dataValue;
+                    SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
+                    if(_statusAdapter.StringStatusToEnum(dataValue) == Ddim2MeasurementStatusState.Ready)
+                    {
+                        await _measurementManager.DownloadMeasurement();
+                    }
                     break;
                 case "BatteryVoltage":
                     _reportBuilder.BatteryVoltage = dataValue;
@@ -74,6 +82,7 @@ namespace SiamCross.Models.Sensors.Ddim2
                     break;
                 case "AccelerationChanel":
                     _reportBuilder.Acceleration = dataValue;
+
                     break;
                 default: return;             
             }
@@ -106,7 +115,6 @@ namespace SiamCross.Models.Sensors.Ddim2
                     {
                         await QuickReport();
                         await Task.Delay(1500);
-
                     }
                     else
                     {
@@ -133,11 +141,11 @@ namespace SiamCross.Models.Sensors.Ddim2
                 (Ddim2MeasurementParameters)measurementParameters;
             Ddim2SecondaryParameters specificSecondaryParameters = 
                 (Ddim2SecondaryParameters)secondaryParameters;
-            var measurementManager = new Ddim2MeasurementManager(
+            _measurementManager = new Ddim2MeasurementManager(
                 BluetoothAdapter,
                 specificMeasurementParameters,
                 specificSecondaryParameters);
-            await measurementManager.RunMeasurement();
+            await _measurementManager.RunMeasurement();
         }
 
         public void Dispose()
