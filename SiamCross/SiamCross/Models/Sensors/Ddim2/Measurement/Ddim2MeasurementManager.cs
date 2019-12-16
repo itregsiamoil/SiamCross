@@ -49,15 +49,15 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
         }
 
         /*/ Copy from SiamBLE /*/
-        public async Task<List<Ddim2MeasurementData>> DownloadMeasurement(Ddim2MeasurementStatusState measurementStatus)
+        public async Task<List<Ddim2MeasurementData>> DownloadMeasurement()
         {
             bool gotError = false;
 
-            if (measurementStatus == Ddim2MeasurementStatusState.Error)
-            {
-                gotError = true;
-                await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["ReadMeasurementErrorCode"]);
-            }
+            //if (measurementStatus == Ddim2MeasurementStatusState.Error)
+            //{
+            //    gotError = true;
+            //    await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["ReadMeasurementErrorCode"]);
+            //}
 
             var _currentReport = new List<byte>();
             var _currentDynGraph = new List<byte[]>();

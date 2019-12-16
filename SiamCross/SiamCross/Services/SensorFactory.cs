@@ -34,6 +34,7 @@ namespace SiamCross.Services
                         new SensorData(SensorService.Instance.SensorsCount,
                         deviceInfo.Name, "Динамограф", ""));
                     sensor.Notify += SensorService.Instance.SensorDataChangedHandler;
+                    sensor.MeasurementRecieved += SensorService.Instance.MeasurementHandler;
                     sensor.ScannedDeviceInfo = deviceInfo;
                     return sensor;
                 }

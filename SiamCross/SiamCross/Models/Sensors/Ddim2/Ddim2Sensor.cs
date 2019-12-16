@@ -60,7 +60,7 @@ namespace SiamCross.Models.Sensors.Ddim2
             System.Diagnostics.Debug.WriteLine("Ддим2 успешно подключен!");
         }
 
-        private void ReceiveHandler(string commandName, string dataValue)
+        private async void ReceiveHandler(string commandName, string dataValue)
         {
             switch (commandName) // TODO: replace to enum 
             {
@@ -68,7 +68,9 @@ namespace SiamCross.Models.Sensors.Ddim2
                     SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
                     if(_statusAdapter.StringStatusToEnum(dataValue) == Ddim2MeasurementStatusState.Ready)
                     {
-                        await _measurementManager.DownloadMeasurement();
+                        var measurement = await _measurementManager.DownloadMeasurement();
+                        IsMeasurement = false;
+                        MeasurementRecieved(measurement);
                     }
                     break;
                 case "BatteryVoltage":
@@ -155,5 +157,6 @@ namespace SiamCross.Models.Sensors.Ddim2
         }
 
         public event Action<SensorData> Notify;
+        public event Action<List<Ddim2MeasurementData>> MeasurementRecieved;
     }
 }
