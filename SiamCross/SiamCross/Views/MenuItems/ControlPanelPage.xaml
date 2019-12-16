@@ -9,7 +9,8 @@
             <ListView x:Name="sensorList"
                 HasUnevenRows="True"
                 Margin="5"
-                ItemsSource="{Binding SensorsData}">
+                ItemsSource="{Binding SensorsData}"                                    
+                ItemTapped="sensorList_ItemTapped">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
