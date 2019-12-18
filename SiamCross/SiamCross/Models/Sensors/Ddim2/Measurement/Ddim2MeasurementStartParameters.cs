@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SiamCross.Models.Sensors.Ddim2.Measurement
 {
-    public struct Ddim2MeasurementParameters
+    public class Ddim2MeasurementStartParameters
     {
         public int Rod { get; }
         public int DynPeriod { get; }
@@ -12,17 +12,21 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
         public int Imtravel { get; }
         public int ModelPump { get; }
 
-        public Ddim2MeasurementParameters(int rod,
+        MeasurementSecondaryParameters SecondaryParameters { get; }
+
+        public Ddim2MeasurementStartParameters(int rod,
                                  int dynPeriod,
                                  int apertNumber,
                                  float imtravel,
-                                 int modelPump)
+                                 int modelPump,
+                                 MeasurementSecondaryParameters secondaryParameters)
         {
             Rod = rod * 10;
             DynPeriod = dynPeriod * 1000;
             ApertNumber = apertNumber;
             Imtravel = Convert.ToInt32(imtravel * 1000);
             ModelPump = modelPump;
+            SecondaryParameters = secondaryParameters;
         }
     }
 }

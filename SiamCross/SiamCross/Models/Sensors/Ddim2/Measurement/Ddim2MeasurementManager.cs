@@ -10,21 +10,17 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
     public class Ddim2MeasurementManager
     {
         private IBluetoothAdapter _bluetoothAdapter;
-        private DeviceConfigCommandGenerator _configGenerator = new DeviceConfigCommandGenerator();
-
-        private Ddim2MeasurementParameters _measurementParameters;
-        private Ddim2SecondaryParameters _secondaryParameters;
-
+        private DeviceConfigCommandGenerator _configGenerator;
+        private Ddim2MeasurementStartParameters _measurementParameters;
         private Ddim2MeasurementReport _report;
         private byte[] _errorCode;
-        private List<Ddim2MeasurementData> _measurements;
 
         public Ddim2MeasurementManager(IBluetoothAdapter bluetoothAdapter,
-            Ddim2MeasurementParameters measurementParameters, Ddim2SecondaryParameters secondaryParameters)
+            Ddim2MeasurementStartParameters measurementParameters)
         {
             _bluetoothAdapter = bluetoothAdapter;
             _measurementParameters = measurementParameters;
-            _secondaryParameters = secondaryParameters;
+            _configGenerator = new DeviceConfigCommandGenerator();
         }
 
         public async Task RunMeasurement()
@@ -49,7 +45,7 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
         }
 
         /*/ Copy from SiamBLE /*/
-        public async Task<List<Ddim2MeasurementData>> DownloadMeasurement()
+        public async Task<Ddim2MeasurementData> DownloadMeasurement()
         {
             bool gotError = false;
 
@@ -66,11 +62,7 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
 
             await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["ReadMeasurementReport"]);
 
-            await Task.Delay(300);
-
             await GetDgm4kB();
-
-            await Task.Delay(1000);
 
             var dynRawBytes = new List<byte>();
             foreach (var bytes in _currentDynGraph)
@@ -88,20 +80,10 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
             measurement.DynGraphPoints = DgmConverter.GetXYs(measurement.DynGraph.ToList(),
                     measurement.Report.Step, measurement.Report.WeightDiscr);
 
-            _measurements.Add(measurement);
-            //var row = new DataGridViewRow();
-            //row.CreateCells(dataGridViewMeasurements);
-            //row.Cells[0].Value = measurement.Date;
-            //row.Cells[1].Value = measurement.ErrorCode;
-            //dataGridViewMeasurements.Rows.Add(row);
-
-            //Console.WriteLine($"Points count in DynGraph {_currentDynGraph.Count}");
-
-            //ShowMeasurement(measurement);
 
             await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["ReadMeasurementReport"]);
             await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["InitializeMeasurement"]);
-            return _measurements;
+            return measurement;
         }
 
         private async Task GetDgm4kB()

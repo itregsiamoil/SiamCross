@@ -112,7 +112,7 @@ namespace SiamCross.Models.Sensors.Ddin2
             Notify?.Invoke(SensorData);
         }
 
-        public Task StartMeasurement(object measurementParameters, object secondaryParameters)
+        public Task StartMeasurement(object measurementParameters)
         {
             throw new NotImplementedException();
         }

@@ -13,8 +13,7 @@ namespace SiamCross.Models
         bool IsAlive { get; }
 
         Task QuickReport();
-        Task StartMeasurement(object measurementParameters,
-            object secondaryParameters);
+        Task StartMeasurement(object measurementParameters);
         SensorData SensorData { get; }
         ScannedDeviceInfo ScannedDeviceInfo { get; set; }
         event Action<SensorData> Notify;

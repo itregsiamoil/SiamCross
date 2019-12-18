@@ -4,9 +4,9 @@ using System.Text;
 
 namespace SiamCross.Models.Sensors.Ddim2.Measurement
 {
-    public struct Ddim2SecondaryParameters
+    public class MeasurementSecondaryParameters
     {
-        public Ddim2SecondaryParameters(
+        public MeasurementSecondaryParameters(
             string field,
             string well,
             string bush,
