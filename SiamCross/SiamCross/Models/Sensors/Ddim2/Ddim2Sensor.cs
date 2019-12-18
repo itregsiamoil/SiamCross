@@ -138,18 +138,12 @@ namespace SiamCross.Models.Sensors.Ddim2
             }
         }
 
-        public async Task StartMeasurement(object measurementParameters,
-            object secondaryParameters)
+        public async Task StartMeasurement(object measurementParameters)
         {
             IsMeasurement = true;
-            Ddim2MeasurementParameters specificMeasurementParameters = 
-                (Ddim2MeasurementParameters)measurementParameters;
-            Ddim2SecondaryParameters specificSecondaryParameters = 
-                (Ddim2SecondaryParameters)secondaryParameters;
-            _measurementManager = new Ddim2MeasurementManager(
-                BluetoothAdapter,
-                specificMeasurementParameters,
-                specificSecondaryParameters);
+            Ddim2MeasurementStartParameters specificMeasurementParameters = 
+                (Ddim2MeasurementStartParameters)measurementParameters;
+            _measurementManager = new Ddim2MeasurementManager(BluetoothAdapter, specificMeasurementParameters);
             await _measurementManager.RunMeasurement();
         }
 
@@ -160,6 +154,6 @@ namespace SiamCross.Models.Sensors.Ddim2
         }
 
         public event Action<SensorData> Notify;
-        public event Action<List<Ddim2MeasurementData>> MeasurementRecieved;
+        public event Action<Ddim2MeasurementData> MeasurementRecieved;
     }
 }
