@@ -23,19 +23,34 @@
                 <ViewCell>
                     <StackLayout   >
                         <Label Text="Куст"></Label>
-                        <Entry Text="{Binding Bush}" Keyboard="Numeric"></Entry>
+                        <Entry Text="{Binding Bush}" 
+                               Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <local:IntegerNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
                     <StackLayout  >
                         <Label Text="Цех"></Label>
-                        <Entry Text="{Binding Shop}" Keyboard="Numeric"></Entry>
+                        <Entry Text="{Binding Shop}" 
+                               Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <local:IntegerNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
                     <StackLayout  >
                         <Label Text="Буферное давление"></Label>
-                        <Entry Text="{Binding BufferPressure}" Keyboard="Numeric"></Entry>
+                        <Entry Text="{Binding BufferPressure}" 
+                               >
+                            <Entry.Behaviors>
+                                <local:FloatNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
@@ -47,13 +62,23 @@
                 <ViewCell>
                     <StackLayout  >
                         <Label Text="Длина хода, м"></Label>
-                        <Entry Text="{Binding Imtravel}" Keyboard="Numeric"></Entry>
+                        <Entry Text="{Binding Imtravel}" 
+                               >
+                            <Entry.Behaviors>
+                                <local:FloatNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
                     <StackLayout >
                         <Label Text="Период качания, сек"></Label>
-                        <Entry Text="{Binding DynPeriod}" Keyboard="Numeric"></Entry>
+                        <Entry Text="{Binding DynPeriod}" 
+                               Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <local:IntegerNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
@@ -62,7 +87,7 @@
                         <Entry Text="{Binding ApertNumber}" 
                                Keyboard="Numeric">
                             <Entry.Behaviors>
-                                <local:ApertNumberBehavior/>
+                                <local:IntegerNumberValidationBehavior/>
                             </Entry.Behaviors>
                         </Entry>
                         <Label Text="Тип привода"></Label>
