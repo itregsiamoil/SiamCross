@@ -62,7 +62,7 @@
                         <Entry Text="{Binding ApertNumber}" 
                                Keyboard="Numeric">
                             <Entry.Behaviors>
-                                <local:NumericValidationBehavior/>
+                                <local:ApertNumberBehavior/>
                             </Entry.Behaviors>
                         </Entry>
                         <Label Text="Тип привода"></Label>
