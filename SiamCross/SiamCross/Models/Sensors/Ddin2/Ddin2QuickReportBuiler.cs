@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace SiamCross.Models.Sensors.Ddin2
-{
+{ 
     public class Ddin2QuickReportBuiler
     {
         private string _batteryVoltage;

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SiamCross.Models.Sensors.Ddin2.Measurement
+namespace SiamCross.Models.Sensors.Ddim2.Measurement
 {
-    public struct SecondaryParameters
+    public struct Ddim2SecondaryParameters
     {
-        public SecondaryParameters(
+        public Ddim2SecondaryParameters(
             string field,
             string well,
             string bush,

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors;
+using SiamCross.Models.Sensors.Ddim2.Measurement;
 
 namespace SiamCross.Models.Sensors.Ddim2
 {
@@ -12,9 +13,14 @@ namespace SiamCross.Models.Sensors.Ddim2
     {
         private CancellationTokenSource _cancellToken;
         public IBluetoothAdapter BluetoothAdapter { get; }
-        public bool Alive { get; private set; }
+        public bool IsAlive { get; private set; }
         public SensorData SensorData { get; }
         public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
+
+        private Ddim2StatusAdapter _statusAdapter;
+        Ddim2MeasurementManager _measurementManager;
+
+        private bool IsMeasurement { get; set; } 
 
         private Ddim2QuickReportBuilder _reportBuilder;
         private Ddim2Parser _parser;
@@ -22,11 +28,13 @@ namespace SiamCross.Models.Sensors.Ddim2
         private Task _liveTask;
         public Ddim2Sensor(IBluetoothAdapter adapter, SensorData sensorData)
         {
-            Alive = false;
+            IsMeasurement = false;
+            IsAlive = false;
             SensorData = sensorData;
             BluetoothAdapter = adapter;
             _parser = new Ddim2Parser();
             _reportBuilder = new Ddim2QuickReportBuilder();
+            _statusAdapter = new Ddim2StatusAdapter();
             BluetoothAdapter.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += ReceiveHandler;
 
@@ -40,7 +48,7 @@ namespace SiamCross.Models.Sensors.Ddim2
 
         private void ConnectFailedHandler()
         {
-            Alive = false;
+            IsAlive = false;
         }
 
         private void ConnectHandler()
@@ -48,16 +56,22 @@ namespace SiamCross.Models.Sensors.Ddim2
             _parser = new Ddim2Parser();
             _parser.MessageReceived += ReceiveHandler;
 
-            Alive = true;
+            IsAlive = true;
             System.Diagnostics.Debug.WriteLine("Ддим2 успешно подключен!");
         }
 
-        private void ReceiveHandler(string commandName, string dataValue)
+        private async void ReceiveHandler(string commandName, string dataValue)
         {
             switch (commandName) // TODO: replace to enum 
             {
                 case "DeviceStatus":
-                    SensorData.Status = dataValue;
+                    SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
+                    if(_statusAdapter.StringStatusToEnum(dataValue) == Ddim2MeasurementStatusState.Ready)
+                    {
+                        var measurement = await _measurementManager.DownloadMeasurement();
+                        IsMeasurement = false;
+                        MeasurementRecieved(measurement);
+                    }
                     break;
                 case "BatteryVoltage":
                     _reportBuilder.BatteryVoltage = dataValue;
@@ -70,6 +84,7 @@ namespace SiamCross.Models.Sensors.Ddim2
                     break;
                 case "AccelerationChanel":
                     _reportBuilder.Acceleration = dataValue;
+
                     break;
                 default: return;             
             }
@@ -86,15 +101,28 @@ namespace SiamCross.Models.Sensors.Ddim2
             await BluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["AccelerationChanel"]);
         }
 
+        public async Task CheckStatus()
+        {
+            await BluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["ReadDeviceStatus"]);
+        }
+
         private async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             await Task.Delay(2000);
             while(!cancellationToken.IsCancellationRequested)
             {
-                if(Alive)
+                if(IsAlive)
                 {
-                    await QuickReport();
-                    await Task.Delay(1500);
+                    if(!IsMeasurement)
+                    {
+                        await QuickReport();
+                        await Task.Delay(1500);
+                    }
+                    else
+                    {
+                        await CheckStatus();
+                        await Task.Delay(1000);
+                    }
                 }
                 else
                 {
@@ -107,9 +135,19 @@ namespace SiamCross.Models.Sensors.Ddim2
             }
         }
 
-        public void StartMeasurement()
+        public async Task StartMeasurement(object measurementParameters,
+            object secondaryParameters)
         {
-            throw new NotImplementedException();
+            IsMeasurement = true;
+            Ddim2MeasurementParameters specificMeasurementParameters = 
+                (Ddim2MeasurementParameters)measurementParameters;
+            Ddim2SecondaryParameters specificSecondaryParameters = 
+                (Ddim2SecondaryParameters)secondaryParameters;
+            _measurementManager = new Ddim2MeasurementManager(
+                BluetoothAdapter,
+                specificMeasurementParameters,
+                specificSecondaryParameters);
+            await _measurementManager.RunMeasurement();
         }
 
         public void Dispose()
@@ -119,5 +157,6 @@ namespace SiamCross.Models.Sensors.Ddim2
         }
 
         public event Action<SensorData> Notify;
+        public event Action<List<Ddim2MeasurementData>> MeasurementRecieved;
     }
 }
