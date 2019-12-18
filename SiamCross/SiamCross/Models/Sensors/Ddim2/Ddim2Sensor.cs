@@ -68,9 +68,12 @@ namespace SiamCross.Models.Sensors.Ddim2
                     SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
                     if(_statusAdapter.StringStatusToEnum(dataValue) == Ddim2MeasurementStatusState.Ready)
                     {
-                        var measurement = await _measurementManager.DownloadMeasurement();
-                        IsMeasurement = false;
+                        var measurement = await _measurementManager.DownloadMeasurement();                       
                         MeasurementRecieved(measurement);
+                    }
+                    else if(_statusAdapter.StringStatusToEnum(dataValue) == Ddim2MeasurementStatusState.Empty)
+                    {
+                        IsMeasurement = false;
                     }
                     break;
                 case "BatteryVoltage":
