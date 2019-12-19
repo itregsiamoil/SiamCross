@@ -23,12 +23,12 @@ namespace SiamCross.Droid
     {
         protected override void RegisterDependencies(ContainerBuilder cb)
         {
-            cb.RegisterType<BluetoothScannerMobile>().As<IBluetoothScanner>();
+            cb.RegisterType<BluetoothScannerAndroid>().As<IBluetoothScanner>();
             base.RegisterDependencies(cb);
 
-            cb.RegisterType<BluetoothClassicAdapterMobile>().As<IBluetoothClassicAdapter>();
-            cb.RegisterType<BluetoothLeAdapterMobile>().As<IBluetoothLeAdapter>();
-            cb.RegisterType<SaveDevicesServiceMobile>().As<ISaveDevicesService>();
+            cb.RegisterType<BluetoothClassicAdapterAndroid>().As<IBluetoothClassicAdapter>();
+            cb.RegisterType<BluetoothLeAdapterAndroid>().As<IBluetoothLeAdapter>();
+            cb.RegisterType<SaveDevicesServiceAndroid>().As<ISaveDevicesService>();
         }
     }    
 }
