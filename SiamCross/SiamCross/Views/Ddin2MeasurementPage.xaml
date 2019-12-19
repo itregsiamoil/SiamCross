@@ -60,6 +60,17 @@
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
+                    <StackLayout >
+                        <Label Text="Диаметр штока, м"></Label>
+                        <Entry Text="{Binding Rod}" 
+                               Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <local:FloatNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
                     <StackLayout  >
                         <Label Text="Длина хода, м"></Label>
                         <Entry Text="{Binding Imtravel}" 

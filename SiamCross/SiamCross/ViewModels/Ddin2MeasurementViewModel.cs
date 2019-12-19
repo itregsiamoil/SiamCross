@@ -74,8 +74,7 @@ namespace SiamCross.ViewModels
                 Comments);
 
             var measurementParams = new Ddim2MeasurementStartParameters(
-                //int.Parse(Rod),
-                24,
+                int.Parse(Rod),
                 int.Parse(DynPeriod),
                 int.Parse(ApertNumber),
                 float.Parse(Imtravel),
