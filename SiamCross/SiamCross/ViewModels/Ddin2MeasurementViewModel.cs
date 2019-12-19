@@ -1,5 +1,5 @@
 ﻿using SiamCross.Models;
-using SiamCross.Models.Sensors.Ddim2.Measurement;
+using SiamCross.Models.Sensors.Ddin2.Measurement;
 using SiamCross.Services;
 using System;
 using System.Collections.Generic;
@@ -65,7 +65,7 @@ namespace SiamCross.ViewModels
                 Imtravel.Insert(0, "0");
             }
 
-            var secondaryParameters = new MeasurementSecondaryParameters(
+            var secondaryParameters = new Ddin2SecondaryParameters(
                 SelectedField,
                 "well",
                 Bush,
@@ -73,7 +73,7 @@ namespace SiamCross.ViewModels
                 BufferPressure,
                 Comments);
 
-            var measurementParams = new Ddim2MeasurementStartParameters(
+            var measurementParams = new Ddin2MeasurementStartParameters(
                 int.Parse(Rod),
                 int.Parse(DynPeriod),
                 int.Parse(ApertNumber),
@@ -117,7 +117,7 @@ namespace SiamCross.ViewModels
             set;
         }
 
-        private bool ValidateMeasurementParameters(Ddim2MeasurementStartParameters measurementParams)
+        private bool ValidateMeasurementParameters(Ddin2MeasurementStartParameters measurementParams)
         {
             bool result = true;
 

@@ -101,7 +101,7 @@ namespace SiamCross.Models.Sensors.Ddin2
         public async Task StartMeasurement(object measurementParameters)
         {
             IsMeasurement = true;
-            _parser.MessageReceived -= MessageReceivedHandler;
+            //_parser.MessageReceived -= MessageReceivedHandler;
             Ddin2MeasurementStartParameters specificMeasurementParameters =
                 (Ddin2MeasurementStartParameters)measurementParameters;
             _measurementManager = new Ddin2MeasurementManager(BluetoothAdapter, SensorData,

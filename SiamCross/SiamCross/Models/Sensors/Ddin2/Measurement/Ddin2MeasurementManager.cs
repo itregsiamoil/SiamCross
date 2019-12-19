@@ -44,10 +44,13 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
 
         public async Task RunMeasurement()
         {
-            await SendParameters();
-            await Start();
-            await IsMeasurementDone();
 
+            await SendParameters();
+            Console.WriteLine("Parameters has been sent");
+            await Start();
+            Console.WriteLine("Measurement started");
+            await IsMeasurementDone();
+            Console.WriteLine("Measurement is done");
             bool gotError = false;
 
             if (MeasurementStatus == Ddin2MeasurementStatus.Error)
@@ -152,7 +155,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
             //Read first 500 bytes
 
             await _bluetoothAdapter.SendData(command.ToArray());
-            //Thread.Sleep(900);
+            await Task.Delay(300);
 
             RemoveCrc();
 
@@ -166,7 +169,8 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
 
                 AddCrc();
                 await _bluetoothAdapter.SendData(command.ToArray());
-                //Thread.Sleep(900);
+                await Task.Delay(300);
+
 
                 RemoveCrc();
             }

@@ -29,7 +29,7 @@ namespace SiamCross.Models.Tools
         /// <returns></returns>
         public byte[] AddBytes(byte[] inputBytes)
         {
-            if (_byffer.Count > 30)
+            if (_byffer.Count > 34)
             {
                 _byffer.Clear();
                 System.Diagnostics.Debug.WriteLine("Внимание!!! Буффер парсера переполнился и был очищен!!!");
