@@ -18,9 +18,9 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
                 Convert.ToString(BitConverter.ToInt16(_errorCode, 0), 16) : "";
         }
 
-        public string Date { get => _date.ToString(); }
+        public DateTime Date => date;
 
-        private readonly DateTime _date;
+        private readonly DateTime date;
 
         private readonly byte[] _errorCode;
 
@@ -32,7 +32,7 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
         {
             Report = report;
             DynGraph = dynGraph;
-            _date = date;
+            date = date;
             AccelerationGraph = accelerationGraph;
             _errorCode = errorCode;
         }
