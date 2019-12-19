@@ -108,8 +108,8 @@ namespace SiamCross.ViewModels
                 return;
             }
 
-            await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);
             Application.Current.MainPage.Navigation.PopModalAsync();
+            await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);           
         }
         
         private int GetModelPump()

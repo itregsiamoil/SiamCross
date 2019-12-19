@@ -17,7 +17,7 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
         public SensorData SensorData { get; private set; }
         private Ddim2StatusAdapter _statusAdapter;
         public byte[] ErrorCode { get; private set; }
-        private Ddim2MeasurementStatus MeasurementStatus { get; set; }
+        public Ddim2MeasurementStatus MeasurementStatus { get; set; }
 
         private Ddim2Parser _parser;
 
@@ -36,10 +36,10 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
             _currentDynGraph = new List<byte[]>();
             _currentAccelerationGraph = new List<byte[]>();
 
-            _parser = new Ddim2Parser();
-            _bluetoothAdapter.DataReceived += _parser.ByteProcess;
-            _parser.ByteMessageReceived += MeasurementRecieveHandler;
-            _parser.MessageReceived += MessageReceiveHandler;
+            _parser = parser;
+            //_bluetoothAdapter.DataReceived += _parser.ByteProcess;
+            //_parser.ByteMessageReceived += MeasurementRecieveHandler;
+            //_parser.MessageReceived += MessageReceiveHandler;
         }
 
         public async Task RunMeasurement()
@@ -124,8 +124,10 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
                 new Ddim2MeasurementData(_report, dynRawBytes, DateTime.Now, null, ErrorCode) : 
                 new Ddim2MeasurementData(_report, dynRawBytes, DateTime.Now, null, null);                   ////////////////// ? 
 
-            measurement.DynGraphPoints = DgmConverter.GetXYs(measurement.DynGraph.ToList(),
+            var dynGraphPoints = DgmConverter.GetXYs(measurement.DynGraph.ToList(),
                     measurement.Report.Step, measurement.Report.WeightDiscr);
+
+            measurement.DynGraphPoints = dynGraphPoints;
 
 
             await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["ReadMeasurementReport"]);
@@ -184,7 +186,7 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
             }
         }
 
-        private void MeasurementRecieveHandler(string commandName, byte[] data)
+        public void MeasurementRecieveHandler(string commandName, byte[] data)
         {
             if(data == null)
             {

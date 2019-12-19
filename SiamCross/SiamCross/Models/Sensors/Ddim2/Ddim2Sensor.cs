@@ -39,6 +39,7 @@ namespace SiamCross.Models.Sensors.Ddim2
             _statusAdapter = new Ddim2StatusAdapter();
             BluetoothAdapter.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += ReceiveHandler;
+            _parser.ByteMessageReceived += MeasurementRecieveHandler;
 
             BluetoothAdapter.ConnectSucceed += ConnectHandler;
             BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
@@ -67,26 +68,10 @@ namespace SiamCross.Models.Sensors.Ddim2
             switch (commandName) // TODO: replace to enum 
             {
                 case "DeviceStatus":
-                    //SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
-
-                    //if(_statusAdapter.StringStatusToEnum(dataValue) == Ddim2MeasurementStatus.Ready)
-                    //{
-                    //    var measurement = await _measurementManager.DownloadMeasurement();                       
-                    //    MeasurementRecieved(measurement);
-                    //}
-                    //if (_statusAdapter.StringStatusToEnum(dataValue) == Ddim2MeasurementStatus.Error)
-                    //{
-                    //    await _measurementManager.ReadErrorCode();
-                    //    await Task.Delay(2000);
-                    //    SensorData.Status += " " + _measurementManager.ErrorCode.ToString();
-                    //}
-                    //else if(_statusAdapter.StringStatusToEnum(dataValue) == Ddim2MeasurementStatus.Empty)
-                    //{
-                    //    IsMeasurement = false;
-                    //}
-
-                   // Notify?.Invoke(SensorData);
-                   // return;
+                    /*/ Для замера /*/
+                    _measurementManager.MeasurementStatus = _statusAdapter.StringStatusToEnum(dataValue);
+                    SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
+                    return;
                     break;
                 case "BatteryVoltage":
                     _reportBuilder.BatteryVoltage = dataValue;
@@ -105,7 +90,7 @@ namespace SiamCross.Models.Sensors.Ddim2
             }
 
             SensorData.Status = _reportBuilder.GetReport();
-            Notify?.Invoke(SensorData);
+            //Notify?.Invoke(SensorData);
         }
 
         public async Task QuickReport()
@@ -159,6 +144,12 @@ namespace SiamCross.Models.Sensors.Ddim2
             _measurementManager = new Ddim2MeasurementManager(BluetoothAdapter, SensorData, 
                 _parser, specificMeasurementParameters);
             await _measurementManager.RunMeasurement();
+        }
+
+        /*/ Для замера /*/
+        private void MeasurementRecieveHandler(string commandName, byte[] data)
+        {
+            _measurementManager.MeasurementRecieveHandler(commandName, data);
         }
 
         public void Dispose()
