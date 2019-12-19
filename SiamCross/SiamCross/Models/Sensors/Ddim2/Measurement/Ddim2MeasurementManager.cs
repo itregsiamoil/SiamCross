@@ -103,7 +103,7 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
         public async Task<Ddim2MeasurementData> DownloadMeasurement(bool isError)
         {
             var _currentReport = new List<byte>();
-            var _currentDynGraph = new List<byte[]>();
+            
             _currentDynGraph.Add(new byte[2] { 0, 0 });
             var _currentAccelerationGraph = new List<byte[]>();
 
@@ -221,6 +221,17 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
                     break;
                 case "ReadMeasurementErrorCode":
                     ErrorCode = data;
+                    break;
+                case "DgmPart1":
+                    //Console.WriteLine("Dgm part1 has been exported");
+                    //_dgmPart1 = new byte[data.Length];
+                    //for(int i=0; i < data.Length; i++)
+                    //{
+                    //    _dgmPart1[i] = data[i];
+                    //}
+                    Console.WriteLine($"Added {data.Length} bytes");
+                    _currentDynGraph.Add(data);
+                    
                     break;
                 default:
                     break;
