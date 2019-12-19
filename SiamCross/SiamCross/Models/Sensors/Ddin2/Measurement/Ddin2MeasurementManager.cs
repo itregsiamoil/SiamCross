@@ -134,6 +134,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
 
 
             await _bluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["ReadMeasurementReport"]);
+            await Task.Delay(300);
             await _bluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["InitializeMeasurement"]);
             return measurement;
         }
