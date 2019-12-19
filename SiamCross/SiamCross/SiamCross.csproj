@@ -24,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\Ddim2MeasurementPage.xaml.cs">
+      <DependentUpon>Ddim2MeasurementPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\MenuItems\MeasuringPanelPage.xaml.cs">
       <DependentUpon>MeasuringPanelPage.xaml</DependentUpon>
     </Compile>
@@ -33,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\Ddin2MeasurementPage.xaml">
+    <EmbeddedResource Update="Views\Ddim2MeasurementPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MenuItems\AboutPanelPage.xaml">

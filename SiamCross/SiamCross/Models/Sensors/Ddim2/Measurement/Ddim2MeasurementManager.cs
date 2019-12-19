@@ -1,4 +1,5 @@
 ﻿using SiamCross.Models.Tools;
+using SiamCross.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,29 +14,78 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
         private DeviceConfigCommandGenerator _configGenerator;
         private Ddim2MeasurementStartParameters _measurementParameters;
         private Ddim2MeasurementReport _report;
-        private byte[] _errorCode;
+        public SensorData SensorData { get; private set; }
+        private Ddim2StatusAdapter _statusAdapter;
+        public byte[] ErrorCode { get; private set; }
+        private Ddim2MeasurementStatus MeasurementStatus { get; set; }
 
-        public Ddim2MeasurementManager(IBluetoothAdapter bluetoothAdapter,
-            Ddim2MeasurementStartParameters measurementParameters)
+        private Ddim2Parser _parser;
+
+        private List<byte[]> _currentDynGraph;
+        private List<byte[]> _currentAccelerationGraph;
+
+        public Ddim2MeasurementManager(IBluetoothAdapter bluetoothAdapter, SensorData sensorData, 
+            Ddim2Parser parser, Ddim2MeasurementStartParameters measurementParameters)
         {
             _bluetoothAdapter = bluetoothAdapter;
             _measurementParameters = measurementParameters;
             _configGenerator = new DeviceConfigCommandGenerator();
+            SensorData = sensorData;
+            _statusAdapter = new Ddim2StatusAdapter();
+
+            _currentDynGraph = new List<byte[]>();
+            _currentAccelerationGraph = new List<byte[]>();
+
+            _parser = new Ddim2Parser();
+            _bluetoothAdapter.DataReceived += _parser.ByteProcess;
+            _parser.ByteMessageReceived += MeasurementRecieveHandler;
+            _parser.MessageReceived += MessageReceiveHandler;
         }
 
         public async Task RunMeasurement()
         {
             await SendParameters();
             await Start();
+            await IsMeasurementDone();
+
+            bool gotError = false;
+
+            if (MeasurementStatus == Ddim2MeasurementStatus.Error)
+            {
+                gotError = true;
+                await ReadErrorCode();
+            }
+
+            var fullReport = await DownloadMeasurement(gotError);
+            SensorService.Instance.MeasurementHandler(fullReport);
         }
 
         private async Task SendParameters()
         {
             await _bluetoothAdapter.SendData(_configGenerator.SetRod(_measurementParameters.Rod));
-            await _bluetoothAdapter.SendData(_configGenerator.SetRod(_measurementParameters.DynPeriod));
-            await _bluetoothAdapter.SendData(_configGenerator.SetRod(_measurementParameters.ApertNumber));
-            await _bluetoothAdapter.SendData(_configGenerator.SetRod(_measurementParameters.Imtravel));
-            await _bluetoothAdapter.SendData(_configGenerator.SetRod(_measurementParameters.ModelPump));
+            await _bluetoothAdapter.SendData(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod));
+            await _bluetoothAdapter.SendData(_configGenerator.SetApertNumber(_measurementParameters.ApertNumber));
+            await _bluetoothAdapter.SendData(_configGenerator.SetImtravel(_measurementParameters.Imtravel));
+            await _bluetoothAdapter.SendData(_configGenerator.SetModelPump(_measurementParameters.ModelPump));
+        }
+
+        private async Task<bool> IsMeasurementDone()
+        {
+            bool isDone = false;
+            while (!isDone)
+            {
+                await Task.Delay(300);
+
+                await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["ReadDeviceStatus"]);
+
+                if (MeasurementStatus == Ddim2MeasurementStatus.Ready
+                   || MeasurementStatus == Ddim2MeasurementStatus.Error)
+                {
+                    isDone = true;
+                }
+            }
+
+            return isDone;
         }
 
         private async Task Start()
@@ -44,17 +94,14 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
             await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["StartMeasurement"]);
         }
 
-        /*/ Copy from SiamBLE /*/
-        public async Task<Ddim2MeasurementData> DownloadMeasurement()
+        public async Task ReadErrorCode()
         {
-            bool gotError = false;
+            await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["ReadMeasurementErrorCode"]);
+        }
 
-            //if (measurementStatus == Ddim2MeasurementStatusState.Error)
-            //{
-            //    gotError = true;
-            //    await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["ReadMeasurementErrorCode"]);
-            //}
-
+        /*/ Copy from SiamBLE /*/
+        public async Task<Ddim2MeasurementData> DownloadMeasurement(bool isError)
+        {
             var _currentReport = new List<byte>();
             var _currentDynGraph = new List<byte[]>();
             _currentDynGraph.Add(new byte[2] { 0, 0 });
@@ -73,8 +120,8 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
                 }
             }
 
-            Ddim2MeasurementData measurement = gotError ? 
-                new Ddim2MeasurementData(_report, dynRawBytes, DateTime.Now, null, _errorCode) : 
+            Ddim2MeasurementData measurement = isError ? 
+                new Ddim2MeasurementData(_report, dynRawBytes, DateTime.Now, null, ErrorCode) : 
                 new Ddim2MeasurementData(_report, dynRawBytes, DateTime.Now, null, null);                   ////////////////// ? 
 
             measurement.DynGraphPoints = DgmConverter.GetXYs(measurement.DynGraph.ToList(),
@@ -136,5 +183,60 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
                 command.RemoveAt(command.Count - 1);
             }
         }
+
+        private void MeasurementRecieveHandler(string commandName, byte[] data)
+        {
+            if(data == null)
+            {
+                return;
+            }
+
+            switch (commandName)
+            {
+                case "ExportDynGraph":
+                    Console.WriteLine(BitConverter.ToString(data));
+                    _currentDynGraph.Add(data);
+                    break;
+                case "ExportAccelerationGraph":
+                    _currentAccelerationGraph.Add(data.Reverse().ToArray());
+                    break;
+                case "ReadMeasurementReport":
+                    var report = new List<short>();
+                    for (int i = 0; i + 1 < data.Count(); i += 2)
+                    {
+                        var array = new byte[] { data[i], data[i + 1] };
+                        short value = BitConverter.ToInt16(array, 0);
+                        report.Add(value);
+                    }
+                    _report = new Ddim2MeasurementReport(
+                        report[0],
+                        report[1],
+                        report[2],
+                        report[3],
+                        report[4],
+                        report[5],
+                        report[6]);
+                    break;
+                case "ReadMeasurementErrorCode":
+                    ErrorCode = data;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void MessageReceiveHandler(string commandName, string dataValue)
+        {
+            switch (commandName) // TODO: replace to enum 
+            {
+                case "DeviceStatus":
+                    var status = _statusAdapter.StringStatusToReport(dataValue);
+                    MeasurementStatus = _statusAdapter.StringStatusToEnum(dataValue);
+                    SensorData.Status = status + " " + Convert.ToString(BitConverter.ToInt16(ErrorCode, 0), 16);
+                    break;         
+                default: return;
+            }
+        }
+
     }
 }

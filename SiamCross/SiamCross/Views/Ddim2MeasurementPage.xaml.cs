@@ -13,11 +13,11 @@ using Xamarin.Forms.Xaml;
 namespace SiamCross.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class Ddin2MeasurementPage : ContentPage
+    public partial class Ddim2MeasurementPage : ContentPage
     {
-        public Ddin2MeasurementPage(SensorData sensorData)
+        public Ddim2MeasurementPage(SensorData sensorData)
         {
-            var vm = new ViewModel<Ddin2MeasurementViewModel>(sensorData);
+            var vm = new ViewModel<Ddim2MeasurementViewModel>(sensorData);
             BindingContext = vm.GetViewModel;
             InitializeComponent();
         }

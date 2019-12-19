@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SiamCross.Models.Sensors.Ddim2.Measurement
 {
-    public enum Ddim2MeasurementStatusState
+    public enum Ddim2MeasurementStatus
     {
         Empty = 0,
         Busy = 1,

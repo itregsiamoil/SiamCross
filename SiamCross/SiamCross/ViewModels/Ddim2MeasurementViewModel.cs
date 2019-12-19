@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models;
 using SiamCross.Models.Sensors.Ddim2.Measurement;
+using SiamCross.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,7 +12,7 @@ using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
-    public class Ddin2MeasurementViewModel : BaseViewModel, IViewModel
+    public class Ddim2MeasurementViewModel : BaseViewModel, IViewModel
     {
         private SensorData _sensorData;
 
@@ -38,7 +39,7 @@ namespace SiamCross.ViewModels
             Hydraulic
         }
 
-        public Ddin2MeasurementViewModel(SensorData sensorData)
+        public Ddim2MeasurementViewModel(SensorData sensorData)
         {
             _sensorData = sensorData;
             SensorName = _sensorData.Name;
@@ -71,7 +72,7 @@ namespace SiamCross.ViewModels
             //});
         }
 
-        private void StartMeasurementHandler()
+        private async void StartMeasurementHandler()
         {
             if (!ValidateForEmptiness())
             {
@@ -84,15 +85,22 @@ namespace SiamCross.ViewModels
                 Imtravel.Insert(0, "0");
             }
 
+            var secondaryParameters = new MeasurementSecondaryParameters(
+                SelectedField,
+                "well",
+                Bush,
+                Shop,
+                BufferPressure,
+                Comments);
 
-
-            var measurementParams = new Ddim2MeasurementParameters(
+            var measurementParams = new Ddim2MeasurementStartParameters(
                 //int.Parse(Rod),
                 24,
                 int.Parse(DynPeriod),
                 int.Parse(ApertNumber),
                 float.Parse(Imtravel),
-                GetModelPump());
+                GetModelPump(),
+                secondaryParameters);
 
             if (!ValidateMeasurementParameters(measurementParams))
             {
@@ -100,6 +108,7 @@ namespace SiamCross.ViewModels
                 return;
             }
 
+            await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);
             Application.Current.MainPage.Navigation.PopModalAsync();
         }
         
@@ -129,7 +138,7 @@ namespace SiamCross.ViewModels
             set; 
         }
 
-        private bool ValidateMeasurementParameters(Ddim2MeasurementParameters measurementParams)
+        private bool ValidateMeasurementParameters(Ddim2MeasurementStartParameters measurementParams)
         {
             bool result = true;
 

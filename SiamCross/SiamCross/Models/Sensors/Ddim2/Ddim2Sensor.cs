@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,12 +18,13 @@ namespace SiamCross.Models.Sensors.Ddim2
         public SensorData SensorData { get; }
         public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
 
-        private Ddim2StatusAdapter _statusAdapter;
+
         Ddim2MeasurementManager _measurementManager;
 
         private bool IsMeasurement { get; set; } 
 
         private Ddim2QuickReportBuilder _reportBuilder;
+        private Ddim2StatusAdapter _statusAdapter;
         private Ddim2Parser _parser;
 
         private Task _liveTask;
@@ -60,21 +62,31 @@ namespace SiamCross.Models.Sensors.Ddim2
             System.Diagnostics.Debug.WriteLine("Ддим2 успешно подключен!");
         }
 
-        private async void ReceiveHandler(string commandName, string dataValue)
+        private void ReceiveHandler(string commandName, string dataValue)
         {
             switch (commandName) // TODO: replace to enum 
             {
                 case "DeviceStatus":
-                    SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
-                    if(_statusAdapter.StringStatusToEnum(dataValue) == Ddim2MeasurementStatusState.Ready)
-                    {
-                        var measurement = await _measurementManager.DownloadMeasurement();                       
-                        MeasurementRecieved(measurement);
-                    }
-                    else if(_statusAdapter.StringStatusToEnum(dataValue) == Ddim2MeasurementStatusState.Empty)
-                    {
-                        IsMeasurement = false;
-                    }
+                    //SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
+
+                    //if(_statusAdapter.StringStatusToEnum(dataValue) == Ddim2MeasurementStatus.Ready)
+                    //{
+                    //    var measurement = await _measurementManager.DownloadMeasurement();                       
+                    //    MeasurementRecieved(measurement);
+                    //}
+                    //if (_statusAdapter.StringStatusToEnum(dataValue) == Ddim2MeasurementStatus.Error)
+                    //{
+                    //    await _measurementManager.ReadErrorCode();
+                    //    await Task.Delay(2000);
+                    //    SensorData.Status += " " + _measurementManager.ErrorCode.ToString();
+                    //}
+                    //else if(_statusAdapter.StringStatusToEnum(dataValue) == Ddim2MeasurementStatus.Empty)
+                    //{
+                    //    IsMeasurement = false;
+                    //}
+
+                   // Notify?.Invoke(SensorData);
+                   // return;
                     break;
                 case "BatteryVoltage":
                     _reportBuilder.BatteryVoltage = dataValue;
@@ -121,16 +133,16 @@ namespace SiamCross.Models.Sensors.Ddim2
                         await QuickReport();
                         await Task.Delay(1500);
                     }
-                    else
-                    {
-                        await CheckStatus();
-                        await Task.Delay(1000);
-                    }
+                    //else
+                    //{
+                    //    await CheckStatus();
+                    //    await Task.Delay(1000);
+                    //}
                 }
                 else
                 {
                     SensorData.Status = "Нет связи";
-                    Notify?.Invoke(SensorData);
+                    //Notify?.Invoke(SensorData);
 
                     await BluetoothAdapter.Connect();
                     await Task.Delay(4000);
@@ -141,9 +153,11 @@ namespace SiamCross.Models.Sensors.Ddim2
         public async Task StartMeasurement(object measurementParameters)
         {
             IsMeasurement = true;
+            _parser.MessageReceived -= ReceiveHandler;
             Ddim2MeasurementStartParameters specificMeasurementParameters = 
                 (Ddim2MeasurementStartParameters)measurementParameters;
-            _measurementManager = new Ddim2MeasurementManager(BluetoothAdapter, specificMeasurementParameters);
+            _measurementManager = new Ddim2MeasurementManager(BluetoothAdapter, SensorData, 
+                _parser, specificMeasurementParameters);
             await _measurementManager.RunMeasurement();
         }
 

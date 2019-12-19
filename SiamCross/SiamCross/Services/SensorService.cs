@@ -105,6 +105,15 @@ namespace SiamCross.Services
             thread.Start();
         }
 
+        public async Task StartMeasurementOnSensor(int id, object parameters)
+        {
+            var sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
+            if (sensor != null)
+            {
+                await sensor.StartMeasurement(parameters);
+            }
+        }
+
         public void MeasurementHandler(object measurementArgs)
         {
             Ddim2MeasurementData ddim2Measuremet = (Ddim2MeasurementData)measurementArgs;

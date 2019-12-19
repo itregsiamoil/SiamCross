@@ -23,7 +23,7 @@ namespace SiamCross.Views.MenuItems
                 if (e.Item is SensorData sensorData)
                 {
                     App.NavigationPage.Navigation.PushModalAsync(
-                        new Ddin2MeasurementPage(sensorData), true);
+                        new Ddim2MeasurementPage(sensorData), true);
                 }
             }
         }
