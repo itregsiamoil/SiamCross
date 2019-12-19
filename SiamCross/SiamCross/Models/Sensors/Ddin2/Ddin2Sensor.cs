@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using SiamCross.Models.Scanners;
+using SiamCross.Models.Sensors.Ddin2.Measurement;
 
 namespace SiamCross.Models.Sensors.Ddin2
 {
@@ -22,21 +23,37 @@ namespace SiamCross.Models.Sensors.Ddin2
 
         public event Action<SensorData> Notify;
 
+        private Ddin2MeasurementManager _measurementManager;
+
+        private bool IsMeasurement { get; set; }
+
+        private Ddin2StatusAdapter _statusAdapter;
+
         public Ddin2Sensor(IBluetoothAdapter bluetoothAdapter, SensorData sensorData)
         {
+            IsMeasurement = false;
             IsAlive = false;
             BluetoothAdapter = bluetoothAdapter;
             SensorData = sensorData;
             _parser = new Ddin2Parser();
             _reportBuilder = new Ddin2QuickReportBuiler();
+            _statusAdapter = new Ddin2StatusAdapter();
 
             BluetoothAdapter.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += MessageReceivedHandler;
+            _parser.ByteMessageReceived += MeasurementRecieveHandler; 
             BluetoothAdapter.ConnectSucceed += ConnectSucceedHandler;
             BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
 
+            _cancellToken = new CancellationTokenSource();
             _liveTask = new Task(async () => await LiveWhileAsync(_cancellToken.Token));
             _liveTask.Start();
+        }
+
+        /*/ Для замера /*/
+        private void MeasurementRecieveHandler(string commandName, byte[] data)
+        {
+            _measurementManager.MeasurementRecieveHandler(commandName, data);
         }
 
         private void ConnectFailedHandler()
@@ -59,8 +76,16 @@ namespace SiamCross.Models.Sensors.Ddin2
             {
                 if (IsAlive)
                 {
-                    await QuickReport();
-                    await Task.Delay(1500);
+                    if (!IsMeasurement)
+                    {
+                        await QuickReport();
+                        await Task.Delay(1500);
+                    }
+                    else
+                    {
+
+                    }
+                    
                 }
                 else
                 {
@@ -71,6 +96,17 @@ namespace SiamCross.Models.Sensors.Ddin2
                     await Task.Delay(4000);
                 }
             }
+        }
+
+        public async Task StartMeasurement(object measurementParameters)
+        {
+            IsMeasurement = true;
+            _parser.MessageReceived -= MessageReceivedHandler;
+            Ddin2MeasurementStartParameters specificMeasurementParameters =
+                (Ddin2MeasurementStartParameters)measurementParameters;
+            _measurementManager = new Ddin2MeasurementManager(BluetoothAdapter, SensorData,
+                _parser, specificMeasurementParameters);
+            await _measurementManager.RunMeasurement();
         }
 
         public async Task CheckStatus()
@@ -91,8 +127,10 @@ namespace SiamCross.Models.Sensors.Ddin2
             switch (commandName) // TODO: replace to enum 
             {
                 case "DeviceStatus":
-                    SensorData.Status = dataValue;
-                    break;
+                    /*/ Для замера /*/
+                    _measurementManager.MeasurementStatus = _statusAdapter.StringStatusToEnum(dataValue);
+                    SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
+                    return;
                 case "BatteryVoltage":
                     _reportBuilder.BatteryVoltage = dataValue;
                     break;
@@ -110,11 +148,6 @@ namespace SiamCross.Models.Sensors.Ddin2
 
             SensorData.Status = _reportBuilder.GetReport();
             Notify?.Invoke(SensorData);
-        }
-
-        public Task StartMeasurement(object measurementParameters)
-        {
-            throw new NotImplementedException();
         }
 
         public void Dispose()
