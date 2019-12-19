@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:local="clr-namespace:SiamCross.Views"
+             x:Class="SiamCross.Views.Ddin2MeasurementPage">
+
+    <TableView Intent="Data" 
+               HasUnevenRows="True" 
+               HorizontalOptions="CenterAndExpand">
+        <TableRoot>
+            <TableSection Title="Данные для замера">
+                <ViewCell>
+                    <StackLayout  >
+                        <Label Text="Скважина"></Label>
+                        <Picker ItemsSource="{Binding Fields}"
+                                SelectedItem="{Binding SelectedField}"
+                                ></Picker>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout   >
+                        <Label Text="Куст"></Label>
+                        <Entry Text="{Binding Bush}" 
+                               Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <local:IntegerNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout  >
+                        <Label Text="Цех"></Label>
+                        <Entry Text="{Binding Shop}" 
+                               Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <local:IntegerNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout  >
+                        <Label Text="Буферное давление"></Label>
+                        <Entry Text="{Binding BufferPressure}" 
+                               >
+                            <Entry.Behaviors>
+                                <local:FloatNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout  >
+                        <Label Text="Комментарии"></Label>
+                        <Editor Text="{Binding Comments}"></Editor>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout  >
+                        <Label Text="Длина хода, м"></Label>
+                        <Entry Text="{Binding Imtravel}" 
+                               >
+                            <Entry.Behaviors>
+                                <local:FloatNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout >
+                        <Label Text="Период качания, сек"></Label>
+                        <Entry Text="{Binding DynPeriod}" 
+                               Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <local:IntegerNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout >
+                        <Label Text="Номер отверствия"></Label>
+                        <Entry Text="{Binding ApertNumber}" 
+                               Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <local:IntegerNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
+                        <Label Text="Тип привода"></Label>
+                        <Picker ItemsSource="{Binding ModelPump}"
+                                SelectedItem="{Binding SelectedModelPump}"
+                                ></Picker>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout>
+                        <Button 
+                            Text="Начать измерение"
+                            Command="{Binding StartMeasurementCommand}"
+                            Margin="20"
+                            HorizontalOptions="CenterAndExpand"></Button>
+                    </StackLayout>
+                </ViewCell>
+            </TableSection>
+            <TableSection>
+
+            </TableSection>
+        </TableRoot>
+    </TableView>
+</ContentPage>
