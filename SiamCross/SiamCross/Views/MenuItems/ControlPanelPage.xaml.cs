@@ -27,6 +27,11 @@ namespace SiamCross.Views.MenuItems
                         App.NavigationPage.Navigation.PushModalAsync(
                             new Ddim2MeasurementPage(sensorData), true);
                     }
+                    else if (sensorData.Name.Contains("DDIN"))
+                    {
+                        App.NavigationPage.Navigation.PushModalAsync(
+                            new Ddin2MeasurementPage(sensorData), true);
+                    }
                     
                 }
             }

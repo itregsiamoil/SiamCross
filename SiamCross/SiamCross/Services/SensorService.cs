@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using SiamCross.Models;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Ddim2.Measurement;
+using SiamCross.Models.Sensors.Ddin2.Measurement;
 
 namespace SiamCross.Services
 {
@@ -116,7 +117,17 @@ namespace SiamCross.Services
 
         public void MeasurementHandler(object measurementArgs)
         {
-            Ddim2MeasurementData ddim2Measuremet = (Ddim2MeasurementData)measurementArgs;
+            switch (measurementArgs)
+            {
+                case Ddim2MeasurementData ddim2Data:
+                    var ddim2Measurement = ddim2Data;
+                    break;
+                case Ddin2MeasurementData ddin2Data:
+                    var ddin2Measurement = ddin2Data;
+                    break;
+                default:
+                    break;
+            }
             throw new NotImplementedException();
         }
     }
