@@ -4,8 +4,8 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             xmlns:local="clr-namespace:SiamCross.Views"
-             x:Class="SiamCross.Views.Ddim2MeasurementDonePage">
+             xmlns:local ="clr-namespace:SiamCross.Views"
+             x:Class="SiamCross.Views.Ddin2MeasurementDonePage">
     <!--1. График
     2. Месторождение
     3. Скважина
@@ -24,10 +24,10 @@
     16. Вес штанг в верхнем положении, т
     17. Вес штанг в нижнем положении, т
     18. Тип привод-->
-    <TableView Intent="Data" 
+        <TableView Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand">
-        <TableRoot>
+            <TableRoot>
             <TableSection Title="Данные для замера">
                 <ViewCell>
                     <StackLayout  >
@@ -192,5 +192,6 @@
                 </ViewCell>
             </TableSection>
         </TableRoot>
-    </TableView>
+        </TableView>
+
 </ContentPage>
