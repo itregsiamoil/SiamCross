@@ -19,15 +19,15 @@
     11. Номер отверствия 1
     12 Максимальная нагрузка, т
     13. Минимальная нагрузка, т
-    14. Длин хода, м
+    14. Длина хода, м
     15. Темп качания, кач/мин
     16. Вес штанг в верхнем положении, т
     17. Вес штанг в нижнем положении, т
     18. Тип привод-->
-    <TableView Intent="Data" 
+        <TableView Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand">
-        <TableRoot>
+            <TableRoot>
             <TableSection Title="Данные для замера">
                 <ViewCell>
                     <StackLayout  >
@@ -38,11 +38,14 @@
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
-                    <StackLayout  >
+                    <StackLayout   >
                         <Label Text="Скважина"></Label>
-                        <Picker ItemsSource="{Binding Fields}"
-                                SelectedItem="{Binding SelectedField}"
-                                ></Picker>
+                        <Entry Text="{Binding Well}" 
+                               Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <local:IntegerNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
@@ -68,6 +71,12 @@
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
+                    <StackLayout>
+                        <Label Text="Дата"></Label>
+                        <Label Text="{Binding Date}"></Label>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
                     <StackLayout  >
                         <Label Text="Буферное давление"></Label>
                         <Entry Text="{Binding BufferPressure}" 
@@ -85,9 +94,43 @@
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
+                    <StackLayout>
+                        <Label Text="Прибор"></Label>
+                        <Label Text="{Binding DeviceName}"></Label>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout>
+                        <Label Text="Тип исследования"></Label>
+                        <Label Text="{Binding MeasurementType}"></Label>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
                     <StackLayout >
-                        <Label Text="Диаметр штока, м"></Label>
-                        <Entry Text="{Binding Rod}" 
+                        <Label Text="Номер отверствия"></Label>
+                        <Entry Text="{Binding ApertNumber}" 
+                               Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <local:IntegerNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout >
+                        <Label Text="Максимальная нагрузка, т"></Label>
+                        <Entry Text="{Binding MaxLoad}" 
+                               Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <local:FloatNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout >
+                        <Label Text="Минимальная нагрузка, т"></Label>
+                        <Entry Text="{Binding MinLoad}" 
                                Keyboard="Numeric">
                             <Entry.Behaviors>
                                 <local:FloatNumberValidationBehavior/>
@@ -108,8 +151,8 @@
                 </ViewCell>
                 <ViewCell>
                     <StackLayout >
-                        <Label Text="Период качания, сек"></Label>
-                        <Entry Text="{Binding DynPeriod}" 
+                        <Label Text="Темп качания, кач/мин"></Label>
+                        <Entry Text="{Binding PumpRate}" 
                                Keyboard="Numeric">
                             <Entry.Behaviors>
                                 <local:IntegerNumberValidationBehavior/>
@@ -119,32 +162,36 @@
                 </ViewCell>
                 <ViewCell>
                     <StackLayout >
-                        <Label Text="Номер отверствия"></Label>
-                        <Entry Text="{Binding ApertNumber}" 
+                        <Label Text="Вес штанг в верхнем положении, т"></Label>
+                        <Entry Text="{Binding UpperRodWeight}" 
                                Keyboard="Numeric">
                             <Entry.Behaviors>
-                                <local:IntegerNumberValidationBehavior/>
+                                <local:FloatNumberValidationBehavior/>
                             </Entry.Behaviors>
                         </Entry>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout >
+                        <Label Text="Вес штанг в нижнем положении, т"></Label>
+                        <Entry Text="{Binding LowerRodWeight}" 
+                               Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <local:FloatNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout >
                         <Label Text="Тип привода"></Label>
                         <Picker ItemsSource="{Binding ModelPump}"
                                 SelectedItem="{Binding SelectedModelPump}"
                                 ></Picker>
                     </StackLayout>
                 </ViewCell>
-                <ViewCell>
-                    <StackLayout>
-                        <Button 
-                            Text="Начать измерение"
-                            Command="{Binding StartMeasurementCommand}"
-                            Margin="20"
-                            HorizontalOptions="CenterAndExpand"></Button>
-                    </StackLayout>
-                </ViewCell>
-            </TableSection>
-            <TableSection>
-
             </TableSection>
         </TableRoot>
-    </TableView>
+        </TableView>
+
 </ContentPage>
