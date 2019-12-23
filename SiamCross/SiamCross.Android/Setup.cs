@@ -11,6 +11,7 @@ using Android.Views;
 using Android.Widget;
 using Autofac;
 using SiamCross.AppObjects;
+using SiamCross.DataBase;
 using SiamCross.Droid.Models;
 using SiamCross.Droid.Services;
 using SiamCross.Models.Adapters;
@@ -29,6 +30,7 @@ namespace SiamCross.Droid
             cb.RegisterType<BluetoothClassicAdapterAndroid>().As<IBluetoothClassicAdapter>();
             cb.RegisterType<BluetoothLeAdapterAndroid>().As<IBluetoothLeAdapter>();
             cb.RegisterType<SaveDevicesServiceAndroid>().As<ISaveDevicesService>();
+            cb.RegisterType<SQLiteAndroid>().As<ISQLite>();
         }
     }    
 }

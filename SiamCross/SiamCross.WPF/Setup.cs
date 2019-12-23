@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using SiamCross.AppObjects;
+using SiamCross.DataBase;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Scanners;
 using SiamCross.Services;
@@ -24,6 +25,7 @@ namespace SiamCross.WPF
             cb.RegisterType<BluetoothClassicAdapterPC>().As<IBluetoothClassicAdapter>();
             cb.RegisterType<BluetoothLeAdapterPC>().As<IBluetoothLeAdapter>();
             cb.RegisterType<SaveDevicesServicePC>().As<ISaveDevicesService>();
+            cb.RegisterType<SQLiteWPF>().As<ISQLite>();
         }
     }
 }
