@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Ddim2.Measurement;
@@ -116,8 +117,13 @@ namespace SiamCross.Services
 
         public void MeasurementHandler(object measurementArgs)
         {
-            Ddim2MeasurementData ddim2Measuremet = (Ddim2MeasurementData)measurementArgs;
-            throw new NotImplementedException();
+            if (measurementArgs is Ddim2MeasurementData)
+            {
+                Ddim2MeasurementData ddim2Measuremet = (Ddim2MeasurementData)measurementArgs;
+                var dbModel = new Ddim2Measurement(ddim2Measuremet);
+                DataRepository.Instance.SaveDdim2Item(dbModel);
+                var qweqwe = DataRepository.Instance.GetDdim2Items<Ddim2Measurement>();
+            }
         }
     }
 }
