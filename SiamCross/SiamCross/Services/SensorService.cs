@@ -128,7 +128,7 @@ namespace SiamCross.Services
                 default:
                     break;
             }
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }

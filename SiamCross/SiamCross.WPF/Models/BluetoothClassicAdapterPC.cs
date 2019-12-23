@@ -99,6 +99,7 @@ namespace SiamCross.WPF.Models
             try
             {
                 await _stream.WriteAsync(data, 0, data.Length);
+                //Console.WriteLine($"Send message: {BitConverter.ToString(data)}");
             }
             catch (SocketException ex)
             {

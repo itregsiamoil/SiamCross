@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SiamCross.Models.Tools
 {
@@ -96,6 +97,7 @@ namespace SiamCross.Models.Tools
                 _expectedLength = -1;
                 var result = _byffer.ToArray();
                 _byffer.Clear();
+                //Console.WriteLine($"Answer message: {BitConverter.ToString(result)}");
                 return result;
             }
             else
