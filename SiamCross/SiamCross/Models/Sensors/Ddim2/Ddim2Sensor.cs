@@ -139,7 +139,7 @@ namespace SiamCross.Models.Sensors.Ddim2
             Ddim2MeasurementStartParameters specificMeasurementParameters = 
                 (Ddim2MeasurementStartParameters)measurementParameters;
             _measurementManager = new Ddim2MeasurementManager(BluetoothAdapter, SensorData, 
-                _parser, specificMeasurementParameters);
+                specificMeasurementParameters);
             var report = await _measurementManager.RunMeasurement();
             SensorService.Instance.MeasurementHandler(report);
             IsMeasurement = false;
