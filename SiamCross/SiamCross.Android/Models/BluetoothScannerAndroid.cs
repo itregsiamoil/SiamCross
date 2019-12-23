@@ -13,17 +13,17 @@ using System.Threading.Tasks;
 using System.Threading;
 using Plugin.BLE.Abstractions;
 
-[assembly: Dependency(typeof(BluetoothScannerMobile))]
+[assembly: Dependency(typeof(BluetoothScannerAndroid))]
 namespace SiamCross.Droid.Models
 {
-    public class BluetoothScannerMobile : IBluetoothScanner
+    public class BluetoothScannerAndroid : IBluetoothScanner
     {
         private IAdapter _adapter;
         private IBluetoothLE _bluetoothBLE;
         private BluetoothAdapter _socketAdapter;
         private List<IDevice> _deviceList = new List<IDevice>();
 
-        public BluetoothScannerMobile()
+        public BluetoothScannerAndroid()
         {
             _bluetoothBLE = CrossBluetoothLE.Current;
             _adapter = CrossBluetoothLE.Current.Adapter;

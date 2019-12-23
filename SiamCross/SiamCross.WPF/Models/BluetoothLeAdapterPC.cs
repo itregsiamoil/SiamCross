@@ -80,7 +80,6 @@ namespace SiamCross.WPF.Models
                     Console.WriteLine(ex.Message);
                     Console.WriteLine($"Ошибка подключения!");
                 }
-
             }
         }
 

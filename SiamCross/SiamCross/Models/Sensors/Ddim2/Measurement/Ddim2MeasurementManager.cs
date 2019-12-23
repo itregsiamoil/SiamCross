@@ -42,7 +42,7 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
             //_parser.MessageReceived += MessageReceiveHandler;
         }
 
-        public async Task RunMeasurement()
+        public async Task<object> RunMeasurement()
         {
             await SendParameters();
             await Start();
@@ -57,7 +57,7 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
             }
 
             var fullReport = await DownloadMeasurement(gotError);
-            SensorService.Instance.MeasurementHandler(fullReport);
+            return fullReport;
         }
 
         private async Task SendParameters()
@@ -121,8 +121,8 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
             }
 
             Ddim2MeasurementData measurement = isError ? 
-                new Ddim2MeasurementData(_report, dynRawBytes, DateTime.Now, null, ErrorCode) : 
-                new Ddim2MeasurementData(_report, dynRawBytes, DateTime.Now, null, null);                   ////////////////// ? 
+                new Ddim2MeasurementData(_report, dynRawBytes, DateTime.Now, _measurementParameters.SecondaryParameters, null, ErrorCode) : 
+                new Ddim2MeasurementData(_report, dynRawBytes, DateTime.Now, _measurementParameters.SecondaryParameters, null, null);                   ////////////////// ? 
 
             var dynGraphPoints = DgmConverter.GetXYs(measurement.DynGraph.ToList(),
                     measurement.Report.Step, measurement.Report.WeightDiscr);
@@ -231,19 +231,5 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
                     break;
             }
         }
-
-        private void MessageReceiveHandler(string commandName, string dataValue)
-        {
-            switch (commandName) // TODO: replace to enum 
-            {
-                case "DeviceStatus":
-                    var status = _statusAdapter.StringStatusToReport(dataValue);
-                    MeasurementStatus = _statusAdapter.StringStatusToEnum(dataValue);
-                    SensorData.Status = status + " " + Convert.ToString(BitConverter.ToInt16(ErrorCode, 0), 16);
-                    break;         
-                default: return;
-            }
-        }
-
     }
 }

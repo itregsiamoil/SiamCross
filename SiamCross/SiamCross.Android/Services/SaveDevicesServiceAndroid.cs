@@ -18,10 +18,10 @@ using SiamCross.Models.Scanners;
 using SiamCross.Services;
 using Xamarin.Forms;
 
-[assembly: Dependency(typeof(SaveDevicesServiceMobile))]
+[assembly: Dependency(typeof(SaveDevicesServiceAndroid))]
 namespace SiamCross.Droid.Services
 {
-    public class SaveDevicesServiceMobile : ISaveDevicesService
+    public class SaveDevicesServiceAndroid : ISaveDevicesService
     {
         private static readonly JsonSerializerSettings
             _settings = new JsonSerializerSettings

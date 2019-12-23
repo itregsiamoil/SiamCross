@@ -34,7 +34,7 @@ namespace SiamCross.Models.Sensors.Ddim2
                     case "1": return "Старт измерения";
                     case "2": return "Расчет";
                     case "4": return "Экспорт";
-                    case "5": return "Ошибка";
+                    case "5": return "Экспорт";
                 }
             }
 

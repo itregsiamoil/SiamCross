@@ -21,10 +21,10 @@ using SiamCross.Models.Adapters;
 using Xamarin.Forms;
 using Plugin.BLE.Abstractions.EventArgs;
 
-[assembly: Dependency(typeof(BluetoothLeAdapterMobile))]
+[assembly: Dependency(typeof(BluetoothLeAdapterAndroid))]
 namespace SiamCross.Droid.Models
 {
-    public class BluetoothLeAdapterMobile : IBluetoothLeAdapter
+    public class BluetoothLeAdapterAndroid : IBluetoothLeAdapter
     {
         private IAdapter _adapter;
         private IDevice _device;
@@ -40,7 +40,7 @@ namespace SiamCross.Droid.Models
 
         private static List<string> _connectQueue;
 
-        public BluetoothLeAdapterMobile(ScannedDeviceInfo deviceInfo)
+        public BluetoothLeAdapterAndroid(ScannedDeviceInfo deviceInfo)
         {
             _adapter = CrossBluetoothLE.Current.Adapter;
             _deviceInfo = deviceInfo;

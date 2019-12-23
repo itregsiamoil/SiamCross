@@ -63,6 +63,9 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
+    <PackageReference Include="sqlite-net-pcl">
+      <Version>1.6.292</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.Design" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Android.Support.v4" Version="28.0.0.3" />
@@ -76,13 +79,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
-    <Compile Include="Models\BluetoothClassicAdapterMobile.cs" />
-    <Compile Include="Models\BluetoothLeAdapterMobile.cs" />
-    <Compile Include="Models\BluetoothScannerMobile.cs" />
-    <Compile Include="Models\Scan.cs" />
+    <Compile Include="Models\BluetoothClassicAdapterAndroid.cs" />
+    <Compile Include="Models\BluetoothLeAdapterAndroid.cs" />
+    <Compile Include="Models\BluetoothScannerAndroid.cs" />
+    <Compile Include="Models\SQLiteAndroid.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\SaveDevicesServiceMobile.cs" />
+    <Compile Include="Services\SaveDevicesServiceAndroid.cs" />
     <Compile Include="Setup.cs" />
   </ItemGroup>
   <ItemGroup>

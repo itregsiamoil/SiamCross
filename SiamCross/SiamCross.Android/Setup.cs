@@ -11,6 +11,7 @@ using Android.Views;
 using Android.Widget;
 using Autofac;
 using SiamCross.AppObjects;
+using SiamCross.DataBase;
 using SiamCross.Droid.Models;
 using SiamCross.Droid.Services;
 using SiamCross.Models.Adapters;
@@ -23,12 +24,13 @@ namespace SiamCross.Droid
     {
         protected override void RegisterDependencies(ContainerBuilder cb)
         {
-            cb.RegisterType<BluetoothScannerMobile>().As<IBluetoothScanner>();
+            cb.RegisterType<BluetoothScannerAndroid>().As<IBluetoothScanner>();
             base.RegisterDependencies(cb);
 
-            cb.RegisterType<BluetoothClassicAdapterMobile>().As<IBluetoothClassicAdapter>();
-            cb.RegisterType<BluetoothLeAdapterMobile>().As<IBluetoothLeAdapter>();
-            cb.RegisterType<SaveDevicesServiceMobile>().As<ISaveDevicesService>();
+            cb.RegisterType<BluetoothClassicAdapterAndroid>().As<IBluetoothClassicAdapter>();
+            cb.RegisterType<BluetoothLeAdapterAndroid>().As<IBluetoothLeAdapter>();
+            cb.RegisterType<SaveDevicesServiceAndroid>().As<ISaveDevicesService>();
+            cb.RegisterType<SQLiteAndroid>().As<ISQLite>();
         }
     }    
 }

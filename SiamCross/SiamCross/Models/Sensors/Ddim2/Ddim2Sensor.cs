@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Ddim2.Measurement;
+using SiamCross.Services;
 
 namespace SiamCross.Models.Sensors.Ddim2
 {
@@ -69,10 +70,12 @@ namespace SiamCross.Models.Sensors.Ddim2
             {
                 case "DeviceStatus":
                     /*/ Для замера /*/
-                    _measurementManager.MeasurementStatus = _statusAdapter.StringStatusToEnum(dataValue);
+                    if (_measurementManager != null)
+                    {
+                        _measurementManager.MeasurementStatus = _statusAdapter.StringStatusToEnum(dataValue);
+                    }
                     SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
                     return;
-                    break;
                 case "BatteryVoltage":
                     _reportBuilder.BatteryVoltage = dataValue;
                     break;
@@ -118,16 +121,10 @@ namespace SiamCross.Models.Sensors.Ddim2
                         await QuickReport();
                         await Task.Delay(1500);
                     }
-                    //else
-                    //{
-                    //    await CheckStatus();
-                    //    await Task.Delay(1000);
-                    //}
                 }
                 else
                 {
                     SensorData.Status = "Нет связи";
-                    //Notify?.Invoke(SensorData);
 
                     await BluetoothAdapter.Connect();
                     await Task.Delay(4000);
@@ -143,7 +140,9 @@ namespace SiamCross.Models.Sensors.Ddim2
                 (Ddim2MeasurementStartParameters)measurementParameters;
             _measurementManager = new Ddim2MeasurementManager(BluetoothAdapter, SensorData, 
                 _parser, specificMeasurementParameters);
-            await _measurementManager.RunMeasurement();
+            var report = await _measurementManager.RunMeasurement();
+            SensorService.Instance.MeasurementHandler(report);
+            IsMeasurement = false;
         }
 
         /*/ Для замера /*/

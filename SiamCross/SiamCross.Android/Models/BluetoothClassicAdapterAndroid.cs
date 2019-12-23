@@ -21,7 +21,7 @@ using SiamCross.Models.Adapters;
 
 namespace SiamCross.Droid.Models
 {
-    public class BluetoothClassicAdapterMobile : BroadcastReceiver, IBluetoothClassicAdapter
+    public class BluetoothClassicAdapterAndroid : BroadcastReceiver, IBluetoothClassicAdapter
     {
         private BluetoothDevice _bluetoothDevice;
         private BluetoothSocket _socket;
@@ -36,7 +36,7 @@ namespace SiamCross.Droid.Models
 
         private const string _uuid = "00001101-0000-1000-8000-00805f9b34fb";
 
-        public BluetoothClassicAdapterMobile(ScannedDeviceInfo deviceInfo)
+        public BluetoothClassicAdapterAndroid(ScannedDeviceInfo deviceInfo)
         {
             _scannedDeviceInfo = deviceInfo;
             _reader = null;

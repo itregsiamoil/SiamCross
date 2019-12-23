@@ -12,13 +12,15 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
 
         public double[,] DynGraphPoints { get; set; }
 
+        public MeasurementSecondaryParameters SecondaryParameters {get; set;}
+
         public string ErrorCode
         {
             get => _errorCode != null ?
                 Convert.ToString(BitConverter.ToInt16(_errorCode, 0), 16) : "";
         }
 
-        public string Date { get => _date.ToString(); }
+        public DateTime Date => _date;
 
         private readonly DateTime _date;
 
@@ -27,12 +29,14 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
         public Ddim2MeasurementData(Ddim2MeasurementReport report,
                            List<byte> dynGraph,
                            DateTime date,
+                           MeasurementSecondaryParameters secondaryParameters,
                            List<byte> accelerationGraph = null,
                            byte[] errorCode = null)
         {
             Report = report;
             DynGraph = dynGraph;
             _date = date;
+            SecondaryParameters = secondaryParameters;
             AccelerationGraph = accelerationGraph;
             _errorCode = errorCode;
         }
