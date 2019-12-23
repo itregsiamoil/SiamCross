@@ -20,6 +20,7 @@ namespace SiamCross.ViewModels
 
         public ObservableCollection<string> Fields { get; set; }
         public string SelectedField { get; set; }
+        public string Well { get; set; }
         public string Bush { get; set; }
         public string Shop { get; set; }
         public string BufferPressure { get; set; }
@@ -87,7 +88,7 @@ namespace SiamCross.ViewModels
 
             var secondaryParameters = new MeasurementSecondaryParameters(
                 SelectedField,
-                "well",
+                Well,
                 Bush,
                 Shop,
                 BufferPressure,

@@ -14,10 +14,21 @@
             <TableSection Title="Данные для замера">
                 <ViewCell>
                     <StackLayout  >
-                        <Label Text="Скважина"></Label>
+                        <Label Text="Месторождение"></Label>
                         <Picker ItemsSource="{Binding Fields}"
                                 SelectedItem="{Binding SelectedField}"
                                 ></Picker>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout   >
+                        <Label Text="Скважина"></Label>
+                        <Entry Text="{Binding Well}" 
+                               Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <local:IntegerNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
