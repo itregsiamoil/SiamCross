@@ -90,10 +90,6 @@
                                 <local:FloatNumberValidationBehavior/>
                             </Entry.Behaviors>
                         </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout >
                         <Label Text="Период качания, сек"></Label>
                         <Entry Text="{Binding DynPeriod}" 
                                Keyboard="Numeric">
@@ -101,10 +97,6 @@
                                 <local:IntegerNumberValidationBehavior/>
                             </Entry.Behaviors>
                         </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout >
                         <Label Text="Номер отверствия"></Label>
                         <Entry Text="{Binding ApertNumber}" 
                                Keyboard="Numeric">
