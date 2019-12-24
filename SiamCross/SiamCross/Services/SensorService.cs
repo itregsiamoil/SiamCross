@@ -129,6 +129,7 @@ namespace SiamCross.Services
                             new Ddim2MeasurementDonePage(
                                 DataRepository.Instance.GetDdimItem(dbModel.Id).Result), 
                             true);
+
                     break;
                 case Ddin2MeasurementData ddin2Data:
                     var ddin2Measurement = ddin2Data;

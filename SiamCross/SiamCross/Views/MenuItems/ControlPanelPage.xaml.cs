@@ -1,4 +1,5 @@
-﻿using SiamCross.Models;
+﻿using SiamCross.DataBase.DataBaseModels;
+using SiamCross.Models;
 using SiamCross.ViewModels;
 
 using Xamarin.Forms;
@@ -29,8 +30,11 @@ namespace SiamCross.Views.MenuItems
                     }
                     else if (sensorData.Name.Contains("DDIN"))
                     {
+                        //App.NavigationPage.Navigation.PushModalAsync(
+                        //    new Ddin2MeasurementPage(sensorData), true);
+                        var m = new Ddim2Measurement();
                         App.NavigationPage.Navigation.PushModalAsync(
-                            new Ddin2MeasurementPage(sensorData), true);
+                            new Ddim2MeasurementDonePage(m), true);
                     }
                     
                 }

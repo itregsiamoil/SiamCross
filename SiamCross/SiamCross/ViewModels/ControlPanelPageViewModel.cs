@@ -4,6 +4,9 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Xamarin.Forms;
 using System.Linq;
+using SiamCross.Views;
+using SiamCross.DataBase.DataBaseModels;
+using SiamCross.Models.Sensors.Ddim2.Measurement;
 
 namespace SiamCross.ViewModels
 {
@@ -23,6 +26,8 @@ namespace SiamCross.ViewModels
             SensorService.Instance.SensorDataChanged += SensorsDataChanged;
             SensorService.Instance.SaveDevicesService = saveDevicesService;
             SensorService.Instance.LoadSavedDevices();
+
+            
         }
 
         public ICommand DeleteSensorCommand

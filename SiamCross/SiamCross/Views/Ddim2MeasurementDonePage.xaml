@@ -27,9 +27,10 @@
     18. Тип привод-->
     <StackLayout>
         <StackLayout>
-            <mcharts:ChartView x:Name="{Binding DynGraph}" 
-                               HorizontalOptions="Fill"
-                               VerticalOptions="Fill"/>
+            <!--<Label Text="GRAPH"></Label>
+            <mcharts:ChartView Chart="{Binding DynGraph}" 
+                               VerticalOptions="FillAndExpand"
+                               HorizontalOptions="FillAndExpand"/>-->
         </StackLayout>
         <TableView Intent="Data" 
                HasUnevenRows="True" 
@@ -37,11 +38,17 @@
             <TableRoot>
                 <TableSection>
                     <ViewCell>
-                        <StackLayout  >
+                        <!--<StackLayout  >
                             <Label Text="Месторождение"></Label>
                             <Picker ItemsSource="{Binding Fields}"
                                 SelectedItem="{Binding SelectedField}"
                                 ></Picker>
+                        </StackLayout>-->
+                        <StackLayout>
+                            <Label Text="GRAPH"></Label>
+                            <mcharts:ChartView Chart="{Binding DynGraph}" 
+                               VerticalOptions="FillAndExpand"
+                               HorizontalOptions="FillAndExpand"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
