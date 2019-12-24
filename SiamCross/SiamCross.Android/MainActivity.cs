@@ -24,7 +24,6 @@ namespace SiamCross.Droid
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            OxyPlot.Xamarin.Forms.Platform.Android.PlotViewRenderer.Init();
             var locationPermissions = new[]
 {
                 Manifest.Permission.AccessCoarseLocation,
