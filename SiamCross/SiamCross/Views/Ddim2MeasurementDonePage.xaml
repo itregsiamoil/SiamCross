@@ -24,173 +24,176 @@
     16. Вес штанг в верхнем положении, т
     17. Вес штанг в нижнем положении, т
     18. Тип привод-->
-    <TableView Intent="Data" 
+    <StackLayout>
+        <TableView Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand">
-        <TableRoot>
-            <TableSection Title="Данные для замера">
-                <ViewCell>
-                    <StackLayout  >
-                        <Label Text="Месторождение"></Label>
-                        <Picker ItemsSource="{Binding Fields}"
+            <TableRoot>
+                <TableSection>
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="Месторождение"></Label>
+                            <Picker ItemsSource="{Binding Fields}"
                                 SelectedItem="{Binding SelectedField}"
                                 ></Picker>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout   >
-                        <Label Text="Скважина"></Label>
-                        <Entry Text="{Binding Well}" 
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout   >
+                            <Label Text="Скважина"></Label>
+                            <Entry Text="{Binding Well}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:IntegerNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout   >
-                        <Label Text="Куст"></Label>
-                        <Entry Text="{Binding Bush}" 
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout   >
+                            <Label Text="Куст"></Label>
+                            <Entry Text="{Binding Bush}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:IntegerNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout  >
-                        <Label Text="Цех"></Label>
-                        <Entry Text="{Binding Shop}" 
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="Цех"></Label>
+                            <Entry Text="{Binding Shop}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:IntegerNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout>
-                        <Label Text="Дата"></Label>
-                        <Label Text="{Binding Date}"></Label>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout  >
-                        <Label Text="Буферное давление"></Label>
-                        <Entry Text="{Binding BufferPressure}" 
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="Дата"></Label>
+                            <Label Text="{Binding Date}"></Label>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="Буферное давление"></Label>
+                            <Entry Text="{Binding BufferPressure}" 
                                >
-                            <Entry.Behaviors>
-                                <local:FloatNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout  >
-                        <Label Text="Комментарии"></Label>
-                        <Editor Text="{Binding Comments}"></Editor>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout>
-                        <Label Text="Прибор"></Label>
-                        <Label Text="{Binding DeviceName}"></Label>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout>
-                        <Label Text="Тип исследования"></Label>
-                        <Label Text="{Binding MeasurementType}"></Label>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout >
-                        <Label Text="Номер отверствия"></Label>
-                        <Entry Text="{Binding ApertNumber}" 
+                                <Entry.Behaviors>
+                                    <local:FloatNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="Комментарии"></Label>
+                            <Editor Text="{Binding Comments}"></Editor>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="Прибор"></Label>
+                            <Label Text="{Binding DeviceName}"></Label>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="Тип исследования"></Label>
+                            <Label Text="{Binding MeasurementType}"></Label>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout >
+                            <Label Text="Номер отверствия"></Label>
+                            <Entry Text="{Binding ApertNumber}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:IntegerNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout >
-                        <Label Text="Максимальная нагрузка, т"></Label>
-                        <Entry Text="{Binding MaxLoad}" 
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout >
+                            <Label Text="Максимальная нагрузка, т"></Label>
+                            <Entry Text="{Binding MaxLoad}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:FloatNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout >
-                        <Label Text="Минимальная нагрузка, т"></Label>
-                        <Entry Text="{Binding MinLoad}" 
+                                <Entry.Behaviors>
+                                    <local:FloatNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout >
+                            <Label Text="Минимальная нагрузка, т"></Label>
+                            <Entry Text="{Binding MinLoad}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:FloatNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout  >
-                        <Label Text="Длина хода, м"></Label>
-                        <Entry Text="{Binding Imtravel}" 
+                                <Entry.Behaviors>
+                                    <local:FloatNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="Длина хода, м"></Label>
+                            <Entry Text="{Binding Imtravel}" 
                                >
-                            <Entry.Behaviors>
-                                <local:FloatNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout >
-                        <Label Text="Темп качания, кач/мин"></Label>
-                        <Entry Text="{Binding PumpRate}" 
+                                <Entry.Behaviors>
+                                    <local:FloatNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout >
+                            <Label Text="Темп качания, кач/мин"></Label>
+                            <Entry Text="{Binding PumpRate}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:IntegerNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout >
-                        <Label Text="Вес штанг в верхнем положении, т"></Label>
-                        <Entry Text="{Binding UpperRodWeight}" 
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout >
+                            <Label Text="Вес штанг в верхнем положении, т"></Label>
+                            <Entry Text="{Binding UpperRodWeight}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:FloatNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout >
-                        <Label Text="Вес штанг в нижнем положении, т"></Label>
-                        <Entry Text="{Binding LowerRodWeight}" 
+                                <Entry.Behaviors>
+                                    <local:FloatNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout >
+                            <Label Text="Вес штанг в нижнем положении, т"></Label>
+                            <Entry Text="{Binding LowerRodWeight}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:FloatNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout >
-                        <Label Text="Тип привода"></Label>
-                        <Picker ItemsSource="{Binding ModelPump}"
+                                <Entry.Behaviors>
+                                    <local:FloatNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout >
+                            <Label Text="Тип привода"></Label>
+                            <Picker ItemsSource="{Binding ModelPump}"
                                 SelectedItem="{Binding SelectedModelPump}"
                                 ></Picker>
-                    </StackLayout>
-                </ViewCell>
-            </TableSection>
-        </TableRoot>
-    </TableView>
+                        </StackLayout>
+                    </ViewCell>
+                </TableSection>
+            </TableRoot>
+        </TableView>
+    </StackLayout>
+    
 </ContentPage>
