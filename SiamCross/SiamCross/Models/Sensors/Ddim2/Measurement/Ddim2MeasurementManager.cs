@@ -19,13 +19,12 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
         public byte[] ErrorCode { get; private set; }
         public Ddim2MeasurementStatus MeasurementStatus { get; set; }
 
-        private Ddim2Parser _parser;
 
         private List<byte[]> _currentDynGraph;
         private List<byte[]> _currentAccelerationGraph;
 
         public Ddim2MeasurementManager(IBluetoothAdapter bluetoothAdapter, SensorData sensorData, 
-            Ddim2Parser parser, Ddim2MeasurementStartParameters measurementParameters)
+         Ddim2MeasurementStartParameters measurementParameters)
         {
             _bluetoothAdapter = bluetoothAdapter;
             _measurementParameters = measurementParameters;
@@ -35,11 +34,6 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
 
             _currentDynGraph = new List<byte[]>();
             _currentAccelerationGraph = new List<byte[]>();
-
-            _parser = parser;
-            //_bluetoothAdapter.DataReceived += _parser.ByteProcess;
-            //_parser.ByteMessageReceived += MeasurementRecieveHandler;
-            //_parser.MessageReceived += MessageReceiveHandler;
         }
 
         public async Task<object> RunMeasurement()
