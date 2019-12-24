@@ -1,7 +1,9 @@
 ﻿using SiamCross.DataBase.DataBaseModels;
+using SiamCross.Models.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 
 namespace SiamCross.ViewModels
@@ -49,6 +51,9 @@ namespace SiamCross.ViewModels
                 "Цепной",
                 "Гидравлический"
             };
+
+            InitDynGraph();
+
             SelectedField = _measurement.Field;
             Well = _measurement.Well;
             Bush = _measurement.Bush;
@@ -65,6 +70,23 @@ namespace SiamCross.ViewModels
             PumpRate = "120";
             UpperRodWeight = "0";
             LowerRodWeight = "0";
+        }
+
+        private void InitDynGraph()
+        {
+            
+
+            //var points = DgmConverter.GetXYs(_measurement.DynGraph.ToList(),
+            //    _measurement.Step,
+            //    _measurement.WeightDiscr);
+
+            //for (int i = 0; i < points.GetUpperBound(0); i++)
+            //{
+            //    //series.Points.Add(new DataPoint(points[i, 0], points[i, 1]));
+            //    series.Points.Add(new DataPoint(i, points[i, 0]));
+            //}
+
+            
         }
     }
 }
