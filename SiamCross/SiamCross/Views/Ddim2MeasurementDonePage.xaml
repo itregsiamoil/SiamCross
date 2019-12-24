@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:local="clr-namespace:SiamCross.Views"
+             xmlns:mcharts="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms"
              x:Class="SiamCross.Views.Ddim2MeasurementDonePage">
     <!--1. График
     2. Месторождение
@@ -25,6 +26,11 @@
     17. Вес штанг в нижнем положении, т
     18. Тип привод-->
     <StackLayout>
+        <StackLayout>
+            <mcharts:ChartView x:Name="{Binding DynGraph}" 
+                               HorizontalOptions="Fill"
+                               VerticalOptions="Fill"/>
+        </StackLayout>
         <TableView Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand">

@@ -1,4 +1,5 @@
 ﻿using SiamCross.DataBase.DataBaseModels;
+using Microcharts;
 using SiamCross.Models.Tools;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace SiamCross.ViewModels
     {
         private Ddim2Measurement _measurement;
 
+        public LineChart DynGraph { get; set; }
         public ObservableCollection<string> Fields { get; set; }
         public string SelectedField { get; set; }
         public string Well { get; set; }
@@ -74,19 +76,25 @@ namespace SiamCross.ViewModels
 
         private void InitDynGraph()
         {
-            
 
-            //var points = DgmConverter.GetXYs(_measurement.DynGraph.ToList(),
-            //    _measurement.Step,
-            //    _measurement.WeightDiscr);
 
-            //for (int i = 0; i < points.GetUpperBound(0); i++)
-            //{
-            //    //series.Points.Add(new DataPoint(points[i, 0], points[i, 1]));
-            //    series.Points.Add(new DataPoint(i, points[i, 0]));
-            //}
+            var points = DgmConverter.GetXYs(_measurement.DynGraph.ToList(),
+                _measurement.Step,
+                _measurement.WeightDiscr);
 
-            
+            Entry[] entries = new Entry[points.GetUpperBound(0)];
+
+            for (int i = 0; i < points.GetUpperBound(0); i++)
+            {
+                //series.Points.Add(new DataPoint(points[i, 0], points[i, 1]));
+                //.Points.Add(new DataPoint(i, points[i, 0]));
+                entries[i] = new Entry((float)points[i, 0])
+                {
+                    Label = i.ToString()
+                };
+            }
+
+            DynGraph = new LineChart() { Entries = entries };
         }
     }
 }
