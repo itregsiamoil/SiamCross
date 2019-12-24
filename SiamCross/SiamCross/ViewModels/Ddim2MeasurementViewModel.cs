@@ -1,4 +1,5 @@
 ﻿using SiamCross.Models;
+using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Ddim2.Measurement;
 using SiamCross.Services;
 using System;

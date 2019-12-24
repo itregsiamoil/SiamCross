@@ -41,6 +41,9 @@ namespace SiamCross.DataBase.DataBaseModels
         public string ErrorCode { get; set; }
         public short ApertNumber { get; set; }
         public short ModelPump { get; set; }
+
+        public short MaxBarbellWeight { get; set; }
+        public short MinBarbellWeight { get; set; }
         /*/ ----- /*/
 
         public Ddim2Measurement() { }
@@ -71,6 +74,9 @@ namespace SiamCross.DataBase.DataBaseModels
             Shop = ddim2MeasurementData.SecondaryParameters.Shop;
             BufferPressure = ddim2MeasurementData.SecondaryParameters.BufferPressure;
             Comment = ddim2MeasurementData.SecondaryParameters.Comment;
+
+            MaxBarbellWeight = 0;
+            MinBarbellWeight = 0;
 
             DateTime = ddim2MeasurementData.Date;
             ErrorCode = ddim2MeasurementData.ErrorCode;

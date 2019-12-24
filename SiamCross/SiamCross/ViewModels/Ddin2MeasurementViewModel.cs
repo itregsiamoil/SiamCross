@@ -1,4 +1,5 @@
 ﻿using SiamCross.Models;
+using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Ddin2.Measurement;
 using SiamCross.Services;
 using System;
@@ -66,7 +67,9 @@ namespace SiamCross.ViewModels
                 Imtravel.Insert(0, "0");
             }
 
-            var secondaryParameters = new Ddin2SecondaryParameters(
+            var secondaryParameters = new MeasurementSecondaryParameters(
+                _sensorData.Name,
+                "Динамограмма",
                 SelectedField,
                 Well,
                 Bush,

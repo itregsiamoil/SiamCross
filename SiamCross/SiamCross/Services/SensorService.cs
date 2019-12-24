@@ -117,7 +117,7 @@ namespace SiamCross.Services
             }
         }
 
-        public void MeasurementHandler(object measurementArgs)
+        public async void MeasurementHandler(object measurementArgs)
         {
             switch (measurementArgs)
             {
@@ -125,9 +125,9 @@ namespace SiamCross.Services
                     var dbModel = new Ddim2Measurement(ddim2Data);
                     DataRepository.Instance.SaveDdim2Item(dbModel);
 
-                    App.NavigationPage.Navigation.PushModalAsync(
+                    await App.NavigationPage.Navigation.PushModalAsync(
                             new Ddim2MeasurementDonePage(
-                                DataRepository.Instance.GetDdimItem(dbModel.Id).Result), 
+                                DataRepository.Instance.GetDdimItem(dbModel.Id)), 
                             true);
                     break;
                 case Ddin2MeasurementData ddin2Data:

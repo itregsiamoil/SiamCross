@@ -127,8 +127,24 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
             }
 
             Ddin2MeasurementData measurement = isError ?
-                new Ddin2MeasurementData(_report, dynRawBytes, DateTime.Now, null, ErrorCode) :
-                new Ddin2MeasurementData(_report, dynRawBytes, DateTime.Now, null, null);                   ////////////////// ? 
+                new Ddin2MeasurementData(
+                    _report,
+                    (short)_measurementParameters.ApertNumber,
+                    (short)_measurementParameters.ModelPump,
+                    (short)_measurementParameters.Rod,
+                    dynRawBytes,
+                    DateTime.Now,
+                    null,
+                    ErrorCode.ToList()) :
+                new Ddin2MeasurementData(
+                    _report,
+                    (short)_measurementParameters.ApertNumber,
+                    (short)_measurementParameters.ModelPump,
+                    (short)_measurementParameters.Rod,
+                    dynRawBytes,
+                    DateTime.Now,
+                    null,
+                    null);                   
 
             var dynGraphPoints = DgmConverter.GetXYs(measurement.DynGraph.ToList(),
                     measurement.Report.Step, measurement.Report.WeightDiscr);
