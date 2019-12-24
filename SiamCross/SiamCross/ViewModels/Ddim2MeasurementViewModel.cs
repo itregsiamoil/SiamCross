@@ -87,6 +87,8 @@ namespace SiamCross.ViewModels
             }
 
             var secondaryParameters = new MeasurementSecondaryParameters(
+                _sensorData.Name,
+                "Динамограмма",
                 SelectedField,
                 Well,
                 Bush,

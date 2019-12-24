@@ -7,6 +7,8 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
     public class MeasurementSecondaryParameters
     {
         public MeasurementSecondaryParameters(
+            string name,
+            string measurementType,
             string field,
             string well,
             string bush,
@@ -14,6 +16,8 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
             string bufferPressure,
             string comment)
         {
+            DeviceName = name;
+            MeasurementType = measurementType;
             Field = field;
             Well = well;
             Bush = bush;
@@ -22,6 +26,8 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
             Comment = comment;
         }
 
+        public string DeviceName { get; }
+        public string MeasurementType { get; }
         public string Field { get; }
         public string Well { get; }
         public string Bush { get; }

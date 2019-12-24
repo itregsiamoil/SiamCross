@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Ddin2.Measurement;
+using SiamCross.Services;
 
 namespace SiamCross.Models.Sensors.Ddin2
 {
@@ -25,7 +26,7 @@ namespace SiamCross.Models.Sensors.Ddin2
 
         private Ddin2MeasurementManager _measurementManager;
 
-        public bool IsMeasurement { get; set; }
+        private bool IsMeasurement { get; set; }
 
         private Ddin2StatusAdapter _statusAdapter;
 
@@ -81,11 +82,7 @@ namespace SiamCross.Models.Sensors.Ddin2
                         await QuickReport();
                         await Task.Delay(1500);
                     }
-                    else
-                    {
-
-                    }
-                    
+                   
                 }
                 else
                 {
@@ -106,8 +103,10 @@ namespace SiamCross.Models.Sensors.Ddin2
             Ddin2MeasurementStartParameters specificMeasurementParameters =
                 (Ddin2MeasurementStartParameters)measurementParameters;
             _measurementManager = new Ddin2MeasurementManager(BluetoothAdapter, SensorData,
-                _parser, specificMeasurementParameters, this);
-            await _measurementManager.RunMeasurement();
+                 specificMeasurementParameters);
+            var report = await _measurementManager.RunMeasurement();
+            SensorService.Instance.MeasurementHandler(report);
+            IsMeasurement = false;
         }
 
         public async Task CheckStatus()
@@ -129,7 +128,10 @@ namespace SiamCross.Models.Sensors.Ddin2
             {
                 case "DeviceStatus":
                     /*/ Для замера /*/
-                    _measurementManager.MeasurementStatus = _statusAdapter.StringStatusToEnum(dataValue);
+                    if (_measurementManager != null)
+                    {
+                        _measurementManager.MeasurementStatus = _statusAdapter.StringStatusToEnum(dataValue);
+                    }
                     SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
                     return;
                 case "BatteryVoltage":

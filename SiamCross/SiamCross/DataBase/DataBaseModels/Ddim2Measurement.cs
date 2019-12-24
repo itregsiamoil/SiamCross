@@ -39,6 +39,8 @@ namespace SiamCross.DataBase.DataBaseModels
         /*/ Other /*/
         public DateTime DateTime { get; set; }
         public string ErrorCode { get; set; }
+        public short ApertNumber { get; set; }
+        public short ModelPump { get; set; }
         /*/ ----- /*/
 
         public Ddim2Measurement() { }
@@ -51,6 +53,8 @@ namespace SiamCross.DataBase.DataBaseModels
             Step = ddim2MeasurementData.Report.Step;
             WeightDiscr = ddim2MeasurementData.Report.WeightDiscr;
             TimeDiscr = ddim2MeasurementData.Report.TimeDiscr;
+            ApertNumber = ddim2MeasurementData.ApertNumber;
+            ModelPump = ddim2MeasurementData.ModelPump;
 
             if (ddim2MeasurementData.DynGraph != null)
             {

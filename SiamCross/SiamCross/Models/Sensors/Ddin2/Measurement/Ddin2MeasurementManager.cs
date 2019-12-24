@@ -13,38 +13,27 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
         private IBluetoothAdapter _bluetoothAdapter;
         private DeviceConfigCommandGenerator _configGenerator;
         private Ddin2MeasurementStartParameters _measurementParameters;
-        private Ddin2Sensor _sensor;
         private Ddin2MeasurementReport _report;
         public SensorData SensorData { get; private set; }
-        private Ddin2StatusAdapter _statusAdapter;
         public byte[] ErrorCode { get; private set; }
         public Ddin2MeasurementStatus MeasurementStatus { get; set; }
-
-        private Ddin2Parser _parser;
 
         private List<byte[]> _currentDynGraph;
         private List<byte[]> _currentAccelerationGraph;
 
         public Ddin2MeasurementManager(IBluetoothAdapter bluetoothAdapter, SensorData sensorData,
-            Ddin2Parser parser, Ddin2MeasurementStartParameters measurementParameters, Ddin2Sensor sensor)
+             Ddin2MeasurementStartParameters measurementParameters)
         {
             _bluetoothAdapter = bluetoothAdapter;
             _measurementParameters = measurementParameters;
-            _sensor = sensor;
             _configGenerator = new DeviceConfigCommandGenerator();
             SensorData = sensorData;
-            _statusAdapter = new Ddin2StatusAdapter();
 
             _currentDynGraph = new List<byte[]>();
             _currentAccelerationGraph = new List<byte[]>();
-
-            _parser = parser;
-            //_bluetoothAdapter.DataReceived += _parser.ByteProcess;
-            //_parser.ByteMessageReceived += MeasurementRecieveHandler;
-            //_parser.MessageReceived += MessageReceiveHandler;
         }
 
-        public async Task RunMeasurement()
+        public async Task<Ddin2MeasurementData> RunMeasurement()
         {
             Console.WriteLine("SENDING PARAMETERS");
             await SendParameters();
@@ -62,8 +51,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
             }
 
             var fullReport = await DownloadMeasurement(gotError);
-            _sensor.IsMeasurement = false;
-            SensorService.Instance.MeasurementHandler(fullReport);
+            return fullReport;
         }
 
         private async Task SendParameters()
@@ -241,31 +229,12 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
                     ErrorCode = data;
                     break;
                 case "DgmPart1":
-                    //Console.WriteLine("Dgm part1 has been exported");
-                    //_dgmPart1 = new byte[data.Length];
-                    //for(int i=0; i < data.Length; i++)
-                    //{
-                    //    _dgmPart1[i] = data[i];
-                    //}
                     Console.WriteLine($"Added {data.Length} bytes");
                     _currentDynGraph.Add(data);
 
                     break;
                 default:
                     break;
-            }
-        }
-
-        private void MessageReceiveHandler(string commandName, string dataValue)
-        {
-            switch (commandName) // TODO: replace to enum 
-            {
-                case "DeviceStatus":
-                    var status = _statusAdapter.StringStatusToReport(dataValue);
-                    MeasurementStatus = _statusAdapter.StringStatusToEnum(dataValue);
-                    SensorData.Status = status + " " + Convert.ToString(BitConverter.ToInt16(ErrorCode, 0), 16);
-                    break;
-                default: return;
             }
         }
     }
