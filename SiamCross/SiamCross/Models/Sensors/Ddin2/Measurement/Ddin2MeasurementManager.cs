@@ -134,8 +134,9 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
                     (short)_measurementParameters.Rod,
                     dynRawBytes,
                     DateTime.Now,
+                    _measurementParameters.SecondaryParameters,
                     null,
-                    ErrorCode.ToList()) :
+                    ErrorCode) :
                 new Ddin2MeasurementData(
                     _report,
                     (short)_measurementParameters.ApertNumber,
@@ -143,6 +144,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
                     (short)_measurementParameters.Rod,
                     dynRawBytes,
                     DateTime.Now,
+                    _measurementParameters.SecondaryParameters,
                     null,
                     null);                   
 
