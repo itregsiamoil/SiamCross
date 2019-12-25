@@ -122,17 +122,18 @@ namespace SiamCross.Services
             switch (measurementArgs)
             {
                 case Ddim2MeasurementData ddim2Data:
-                    var dbModel = new Ddim2Measurement(ddim2Data);
-                    DataRepository.Instance.SaveDdim2Item(dbModel);
+                    var dbModelDdim2 = new Ddim2Measurement(ddim2Data);
+                    DataRepository.Instance.SaveDdim2Item(dbModelDdim2);
 
                     await App.NavigationPage.Navigation.PushModalAsync(
                             new Ddim2MeasurementDonePage(
-                                DataRepository.Instance.GetDdim2Item(dbModel.Id)), 
-                            true);
+                                DataRepository.Instance.GetDdim2Item(dbModelDdim2.Id)), 
+                                true);
                     break;
                 case Ddin2MeasurementData ddin2Data:
-                    var ddin2Measurement = ddin2Data;
-                        throw new NotImplementedException();
+                    var dbModelDdin2 = new Ddin2Measurement(ddin2Data);
+                    DataRepository.Instance.SaveDdin2Item(dbModelDdin2);
+                    throw new NotImplementedException();
                     break;
                 default:
                     break;
