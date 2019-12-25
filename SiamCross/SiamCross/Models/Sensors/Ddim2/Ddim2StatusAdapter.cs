@@ -31,10 +31,10 @@ namespace SiamCross.Models.Sensors.Ddim2
                 switch (stringStatus)
                 {
                     case "0": return "Датчик свободен"; 
-                    case "1": return "Старт измерения";
+                    case "1": return "Замер";
                     case "2": return "Расчет";
                     case "4": return "Экспорт";
-                    case "5": return "Экспорт";
+                    case "5": return "Сохранение";
                 }
             }
 
