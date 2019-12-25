@@ -35,6 +35,8 @@ namespace SiamCross.DataBase.DataBaseModels
         public string Shop { get; set; }
         public string BufferPressure { get; set; }
         public string Comment { get; set; }
+        public object Name { get; set; }
+
         /*/ ----- /*/
 
         /*/ Other /*/
@@ -75,6 +77,7 @@ namespace SiamCross.DataBase.DataBaseModels
             Shop = ddin2MeasurementData.SecondaryParameters.Shop;
             BufferPressure = ddin2MeasurementData.SecondaryParameters.BufferPressure;
             Comment = ddin2MeasurementData.SecondaryParameters.Comment;
+            Name = ddin2MeasurementData.SecondaryParameters.DeviceName;
 
             DateTime = ddin2MeasurementData.Date;
             ErrorCode = ddin2MeasurementData.ErrorCode;

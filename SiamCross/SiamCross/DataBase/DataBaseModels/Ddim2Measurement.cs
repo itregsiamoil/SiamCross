@@ -34,6 +34,8 @@ namespace SiamCross.DataBase.DataBaseModels
         public string Shop { get; set; }
         public string BufferPressure { get; set; }
         public string Comment { get; set; }
+
+        public string Name { get; set; }
         /*/ ----- /*/
 
         /*/ Other /*/
@@ -74,6 +76,7 @@ namespace SiamCross.DataBase.DataBaseModels
             Shop = ddim2MeasurementData.SecondaryParameters.Shop;
             BufferPressure = ddim2MeasurementData.SecondaryParameters.BufferPressure;
             Comment = ddim2MeasurementData.SecondaryParameters.Comment;
+            Name = ddim2MeasurementData.SecondaryParameters.DeviceName;
 
             MaxBarbellWeight = 0;
             MinBarbellWeight = 0;
