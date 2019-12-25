@@ -35,7 +35,7 @@ namespace SiamCross.DataBase.DataBaseModels
         public string Shop { get; set; }
         public string BufferPressure { get; set; }
         public string Comment { get; set; }
-        public object Name { get; set; }
+        public string Name { get; set; }
 
         /*/ ----- /*/
 
