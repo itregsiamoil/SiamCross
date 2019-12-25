@@ -5,9 +5,29 @@
              Title="Измерения">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Измерения"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <ListView HasUnevenRows="True"
+                      ItemsSource="{Binding Measurements}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Label Grid.Row="0" Text="{Binding Field}"></Label>
+                                    <Label Grid.Row="1" Text="{Binding Date}"></Label>
+                                    <Label Grid.Row="2" Text="{Binding MesurementType}"></Label>
+                                    <Label Grid.Row="3" Text="{Binding Comments}"></Label>
+                                </Grid>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
