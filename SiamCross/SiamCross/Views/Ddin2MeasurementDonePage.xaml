@@ -73,7 +73,7 @@
                 <ViewCell>
                     <StackLayout>
                         <Label Text="Дата"></Label>
-                        <Label Text="{Binding Date}"></Label>
+                        <Label Text="{Binding Date, Mode=OneWay}"></Label>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
@@ -96,13 +96,13 @@
                 <ViewCell>
                     <StackLayout>
                         <Label Text="Прибор"></Label>
-                        <Label Text="{Binding DeviceName}"></Label>
+                        <Label Text="{Binding DeviceName, Mode=OneWay}"></Label>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
                     <StackLayout>
                         <Label Text="Тип исследования"></Label>
-                        <Label Text="{Binding MeasurementType}"></Label>
+                        <Label Text="{Binding MeasurementType, Mode=OneWay}"></Label>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
@@ -119,75 +119,55 @@
                 <ViewCell>
                     <StackLayout >
                         <Label Text="Максимальная нагрузка, т"></Label>
-                        <Entry Text="{Binding MaxLoad}" 
+                        <Entry Text="{Binding MaxLoad, Mode=OneWay}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:FloatNumberValidationBehavior/>
-                            </Entry.Behaviors>
                         </Entry>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
                     <StackLayout >
                         <Label Text="Минимальная нагрузка, т"></Label>
-                        <Entry Text="{Binding MinLoad}" 
+                        <Entry Text="{Binding MinLoad, Mode=OneWay}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:FloatNumberValidationBehavior/>
-                            </Entry.Behaviors>
                         </Entry>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
                     <StackLayout  >
                         <Label Text="Длина хода, м"></Label>
-                        <Entry Text="{Binding Imtravel}" 
-                               >
-                            <Entry.Behaviors>
-                                <local:FloatNumberValidationBehavior/>
-                            </Entry.Behaviors>
+                        <Entry Text="{Binding Imtravel, Mode=OneWay}">
                         </Entry>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
                     <StackLayout >
                         <Label Text="Темп качания, кач/мин"></Label>
-                        <Entry Text="{Binding PumpRate}" 
+                        <Entry Text="{Binding PumpRate, Mode=OneWay}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:IntegerNumberValidationBehavior/>
-                            </Entry.Behaviors>
                         </Entry>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
                     <StackLayout >
                         <Label Text="Вес штанг в верхнем положении, т"></Label>
-                        <Entry Text="{Binding UpperRodWeight}" 
+                        <Entry Text="{Binding UpperRodWeight, Mode=OneWay}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:FloatNumberValidationBehavior/>
-                            </Entry.Behaviors>
                         </Entry>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
                     <StackLayout >
                         <Label Text="Вес штанг в нижнем положении, т"></Label>
-                        <Entry Text="{Binding LowerRodWeight}" 
+                        <Entry Text="{Binding LowerRodWeight, Mode=OneWay}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:FloatNumberValidationBehavior/>
-                            </Entry.Behaviors>
                         </Entry>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
                     <StackLayout >
                         <Label Text="Тип привода"></Label>
-                        <Picker ItemsSource="{Binding ModelPump}"
-                                SelectedItem="{Binding SelectedModelPump}"
-                                ></Picker>
+                        <Entry Text="{Binding SelectedModelPump, Mode=OneWay}">
+                        </Entry>
                     </StackLayout>
                 </ViewCell>
             </TableSection>
