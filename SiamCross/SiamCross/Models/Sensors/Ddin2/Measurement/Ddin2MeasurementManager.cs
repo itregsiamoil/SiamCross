@@ -33,7 +33,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
             _currentAccelerationGraph = new List<byte[]>();
         }
 
-        public async Task<Ddin2MeasurementData> RunMeasurement()
+        public async Task<object> RunMeasurement()
         {
             Console.WriteLine("SENDING PARAMETERS");
             await SendParameters();

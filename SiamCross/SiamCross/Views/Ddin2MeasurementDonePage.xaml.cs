@@ -22,7 +22,6 @@ namespace SiamCross.Views
             var vm = new ViewModel<Ddin2MeasurementDoneViewModel>(measurement);
             this.BindingContext = vm.GetViewModel;
             InitializeComponent();
-            InitializeComponent();
         }
 
         protected override void OnDisappearing()
