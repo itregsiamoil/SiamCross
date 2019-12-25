@@ -19,18 +19,15 @@ namespace SiamCross.Services
         public static DataRepository Instance { get => _instance.Value; }
         private SQLiteConnection _database;
         private static object _locker = new object();
-        private string _databasePart;
 
         private DataRepository()
         {
             string _databasePart = AppContainer.Container.Resolve<ISQLite>()
-                .GetDatabasePath("test.db");
-            //using (_database = new SQLiteConnection(_databasePart))
-            //{
+                .GetDatabasePath("sqlite.db");
+
             _database = new SQLiteConnection(_databasePart);
-                _database.CreateTable<Ddim2Measurement>();
-              //  _database.Close();
-           // }
+            _database.CreateTable<Ddim2Measurement>();
+            _database.CreateTable<Ddin2Measurement>();
         }
 
         public IEnumerable<Ddim2Measurement> GetDdim2Items()
@@ -38,26 +35,22 @@ namespace SiamCross.Services
             List<Ddim2Measurement> table;
 
             Monitor.Enter(_locker);
-            //using (_database = new SQLiteConnection(_databasePart))
-         //   { 
-                table = _database.Table<Ddim2Measurement>().ToList();
-//_database.Close();
-         //   }
+
+            table = _database.Table<Ddim2Measurement>().ToList();
+
             Monitor.Exit(_locker);
             return table;
         }
 
-        public Ddim2Measurement GetDdimItem(int id)
+        public Ddim2Measurement GetDdim2Item(int id)
         {
             Ddim2Measurement measurement;
 
             Monitor.Enter(_locker);
-         //   using (_database = new SQLiteConnection(_databasePart))
-          //  {
-               
-                measurement = _database.Get<Ddim2Measurement>(id);            
-          //      _database.Close();              
-         //   }
+
+
+            measurement = _database.Get<Ddim2Measurement>(id);
+
             Monitor.Exit(_locker);
 
             return measurement;
@@ -68,11 +61,9 @@ namespace SiamCross.Services
             int result;
 
             Monitor.Enter(_locker);
-        //    using (_database = new SQLiteConnection(_databasePart))
-       //     {             
-                result = _database.Delete<Ddim2Measurement>(id);
-           //     _database.Close();
-           // }
+
+            result = _database.Delete<Ddim2Measurement>(id);
+
             Monitor.Exit(_locker);
             return result;
         }
@@ -82,20 +73,77 @@ namespace SiamCross.Services
             int result;
 
             Monitor.Enter(_locker);
-         //   using (_database = new SQLiteConnection(_databasePart))
-          //  {
-                if (item.Id != 0)
-                {
-                    _database.Update(item);
-                    result = item.Id;
-                }
-                else
-                {
-                    result = _database.Insert(item);
-                }
-        //        _database.Close();
-         //   }
-           Monitor.Exit(_locker);
+
+            if (item.Id != 0)
+            {
+                _database.Update(item);
+                result = item.Id;
+            }
+            else
+            {
+                result = _database.Insert(item);
+            }
+
+            Monitor.Exit(_locker);
+
+            return result;
+        }
+
+        public IEnumerable<Ddin2Measurement> GetDdin2Items()
+        {
+            List<Ddin2Measurement> table;
+
+            Monitor.Enter(_locker);
+
+            table = _database.Table<Ddin2Measurement>().ToList();
+
+            Monitor.Exit(_locker);
+            return table;
+        }
+
+        public Ddin2Measurement GetDdin2Item(int id)
+        {
+            Ddin2Measurement measurement;
+
+            Monitor.Enter(_locker);
+
+
+            measurement = _database.Get<Ddin2Measurement>(id);
+
+            Monitor.Exit(_locker);
+
+            return measurement;
+        }
+
+        public int DeleteDdin2Item(int id)
+        {
+            int result;
+
+            Monitor.Enter(_locker);
+
+            result = _database.Delete<Ddin2Measurement>(id);
+
+            Monitor.Exit(_locker);
+            return result;
+        }
+
+        public int SaveDdin2Item(Ddin2Measurement item)
+        {
+            int result;
+
+            Monitor.Enter(_locker);
+
+            if (item.Id != 0)
+            {
+                _database.Update(item);
+                result = item.Id;
+            }
+            else
+            {
+                result = _database.Insert(item);
+            }
+
+            Monitor.Exit(_locker);
 
             return result;
         }

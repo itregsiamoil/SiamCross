@@ -127,7 +127,7 @@ namespace SiamCross.Services
 
                     await App.NavigationPage.Navigation.PushModalAsync(
                             new Ddim2MeasurementDonePage(
-                                DataRepository.Instance.GetDdimItem(dbModel.Id)), 
+                                DataRepository.Instance.GetDdim2Item(dbModel.Id)), 
                             true);
                     break;
                 case Ddin2MeasurementData ddin2Data:
