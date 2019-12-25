@@ -133,7 +133,10 @@ namespace SiamCross.Services
                 case Ddin2MeasurementData ddin2Data:
                     var dbModelDdin2 = new Ddin2Measurement(ddin2Data);
                     DataRepository.Instance.SaveDdin2Item(dbModelDdin2);
-                    throw new NotImplementedException();
+                    await App.NavigationPage.Navigation.PushModalAsync(
+                           new Ddin2MeasurementDonePage(
+                               DataRepository.Instance.GetDdin2Item(dbModelDdin2.Id)),
+                               true);
                     break;
                 default:
                     break;
