@@ -12,7 +12,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
         public int Imtravel { get; }
         public int ModelPump { get; }
 
-        MeasurementSecondaryParameters SecondaryParameters { get; }
+        public MeasurementSecondaryParameters SecondaryParameters { get; }
 
         public Ddin2MeasurementStartParameters(int rod,
                                  int dynPeriod,
