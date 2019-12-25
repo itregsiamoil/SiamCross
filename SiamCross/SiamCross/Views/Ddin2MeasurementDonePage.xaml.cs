@@ -1,4 +1,7 @@
-﻿using System;
+﻿using SiamCross.DataBase.DataBaseModels;
+using SiamCross.Services;
+using SiamCross.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +15,20 @@ namespace SiamCross.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Ddin2MeasurementDonePage : ContentPage
     {
-        public Ddin2MeasurementDonePage()
+        private Ddin2Measurement _measurement;
+        public Ddin2MeasurementDonePage(Ddin2Measurement measurement)
         {
+            _measurement = measurement;
+            var vm = new ViewModel<Ddin2MeasurementDoneViewModel>(measurement);
+            this.BindingContext = vm.GetViewModel;
             InitializeComponent();
+            InitializeComponent();
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            DataRepository.Instance.SaveDdim2Item(_measurement);
         }
     }
 }

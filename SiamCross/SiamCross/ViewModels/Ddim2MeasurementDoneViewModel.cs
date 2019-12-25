@@ -67,9 +67,23 @@ namespace SiamCross.ViewModels
             MaxLoad = _measurement.MaxWeight.ToString();
             MinLoad = _measurement.MinWeight.ToString();
             Imtravel = _measurement.Travel.ToString();
-            PumpRate = "120";
+            PumpRate = (60 / _measurement.Period).ToString();
             UpperRodWeight = "0";
             LowerRodWeight = "0";
+            switch (_measurement.ModelPump)
+            {
+                case 0:
+                    SelectedModelPump = "Балансирный";
+                    break;
+                case 1:
+                    SelectedModelPump = "Цепной";
+                    break;
+                case 2:
+                    SelectedModelPump = "Гидравлический";
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void InitDynGraph()

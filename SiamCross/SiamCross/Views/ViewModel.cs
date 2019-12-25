@@ -35,5 +35,14 @@ namespace SiamCross.Views
                     new TypedParameter(typeof(Ddim2Measurement), measurement));
             }
         }
+
+        public ViewModel(Ddin2Measurement measurement)
+        {
+            using (var scope = AppContainer.Container.BeginLifetimeScope())
+            {
+                GetViewModel = AppContainer.Container.Resolve<T>(
+                    new TypedParameter(typeof(Ddin2Measurement), measurement));
+            }
+        }
     }
 }
