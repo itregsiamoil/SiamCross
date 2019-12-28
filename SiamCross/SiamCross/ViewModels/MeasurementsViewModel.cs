@@ -21,8 +21,10 @@ namespace SiamCross.ViewModels
 
         public MeasurementsViewModel()
         {
+            Measurements = new ObservableCollection<MeasurementView>();
             var ddim2Measurements = DataRepository.Instance.GetDdim2Items();
             var ddin2Measurements = DataRepository.Instance.GetDdin2Items();
+
             foreach (var m in ddim2Measurements)
             {
                 Measurements.Add(
@@ -34,6 +36,7 @@ namespace SiamCross.ViewModels
                         Comments = m.Comment
                     });
             }
+
             foreach (var m in ddin2Measurements)
             {
                 Measurements.Add(
@@ -45,6 +48,8 @@ namespace SiamCross.ViewModels
                         Comments = m.Comment
                     });
             }
+
+
             Measurements.OrderBy(m => m.Date);
         }
     }
