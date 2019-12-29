@@ -27,7 +27,7 @@ namespace SiamCross.Views
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            DataRepository.Instance.SaveDdim2Item(_measurement);
+            //DataRepository.Instance.SaveDdim2Item(_measurement);
         }
     }
 }

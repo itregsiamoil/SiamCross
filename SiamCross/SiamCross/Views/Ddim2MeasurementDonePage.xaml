@@ -7,6 +7,16 @@
              mc:Ignorable="d"
              xmlns:local="clr-namespace:SiamCross.Views"
              x:Class="SiamCross.Views.Ddim2MeasurementDonePage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="labelStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="Medium"/>
+                <!--<Setter Property="FontAttributes" Value="Bold"/>-->
+                <Setter Property="Margin" Value="2, 6"/>
+                <Setter Property="TextColor" Value="Black" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <!--1. График
     2. Месторождение
     3. Скважина
@@ -28,11 +38,12 @@
     <StackLayout>
         <TableView Intent="Data" 
                HasUnevenRows="True" 
-               HorizontalOptions="CenterAndExpand">
-            <TableRoot>
-                <TableSection rainbows:DebugRainbow.IsDebug="True">
+               HorizontalOptions="CenterAndExpand"
+               >
+            <TableRoot >
+                <TableSection>
                     <ViewCell>
-                        <StackLayout>
+                        <StackLayout rainbows:DebugRainbow.IsDebug="True">
                             <Label Text="Месторождение"></Label>
                             <Picker ItemsSource="{Binding Fields}"
                                 SelectedItem="{Binding SelectedField}"
@@ -75,7 +86,8 @@
                     <ViewCell>
                         <StackLayout>
                             <Label Text="Дата"></Label>
-                            <Label Text="{Binding Date, Mode=OneWay}"></Label>
+                            <Label Text="{Binding Date, Mode=OneWay}" 
+                                   Style="{StaticResource labelStyle}"></Label>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
@@ -98,13 +110,15 @@
                     <ViewCell>
                         <StackLayout>
                             <Label Text="Прибор"></Label>
-                            <Label Text="{Binding DeviceName, Mode=OneWay}"></Label>
+                            <Label Text="{Binding DeviceName, Mode=OneWay}"
+                                   Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
                             <Label Text="Тип исследования"></Label>
-                            <Label Text="{Binding MeasurementType, Mode=OneWay}"></Label>
+                            <Label Text="{Binding MeasurementType, Mode=OneWay}"
+                                   Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
@@ -120,51 +134,55 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout >
-                            <Label Text="Максимальная нагрузка, т"></Label>
-                            <Label Text="{Binding MaxLoad}">
-                            </Label>
+                            <Label Text="Максимальная нагрузка, т"/>
+                            <Label Text="{Binding MaxLoad}"
+                                   Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout >
-                            <Label Text="Минимальная нагрузка, т"></Label>
-                            <Label Text="{Binding MinLoad}">
-                            </Label>
+                            <Label Text="Минимальная нагрузка, т"/>
+                            <Label Text="{Binding MinLoad}"
+                                   Style="{StaticResource labelStyle}"/>
+
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout  >
-                            <Label Text="Длина хода, м"></Label>
-                            <Label Text="{Binding Imtravel}">
-                            </Label>
+                            <Label Text="Длина хода, м"/>
+                            <Label Text="{Binding Imtravel}"
+                                   Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout >
-                            <Label Text="Темп качания, кач/мин"></Label>
-                            <Label Text="{Binding PumpRate}">
-                            </Label>
+                            <Label Text="Темп качания, кач/мин"/>
+                            <Label Text="{Binding PumpRate}"
+                                   Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout >
-                            <Label Text="Вес штанг в верхнем положении, т"></Label>
-                            <Label Text="{Binding UpperRodWeight}">
-                            </Label>
+                            <Label Text="Вес штанг в верхнем положении, т"/>
+                            <Label Text="{Binding UpperRodWeight}"
+                                   Style="{StaticResource labelStyle}"/>
+
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout >
-                            <Label Text="Вес штанг в нижнем положении, т"></Label>
-                            <Label Text="{Binding LowerRodWeight}">
-                            </Label>
+                            <Label Text="Вес штанг в нижнем положении, т"/>
+                            <Label Text="{Binding LowerRodWeight}"
+                                   Style="{StaticResource labelStyle}"/>
+
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout >
-                            <Label Text="Тип привода"></Label>
-                            <Label Text="{Binding SelectedModelPump}">
-                            </Label>
+                            <Label Text="Тип привода"/>
+                            <Label Text="{Binding SelectedModelPump}"
+                                   Style="{StaticResource labelStyle}"/>
+
                         </StackLayout>
                     </ViewCell>
                 </TableSection>
