@@ -76,6 +76,9 @@
     <PackageReference Include="Xamarin.Forms">
       <Version>4.4.0.936621-pre1</Version>
     </PackageReference>
+    <PackageReference Include="Xamarin.Forms.DebugRainbows">
+      <Version>1.0.16</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />

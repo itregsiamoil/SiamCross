@@ -2,25 +2,29 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.MenuItems.MeasuringPanelPage"
+             xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
              Title="Измерения">
     <ContentPage.Content>
         <StackLayout>
             <ListView HasUnevenRows="True"
-                      ItemsSource="{Binding Measurements}">
+                      ItemsSource="{Binding Measurements}"
+                      rainbows:DebugRainbow.IsDebug="False"
+                      SelectedItem="{Binding SelectedMeasurement}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <Grid>
+                                <Grid Margin="5" rainbows:DebugRainbow.IsDebug="False">
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="*"></RowDefinition>
-                                        <RowDefinition Height="*"></RowDefinition>
-                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
                                         <RowDefinition Height="*"></RowDefinition>
                                     </Grid.RowDefinitions>
-                                    <Label Grid.Row="0" Text="{Binding Field}"></Label>
+                                    <Label Grid.Row="0" Text="{Binding Field}"
+                                           FontAttributes="Bold"></Label>
                                     <Label Grid.Row="1" Text="{Binding Date}"></Label>
-                                    <Label Grid.Row="2" Text="{Binding MesurementType}"></Label>
+                                    <Label Grid.Row="2" Text="{Binding MeasurementType}"></Label>
                                     <Label Grid.Row="3" Text="{Binding Comments}"></Label>
                                 </Grid>
                             </ViewCell.View>

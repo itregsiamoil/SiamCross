@@ -113,6 +113,9 @@
     <Reference Include="Xamarin.Forms.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Xamarin.Forms.4.3.0.947036\lib\netstandard2.0\Xamarin.Forms.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Xamarin.Forms.DebugRainbows, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Xamarin.Forms.DebugRainbows.1.0.16\lib\netstandard2.0\Xamarin.Forms.DebugRainbows.dll</HintPath>
+    </Reference>
     <Reference Include="Xamarin.Forms.Platform, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Xamarin.Forms.4.3.0.947036\lib\netstandard2.0\Xamarin.Forms.Platform.dll</HintPath>
     </Reference>

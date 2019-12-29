@@ -26,15 +26,15 @@ namespace SiamCross.ViewModels
         public string MeasurementType { get; set; }
         public string ApertNumber { get; set; }
 
-        public string MaxLoad { get; set; }
-        public string MinLoad { get; set; }
-        public string Imtravel { get; set; }
-        public string PumpRate { get; set; }
+        public string MaxLoad { get;  }
+        public string MinLoad { get;  }
+        public string Imtravel { get;  }
+        public string PumpRate { get;  }
 
-        public string UpperRodWeight { get; set; }
-        public string LowerRodWeight { get; set; }
+        public string UpperRodWeight { get;  }
+        public string LowerRodWeight { get;  }
         public ObservableCollection<string> ModelPump { get; set; }
-        public string SelectedModelPump { get; set; }
+        public string SelectedModelPump { get;  }
 
         public Ddim2MeasurementDoneViewModel(Ddim2Measurement measurement)
         {
@@ -61,9 +61,9 @@ namespace SiamCross.ViewModels
             Date = _measurement.DateTime.ToString();
             BufferPressure = _measurement.BufferPressure;
             Comments = _measurement.Comment;
-            DeviceName = "DDIM2";
+            DeviceName = _measurement.Name;
             MeasurementType = "Динамограмма";
-            ApertNumber = "1";
+            ApertNumber = _measurement.ApertNumber.ToString();
             MaxLoad = _measurement.MaxWeight.ToString();
             MinLoad = _measurement.MinWeight.ToString();
             Imtravel = _measurement.Travel.ToString();

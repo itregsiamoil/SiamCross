@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
              mc:Ignorable="d"
              xmlns:local="clr-namespace:SiamCross.Views"
              x:Class="SiamCross.Views.Ddim2MeasurementDonePage">
@@ -29,9 +30,9 @@
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand">
             <TableRoot>
-                <TableSection Title="Данные для замера">
+                <TableSection rainbows:DebugRainbow.IsDebug="True">
                     <ViewCell>
-                        <StackLayout  >
+                        <StackLayout>
                             <Label Text="Месторождение"></Label>
                             <Picker ItemsSource="{Binding Fields}"
                                 SelectedItem="{Binding SelectedField}"
@@ -61,7 +62,7 @@
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout  >
+                        <StackLayout>
                             <Label Text="Цех"></Label>
                             <Entry Text="{Binding Shop}" 
                                Keyboard="Numeric">
@@ -91,7 +92,7 @@
                     <ViewCell>
                         <StackLayout  >
                             <Label Text="Комментарии"></Label>
-                            <Editor Text="{Binding Comments}"></Editor>
+                            <Editor Text="{Binding Comments, Mode=TwoWay}"></Editor>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
@@ -120,55 +121,50 @@
                     <ViewCell>
                         <StackLayout >
                             <Label Text="Максимальная нагрузка, т"></Label>
-                            <Entry Text="{Binding MaxLoad, Mode=OneWay}" 
-                               Keyboard="Numeric">
-                            </Entry>
+                            <Label Text="{Binding MaxLoad}">
+                            </Label>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout >
                             <Label Text="Минимальная нагрузка, т"></Label>
-                            <Entry Text="{Binding MinLoad, Mode=OneWay}" 
-                               Keyboard="Numeric">
-                            </Entry>
+                            <Label Text="{Binding MinLoad}">
+                            </Label>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout  >
                             <Label Text="Длина хода, м"></Label>
-                            <Entry Text="{Binding Imtravel, Mode=OneWay}">
-                            </Entry>
+                            <Label Text="{Binding Imtravel}">
+                            </Label>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout >
                             <Label Text="Темп качания, кач/мин"></Label>
-                            <Entry Text="{Binding PumpRate, Mode=OneWay}" 
-                               Keyboard="Numeric">
-                            </Entry>
+                            <Label Text="{Binding PumpRate}">
+                            </Label>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout >
                             <Label Text="Вес штанг в верхнем положении, т"></Label>
-                            <Entry Text="{Binding UpperRodWeight, Mode=OneWay}" 
-                               Keyboard="Numeric">
-                            </Entry>
+                            <Label Text="{Binding UpperRodWeight}">
+                            </Label>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout >
                             <Label Text="Вес штанг в нижнем положении, т"></Label>
-                            <Entry Text="{Binding LowerRodWeight, Mode=OneWay}" 
-                               Keyboard="Numeric">
-                            </Entry>
+                            <Label Text="{Binding LowerRodWeight}">
+                            </Label>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout >
                             <Label Text="Тип привода"></Label>
-                            <Entry Text="{Binding SelectedModelPump, Mode=OneWay}">
-                            </Entry>
+                            <Label Text="{Binding SelectedModelPump}">
+                            </Label>
                         </StackLayout>
                     </ViewCell>
                 </TableSection>
