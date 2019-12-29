@@ -216,8 +216,6 @@ namespace SiamCross.Models.Tools
             return binary;
         }
 
-
-
         private static int ExtractWeight(short number)
         {
             short mask = 1023;

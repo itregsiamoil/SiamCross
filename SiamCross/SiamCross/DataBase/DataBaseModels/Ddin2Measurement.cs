@@ -45,6 +45,8 @@ namespace SiamCross.DataBase.DataBaseModels
         public short ApertNumber { get; set; }
         public short ModelPump { get; set; }
 
+        public short Rod { get; set; }
+
         public short MaxBarbellWeight { get; set; }
         public short MinBarbellWeight { get; set; }
         /*/ ----- /*/
@@ -78,6 +80,8 @@ namespace SiamCross.DataBase.DataBaseModels
             BufferPressure = ddin2MeasurementData.SecondaryParameters.BufferPressure;
             Comment = ddin2MeasurementData.SecondaryParameters.Comment;
             Name = ddin2MeasurementData.SecondaryParameters.DeviceName;
+
+            Rod = ddin2MeasurementData.Rod;
 
             DateTime = ddin2MeasurementData.Date;
             ErrorCode = ddin2MeasurementData.ErrorCode;
