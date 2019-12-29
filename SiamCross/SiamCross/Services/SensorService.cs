@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac;
+using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Ddim2.Measurement;
 using SiamCross.Models.Sensors.Ddin2.Measurement;
+using SiamCross.Models.Tools;
 using SiamCross.Views;
 
 namespace SiamCross.Services
@@ -85,6 +88,7 @@ namespace SiamCross.Services
         }
 
         public ISaveDevicesService SaveDevicesService { get; set; }
+        public IFileManager AppCotainer { get; private set; }
 
         public void LoadSavedDevices()
         {
@@ -137,6 +141,12 @@ namespace SiamCross.Services
                            new Ddin2MeasurementDonePage(
                                DataRepository.Instance.GetDdin2Item(dbModelDdin2.Id)),
                                true);
+
+                    var qwe = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
+                    var name = "ddin2_" + dbModelDdin2.DateTime.Date.ToString() + "T"
+                        + dbModelDdin2.DateTime.TimeOfDay.ToString() + dbModelDdin2.DateTime.TimeOfDay.ToString()
+                        + ".xml";
+                    qwe.SaveXml(name.Replace(':', '-'), new XmlCreator().CreateDdin2Xml(dbModelDdin2));
                     break;
                 default:
                     break;

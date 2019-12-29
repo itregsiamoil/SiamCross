@@ -32,6 +32,7 @@ namespace SiamCross.Models.Tools
         {
             if (_byffer.Count > 34)
             {
+                System.Diagnostics.Debug.WriteLine(_byffer.ToString());
                 _byffer.Clear();
                 System.Diagnostics.Debug.WriteLine("Внимание!!! Буффер парсера переполнился и был очищен!!!");
             }
