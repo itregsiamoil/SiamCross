@@ -16,6 +16,7 @@ using SiamCross.Droid.Models;
 using SiamCross.Droid.Services;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Scanners;
+using SiamCross.Models.Tools;
 using SiamCross.Services;
 
 namespace SiamCross.Droid
@@ -31,6 +32,7 @@ namespace SiamCross.Droid
             cb.RegisterType<BluetoothLeAdapterAndroid>().As<IBluetoothLeAdapter>();
             cb.RegisterType<SaveDevicesServiceAndroid>().As<ISaveDevicesService>();
             cb.RegisterType<SQLiteAndroid>().As<ISQLite>();
+            cb.RegisterType<FileManagerAndroid>().As<IFileManager>();
         }
     }    
 }

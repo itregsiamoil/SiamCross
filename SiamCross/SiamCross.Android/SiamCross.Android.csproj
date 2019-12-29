@@ -82,6 +82,7 @@
     <Compile Include="Models\BluetoothClassicAdapterAndroid.cs" />
     <Compile Include="Models\BluetoothLeAdapterAndroid.cs" />
     <Compile Include="Models\BluetoothScannerAndroid.cs" />
+    <Compile Include="Models\FileManagerAndroid.cs" />
     <Compile Include="Models\SQLiteAndroid.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

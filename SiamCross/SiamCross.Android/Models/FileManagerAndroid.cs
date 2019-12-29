@@ -1,13 +1,17 @@
-﻿using System;
+﻿using SiamCross.Droid.Models;
+using SiamCross.Models.Tools;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
+[assembly: Dependency(typeof(FileManagerAndroid))]
 namespace SiamCross.Droid.Models
 {
-    public class FileManagerAndroid
+    public class FileManagerAndroid : IFileManager
     {
         public Task DeleteAsync(string filename)
         {
@@ -51,12 +55,12 @@ namespace SiamCross.Droid.Models
             }
         }
         // вспомогательный метод для построения пути к файлу
-        string GetFilePath(string filename)
+        private string GetFilePath(string filename)
         {
             return Path.Combine(GetDocsPath(), filename);
         }
         // получаем путь к папке MyDocuments
-        string GetDocsPath()
+        private string GetDocsPath()
         {
             return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         }

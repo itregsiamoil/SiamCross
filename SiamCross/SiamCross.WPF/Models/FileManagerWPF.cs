@@ -1,11 +1,14 @@
 ﻿using SiamCross.Models.Tools;
+using SiamCross.WPF.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Xamarin.Forms;
 
+[assembly: Dependency(typeof(FileManagerWPF))]
 namespace SiamCross.WPF.Models
 {
     public class FileManagerWPF : IFileManager
