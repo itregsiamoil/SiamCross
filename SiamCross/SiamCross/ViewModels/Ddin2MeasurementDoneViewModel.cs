@@ -1,8 +1,5 @@
 ﻿using SiamCross.DataBase.DataBaseModels;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace SiamCross.ViewModels
 {
@@ -11,28 +8,59 @@ namespace SiamCross.ViewModels
         private Ddin2Measurement _measurement;
 
         public ObservableCollection<string> Fields { get; set; }
-        public string SelectedField { get; set; }
-        public string Well { get; set; }
-        public string Bush { get; set; }
-        public string Shop { get; set; }
-        public string Date { get; private set; }
-        public string BufferPressure { get; set; }
-        public string Comments { get; set; }
+        public string SelectedField
+        {
+            get => _measurement.Field;
+            set => _measurement.Field = value;
+        }
+        public string Well
+        {
+            get => _measurement.Well;
+            set => _measurement.Well = value;
+        }
+        public string Bush
+        {
+            get => _measurement.Bush;
+            set => _measurement.Bush = value;
+        }
+        public string Shop
+        {
+            get => _measurement.Shop;
+            set => _measurement.Shop = value;
+        }
+        public string Date { get; }
+        public string BufferPressure
+        {
+            get => _measurement.BufferPressure;
+            set => _measurement.BufferPressure = value;
+        }
+        public string Comments
+        {
+            get => _measurement.Comment;
+            set => _measurement.Comment = value;
+        }
 
-        public string DeviceName { get; set; }
+        public string DeviceName { get; }
 
-        public string MeasurementType { get; set; }
-        public string ApertNumber { get; set; }
+        public string MeasurementType { get; }
+        public string ApertNumber
+        {
+            get => _measurement.ApertNumber.ToString();
+            set
+            {
+                if (short.TryParse(value, out short apertNumber))
+                    _measurement.ApertNumber = apertNumber;
+            }
+        }
 
-        public string MaxLoad { get; set; }
-        public string MinLoad { get; set; }
-        public string Imtravel { get; set; }
-        public string PumpRate { get; set; }
+        public string MaxLoad { get; }
+        public string MinLoad { get; }
+        public string Imtravel { get; }
+        public string PumpRate { get; }
 
-        public string UpperRodWeight { get; set; }
-        public string LowerRodWeight { get; set; }
-        public ObservableCollection<string> ModelPump { get; set; }
-        public string SelectedModelPump { get; set; }
+        public string UpperRodWeight { get; }
+        public string LowerRodWeight { get;  }
+        public string SelectedModelPump { get; }
         public Ddin2MeasurementDoneViewModel(Ddin2Measurement measurement)
         {
             _measurement = measurement;
@@ -41,12 +69,6 @@ namespace SiamCross.ViewModels
                 "Первое поле",
                 "Второе поле",
                 "Третье поле"
-            };
-            ModelPump = new ObservableCollection<string>()
-            {
-                "Балансирный",
-                "Цепной",
-                "Гидравлический"
             };
 
             InitDynGraph();
