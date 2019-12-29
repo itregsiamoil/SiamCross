@@ -58,9 +58,9 @@ namespace SiamCross.ViewModels
             Date = _measurement.DateTime.ToString();
             BufferPressure = _measurement.BufferPressure;
             Comments = _measurement.Comment;
-            DeviceName = "DDIM2";
+            DeviceName = _measurement.Name;
             MeasurementType = "Динамограмма";
-            ApertNumber = "1";
+            ApertNumber = _measurement.ApertNumber.ToString();
             MaxLoad = _measurement.MaxWeight.ToString();
             MinLoad = _measurement.MinWeight.ToString();
             Imtravel = _measurement.Travel.ToString();

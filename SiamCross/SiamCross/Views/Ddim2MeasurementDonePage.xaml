@@ -43,7 +43,7 @@
             <TableRoot >
                 <TableSection>
                     <ViewCell>
-                        <StackLayout rainbows:DebugRainbow.IsDebug="True">
+                        <StackLayout>
                             <Label Text="Месторождение"></Label>
                             <Picker ItemsSource="{Binding Fields}"
                                 SelectedItem="{Binding SelectedField}"
