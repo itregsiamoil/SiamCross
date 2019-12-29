@@ -11,7 +11,6 @@
         <ResourceDictionary>
             <Style x:Key="labelStyle" TargetType="Label">
                 <Setter Property="FontSize" Value="Medium"/>
-                <!--<Setter Property="FontAttributes" Value="Bold"/>-->
                 <Setter Property="Margin" Value="2, 6"/>
                 <Setter Property="TextColor" Value="Black" />
             </Style>
@@ -44,15 +43,14 @@
                 <TableSection>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Месторождение"></Label>
+                            <Label Text="Месторождение"/>
                             <Picker ItemsSource="{Binding Fields}"
-                                SelectedItem="{Binding SelectedField}"
-                                ></Picker>
+                                SelectedItem="{Binding SelectedField}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout   >
-                            <Label Text="Скважина"></Label>
+                        <StackLayout>
+                            <Label Text="Скважина"/>
                             <Entry Text="{Binding Well}" 
                                Keyboard="Numeric">
                                 <Entry.Behaviors>
@@ -62,8 +60,8 @@
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout   >
-                            <Label Text="Куст"></Label>
+                        <StackLayout>
+                            <Label Text="Куст"/>
                             <Entry Text="{Binding Bush}" 
                                Keyboard="Numeric">
                                 <Entry.Behaviors>
@@ -74,7 +72,7 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Цех"></Label>
+                            <Label Text="Цех"/>
                             <Entry Text="{Binding Shop}" 
                                Keyboard="Numeric">
                                 <Entry.Behaviors>
@@ -85,16 +83,15 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Дата"></Label>
+                            <Label Text="Дата"/>
                             <Label Text="{Binding Date, Mode=OneWay}" 
-                                   Style="{StaticResource labelStyle}"></Label>
+                                   Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout  >
-                            <Label Text="Буферное давление"></Label>
-                            <Entry Text="{Binding BufferPressure}" 
-                               >
+                        <StackLayout>
+                            <Label Text="Буферное давление"/>
+                            <Entry Text="{Binding BufferPressure}">
                                 <Entry.Behaviors>
                                     <local:FloatNumberValidationBehavior/>
                                 </Entry.Behaviors>
@@ -102,28 +99,28 @@
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout  >
-                            <Label Text="Комментарии"></Label>
-                            <Editor Text="{Binding Comments, Mode=TwoWay}"></Editor>
+                        <StackLayout>
+                            <Label Text="Комментарии"/>
+                            <Editor Text="{Binding Comments, Mode=TwoWay}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Прибор"></Label>
+                            <Label Text="Прибор"/>
                             <Label Text="{Binding DeviceName, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Тип исследования"></Label>
+                            <Label Text="Тип исследования"/>
                             <Label Text="{Binding MeasurementType, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout >
-                            <Label Text="Номер отверствия"></Label>
+                        <StackLayout>
+                            <Label Text="Номер отверствия"/>
                             <Entry Text="{Binding ApertNumber}" 
                                Keyboard="Numeric">
                                 <Entry.Behaviors>
@@ -133,56 +130,52 @@
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout >
+                        <StackLayout>
                             <Label Text="Максимальная нагрузка, т"/>
-                            <Label Text="{Binding MaxLoad}"
+                            <Label Text="{Binding MaxLoad, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout >
+                        <StackLayout>
                             <Label Text="Минимальная нагрузка, т"/>
-                            <Label Text="{Binding MinLoad}"
+                            <Label Text="{Binding MinLoad, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
-
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout  >
+                        <StackLayout>
                             <Label Text="Длина хода, м"/>
-                            <Label Text="{Binding Imtravel}"
+                            <Label Text="{Binding Imtravel, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout >
+                        <StackLayout>
                             <Label Text="Темп качания, кач/мин"/>
-                            <Label Text="{Binding PumpRate}"
+                            <Label Text="{Binding PumpRate, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout >
+                        <StackLayout>
                             <Label Text="Вес штанг в верхнем положении, т"/>
-                            <Label Text="{Binding UpperRodWeight}"
+                            <Label Text="{Binding UpperRodWeight, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
-
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout >
+                        <StackLayout>
                             <Label Text="Вес штанг в нижнем положении, т"/>
-                            <Label Text="{Binding LowerRodWeight}"
+                            <Label Text="{Binding LowerRodWeight, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
-
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout >
                             <Label Text="Тип привода"/>
-                            <Label Text="{Binding SelectedModelPump}"
+                            <Label Text="{Binding SelectedModelPump, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
-
                         </StackLayout>
                     </ViewCell>
                 </TableSection>
