@@ -1,6 +1,7 @@
 ﻿using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Services;
 using SiamCross.ViewModels;
+using SiamCross.Views.MenuItems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,10 +25,14 @@ namespace SiamCross.Views
             InitializeComponent();
         }
 
-        protected override void OnDisappearing()
+        protected override async void OnDisappearing()
         {
             base.OnDisappearing();
-            //DataRepository.Instance.SaveDdin2Item(_measurement);
+            DataRepository.Instance.SaveDdin2Item(_measurement);
+            NavigationHelper.RemovePage(typeof(MeasurementsPage));
+            this.Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
+            await App.NavigationPage.Navigation.PushAsync(
+                  new MeasurementsPage(), true);
         }
     }
 }

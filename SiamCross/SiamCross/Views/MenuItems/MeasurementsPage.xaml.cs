@@ -11,9 +11,9 @@ using Xamarin.Forms.Xaml;
 namespace SiamCross.Views.MenuItems
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MeasuringPanelPage : ContentPage
+    public partial class MeasurementsPage : ContentPage
     {
-        public MeasuringPanelPage()
+        public MeasurementsPage()
         {
             var vm = new ViewModel<MeasurementsViewModel>();
             this.BindingContext = vm.GetViewModel;
