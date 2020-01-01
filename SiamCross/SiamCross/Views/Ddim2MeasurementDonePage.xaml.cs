@@ -25,15 +25,13 @@ namespace SiamCross.Views
             InitializeComponent();
         }
 
-        protected override async void OnDisappearing()
+        protected override void OnDisappearing()
         {
             base.OnDisappearing();
             DataRepository.Instance.SaveDdim2Item(_measurement);
-            NavigationHelper.RemovePage(typeof(MeasurementsPage));
-            //this.Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
-
-            await App.NavigationPage.Navigation.PushAsync(
-                new MeasurementsPage(), true);
+            MessagingCenter
+                .Send<Ddim2MeasurementDonePage, Ddim2Measurement>(
+                this, "Refresh measurement", _measurement);
         }
     }
 }

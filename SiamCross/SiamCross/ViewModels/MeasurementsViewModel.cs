@@ -4,23 +4,48 @@ using SiamCross.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
     public class MeasurementsViewModel : BaseViewModel, IViewModel
     {
-        public class MeasurementView
+        public class MeasurementView : INotifyPropertyChanged
         {
+            private string _field;
+            private string _comments;
+
             public int Id { get; set; }
 
             public string Name { get; set; }
-            public string Field { get; set; }
+            public string Field
+            {
+                get => _field;
+                set
+                {
+                    _field = value;
+                    PropertyChanged?.Invoke(this,
+                        new PropertyChangedEventArgs(nameof(Field)));
+                }
+            }
             public DateTime Date { get; set; }
             public string MeasurementType { get; set; }
-            public string Comments { get; set; }
+            public string Comments 
+            { 
+                get => _comments;
+                set
+                {
+                    _comments = value;
+                    PropertyChanged?.Invoke(this,
+                        new PropertyChangedEventArgs(nameof(Comments)));
+                }
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
         }
 
         private MeasurementView _selectedMeasurement;
@@ -48,15 +73,9 @@ namespace SiamCross.ViewModels
                     .SingleOrDefault(m => m.Id == _selectedMeasurement.Id);
                 if (measurement != null)
                 {
-                    //Task openModel = App.NavigationPage.Navigation
-                    //    .PushModalAsync(
-                    //    new Ddim2MeasurementDonePage(measurement), true);
-                    //openModel.Start();
-                    //Task.WaitAll(openModel);
                     App.NavigationPage.Navigation
                         .PushModalAsync(
-                        new Ddim2MeasurementDonePage(measurement), true);
-                    //RefreshMeasurement(measurement);                    
+                        new Ddim2MeasurementDonePage(measurement), true);                   
                 }
             }
             else if (_selectedMeasurement.Name.Contains("DDIN"))
@@ -68,42 +87,8 @@ namespace SiamCross.ViewModels
                     App.NavigationPage.Navigation
                         .PushModalAsync(
                         new Ddin2MeasurementDonePage(measurement), true);
-                    //RefreshMeasurement(measurement);
                 }
             }
-        }
-
-        private void RefreshMeasurement(object measurement)
-        {
-            switch (measurement)
-            {
-                case Ddim2Measurement m:
-                    Measurements.Remove(_selectedMeasurement);
-                    Measurements.Add(new MeasurementView
-                    {
-                        Id = m.Id,
-                        Name = m.Name,
-                        Field = m.Field,
-                        Date = m.DateTime,
-                        MeasurementType = "Динамограмма",
-                        Comments = m.Comment
-                    });
-                    break;
-                case Ddin2Measurement m:
-                    Measurements.Remove(_selectedMeasurement);
-                    Measurements.Add(new MeasurementView
-                    {
-                        Id = m.Id,
-                        Name = m.Name,
-                        Field = m.Field,
-                        Date = m.DateTime,
-                        MeasurementType = "Динамограмма",
-                        Comments = m.Comment
-                    });
-                    break;
-                default:
-                    break;
-            } 
         }
 
         public ObservableCollection<MeasurementView> Measurements { get; set; }
@@ -227,6 +212,35 @@ namespace SiamCross.ViewModels
 
 
             Measurements.OrderBy(m => m.Date);
+
+            MessagingCenter
+                .Subscribe<Ddim2MeasurementDonePage, Ddim2Measurement>(
+                this, 
+                "Refresh measurement", 
+                (sender, arg)=>
+                {
+                    var mv = Measurements.SingleOrDefault(m => m.Id == arg.Id);
+                    if (mv != null)
+                    {
+                        mv.Field = arg.Field;
+                        mv.Comments = arg.Comment;
+                    }
+                });
+
+            MessagingCenter
+                .Subscribe<Ddin2MeasurementDonePage, Ddin2Measurement>(
+                this,
+                "Refresh measurement",
+                (sender, arg) =>
+                {
+                    var mv = Measurements.SingleOrDefault(m => m.Id == arg.Id);
+                    if (mv != null)
+                    {
+                        mv.Field = arg.Field;
+                        mv.Comments = arg.Comment;
+                    }
+                });
         }
+
     }
 }
