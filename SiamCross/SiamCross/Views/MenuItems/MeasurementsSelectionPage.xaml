@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="SiamCross.Views.MenuItems.MeasurementsSelectionPage"
+             Title="{Binding Title, Mode=TwoWay}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Удалить" Command="{Binding DeleteCommand}"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout>
+            <CollectionView ItemsSource="{Binding Measurements}"
+                            SelectedItems="{Binding SelectedMeasurements}"
+                            SelectionMode="Multiple"
+                            SelectionChangedCommand="{Binding SelectionChanged}"
+                            Margin ="5">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Label Grid.Row="0" Text="{Binding Field}"
+                                           FontAttributes="Bold"></Label>
+                            <Label Grid.Row="1" Text="{Binding Date}"/>
+                            <Label Grid.Row="2" Text="{Binding MeasurementType}"/>
+                            <Label Grid.Row="3" Text="{Binding Comments}"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

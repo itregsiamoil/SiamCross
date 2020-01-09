@@ -1,6 +1,7 @@
 ﻿using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Services;
 using SiamCross.Views;
+using SiamCross.Views.MenuItems;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,46 +9,13 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
     public class MeasurementsViewModel : BaseViewModel, IViewModel
     {
-        public class MeasurementView : INotifyPropertyChanged
-        {
-            private string _field;
-            private string _comments;
-
-            public int Id { get; set; }
-
-            public string Name { get; set; }
-            public string Field
-            {
-                get => _field;
-                set
-                {
-                    _field = value;
-                    PropertyChanged?.Invoke(this,
-                        new PropertyChangedEventArgs(nameof(Field)));
-                }
-            }
-            public DateTime Date { get; set; }
-            public string MeasurementType { get; set; }
-            public string Comments 
-            { 
-                get => _comments;
-                set
-                {
-                    _comments = value;
-                    PropertyChanged?.Invoke(this,
-                        new PropertyChangedEventArgs(nameof(Comments)));
-                }
-            }
-
-            public event PropertyChangedEventHandler PropertyChanged;
-        }
-
         private MeasurementView _selectedMeasurement;
 
         public MeasurementView SelectedMeasurement
@@ -97,8 +65,17 @@ namespace SiamCross.ViewModels
 
         private List<Ddin2Measurement> _ddin2Measurements;
 
+        public ICommand SelectAll { get; set; }
+
         public MeasurementsViewModel()
         {
+            SelectAll = new Command(() =>
+            {
+                App.NavigationPage
+                    .Navigation
+                    .PushAsync(new MeasurementsSelectionPage(Measurements));
+                App.MenuIsPresented = false;
+            });
             Measurements = new ObservableCollection<MeasurementView>();
             _ddim2Measurements = new List<Ddim2Measurement>();
             _ddin2Measurements = new List<Ddin2Measurement>();
