@@ -3,6 +3,7 @@ using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
 using SiamCross.ViewModels;
+using System.Collections.ObjectModel;
 
 namespace SiamCross.Views
 {
@@ -42,6 +43,16 @@ namespace SiamCross.Views
             {
                 GetViewModel = AppContainer.Container.Resolve<T>(
                     new TypedParameter(typeof(Ddin2Measurement), measurement));
+            }
+        }
+
+        public ViewModel(ObservableCollection<MeasurementView> measurements)
+        {
+            using (var scope = AppContainer.Container.BeginLifetimeScope())
+            {
+                GetViewModel = AppContainer.Container.Resolve<T>(
+                    new TypedParameter(
+                        typeof(ObservableCollection<MeasurementView>), measurements));
             }
         }
     }
