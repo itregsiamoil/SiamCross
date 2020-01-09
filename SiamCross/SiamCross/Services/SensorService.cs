@@ -142,11 +142,11 @@ namespace SiamCross.Services
                                DataRepository.Instance.GetDdin2Item(dbModelDdin2.Id)),
                                true);
 
-                    var qwe = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
+                    //var qwe = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
                     var name = "ddin2_" + dbModelDdin2.DateTime.Date.ToString() + "T"
                         + dbModelDdin2.DateTime.TimeOfDay.ToString() + dbModelDdin2.DateTime.TimeOfDay.ToString()
                         + ".xml";
-                    qwe.SaveXml(name.Replace(':', '-'), new XmlCreator().CreateDdin2Xml(dbModelDdin2));
+                    //qwe.SaveXml(name.Replace(':', '-'), new XmlCreator().CreateDdin2Xml(dbModelDdin2));
                     break;
                 default:
                     break;
