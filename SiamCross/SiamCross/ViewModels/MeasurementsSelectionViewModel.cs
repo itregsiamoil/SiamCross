@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiamCross.Services;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -33,15 +34,39 @@ namespace SiamCross.ViewModels
                 SelectedMeasurements.Add(m);
             }
             Title = $"Выбрано: {SelectedMeasurements.Count}";
-            DeleteCommand = new Command(DeleteMeasurement);
-            SelectionChanged = new Command(
-                ()=> 
-                Title = $"Выбрано: {SelectedMeasurements.Count}");
+            DeleteCommand = new Command(DeleteMeasurements);
+            SelectionChanged = new Command(RefreshSelectedCount);
         }
 
-        private void DeleteMeasurement()
+        private void RefreshSelectedCount()
         {
             Title = $"Выбрано: {SelectedMeasurements.Count}";
+        }
+
+        private void DeleteMeasurements()
+        {
+            if (SelectedMeasurements.Count != 0)
+            {
+                foreach (var m in SelectedMeasurements)
+                {
+                    if (m is MeasurementView mv)
+                    {
+                        if (mv.Name.Contains("DDIM"))
+                        {
+                            DataRepository.Instance.DeleteDdim2Item(mv.Id);
+                            Measurements.Remove(mv);
+                        }
+                        else if (mv.Name.Contains("DDIN"))
+                        {
+                            DataRepository.Instance.DeleteDdin2Item(mv.Id);
+                            Measurements.Remove(mv);
+                        }
+                    }
+                }
+                MessagingCenter.Send<MeasurementsSelectionViewModel>(this, "RefreshAfterDeleting");
+                SelectedMeasurements.Clear();
+                RefreshSelectedCount();
+            }
         }
     }
 }

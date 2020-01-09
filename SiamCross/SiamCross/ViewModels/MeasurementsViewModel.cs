@@ -79,8 +79,6 @@ namespace SiamCross.ViewModels
             Measurements = new ObservableCollection<MeasurementView>();
             _ddim2Measurements = new List<Ddim2Measurement>();
             _ddin2Measurements = new List<Ddin2Measurement>();
-            _ddim2Measurements = DataRepository.Instance.GetDdim2Items().ToList();
-            _ddin2Measurements = DataRepository.Instance.GetDdin2Items().ToList();
 
             //var ddim2M = new Ddim2Measurement()
             //{
@@ -159,6 +157,59 @@ namespace SiamCross.ViewModels
             //            Comments = "Комментарии вавыафыафыафывафыва"
             //        });
 
+            GetMeasurementsFromDb();
+
+            Measurements.OrderBy(m => m.Date);
+
+            MessagingCenter
+                .Subscribe<Ddim2MeasurementDonePage, Ddim2Measurement>(
+                    this, 
+                    "Refresh measurement", 
+                    (sender, arg)=>
+                    {
+                        var mv = Measurements.SingleOrDefault(m => m.Id == arg.Id);
+                        if (mv != null)
+                        {
+                            mv.Field = arg.Field;
+                            mv.Comments = arg.Comment;
+                        }
+                    }
+                );
+
+            MessagingCenter
+                .Subscribe<Ddin2MeasurementDonePage, Ddin2Measurement>(
+                    this,
+                    "Refresh measurement",
+                    (sender, arg) =>
+                    {
+                        var mv = Measurements.SingleOrDefault(m => m.Id == arg.Id);
+                        if (mv != null)
+                        {
+                            mv.Field = arg.Field;
+                            mv.Comments = arg.Comment;
+                        }
+                    }
+                );
+
+            MessagingCenter
+                .Subscribe<MeasurementsSelectionViewModel>(
+                    this, 
+                    "RefreshAfterDeleting", 
+                    (sender)=> 
+                    {
+                        _ddim2Measurements.Clear();
+                        _ddin2Measurements.Clear();
+                        Measurements.Clear();
+
+                        GetMeasurementsFromDb();
+                    }
+                );
+        }
+
+        private void GetMeasurementsFromDb()
+        {
+            _ddim2Measurements = DataRepository.Instance.GetDdim2Items().ToList();
+            _ddin2Measurements = DataRepository.Instance.GetDdin2Items().ToList();
             foreach (var m in _ddim2Measurements)
             {
                 Measurements.Add(
@@ -186,38 +237,6 @@ namespace SiamCross.ViewModels
                         Comments = m.Comment
                     });
             }
-
-
-            Measurements.OrderBy(m => m.Date);
-
-            MessagingCenter
-                .Subscribe<Ddim2MeasurementDonePage, Ddim2Measurement>(
-                this, 
-                "Refresh measurement", 
-                (sender, arg)=>
-                {
-                    var mv = Measurements.SingleOrDefault(m => m.Id == arg.Id);
-                    if (mv != null)
-                    {
-                        mv.Field = arg.Field;
-                        mv.Comments = arg.Comment;
-                    }
-                });
-
-            MessagingCenter
-                .Subscribe<Ddin2MeasurementDonePage, Ddin2Measurement>(
-                this,
-                "Refresh measurement",
-                (sender, arg) =>
-                {
-                    var mv = Measurements.SingleOrDefault(m => m.Id == arg.Id);
-                    if (mv != null)
-                    {
-                        mv.Field = arg.Field;
-                        mv.Comments = arg.Comment;
-                    }
-                });
         }
-
     }
 }
