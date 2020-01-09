@@ -1,6 +1,7 @@
 ﻿using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Services;
 using SiamCross.ViewModels;
+using SiamCross.Views.MenuItems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,9 @@ namespace SiamCross.Views
         {
             base.OnDisappearing();
             DataRepository.Instance.SaveDdim2Item(_measurement);
+            MessagingCenter
+                .Send<Ddim2MeasurementDonePage, Ddim2Measurement>(
+                this, "Refresh measurement", _measurement);
         }
     }
 }
