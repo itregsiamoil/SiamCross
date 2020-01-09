@@ -45,24 +45,28 @@ namespace SiamCross.ViewModels
 
         private void DeleteMeasurements()
         {
-            foreach (var m in SelectedMeasurements)
+            if (SelectedMeasurements.Count != 0)
             {
-                if (m is MeasurementView mv)
+                foreach (var m in SelectedMeasurements)
                 {
-                    if (mv.Name.Contains("DDIM"))
+                    if (m is MeasurementView mv)
                     {
-                        //DataRepository.Instance.DeleteDdim2Item(mv.Id);
-                        Measurements.Remove(mv);
-                    }
-                    else if (mv.Name.Contains("DDIN"))
-                    {
-                        //DataRepository.Instance.DeleteDdin2Item(mv.Id);
-                        Measurements.Remove(mv);
+                        if (mv.Name.Contains("DDIM"))
+                        {
+                            DataRepository.Instance.DeleteDdim2Item(mv.Id);
+                            Measurements.Remove(mv);
+                        }
+                        else if (mv.Name.Contains("DDIN"))
+                        {
+                            DataRepository.Instance.DeleteDdin2Item(mv.Id);
+                            Measurements.Remove(mv);
+                        }
                     }
                 }
+                MessagingCenter.Send<MeasurementsSelectionViewModel>(this, "RefreshAfterDeleting");
+                SelectedMeasurements.Clear();
+                RefreshSelectedCount();
             }
-            SelectedMeasurements.Clear();
-            RefreshSelectedCount();
         }
     }
 }
