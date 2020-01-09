@@ -525,7 +525,7 @@ namespace SiamCross.Models.Tools
                 dbDdinModel.DynGraph.ToList(),
                 dbDdinModel.Step,
                 dbDdinModel.WeightDiscr);
-            for (int i = 0; i < discrets.Length; i++)
+            for (int i = 0; i < discrets.GetUpperBound(0); i++)
             {
                 movement.Add(discrets[i, 0]);
                 weight.Add(discrets[i, 1]);
