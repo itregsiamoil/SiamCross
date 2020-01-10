@@ -5,6 +5,7 @@ using SiamCross.Services;
 using SiamCross.ViewModels;
 using SiamCross.Views.MenuItems;
 using SkiaSharp;
+using SkiaSharp.Views.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,8 @@ namespace SiamCross.Views
             //}
         };
 
+        private double[,] _points;
+
         private Ddim2Measurement _measurement;
         public Ddim2MeasurementDonePage(Ddim2Measurement measurement)
         {
@@ -48,23 +51,92 @@ namespace SiamCross.Views
             var vm = new ViewModel<Ddim2MeasurementDoneViewModel>(measurement);
             this.BindingContext = vm.GetViewModel;
             InitializeComponent();
-            
-            var points = DgmConverter.GetXYs(_measurement.DynGraph.ToList(),
-                _measurement.Step,
-                _measurement.WeightDiscr); ;
-            for (int i = 0; i < points.GetUpperBound(0)/3; i++)
-            {
-                entries.Add(
-                    new Microcharts.Entry((float)points[i, 1])
-                    {
-                        
-                    });
-            }
 
-            Chart1.Chart = new LineChart
+            _points = DgmConverter.GetXYs(_measurement.DynGraph.ToList(),
+                _measurement.Step,
+                _measurement.WeightDiscr);
+            //for (int i = 0; i < points.GetUpperBound(0)/3; i++)
+            //{
+            //    entries.Add(
+            //        new Microcharts.Entry((float)points[i, 1])
+            //        {
+
+            //        });
+            //}
+
+            //Chart1.Chart = new LineChart
+            //{
+            //    Entries = entries,
+            //};
+        }
+
+        private void CanvasView_PaintSurface(object sender, SkiaSharp.Views.Forms.SKPaintSurfaceEventArgs args)
+        {
+            SKImageInfo info = args.Info;
+            SKSurface surface = args.Surface;
+            SKCanvas canvas = surface.Canvas;
+
+            canvas.Clear();
+
+            SKPaint paint = new SKPaint
             {
-                Entries = entries
+                Style = SKPaintStyle.Fill,
+                Color = Color.Blue.ToSKColor(),
+                StrokeWidth = 2
             };
+
+            SKPaint paintAxies = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                Color = Color.Black.ToSKColor(),
+                StrokeWidth = 2
+            };
+            canvas.DrawLine(0, 0, 0, (float)CanvasView.Height, paintAxies);
+            //canvas.DrawCircle(info.Width / 2, info.Height / 2, 100, paint);
+
+            double maxX = GetMaximumX();
+            double maxY = GetMaximumY();
+            //maxX = maxX < 1 ? maxX * 0.1 : maxX * 10;
+            //maxY = maxY < 1 ? maxY * 0.1 : maxY * 10;
+            double dx = CanvasView.Width / maxX;
+            double dy = CanvasView.Height / maxY;
+
+            var skPoints = new List<SKPoint>();
+            for (int i = 0; i < _points.GetUpperBound(0); i++)
+            {
+                skPoints.Add(
+                    new SKPoint(
+                        (float)(_points[i, 0] * dx),
+                        (float)(_points[i, 1] * dy)));
+            }
+            
+            canvas.DrawPoints(SKPointMode.Polygon, skPoints.ToArray(), paint);
+        }
+
+        private double GetMaximumX()
+        {
+            double max = -43;
+            for (int i = 0; i < _points.GetUpperBound(0); i++)
+            {
+                if (_points[i, 0] > max)
+                {
+                    max = _points[i, 0];
+                }
+            }
+            return max;
+        }
+
+        private double GetMaximumY()
+        {
+            double max = -43;
+            for (int i = 0; i < _points.GetUpperBound(0); i++)
+            {
+                if (_points[i, 1] > max)
+                {
+                    max = _points[i, 1];
+                }
+            }
+            return max;
         }
 
         protected override void OnDisappearing()

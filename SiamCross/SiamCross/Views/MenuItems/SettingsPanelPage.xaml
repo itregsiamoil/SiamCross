@@ -2,8 +2,12 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.MenuItems.SettingsPanelPage"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
              Title="Настройки">
     <ContentPage.Content>
-        <Label Text="Настройки"/>
+        <skia:SKCanvasView x:Name="CanvasView"
+                           PaintSurface="CanvasView_PaintSurface"
+                           />
+
     </ContentPage.Content>
 </ContentPage>
