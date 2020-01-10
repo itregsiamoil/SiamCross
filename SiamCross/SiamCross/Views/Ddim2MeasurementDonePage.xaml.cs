@@ -52,7 +52,7 @@ namespace SiamCross.Views
             var points = DgmConverter.GetXYs(_measurement.DynGraph.ToList(),
                 _measurement.Step,
                 _measurement.WeightDiscr); ;
-            for (int i = 0; i < points.GetUpperBound(0); i++)
+            for (int i = 0; i < points.GetUpperBound(0)/3; i++)
             {
                 entries.Add(
                     new Microcharts.Entry((float)points[i, 1])

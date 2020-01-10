@@ -47,21 +47,24 @@ namespace SiamCross.Views
             var vm = new ViewModel<Ddin2MeasurementDoneViewModel>(measurement);
             this.BindingContext = vm.GetViewModel;
             InitializeComponent();
+
             var points = DgmConverter.GetXYs(_measurement.DynGraph.ToList(),
                 _measurement.Step,
                 _measurement.WeightDiscr); ;
-            for (int i = 0; i < points.GetUpperBound(0)/2; i++)
+            for (int i = 0; i < points.GetUpperBound(0)/3; i++)
             {
+                //if (i % 10 != 0) continue;
+                //else 
                 entries.Add(
-                    new Microcharts.Entry((float)points[i, 0])
+                    new Microcharts.Entry((float)points[i, 1])
                     {
-
+                        //Label = points[i, 0].ToString()
                     });
             }
 
             Chart1.Chart = new LineChart
             {
-                Entries = entries
+                Entries = entries,
             };
         }
 
