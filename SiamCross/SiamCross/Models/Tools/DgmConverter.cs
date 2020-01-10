@@ -107,7 +107,7 @@ namespace SiamCross.Models.Tools
                 int x = ExtractTravel(words[i]);
                 int y = ExtractWeight(words[i]);
 
-                Console.WriteLine($"Дискреты x: {x} y: {y}");
+                //Console.WriteLine($"Дискреты x: {x} y: {y}");
 
                 if (i == 0)
                 {
@@ -123,7 +123,7 @@ namespace SiamCross.Models.Tools
                     points[i, 0] = ((x * step) / 1000f) + points[i - 1, 0];
                 }
                 points[i, 1] = Math.Abs((y * weightDiscr));
-                Console.WriteLine($"Точка {i}  x: {points[i, 0]} y: {points[i, 1]}");
+                //Console.WriteLine($"Точка {i}  x: {points[i, 0]} y: {points[i, 1]}");
             }
 
             double min = Double.MaxValue;

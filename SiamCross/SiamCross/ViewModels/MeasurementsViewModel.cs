@@ -167,7 +167,8 @@ namespace SiamCross.ViewModels
                     "Refresh measurement", 
                     (sender, arg)=>
                     {
-                        var mv = Measurements.SingleOrDefault(m => m.Id == arg.Id);
+                        var mv = Measurements
+                            .SingleOrDefault(m => m.Id == arg.Id && m.Name == arg.Name);
                         if (mv != null)
                         {
                             mv.Field = arg.Field;
@@ -182,7 +183,8 @@ namespace SiamCross.ViewModels
                     "Refresh measurement",
                     (sender, arg) =>
                     {
-                        var mv = Measurements.SingleOrDefault(m => m.Id == arg.Id);
+                        var mv = Measurements
+                        .SingleOrDefault(m => m.Id == arg.Id && m.Name == arg.Name);
                         if (mv != null)
                         {
                             mv.Field = arg.Field;

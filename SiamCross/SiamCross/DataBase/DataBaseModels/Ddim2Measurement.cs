@@ -43,7 +43,7 @@ namespace SiamCross.DataBase.DataBaseModels
         public string ErrorCode { get; set; }
         public short ApertNumber { get; set; }
         public short ModelPump { get; set; }
-
+        
         public short MaxBarbellWeight { get; set; }
         public short MinBarbellWeight { get; set; }
         /*/ ----- /*/

@@ -5,6 +5,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:local ="clr-namespace:SiamCross.Views"
+             xmlns:forms="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
              x:Class="SiamCross.Views.Ddin2MeasurementDonePage">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -34,6 +36,12 @@
     17. Вес штанг в нижнем положении, т
     18. Тип привод-->
     <StackLayout>
+        <!--<forms:ChartView x:Name="Chart1" HeightRequest="200"/>-->
+        <skia:SKCanvasView x:Name="CanvasView"
+                           PaintSurface="CanvasView_PaintSurface"
+                           HeightRequest="200"
+                           HorizontalOptions="FillAndExpand"
+                           Margin="10"/>
         <TableView Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand"
