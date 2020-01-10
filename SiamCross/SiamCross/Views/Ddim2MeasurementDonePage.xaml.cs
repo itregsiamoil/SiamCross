@@ -89,9 +89,11 @@ namespace SiamCross.Views
             {
                 Style = SKPaintStyle.Fill,
                 Color = Color.Black.ToSKColor(),
-                StrokeWidth = 2
+                StrokeWidth = 1
             };
             canvas.DrawLine(0, 0, 0, (float)CanvasView.Height, paintAxies);
+            canvas.DrawLine(0, (float)CanvasView.Height,
+                (float)CanvasView.Width, (float)CanvasView.Height, paintAxies);
             //canvas.DrawCircle(info.Width / 2, info.Height / 2, 100, paint);
 
             double maxX = GetMaximumX();

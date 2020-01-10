@@ -102,8 +102,8 @@ namespace SiamCross.Views
 
             double maxX = GetMaximumX();
             double maxY = GetMaximumY();
-            double dx = CanvasView.Width / maxX;
-            double dy = CanvasView.Height / maxY;
+            double dx = (CanvasView.Width) / maxX;
+            double dy = (CanvasView.Height) / maxY;
 
             var skPoints = new List<SKPoint>();
             for (int i = 0; i < _points.GetUpperBound(0); i++)
