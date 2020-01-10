@@ -44,9 +44,6 @@
             <TableRoot >
                 <TableSection>
                     <ViewCell>
-                        
-                    </ViewCell>
-                    <ViewCell>
                         <StackLayout>
                             <Label Text="Месторождение"/>
                             <Picker ItemsSource="{Binding Fields}"
