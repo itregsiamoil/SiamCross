@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\SkiaSharp.Views.Forms.WPF.1.68.1.1\build\net45\SkiaSharp.Views.Forms.WPF.props" Condition="Exists('..\..\packages\SkiaSharp.Views.Forms.WPF.1.68.1.1\build\net45\SkiaSharp.Views.Forms.WPF.props')" />
   <Import Project="..\..\packages\Xamarin.Forms.4.3.0.947036\build\Xamarin.Forms.props" Condition="Exists('..\..\packages\Xamarin.Forms.4.3.0.947036\build\Xamarin.Forms.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -44,6 +45,12 @@
     <Reference Include="InTheHand.Net.Personal, Version=3.5.605.0, Culture=neutral, PublicKeyToken=ea38caa273134499, processorArchitecture=MSIL">
       <HintPath>..\..\packages\32feet.NET.3.5.0.0\lib\net\InTheHand.Net.Personal.dll</HintPath>
     </Reference>
+    <Reference Include="Microcharts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microcharts.0.7.1\lib\netstandard1.4\Microcharts.dll</HintPath>
+    </Reference>
+    <Reference Include="Microcharts.Forms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microcharts.Forms.0.7.1\lib\netstandard1.4\Microcharts.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -52,6 +59,21 @@
     </Reference>
     <Reference Include="OpenTK.GLControl, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\OpenTK.GLControl.3.0.1\lib\net20\OpenTK.GLControl.dll</HintPath>
+    </Reference>
+    <Reference Include="SkiaSharp, Version=1.68.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SkiaSharp.1.68.1.1\lib\net45\SkiaSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="SkiaSharp.Views.Desktop.Common, Version=1.68.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SkiaSharp.Views.Desktop.Common.1.68.1.1\lib\net45\SkiaSharp.Views.Desktop.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="SkiaSharp.Views.Forms, Version=1.68.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SkiaSharp.Views.Forms.WPF.1.68.1.1\lib\net45\SkiaSharp.Views.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="SkiaSharp.Views.WindowsForms, Version=1.68.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SkiaSharp.Views.WindowsForms.1.68.1.1\lib\net45\SkiaSharp.Views.WindowsForms.dll</HintPath>
+    </Reference>
+    <Reference Include="SkiaSharp.Views.WPF, Version=1.68.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SkiaSharp.Views.WPF.1.68.1.1\lib\net45\SkiaSharp.Views.WPF.dll</HintPath>
     </Reference>
     <Reference Include="SQLite-net, Version=1.7.302.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\sqlite-net-pcl.1.7.302-beta\lib\netstandard2.0\SQLite-net.dll</HintPath>
@@ -195,7 +217,12 @@
     <Error Condition="!Exists('..\..\packages\Xamarin.Forms.4.3.0.947036\build\Xamarin.Forms.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.Forms.4.3.0.947036\build\Xamarin.Forms.props'))" />
     <Error Condition="!Exists('..\..\packages\Xamarin.Forms.4.3.0.947036\build\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.Forms.4.3.0.947036\build\Xamarin.Forms.targets'))" />
     <Error Condition="!Exists('..\..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.2\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.2\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets'))" />
+    <Error Condition="!Exists('..\..\packages\SkiaSharp.1.68.1.1\build\net45\SkiaSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SkiaSharp.1.68.1.1\build\net45\SkiaSharp.targets'))" />
+    <Error Condition="!Exists('..\..\packages\SkiaSharp.Views.Forms.1.68.1.1\build\net45\SkiaSharp.Views.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SkiaSharp.Views.Forms.1.68.1.1\build\net45\SkiaSharp.Views.Forms.targets'))" />
+    <Error Condition="!Exists('..\..\packages\SkiaSharp.Views.Forms.WPF.1.68.1.1\build\net45\SkiaSharp.Views.Forms.WPF.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SkiaSharp.Views.Forms.WPF.1.68.1.1\build\net45\SkiaSharp.Views.Forms.WPF.props'))" />
   </Target>
   <Import Project="..\..\packages\Xamarin.Forms.4.3.0.947036\build\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.4.3.0.947036\build\Xamarin.Forms.targets')" />
   <Import Project="..\..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.2\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets" Condition="Exists('..\..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.2\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets')" />
+  <Import Project="..\..\packages\SkiaSharp.1.68.1.1\build\net45\SkiaSharp.targets" Condition="Exists('..\..\packages\SkiaSharp.1.68.1.1\build\net45\SkiaSharp.targets')" />
+  <Import Project="..\..\packages\SkiaSharp.Views.Forms.1.68.1.1\build\net45\SkiaSharp.Views.Forms.targets" Condition="Exists('..\..\packages\SkiaSharp.Views.Forms.1.68.1.1\build\net45\SkiaSharp.Views.Forms.targets')" />
 </Project>

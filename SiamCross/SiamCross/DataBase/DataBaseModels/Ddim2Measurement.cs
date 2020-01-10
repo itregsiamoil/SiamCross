@@ -43,10 +43,11 @@ namespace SiamCross.DataBase.DataBaseModels
         public string ErrorCode { get; set; }
         public short ApertNumber { get; set; }
         public short ModelPump { get; set; }
-
+        
         public short MaxBarbellWeight { get; set; }
         public short MinBarbellWeight { get; set; }
         /*/ ----- /*/
+
 
         public Ddim2Measurement() { }
         public Ddim2Measurement(Ddim2MeasurementData ddim2MeasurementData)
