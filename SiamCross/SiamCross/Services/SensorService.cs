@@ -70,7 +70,6 @@ namespace SiamCross.Services
             }).Start();
         }
 
-
         public async Task DeleteSensor(int id)
         {
             var sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
@@ -133,6 +132,11 @@ namespace SiamCross.Services
                             new Ddim2MeasurementDonePage(
                                 DataRepository.Instance.GetDdim2Item(dbModelDdim2.Id)), 
                                 true);
+
+                    var qwe1 = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
+                    var name1 = ("ddim2_" + 
+                        new DateTimeConverter().DateTimeToString(dbModelDdim2.DateTime) + ".xml").Replace(':', '-');
+                    qwe1.SaveXml(name1, new XmlCreator().CreateDdim2Xml(dbModelDdim2));
                     break;
                 case Ddin2MeasurementData ddin2Data:
                     var dbModelDdin2 = new Ddin2Measurement(ddin2Data);
@@ -143,10 +147,9 @@ namespace SiamCross.Services
                                true);
 
                     var qwe = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
-                    var name = "ddin2_" + dbModelDdin2.DateTime.Date.ToString() + "T"
-                        + dbModelDdin2.DateTime.TimeOfDay.ToString() + dbModelDdin2.DateTime.TimeOfDay.ToString()
-                        + ".xml";
-                    qwe.SaveXml(name.Replace(':', '-'), new XmlCreator().CreateDdin2Xml(dbModelDdin2));
+                    var name = ("ddin2_" +
+                        new DateTimeConverter().DateTimeToString(dbModelDdin2.DateTime) + ".xml").Replace(':', '-');
+                    qwe.SaveXml(name, new XmlCreator().CreateDdin2Xml(dbModelDdin2));
                     break;
                 default:
                     break;

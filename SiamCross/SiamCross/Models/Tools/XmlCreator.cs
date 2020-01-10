@@ -394,24 +394,31 @@ namespace SiamCross.Models.Tools
                 }
             }
 
+            number = dbDdimModel.Name.Substring(dbDdimModel.Name.Length - 4);
+            if (number[0] == '0')
+            {
+                number.Substring(number.Length - 1);
+            }
+
             List<double> movement = new List<double>();
             List<double> weight = new List<double>();
             var discrets = DgmConverter.GetXYs(
                 dbDdimModel.DynGraph.ToList(),
                 dbDdimModel.Step,
                 dbDdimModel.WeightDiscr);
-            for (int i = 0; i < discrets.Length; i++)
+            for (int i = 0; i < discrets.GetUpperBound(0); i++)
             {
-                movement.Add(discrets[i, 0]);
+                movement.Add(discrets[i, 0] * 100);  //////для УМИ умножается на 100
                 weight.Add(discrets[i, 1]);
             }
 
             var maxStaticW = weight.Max();
             var minStaticW = weight.Min();
 
-            string date = dbDdimModel.DateTime.Date.ToString();
-            string time = TimeSpan.Parse(string.Format("{0:HH:mm:ss}",
-                dbDdimModel.DateTime.TimeOfDay)).ToString();
+            string date = dbDdimModel.DateTime.Date.Year.ToString() + "-" +
+                dbDdimModel.DateTime.Date.Month.ToString() + "-" +
+                dbDdimModel.DateTime.Date.Day.ToString();
+            string time = dbDdimModel.DateTime.TimeOfDay.ToString().Split('.')[0];
 
             ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -463,11 +470,11 @@ namespace SiamCross.Models.Tools
                                             new XAttribute("MSVDICTIONARYID", "sidtimediscrete")),
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", maxStaticW.ToString()),
+                                            new XAttribute("MSVDOUBLE", dbDdimModel.MaxBarbellWeight),
                                             new XAttribute("MSVDICTIONARYID", "dynbarweightupplace")),
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", minStaticW.ToString()),
+                                            new XAttribute("MSVDOUBLE", dbDdimModel.MinBarbellWeight),
                                             new XAttribute("MSVDICTIONARYID", "dynbarweightdownplace")),
 
                                         new XElement("Value",
@@ -479,19 +486,19 @@ namespace SiamCross.Models.Tools
                                         //    new XAttribute("MSVDICTIONARYID", "dynbossdiameter")),                        // Данный параметр имеется только у прибора ддин2
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", dbDdimModel.Travel.ToString()),
+                                            new XAttribute("MSVDOUBLE", dbDdimModel.TravelLength),
                                             new XAttribute("MSVDICTIONARYID", "dynbosstravellength")),
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", dbDdimModel.MaxWeight.ToString()),
+                                            new XAttribute("MSVDOUBLE", dbDdimModel.MaxWeight),
                                             new XAttribute("MSVDICTIONARYID", "dynmaxbossburden")),
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", dbDdimModel.MinWeight.ToString()),
+                                            new XAttribute("MSVDOUBLE", dbDdimModel.MinWeight),
                                             new XAttribute("MSVDICTIONARYID", "dynminbossburden")),
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", dbDdimModel.Period.ToString()),
+                                            new XAttribute("MSVDOUBLE", dbDdimModel.SwingCount),
                                             new XAttribute("MSVDICTIONARYID", "dynswingcount")),
 
                                         new XElement("Value",
@@ -519,6 +526,12 @@ namespace SiamCross.Models.Tools
                 }
             }
 
+            number = dbDdinModel.Name.Substring(dbDdinModel.Name.Length - 4);
+            if(number[0] == '0')
+            {
+                number.Substring(number.Length - 1);
+            }
+
             List<double> movement = new List<double>();
             List<double> weight = new List<double>();
             var discrets = DgmConverter.GetXYs(
@@ -531,12 +544,24 @@ namespace SiamCross.Models.Tools
                 weight.Add(discrets[i, 1]);
             }
 
-            var maxStaticW = weight.Max();
-            var minStaticW = weight.Min();
+            var maxStaticW = weight.Max() / 1000;
+            var minStaticW = weight.Min() / 1000;
 
-            string date = dbDdinModel.DateTime.Date.ToString();
-            string time = TimeSpan.Parse(string.Format("{0:HH:mm:ss}",
-                dbDdinModel.DateTime.TimeOfDay)).ToString();
+            var month = dbDdinModel.DateTime.Date.Month.ToString();
+            if(month.Length < 2)
+            {
+                month = "0" + month;
+            }
+
+            var day = dbDdinModel.DateTime.Date.Day.ToString();
+            if (day.Length < 2)
+            {
+                day = "0" + day;
+            }
+
+            string date = dbDdinModel.DateTime.Date.Year.ToString() + "-" +
+                month + "-" + day;
+            string time = dbDdinModel.DateTime.TimeOfDay.ToString().Split('.')[0];
 
             ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -569,7 +594,7 @@ namespace SiamCross.Models.Tools
 
                                         new XElement("Value",
                                             new XAttribute("MSVDICTIONARYID", "dynburden"),
-                                            new XAttribute("MSVDATA", BinaryToBase64(movement.ToArray()))),                                    //!
+                                            new XAttribute("MSVDATA", BinaryToBase64(weight.ToArray()))),                                    //!
 
                                         new XElement("Value",
                                             new XAttribute("MSVINTEGER", "1"),                                      //Накладной
@@ -584,39 +609,39 @@ namespace SiamCross.Models.Tools
                                             new XAttribute("MSVDICTIONARYID", "sidskippedcyclecount")),
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", dbDdinModel.TimeDiscr.ToString()),          //! возможно нужно поделить или умножить на 1К
+                                            new XAttribute("MSVDOUBLE", dbDdinModel.TimeDiscr.ToString()),         
                                             new XAttribute("MSVDICTIONARYID", "sidtimediscrete")),
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", maxStaticW.ToString()),
+                                            new XAttribute("MSVDOUBLE", dbDdinModel.MaxBarbellWeight),
                                             new XAttribute("MSVDICTIONARYID", "dynbarweightupplace")),
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", minStaticW.ToString()),
+                                            new XAttribute("MSVDOUBLE", dbDdinModel.MinBarbellWeight),
                                             new XAttribute("MSVDICTIONARYID", "dynbarweightdownplace")),
 
                                         new XElement("Value",
-                                            new XAttribute("MSVINTEGER", dbDdinModel.ApertNumber.ToString()),
+                                            new XAttribute("MSVINTEGER", dbDdinModel.ApertNumber),
                                             new XAttribute("MSVDICTIONARYID", "holeindex")),
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", dbDdinModel.Rod),
+                                            new XAttribute("MSVDOUBLE", dbDdinModel.Rod),                    
                                             new XAttribute("MSVDICTIONARYID", "dynbossdiameter")),                        
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", dbDdinModel.Travel.ToString()),
+                                            new XAttribute("MSVDOUBLE", dbDdinModel.TravelLength),
                                             new XAttribute("MSVDICTIONARYID", "dynbosstravellength")),
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", dbDdinModel.MaxWeight.ToString()),
+                                            new XAttribute("MSVDOUBLE", dbDdinModel.MaxWeight),
                                             new XAttribute("MSVDICTIONARYID", "dynmaxbossburden")),
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", dbDdinModel.MinWeight.ToString()),
+                                            new XAttribute("MSVDOUBLE", dbDdinModel.MinWeight),
                                             new XAttribute("MSVDICTIONARYID", "dynminbossburden")),
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", dbDdinModel.Period.ToString()),
+                                            new XAttribute("MSVDOUBLE", dbDdinModel.SwingCount),
                                             new XAttribute("MSVDICTIONARYID", "dynswingcount")),
 
                                         new XElement("Value",
@@ -627,25 +652,11 @@ namespace SiamCross.Models.Tools
         }
 
         private String BinaryToBase64(double[] array)
-        {
-            byte[] data = new byte[array.Length * 8];
-            int key = 0;
-            byte[] buffer;
-            foreach (double anArray in array)
-            {
-                buffer = BitConverter.GetBytes(anArray);
-                data[key] = buffer[7];
-                data[key + 1] = buffer[6];
-                data[key + 2] = buffer[5];
-                data[key + 3] = buffer[4];
-                data[key + 4] = buffer[3];
-                data[key + 5] = buffer[2];
-                data[key + 6] = buffer[1];
-                data[key + 7] = buffer[0];
-                key += 8;
-            }
-
-            return Convert.ToBase64String(data, Base64FormattingOptions.None);
+        {          
+            return Convert.ToBase64String(array.SelectMany(n => {
+                return BitConverter.GetBytes(n / 1000f);
+            }).ToArray(), 
+            Base64FormattingOptions.None);
         }
     }
 }
