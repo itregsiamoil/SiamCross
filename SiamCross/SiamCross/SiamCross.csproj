@@ -22,14 +22,15 @@
     <PackageReference Include="sqlite-net-pcl" Version="1.7.302-beta" />
     <PackageReference Include="Xamarin.Forms" Version="4.3.0.947036" />
     <PackageReference Include="Xamarin.Essentials" Version="1.3.1" />
+    <PackageReference Include="Xamarin.Forms.DebugRainbows" Version="1.0.16" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Views\Ddim2MeasurementPage.xaml.cs">
       <DependentUpon>Ddim2MeasurementPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\MenuItems\MeasuringPanelPage.xaml.cs">
-      <DependentUpon>MeasuringPanelPage.xaml</DependentUpon>
+    <Compile Update="Views\MenuItems\MeasurementsPage.xaml.cs">
+      <DependentUpon>MeasurementsPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\MenuItems\SearchPanelTabs\BoundingTab.xaml.cs">
       <DependentUpon>BoundingTab.xaml</DependentUpon>
@@ -58,7 +59,10 @@
     <EmbeddedResource Update="Views\MenuItems\DirectoryPanelPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\MenuItems\MeasuringPanelPage.xaml">
+    <EmbeddedResource Update="Views\MenuItems\MeasurementsPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\MenuItems\MeasurementsSelectionPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MenuItems\SearchPanelPage.xaml">

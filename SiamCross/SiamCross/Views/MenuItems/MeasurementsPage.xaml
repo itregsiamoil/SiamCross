@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SiamCross.Views.MenuItems.MeasurementsPage"
+             xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
+             Title="Измерения">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Выделить" Command="{Binding SelectAll}"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout>
+            <ListView HasUnevenRows="True"
+                      ItemsSource="{Binding Measurements}"
+                      rainbows:DebugRainbow.IsDebug="False"
+                      SelectedItem="{Binding SelectedMeasurement}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <Grid Margin="5" rainbows:DebugRainbow.IsDebug="False">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Label Grid.Row="0" Text="{Binding Field}"
+                                           FontAttributes="Bold"></Label>
+                                    <Label Grid.Row="1" Text="{Binding Date}"></Label>
+                                    <Label Grid.Row="2" Text="{Binding MeasurementType}"></Label>
+                                    <Label Grid.Row="3" Text="{Binding Comments}"></Label>
+                                </Grid>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

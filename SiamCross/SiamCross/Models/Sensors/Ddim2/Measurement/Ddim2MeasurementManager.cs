@@ -143,9 +143,8 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
 
             measurement.DynGraphPoints = dynGraphPoints;
 
-
-            await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["ReadMeasurementReport"]);
             await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["InitializeMeasurement"]);
+            await Task.Delay(300);
             return measurement;
         }
 

@@ -1,6 +1,7 @@
 ﻿using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Services;
 using SiamCross.ViewModels;
+using SiamCross.Views.MenuItems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,13 +23,15 @@ namespace SiamCross.Views
             var vm = new ViewModel<Ddin2MeasurementDoneViewModel>(measurement);
             this.BindingContext = vm.GetViewModel;
             InitializeComponent();
-            InitializeComponent();
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
             DataRepository.Instance.SaveDdin2Item(_measurement);
+            MessagingCenter
+                .Send<Ddin2MeasurementDonePage, Ddin2Measurement>(
+                this, "Refresh measurement", _measurement);
         }
     }
 }

@@ -41,7 +41,7 @@ namespace SiamCross.ViewModels
 
         void GoMeasuring(object obj)
         {
-            App.NavigationPage.Navigation.PushAsync(new MeasuringPanelPage());
+            App.NavigationPage.Navigation.PushAsync(new MeasurementsPage());
             App.MenuIsPresented = false;
         }
 
