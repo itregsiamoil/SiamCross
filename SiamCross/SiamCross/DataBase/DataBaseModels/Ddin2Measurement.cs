@@ -45,15 +45,22 @@ namespace SiamCross.DataBase.DataBaseModels
         public short ApertNumber { get; set; }
         public short ModelPump { get; set; }
 
-        public short Rod { get; set; }
+        public double Rod { get; set; }
 
         public short MaxBarbellWeight { get; set; }
         public short MinBarbellWeight { get; set; }
         /*/ ----- /*/
 
+        public double TravelLength { get; set; }
+        public double SwingCount { get; set; }
+
         public Ddin2Measurement() { }
         public Ddin2Measurement(Ddin2MeasurementData ddin2MeasurementData)
         {
+            TravelLength = ddin2MeasurementData.Report.Travel * ddin2MeasurementData.Report.Step / 10000;
+
+            SwingCount = (60 / 0.001) / (ddin2MeasurementData.Report.Period * ddin2MeasurementData.Report.TimeDiscr);
+
             MaxWeight = ddin2MeasurementData.Report.MaxWeight;
             MinWeight = ddin2MeasurementData.Report.MinWeight;
             Travel = ddin2MeasurementData.Report.Travel;
@@ -81,7 +88,7 @@ namespace SiamCross.DataBase.DataBaseModels
             Comment = ddin2MeasurementData.SecondaryParameters.Comment;
             Name = ddin2MeasurementData.SecondaryParameters.DeviceName;
 
-            Rod = ddin2MeasurementData.Rod;
+            Rod = ddin2MeasurementData.Rod / 10;
 
             DateTime = ddin2MeasurementData.Date;
             ErrorCode = ddin2MeasurementData.ErrorCode;
