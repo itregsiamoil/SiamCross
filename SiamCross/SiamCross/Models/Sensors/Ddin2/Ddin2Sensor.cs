@@ -26,7 +26,7 @@ namespace SiamCross.Models.Sensors.Ddin2
 
         private Ddin2MeasurementManager _measurementManager;
 
-        private bool IsMeasurement { get; set; }
+        public bool IsMeasurement { get; set; }
 
         private Ddin2StatusAdapter _statusAdapter;
 

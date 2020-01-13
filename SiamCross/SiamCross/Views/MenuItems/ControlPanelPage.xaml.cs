@@ -1,4 +1,6 @@
-﻿using SiamCross.Models;
+﻿using System.Linq;
+using SiamCross.Models;
+using SiamCross.Services;
 using SiamCross.ViewModels;
 
 using Xamarin.Forms;
@@ -24,6 +26,10 @@ namespace SiamCross.Views.MenuItems
                 {
                     if (sensorData.Name.Contains("DDIM"))
                     {
+                        var sensor =
+                            SensorService.Instance.Sensors.SingleOrDefault(
+                                s => s.SensorData.Id == sensorData.Id 
+                                     );
                         App.NavigationPage.Navigation.PushModalAsync(
                             new Ddim2MeasurementPage(sensorData), true);
                     }

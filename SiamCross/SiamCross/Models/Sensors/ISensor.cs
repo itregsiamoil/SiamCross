@@ -11,7 +11,7 @@ namespace SiamCross.Models
     {
         IBluetoothAdapter BluetoothAdapter { get; }
         bool IsAlive { get; }
-
+        bool IsMeasurement { get; }
         Task QuickReport();
         Task StartMeasurement(object measurementParameters);
         SensorData SensorData { get; }
