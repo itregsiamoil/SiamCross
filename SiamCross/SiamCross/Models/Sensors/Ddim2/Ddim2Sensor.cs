@@ -22,7 +22,7 @@ namespace SiamCross.Models.Sensors.Ddim2
 
         Ddim2MeasurementManager _measurementManager;
 
-        public bool IsMeasurement { get; set; } 
+        public bool IsMeasurement { get; private set; } 
 
         private Ddim2QuickReportBuilder _reportBuilder;
         private Ddim2StatusAdapter _statusAdapter;

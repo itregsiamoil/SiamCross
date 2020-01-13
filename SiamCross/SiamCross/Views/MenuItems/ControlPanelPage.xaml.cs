@@ -26,21 +26,36 @@ namespace SiamCross.Views.MenuItems
                 {
                     if (sensorData.Name.Contains("DDIM"))
                     {
-                        var sensor =
-                            SensorService.Instance.Sensors.SingleOrDefault(
-                                s => s.SensorData.Id == sensorData.Id 
-                                     );
-                        App.NavigationPage.Navigation.PushModalAsync(
-                            new Ddim2MeasurementPage(sensorData), true);
+                        if (!IsMeasuring(sensorData))
+                        {
+                            App.NavigationPage.Navigation.PushModalAsync(
+                                new Ddim2MeasurementPage(sensorData), true);
+                        }
                     }
                     else if (sensorData.Name.Contains("DDIN"))
                     {
-                        App.NavigationPage.Navigation.PushModalAsync(
-                            new Ddin2MeasurementPage(sensorData), true);
+                        if (!IsMeasuring(sensorData))
+                        {
+                            App.NavigationPage.Navigation.PushModalAsync(
+                                new Ddin2MeasurementPage(sensorData), true);
+                        }
                     }
-                    
                 }
             }
+        }
+
+        private bool IsMeasuring(SensorData sensorData)
+        {
+            bool result = false;
+            var sensor = SensorService.Instance.Sensors.SingleOrDefault(
+                                s => s.SensorData.Id == sensorData.Id);
+            if (sensor != null)
+            {
+                if (sensor.IsMeasurement)
+                    result = true;
+            }
+
+            return result;
         }
     }
 }
