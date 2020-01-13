@@ -32,12 +32,20 @@ namespace SiamCross.ViewModels
 
         private async void DeleteSensorHandler(int id)
         {
-            var sensorData = SensorsData.FirstOrDefault(s => s.Id == id);
-            if (sensorData != null)
+            var sensor = SensorService.Instance.Sensors
+                .SingleOrDefault(s => s.SensorData.Id == id);
+            if (sensor != null)
             {
-                SensorsData.Remove(sensorData);
+                if (!sensor.IsMeasurement)
+                {
+                    var sensorData = SensorsData.FirstOrDefault(s => s.Id == id);
+                    if (sensorData != null)
+                    {
+                        SensorsData.Remove(sensorData);
+                    }
+                    await SensorService.Instance.DeleteSensor(id);
+                }
             }
-            await SensorService.Instance.DeleteSensor(id);
         }
 
         private void SensorAdded(SensorData sensorData)
