@@ -1,25 +1,29 @@
 ﻿using Newtonsoft.Json;
+using SiamCross.Droid.Services;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
-using SiamCross.WPF.Services;
 using System.IO;
 using Xamarin.Forms;
 
-[assembly: Dependency(typeof(SettingsSaverWPF))]
-namespace SiamCross.WPF.Services
+[assembly: Dependency(typeof(SettingsSaverAndroid))]
+namespace SiamCross.Droid.Services
 {
-    public class SettingsSaverWPF : ISettingsSaver
+    public class SettingsSaverAndroid : ISettingsSaver
     {
-        protected const string _name = "settings.json";
+        private const string _name = "settings.json";
 
-        protected readonly string _path;
+        private readonly string _path;
 
-        public SettingsSaverWPF()
+        public SettingsSaverAndroid()
         {
-            _path = Path.Combine(Directory.GetCurrentDirectory(), _name);
+            _path = Path.Combine(
+                    System.Environment.GetFolderPath(
+                        System.Environment.SpecialFolder.Personal), _name);
         }
-
-        public bool DoesSettingsFileExists() => File.Exists(_path);
+        public bool DoesSettingsFileExists()
+        {
+            return File.Exists(_path);
+        }
 
         public SettingsParameters ReadSettings()
         {
@@ -43,18 +47,16 @@ namespace SiamCross.WPF.Services
                     result = settings;
                 }
             }
-            
+
             return result;
         }
 
         public void SaveSettings(SettingsParameters settings)
         {
-            using (var file = new StreamWriter(_path))
-            {
-                var jsonString = JsonConvert.SerializeObject(settings,
-                                        _jsonSettings);
-                file.WriteLine(jsonString);
-            }
+            using var file = new StreamWriter(_path);
+            var jsonString = JsonConvert.SerializeObject(settings,
+                                                    _jsonSettings);
+            file.WriteLine(jsonString);
         }
 
         protected static readonly JsonSerializerSettings
