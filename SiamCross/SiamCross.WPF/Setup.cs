@@ -28,6 +28,7 @@ namespace SiamCross.WPF
             cb.RegisterType<SaveDevicesServicePC>().As<ISaveDevicesService>();
             cb.RegisterType<SQLiteWPF>().As<ISQLite>();
             cb.RegisterType<FileManagerWPF>().As<IFileManager>();
+            cb.RegisterType<EmailSenderWPF>().As<IEmailSender>();
         }
     }
 }

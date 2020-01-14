@@ -33,6 +33,7 @@ namespace SiamCross.Droid
             cb.RegisterType<SaveDevicesServiceAndroid>().As<ISaveDevicesService>();
             cb.RegisterType<SQLiteAndroid>().As<ISQLite>();
             cb.RegisterType<FileManagerAndroid>().As<IFileManager>();
+            cb.RegisterType<EmailSenderAndroid>().As<IEmailSender>();
         }
     }    
 }
