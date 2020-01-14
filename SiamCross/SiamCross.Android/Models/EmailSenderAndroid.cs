@@ -5,7 +5,7 @@ using System.IO;
 using System.Net;
 using System.Net.Mail;
 using Xamarin.Forms;
-
+using Settings = SiamCross.Models.Tools.Settings;
 [assembly: Dependency(typeof(EmailSenderAndroid))]
 namespace SiamCross.Droid.Models
 {
@@ -13,40 +13,30 @@ namespace SiamCross.Droid.Models
     {
         public void SendEmail(string to, string subject, string text)
         {
-            MailAddress from = new MailAddress("gelcen777@gmail.com");
-            MailAddress toMail = new MailAddress(to);
-            MailMessage m = new MailMessage(from, toMail);
-            m.Subject = subject;
-            m.Body = text;
-            m.IsBodyHtml = true;
-            SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-            smtp.Credentials = new NetworkCredential("gelcen777@gmail.com", "");
-            smtp.EnableSsl = true;
-            smtp.Send(m);
+            
         }
 
-            public void SendEmailWithFile(string filename)
+        public void SendEmailWithFile(string filename)
         {
-            var file = Path.Combine(
+            var path = Path.Combine(
                         System.Environment.GetFolderPath(
-                        System.Environment.SpecialFolder.Personal), filename);
+                        System.Environment.SpecialFolder.ApplicationData), filename);
 
-            if (file != null && File.Exists(file))
-            {
-                var emailMessenger =
-                    CrossMessaging.Current.EmailMessenger;
+            if (!File.Exists(path)) return;
 
-                if (emailMessenger.CanSendEmail)
-                {
-                    var email = new EmailMessageBuilder()
-                    .To("gelcen777@gmail.com")
-                    .Subject("Xamarin Messaging Plugin")
-                    .Body("Well hello there from Xam.Messaging.Plugin")
-                    .WithAttachment(file, "measurement")
-                    .Build();
-                    emailMessenger.SendEmail(email);
-                }
-            }
+            MailAddress from = new MailAddress(Settings.Instance.FromAddress);
+            MailAddress toMail = new MailAddress(Settings.Instance.ToAddress);
+            MailMessage m = new MailMessage(from, toMail);
+            m.Attachments.Add(new Attachment(path));
+            m.Subject = "Mail with attachment";
+            m.Body = "Measurement ";
+            m.IsBodyHtml = true;
+            SmtpClient smtp = new SmtpClient(Settings.Instance.SmtpAddress,
+                Settings.Instance.Port);
+            smtp.Credentials = new NetworkCredential(Settings.Instance.Username,
+                Settings.Instance.Password);
+            smtp.EnableSsl = true;
+            smtp.Send(m);
         }
     }
 }

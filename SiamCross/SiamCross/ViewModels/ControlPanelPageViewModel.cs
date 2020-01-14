@@ -32,22 +32,20 @@ namespace SiamCross.ViewModels
 
         private async void DeleteSensorHandler(int id)
         {
-            EmailService.Instance.SendEmail("gelcen777@gmail.com",
-                "Hello its Xamarin Forms", "Text from example");
-            //var sensor = SensorService.Instance.Sensors
-            //    .SingleOrDefault(s => s.SensorData.Id == id);
-            //if (sensor != null)
-            //{
-            //    if (!sensor.IsMeasurement)
-            //    {
-            //        var sensorData = SensorsData.FirstOrDefault(s => s.Id == id);
-            //        if (sensorData != null)
-            //        {
-            //            SensorsData.Remove(sensorData);
-            //        }
-            //        await SensorService.Instance.DeleteSensor(id);
-            //    }
-            //}
+            var sensor = SensorService.Instance.Sensors
+                .SingleOrDefault(s => s.SensorData.Id == id);
+            if (sensor != null)
+            {
+                if (!sensor.IsMeasurement)
+                {
+                    var sensorData = SensorsData.FirstOrDefault(s => s.Id == id);
+                    if (sensorData != null)
+                    {
+                        SensorsData.Remove(sensorData);
+                    }
+                    await SensorService.Instance.DeleteSensor(id);
+                }
+            }
         }
 
         private void SensorAdded(SensorData sensorData)
