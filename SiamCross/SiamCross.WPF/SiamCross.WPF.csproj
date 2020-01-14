@@ -199,7 +199,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\FileManagerWPF.cs" />
-    <Compile Include="Models\SQLiteWPF.cs" />
     <Compile Include="Services\SaveDevicesServicePC.cs" />
     <Compile Include="Setup.cs" />
     <Page Include="MainWindow.xaml">

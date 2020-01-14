@@ -26,7 +26,6 @@ namespace SiamCross.WPF
             cb.RegisterType<BluetoothClassicAdapterPC>().As<IBluetoothClassicAdapter>();
             cb.RegisterType<BluetoothLeAdapterPC>().As<IBluetoothLeAdapter>();
             cb.RegisterType<SaveDevicesServicePC>().As<ISaveDevicesService>();
-            cb.RegisterType<SQLiteWPF>().As<ISQLite>();
             cb.RegisterType<FileManagerWPF>().As<IFileManager>();
         }
     }
