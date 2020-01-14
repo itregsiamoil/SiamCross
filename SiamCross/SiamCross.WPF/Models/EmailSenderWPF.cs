@@ -11,7 +11,7 @@ namespace SiamCross.WPF.Models
     {
         public void SendEmail(string to, string subject, string text)
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
 
         public void SendEmailWithFile(string filename)

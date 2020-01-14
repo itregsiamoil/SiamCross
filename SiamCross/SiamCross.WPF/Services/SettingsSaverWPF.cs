@@ -49,8 +49,6 @@ namespace SiamCross.WPF.Services
 
         public void SaveSettings(SettingsParameters settings)
         {
-            if (!DoesSettingsFileExists()) return;
-
             using (var file = new StreamWriter(_path))
             {
                 var jsonString = JsonConvert.SerializeObject(settings,

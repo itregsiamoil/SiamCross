@@ -45,6 +45,17 @@ namespace SiamCross.Models.Tools
                 Password));
         }
 
+        public void SaveSettings()
+        {
+            _settingsSaver.SaveSettings(new SettingsParameters(
+                FromAddress,
+                ToAddress,
+                SmtpAddress,
+                Port,
+                Username,
+                Password));
+        }
+
         public string FromAddress { get; set; }
         public string ToAddress { get; set; }
         public string SmtpAddress { get; set; }

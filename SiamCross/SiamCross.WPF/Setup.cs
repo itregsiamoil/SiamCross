@@ -29,6 +29,7 @@ namespace SiamCross.WPF
             cb.RegisterType<SQLiteWPF>().As<ISQLite>();
             cb.RegisterType<FileManagerWPF>().As<IFileManager>();
             cb.RegisterType<EmailSenderWPF>().As<IEmailSender>();
+            cb.RegisterType<SettingsSaverWPF>().As<ISettingsSaver>();
         }
     }
 }

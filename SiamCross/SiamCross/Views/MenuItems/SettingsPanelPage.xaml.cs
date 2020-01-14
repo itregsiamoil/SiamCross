@@ -1,11 +1,5 @@
-﻿using Microcharts;
-using SkiaSharp;
-using SkiaSharp.Views.Forms;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SiamCross.Models.Tools;
+using SiamCross.ViewModels;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -17,7 +11,15 @@ namespace SiamCross.Views.MenuItems
     {
         public SettingsPanelPage()
         {
+            var vm = new ViewModel<SettingsViewModel>();
+            this.BindingContext = vm.GetViewModel;
             InitializeComponent();
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Settings.Instance.SaveSettings();
         }
     }
 }
