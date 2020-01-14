@@ -1,4 +1,5 @@
 ﻿using Microcharts;
+using SiamCross.DataBase;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
@@ -144,7 +145,7 @@ namespace SiamCross.Views
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            DataRepository.Instance.SaveDdim2Item(_measurement);
+            new RealmDBController().AddDdim2(_measurement);
             MessagingCenter
                 .Send<Ddim2MeasurementDonePage, Ddim2Measurement>(
                 this, "Refresh measurement", _measurement);

@@ -1,4 +1,5 @@
-﻿using SiamCross.DataBase.DataBaseModels;
+﻿using SiamCross.DataBase;
+using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Services;
 using SiamCross.Views;
 using SiamCross.Views.MenuItems;
@@ -210,8 +211,10 @@ namespace SiamCross.ViewModels
 
         private void GetMeasurementsFromDb()
         {
-            _ddim2Measurements = DataRepository.Instance.GetDdim2Items().ToList();
-            _ddin2Measurements = DataRepository.Instance.GetDdin2Items().ToList();
+            var dataBase = new RealmDBController();
+
+            _ddim2Measurements = dataBase.GetAllDdim2().ToList();
+            _ddin2Measurements = dataBase.GetAllDdin2().ToList();
             foreach (var m in _ddim2Measurements)
             {
                 Measurements.Add(
@@ -220,7 +223,7 @@ namespace SiamCross.ViewModels
                         Id = m.Id,
                         Name = m.Name,
                         Field = m.Field,
-                        Date = m.DateTime,
+                        Date = Convert.ToDateTime(m.DateTime),
                         MeasurementType = "Динамограмма",
                         Comments = m.Comment
                     });
@@ -234,7 +237,7 @@ namespace SiamCross.ViewModels
                         Id = m.Id,
                         Name = m.Name,
                         Field = m.Field,
-                        Date = m.DateTime,
+                        Date = Convert.ToDateTime(m.DateTime),
                         MeasurementType = "Динамограмма",
                         Comments = m.Comment
                     });

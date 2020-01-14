@@ -1,4 +1,5 @@
-﻿using SiamCross.DataBase.DataBaseModels;
+﻿using Realms;
+using SiamCross.DataBase.DataBaseModels;
 using System.Collections.ObjectModel;
 
 namespace SiamCross.ViewModels
@@ -73,7 +74,6 @@ namespace SiamCross.ViewModels
             };
 
             InitDynGraph();
-
             SelectedField = _measurement.Field;
             Well = _measurement.Well;
             Bush = _measurement.Bush;

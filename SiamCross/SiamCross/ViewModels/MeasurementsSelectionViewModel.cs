@@ -1,4 +1,5 @@
-﻿using SiamCross.Services;
+﻿using SiamCross.DataBase;
+using SiamCross.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -47,18 +48,19 @@ namespace SiamCross.ViewModels
         {
             if (SelectedMeasurements.Count != 0)
             {
+                var dataBase = new RealmDBController();
                 foreach (var m in SelectedMeasurements)
                 {
                     if (m is MeasurementView mv)
                     {
                         if (mv.Name.Contains("DDIM"))
                         {
-                            DataRepository.Instance.DeleteDdim2Item(mv.Id);
+                            dataBase.RemoveDdim2FromId(mv.Id);
                             Measurements.Remove(mv);
                         }
                         else if (mv.Name.Contains("DDIN"))
                         {
-                            DataRepository.Instance.DeleteDdin2Item(mv.Id);
+                            dataBase.RemoveDdim2FromId(mv.Id);
                             Measurements.Remove(mv);
                         }
                     }

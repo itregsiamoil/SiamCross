@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Realms;
 using SiamCross.Models.Sensors.Ddim2.Measurement;
-using SQLite;
 
 namespace SiamCross.DataBase.DataBaseModels
 {
-    [Table("Ddim2Measurement")]
-    public class Ddim2Measurement
+
+    public class Ddim2Measurement : RealmObject
     {
-        [PrimaryKey, AutoIncrement, Column("_id")]
+        [PrimaryKey]
         public int Id { get; set; }
 
         /*/ Report /*/
@@ -34,16 +34,16 @@ namespace SiamCross.DataBase.DataBaseModels
         public string Shop { get; set; }
         public string BufferPressure { get; set; }
         public string Comment { get; set; }
-
-        public string Name { get; set; }
         /*/ ----- /*/
 
         /*/ Other /*/
-        public DateTime DateTime { get; set; }
+        public string DateTime { get; set; }
         public string ErrorCode { get; set; }
         public short ApertNumber { get; set; }
         public short ModelPump { get; set; }
-        
+
+        public string Name { get; set; }
+
         public short MaxBarbellWeight { get; set; }
         public short MinBarbellWeight { get; set; }
         /*/ ----- /*/
@@ -54,9 +54,9 @@ namespace SiamCross.DataBase.DataBaseModels
         public Ddim2Measurement() { }
         public Ddim2Measurement(Ddim2MeasurementData ddim2MeasurementData)
         {
-            var TravelLength = ddim2MeasurementData.Report.Travel * ddim2MeasurementData.Report.Step / 10000;
+            TravelLength = ddim2MeasurementData.Report.Travel * ddim2MeasurementData.Report.Step / 10000;
 
-            double SwingCount = (60 / 0.001) / (ddim2MeasurementData.Report.Period * ddim2MeasurementData.Report.TimeDiscr);
+            SwingCount = (60 / 0.001) / (ddim2MeasurementData.Report.Period * ddim2MeasurementData.Report.TimeDiscr);
 
             MaxWeight = ddim2MeasurementData.Report.MaxWeight;
             MinWeight = ddim2MeasurementData.Report.MinWeight;
@@ -88,7 +88,7 @@ namespace SiamCross.DataBase.DataBaseModels
             MaxBarbellWeight = 0;
             MinBarbellWeight = 0;
 
-            DateTime = ddim2MeasurementData.Date;
+            DateTime = ddim2MeasurementData.Date.ToString();
             ErrorCode = ddim2MeasurementData.ErrorCode;
         }
     }

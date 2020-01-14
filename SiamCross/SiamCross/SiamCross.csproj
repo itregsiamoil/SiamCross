@@ -21,6 +21,7 @@
     <PackageReference Include="Microcharts" Version="0.7.1" />
     <PackageReference Include="Microcharts.Forms" Version="0.7.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Realm.Database" Version="3.4.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.7.302-beta" />
     <PackageReference Include="Xamarin.Forms" Version="4.3.0.991250" />
     <PackageReference Include="Xamarin.Essentials" Version="1.3.1" />

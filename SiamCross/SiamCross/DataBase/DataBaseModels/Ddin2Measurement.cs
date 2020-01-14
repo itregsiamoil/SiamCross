@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SiamCross.Models.Sensors.Ddim2.Measurement;
+using Realms;
 using SiamCross.Models.Sensors.Ddin2.Measurement;
-using SQLite;
 
 namespace SiamCross.DataBase.DataBaseModels
 {
-    [Table("Ddin2Measurement")]
-    public class Ddin2Measurement
+    public class Ddin2Measurement : RealmObject
     {
-        [PrimaryKey, AutoIncrement, Column("_id")]
+        [PrimaryKey]
         public int Id { get; set; }
 
         /*/ Report /*/
@@ -40,7 +38,7 @@ namespace SiamCross.DataBase.DataBaseModels
         /*/ ----- /*/
 
         /*/ Other /*/
-        public DateTime DateTime { get; set; }
+        public string DateTime { get; set; }
         public string ErrorCode { get; set; }
         public short ApertNumber { get; set; }
         public short ModelPump { get; set; }
@@ -90,7 +88,7 @@ namespace SiamCross.DataBase.DataBaseModels
 
             Rod = ddin2MeasurementData.Rod / 10;
 
-            DateTime = ddin2MeasurementData.Date;
+            DateTime = ddin2MeasurementData.Date.ToString();
             ErrorCode = ddin2MeasurementData.ErrorCode;
         }
     }

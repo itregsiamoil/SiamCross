@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using SiamCross.AppObjects;
+using SiamCross.DataBase;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
 using SiamCross.Models.Scanners;
@@ -122,15 +123,16 @@ namespace SiamCross.Services
 
         public async void MeasurementHandler(object measurementArgs)
         {
+            var dataBase = new RealmDBController();
             switch (measurementArgs)
             {
                 case Ddim2MeasurementData ddim2Data:
                     var dbModelDdim2 = new Ddim2Measurement(ddim2Data);
-                    DataRepository.Instance.SaveDdim2Item(dbModelDdim2);
+                    dataBase.AddDdim2(dbModelDdim2);
 
                     await App.NavigationPage.Navigation.PushModalAsync(
                             new Ddim2MeasurementDonePage(
-                                DataRepository.Instance.GetDdim2Item(dbModelDdim2.Id)), 
+                                dataBase.GetDdim2(dbModelDdim2.Id)), 
                                 true);
 
                     var qwe1 = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
@@ -140,10 +142,10 @@ namespace SiamCross.Services
                     break;
                 case Ddin2MeasurementData ddin2Data:
                     var dbModelDdin2 = new Ddin2Measurement(ddin2Data);
-                    DataRepository.Instance.SaveDdin2Item(dbModelDdin2);
+                    dataBase.AddDdin2(dbModelDdin2);
                     await App.NavigationPage.Navigation.PushModalAsync(
                            new Ddin2MeasurementDonePage(
-                               DataRepository.Instance.GetDdin2Item(dbModelDdin2.Id)),
+                               dataBase.GetDdin2(dbModelDdin2.Id)),
                                true);
 
                     var qwe = new FileSaver(AppContainer.Container.Resolve<IFileManager>());

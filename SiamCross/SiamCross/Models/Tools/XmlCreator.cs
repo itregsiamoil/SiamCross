@@ -10,372 +10,6 @@ namespace SiamCross.Models.Tools
 {
     public class XmlCreator
     {
-        public string CreateDdim2XmlOld(Ddim2Measurement dbMeasurementItem)
-        {
-            string name = "";
-            string number = "";
-            foreach (char ch in dbMeasurementItem.Name)
-            {
-                if (ch > 47 || ch < 58)
-                {
-                    name += ch;
-                }
-                else
-                {
-                    number += ch;
-                }
-            }
-
-            List<double> movement = new  List<double>();
-            List<double> weight = new List<double>();
-            var discrets = DgmConverter.GetXYs(
-                dbMeasurementItem.DynGraph.ToList(),
-                dbMeasurementItem.Step,
-                dbMeasurementItem.WeightDiscr);
-            for(int i = 0; i < discrets.Length; i++)
-            {
-                movement.Add(discrets[i, 0]);
-                weight.Add(discrets[i, 1]);
-            }
-
-            StringBuilder builder = new StringBuilder();
-
-            builder.Append("<?xml version=\"1.0\" encoding=\"utf-8\" ?>");
-            builder.Append("\r\n");
-            builder.Append("<Device_List>");
-            builder.Append("\r\n  ");
-
-            builder.Append("<Device DEVTID=\"siddos01\" DSTID=\"");
-            builder.Append("ДДИМ2");                                                                 ///!!! Временное решение
-            builder.Append("\" DEVSERIALNUMBER=\"");
-            builder.Append(number.ToString());
-            builder.Append("\">");
-            builder.Append("\r\n    ");
-            builder.Append("<Measurement_List>");
-            builder.Append("\r\n      ");
-            builder.Append("<Measurement>");
-            builder.Append("\r\n        ");
-            builder.Append("<Header MESTYPEID=\"dynamogram\" MESSTARTDATE=\"");
-
-            builder.Append(dbMeasurementItem.DateTime.Date.ToString());
-            builder.Append("T");
-            builder.Append(builder.Append(dbMeasurementItem.DateTime.TimeOfDay.ToString()));
-            builder.Append("\" MESDEVICEOPERATORID=\"");
-            builder.Append(0);                                                                          /// ?
-            builder.Append("\" MESDEVICEFIELDID=\"");
-            builder.Append(dbMeasurementItem.Field.ToString());
-            builder.Append("\" MESDEVICEWELLCLUSTERID=\"");
-            builder.Append(dbMeasurementItem.Bush.ToString());
-            builder.Append("\" MESDEVICEWELLID=\"");
-            builder.Append(dbMeasurementItem.Well.ToString());
-            builder.Append("\" MESDEVICEDEPARTMENTID=\"");
-            builder.Append(dbMeasurementItem.Shop.ToString());
-
-            builder.Append("\" MESDEVICEBUFFERPRESSUREID=\"");
-            builder.Append(dbMeasurementItem.BufferPressure.ToString());
-
-            builder.Append("\" />");
-            builder.Append("\r\n        ");
-            builder.Append("<Value_List>");
-            builder.Append("\r\n          ");
-            builder.Append("<Value MSVDICTIONARYID=\"dynmovement\" MSVDATA=\"");
-            builder.Append(BinaryToBase64(movement.ToArray()));
-            builder.Append("\" />");
-            builder.Append("\r\n          ");
-            builder.Append("<Value MSVDICTIONARYID=\"/*dynburden*/\" MSVDATA=\"");
-            builder.Append(BinaryToBase64(weight.ToArray()));                                                                                           
-            builder.Append("\" />");
-            builder.Append("\r\n          ");
-            builder.Append("<Value MSVDICTIONARYID=\"sidsensortype\" MSVINTEGER=\"");
-            builder.Append(2.ToString()); //межтраверсный
-            //  builder.Append(String.valueOf(wSensor));                                                                   
-            builder.Append("\" />");
-            builder.Append("\r\n          ");
-            builder.Append("<Value MSVDICTIONARYID=\"sidsensorplacemanttype\" MSVINTEGER=\"");
-            builder.Append(1.ToString()); // ? ddim/ddin?
-            //builder.Append(String.valueOf(placementType));                                                
-            builder.Append("\" />");
-            builder.Append("\r\n          ");
-
-            var cycle = 1; // copy from siamService; for ddim cycle == 1
-            if (cycle >= 0)
-            {
-                builder.Append("<Value MSVDICTIONARYID=\"sidskippedcyclecount\" MSVINTEGER=\"");
-                builder.Append(cycle.ToString());
-                builder.Append("\" />");
-                builder.Append("\r\n          ");
-            }
-            builder.Append("<Value MSVDICTIONARYID=\"sidtimediscrete\" MSVDOUBLE=\"");
-            builder.Append(dbMeasurementItem.TimeDiscr.ToString()); // возможно нужно умножить или поделить на тысячу
-            builder.Append("\" />");
-            builder.Append("\r\n          ");
-
-            var maxStaticW = weight.Max();
-            var minStaticW = weight.Min();
-
-            if (maxStaticW >= 0)
-            {
-                builder.Append("<Value MSVDICTIONARYID=\"dynbarweightupplace\" MSVDOUBLE=\"");
-                builder.Append(maxStaticW.ToString());
-                builder.Append("\" />");
-                builder.Append("\r\n          ");
-            }
-            if (minStaticW >= 0)
-            {
-                builder.Append("<Value MSVDICTIONARYID=\"dynbarweightdownplace\" MSVDOUBLE=\"");
-                builder.Append(minStaticW.ToString());
-                builder.Append("\" />");
-                builder.Append("\r\n          ");
-            }
-
-            var hole = dbMeasurementItem.ApertNumber; // не точно что этот параметр
-            if (hole > 0)
-            {
-                builder.Append("<Value MSVDICTIONARYID=\"holeindex\" MSVINTEGER=\"");
-                builder.Append(hole.ToString());
-                builder.Append("\" />");
-                builder.Append("\r\n          ");
-            }
-
-            //builder.Append("<Value MSVDICTIONARYID=\"dynbossdiameter\" MSVDOUBLE=\"");
-            //builder.Append(dbMeasurementItem.);
-            //builder.Append("\" />");
-            //builder.Append("\r\n          "); // Параметр диаметр штока есть только у ддин2
-
-            if (dbMeasurementItem.Travel >= 0)
-            {
-                builder.Append("<Value MSVDICTIONARYID=\"dynbosstravellength\" MSVDOUBLE=\"");
-                builder.Append(dbMeasurementItem.Travel.ToString());
-                builder.Append("\" />");
-                builder.Append("\r\n          ");
-            }
-
-            if (dbMeasurementItem.MaxWeight >= 0)
-            {
-                builder.Append("<Value MSVDICTIONARYID=\"dynmaxbossburden\" MSVDOUBLE=\"");
-                builder.Append(dbMeasurementItem.MaxWeight.ToString());
-                builder.Append("\" />");
-                builder.Append("\r\n          ");
-            }
-            if (dbMeasurementItem.MinWeight >= 0)
-            {
-                builder.Append("<Value MSVDICTIONARYID=\"dynminbossburden\" MSVDOUBLE=\"");
-                builder.Append(dbMeasurementItem.MinWeight.ToString());
-                builder.Append("\" />");
-                builder.Append("\r\n          ");
-            }
-            if (dbMeasurementItem.Period >= 0)
-            {
-                builder.Append("<Value MSVDICTIONARYID=\"dynswingcount\" MSVDOUBLE=\"");
-                builder.Append(dbMeasurementItem.Period.ToString());
-                builder.Append("\" />");
-                builder.Append("\r\n          ");
-            }
-            builder.Append("<Value MSVDICTIONARYID=\"sidtype\" MSVINTEGER=\"");
-            builder.Append(1.ToString());
-            builder.Append("\" />");
-            builder.Append("\r\n        ");
-            builder.Append("</Value_List>");
-            builder.Append("\r\n      ");
-            builder.Append("</Measurement>");
-            builder.Append("\r\n    ");
-            builder.Append("</Measurement_List>");
-            builder.Append("\r\n  ");
-            builder.Append("</Device>");
-            //if (isSingle)
-            //{
-            //    builder.Append("\r\n");
-            //    builder.Append("</Device_List>");
-            //} В СиамСервисе всегда isSingle передается фолс => ???
-
-            return builder.ToString();
-        }
-
-        public string CreateDdin2XmlOld(Ddin2Measurement dbMeasurementItem)
-        {
-            string name = "";
-            string number = "";
-            foreach (char ch in dbMeasurementItem.Name)
-            {
-                if (ch > 47 || ch < 58)
-                {
-                    name += ch;
-                }
-                else
-                {
-                    if(number.Length == 0 && ch == '0')
-                    {
-                        continue;
-                    }
-                    number += ch;
-                }
-            }
-
-            List<double> movement = new List<double>();
-            List<double> weight = new List<double>();
-            var discrets = DgmConverter.GetXYs(
-                dbMeasurementItem.DynGraph.ToList(),
-                dbMeasurementItem.Step,
-                dbMeasurementItem.WeightDiscr);
-            for (int i = 0; i < discrets.GetUpperBound(0); i++)
-            {
-                movement.Add(discrets[i, 0]);
-                weight.Add(discrets[i, 1]);
-            }
-
-            StringBuilder builder = new StringBuilder();
-
-            builder.Append("<?xml version=\"1.0\" encoding=\"utf-8\" ?>");
-            builder.Append("\r\n");
-            builder.Append("<Device_List>");
-            builder.Append("\r\n  ");
-
-            builder.Append("<Device DEVTID=\"siddos01\" DSTID=\"");
-            builder.Append("ДДИН2");                                                                 ///!!! Временное решение
-            builder.Append("\" DEVSERIALNUMBER=\"");
-            builder.Append(number.ToString());
-            builder.Append("\">");
-            builder.Append("\r\n    ");
-            builder.Append("<Measurement_List>");
-            builder.Append("\r\n      ");
-            builder.Append("<Measurement>");
-            builder.Append("\r\n        ");
-            builder.Append("<Header MESTYPEID=\"dynamogram\" MESSTARTDATE=\"");
-
-            builder.Append(dbMeasurementItem.DateTime.Date.ToString());
-            builder.Append("T");
-            builder.Append(builder.Append(dbMeasurementItem.DateTime.TimeOfDay.ToString()));
-            builder.Append("\" MESDEVICEOPERATORID=\"");
-            builder.Append(0);                                                                          /// ?
-            builder.Append("\" MESDEVICEFIELDID=\"");
-            builder.Append(dbMeasurementItem.Field.ToString());
-            builder.Append("\" MESDEVICEWELLCLUSTERID=\"");
-            builder.Append(dbMeasurementItem.Bush.ToString());
-            builder.Append("\" MESDEVICEWELLID=\"");
-            builder.Append(dbMeasurementItem.Well.ToString());
-            builder.Append("\" MESDEVICEDEPARTMENTID=\"");
-            builder.Append(dbMeasurementItem.Shop.ToString());
-
-            builder.Append("\" MESDEVICEBUFFERPRESSUREID=\"");
-            builder.Append(dbMeasurementItem.BufferPressure.ToString());
-
-            builder.Append("\" />");
-            builder.Append("\r\n        ");
-            builder.Append("<Value_List>");
-            builder.Append("\r\n          ");
-            builder.Append("<Value MSVDICTIONARYID=\"dynmovement\" MSVDATA=\"");
-            builder.Append(BinaryToBase64(movement.ToArray()));
-            builder.Append("\" />");
-            builder.Append("\r\n          ");
-            builder.Append("<Value MSVDICTIONARYID=\"/*dynburden*/\" MSVDATA=\"");
-            builder.Append(BinaryToBase64(weight.ToArray()));
-            builder.Append("\" />");
-            builder.Append("\r\n          ");
-            builder.Append("<Value MSVDICTIONARYID=\"sidsensortype\" MSVINTEGER=\"");
-            builder.Append(1.ToString()); //накладной
-            //  builder.Append(String.valueOf(wSensor));                                                                    
-            builder.Append("\" />");
-            builder.Append("\r\n          ");
-            builder.Append("<Value MSVDICTIONARYID=\"sidsensorplacemanttype\" MSVINTEGER=\"");
-            builder.Append(1.ToString()); // ? ddim/ddin?
-            //builder.Append(String.valueOf(placementType));                                                
-            builder.Append("\" />");
-            builder.Append("\r\n          ");
-
-            var cycle = 1; // copy from siamService; for ddim cycle == 1
-            if (cycle >= 0)
-            {
-                builder.Append("<Value MSVDICTIONARYID=\"sidskippedcyclecount\" MSVINTEGER=\"");
-                builder.Append(cycle.ToString());
-                builder.Append("\" />");
-                builder.Append("\r\n          ");
-            }
-            builder.Append("<Value MSVDICTIONARYID=\"sidtimediscrete\" MSVDOUBLE=\"");
-            builder.Append(dbMeasurementItem.TimeDiscr.ToString()); // возможно нужно умножить или поделить на тысячу
-            builder.Append("\" />");
-            builder.Append("\r\n          ");
-
-            var maxStaticW = weight.Max();
-            var minStaticW = weight.Min();
-
-            if (maxStaticW >= 0)
-            {
-                builder.Append("<Value MSVDICTIONARYID=\"dynbarweightupplace\" MSVDOUBLE=\"");
-                builder.Append(maxStaticW.ToString());
-                builder.Append("\" />");
-                builder.Append("\r\n          ");
-            }
-            if (minStaticW >= 0)
-            {
-                builder.Append("<Value MSVDICTIONARYID=\"dynbarweightdownplace\" MSVDOUBLE=\"");
-                builder.Append(minStaticW.ToString());
-                builder.Append("\" />");
-                builder.Append("\r\n          ");
-            }
-
-            var hole = dbMeasurementItem.ApertNumber; // не точно что этот параметр
-            if (hole > 0)
-            {
-                builder.Append("<Value MSVDICTIONARYID=\"holeindex\" MSVINTEGER=\"");
-                builder.Append(hole.ToString());
-                builder.Append("\" />");
-                builder.Append("\r\n          ");
-            }
-
-            builder.Append("<Value MSVDICTIONARYID=\"dynbossdiameter\" MSVDOUBLE=\"");
-            builder.Append(dbMeasurementItem.Rod);
-            builder.Append("\" />");
-            builder.Append("\r\n          "); 
-
-            if (dbMeasurementItem.Travel >= 0)
-            {
-                builder.Append("<Value MSVDICTIONARYID=\"dynbosstravellength\" MSVDOUBLE=\"");
-                builder.Append(dbMeasurementItem.Travel.ToString());
-                builder.Append("\" />");
-                builder.Append("\r\n          ");
-            }
-
-            if (dbMeasurementItem.MaxWeight >= 0)
-            {
-                builder.Append("<Value MSVDICTIONARYID=\"dynmaxbossburden\" MSVDOUBLE=\"");
-                builder.Append(dbMeasurementItem.MaxWeight.ToString());
-                builder.Append("\" />");
-                builder.Append("\r\n          ");
-            }
-            if (dbMeasurementItem.MinWeight >= 0)
-            {
-                builder.Append("<Value MSVDICTIONARYID=\"dynminbossburden\" MSVDOUBLE=\"");
-                builder.Append(dbMeasurementItem.MinWeight.ToString());
-                builder.Append("\" />");
-                builder.Append("\r\n          ");
-            }
-            if (dbMeasurementItem.Period >= 0)
-            {
-                builder.Append("<Value MSVDICTIONARYID=\"dynswingcount\" MSVDOUBLE=\"");
-                builder.Append(dbMeasurementItem.Period.ToString());
-                builder.Append("\" />");
-                builder.Append("\r\n          ");
-            }
-            builder.Append("<Value MSVDICTIONARYID=\"sidtype\" MSVINTEGER=\"");
-            builder.Append(1.ToString());
-            builder.Append("\" />");
-            builder.Append("\r\n        ");
-            builder.Append("</Value_List>");
-            builder.Append("\r\n      ");
-            builder.Append("</Measurement>");
-            builder.Append("\r\n    ");
-            builder.Append("</Measurement_List>");
-            builder.Append("\r\n  ");
-            builder.Append("</Device>");
-            //if (isSingle)
-            //{
-            //    builder.Append("\r\n");
-            //    builder.Append("</Device_List>");
-            //} В СиамСервисе всегда isSingle передается фолс => ???
-
-            return builder.ToString();
-        }
-
         public XDocument CreateDdim2Xml(Ddim2Measurement dbDdimModel)
         {
             //////////////////////////////////////////////////////////////////////////////////////// Setup
@@ -415,10 +49,23 @@ namespace SiamCross.Models.Tools
             var maxStaticW = weight.Max();
             var minStaticW = weight.Min();
 
-            string date = dbDdimModel.DateTime.Date.Year.ToString() + "-" +
-                dbDdimModel.DateTime.Date.Month.ToString() + "-" +
-                dbDdimModel.DateTime.Date.Day.ToString();
-            string time = dbDdimModel.DateTime.TimeOfDay.ToString().Split('.')[0];
+            DateTime dbDateTime = Convert.ToDateTime(dbDdimModel.DateTime);
+
+            var month = dbDateTime.Date.Month.ToString();
+            if (month.Length < 2)
+            {
+                month = "0" + month;
+            }
+
+            var day = dbDateTime.Date.Day.ToString();
+            if (day.Length < 2)
+            {
+                day = "0" + day;
+            }
+
+            string date = dbDateTime.Date.Year.ToString() + "-" +
+                month + "-" + day;
+            string time = dbDateTime.TimeOfDay.ToString().Split('.')[0];
 
             ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -547,21 +194,23 @@ namespace SiamCross.Models.Tools
             var maxStaticW = weight.Max() / 1000;
             var minStaticW = weight.Min() / 1000;
 
-            var month = dbDdinModel.DateTime.Date.Month.ToString();
+            DateTime dbDateTime = Convert.ToDateTime(dbDdinModel.DateTime);
+
+            var month = dbDateTime.Date.Month.ToString();
             if(month.Length < 2)
             {
                 month = "0" + month;
             }
 
-            var day = dbDdinModel.DateTime.Date.Day.ToString();
+            var day = dbDateTime.Date.Day.ToString();
             if (day.Length < 2)
             {
                 day = "0" + day;
             }
 
-            string date = dbDdinModel.DateTime.Date.Year.ToString() + "-" +
+            string date = dbDateTime.Date.Year.ToString() + "-" +
                 month + "-" + day;
-            string time = dbDdinModel.DateTime.TimeOfDay.ToString().Split('.')[0];
+            string time = dbDateTime.TimeOfDay.ToString().Split('.')[0];
 
             ////////////////////////////////////////////////////////////////////////////////////////////
 
