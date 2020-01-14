@@ -2,12 +2,60 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.MenuItems.SettingsPanelPage"
-             xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
+             xmlns:local="clr-namespace:SiamCross.Views"
              Title="Настройки">
-    <ContentPage.Content>
-        <skia:SKCanvasView x:Name="CanvasView"
-                           PaintSurface="CanvasView_PaintSurface"
-                           />
-
-    </ContentPage.Content>
+    <TableView HasUnevenRows="True" Margin="5">
+        <TableRoot>
+            <TableSection Title="Настройки почты">
+                <ViewCell>
+                    <StackLayout>
+                        <Label Text="Адресат отправителя"/>
+                        <Entry Text="{Binding FromAddress}" 
+                               Keyboard="Email"/>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout>
+                        <Label Text="Адресат назначения"/>
+                        <Entry Text="{Binding ToAddress}"
+                               Keyboard="Email"/>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout>
+                        <Label Text="Адрес SMTP сервера"/>
+                        <Entry Text="{Binding SmtpAddress}"
+                               Keyboard="Email"/>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout>
+                        <Label Text="Порт"></Label>
+                        <Entry Text="{Binding Port}" 
+                               Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <local:IntegerNumberValidationBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
+                    </StackLayout>
+                </ViewCell>
+            </TableSection>
+            <TableSection Title="Аутентификационные данные">
+                <ViewCell>
+                    <StackLayout>
+                        <Label Text="Имя пользователя"/>
+                        <Entry Text="{Binding Username}"
+                               Keyboard="Email"/>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout>
+                        <Label Text="Пароль"/>
+                        <Entry Text="{Binding Password}"
+                               Keyboard="Default"/>
+                    </StackLayout>
+                </ViewCell>
+            </TableSection>
+        </TableRoot>
+    </TableView>
 </ContentPage>
