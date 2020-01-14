@@ -52,6 +52,7 @@
                     <StackLayout>
                         <Label Text="Пароль"/>
                         <Entry Text="{Binding Password}"
+                               IsPassword="True"
                                Keyboard="Default"/>
                     </StackLayout>
                 </ViewCell>

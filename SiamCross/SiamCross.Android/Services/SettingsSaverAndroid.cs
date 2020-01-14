@@ -20,6 +20,7 @@ namespace SiamCross.Droid.Services
                     System.Environment.GetFolderPath(
                         System.Environment.SpecialFolder.Personal), _name);
         }
+
         public bool DoesSettingsFileExists()
         {
             return File.Exists(_path);
