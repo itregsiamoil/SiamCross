@@ -7,6 +7,7 @@
              x:Class="SiamCross.Views.MenuItems.MeasurementsSelectionPage"
              Title="{Binding Title, Mode=TwoWay}">
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Отправить" Command="{Binding SendCommand}"/>
         <ToolbarItem Text="Удалить" Command="{Binding DeleteCommand}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>

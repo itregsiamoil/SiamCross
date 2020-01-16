@@ -24,6 +24,8 @@ namespace SiamCross.ViewModels
         public ObservableCollection<object> SelectedMeasurements { get; set; }
         public ICommand DeleteCommand { get; set; }
         public ICommand SelectionChanged { get; set; }
+        public ICommand SendCommand { get; set; }
+
         public MeasurementsSelectionViewModel(ObservableCollection<MeasurementView> measurements)
         {
             Measurements = new ObservableCollection<MeasurementView>();
@@ -36,6 +38,12 @@ namespace SiamCross.ViewModels
             Title = $"Выбрано: {SelectedMeasurements.Count}";
             DeleteCommand = new Command(DeleteMeasurements);
             SelectionChanged = new Command(RefreshSelectedCount);
+            SendCommand = new Command(SendMeasurements);
+        }
+
+        private void SendMeasurements(object obj)
+        {
+            
         }
 
         private void RefreshSelectedCount()
