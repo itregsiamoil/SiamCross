@@ -4,6 +4,7 @@ using SiamCross.Models.Tools;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SiamCross.Services
 {
@@ -19,14 +20,14 @@ namespace SiamCross.Services
             _emailSender = AppContainer.Container.Resolve<IEmailSender>();
         }
 
-        public void SendEmailWithFile(string filename)
+        public Task SendEmailWithFile(string filename)
         {
-            _emailSender.SendEmailWithFile(filename);
+            return _emailSender.SendEmailWithFile(filename);
         }
 
-        public void SendEmail(string to, string subject, string text)
+        public Task SendEmail(string to, string subject, string text)
         {
-            _emailSender.SendEmail(to, subject, text);
+            return _emailSender.SendEmail(to, subject, text);
         }
     }
 }

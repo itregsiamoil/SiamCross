@@ -141,7 +141,7 @@ namespace SiamCross.Services
                         new DateTimeConverter().DateTimeToString(dbModelDdim2.DateTime) + ".xml").Replace(':', '-');
                     qwe1.SaveXml(name1, new XmlCreator().CreateDdim2Xml(dbModelDdim2));
 
-                    EmailService.Instance.SendEmailWithFile(name1);
+                    //EmailService.Instance.SendEmailWithFile(name1);
 
                     break;
                 case Ddin2MeasurementData ddin2Data:
@@ -157,7 +157,7 @@ namespace SiamCross.Services
                         new DateTimeConverter().DateTimeToString(dbModelDdin2.DateTime) + ".xml").Replace(':', '-');
                     qwe.SaveXml(name, new XmlCreator().CreateDdin2Xml(dbModelDdin2));
 
-                    EmailService.Instance.SendEmailWithFile(name);
+                    //EmailService.Instance.SendEmailWithFile(name);
                     
                     break;
                 default:
