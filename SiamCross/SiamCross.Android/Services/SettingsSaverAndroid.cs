@@ -54,10 +54,12 @@ namespace SiamCross.Droid.Services
 
         public void SaveSettings(SettingsParameters settings)
         {
-            using var file = new StreamWriter(_path);
-            var jsonString = JsonConvert.SerializeObject(settings,
-                                                    _jsonSettings);
-            file.WriteLine(jsonString);
+            using (var file = new StreamWriter(_path))
+            {
+                var jsonString = JsonConvert.SerializeObject(settings,
+                                                        _jsonSettings);
+                file.WriteLine(jsonString);
+            }
         }
 
         protected static readonly JsonSerializerSettings

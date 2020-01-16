@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+п»ї<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\packages\Xamarin.Forms.4.4.0.991220-pre3\build\Xamarin.Forms.props" Condition="Exists('..\..\packages\Xamarin.Forms.4.4.0.991220-pre3\build\Xamarin.Forms.props')" />
   <Import Project="..\..\packages\SkiaSharp.Views.Forms.WPF.1.68.1.1\build\net45\SkiaSharp.Views.Forms.WPF.props" Condition="Exists('..\..\packages\SkiaSharp.Views.Forms.WPF.1.68.1.1\build\net45\SkiaSharp.Views.Forms.WPF.props')" />
@@ -97,21 +97,6 @@
     <Reference Include="SkiaSharp.Views.WPF, Version=1.68.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SkiaSharp.Views.WPF.1.68.1.1\lib\net45\SkiaSharp.Views.WPF.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="SQLiteNetStandard, Version=1.5.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\sqlite-net-standard.1.5.1\lib\netstandard1.1\SQLiteNetStandard.dll</HintPath>
-    </Reference>
-    <Reference Include="SQLitePCLRaw.batteries_v2, Version=2.0.1.610, Culture=neutral, PublicKeyToken=8226ea5df37bcae9, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SQLitePCLRaw.bundle_green.2.0.1\lib\net461\SQLitePCLRaw.batteries_v2.dll</HintPath>
-    </Reference>
-    <Reference Include="SQLitePCLRaw.core, Version=2.0.1.610, Culture=neutral, PublicKeyToken=1488e028ca7ab535, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SQLitePCLRaw.core.2.0.1\lib\netstandard2.0\SQLitePCLRaw.core.dll</HintPath>
-    </Reference>
-    <Reference Include="SQLitePCLRaw.nativelibrary, Version=2.0.1.610, Culture=neutral, PublicKeyToken=502ed628492ab262, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SQLitePCLRaw.bundle_green.2.0.1\lib\net461\SQLitePCLRaw.nativelibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="SQLitePCLRaw.provider.dynamic_cdecl, Version=2.0.1.610, Culture=neutral, PublicKeyToken=b68184102cba0b3b, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SQLitePCLRaw.provider.dynamic_cdecl.2.0.1\lib\netstandard2.0\SQLitePCLRaw.provider.dynamic_cdecl.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -281,26 +266,13 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Xamarin.Forms.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-<<<<<<< HEAD
-      <HintPath>..\..\packages\Xamarin.Forms.4.4.0.991477\lib\netstandard2.0\Xamarin.Forms.Core.dll</HintPath>
-=======
       <HintPath>..\..\packages\Xamarin.Forms.4.4.0.991220-pre3\lib\netstandard2.0\Xamarin.Forms.Core.dll</HintPath>
->>>>>>> sql-rework
     </Reference>
     <Reference Include="Xamarin.Forms.DebugRainbows, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Xamarin.Forms.DebugRainbows.1.0.16\lib\netstandard2.0\Xamarin.Forms.DebugRainbows.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Xamarin.Forms.Platform, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-<<<<<<< HEAD
-      <HintPath>..\..\packages\Xamarin.Forms.4.4.0.991477\lib\netstandard2.0\Xamarin.Forms.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Forms.Platform.WPF, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Xamarin.Forms.Platform.WPF.4.4.0.991477\lib\net45\Xamarin.Forms.Platform.WPF.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Forms.Xaml, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Xamarin.Forms.4.4.0.991477\lib\netstandard2.0\Xamarin.Forms.Xaml.dll</HintPath>
-=======
       <HintPath>..\..\packages\Xamarin.Forms.4.4.0.991220-pre3\lib\netstandard2.0\Xamarin.Forms.Platform.dll</HintPath>
     </Reference>
     <Reference Include="Xamarin.Forms.Platform.WPF, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -308,7 +280,6 @@
     </Reference>
     <Reference Include="Xamarin.Forms.Xaml, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Xamarin.Forms.4.4.0.991220-pre3\lib\netstandard2.0\Xamarin.Forms.Xaml.dll</HintPath>
->>>>>>> sql-rework
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -380,21 +351,10 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-<<<<<<< HEAD
-      <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\Xamarin.Forms.4.4.0.991477\build\Xamarin.Forms.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.Forms.4.4.0.991477\build\Xamarin.Forms.props'))" />
-    <Error Condition="!Exists('..\..\packages\Xamarin.Forms.4.4.0.991477\build\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.Forms.4.4.0.991477\build\Xamarin.Forms.targets'))" />
-  </Target>
-  <Import Project="..\..\packages\Xamarin.Forms.4.4.0.991477\build\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.4.4.0.991477\build\Xamarin.Forms.targets')" />
-=======
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\Xamarin.Forms.4.4.0.991220-pre3\build\Xamarin.Forms.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.Forms.4.4.0.991220-pre3\build\Xamarin.Forms.props'))" />
     <Error Condition="!Exists('..\..\packages\Xamarin.Forms.4.4.0.991220-pre3\build\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.Forms.4.4.0.991220-pre3\build\Xamarin.Forms.targets'))" />
-    <Error Condition="!Exists('..\..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.1\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.1\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets'))" />
   </Target>
   <Import Project="..\..\packages\Xamarin.Forms.4.4.0.991220-pre3\build\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.4.4.0.991220-pre3\build\Xamarin.Forms.targets')" />
-  <Import Project="..\..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.1\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets" Condition="Exists('..\..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.1\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets')" />
->>>>>>> sql-rework
 </Project>
