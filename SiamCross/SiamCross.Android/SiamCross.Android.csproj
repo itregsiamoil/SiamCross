@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -69,8 +69,8 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
-    <PackageReference Include="sqlite-net-pcl">
-      <Version>1.7.302-beta</Version>
+    <PackageReference Include="sqlite-net-standard">
+      <Version>1.5.1</Version>
     </PackageReference>
     <PackageReference Include="Xam.Plugins.Messaging">
       <Version>5.2.0</Version>
@@ -83,7 +83,7 @@
     <PackageReference Include="Xamarin.Android.Support.Core.Utils" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Android.Support.CustomTabs" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Forms">
-      <Version>4.4.0.991477</Version>
+      <Version>4.4.0.991220-pre3</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms.DebugRainbows">
       <Version>1.0.16</Version>

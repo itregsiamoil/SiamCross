@@ -2,13 +2,13 @@
 using SiamCross.AppObjects;
 using SiamCross.DataBase;
 using SiamCross.DataBase.DataBaseModels;
-using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using SQLite;
 
 namespace SiamCross.Services
 {
@@ -24,8 +24,14 @@ namespace SiamCross.Services
         {
             string _databasePart = AppContainer.Container.Resolve<ISQLite>()
                 .GetDatabasePath("sqlite.db");
-
-            _database = new SQLiteConnection(_databasePart);
+            try
+            {
+                _database = new SQLiteConnection(_databasePart);
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+            }
             _database.CreateTable<Ddim2Measurement>();
             _database.CreateTable<Ddin2Measurement>();
         }
