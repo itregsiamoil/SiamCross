@@ -129,35 +129,37 @@ namespace SiamCross.Services
             {
                 case Ddim2MeasurementData ddim2Data:
                     var dbModelDdim2 = new Ddim2Measurement(ddim2Data);
-                    //DataRepository.Instance.SaveDdim2Item(dbModelDdim2);
+                    DataRepository.Instance.SaveDdim2Item(dbModelDdim2);
 
                     //await App.NavigationPage.Navigation.PushModalAsync(
-                            //new Ddim2MeasurementDonePage(
-                            //    DataRepository.Instance.GetDdim2Item(dbModelDdim2.Id)), 
-                            //    true);
+                    //new Ddim2MeasurementDonePage(
+                    //    DataRepository.Instance.GetDdim2Item(dbModelDdim2.Id)),
+                    //    true);
 
                     var qwe1 = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
-                    var name1 = ("ddim2_" + 
+                    var name1 = ("ddim2_" +
                         new DateTimeConverter().DateTimeToString(dbModelDdim2.DateTime) + ".xml").Replace(':', '-');
                     qwe1.SaveXml(name1, new XmlCreator().CreateDdim2Xml(dbModelDdim2));
 
-                    EmailService.Instance.SendEmailWithFile(name1);
+                    EmailService.Instance.SendEmailWithFile(qwe1.GetFilePath(name1));
+
+                    qwe1.DeleteFile(name1);
 
                     break;
                 case Ddin2MeasurementData ddin2Data:
                     var dbModelDdin2 = new Ddin2Measurement(ddin2Data);
-                    //DataRepository.Instance.SaveDdin2Item(dbModelDdin2);
-                    //await App.NavigationPage.Navigation.PushModalAsync(
-                    //       new Ddin2MeasurementDonePage(
-                    //           DataRepository.Instance.GetDdin2Item(dbModelDdin2.Id)),
-                    //           true);
+                    DataRepository.Instance.SaveDdin2Item(dbModelDdin2);
+                    await App.NavigationPage.Navigation.PushModalAsync(
+                           new Ddin2MeasurementDonePage(
+                               DataRepository.Instance.GetDdin2Item(dbModelDdin2.Id)),
+                               true);
 
-                    var qwe = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
-                    var name = ("ddin2_" +
-                        new DateTimeConverter().DateTimeToString(dbModelDdin2.DateTime) + ".xml").Replace(':', '-');
-                    qwe.SaveXml(name, new XmlCreator().CreateDdin2Xml(dbModelDdin2));
+                    //var qwe = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
+                    //var name = ("ddin2_" +
+                    //    new DateTimeConverter().DateTimeToString(dbModelDdin2.DateTime) + ".xml").Replace(':', '-');
+                    //qwe.SaveXml(name, new XmlCreator().CreateDdin2Xml(dbModelDdin2));
 
-                    EmailService.Instance.SendEmailWithFile(name);
+                    //EmailService.Instance.SendEmailWithFile(name);
                     
                     break;
                 default:

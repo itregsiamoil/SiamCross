@@ -55,19 +55,6 @@ namespace SiamCross.Views
             _points = DgmConverter.GetXYs(_measurement.DynGraph.ToList(),
                 _measurement.Step,
                 _measurement.WeightDiscr);
-            //for (int i = 0; i < points.GetUpperBound(0)/3; i++)
-            //{
-            //    entries.Add(
-            //        new Microcharts.Entry((float)points[i, 1])
-            //        {
-
-            //        });
-            //}
-
-            //Chart1.Chart = new LineChart
-            //{
-            //    Entries = entries,
-            //};
         }
 
         private void CanvasView_PaintSurface(object sender, SkiaSharp.Views.Forms.SKPaintSurfaceEventArgs args)

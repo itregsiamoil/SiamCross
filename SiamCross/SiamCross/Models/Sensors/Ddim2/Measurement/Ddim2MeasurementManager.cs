@@ -165,7 +165,7 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
             //Read first 500 bytes
 
             await _bluetoothAdapter.SendData(command.ToArray());
-            await Task.Delay(300);
+            await Task.Delay(200);
 
             RemoveCrc();
 
@@ -179,7 +179,7 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
 
                 AddCrc();
                 await _bluetoothAdapter.SendData(command.ToArray());
-                await Task.Delay(300);
+                await Task.Delay(200);
 
                 RemoveCrc();
             }

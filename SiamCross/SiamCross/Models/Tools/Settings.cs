@@ -21,12 +21,19 @@ namespace SiamCross.Models.Tools
             if (_settingsSaver.DoesSettingsFileExists())
             {
                 var settings = _settingsSaver.ReadSettings();
-                FromAddress = settings.FromAddress;
-                ToAddress = settings.ToAddress;
-                SmtpAddress = settings.SmtpAddress;
-                Port = settings.Port;
-                Username = settings.Username;
-                Password = settings.Password;
+                if (settings != null)
+                {
+                    FromAddress = settings.FromAddress;
+                    ToAddress = settings.ToAddress;
+                    SmtpAddress = settings.SmtpAddress;
+                    Port = settings.Port;
+                    Username = settings.Username;
+                    Password = settings.Password;
+                }
+                else
+                {
+
+                }
             }
             else
             {
