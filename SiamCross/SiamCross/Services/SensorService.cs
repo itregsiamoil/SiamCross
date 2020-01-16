@@ -131,17 +131,19 @@ namespace SiamCross.Services
                     var dbModelDdim2 = new Ddim2Measurement(ddim2Data);
                     DataRepository.Instance.SaveDdim2Item(dbModelDdim2);
 
-                    await App.NavigationPage.Navigation.PushModalAsync(
-                    new Ddim2MeasurementDonePage(
-                        DataRepository.Instance.GetDdim2Item(dbModelDdim2.Id)),
-                        true);
+                    //await App.NavigationPage.Navigation.PushModalAsync(
+                    //new Ddim2MeasurementDonePage(
+                    //    DataRepository.Instance.GetDdim2Item(dbModelDdim2.Id)),
+                    //    true);
 
-                    //var qwe1 = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
-                    //var name1 = ("ddim2_" + 
-                    //    new DateTimeConverter().DateTimeToString(dbModelDdim2.DateTime) + ".xml").Replace(':', '-');
-                    //qwe1.SaveXml(name1, new XmlCreator().CreateDdim2Xml(dbModelDdim2));
+                    var qwe1 = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
+                    var name1 = ("ddim2_" +
+                        new DateTimeConverter().DateTimeToString(dbModelDdim2.DateTime) + ".xml").Replace(':', '-');
+                    qwe1.SaveXml(name1, new XmlCreator().CreateDdim2Xml(dbModelDdim2));
 
-                    //EmailService.Instance.SendEmailWithFile(name1);
+                    EmailService.Instance.SendEmailWithFile(qwe1.GetFilePath(name1));
+
+                    qwe1.DeleteFile(name1);
 
                     break;
                 case Ddin2MeasurementData ddin2Data:

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SiamCross.Models.Tools
+﻿namespace SiamCross.Models.Tools
 {
     public interface IEmailSender
     {
-        Task SendEmailWithFile(string filename);
+        void SendEmailWithFile(string filename);
 
         void SendEmail(string to, string subject, string text);
     }

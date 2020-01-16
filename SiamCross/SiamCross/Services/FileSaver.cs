@@ -1,8 +1,5 @@
 ﻿using SiamCross.Models.Tools;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Xml.Linq;
 
 namespace SiamCross.Services
@@ -18,7 +15,28 @@ namespace SiamCross.Services
 
         public void SaveXml(string filename, XDocument xml)
         {
-            xml.Save(filename);
+            var path = Path.Combine(
+                   System.Environment.GetFolderPath(
+                       System.Environment.SpecialFolder.Personal), filename);
+            xml.Save(path);
+        }
+
+        public void DeleteFile(string filename)
+        {
+            var path = Path.Combine(
+                   System.Environment.GetFolderPath(
+                       System.Environment.SpecialFolder.Personal), filename);
+
+            if (!File.Exists(path)) return;
+
+            File.Delete(path);
+        }
+
+        public string GetFilePath(string filename)
+        {
+            return Path.Combine(
+                   System.Environment.GetFolderPath(
+                       System.Environment.SpecialFolder.Personal), filename);
         }
     }
 }

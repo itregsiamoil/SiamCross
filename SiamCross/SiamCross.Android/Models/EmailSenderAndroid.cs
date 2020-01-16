@@ -71,33 +71,29 @@ namespace SiamCross.Droid.Models
             //});
         }
 
-        public Task SendEmailWithFile(string filename)
+        public void SendEmailWithFile(string path)
         {
-            return new Task(() =>
-            {
-                var path = Path.Combine(
-                        Environment.GetFolderPath(
-                        Environment.SpecialFolder.ApplicationData), filename);
-
-                //if (File.Exists(path))
-                //{
-                //    var from = new MailAddress(Settings.Instance.FromAddress);
-                //    var toMail = new MailAddress(Settings.Instance.ToAddress);
-                //    var m = new MailMessage(from, toMail);
-                //    m.Attachments.Add(new Attachment(path));
-                //    m.Subject = "Mail with attachment";
-                //    m.Body = "Measurement ";
-                //    m.IsBodyHtml = true;
-                //    var smtp = new SmtpClient(Settings.Instance.SmtpAddress,
-                //        Settings.Instance.Port)
-                //    {
-                //        Credentials = new NetworkCredential(Settings.Instance.Username,
-                //        Settings.Instance.Password),
-                //        EnableSsl = true
-                //    };
-                //    smtp.Send(m);
-                //}
-            });
+            //return new Task(() =>
+            //{
+                if (File.Exists(path))
+                {
+                    var from = new MailAddress(Settings.Instance.FromAddress);
+                    var toMail = new MailAddress(Settings.Instance.ToAddress);
+                    var m = new MailMessage(from, toMail);
+                    m.Attachments.Add(new Attachment(path));
+                    m.Subject = "Mail with attachment";
+                    m.Body = "Measurement ";
+                    m.IsBodyHtml = true;
+                    var smtp = new SmtpClient(Settings.Instance.SmtpAddress,
+                        Settings.Instance.Port)
+                    {
+                        Credentials = new NetworkCredential(Settings.Instance.Username,
+                        Settings.Instance.Password),
+                        EnableSsl = true
+                    };
+                    smtp.Send(m);
+                }
+            //});
         }
     }
 }
