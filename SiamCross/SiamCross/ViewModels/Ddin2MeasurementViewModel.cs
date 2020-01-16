@@ -145,7 +145,7 @@ namespace SiamCross.ViewModels
 
         private bool IsNumberValid(int from, int to, int number)
         {
-            return Enumerable.Range(from, to).Contains(number);
+            return number >= from && number <= to;
         }
 
         private bool ValidateForEmptiness()
