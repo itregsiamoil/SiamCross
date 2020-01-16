@@ -25,9 +25,9 @@ namespace SiamCross.Services
             return _emailSender.SendEmailWithFile(filename);
         }
 
-        public Task SendEmail(string to, string subject, string text)
+        public void SendEmail(string to, string subject, string text)
         {
-            return _emailSender.SendEmail(to, subject, text);
+            _emailSender.SendEmail(to, subject, text);
         }
     }
 }

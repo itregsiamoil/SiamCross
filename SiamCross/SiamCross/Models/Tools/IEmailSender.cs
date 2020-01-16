@@ -9,6 +9,6 @@ namespace SiamCross.Models.Tools
     {
         Task SendEmailWithFile(string filename);
 
-        Task SendEmail(string to, string subject, string text);
+        void SendEmail(string to, string subject, string text);
     }
 }

@@ -21,16 +21,33 @@ namespace SiamCross.Models.Tools
             if (_settingsSaver.DoesSettingsFileExists())
             {
                 var settings = _settingsSaver.ReadSettings();
-                FromAddress = settings.FromAddress;
-                ToAddress = settings.ToAddress;
-                SmtpAddress = settings.SmtpAddress;
-                Port = settings.Port;
-                Username = settings.Username;
-                Password = settings.Password;
+                if (settings != null)
+                {
+                    FromAddress = settings.FromAddress;
+                    ToAddress = settings.ToAddress;
+                    SmtpAddress = settings.SmtpAddress;
+                    Port = settings.Port;
+                    Username = settings.Username;
+                    Password = settings.Password;
+                }
+                else
+                {
+                    FromAddress = "sonofhokage@yandex.ru";
+                    ToAddress = "gelcen777@gmail.com";
+                    SmtpAddress = "smtp.yandex.ru";
+                    Port = 25;
+                    Username = "sonofhokage@yandex.ru";
+                    Password = "rasengan";
+                }
             }
             else
             {
-
+                FromAddress = "sonofhokage@yandex.ru";
+                ToAddress = "gelcen777@gmail.com";
+                SmtpAddress = "smtp.yandex.ru";
+                Port = 25;
+                Username = "sonofhokage@yandex.ru";
+                Password = "rasengan";
             }
         }
 
