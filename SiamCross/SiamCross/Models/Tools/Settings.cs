@@ -32,22 +32,12 @@ namespace SiamCross.Models.Tools
                 }
                 else
                 {
-                    FromAddress = "sonofhokage@yandex.ru";
-                    ToAddress = "gelcen777@gmail.com";
-                    SmtpAddress = "smtp.yandex.ru";
-                    Port = 25;
-                    Username = "sonofhokage@yandex.ru";
-                    Password = "rasengan";
+
                 }
             }
             else
             {
-                FromAddress = "sonofhokage@yandex.ru";
-                ToAddress = "gelcen777@gmail.com";
-                SmtpAddress = "smtp.yandex.ru";
-                Port = 25;
-                Username = "sonofhokage@yandex.ru";
-                Password = "rasengan";
+
             }
         }
 
