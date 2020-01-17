@@ -146,7 +146,7 @@ namespace SiamCross.Views
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            DataRepository.Instance.SaveDdin2Item(_measurement);
+            DataRepository.Instance.SaveDdin2Measurement(_measurement);
             MessagingCenter
                 .Send<Ddin2MeasurementDonePage, Ddin2Measurement>(
                 this, "Refresh measurement", _measurement);

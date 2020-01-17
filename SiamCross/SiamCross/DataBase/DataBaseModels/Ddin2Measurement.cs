@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using SiamCross.Models.Sensors.Ddim2.Measurement;
 using SiamCross.Models.Sensors.Ddin2.Measurement;
-using SQLite;
+
 
 namespace SiamCross.DataBase.DataBaseModels
 {
-    [Table("Ddin2Measurement")]
     public class Ddin2Measurement
     {
-        [PrimaryKey, AutoIncrement, Column("_id")]
         public int Id { get; set; }
 
         /*/ Report /*/
