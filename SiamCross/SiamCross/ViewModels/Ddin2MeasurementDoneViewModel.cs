@@ -85,10 +85,10 @@ namespace SiamCross.ViewModels
             ApertNumber = _measurement.ApertNumber.ToString();
             MaxLoad = _measurement.MaxWeight.ToString();
             MinLoad = _measurement.MinWeight.ToString();
-            Imtravel = _measurement.Travel.ToString();
-            PumpRate = (60 / _measurement.Period).ToString();
-            UpperRodWeight = "0";
-            LowerRodWeight = "0";
+            Imtravel = _measurement.TravelLength.ToString();    //
+            PumpRate = _measurement.SwingCount.ToString();      //
+            UpperRodWeight = _measurement.MaxBarbellWeight.ToString();
+            LowerRodWeight = _measurement.MinBarbellWeight.ToString();
             switch (_measurement.ModelPump)
             {
                 case 0:
