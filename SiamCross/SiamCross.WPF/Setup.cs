@@ -9,6 +9,8 @@ using SiamCross.WPF.Models;
 using SiamCross.WPF.Services;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +32,8 @@ namespace SiamCross.WPF
             cb.RegisterType<FileManagerWPF>().As<IFileManager>();
             cb.RegisterType<EmailSenderWPF>().As<IEmailSender>();
             cb.RegisterType<SettingsSaverWPF>().As<ISettingsSaver>();
+            cb.RegisterType<SQLiteConnection>().As<IDbConnection>();
+            cb.RegisterType<DatabaseCreatorWPF>().As<IDatabaseCreator>();
         }
     }
 }

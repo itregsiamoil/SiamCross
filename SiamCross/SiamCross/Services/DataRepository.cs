@@ -20,7 +20,7 @@ namespace SiamCross.Services
         private static readonly Lazy<DataRepository> _instance =
             new Lazy<DataRepository>(() => new DataRepository());
         public static DataRepository Instance { get => _instance.Value; }
-        private SqliteConnection _database;
+        private IDbConnection _database;
         private static object _locker = new object();
 
         private DataRepository()
@@ -30,10 +30,12 @@ namespace SiamCross.Services
 
             if (!File.Exists(_databasePart))
             {
-                SqliteConnection.CreateFile(_databasePart);
+                AppContainer.Container.Resolve<IDatabaseCreator>().CreateDatabase(_databasePart);                  
             }
-            _database = new SqliteConnection(string.Format(
-                "Data Source={0};Version=3;", _databasePart));
+
+            _database = AppContainer.Container
+                .Resolve<IDbConnection>(new TypedParameter(typeof(string),
+                    (string.Format("Data Source={0};Version=3;", _databasePart))));
 
             _database.Open();
             CreateDdim2Table();
