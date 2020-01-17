@@ -59,6 +59,7 @@
     </PackageReference>
     <PackageReference Include="MailKit">
       <Version>2.4.1</Version>
+    </PackageReference>
     <PackageReference Include="Dapper">
       <Version>2.0.30</Version>
     </PackageReference>
