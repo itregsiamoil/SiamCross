@@ -210,8 +210,8 @@ namespace SiamCross.ViewModels
 
         private void GetMeasurementsFromDb()
         {
-            _ddim2Measurements = DataRepository.Instance.GetDdim2Items().ToList();
-            _ddin2Measurements = DataRepository.Instance.GetDdin2Items().ToList();
+            _ddim2Measurements = DataRepository.Instance.GetDdim2Measurements().ToList();
+            _ddin2Measurements = DataRepository.Instance.GetDdin2Measurements().ToList();
             foreach (var m in _ddim2Measurements)
             {
                 Measurements.Add(

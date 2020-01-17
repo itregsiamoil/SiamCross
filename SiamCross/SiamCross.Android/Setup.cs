@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -10,6 +11,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Autofac;
+using Mono.Data.Sqlite;
 using SiamCross.AppObjects;
 using SiamCross.DataBase;
 using SiamCross.Droid.Models;
@@ -35,6 +37,8 @@ namespace SiamCross.Droid
             cb.RegisterType<FileManagerAndroid>().As<IFileManager>();
             cb.RegisterType<EmailSenderAndroid>().As<IEmailSender>();
             cb.RegisterType<SettingsSaverAndroid>().As<ISettingsSaver>();
+            cb.RegisterType<SqliteConnection>().As<IDbConnection>();
+            cb.RegisterType<DatabaseCreatorAndroid>().As<IDatabaseCreator>();
         }
     }    
 }

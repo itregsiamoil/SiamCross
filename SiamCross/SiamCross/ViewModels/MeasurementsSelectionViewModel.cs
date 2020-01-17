@@ -59,12 +59,12 @@ namespace SiamCross.ViewModels
                     {
                         if (mv.Name.Contains("DDIM"))
                         {
-                            DataRepository.Instance.DeleteDdim2Item(mv.Id);
+                            DataRepository.Instance.RemoveDdim2Measurement(mv.Id);
                             Measurements.Remove(mv);
                         }
                         else if (mv.Name.Contains("DDIN"))
                         {
-                            DataRepository.Instance.DeleteDdin2Item(mv.Id);
+                            DataRepository.Instance.RemoveDdin2Measurement(mv.Id);
                             Measurements.Remove(mv);
                         }
                     }
