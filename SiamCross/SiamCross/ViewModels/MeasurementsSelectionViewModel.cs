@@ -86,6 +86,7 @@ namespace SiamCross.ViewModels
 
             try
             {
+                DependencyService.Get<IToast>().Show("Отправка измерений на почту");
                 await Task.Run(() =>
                 {
                     foreach (var m in SelectedMeasurements)
@@ -97,6 +98,8 @@ namespace SiamCross.ViewModels
                         }
                     }
                 });
+                DependencyService.Get<IToast>()
+                    .Show($"{SelectedMeasurements.Count} измерений успешно отправлено на почту");
             }
             catch (Exception ex)
             {
