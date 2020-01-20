@@ -110,6 +110,7 @@
     <Compile Include="Models\EmailSenderAndroid.cs" />
     <Compile Include="Models\FileManagerAndroid.cs" />
     <Compile Include="Models\SQLiteAndroid.cs" />
+    <Compile Include="Models\XmlSaverAndroid.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\SaveDevicesServiceAndroid.cs" />

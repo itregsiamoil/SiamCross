@@ -87,12 +87,19 @@ namespace SiamCross.ViewModels
             try
             {
                 DependencyService.Get<IToast>().Show("Отправка измерений на почту");
+                var xmlSaver = DependencyService.Get<IXmlSaver>();
+                var xmlCreator = new XmlCreator();
                 await Task.Run(() =>
                 {
                     foreach (var m in SelectedMeasurements)
                     {
                         if (m is MeasurementView mv)
                         {
+                            var dm = DataRepository.Instance.GetDdim2MeasurementById(mv.Id);
+                            var name = ("ddim2_" +
+                                 new DateTimeConverter().DateTimeToString(dm.DateTime) + ".xml").Replace(':', '-');
+                            xmlSaver.SaveXml(name, xmlCreator.CreateDdim2Xml(dm));
+
                             EmailService.Instance.SendEmail
                                 ("", mv.Name + mv.MeasurementType, mv.MeasurementType + mv.Date.ToString());
                         }

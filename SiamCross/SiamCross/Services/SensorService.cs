@@ -138,10 +138,10 @@ namespace SiamCross.Services
                                 DataRepository.Instance.GetDdim2MeasurementById(addbleId)),
                                 true);
 
-                    var qwe1 = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
-                    var name1 = ("ddim2_" +
-                        new DateTimeConverter().DateTimeToString(dbModelDdim2.DateTime) + ".xml").Replace(':', '-');
-                    qwe1.SaveXml(name1, new XmlCreator().CreateDdim2Xml(dbModelDdim2));
+                    //var qwe1 = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
+                    //var name1 = ("ddim2_" +
+                    //    new DateTimeConverter().DateTimeToString(dbModelDdim2.DateTime) + ".xml").Replace(':', '-');
+                    //qwe1.SaveXml(name1, new XmlCreator().CreateDdim2Xml(dbModelDdim2));
 
 
                  //   EmailService.Instance.SendEmailWithFile(name1);
@@ -156,10 +156,10 @@ namespace SiamCross.Services
                                dbObj),
                                true);
 
-                    var qwe = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
-                    var name = ("ddin2_" +
-                        new DateTimeConverter().DateTimeToString(dbModelDdin2.DateTime) + ".xml").Replace(':', '-');
-                    qwe.SaveXml(name, new XmlCreator().CreateDdin2Xml(dbModelDdin2));
+                    //var qwe = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
+                    //var name = ("ddin2_" +
+                    //    new DateTimeConverter().DateTimeToString(dbModelDdin2.DateTime) + ".xml").Replace(':', '-');
+                    //qwe.SaveXml(name, new XmlCreator().CreateDdin2Xml(dbModelDdin2));
 
                     //EmailService.Instance.SendEmailWithFile(name);
                     
