@@ -87,24 +87,17 @@ namespace SiamCross.ViewModels
             try
             {
                 DependencyService.Get<IToast>().Show("Отправка измерений на почту");
-                var xmlSaver = DependencyService.Get<IXmlSaver>();
-                var xmlCreator = new XmlCreator();
+
                 await Task.Run(() =>
                 {
-                    foreach (var m in SelectedMeasurements)
-                    {
-                        if (m is MeasurementView mv)
-                        {
-                            var dm = DataRepository.Instance.GetDdim2MeasurementById(mv.Id);
-                            var name = ("ddim2_" +
-                                 new DateTimeConverter().DateTimeToString(dm.DateTime) + ".xml").Replace(':', '-');
-                            xmlSaver.SaveXml(name, xmlCreator.CreateDdim2Xml(dm));
+                    var paths = SaveXmlsReturnPaths();
 
-                            EmailService.Instance.SendEmail
-                                ("", mv.Name + mv.MeasurementType, mv.MeasurementType + mv.Date.ToString());
-                        }
+                    for (int i = 0; i < paths.Length; i++)
+                    {
+                        EmailService.Instance.SendEmailWithFile(paths[i]);
                     }
                 });
+
                 DependencyService.Get<IToast>()
                     .Show($"{SelectedMeasurements.Count} измерений успешно отправлено на почту");
             }
@@ -113,6 +106,52 @@ namespace SiamCross.ViewModels
                 await Application.Current.MainPage.DisplayAlert("Ошибка",
                 ex.Message, "OK");
             }
+        }
+
+        private DateTimeConverter _timeConverter = new DateTimeConverter();
+
+        private string[] SaveXmlsReturnPaths()
+        {
+            var xmlCreator = new XmlCreator();
+
+            var xmlSaver = DependencyService.Get<IXmlSaver>();
+
+            var paths = new string[SelectedMeasurements.Count];
+
+            for (int i = 0; i < SelectedMeasurements.Count; i++)
+            {
+                if (SelectedMeasurements[i] is MeasurementView mv)
+                {
+                    if (mv.Name.Contains("DDIM"))
+                    {
+                        var dmm = DataRepository.Instance.GetDdim2MeasurementById(mv.Id);
+                        var name = CreateName(dmm.Name, dmm.DateTime);
+                        xmlSaver.SaveXml(name, xmlCreator.CreateDdim2Xml(dmm));
+
+                        paths[i] = xmlSaver.GetFilepath(name);
+                    }
+                    else if (mv.Name.Contains("DDIN"))
+                    {
+                        var dnm = DataRepository.Instance.GetDdin2MeasurementById(mv.Id);
+                        var name = CreateName(dnm.Name, dnm.DateTime);
+                        xmlSaver.SaveXml(name, xmlCreator.CreateDdin2Xml(dnm));
+
+                        paths[i] = xmlSaver.GetFilepath(name);
+                    }
+                    else if (mv.Name.Contains("SIDDOSA3M"))
+                    {
+                        //Get siddos by id
+                    }
+                }
+            }
+
+            return paths;
+        }
+
+        private string CreateName(string deviceName, DateTime date)
+        {
+            return $"{deviceName}_{_timeConverter.DateTimeToString(date)}.xml"
+                .Replace(':', '-');
         }
 
         private bool ValidateForEmptiness()

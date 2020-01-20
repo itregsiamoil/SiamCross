@@ -6,5 +6,7 @@ namespace SiamCross.Models.Tools
     {
         void SaveXml(string filename, XDocument xml);
         void DeleteXml(string filename);
+
+        string GetFilepath(string filename);
     }
 }

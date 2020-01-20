@@ -19,13 +19,15 @@ namespace SiamCross.Droid.Models
 {
     public class XmlSaverAndroid : IXmlSaver
     {
-        private string _path = Android.OS.Environment.GetExternalStoragePublicDirectory(
+        private readonly string _path = Android.OS.Environment.GetExternalStoragePublicDirectory(
             Android.OS.Environment.DirectoryDownloads).AbsolutePath;
+
+        private readonly string _folder = "Measurements";
 
         public void DeleteXml(string filename)
         {
             string s = Directory.CreateDirectory(_path +
-                (Path.DirectorySeparatorChar + "Measurements")).FullName;
+                (Path.DirectorySeparatorChar + _folder)).FullName;
 
             if (Directory.Exists(s))
             {
@@ -40,12 +42,32 @@ namespace SiamCross.Droid.Models
         public void SaveXml(string filename, XDocument xml)
         {
             string s = Directory.CreateDirectory(_path + 
-                (Path.DirectorySeparatorChar + "Measurements")).FullName;
+                (Path.DirectorySeparatorChar + _folder)).FullName;
 
             if (Directory.Exists(s))
             {
                 xml.Save(s + (Path.DirectorySeparatorChar + filename));
             }
+        }
+
+        /// <summary>
+        /// Получить путь к файлу
+        /// </summary>
+        /// <param name="filename">Имя файла</param>
+        /// <returns>Путь к файлу или null</returns>
+        public string GetFilepath(string filename)
+        {
+            string result = null;
+
+            var path = _path + 
+                Path.DirectorySeparatorChar +
+                _folder + Path.DirectorySeparatorChar 
+                + filename;
+
+            if (File.Exists(path))
+                result = path;
+
+            return result;
         }
     }
 }
