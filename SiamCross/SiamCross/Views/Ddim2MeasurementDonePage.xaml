@@ -40,8 +40,12 @@
         <!--<forms:ChartView x:Name="Chart1" HeightRequest="200"/>-->
         <skia:SKCanvasView x:Name="CanvasView"
                            PaintSurface="CanvasView_PaintSurface"
+                           HorizontalOptions="FillAndExpand"
+                           Margin="5"
+                           VerticalOptions="FillAndExpand"
+                           IgnorePixelScaling="True"
                            HeightRequest="200"
-                           Margin="10"/>
+                           />
         <TableView Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand"
