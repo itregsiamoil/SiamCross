@@ -29,9 +29,9 @@ namespace SiamCross.Droid.Models
                 var smtp = new SmtpClient(Settings.Instance.SmtpAddress,
                     Settings.Instance.Port)
                 {
-                    Credentials = new NetworkCredential(Settings.Instance.Username,
-                    Settings.Instance.Password),
-                    EnableSsl = true
+                    //Credentials = new NetworkCredential(Settings.Instance.Username,
+                    //Settings.Instance.Password),
+                    EnableSsl = false
                 };
                 smtp.Send(m);
 
