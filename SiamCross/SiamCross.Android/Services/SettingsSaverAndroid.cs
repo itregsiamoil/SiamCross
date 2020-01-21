@@ -49,6 +49,8 @@ namespace SiamCross.Droid.Services
                 }
             }
 
+            file.Dispose();
+
             return result;
         }
 
