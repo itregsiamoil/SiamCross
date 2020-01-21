@@ -33,6 +33,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\SiddosA3MMeasurementPage.xaml.cs">
+      <DependentUpon>SiddosA3MMeasurementPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Ddim2MeasurementPage.xaml.cs">
       <DependentUpon>Ddim2MeasurementPage.xaml</DependentUpon>
     </Compile>
@@ -41,6 +44,9 @@
     </Compile>
     <Compile Update="Views\MenuItems\SearchPanelTabs\BoundingTab.xaml.cs">
       <DependentUpon>BoundingTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SiddosA3MMeasurementDonePage.xaml.cs">
+      <DependentUpon>SiddosA3MMeasurementDonePage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 

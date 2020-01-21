@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SiamCross.Models.Sensors.Ddim2
+namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 {
     public class Ddim2QuickReportBuilder
     {

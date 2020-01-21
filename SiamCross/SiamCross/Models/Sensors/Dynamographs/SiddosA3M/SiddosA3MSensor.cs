@@ -1,17 +1,16 @@
-﻿using System;
+﻿using SiamCross.Models.Scanners;
+using SiamCross.Models.Sensors.Dynamographs.Shared;
+using SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement;
+using SiamCross.Services;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using SiamCross.Models.Scanners;
-using SiamCross.Models.Sensors;
-using SiamCross.Models.Sensors.Ddim2.Measurement;
-using SiamCross.Services;
 
-namespace SiamCross.Models.Sensors.Ddim2
+namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 {
-    public class Ddim2Sensor : ISensor
+    public class SiddosA3MSensor : ISensor
     {
         private CancellationTokenSource _cancellToken;
         public IBluetoothAdapter BluetoothAdapter { get; }
@@ -19,25 +18,24 @@ namespace SiamCross.Models.Sensors.Ddim2
         public SensorData SensorData { get; }
         public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
 
+        SiddosA3MMeasurementManager _measurementManager;
 
-        Ddim2MeasurementManager _measurementManager;
+        public bool IsMeasurement { get; private set; }
 
-        public bool IsMeasurement { get; private set; } 
-
-        private Ddim2QuickReportBuilder _reportBuilder;
-        private Ddim2StatusAdapter _statusAdapter;
-        private Ddim2Parser _parser;
+        private SiddosA3MQuickReportBuilder _reportBuilder;
+        private DynamographStatusAdapter _statusAdapter;
+        private SiddosA3MParser _parser;
 
         private Task _liveTask;
-        public Ddim2Sensor(IBluetoothAdapter adapter, SensorData sensorData)
+        public SiddosA3MSensor(IBluetoothAdapter adapter, SensorData sensorData)
         {
             IsMeasurement = false;
             IsAlive = false;
             SensorData = sensorData;
             BluetoothAdapter = adapter;
-            _parser = new Ddim2Parser();
-            _reportBuilder = new Ddim2QuickReportBuilder();
-            _statusAdapter = new Ddim2StatusAdapter();
+            _parser = new SiddosA3MParser();
+            _reportBuilder = new SiddosA3MQuickReportBuilder();
+            _statusAdapter = new DynamographStatusAdapter();
             BluetoothAdapter.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += ReceiveHandler;
             _parser.ByteMessageReceived += MeasurementRecieveHandler;
@@ -57,7 +55,7 @@ namespace SiamCross.Models.Sensors.Ddim2
 
         private void ConnectHandler()
         {
-            _parser = new Ddim2Parser();
+            _parser = new SiddosA3MParser();
             _parser.MessageReceived += ReceiveHandler;
 
             IsAlive = true;
@@ -89,7 +87,7 @@ namespace SiamCross.Models.Sensors.Ddim2
                     _reportBuilder.Acceleration = dataValue;
 
                     break;
-                default: return;             
+                default: return;
             }
 
             SensorData.Status = _reportBuilder.GetReport();
@@ -98,25 +96,25 @@ namespace SiamCross.Models.Sensors.Ddim2
 
         public async Task QuickReport()
         {
-            await BluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["BatteryVoltage"]);
-            await BluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["Тemperature"]);
-            await BluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["LoadChanel"]);
-            await BluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["AccelerationChanel"]);
+            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["BatteryVoltage"]);
+            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["Тemperature"]);
+            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["LoadChanel"]);
+            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["AccelerationChanel"]);
         }
 
         public async Task CheckStatus()
         {
-            await BluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["ReadDeviceStatus"]);
+            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["ReadDeviceStatus"]);
         }
 
         private async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             await Task.Delay(2000);
-            while(!cancellationToken.IsCancellationRequested)
+            while (!cancellationToken.IsCancellationRequested)
             {
-                if(IsAlive)
+                if (IsAlive)
                 {
-                    if(!IsMeasurement)
+                    if (!IsMeasurement)
                     {
                         await QuickReport();
                         await Task.Delay(1500);
@@ -136,9 +134,9 @@ namespace SiamCross.Models.Sensors.Ddim2
         {
             IsMeasurement = true;
             _parser.MessageReceived -= ReceiveHandler;
-            Ddim2MeasurementStartParameters specificMeasurementParameters = 
-                (Ddim2MeasurementStartParameters)measurementParameters;
-            _measurementManager = new Ddim2MeasurementManager(BluetoothAdapter, SensorData, 
+            SiddosA3MMeasurementStartParameters specificMeasurementParameters =
+                (SiddosA3MMeasurementStartParameters)measurementParameters;
+            _measurementManager = new SiddosA3MMeasurementManager(BluetoothAdapter, SensorData,
                 specificMeasurementParameters);
             var report = await _measurementManager.RunMeasurement();
             SensorService.Instance.MeasurementHandler(report);
@@ -158,6 +156,6 @@ namespace SiamCross.Models.Sensors.Ddim2
         }
 
         public event Action<SensorData> Notify;
-        public event Action<Ddim2MeasurementData> MeasurementRecieved;
+        public event Action<SiddosA3MMeasurementData> MeasurementRecieved;
     }
 }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SiamCross.Models.Sensors.Ddim2
+namespace SiamCross.Models.Sensors.Dynamographs.Shared
 {
-    public class Ddim2Commands
+    public class DynamographCommands
     {
         /// <summary>
         /// Готовые сообщения команд

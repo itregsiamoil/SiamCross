@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SiamCross.Models.Sensors.Ddim2.Measurement
+namespace SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement
 {
     public class Ddim2MeasurementStartParameters
     {

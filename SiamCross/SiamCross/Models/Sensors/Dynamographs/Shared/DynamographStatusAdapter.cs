@@ -1,27 +1,26 @@
-﻿using SiamCross.Models.Sensors.Ddim2.Measurement;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SiamCross.Models.Sensors.Ddim2
+namespace SiamCross.Models.Sensors.Dynamographs.Shared
 {
-    public class Ddim2StatusAdapter
+    public class DynamographStatusAdapter
     {
-        public Ddim2MeasurementStatus StringStatusToEnum(string stringStatus)
+        public DynamographMeasurementStatus StringStatusToEnum(string stringStatus)
         {
             if (!string.IsNullOrEmpty(stringStatus))
             {
                 switch(stringStatus)
                 {
-                    case "0": return Ddim2MeasurementStatus.Empty;
-                    case "1": return Ddim2MeasurementStatus.Busy;
-                    case "2": return Ddim2MeasurementStatus.Calc;
-                    case "4": return Ddim2MeasurementStatus.Ready;
-                    case "5": return Ddim2MeasurementStatus.Error;
+                    case "0": return DynamographMeasurementStatus.Empty;
+                    case "1": return DynamographMeasurementStatus.Busy;
+                    case "2": return DynamographMeasurementStatus.Calc;
+                    case "4": return DynamographMeasurementStatus.Ready;
+                    case "5": return DynamographMeasurementStatus.Error;
                 }
             }
 
-            return Ddim2MeasurementStatus.Empty; //stub
+            return DynamographMeasurementStatus.Empty; //stub
         }
 
         public string StringStatusToReport(string stringStatus)

@@ -3,8 +3,9 @@ using SiamCross.AppObjects;
 using SiamCross.Models;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Scanners;
-using SiamCross.Models.Sensors.Ddim2;
 using SiamCross.Models.Sensors.Ddin2;
+using SiamCross.Models.Sensors.Dynamographs.Ddim2;
+using SiamCross.Models.Sensors.Dynamographs.SiddosA3M;
 
 namespace SiamCross.Services
 {
@@ -24,11 +25,11 @@ namespace SiamCross.Services
                 ddin2.ScannedDeviceInfo = deviceInfo;
                 return ddin2;
             }
-            else if(deviceInfo.Name.Contains("DDIM"))
+            else if (deviceInfo.Name.Contains("DDIM"))
             {
                 if (deviceInfo.BluetoothType == BluetoothType.Le)
                 {
-                    var sensor =  new Ddim2Sensor(
+                    var sensor = new Ddim2Sensor(
                         AppContainer.Container.Resolve<IBluetoothLeAdapter>
                         (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                         new SensorData(SensorService.Instance.SensorsCount,
@@ -48,9 +49,23 @@ namespace SiamCross.Services
                     sensor.Notify += SensorService.Instance.SensorDataChangedHandler;
                     sensor.ScannedDeviceInfo = deviceInfo;
                     return sensor;
+                }               
+            }
+            else if (deviceInfo.Name.Contains("SIDDOSA3M"))
+            {
+                if (deviceInfo.BluetoothType == BluetoothType.Le)
+                {
+                    var sensor = new SiddosA3MSensor(
+                        AppContainer.Container.Resolve<IBluetoothLeAdapter>
+                        (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
+                        new SensorData(SensorService.Instance.SensorsCount,
+                        deviceInfo.Name, "Динамограф", ""));
+                    sensor.Notify += SensorService.Instance.SensorDataChangedHandler;
+                    sensor.MeasurementRecieved += SensorService.Instance.MeasurementHandler;
+                    sensor.ScannedDeviceInfo = deviceInfo;
+                    return sensor;
                 }
             }
-
             return null;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using SiamCross.Models;
 using SiamCross.Models.Sensors;
-using SiamCross.Models.Sensors.Ddin2.Measurement;
+using SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement;
+using SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement;
 using SiamCross.Services;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
-    public class Ddin2MeasurementViewModel : BaseViewModel, IViewModel
+    public class SiddosA3MMeasurementViewModel : BaseViewModel, IViewModel
     {
         private SensorData _sensorData;
 
@@ -26,7 +27,6 @@ namespace SiamCross.ViewModels
         public string Shop { get; set; }
         public string BufferPressure { get; set; }
         public string Comments { get; set; }
-        public string Rod { get; set; }
         public string DynPeriod { get; set; }
         public string ApertNumber { get; set; }
         public string Imtravel { get; set; }
@@ -34,7 +34,14 @@ namespace SiamCross.ViewModels
         public string SelectedModelPump { get; set; }
         public ICommand StartMeasurementCommand { get; set; }
 
-        public Ddin2MeasurementViewModel(SensorData sensorData)
+        private enum ModelPumpEnum
+        {
+            Balancer,
+            Chain,
+            Hydraulic
+        }
+
+        public SiddosA3MMeasurementViewModel(SensorData sensorData)
         {
             _sensorData = sensorData;
             SensorName = _sensorData.Name;
@@ -52,6 +59,19 @@ namespace SiamCross.ViewModels
                 "Гидравлический"
             };
             StartMeasurementCommand = new Command(StartMeasurementHandler);
+            //    new Command(() =>
+            //{
+            //    Console.WriteLine(Bush);
+            //    Console.WriteLine(Shop);
+            //    Console.WriteLine(BufferPressure);
+            //    Console.WriteLine(Comments);
+            //    Console.WriteLine(Rod);
+            //    Console.WriteLine(DynPeriod);
+            //    Console.WriteLine(ApertNumber);
+            //    Console.WriteLine(Imtravel);
+            //    Console.WriteLine(SelectedField);
+            //    Console.WriteLine(SelectedModelPump);
+            //});
         }
 
         private async void StartMeasurementHandler()
@@ -61,7 +81,7 @@ namespace SiamCross.ViewModels
                 return;
             }
 
-            if (Imtravel[0] ==
+            if (Imtravel[0] == 
                 Convert.ToChar(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator))
             {
                 Imtravel.Insert(0, "0");
@@ -77,8 +97,9 @@ namespace SiamCross.ViewModels
                 BufferPressure,
                 Comments);
 
-            var measurementParams = new Ddin2MeasurementStartParameters(
-                int.Parse(Rod),
+            var measurementParams = new SiddosA3MMeasurementStartParameters(
+                //int.Parse(Rod),
+                24,
                 int.Parse(DynPeriod),
                 int.Parse(ApertNumber),
                 float.Parse(Imtravel),
@@ -92,9 +113,9 @@ namespace SiamCross.ViewModels
             }
 
             Application.Current.MainPage.Navigation.PopModalAsync();
-            await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);
+            await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);           
         }
-
+        
         private int GetModelPump()
         {
             int result = -1;
@@ -115,18 +136,18 @@ namespace SiamCross.ViewModels
             return result;
         }
 
-        public string SensorName
-        {
-            get;
-            set;
+        public string SensorName 
+        { 
+            get; 
+            set; 
         }
 
-        private bool ValidateMeasurementParameters(Ddin2MeasurementStartParameters measurementParams)
+        private bool ValidateMeasurementParameters(SiddosA3MMeasurementStartParameters measurementParams)
         {
             bool result = true;
 
-            if (!IsNumberValid(160, 390, measurementParams.Rod))
-                _errorList.Add("Диаметр штока должен быть в пределе от 16 до 39!");
+            if (!IsNumberValid(120, 400, measurementParams.Rod))/////////////////////////////////////!!!???!!! у ддим/сидоса3м нет поля rod!
+                _errorList.Add("Диаметр штока должен быть в пределе от 12 до 40!");
             if (!IsNumberValid(4000, 180000, measurementParams.DynPeriod))
                 _errorList.Add("Период качания должен быть в пределе от 4 до 180!");
             if (!IsNumberValid(1, 5, measurementParams.ApertNumber))
@@ -156,7 +177,7 @@ namespace SiamCross.ViewModels
             ValidateParameter(Shop, "Введите номер цеха!");
             ValidateParameter(BufferPressure, "Введите буфер давления!");
             ValidateParameter(Comments, "Введите комментарий!");
-            ValidateParameter(Rod, "Введите диаметр штока!");
+            //ValidateParameter(Rod, "Введите диаметр штока!");
             ValidateParameter(DynPeriod, "Введите период качания!");
             ValidateParameter(ApertNumber, "Введите номер отверствия!");
             ValidateParameter(Imtravel, "Введите длину хода");
@@ -186,7 +207,7 @@ namespace SiamCross.ViewModels
                 Application.Current.MainPage.DisplayAlert("Введены неправильные данные",
                 errors, "OK");
             }
-
+            
         }
 
         private void ValidateParameter(string text, string errorMessage)

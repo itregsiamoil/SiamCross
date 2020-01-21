@@ -67,6 +67,11 @@ namespace SiamCross.ViewModels
                             DataRepository.Instance.RemoveDdin2Measurement(mv.Id);
                             Measurements.Remove(mv);
                         }
+                        else if (mv.Name.Contains("SIDDOSA3M"))
+                        {
+                            DataRepository.Instance.RemoveSiddosA3MMeasurement(mv.Id);
+                            Measurements.Remove(mv);
+                        }
                     }
                 }
                 MessagingCenter.Send<MeasurementsSelectionViewModel>(this, "RefreshAfterDeleting");

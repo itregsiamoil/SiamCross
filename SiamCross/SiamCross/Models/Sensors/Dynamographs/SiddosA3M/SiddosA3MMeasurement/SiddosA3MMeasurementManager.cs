@@ -1,32 +1,34 @@
-﻿using SiamCross.Models.Tools;
-using SiamCross.Services;
+﻿using SiamCross.Models.Sensors.Dynamographs;
+using SiamCross.Models.Sensors.Dynamographs.Shared;
+using SiamCross.Models.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SiamCross.Models.Sensors.Ddim2.Measurement
+namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
 {
-    public class Ddim2MeasurementManager
+    public class SiddosA3MMeasurementManager
     {
         private IBluetoothAdapter _bluetoothAdapter;
-        private DeviceConfigCommandGenerator _configGenerator;
-        private Ddim2MeasurementStartParameters _measurementParameters;
-        private Ddim2MeasurementReport _report;
+        private SiddosA3MConfigCommandsGenerator _configGenerator;
+        private SiddosA3MMeasurementStartParameters _measurementParameters;
+        private SiddosA3MMeasurementReport _report;
         public SensorData SensorData { get; private set; }
         public byte[] ErrorCode { get; private set; }
-        public Ddim2MeasurementStatus MeasurementStatus { get; set; }
+        public DynamographMeasurementStatus MeasurementStatus { get; set; }
 
         private List<byte[]> _currentDynGraph;
         private List<byte[]> _currentAccelerationGraph;
 
-        public Ddim2MeasurementManager(IBluetoothAdapter bluetoothAdapter, SensorData sensorData, 
-                Ddim2MeasurementStartParameters measurementParameters)
+        public SiddosA3MMeasurementManager(IBluetoothAdapter bluetoothAdapter, SensorData sensorData,
+                SiddosA3MMeasurementStartParameters measurementParameters)
         {
             _bluetoothAdapter = bluetoothAdapter;
             _measurementParameters = measurementParameters;
-            _configGenerator = new DeviceConfigCommandGenerator();
+            _configGenerator = new SiddosA3MConfigCommandsGenerator();
+
             SensorData = sensorData;
 
             _currentDynGraph = new List<byte[]>();
@@ -41,7 +43,7 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
 
             bool gotError = false;
 
-            if (MeasurementStatus == Ddim2MeasurementStatus.Error)
+            if (MeasurementStatus == DynamographMeasurementStatus.Error)
             {
                 gotError = true;
                 await ReadErrorCode();
@@ -72,10 +74,10 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
             {
                 await Task.Delay(300);
 
-                await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["ReadDeviceStatus"]);
+                await _bluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["ReadDeviceStatus"]);
 
-                if (MeasurementStatus == Ddim2MeasurementStatus.Ready
-                   || MeasurementStatus == Ddim2MeasurementStatus.Error)
+                if (MeasurementStatus == DynamographMeasurementStatus.Ready
+                   || MeasurementStatus == DynamographMeasurementStatus.Error)
                 {
                     isDone = true;
                 }
@@ -86,27 +88,27 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
 
         private async Task Start()
         {
-            await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["InitializeMeasurement"]);
+            await _bluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["InitializeMeasurement"]);
             await Task.Delay(300);
-            await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["StartMeasurement"]);
+            await _bluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["StartMeasurement"]);
             await Task.Delay(300);
         }
 
         public async Task ReadErrorCode()
         {
-            await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["ReadMeasurementErrorCode"]);
+            await _bluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["ReadMeasurementErrorCode"]);
             await Task.Delay(300);
         }
 
         /*/ Copy from SiamBLE /*/
-        public async Task<Ddim2MeasurementData> DownloadMeasurement(bool isError)
+        public async Task<SiddosA3MMeasurementData> DownloadMeasurement(bool isError)
         {
             var _currentReport = new List<byte>();
-            
+
             _currentDynGraph.Add(new byte[2] { 0, 0 });
             var _currentAccelerationGraph = new List<byte[]>();
 
-            await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["ReadMeasurementReport"]);
+            await _bluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["ReadMeasurementReport"]);
 
             await GetDgm4kB();
 
@@ -119,16 +121,16 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
                 }
             }
 
-            Ddim2MeasurementData measurement = isError ? 
-                new Ddim2MeasurementData(_report,
+            SiddosA3MMeasurementData measurement = isError ?
+                new SiddosA3MMeasurementData(_report,
                     (short)_measurementParameters.ApertNumber,
                     (short)_measurementParameters.ModelPump,
                     dynRawBytes,
                     DateTime.Now,
                     _measurementParameters.SecondaryParameters,
                     null,
-                    ErrorCode) : 
-                new Ddim2MeasurementData(
+                    ErrorCode) :
+                new SiddosA3MMeasurementData(
                     _report,
                     (short)_measurementParameters.ApertNumber,
                     (short)_measurementParameters.ModelPump,
@@ -136,14 +138,14 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
                     DateTime.Now,
                     _measurementParameters.SecondaryParameters,
                     null,
-                    null);                   
+                    null);
 
             var dynGraphPoints = DgmConverter.GetXYs(measurement.DynGraph.ToList(),
                     measurement.Report.Step, measurement.Report.WeightDiscr);
 
             measurement.DynGraphPoints = dynGraphPoints;
 
-            await _bluetoothAdapter.SendData(Ddim2Commands.FullCommandDictionary["InitializeMeasurement"]);
+            await _bluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["InitializeMeasurement"]);
             await Task.Delay(300);
             return measurement;
         }
@@ -201,7 +203,7 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
 
         public void MeasurementRecieveHandler(string commandName, byte[] data)
         {
-            if(data == null)
+            if (data == null)
             {
                 return;
             }
@@ -223,7 +225,7 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
                         short value = BitConverter.ToInt16(array, 0);
                         report.Add(value);
                     }
-                    _report = new Ddim2MeasurementReport(
+                    _report = new SiddosA3MMeasurementReport(
                         report[0],
                         report[1],
                         report[2],
@@ -238,7 +240,7 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
                 case "DgmPart1":
                     Console.WriteLine($"Added {data.Length} bytes");
                     _currentDynGraph.Add(data);
-                    
+
                     break;
                 default:
                     break;
