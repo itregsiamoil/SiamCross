@@ -44,6 +44,30 @@ namespace SiamCross.ViewModels
             SendCommand = new Command(SendMeasurements);
         }
 
+        public async void SaveMeasurements(object obj)
+        {
+            try
+            {
+                DependencyService.Get<IToast>().Show("Сохранение измерений...");
+
+                await Task.Run(() =>
+                {
+                    var paths = SaveXmlsReturnPaths();
+                });
+
+                var savePath = @"""Download\Measurements""";
+
+                DependencyService.Get<IToast>()
+                    .Show($"{SelectedMeasurements.Count} " +
+                    $"измерений успешно сохранены в {savePath}");
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Ошибка",
+                ex.Message, "OK");
+            }
+        }
+
         private void RefreshSelectedCount()
         {
             Title = $"Выбрано: {SelectedMeasurements.Count}";
