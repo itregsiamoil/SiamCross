@@ -44,6 +44,30 @@ namespace SiamCross.ViewModels
             SendCommand = new Command(SendMeasurements);
         }
 
+        public async void SaveMeasurements(object obj)
+        {
+            try
+            {
+                DependencyService.Get<IToast>().Show("Сохранение измерений...");
+
+                await Task.Run(() =>
+                {
+                    var paths = SaveXmlsReturnPaths();
+                });
+
+                var savePath = @"""Download\Measurements""";
+
+                DependencyService.Get<IToast>()
+                    .Show($"{SelectedMeasurements.Count} " +
+                    $"измерений успешно сохранены в {savePath}");
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Ошибка",
+                ex.Message, "OK");
+            }
+        }
+
         private void RefreshSelectedCount()
         {
             Title = $"Выбрано: {SelectedMeasurements.Count}";
@@ -96,9 +120,10 @@ namespace SiamCross.ViewModels
                 await Task.Run(() =>
                 {
                     var paths = SaveXmlsReturnPaths();
-                    
-                    EmailService.Instance.SendEmailWithFiles("Измерения", 
-                        "Письмо с измерениями", paths);
+
+                    EmailService.Instance.SendEmailWithFiles("Siam Measurements",
+                        "Hello!\n\nSiamCompany Telemetry Transfer Service", 
+                        paths);
                 });
 
                 DependencyService.Get<IToast>()
@@ -167,10 +192,15 @@ namespace SiamCross.ViewModels
                 "Введите адресат назначения!");
             ValidateParameter(Settings.Instance.SmtpAddress,
                 "Введите адрес SMTP сервера!");
-            ValidateParameter(Settings.Instance.Username,
+
+            if (Settings.Instance.NeedAuthorization)
+            {
+                ValidateParameter(Settings.Instance.Username,
                 "Введите имя пользователя!");
-            ValidateParameter(Settings.Instance.Password,
-                "Введите пароль!");
+                ValidateParameter(Settings.Instance.Password,
+                    "Введите пароль!");
+            }
+            
 
             if (_errorList.Count != 0)
             {

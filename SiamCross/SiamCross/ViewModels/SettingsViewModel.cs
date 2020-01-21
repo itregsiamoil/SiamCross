@@ -4,13 +4,23 @@ namespace SiamCross.ViewModels
 {
     public class SettingsViewModel : BaseViewModel, IViewModel
     {
-        private string _fromAddress;
-        private string _toAddress;
-        private string _smtpAddress;
-        private string _port;
-        private string _username;
-        private string _password;
+        private string fromAddress;
+        private string toAddress;
+        private string smtpAddress;
+        private string port;
+        private string username;
+        private string password;
+        private bool needAuthorization;
 
+        public bool NeedAuthorization
+        {
+            get => needAuthorization;
+            set
+            {
+                needAuthorization = value;
+                Settings.Instance.NeedAuthorization = value;
+            }
+        }
         public string FromAddress
         {
             get => _fromAddress;
