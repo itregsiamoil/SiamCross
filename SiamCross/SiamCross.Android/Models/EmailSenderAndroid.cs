@@ -18,10 +18,8 @@ namespace SiamCross.Droid.Models
     {
         public void SendEmail(string to, string subject, string text)
         {
-            //return new Task(() =>
-            //{
-                try
-                {
+            try
+            {
                 var from = new MailAddress(Settings.Instance.FromAddress);
                 var toMail = new MailAddress(Settings.Instance.ToAddress);
                 var m = new MailMessage(from, toMail);
@@ -37,6 +35,7 @@ namespace SiamCross.Droid.Models
                 };
                 smtp.Send(m);
 
+                #region С использованием MailKit
                 //var message = new MimeMessage();
                 //message.From.Add(new MailboxAddress("Joey Tribbiani", Settings.Instance.FromAddress));
                 //message.To.Add(new MailboxAddress("Mrs. Chanandler Bong", Settings.Instance.ToAddress));
@@ -62,38 +61,61 @@ namespace SiamCross.Droid.Models
                 //    client.Send(message);
                 //    client.Disconnect(true);
                 //}
+                #endregion
             }
-                catch (Exception ex)
-                {
-                    throw new Exception(ex.Message);
-                }
-                
-            //});
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public void SendEmailWithFile(string path)
         {
-            //return new Task(() =>
-            //{
+            if (File.Exists(path))
+            {
+                var from = new MailAddress(Settings.Instance.FromAddress);
+                var toMail = new MailAddress(Settings.Instance.ToAddress);
+                var m = new MailMessage(from, toMail);
+                m.Attachments.Add(new Attachment(path));
+                m.Subject = "Mail with attachment";
+                m.Body = "Measurement ";
+                m.IsBodyHtml = true;
+                var smtp = new SmtpClient(Settings.Instance.SmtpAddress,
+                    Settings.Instance.Port)
+                {
+                    Credentials = new NetworkCredential(Settings.Instance.Username,
+                    Settings.Instance.Password),
+                    EnableSsl = true
+                };
+                smtp.Send(m);
+            }
+        }
+
+        public void SendEmailWithFiles(string subject, string text, string[] filenames)
+        {
+            var from = new MailAddress(Settings.Instance.FromAddress);
+            var toMail = new MailAddress(Settings.Instance.ToAddress);
+            var m = new MailMessage(from, toMail);
+
+            foreach (var path in filenames)
+            {
                 if (File.Exists(path))
                 {
-                    var from = new MailAddress(Settings.Instance.FromAddress);
-                    var toMail = new MailAddress(Settings.Instance.ToAddress);
-                    var m = new MailMessage(from, toMail);
                     m.Attachments.Add(new Attachment(path));
-                    m.Subject = "Mail with attachment";
-                    m.Body = "Measurement ";
-                    m.IsBodyHtml = true;
-                    var smtp = new SmtpClient(Settings.Instance.SmtpAddress,
-                        Settings.Instance.Port)
-                    {
-                        Credentials = new NetworkCredential(Settings.Instance.Username,
-                        Settings.Instance.Password),
-                        EnableSsl = true
-                    };
-                    smtp.Send(m);
                 }
-            //});
+            }
+            
+            m.Subject = subject;
+            m.Body = text;
+            m.IsBodyHtml = true;
+            var smtp = new SmtpClient(Settings.Instance.SmtpAddress,
+                Settings.Instance.Port)
+            {
+                Credentials = new NetworkCredential(Settings.Instance.Username,
+                Settings.Instance.Password),
+                EnableSsl = true
+            };
+            smtp.Send(m);
         }
     }
 }

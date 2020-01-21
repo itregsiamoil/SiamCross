@@ -29,5 +29,11 @@ namespace SiamCross.Services
         {
             _emailSender.SendEmail(to, subject, text);
         }
+
+        public void 
+            SendEmailWithFiles(string subject, string text, string[] filenames)
+        {
+            _emailSender.SendEmailWithFiles(subject, text, filenames);
+        }
     }
 }

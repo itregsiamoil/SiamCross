@@ -91,11 +91,9 @@ namespace SiamCross.ViewModels
                 await Task.Run(() =>
                 {
                     var paths = SaveXmlsReturnPaths();
-
-                    for (int i = 0; i < paths.Length; i++)
-                    {
-                        EmailService.Instance.SendEmailWithFile(paths[i]);
-                    }
+                    
+                    EmailService.Instance.SendEmailWithFiles("Измерения", 
+                        "Писмьо с измерениями", paths);
                 });
 
                 DependencyService.Get<IToast>()
