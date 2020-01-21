@@ -16,7 +16,9 @@ namespace SiamCross.Droid.Models
 {
     public class EmailSenderAndroid : IEmailSender
     {
-        public void SendEmail(string to, string subject, string text)
+        public void SendEmail(string to, 
+                              string subject, 
+                              string text)
         {
             try
             {
@@ -26,14 +28,28 @@ namespace SiamCross.Droid.Models
                 m.Subject = subject;
                 m.Body = text;
                 m.IsBodyHtml = true;
-                var smtp = new SmtpClient(Settings.Instance.SmtpAddress,
-                    Settings.Instance.Port)
+                SmtpClient smtp = null;
+
+                if (Settings.Instance.NeedAuthorization)
                 {
-                    Credentials = new NetworkCredential(Settings.Instance.Username,
-                    Settings.Instance.Password),
-                    EnableSsl = true
-                };
-                smtp.Send(m);
+                    smtp = new SmtpClient(Settings.Instance.SmtpAddress,
+                                          Settings.Instance.Port)
+                    {
+                        Credentials = new NetworkCredential(Settings.Instance.Username,
+                                                            Settings.Instance.Password),
+                        EnableSsl = true
+                    };
+                }
+                else
+                {
+                    smtp = new SmtpClient(Settings.Instance.SmtpAddress,
+                                          Settings.Instance.Port)
+                    {
+                        EnableSsl = false
+                    };
+                }
+                
+                smtp?.Send(m);
 
                 #region С использованием MailKit
                 //var message = new MimeMessage();
@@ -80,18 +96,34 @@ namespace SiamCross.Droid.Models
                 m.Subject = "Mail with attachment";
                 m.Body = "Measurement ";
                 m.IsBodyHtml = true;
-                var smtp = new SmtpClient(Settings.Instance.SmtpAddress,
-                    Settings.Instance.Port)
+                SmtpClient smtp = null;
+
+                if (Settings.Instance.NeedAuthorization)
                 {
-                    Credentials = new NetworkCredential(Settings.Instance.Username,
-                    Settings.Instance.Password),
-                    EnableSsl = true
-                };
-                smtp.Send(m);
+                    smtp = new SmtpClient(Settings.Instance.SmtpAddress,
+                                          Settings.Instance.Port)
+                    {
+                        Credentials = new NetworkCredential(Settings.Instance.Username,
+                                                            Settings.Instance.Password),
+                        EnableSsl = true
+                    };
+                }
+                else
+                {
+                    smtp = new SmtpClient(Settings.Instance.SmtpAddress,
+                                          Settings.Instance.Port)
+                    {
+                        EnableSsl = false
+                    };
+                }
+
+                smtp?.Send(m);
             }
         }
 
-        public void SendEmailWithFiles(string subject, string text, string[] filenames)
+        public void SendEmailWithFiles(string subject, 
+                                       string text, 
+                                       string[] filenames)
         {
             var from = new MailAddress(Settings.Instance.FromAddress);
             var toMail = new MailAddress(Settings.Instance.ToAddress);
@@ -104,18 +136,32 @@ namespace SiamCross.Droid.Models
                     m.Attachments.Add(new Attachment(path));
                 }
             }
-            
+
             m.Subject = subject;
             m.Body = text;
             m.IsBodyHtml = true;
-            var smtp = new SmtpClient(Settings.Instance.SmtpAddress,
-                Settings.Instance.Port)
+            SmtpClient smtp = null;
+
+            if (Settings.Instance.NeedAuthorization)
             {
-                Credentials = new NetworkCredential(Settings.Instance.Username,
-                Settings.Instance.Password),
-                EnableSsl = true
-            };
-            smtp.Send(m);
+                smtp = new SmtpClient(Settings.Instance.SmtpAddress,
+                                      Settings.Instance.Port)
+                {
+                    Credentials = new NetworkCredential(Settings.Instance.Username,
+                                                        Settings.Instance.Password),
+                    EnableSsl = true
+                };
+            }
+            else
+            {
+                smtp = new SmtpClient(Settings.Instance.SmtpAddress,
+                                      Settings.Instance.Port)
+                {
+                    EnableSsl = false
+                };
+            }
+
+            smtp?.Send(m);
         }
     }
 }

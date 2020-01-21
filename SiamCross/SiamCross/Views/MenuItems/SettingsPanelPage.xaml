@@ -39,13 +39,24 @@
                         </Entry>
                     </StackLayout>
                 </ViewCell>
+                <ViewCell>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Grid.Column="0" CheckedChanged="CheckBox_CheckedChanged"/>
+                        <Label Margin="0, 5" Text="Авторизация" Grid.Column="1"/>
+                    </Grid>
+                </ViewCell>
             </TableSection>
-            <TableSection Title="Аутентификационные данные">
+            <TableSection Title="Аутентификационные данные" x:Name="Authtorization">
                 <ViewCell>
                     <StackLayout>
                         <Label Text="Имя пользователя"/>
                         <Entry Text="{Binding Username}"
-                               Keyboard="Email"/>
+                               Keyboard="Email" 
+                               x:Name="UsernameEntry"/>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
@@ -53,7 +64,8 @@
                         <Label Text="Пароль"/>
                         <Entry Text="{Binding Password}"
                                IsPassword="True"
-                               Keyboard="Default"/>
+                               Keyboard="Default"
+                               x:Name="PasswordEntry"/>
                     </StackLayout>
                 </ViewCell>
             </TableSection>

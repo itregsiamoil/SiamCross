@@ -9,17 +9,28 @@ namespace SiamCross.Views.MenuItems
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SettingsPanelPage : ContentPage
     {
+        private readonly ViewModel<SettingsViewModel> _vm;
         public SettingsPanelPage()
         {
-            var vm = new ViewModel<SettingsViewModel>();
-            this.BindingContext = vm.GetViewModel;
+            _vm = new ViewModel<SettingsViewModel>();
+            this.BindingContext = _vm.GetViewModel;
             InitializeComponent();
+            UsernameEntry.IsEnabled = false;
+            PasswordEntry.IsEnabled = false;
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
             Settings.Instance.SaveSettings();
+        }
+
+        private void CheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
+        {
+            UsernameEntry.IsEnabled = true;
+            PasswordEntry.IsEnabled = true;
+
+            _vm.GetViewModel.NeedAuthorization = e.Value;
         }
     }
 }

@@ -10,7 +10,17 @@ namespace SiamCross.ViewModels
         private string port;
         private string username;
         private string password;
+        private bool needAuthorization;
 
+        public bool NeedAuthorization
+        {
+            get => needAuthorization;
+            set
+            {
+                needAuthorization = value;
+                Settings.Instance.NeedAuthorization = value;
+            }
+        }
         public string FromAddress
         {
             get => fromAddress;
