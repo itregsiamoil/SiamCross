@@ -21,7 +21,7 @@ namespace SiamCross.Models.Tools
             if (_settingsSaver.DoesSettingsFileExists())
             {
                 var settings = _settingsSaver.ReadSettings();
-                if (settings != null)
+                if (settings != null) //Если файл настроек не пустой
                 {
                     FromAddress = settings.FromAddress;
                     ToAddress = settings.ToAddress;
@@ -32,20 +32,12 @@ namespace SiamCross.Models.Tools
                 }
                 else
                 {
-                    FromAddress = "sonofhokage@yandex.ru";
-                    ToAddress = "gelcen777@gmail.com";
-                    SmtpAddress = "smtp.yandex.ru";
-                    Port = 25;
-                    Username = "sonofhokage@yandex.ru";
+
                 }
             }
             else
             {
-                FromAddress = "sonofhokage@yandex.ru";
-                ToAddress = "gelcen777@gmail.com";
-                SmtpAddress = "smtp.yandex.ru";
-                Port = 25;
-                Username = "sonofhokage@yandex.ru";
+
             }
         }
 

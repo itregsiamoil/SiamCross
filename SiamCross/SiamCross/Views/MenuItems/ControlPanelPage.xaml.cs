@@ -26,7 +26,7 @@ namespace SiamCross.Views.MenuItems
                 {
                     if (sensorData.Name.Contains("DDIM"))
                     {
-                        if (!IsMeasuring(sensorData))
+                        if (CanOpenModal(sensorData))
                         {
                             App.NavigationPage.Navigation.PushModalAsync(
                                 new Ddim2MeasurementPage(sensorData), true);
@@ -34,7 +34,7 @@ namespace SiamCross.Views.MenuItems
                     }
                     else if (sensorData.Name.Contains("DDIN"))
                     {
-                        if (!IsMeasuring(sensorData))
+                        if (CanOpenModal(sensorData))
                         {
                             App.NavigationPage.Navigation.PushModalAsync(
                                 new Ddin2MeasurementPage(sensorData), true);
@@ -44,15 +44,20 @@ namespace SiamCross.Views.MenuItems
             }
         }
 
-        private bool IsMeasuring(SensorData sensorData)
+        
+        private bool CanOpenModal(SensorData sensorData)
         {
-            bool result = false;
+            bool result = true;
             var sensor = SensorService.Instance.Sensors.SingleOrDefault(
                                 s => s.SensorData.Id == sensorData.Id);
             if (sensor != null)
             {
-                if (sensor.IsMeasurement)
-                    result = true;
+                if (sensor.IsAlive)
+                {
+                    if (sensor.IsMeasurement)
+                        result = false;
+                }
+                else result = false;
             }
 
             return result;
