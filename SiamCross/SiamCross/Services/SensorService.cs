@@ -11,8 +11,10 @@ using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
 using SiamCross.Models.Scanners;
-using SiamCross.Models.Sensors.Ddim2.Measurement;
 using SiamCross.Models.Sensors.Ddin2.Measurement;
+using SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement;
+using SiamCross.Models.Sensors.Dynamographs.SiddosA3M;
+using SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement;
 using SiamCross.Models.Tools;
 using SiamCross.Views;
 using Xamarin.Forms;
@@ -163,6 +165,25 @@ namespace SiamCross.Services
 
                     //EmailService.Instance.SendEmailWithFile(name);
                     
+                    break;
+                case SiddosA3MMeasurementData siddosA3M:
+                    var dbModelsiddosA3M = new SiddosA3MMeasurement(siddosA3M);
+
+                    addbleId = DataRepository.Instance.SaveSiddosA3MMeasurement(dbModelsiddosA3M);
+
+                    //await App.NavigationPage.Navigation.PushModalAsync(
+                    //        new SiddosA3MMeasurementDonePage(
+                    //            DataRepository.Instance.GetSiddosA3MMeasurementById(addbleId)),
+                    //            true);
+
+                    var qwe2 = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
+                    var name2 = ("siddosA3M_" +
+                        new DateTimeConverter().DateTimeToString(dbModelsiddosA3M.DateTime) + ".xml").Replace(':', '-');
+                    qwe2.SaveXml(name2, new XmlCreator().CreateSiddosA3MXml(dbModelsiddosA3M));
+
+
+                    //   EmailService.Instance.SendEmailWithFile(name1);
+
                     break;
                 default:
                     break;

@@ -4,49 +4,49 @@ namespace SiamCross.ViewModels
 {
     public class SettingsViewModel : BaseViewModel, IViewModel
     {
-        private string fromAddress;
-        private string toAddress;
-        private string smtpAddress;
-        private string port;
-        private string username;
-        private string password;
+        private string _fromAddress;
+        private string _toAddress;
+        private string _smtpAddress;
+        private string _port;
+        private string _username;
+        private string _password;
 
         public string FromAddress
         {
-            get => fromAddress;
+            get => _fromAddress;
             set
             {
-                fromAddress = value;
+                _fromAddress = value;
                 Settings.Instance.FromAddress = value;
             }
         }
 
         public string ToAddress
         {
-            get => toAddress;
+            get => _toAddress;
             set
             {
-                toAddress = value;
+                _toAddress = value;
                 Settings.Instance.ToAddress = value;
             }
         }
 
         public string SmtpAddress
         {
-            get => smtpAddress;
+            get => _smtpAddress;
             set
             {
-                smtpAddress = value;
+                _smtpAddress = value;
                 Settings.Instance.SmtpAddress = value;
             }
         }
 
         public string Port
         {
-            get => port;
+            get => _port;
             set
             {
-                port = value;
+                _port = value;
                 if (int.TryParse(value, out int p))
                     Settings.Instance.Port = p;
             }
@@ -54,20 +54,20 @@ namespace SiamCross.ViewModels
 
         public string Username
         {
-            get => username;
+            get => _username;
             set
             {
-                username = value;
+                _username = value;
                 Settings.Instance.Username = value;
             }
         }
 
         public string Password 
         { 
-            get => password;
+            get => _password;
             set
             {
-                password = value;
+                _password = value;
                 Settings.Instance.Password = value;
             }
         }

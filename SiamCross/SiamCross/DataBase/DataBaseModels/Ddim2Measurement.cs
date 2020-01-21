@@ -1,8 +1,7 @@
-﻿using System;
+﻿using SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using SiamCross.Models.Sensors.Ddim2.Measurement;
-
 namespace SiamCross.DataBase.DataBaseModels
 {
     public class Ddim2Measurement
@@ -10,8 +9,8 @@ namespace SiamCross.DataBase.DataBaseModels
         public int Id { get; set; }
 
         /*/ Report /*/
-        public short MaxWeight { get; set; }
-        public short MinWeight { get; set; }
+        public float MaxWeight { get; set; }
+        public float MinWeight { get; set; }
         public short Travel { get; set; }
         public short Period { get; set; }
         public short Step { get; set; }
@@ -55,8 +54,8 @@ namespace SiamCross.DataBase.DataBaseModels
 
             SwingCount = (60 / 0.001) / (ddim2MeasurementData.Report.Period * ddim2MeasurementData.Report.TimeDiscr);
 
-            MaxWeight = ddim2MeasurementData.Report.MaxWeight;
-            MinWeight = ddim2MeasurementData.Report.MinWeight;
+            MaxWeight = ddim2MeasurementData.Report.MaxWeight / 1000f;
+            MinWeight = ddim2MeasurementData.Report.MinWeight / 1000f;
             Travel = ddim2MeasurementData.Report.Travel;
             Period = ddim2MeasurementData.Report.Period;
             Step = ddim2MeasurementData.Report.Step;

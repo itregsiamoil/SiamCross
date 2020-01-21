@@ -46,6 +46,15 @@ namespace SiamCross.Views
             }
         }
 
+        public ViewModel(SiddosA3MMeasurement measurement)
+        {
+            using (var scope = AppContainer.Container.BeginLifetimeScope())
+            {
+                GetViewModel = AppContainer.Container.Resolve<T>(
+                    new TypedParameter(typeof(SiddosA3MMeasurement), measurement));
+            }
+        }
+
         public ViewModel(ObservableCollection<MeasurementView> measurements)
         {
             using (var scope = AppContainer.Container.BeginLifetimeScope())

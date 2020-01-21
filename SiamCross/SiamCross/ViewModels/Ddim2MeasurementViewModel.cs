@@ -1,6 +1,6 @@
 ﻿using SiamCross.Models;
 using SiamCross.Models.Sensors;
-using SiamCross.Models.Sensors.Ddim2.Measurement;
+using SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement;
 using SiamCross.Services;
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,6 @@ namespace SiamCross.ViewModels
         public string Shop { get; set; }
         public string BufferPressure { get; set; }
         public string Comments { get; set; }
-        public string Rod { get; set; }
         public string DynPeriod { get; set; }
         public string ApertNumber { get; set; }
         public string Imtravel { get; set; }
@@ -151,7 +150,7 @@ namespace SiamCross.ViewModels
             if (!IsNumberValid(4000, 180000, measurementParams.DynPeriod))
                 _errorList.Add("Период качания должен быть в пределе от 4 до 180!");
             if (!IsNumberValid(1, 5, measurementParams.ApertNumber))
-                _errorList.Add("Номер отверстия должен быть в пределе от 1 до 7!");
+                _errorList.Add("Номер отверстия должен быть в пределе от 1 до 6!");
             if (!IsNumberValid(500, 9999, measurementParams.Imtravel))
                 _errorList.Add("Длина хода должна быть в пределе от 0,5 до 9,999!");
 

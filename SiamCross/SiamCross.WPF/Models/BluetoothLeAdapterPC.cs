@@ -127,29 +127,35 @@ namespace SiamCross.WPF.Models
                 {
                     continue;
                 }
-
-                GattCharacteristicsResult characteristicsResult =
-                    await service.GetCharacteristicsAsync();
-
-                if (characteristicsResult.Status == GattCommunicationStatus.Success)
+                try
                 {
-                    var characteristics = characteristicsResult.Characteristics;
-                    Console.WriteLine("Characteristics: " + Environment.NewLine);
-                    foreach (var characteristic in characteristics)
+                    GattCharacteristicsResult characteristicsResult =
+                        await service.GetCharacteristicsAsync();
+
+                    if (characteristicsResult.Status == GattCommunicationStatus.Success)
                     {
-                        Console.WriteLine(characteristic.Uuid + Environment.NewLine);
-                        if (characteristic.Uuid.ToString()
-                            .StartsWith("569a2001-b87f-490c-92cb-11ba5ea5167")) //характеристика записи
+                        var characteristics = characteristicsResult.Characteristics;
+                        Console.WriteLine("Characteristics: " + Environment.NewLine);
+                        foreach (var characteristic in characteristics)
                         {
-                            WriteCaracteristic = characteristic;
-                        }
-                        else if (characteristic.Uuid.ToString()
-                            .StartsWith("569a2000-b87f-490c-92cb-11ba5ea5167")) //характеристика чтения
-                        {
-                            characteristic.ValueChanged += CharacteristicValueChangedHandler;
-                            ReadCaracteristic = characteristic;
+                            Console.WriteLine(characteristic.Uuid + Environment.NewLine);
+                            if (characteristic.Uuid.ToString()
+                                .StartsWith("569a2001-b87f-490c-92cb-11ba5ea5167")) //характеристика записи
+                            {
+                                WriteCaracteristic = characteristic;
+                            }
+                            else if (characteristic.Uuid.ToString()
+                                .StartsWith("569a2000-b87f-490c-92cb-11ba5ea5167")) //характеристика чтения
+                            {
+                                characteristic.ValueChanged += CharacteristicValueChangedHandler;
+                                ReadCaracteristic = characteristic;
+                            }
                         }
                     }
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine(e.Message);
                 }
             }
         }

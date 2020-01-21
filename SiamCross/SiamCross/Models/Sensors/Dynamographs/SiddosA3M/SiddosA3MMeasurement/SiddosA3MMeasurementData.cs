@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SiamCross.Models.Sensors.Ddim2.Measurement
+namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
 {
-    public class Ddim2MeasurementData
+    public class SiddosA3MMeasurementData
     {
-        public Ddim2MeasurementReport Report { get; }
+        public SiddosA3MMeasurementReport Report { get; }
         public IReadOnlyList<byte> DynGraph { get; }
         public IReadOnlyList<byte> AccelerationGraph { get; }
 
@@ -14,7 +14,7 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
 
         public short ApertNumber { get; set; }
         public short ModelPump { get; set; }
-        public MeasurementSecondaryParameters SecondaryParameters {get; set;}
+        public MeasurementSecondaryParameters SecondaryParameters { get; set; }
 
         public string ErrorCode
         {
@@ -28,7 +28,7 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
 
         private readonly byte[] _errorCode;
 
-        public Ddim2MeasurementData(Ddim2MeasurementReport report,
+        public SiddosA3MMeasurementData(SiddosA3MMeasurementReport report,
                            short apertNumber,
                            short modelPump,
                            List<byte> dynGraph,
@@ -36,7 +36,7 @@ namespace SiamCross.Models.Sensors.Ddim2.Measurement
                            MeasurementSecondaryParameters secondaryParameters,
                            List<byte> accelerationGraph = null,
                            byte[] errorCode = null)
-        {         
+        {
             Report = report;
             ApertNumber = apertNumber;
             ModelPump = modelPump;

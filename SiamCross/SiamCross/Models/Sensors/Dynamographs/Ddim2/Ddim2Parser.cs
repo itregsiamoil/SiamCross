@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SiamCross.Models.Tools;
 
-namespace SiamCross.Models.Sensors
+namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 
 {
     public class Ddim2Parser

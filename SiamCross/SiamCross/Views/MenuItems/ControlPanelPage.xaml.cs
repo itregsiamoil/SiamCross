@@ -40,6 +40,14 @@ namespace SiamCross.Views.MenuItems
                                 new Ddin2MeasurementPage(sensorData), true);
                         }
                     }
+                    else if (sensorData.Name.Contains("SIDDOSA3M"))
+                    {
+                        if (!IsMeasuring(sensorData))
+                        {
+                            App.NavigationPage.Navigation.PushModalAsync(
+                                new SiddosA3MMeasurementPage(sensorData), true);
+                        }
+                    }
                 }
             }
         }

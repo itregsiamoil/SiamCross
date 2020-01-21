@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SiamCross.Models.Sensors.Ddim2.Measurement
+namespace SiamCross.Models.Sensors.Dynamographs.Shared
 {
-    public enum Ddim2MeasurementStatus
+    public enum DynamographMeasurementStatus
     {
         Empty = 0,
         Busy = 1,

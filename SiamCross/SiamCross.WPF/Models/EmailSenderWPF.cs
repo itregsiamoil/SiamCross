@@ -12,10 +12,10 @@ namespace SiamCross.WPF.Models
 {
     public class EmailSenderWPF : IEmailSender
     {
-        public Task SendEmail(string to, string subject, string text)
+        public void SendEmail(string to, string subject, string text)
         {
-            return new Task(() =>
-            {
+            //return new Task(() =>
+            //{
                 MailAddress from = new MailAddress(Settings.Instance.FromAddress);
                 MailAddress toMail = new MailAddress(Settings.Instance.ToAddress);
                 MailMessage m = new MailMessage(from, toMail);
@@ -29,13 +29,13 @@ namespace SiamCross.WPF.Models
                 smtp.EnableSsl = true;
                 smtp.Send(m);
                 //smtp.SendAsync(m, null);
-            });
+            //});
         }
 
-        public Task SendEmailWithFile(string filename)
+        public void SendEmailWithFile(string filename)
         {
-            return new Task(() =>
-            {
+            //return new Task(() =>
+            //{
                 var path = Path.Combine(Directory.GetCurrentDirectory(), filename);
 
                 if (!File.Exists(path)) return;
@@ -53,7 +53,7 @@ namespace SiamCross.WPF.Models
                     Settings.Instance.Password);
                 smtp.EnableSsl = true;
                 smtp.Send(m);
-            });
+            //});
         }
     }
 }

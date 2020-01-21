@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using Dapper;
-using Mono.Data.Sqlite;
 using SiamCross.AppObjects;
 using SiamCross.DataBase;
 using SiamCross.DataBase.DataBaseModels;
@@ -9,9 +8,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SiamCross.Services
 {
@@ -40,6 +36,7 @@ namespace SiamCross.Services
             _database.Open();
             CreateDdim2Table();
             CreateDdin2Table();
+            CreateSiddosA3MTable();
         }
 
         private void NonQueryCheck()
@@ -63,6 +60,40 @@ namespace SiamCross.Services
 
             _database.Execute(@"
             CREATE TABLE IF NOT EXISTS [Ddim2Measurement] (
+                [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                [MaxWeight] REAL NOT NULL,
+                [MinWeight] REAL NOT NULL,
+                [Travel] REAL NOT NULL,
+                [Period] REAL NOT NULL,
+                [Step] REAL NOT NULL,
+                [WeightDiscr] REAL NOT NULL,
+                [TimeDiscr] REAL NOT NULL,
+                [DynGraph] BLOB,
+                [AccelerationGraph] BLOB,
+                [Field] NVARCHAR(128) NOT NULL,
+                [Well] NVARCHAR(128) NOT NULL,
+                [Bush] NVARCHAR(128) NOT NULL,
+                [Shop] NVARCHAR(128) NOT NULL,
+                [BufferPressure] NVARCHAR(128) NOT NULL,
+                [Comment] NVARCHAR(128) NOT NULL,
+                [Name] NVARCHAR(128) NOT NULL,
+                [DateTime] TEXT NOT NULL,
+                [ErrorCode] NVARCHAR(128),
+                [ApertNumber] REAL NOT NULL,
+                [ModelPump] REAL NOT NULL,
+                [MaxBarbellWeight] REAL NOT NULL,
+                [MinBarbellWeight] REAL NOT NULL,
+                [TravelLength] REAL NOT NULL,
+                [SwingCount] REAL NOT NULL
+            )");
+        }
+
+        private void CreateSiddosA3MTable()
+        {
+            NonQueryCheck();
+
+            _database.Execute(@"
+            CREATE TABLE IF NOT EXISTS [SiddosA3MMeasurement] (
                 [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                 [MaxWeight] REAL NOT NULL,
                 [MinWeight] REAL NOT NULL,
@@ -125,6 +156,8 @@ namespace SiamCross.Services
                 [SwingCount] REAL NOT NULL
             )");
         }
+
+        /// /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public int SaveDdim2Measurement(Ddim2Measurement ddim2Measurement)
         {
@@ -380,6 +413,134 @@ namespace SiamCross.Services
             NonQueryCheck();
             return _database.Query<Ddin2Measurement>(
                 "SELECT * FROM Ddin2Measurement WHERE Id =" + id).First();
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public int SaveSiddosA3MMeasurement(SiddosA3MMeasurement siddosA3MMeasurement)
+        {
+            NonQueryCheck();
+
+            if (siddosA3MMeasurement.Id == 0)
+            {
+                siddosA3MMeasurement.Id = (int)_database.Query(string.Format(
+                    "SELECT COUNT(1) as 'Count' FROM SiddosA3MMeasurement")).First().Count + 1;
+            }
+
+            var rows = _database.Query(string.Format(
+            "SELECT COUNT(1) as 'Count' FROM SiddosA3MMeasurement WHERE Id = '{0}'",
+            siddosA3MMeasurement.Id));
+
+            if (rows.First().Count > 0)
+            {
+                UpdateSiddosA3MMeasurement(siddosA3MMeasurement);
+                return siddosA3MMeasurement.Id;
+            }
+
+            string sql = "INSERT INTO SiddosA3MMeasurement" +
+                    "(MaxWeight, MinWeight, Travel, Period, Step, WeightDiscr, TimeDiscr, DynGraph," +
+                    " AccelerationGraph, Field, Well, Bush, Shop, BufferPressure, Comment, " +
+                    "Name, DateTime, ErrorCode, ApertNumber, ModelPump, MaxBarbellWeight," +
+                    " MinBarbellWeight, TravelLength, SwingCount) Values (@MaxWeight, @MinWeight," +
+                    " @Travel, @Period, @Step, @WeightDiscr, @TimeDiscr, @DynGraph," +
+                    " @AccelerationGraph, @Field, @Well, @Bush, @Shop, @BufferPressure, @Comment, " +
+                    "@Name, @DateTime, @ErrorCode, @ApertNumber, @ModelPump, @MaxBarbellWeight," +
+                    " @MinBarbellWeight, @TravelLength, @SwingCount);";
+
+            var affectedRows = _database.Execute(sql, new
+            {
+                MaxWeight = siddosA3MMeasurement.MaxWeight,
+                MinWeight = siddosA3MMeasurement.MinWeight,
+                Travel = siddosA3MMeasurement.Travel,
+                Period = siddosA3MMeasurement.Period,
+                Step = siddosA3MMeasurement.Step,
+                WeightDiscr = siddosA3MMeasurement.WeightDiscr,
+                TimeDiscr = siddosA3MMeasurement.TimeDiscr,
+                DynGraph = siddosA3MMeasurement.DynGraph,
+                AccelerationGraph = siddosA3MMeasurement.AccelerationGraph,
+                Field = siddosA3MMeasurement.Field,
+                Well = siddosA3MMeasurement.Well,
+                Bush = siddosA3MMeasurement.Bush,
+                Shop = siddosA3MMeasurement.Shop,
+                BufferPressure = siddosA3MMeasurement.BufferPressure,
+                Comment = siddosA3MMeasurement.Comment,
+                Name = siddosA3MMeasurement.Name,
+                DateTime = siddosA3MMeasurement.DateTime,
+                ErrorCode = siddosA3MMeasurement.ErrorCode,
+                ApertNumber = siddosA3MMeasurement.ApertNumber,
+                ModelPump = siddosA3MMeasurement.ModelPump,
+                MaxBarbellWeight = siddosA3MMeasurement.MaxBarbellWeight,
+                MinBarbellWeight = siddosA3MMeasurement.MinBarbellWeight,
+                TravelLength = siddosA3MMeasurement.TravelLength,
+                SwingCount = siddosA3MMeasurement.SwingCount
+            });
+
+            return siddosA3MMeasurement.Id;
+        }
+
+        private void UpdateSiddosA3MMeasurement(SiddosA3MMeasurement siddosA3MMeasurement)
+        {
+            string sql = "UPDATE SiddosA3MMeasurement SET " +
+                "MaxWeight = @MaxWeight, MinWeight = @MinWeight, Travel = @Travel," +
+                " Period = @Period, Step = @Step, WeightDiscr = @WeightDiscr," +
+                " TimeDiscr = @TimeDiscr, DynGraph = @DynGraph," +
+                " AccelerationGraph = @AccelerationGraph, Field = @Field," +
+                " Well = @Well, Bush = @Bush, Shop = @Shop, BufferPressure = @BufferPressure," +
+                " Comment = @Comment, Name = @Name, DateTime = @DateTime," +
+                " ErrorCode = @ErrorCode, ApertNumber = @ApertNumber," +
+                " ModelPump = @ModelPump, MaxBarbellWeight = @MaxBarbellWeight," +
+                " MinBarbellWeight = @MinBarbellWeight, TravelLength = @TravelLength, SwingCount = @SwingCount" +
+                " WHERE Id = @Id;";
+
+            var affectedRows = _database.Execute(sql, new
+            {
+                MaxWeight = siddosA3MMeasurement.MaxWeight,
+                MinWeight = siddosA3MMeasurement.MinWeight,
+                Travel = siddosA3MMeasurement.Travel,
+                Period = siddosA3MMeasurement.Period,
+                Step = siddosA3MMeasurement.Step,
+                WeightDiscr = siddosA3MMeasurement.WeightDiscr,
+                TimeDiscr = siddosA3MMeasurement.TimeDiscr,
+                DynGraph = siddosA3MMeasurement.DynGraph,
+                AccelerationGraph = siddosA3MMeasurement.AccelerationGraph,
+                Field = siddosA3MMeasurement.Field,
+                Well = siddosA3MMeasurement.Well,
+                Bush = siddosA3MMeasurement.Bush,
+                Shop = siddosA3MMeasurement.Shop,
+                BufferPressure = siddosA3MMeasurement.BufferPressure,
+                Comment = siddosA3MMeasurement.Comment,
+                Name = siddosA3MMeasurement.Name,
+                DateTime = siddosA3MMeasurement.DateTime,
+                ErrorCode = siddosA3MMeasurement.ErrorCode,
+                ApertNumber = siddosA3MMeasurement.ApertNumber,
+                ModelPump = siddosA3MMeasurement.ModelPump,
+                MaxBarbellWeight = siddosA3MMeasurement.MaxBarbellWeight,
+                MinBarbellWeight = siddosA3MMeasurement.MinBarbellWeight,
+                TravelLength = siddosA3MMeasurement.TravelLength,
+                SwingCount = siddosA3MMeasurement.SwingCount,
+                Id = siddosA3MMeasurement.Id
+            });
+        }
+
+        public void RemoveSiddosA3MMeasurement(int removebleId)
+        {
+            NonQueryCheck();
+
+            _database.Execute("DELETE FROM SiddosA3MMeasurement WHERE Id =" + removebleId);
+        }
+
+        public IEnumerable<SiddosA3MMeasurement> GetSiddosA3MMeasurements()
+        {
+            NonQueryCheck();
+            return _database.Query<SiddosA3MMeasurement>(
+                "SELECT * FROM SiddosA3MMeasurement");
+        }
+
+        public SiddosA3MMeasurement GetSiddosA3MMeasurementById(int id)
+        {
+            NonQueryCheck();
+            return _database.Query<SiddosA3MMeasurement>(
+                "SELECT * FROM SiddosA3MMeasurement WHERE Id =" + id).First();
         }
     }
 }
