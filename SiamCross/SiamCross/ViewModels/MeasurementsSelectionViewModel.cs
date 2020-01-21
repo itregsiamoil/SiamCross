@@ -120,9 +120,10 @@ namespace SiamCross.ViewModels
                 await Task.Run(() =>
                 {
                     var paths = SaveXmlsReturnPaths();
-                    
-                    EmailService.Instance.SendEmailWithFiles("Измерения", 
-                        "Письмо с измерениями", paths);
+
+                    EmailService.Instance.SendEmailWithFiles("Siam Measurements",
+                        "Hello!\n\nSiamCompany Telemetry Transfer Service", 
+                        paths);
                 });
 
                 DependencyService.Get<IToast>()
@@ -191,10 +192,15 @@ namespace SiamCross.ViewModels
                 "Введите адресат назначения!");
             ValidateParameter(Settings.Instance.SmtpAddress,
                 "Введите адрес SMTP сервера!");
-            ValidateParameter(Settings.Instance.Username,
+
+            if (Settings.Instance.NeedAuthorization)
+            {
+                ValidateParameter(Settings.Instance.Username,
                 "Введите имя пользователя!");
-            ValidateParameter(Settings.Instance.Password,
-                "Введите пароль!");
+                ValidateParameter(Settings.Instance.Password,
+                    "Введите пароль!");
+            }
+            
 
             if (_errorList.Count != 0)
             {
