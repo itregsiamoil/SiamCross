@@ -93,7 +93,7 @@ namespace SiamCross.ViewModels
                     var paths = SaveXmlsReturnPaths();
                     
                     EmailService.Instance.SendEmailWithFiles("Измерения", 
-                        "Писмьо с измерениями", paths);
+                        "Письмо с измерениями", paths);
                 });
 
                 DependencyService.Get<IToast>()
