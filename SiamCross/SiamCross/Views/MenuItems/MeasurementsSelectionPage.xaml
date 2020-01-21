@@ -6,8 +6,12 @@
              mc:Ignorable="d"
              x:Class="SiamCross.Views.MenuItems.MeasurementsSelectionPage"
              Title="{Binding Title, Mode=TwoWay}">
+    <!--Icons made by
+    <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from
+    <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>-->
     <ContentPage.ToolbarItems>
         <ToolbarItem  IconImageSource="send.png" Command="{Binding SendCommand}"/>
+        <ToolbarItem IconImageSource="save.png" Command="{Binding SaveCommand}"/>
         <ToolbarItem IconImageSource="trashcan.png" Command="{Binding DeleteCommand}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>

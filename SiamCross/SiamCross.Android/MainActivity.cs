@@ -27,7 +27,8 @@ namespace SiamCross.Droid
             var locationPermissions = new[]
 {
                 Manifest.Permission.AccessCoarseLocation,
-                Manifest.Permission.AccessFineLocation
+                Manifest.Permission.AccessFineLocation,
+                Manifest.Permission.WriteExternalStorage
             };
 
             // check if the app has permission to access coarse location
@@ -38,10 +39,14 @@ namespace SiamCross.Droid
             var fineLocationPermissionGranted =
                 ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation);
 
+            var externalFilesPermissionGranted =
+                ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage);
+
             // if either is denied permission, request permission from the user
             const int locationPermissionsRequestCode = 1000;
             if (coarseLocationPermissionGranted == Permission.Denied ||
-                fineLocationPermissionGranted == Permission.Denied)
+                fineLocationPermissionGranted == Permission.Denied || 
+                externalFilesPermissionGranted == Permission.Denied)
             {
                 ActivityCompat.RequestPermissions(this, locationPermissions, locationPermissionsRequestCode);
             }
