@@ -55,5 +55,10 @@ namespace SiamCross.WPF.Models
                 smtp.Send(m);
             //});
         }
+
+        public void SendEmailWithFiles(string subject, string text, string[] filenames)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

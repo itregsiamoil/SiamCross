@@ -42,7 +42,7 @@ namespace SiamCross.Views.MenuItems
                     }
                     else if (sensorData.Name.Contains("SIDDOSA3M"))
                     {
-                        if (!IsMeasuring(sensorData))
+                        if (CanOpenModal(sensorData))
                         {
                             App.NavigationPage.Navigation.PushModalAsync(
                                 new SiddosA3MMeasurementPage(sensorData), true);

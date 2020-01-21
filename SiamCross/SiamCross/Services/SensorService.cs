@@ -1,4 +1,7 @@
-﻿using SiamCross.DataBase.DataBaseModels;
+﻿using Autofac;
+using Plugin.Messaging;
+using SiamCross.AppObjects;
+using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Ddin2.Measurement;
@@ -9,9 +12,11 @@ using SiamCross.Models.Tools;
 using SiamCross.Views;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace SiamCross.Services
 {
