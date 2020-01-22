@@ -3,11 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.MenuItems.DirectoryPanelPage"
              Title="Справочник">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Добавить" Command="{Binding AddField}"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Справочник"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <ListView ItemsSource="{Binding FieldDictionary}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                                <Label Text="{Binding Key}: {Binding Value}"/>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

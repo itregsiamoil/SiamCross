@@ -6,7 +6,6 @@ using SiamCross.Models;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Ddin2.Measurement;
 using SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement;
-using SiamCross.Models.Sensors.Dynamographs.SiddosA3M;
 using SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement;
 using SiamCross.Models.Tools;
 using SiamCross.Views;

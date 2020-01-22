@@ -56,6 +56,8 @@
     </AndroidLinkSkip>
     <AndroidUseAapt2>false</AndroidUseAapt2>
     <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
+    <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
+    <AndroidSupportedAbis>armeabi-v7a;x86;x86_64;arm64-v8a</AndroidSupportedAbis>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
@@ -124,6 +126,7 @@
     <Compile Include="Models\DatabaseCreatorAndroid.cs" />
     <Compile Include="Models\EmailSenderAndroid.cs" />
     <Compile Include="Models\FileManagerAndroid.cs" />
+    <Compile Include="Models\HandbookManagerAndroid.cs" />
     <Compile Include="Models\SQLiteAndroid.cs" />
     <Compile Include="Models\XmlSaverAndroid.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
