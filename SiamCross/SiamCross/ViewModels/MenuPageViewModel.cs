@@ -32,35 +32,93 @@ namespace SiamCross.ViewModels
             App.NavigationPage.Navigation.PopToRootAsync();
             App.MenuIsPresented = false;
         }
+        /// <summary>
+        /// Проверяет на соответствие параметр и
+        /// тип последней страницы в стеке навигации.
+        /// Если страничка уже открыта, возвращает false
+        /// </summary>
+        /// <param name="type">Тип проверяемой страницы</param>
+        /// <returns></returns>
+        private bool CanOpenPage(Type type)
+        {
+            var stack = App.NavigationPage.Navigation.NavigationStack;
+            if (stack[stack.Count - 1].GetType() != type)
+                return true;
+            return false;
+        }
 
         void GoSearch(object obj)
         {
-            App.NavigationPage.Navigation.PushAsync(new SearchPanelPage()); 
-            App.MenuIsPresented = false;
+            if (CanOpenPage(typeof(SearchPanelPage)))
+            {
+                App.NavigationPage.Navigation.PushAsync(new SearchPanelPage());
+                App.MenuIsPresented = false;
+            }
         }
 
         void GoMeasuring(object obj)
         {
-            App.NavigationPage.Navigation.PushAsync(new MeasurementsPage());
-            App.MenuIsPresented = false;
+            if (CanOpenPage(typeof(MeasurementsPage)))
+            {
+                App.NavigationPage.Navigation.PushAsync(new MeasurementsPage());
+                App.MenuIsPresented = false;
+            }
         }
 
         void GoDirectory(object obj)
         {
-            App.NavigationPage.Navigation.PushAsync(new DirectoryPanelPage());
-            App.MenuIsPresented = false;
+            if (CanOpenPage(typeof(DirectoryPanelPage)))
+            {
+                App.NavigationPage.Navigation.PushAsync(new DirectoryPanelPage());
+                App.MenuIsPresented = false;
+            }
         }
 
         void GoSettings(object obj)
         {
-            App.NavigationPage.Navigation.PushAsync(new SettingsPanelPage());
-            App.MenuIsPresented = false;
+            if (CanOpenPage(typeof(SettingsPanelPage)))
+            {
+                App.NavigationPage.Navigation.PushAsync(new SettingsPanelPage());
+                App.MenuIsPresented = false;
+            }
         }
 
         void GoAbout(object obj)
         {
-            App.NavigationPage.Navigation.PushAsync(new AboutPanelPage());
-            App.MenuIsPresented = false;
+            if (CanOpenPage(typeof(AboutPanelPage)))
+            {
+                App.NavigationPage.Navigation.PushAsync(new AboutPanelPage());
+                App.MenuIsPresented = false;
+            }
         }
+        //void GoSearch(object obj)
+        //{
+        //    App.NavigationPage.Navigation.PushAsync(new SearchPanelPage()); 
+        //    App.MenuIsPresented = false;
+        //}
+
+        //void GoMeasuring(object obj)
+        //{
+        //    App.NavigationPage.Navigation.PushAsync(new MeasurementsPage());
+        //    App.MenuIsPresented = false;
+        //}
+
+        //void GoDirectory(object obj)
+        //{
+        //    App.NavigationPage.Navigation.PushAsync(new DirectoryPanelPage());
+        //    App.MenuIsPresented = false;
+        //}
+
+        //void GoSettings(object obj)
+        //{
+        //    App.NavigationPage.Navigation.PushAsync(new SettingsPanelPage());
+        //    App.MenuIsPresented = false;
+        //}
+
+        //void GoAbout(object obj)
+        //{
+        //    App.NavigationPage.Navigation.PushAsync(new AboutPanelPage());
+        //    App.MenuIsPresented = false;
+        //}
     }
 }
