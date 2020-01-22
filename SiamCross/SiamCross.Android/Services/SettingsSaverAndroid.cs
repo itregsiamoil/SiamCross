@@ -3,6 +3,7 @@ using SiamCross.Droid.Services;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using System.IO;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(SettingsSaverAndroid))]
@@ -21,24 +22,21 @@ namespace SiamCross.Droid.Services
                         System.Environment.SpecialFolder.Personal), _name);
         }
 
-        public bool DoesSettingsFileExists()
-        {
-            return File.Exists(_path);
-        }
-
-        public SettingsParameters ReadSettings()
+        /// <summary>
+        /// Прочитать настройки из json-файла.
+        /// </summary>
+        /// <returns>Настройки или null</returns>
+        public async Task<SettingsParameters> ReadSettings()
         {
             SettingsParameters result = null;
 
-            if (!DoesSettingsFileExists()) return result;
+            if (!File.Exists(_path)) return null;
 
             var file = new StreamReader(_path);
-
-            if (file == null) return result;
-
+            
             while (!file.EndOfStream)
             {
-                var line = file.ReadLine();
+                var line = await file.ReadLineAsync();
 
                 object item = JsonConvert.DeserializeObject(
                     line, _jsonSettings);
@@ -54,13 +52,13 @@ namespace SiamCross.Droid.Services
             return result;
         }
 
-        public void SaveSettings(SettingsParameters settings)
+        public async Task SaveSettings(SettingsParameters settings)
         {
             using (var file = new StreamWriter(_path))
             {
                 var jsonString = JsonConvert.SerializeObject(settings,
                                                         _jsonSettings);
-                file.WriteLine(jsonString);
+                await file.WriteLineAsync(jsonString);
             }
         }
 

@@ -3,6 +3,7 @@ using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.WPF.Services;
 using System.IO;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(SettingsSaverWPF))]
@@ -55,6 +56,16 @@ namespace SiamCross.WPF.Services
                                         _jsonSettings);
                 file.WriteLine(jsonString);
             }
+        }
+
+        Task ISettingsSaver.SaveSettings(SettingsParameters settings)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        Task<SettingsParameters> ISettingsSaver.ReadSettings()
+        {
+            throw new System.NotImplementedException();
         }
 
         protected static readonly JsonSerializerSettings

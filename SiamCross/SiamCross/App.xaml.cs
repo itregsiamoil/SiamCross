@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Autofac.Core;
 using SiamCross.AppObjects;
+using SiamCross.Models.Tools;
 using SiamCross.Views;
 using SiamCross.Views.MenuItems;
 using System;
@@ -44,9 +45,10 @@ namespace SiamCross
             CallMain();
         }
 
-        protected override void OnStart()
+        protected override async void OnStart()
         {
             // Handle when your app starts
+            await Settings.Instance.Initialize();
         }
 
         protected override void OnSleep()

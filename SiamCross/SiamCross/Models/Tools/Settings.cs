@@ -2,6 +2,7 @@
 using SiamCross.AppObjects;
 using SiamCross.Services;
 using System;
+using System.Threading.Tasks;
 
 namespace SiamCross.Models.Tools
 {
@@ -17,27 +18,19 @@ namespace SiamCross.Models.Tools
         private Settings()
         {
             _settingsSaver = AppContainer.Container.Resolve<ISettingsSaver>();
+        }
 
-            if (_settingsSaver.DoesSettingsFileExists())
+        public async Task Initialize()
+        {
+            var settings = await _settingsSaver.ReadSettings();
+            if (settings != null) //Если файл настроек не пустой
             {
-                var settings = _settingsSaver.ReadSettings();
-                if (settings != null) //Если файл настроек не пустой
-                {
-                    FromAddress = settings.FromAddress;
-                    ToAddress = settings.ToAddress;
-                    SmtpAddress = settings.SmtpAddress;
-                    Port = settings.Port;
-                    Username = settings.Username;
-                    Password = settings.Password;
-                }
-                else
-                {
-
-                }
-            }
-            else
-            {
-
+                FromAddress = settings.FromAddress;
+                ToAddress = settings.ToAddress;
+                SmtpAddress = settings.SmtpAddress;
+                Port = settings.Port;
+                Username = settings.Username;
+                Password = settings.Password;
             }
         }
 
@@ -52,9 +45,9 @@ namespace SiamCross.Models.Tools
                 Password));
         }
 
-        public void SaveSettings()
+        public async Task SaveSettings()
         {
-            _settingsSaver.SaveSettings(new SettingsParameters(
+           await  _settingsSaver.SaveSettings(new SettingsParameters(
                 FromAddress,
                 ToAddress,
                 SmtpAddress,

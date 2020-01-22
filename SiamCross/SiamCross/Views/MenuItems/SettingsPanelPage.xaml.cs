@@ -19,10 +19,10 @@ namespace SiamCross.Views.MenuItems
             PasswordEntry.IsEnabled = false;
         }
 
-        protected override void OnDisappearing()
+        protected override async void OnDisappearing()
         {
             base.OnDisappearing();
-            Settings.Instance.SaveSettings();
+            await Settings.Instance.SaveSettings();
         }
 
         private void CheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)

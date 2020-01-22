@@ -1,14 +1,12 @@
 ﻿using SiamCross.Models.Tools;
+using System.Threading.Tasks;
 
 namespace SiamCross.Services
 {
-    //Связан с синглтоном Settings
     public interface ISettingsSaver
     {
-        void SaveSettings(SettingsParameters settings);
+        Task SaveSettings(SettingsParameters settings);
 
-        bool DoesSettingsFileExists();
-
-        SettingsParameters ReadSettings();
+        Task<SettingsParameters> ReadSettings();
     }
 }
