@@ -47,6 +47,22 @@ namespace SiamCross.Services
             SensorDataChanged?.Invoke(data);
         }
 
+        public async Task Initinalize()
+        {
+            var savedSensors = 
+                await SensorsSaverService.Instance.ReadSavedSensors();
+
+            foreach (var device in savedSensors)
+            {
+                var addebleSensor = SensorFactory.CreateSensor(device);
+                if (addebleSensor != null)
+                {
+                    _sensors.Add(addebleSensor);
+                    SensorAdded?.Invoke(addebleSensor.SensorData);
+                }
+            }
+        }
+
         public void AddSensor(ScannedDeviceInfo deviceInfo)
         {
             foreach(var sensor in Sensors)
@@ -67,14 +83,11 @@ namespace SiamCross.Services
             
             SensorAdded?.Invoke(addebleSensor.SensorData);
 
-            new Thread(async () =>
-            {
-                await SaveDevicesService.SaveDevices(
-                    _sensors.Select(s => s?.ScannedDeviceInfo));
-            }).Start();
+            MessagingCenter.Send(this, "Refresh saved sensors", 
+                _sensors.Select(s => s.ScannedDeviceInfo));
         }
 
-        public async Task DeleteSensor(int id)
+        public void DeleteSensor(int id)
         {
             var sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
             if (sensor != null)
@@ -83,37 +96,11 @@ namespace SiamCross.Services
                 _sensors.Remove(sensor);
                 sensor.Dispose();
             }
-            new Thread(async () =>
-            {
-                await SaveDevicesService.SaveDevices(
-                    _sensors.Select(s => s?.ScannedDeviceInfo));
-            }).Start();
+            MessagingCenter.Send(this, "Refresh saved sensors",
+                _sensors.Select(s => s.ScannedDeviceInfo));
         }
 
-        public ISaveDevicesService SaveDevicesService { get; set; }
         public IFileManager AppCotainer { get; private set; }
-
-        public void LoadSavedDevices()
-        {
-            if (SaveDevicesService == null) return;
-
-            var thread = new Thread(async () => 
-            {
-                var savedDevices = await SaveDevicesService.LoadDevices();
-
-                foreach (var device in savedDevices)
-                {
-                    var addebleSensor = SensorFactory.CreateSensor(device);
-                    if (addebleSensor == null)
-                    {
-                        return;
-                    }
-                    _sensors.Add(addebleSensor);
-                    SensorAdded?.Invoke(addebleSensor.SensorData);
-                }
-            });
-            thread.Start();
-        }
 
         public async Task StartMeasurementOnSensor(int id, object parameters)
         {

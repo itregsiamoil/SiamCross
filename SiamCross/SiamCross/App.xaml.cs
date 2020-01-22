@@ -2,6 +2,7 @@
 using Autofac.Core;
 using SiamCross.AppObjects;
 using SiamCross.Models.Tools;
+using SiamCross.Services;
 using SiamCross.Views;
 using SiamCross.Views.MenuItems;
 using System;
@@ -49,6 +50,7 @@ namespace SiamCross
         {
             // Handle when your app starts
             await Settings.Instance.Initialize();
+            await SensorService.Instance.Initinalize();
         }
 
         protected override void OnSleep()

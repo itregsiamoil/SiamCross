@@ -11,7 +11,7 @@ namespace SiamCross.ViewModels
     {
         public ObservableCollection<SensorData> SensorsData { get; }
 
-        public ControlPanelPageViewModel(ISaveDevicesService saveDevicesService)
+        public ControlPanelPageViewModel()
         {
             SensorsData = new ObservableCollection<SensorData>();
             foreach (var sensor in SensorService.Instance.Sensors)
@@ -21,8 +21,6 @@ namespace SiamCross.ViewModels
 
             SensorService.Instance.SensorAdded += SensorAdded;
             SensorService.Instance.SensorDataChanged += SensorsDataChanged;
-            SensorService.Instance.SaveDevicesService = saveDevicesService;
-            SensorService.Instance.LoadSavedDevices();
         }
 
         public ICommand DeleteSensorCommand
@@ -30,7 +28,7 @@ namespace SiamCross.ViewModels
             get => new Command<int>(DeleteSensorHandler);
         }
 
-        private async void DeleteSensorHandler(int id)
+        private void DeleteSensorHandler(int id)
         {
             var sensor = SensorService.Instance.Sensors
                 .SingleOrDefault(s => s.SensorData.Id == id);
@@ -43,34 +41,21 @@ namespace SiamCross.ViewModels
                     {
                         SensorsData.Remove(sensorData);
                     }
-                    await SensorService.Instance.DeleteSensor(id);
+                    SensorService.Instance.DeleteSensor(id);
                 }
             }
         }
 
         private void SensorAdded(SensorData sensorData)
         {
-            SensorsData.Add(sensorData);
+            if (!SensorsData.Contains(sensorData))
+            {
+                SensorsData.Add(sensorData);
+            }
         }
 
         public void SensorsDataChanged(SensorData data)
         {
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                //if (!data.FirstTime) return;
-
-                //for (int i = 0; i < SensorsData.Count; i++)
-                //{
-                //    if (data.Id == SensorsData[i].Id)
-                //    {
-                //        SensorsData[i] = data;
-                //        data.FirstTime = false;
-                //    }
-                //}
-
-                ////  sensorData.Status = data.Status;
-                //NotifyPropertyChanged(nameof(SensorsData));
-            });
             
         }
     }
