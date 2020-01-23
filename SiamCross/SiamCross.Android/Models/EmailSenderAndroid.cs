@@ -32,6 +32,7 @@ namespace SiamCross.Droid.Models
 
                 if (Settings.Instance.NeedAuthorization)
                 {
+
                     smtp = new SmtpClient(Settings.Instance.SmtpAddress,
                                           Settings.Instance.Port)
                     {
