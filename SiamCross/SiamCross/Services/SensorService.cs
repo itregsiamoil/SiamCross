@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Plugin.Messaging;
 using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
@@ -162,59 +161,6 @@ namespace SiamCross.Services
 
                     //   EmailService.Instance.SendEmailWithFile(name1);
 
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void SendEmail(string name)
-        {
-            switch (Device.RuntimePlatform)
-            {
-                case Device.WPF:
-                    var path = Path.Combine(
-                        Directory.GetCurrentDirectory(), name);
-
-                    if (File.Exists(path))
-                    {
-                        var emailMessenger =
-                            CrossMessaging.Current.EmailMessenger;
-
-                        if (emailMessenger.CanSendEmail)
-                        {
-                            var email = new EmailMessageBuilder()
-                            .To("gelcen777@gmail.com")
-                            .Subject("Xamarin Messaging Plugin")
-                            .Body("Well hello there from Xam.Messaging.Plugin")
-                            .WithAttachment(path, "measurement")
-                            .Build();
-
-                            emailMessenger.SendEmail(email);
-                        }
-                    }
-                    break;
-                case Device.Android:
-                    var file = Path.Combine(
-                        System.Environment.GetFolderPath(
-                        System.Environment.SpecialFolder.Personal), name);
-
-                    if (file != null && File.Exists(file))
-                    {
-                        var emailMessenger = 
-                            CrossMessaging.Current.EmailMessenger;
-
-                        if (emailMessenger.CanSendEmail)
-                        {
-                            var email = new EmailMessageBuilder()
-                            .To("gelcen777@gmail.com")
-                            .Subject("Xamarin Messaging Plugin")
-                            .Body("Well hello there from Xam.Messaging.Plugin")
-                            .WithAttachment(file, "measurement")
-                            .Build();
-                            emailMessenger.SendEmail(email);
-                        }
-                    }
                     break;
                 default:
                     break;
