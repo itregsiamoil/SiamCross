@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SiamCross.Views.AddFieldPage"
+             xmlns:local="clr-namespace:SiamCross.Views">
+    <ContentPage.Content>
+        <TableView Intent="Data" 
+               HasUnevenRows="True" 
+               HorizontalOptions="CenterAndExpand">
+            <TableRoot>
+                <TableSection Title="Новое месторождение">
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="Название"></Label>
+                            <Editor Text="{Binding FieldName}"></Editor>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="Код"></Label>
+                            <Entry Text="{Binding FieldCode, Mode=TwoWay}" 
+                               Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Button 
+                            Text="Ок"
+                            Command="{Binding Add}"
+                            Margin="20"
+                            HorizontalOptions="CenterAndExpand"></Button>
+                        </StackLayout>
+                    </ViewCell>
+                </TableSection>
+            </TableRoot>
+        </TableView>
+    </ContentPage.Content>
+</ContentPage>
