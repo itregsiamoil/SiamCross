@@ -2,23 +2,33 @@
 <ContentPage BackgroundColor="White"
          xmlns="http://xamarin.com/schemas/2014/forms" 
          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+         xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
          x:Class="SiamCross.Views.MenuPage">
 
     <ContentPage.Content>
-        <StackLayout BackgroundColor="White" Padding ="10 , 30 , 10, 10">
-            <Label Text="SIAM SERVICE" FontSize="Large"  TextColor="White" BackgroundColor="Blue"/>
-            <Button Text="Панель управления" BackgroundColor="White" TextColor="Black" HorizontalOptions="StartAndExpand" Command="{Binding GoControlPanel}" />
-            <BoxView HeightRequest="0.5" HorizontalOptions="FillAndExpand" BackgroundColor="Gray"/>
-            <Button Text="Поиск" BackgroundColor="White" TextColor="Black" HorizontalOptions="StartAndExpand" Command="{Binding GoSearchPanel}" />
-            <BoxView HeightRequest="0.5" HorizontalOptions="FillAndExpand" BackgroundColor="Gray"/>
-            <Button Text="Измерения" TextColor="Black" BackgroundColor="White" HorizontalOptions="StartAndExpand" Command="{Binding GoMeasuringPanel}"/>
-            <BoxView HeightRequest="0.5" HorizontalOptions="FillAndExpand" BackgroundColor="Gray"/>
-            <Button Text="Справочник" BackgroundColor="White" TextColor="Black" HorizontalOptions="StartAndExpand" Command="{Binding GoDirectoryPanel}" />
-            <BoxView HeightRequest="0.5" HorizontalOptions="FillAndExpand" BackgroundColor="Gray"/>
-            <Button Text="Настройки" BackgroundColor="White" TextColor="Black" HorizontalOptions="StartAndExpand" Command="{Binding GoSettingsPanel}" />
-            <BoxView HeightRequest="0.5" HorizontalOptions="FillAndExpand" BackgroundColor="Gray"/>
-            <Button Text="О приложении" TextColor="Black" BackgroundColor="White" HorizontalOptions="StartAndExpand" Command="{Binding GoAboutPanel}"/>
-            <BoxView HeightRequest="0.5" HorizontalOptions="FillAndExpand" BackgroundColor="Gray"/>
+        <StackLayout BackgroundColor="White" 
+                     rainbows:DebugRainbow.IsDebug="False"
+                     >
+            <!--Padding ="10 , 30 , 10, 10"-->
+            <Label Text="SIAM SERVICE" 
+                   FontSize="Large"
+                   
+                   TextColor="CornflowerBlue" 
+                   Margin="5"/>
+            <ListView ItemsSource="{Binding MenuItems}"
+                      x:Name="menuListView"
+                      ItemSelected="menuListView_ItemSelected"
+                      
+                      rainbows:DebugRainbow.IsDebug="False"
+                      Margin="5">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Label Text="{Binding Title}" FontSize="Medium" Margin="5"/>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -11,12 +11,38 @@ namespace SiamCross.ViewModels
 {
     public class MenuPageViewModel
     {
+        private MenuPageItem _selectedItem;
+
+        public class MenuPageItem
+        {
+            public string Title { get; set; }
+
+            public ICommand Command { get; set; }
+        }
+
+        public List<MenuPageItem> MenuItems { get; private set; }
+
         public ICommand GoControlPanel { get; set; }
         public ICommand GoSearchPanel { get; set; }
         public ICommand GoMeasuringPanel { get; set; }
         public ICommand GoDirectoryPanel { get; set; }
         public ICommand GoSettingsPanel { get; set; }
         public ICommand GoAboutPanel { get; set; }
+
+        public MenuPageItem SelectedItem 
+        { 
+            get => _selectedItem; 
+            set
+            {
+                _selectedItem = value;
+
+                //if (_selectedItem == null) return;
+
+                //_selectedItem.Command?.Execute(this);
+
+                //SelectedItem = null;
+            }
+        }
         public MenuPageViewModel()
         {
             GoControlPanel = new Command(GoHome);
@@ -25,6 +51,40 @@ namespace SiamCross.ViewModels
             GoDirectoryPanel = new Command(GoDirectory);
             GoSettingsPanel = new Command(GoSettings);
             GoAboutPanel = new Command(GoAbout);
+
+            MenuItems = new List<MenuPageItem>
+            {
+                new MenuPageItem()
+                {
+                    Title = "Панель управления",
+                    Command = GoControlPanel
+                },
+                new MenuPageItem()
+                {
+                    Title = "Поиск",
+                    Command = GoSearchPanel
+                },
+                new MenuPageItem()
+                {
+                    Title = "Измерения",
+                    Command = GoMeasuringPanel
+                },
+                new MenuPageItem()
+                {
+                    Title = "Справочник",
+                    Command = GoDirectoryPanel
+                },
+                new MenuPageItem()
+                {
+                    Title = "Настройки",
+                    Command = GoSettingsPanel
+                },
+                new MenuPageItem()
+                {
+                    Title = "О приложении",
+                    Command = GoAboutPanel
+                }
+            };
         }
 
         void GoHome(object obj)
