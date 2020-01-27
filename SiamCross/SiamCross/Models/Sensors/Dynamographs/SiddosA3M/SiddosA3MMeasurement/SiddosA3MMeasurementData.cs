@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
 {
+    [Preserve(AllMembers = true)]
     public class SiddosA3MMeasurementData
     {
         public SiddosA3MMeasurementReport Report { get; }

@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Services
 {
+    [Preserve(AllMembers = true)]
     public sealed class SensorsSaverService
     {
         #region instance

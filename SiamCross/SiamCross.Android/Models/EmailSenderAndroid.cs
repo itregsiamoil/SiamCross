@@ -1,5 +1,6 @@
 ﻿//using MailKit.Net.Smtp;
 //using MimeKit;
+using Android.Runtime;
 using SiamCross.Droid.Models;
 using SiamCross.Models.Tools;
 using System;
@@ -11,9 +12,11 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Settings = SiamCross.Models.Tools.Settings;
+
 [assembly: Dependency(typeof(EmailSenderAndroid))]
 namespace SiamCross.Droid.Models
 {
+    [Preserve(AllMembers = true)]
     public class EmailSenderAndroid : IEmailSender
     {
         public void SendEmail(string to, 

@@ -8,9 +8,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Services
 {
+    [Preserve(AllMembers = true)]
     public class DataRepository
     {
         private static readonly Lazy<DataRepository> _instance =

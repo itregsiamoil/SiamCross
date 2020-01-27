@@ -3,9 +3,11 @@ using SiamCross.Services;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Services
 {
+    [Preserve(AllMembers = true)]
     public class ScannedDevicesService : IScannedDevicesService
     {
         private List<ScannedDeviceInfo> _devices;

@@ -23,6 +23,7 @@ using SiamCross.Services;
 
 namespace SiamCross.Droid
 {
+    [Preserve(AllMembers = true)]
     public class Setup : AppSetup
     {
         protected override void RegisterDependencies(ContainerBuilder cb)

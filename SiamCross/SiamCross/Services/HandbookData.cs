@@ -6,9 +6,11 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Autofac;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Services
 {
+    [Preserve(AllMembers = true)]
     public class HandbookData : IDisposable
     {
         private static readonly Lazy<HandbookData> _instance =

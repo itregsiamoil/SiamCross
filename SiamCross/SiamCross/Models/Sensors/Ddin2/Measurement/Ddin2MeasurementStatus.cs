@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Sensors.Ddin2.Measurement
 {
+    [Preserve(AllMembers = true)]
     public enum Ddin2MeasurementStatus
     {
         Empty = 0,

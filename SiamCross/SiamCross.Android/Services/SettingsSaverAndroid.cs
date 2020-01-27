@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Android.Runtime;
+using Newtonsoft.Json;
 using SiamCross.Droid.Services;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
@@ -9,6 +10,7 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(SettingsSaverAndroid))]
 namespace SiamCross.Droid.Services
 {
+    [Preserve(AllMembers = true)]
     public class SettingsSaverAndroid : ISettingsSaver
     {
         private const string _name = "settings.json";

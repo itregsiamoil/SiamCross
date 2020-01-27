@@ -18,9 +18,14 @@ using System.IO;
 using SiamCross.Models;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Adapters;
+using Xamarin.Forms;
+using SiamCross.Droid.Models;
 
+[assembly: Dependency(typeof(BluetoothClassicAdapterAndroid))]
 namespace SiamCross.Droid.Models
 {
+
+    [Preserve(AllMembers = true)]
     public class BluetoothClassicAdapterAndroid : BroadcastReceiver, IBluetoothClassicAdapter
     {
         private BluetoothDevice _bluetoothDevice;

@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Sensors.Ddin2
 {
+    [Preserve(AllMembers = true)]
     public class Ddin2Parser
     {
         /// <summary>

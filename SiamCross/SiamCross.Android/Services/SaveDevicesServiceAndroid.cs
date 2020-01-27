@@ -21,6 +21,7 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(SaveDevicesServiceAndroid))]
 namespace SiamCross.Droid.Services
 {
+    [Preserve(AllMembers = true)]
     public class SaveDevicesServiceAndroid : ISaveDevicesService
     {
         private static readonly JsonSerializerSettings

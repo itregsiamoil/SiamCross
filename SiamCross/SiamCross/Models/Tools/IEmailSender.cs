@@ -1,5 +1,8 @@
-﻿namespace SiamCross.Models.Tools
+﻿using Xamarin.Forms.Internals;
+
+namespace SiamCross.Models.Tools
 {
+    [Preserve(AllMembers = true)]
     public interface IEmailSender
     {
         void SendEmailWithFile(string filename);

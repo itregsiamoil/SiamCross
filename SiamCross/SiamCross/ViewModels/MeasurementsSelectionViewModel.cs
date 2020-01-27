@@ -7,9 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class MeasurementsSelectionViewModel : BaseViewModel, IViewModel
     {
         private string _title;

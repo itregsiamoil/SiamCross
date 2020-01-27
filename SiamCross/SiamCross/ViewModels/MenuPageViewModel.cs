@@ -6,9 +6,11 @@ using SiamCross.Models;
 using Xamarin.Forms;
 using SiamCross.Views;
 using SiamCross.Views.MenuItems;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class MenuPageViewModel
     {
         public ICommand GoControlPanel { get; set; }

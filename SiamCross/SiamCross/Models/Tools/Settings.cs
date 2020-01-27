@@ -3,9 +3,11 @@ using SiamCross.AppObjects;
 using SiamCross.Services;
 using System;
 using System.Threading.Tasks;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Tools
 {
+    [Preserve(AllMembers = true)]
     public sealed class Settings : IDisposable
     {
         private static readonly Lazy<Settings> _instance =

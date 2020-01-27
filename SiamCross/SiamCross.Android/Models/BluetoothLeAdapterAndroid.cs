@@ -24,6 +24,7 @@ using Plugin.BLE.Abstractions.EventArgs;
 [assembly: Dependency(typeof(BluetoothLeAdapterAndroid))]
 namespace SiamCross.Droid.Models
 {
+    [Preserve(AllMembers = true)]
     public class BluetoothLeAdapterAndroid : IBluetoothLeAdapter
     {
         private IAdapter _adapter;

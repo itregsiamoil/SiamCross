@@ -10,9 +10,11 @@ using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class Ddim2MeasurementViewModel : BaseViewModel, IViewModel
     {
         private SensorData _sensorData;

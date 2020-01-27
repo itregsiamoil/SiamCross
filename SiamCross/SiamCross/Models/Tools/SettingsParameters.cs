@@ -1,5 +1,8 @@
-﻿namespace SiamCross.Models.Tools
+﻿using Xamarin.Forms.Internals;
+
+namespace SiamCross.Models.Tools
 {
+    [Preserve(AllMembers = true)]
     public class SettingsParameters
     {
         public string FromAddress { get; }

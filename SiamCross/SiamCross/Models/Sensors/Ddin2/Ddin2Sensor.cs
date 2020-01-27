@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Ddin2.Measurement;
 using SiamCross.Services;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Sensors.Ddin2
 {
+    [Preserve(AllMembers = true)]
     public class Ddin2Sensor : ISensor
     {
         private Ddin2Parser _parser;

@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SiamCross.Models.Tools;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 
 {
+    [Preserve(AllMembers = true)]
     public class Ddim2Parser
     {
         /// <summary>

@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models
 {
+    [Preserve(AllMembers = true)]
     public class SensorData : INotifyPropertyChanged
     {
         public string Name { get; private set; }

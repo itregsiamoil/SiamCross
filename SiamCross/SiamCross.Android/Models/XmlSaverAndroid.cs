@@ -17,6 +17,7 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(XmlSaverAndroid))]
 namespace SiamCross.Droid.Models
 {
+    [Preserve(AllMembers = true)]
     public class XmlSaverAndroid : IXmlSaver
     {
         private readonly string _path = Android.OS.Environment.GetExternalStoragePublicDirectory(

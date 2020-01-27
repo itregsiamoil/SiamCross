@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
 {
+    [Preserve(AllMembers = true)]
     public class SiddosA3MMeasurementManager
     {
         private IBluetoothAdapter _bluetoothAdapter;

@@ -2,8 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Xamarin.Forms.Internals;
+
 namespace SiamCross.DataBase.DataBaseModels
 {
+    [Preserve(AllMembers = true)]
     public class Ddim2Measurement
     {
         public int Id { get; set; }

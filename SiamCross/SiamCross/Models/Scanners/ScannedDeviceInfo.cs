@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Scanners
 {
+    [Preserve(AllMembers = true)]
     public class ScannedDeviceInfo : IEquatable<ScannedDeviceInfo>
     {
         public string Name { get; }

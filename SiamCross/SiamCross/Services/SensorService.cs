@@ -16,9 +16,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Services
 {
+    [Preserve(AllMembers = true)]
     public sealed class SensorService 
     {
         private static readonly Lazy<SensorService> _instance =

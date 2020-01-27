@@ -12,10 +12,12 @@ using SiamCross.Models.Scanners;
 using System.Threading.Tasks;
 using System.Threading;
 using Plugin.BLE.Abstractions;
+using Android.Runtime;
 
 [assembly: Dependency(typeof(BluetoothScannerAndroid))]
 namespace SiamCross.Droid.Models
 {
+    [Preserve(AllMembers = true)]
     public class BluetoothScannerAndroid : IBluetoothScanner
     {
         private IAdapter _adapter;

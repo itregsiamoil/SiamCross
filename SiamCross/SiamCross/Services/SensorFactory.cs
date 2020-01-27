@@ -6,11 +6,13 @@ using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Ddin2;
 using SiamCross.Models.Sensors.Dynamographs.Ddim2;
 using SiamCross.Models.Sensors.Dynamographs.SiddosA3M;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Services
 {
     public static class SensorFactory
     {
+        [Preserve(AllMembers = true)]
         public static ISensor CreateSensor(ScannedDeviceInfo deviceInfo)
         {
 

@@ -4,9 +4,11 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Xamarin.Forms;
 using System.Linq;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class ControlPanelPageViewModel : BaseViewModel, IViewModel
     {
         public ObservableCollection<SensorData> SensorsData { get; }

@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Sensors.Ddin2.Measurement
 {
+    [Preserve(AllMembers = true)]
     public class Ddin2MeasurementManager
     {
         private IBluetoothAdapter _bluetoothAdapter;

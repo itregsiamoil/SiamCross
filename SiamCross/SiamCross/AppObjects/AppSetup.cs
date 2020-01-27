@@ -3,9 +3,11 @@ using SiamCross.Models;
 using SiamCross.Models.Adapters;
 using SiamCross.Services;
 using SiamCross.ViewModels;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.AppObjects
 {
+    [Preserve(AllMembers = true)]
     public class AppSetup
     {
         public IContainer CreateContainer()

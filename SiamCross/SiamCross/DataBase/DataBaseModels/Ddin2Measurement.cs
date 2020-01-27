@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using SiamCross.Models.Sensors.Ddin2.Measurement;
-
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.DataBase.DataBaseModels
 {
+    [Preserve(AllMembers = true)]
     public class Ddin2Measurement
     {
         public int Id { get; set; }

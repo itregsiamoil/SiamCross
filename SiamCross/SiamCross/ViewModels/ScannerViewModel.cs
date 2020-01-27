@@ -5,9 +5,11 @@ using Xamarin.Forms;
 using System.ComponentModel;
 using System.Windows.Input;
 using SiamCross.Models;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class ScannerViewModel : IViewModel
     {
         private  IScannedDevicesService _service;

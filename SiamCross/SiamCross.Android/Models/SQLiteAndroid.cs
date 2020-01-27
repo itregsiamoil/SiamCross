@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Android.Runtime;
 using SiamCross.DataBase;
 using SiamCross.Droid.Models;
 using Xamarin.Forms;
@@ -6,6 +7,7 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(SQLiteAndroid))]
 namespace SiamCross.Droid.Models
 {
+    [Preserve(AllMembers = true)]
     public class SQLiteAndroid : ISQLite
     {
         public SQLiteAndroid() { }

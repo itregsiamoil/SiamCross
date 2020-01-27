@@ -4,9 +4,11 @@ using System.Text;
 using System.Threading.Tasks;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models
 {
+    [Preserve(AllMembers = true)]
     public interface ISensor : IDisposable
     {
         IBluetoothAdapter BluetoothAdapter { get; }

@@ -5,9 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Tools
 {
+    [Preserve(AllMembers = true)]
     public class XmlCreator
     {
         public XDocument CreateDdim2Xml(Ddim2Measurement dbDdimModel)

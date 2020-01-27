@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class MeasurementView : INotifyPropertyChanged
     {
         private string _field;

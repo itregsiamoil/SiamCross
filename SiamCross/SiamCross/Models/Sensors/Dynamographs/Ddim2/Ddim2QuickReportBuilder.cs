@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 {
+    [Preserve(AllMembers = true)]
     public class Ddim2QuickReportBuilder
     {
         private string _batteryVoltage;

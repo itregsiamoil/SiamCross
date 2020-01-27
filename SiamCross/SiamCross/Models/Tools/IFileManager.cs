@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Tools
 {
+    [Preserve(AllMembers = true)]
     public interface IFileManager
     {
         Task<bool> ExistsAsync(string filename); // проверка существования файла

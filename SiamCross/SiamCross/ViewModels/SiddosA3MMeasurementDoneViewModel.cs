@@ -1,8 +1,10 @@
 ﻿using SiamCross.DataBase.DataBaseModels;
 using System.Collections.ObjectModel;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class SiddosA3MMeasurementDoneViewModel : BaseViewModel, IViewModel
     {
         private SiddosA3MMeasurement _measurement;

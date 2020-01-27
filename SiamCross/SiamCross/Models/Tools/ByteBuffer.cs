@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Tools
 {
+    [Preserve(AllMembers = true)]
     /// <summary>
     /// Буффер сообщений
     /// </summary>

@@ -11,10 +11,14 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Newtonsoft.Json;
+using SiamCross.Droid.Models;
 using SiamCross.Services;
+using Xamarin.Forms;
 
+[assembly: Dependency(typeof(EmailSenderAndroid))]
 namespace SiamCross.Droid.Models
 {
+    [Preserve(AllMembers = true)]
     public class HandbookManagerAndroid : IHandbookManager
     {
         private static readonly JsonSerializerSettings

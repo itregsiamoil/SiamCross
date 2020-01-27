@@ -1,4 +1,5 @@
-﻿using Android.Widget;
+﻿using Android.Runtime;
+using Android.Widget;
 using SiamCross.Droid.Services;
 using SiamCross.Services;
 using Xamarin.Forms;
@@ -6,6 +7,7 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(ToastAndroid))]
 namespace SiamCross.Droid.Services
 {
+    [Preserve(AllMembers = true)]
     public class ToastAndroid : IToast
     {
         public void Show(string message)

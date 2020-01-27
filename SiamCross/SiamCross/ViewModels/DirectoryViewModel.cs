@@ -8,9 +8,11 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class DirectoryViewModel : BaseViewModel, IViewModel
     {
         public DirectoryViewModel()

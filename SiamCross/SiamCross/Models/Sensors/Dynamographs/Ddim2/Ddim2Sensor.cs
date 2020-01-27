@@ -5,9 +5,11 @@ using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement;
 using SiamCross.Models.Sensors.Dynamographs.Shared;
 using SiamCross.Services;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 {
+    [Preserve(AllMembers = true)]
     public class Ddim2Sensor : ISensor
     {
         private CancellationTokenSource _cancellToken;

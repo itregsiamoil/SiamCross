@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Sensors.Ddin2.Measurement
 {
+    [Preserve(AllMembers = true)]
     public class Ddin2MeasurementReport
     {
         public short MaxWeight { get; }

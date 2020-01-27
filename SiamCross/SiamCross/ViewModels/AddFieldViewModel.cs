@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class AddFieldViewModel : BaseViewModel, IViewModel
     {
         public AddFieldViewModel()

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Tools
 {
+    [Preserve(AllMembers = true)]
     public static class DgmConverter
     {
         public static List<double[]> GetXY(List<byte[]> data,

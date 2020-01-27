@@ -7,9 +7,11 @@ using Xamarin.Forms;
 using System.Threading;
 using System.Threading.Tasks;
 using SiamCross.Models;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class SearchViewModel : BaseViewModel
     {
         private MainPageModel _mainPageModel = new MainPageModel();

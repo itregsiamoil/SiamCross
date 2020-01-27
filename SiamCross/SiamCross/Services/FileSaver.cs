@@ -1,9 +1,11 @@
 ﻿using SiamCross.Models.Tools;
 using System.IO;
 using System.Xml.Linq;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Services
 {
+    [Preserve(AllMembers = true)]
     public class FileSaver
     {
         private IFileManager _fileManager;
