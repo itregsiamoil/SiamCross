@@ -56,8 +56,11 @@ namespace SiamCross.DataBase.DataBaseModels
             SwingCount = (60 / 0.001) / (siddosA3MMeasurementData.Report.Period 
                 * siddosA3MMeasurementData.Report.TimeDiscr);
 
-            MaxWeight = siddosA3MMeasurementData.Report.MaxWeight / 1000f;
-            MinWeight = siddosA3MMeasurementData.Report.MinWeight / 1000f;
+            MaxWeight = siddosA3MMeasurementData.Report.WeightDiscr *
+                siddosA3MMeasurementData.Report.MaxWeight / 1000f;
+            MinWeight = siddosA3MMeasurementData.Report.WeightDiscr *
+                siddosA3MMeasurementData.Report.MinWeight / 1000f;
+
             Travel = siddosA3MMeasurementData.Report.Travel;
             Period = siddosA3MMeasurementData.Report.Period;
             Step = siddosA3MMeasurementData.Report.Step;

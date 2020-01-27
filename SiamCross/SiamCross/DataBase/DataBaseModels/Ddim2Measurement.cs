@@ -50,12 +50,17 @@ namespace SiamCross.DataBase.DataBaseModels
         public Ddim2Measurement() { }
         public Ddim2Measurement(Ddim2MeasurementData ddim2MeasurementData)
         {
-            TravelLength = ddim2MeasurementData.Report.Travel * ddim2MeasurementData.Report.Step / 10000;
+            TravelLength = ddim2MeasurementData.Report.Travel * 
+                ddim2MeasurementData.Report.Step / 10000;
 
-            SwingCount = (60 / 0.001) / (ddim2MeasurementData.Report.Period * ddim2MeasurementData.Report.TimeDiscr);
+            SwingCount = (60 / 0.001) / (ddim2MeasurementData.Report.Period * 
+                ddim2MeasurementData.Report.TimeDiscr);
 
-            MaxWeight = ddim2MeasurementData.Report.MaxWeight / 1000f;
-            MinWeight = ddim2MeasurementData.Report.MinWeight / 1000f;
+            MaxWeight = ddim2MeasurementData.Report.WeightDiscr * 
+                ddim2MeasurementData.Report.MaxWeight / 1000f;
+            MinWeight = ddim2MeasurementData.Report.WeightDiscr * 
+                ddim2MeasurementData.Report.MinWeight / 1000f;
+
             Travel = ddim2MeasurementData.Report.Travel;
             Period = ddim2MeasurementData.Report.Period;
             Step = ddim2MeasurementData.Report.Step;

@@ -10,8 +10,8 @@ namespace SiamCross.DataBase.DataBaseModels
         public int Id { get; set; }
 
         /*/ Report /*/
-        public short MaxWeight { get; set; }
-        public short MinWeight { get; set; }
+        public float MaxWeight { get; set; }
+        public float MinWeight { get; set; }
         public short Travel { get; set; }
         public short Period { get; set; }
         public short Step { get; set; }
@@ -53,12 +53,17 @@ namespace SiamCross.DataBase.DataBaseModels
         public Ddin2Measurement() { }
         public Ddin2Measurement(Ddin2MeasurementData ddin2MeasurementData)
         {
-            TravelLength = ddin2MeasurementData.Report.Travel * ddin2MeasurementData.Report.Step / 10000;
+            TravelLength = ddin2MeasurementData.Report.Travel *
+                ddin2MeasurementData.Report.Step / 10000;
 
-            SwingCount = (60 / 0.001) / (ddin2MeasurementData.Report.Period * ddin2MeasurementData.Report.TimeDiscr);
+            SwingCount = (60 / 0.001) / (ddin2MeasurementData.Report.Period *
+                ddin2MeasurementData.Report.TimeDiscr);
 
-            MaxWeight = ddin2MeasurementData.Report.MaxWeight;
-            MinWeight = ddin2MeasurementData.Report.MinWeight;
+            MaxWeight = ddin2MeasurementData.Report.WeightDiscr *
+                ddin2MeasurementData.Report.MaxWeight / 1000f;
+            MinWeight = ddin2MeasurementData.Report.WeightDiscr *
+                ddin2MeasurementData.Report.MinWeight / 1000f;
+
             Travel = ddin2MeasurementData.Report.Travel;
             Period = ddin2MeasurementData.Report.Period;
             Step = ddin2MeasurementData.Report.Step;
