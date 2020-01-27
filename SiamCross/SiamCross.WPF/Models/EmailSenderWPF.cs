@@ -1,5 +1,4 @@
-﻿using Plugin.Messaging;
-using SiamCross.Models.Tools;
+﻿using SiamCross.Models.Tools;
 using SiamCross.WPF.Models;
 using System.IO;
 using System.Net;

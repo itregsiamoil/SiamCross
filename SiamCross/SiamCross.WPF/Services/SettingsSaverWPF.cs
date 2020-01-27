@@ -60,12 +60,14 @@ namespace SiamCross.WPF.Services
 
         Task ISettingsSaver.SaveSettings(SettingsParameters settings)
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
+            return null;
         }
 
         Task<SettingsParameters> ISettingsSaver.ReadSettings()
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
+            return null;
         }
 
         protected static readonly JsonSerializerSettings

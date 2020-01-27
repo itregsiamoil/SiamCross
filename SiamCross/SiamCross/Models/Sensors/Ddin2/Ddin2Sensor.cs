@@ -132,6 +132,7 @@ namespace SiamCross.Models.Sensors.Ddin2
                     {
                         _measurementManager.MeasurementStatus = _statusAdapter.StringStatusToEnum(dataValue);
                     }
+                    Console.WriteLine("Settings Status: " + dataValue);
                     SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
                     return;
                 case "BatteryVoltage":

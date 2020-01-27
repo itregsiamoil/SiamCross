@@ -21,7 +21,7 @@ namespace SiamCross.AppObjects
             cb.RegisterType<IBluetoothClassicAdapter>().As<IBluetoothAdapter>();
             cb.RegisterType<IBluetoothLeAdapter>().As<IBluetoothAdapter>();
 
-            cb.RegisterType<ScannerViewModel>().SingleInstance();
+            cb.RegisterType<ScannerViewModel>().AsSelf();
             cb.RegisterType<ControlPanelPageViewModel>().SingleInstance();
             cb.RegisterType<Ddim2MeasurementViewModel>().AsSelf();
             cb.RegisterType<Ddin2MeasurementViewModel>().AsSelf();

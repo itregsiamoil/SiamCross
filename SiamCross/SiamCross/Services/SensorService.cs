@@ -58,6 +58,7 @@ namespace SiamCross.Services
                 {
                     _sensors.Add(addebleSensor);
                     SensorAdded?.Invoke(addebleSensor.SensorData);
+                  
                 }
             }
         }

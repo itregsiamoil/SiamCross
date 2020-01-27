@@ -120,7 +120,8 @@ namespace SiamCross.Models.Sensors.Ddin2
         /// <returns></returns>
         private byte[] GetPayload(byte[] message)
         {
-            int payloadSize = message[8] + message[9] * 10;                // 9ый байт указывает на размер данных
+            Console.WriteLine("READ:" + BitConverter.ToString(message));
+            int payloadSize = message[8] + message[9] * 16;                // 9ый байт указывает на размер данных
             var payloadBytes = new byte[payloadSize];
             if (message.Length > 12)
             {

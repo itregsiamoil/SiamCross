@@ -36,6 +36,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
 
         public async Task<object> RunMeasurement()
         {
+            await Task.Delay(1000);
             Console.WriteLine("SENDING PARAMETERS");
             await SendParameters();
             Console.WriteLine("PARAMETERS HAS BEEN SENT");
@@ -57,16 +58,26 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
 
         private async Task SendParameters()
         {
+            Console.WriteLine("SetRod: " + BitConverter.ToString(_configGenerator.SetRod(_measurementParameters.Rod)));
             await _bluetoothAdapter.SendData(_configGenerator.SetRod(_measurementParameters.Rod));
             await Task.Delay(300);
+            Console.WriteLine("SetDynPeriod: " + BitConverter.ToString(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod)));
             await _bluetoothAdapter.SendData(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod));
             await Task.Delay(300);
+            Console.WriteLine("SetApertNumber: " + BitConverter.ToString(_configGenerator.SetApertNumber(_measurementParameters.ApertNumber)));
             await _bluetoothAdapter.SendData(_configGenerator.SetApertNumber(_measurementParameters.ApertNumber));
             await Task.Delay(300);
+            LogMessage("SetImtravel", _configGenerator.SetImtravel(_measurementParameters.Imtravel));
             await _bluetoothAdapter.SendData(_configGenerator.SetImtravel(_measurementParameters.Imtravel));
             await Task.Delay(300);
+            LogMessage("SetModelPump", _configGenerator.SetModelPump(_measurementParameters.ModelPump));
             await _bluetoothAdapter.SendData(_configGenerator.SetModelPump(_measurementParameters.ModelPump));
             await Task.Delay(300);
+        }
+
+        private void LogMessage(string text, byte[] message)
+        {
+            Console.WriteLine(text + ":" + BitConverter.ToString(message));
         }
 
         private async Task<bool> IsMeasurementDone()
@@ -75,7 +86,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
             while (!isDone)
             {
                 await Task.Delay(300);
-
+                LogMessage("ReadDeviceStatus", Ddin2Commands.FullCommandDictionary["ReadDeviceStatus"]);
                 await _bluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["ReadDeviceStatus"]);
 
                 if (MeasurementStatus == Ddin2MeasurementStatus.Ready
@@ -90,14 +101,17 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
 
         private async Task Start()
         {
+            LogMessage("InitializeMeasurement", Ddin2Commands.FullCommandDictionary["InitializeMeasurement"]);
             await _bluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["InitializeMeasurement"]);
             await Task.Delay(300);
+            LogMessage("StartMeasurement", Ddin2Commands.FullCommandDictionary["StartMeasurement"]);
             await _bluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["StartMeasurement"]);
-            await Task.Delay(300);
+            await Task.Delay(2500);
         }
         
         public async Task ReadErrorCode()
         {
+            LogMessage("ReadMeasurementErrorCode", Ddin2Commands.FullCommandDictionary["ReadMeasurementErrorCode"]);
             await _bluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["ReadMeasurementErrorCode"]);
             await Task.Delay(300);
         }
@@ -112,6 +126,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
 
             Console.WriteLine("READING MEASUREMENT REPORT");
 
+            LogMessage("ReadMeasurementReport", Ddin2Commands.FullCommandDictionary["ReadMeasurementReport"]);
             await _bluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["ReadMeasurementReport"]);
 
             await Task.Delay(1000);
