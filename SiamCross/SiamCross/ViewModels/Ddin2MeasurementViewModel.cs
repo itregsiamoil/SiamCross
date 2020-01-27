@@ -39,12 +39,7 @@ namespace SiamCross.ViewModels
             _sensorData = sensorData;
             SensorName = _sensorData.Name;
             _errorList = new List<string>();
-            Fields = new ObservableCollection<string>()
-            {
-                "Первое поле",
-                "Второе поле",
-                "Третье поле"
-            };
+            Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
             ModelPump = new ObservableCollection<string>()
             {
                 "Балансирный",

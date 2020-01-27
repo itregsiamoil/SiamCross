@@ -65,6 +65,16 @@ namespace SiamCross.Models.Tools
                 month + "-" + day;
             string time = dbDdimModel.DateTime.TimeOfDay.ToString().Split('.')[0];
 
+            string field = "";
+            var tempField = dbDdimModel.Field.Split(':');
+            if(tempField.Length > 1)
+            {
+                if(tempField[1].Length > 1)
+                {
+                    field = tempField[1].Remove(0, 1);
+                }
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////////////
 
             XDocument document =
@@ -82,7 +92,7 @@ namespace SiamCross.Models.Tools
                                         new XAttribute("MESTYPEID", "dynamogram"),
                                         new XAttribute("MESSTARTDATE", date + "T" + time),
                                         new XAttribute("MESDEVICEOPERATORID", "0"),                                             //?
-                                        new XAttribute("MESDEVICEFIELDID", dbDdimModel.Field.ToString()),
+                                        new XAttribute("MESDEVICEFIELDID", field),
                                         new XAttribute("MESDEVICEWELLCLUSTERID", dbDdimModel.Bush.ToString()),
                                         new XAttribute("MESDEVICEWELLID", dbDdimModel.Well.ToString()),
                                         new XAttribute("MESDEVICEDEPARTMENTID", dbDdimModel.Shop.ToString()),
@@ -204,6 +214,16 @@ namespace SiamCross.Models.Tools
                 month + "-" + day;
             string time = dbDdinModel.DateTime.TimeOfDay.ToString().Split('.')[0];
 
+            string field = "";
+            var tempField = dbDdinModel.Field.Split(':');
+            if (tempField.Length > 1)
+            {
+                if (tempField[1].Length > 1)
+                {
+                    field = tempField[1].Remove(0, 1);
+                }
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////////////
 
             XDocument document =
@@ -221,7 +241,7 @@ namespace SiamCross.Models.Tools
                                         new XAttribute("MESTYPEID", "dynamogram"),
                                         new XAttribute("MESSTARTDATE", date + "T" + time),
                                         new XAttribute("MESDEVICEOPERATORID", "0"),                                             //?
-                                        new XAttribute("MESDEVICEFIELDID", dbDdinModel.Field.ToString()),
+                                        new XAttribute("MESDEVICEFIELDID", field),
                                         new XAttribute("MESDEVICEWELLCLUSTERID", dbDdinModel.Bush.ToString()),
                                         new XAttribute("MESDEVICEWELLID", dbDdinModel.Well.ToString()),
                                         new XAttribute("MESDEVICEDEPARTMENTID", dbDdinModel.Shop.ToString()),
@@ -347,6 +367,16 @@ namespace SiamCross.Models.Tools
                 month + "-" + day;
             string time = dbSiddosA3MModel.DateTime.TimeOfDay.ToString().Split('.')[0];
 
+            string field = "";
+            var tempField = dbSiddosA3MModel.Field.Split(':');
+            if (tempField.Length > 1)
+            {
+                if (tempField[1].Length > 1)
+                {
+                    field = tempField[1].Remove(0, 1);
+                }
+            }
+
             ////////////////////////////////////////////////////////////////////////////////////////////
 
             XDocument document =
@@ -364,7 +394,7 @@ namespace SiamCross.Models.Tools
                                         new XAttribute("MESTYPEID", "dynamogram"),
                                         new XAttribute("MESSTARTDATE", date + "T" + time),
                                         new XAttribute("MESDEVICEOPERATORID", "0"),                                             //?
-                                        new XAttribute("MESDEVICEFIELDID", dbSiddosA3MModel.Field.ToString()),
+                                        new XAttribute("MESDEVICEFIELDID", field),
                                         new XAttribute("MESDEVICEWELLCLUSTERID", dbSiddosA3MModel.Bush.ToString()),
                                         new XAttribute("MESDEVICEWELLID", dbSiddosA3MModel.Well.ToString()),
                                         new XAttribute("MESDEVICEDEPARTMENTID", dbSiddosA3MModel.Shop.ToString()),

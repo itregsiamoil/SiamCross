@@ -42,6 +42,18 @@ namespace SiamCross.Services
             return _fieldDictionary;
         }
 
+        public IEnumerable<string> GetFieldList()
+        {
+            var fieldDictionay = GetFieldDictionary();
+            var fieldList = new List<string>();
+            foreach(var field in fieldDictionay)
+            {
+                fieldList.Add(field.Key + ": " + field.Value);
+            }
+
+            return fieldList;
+        }
+
         public void AddField(string fieldKey, int fieldValue)
         {
             if (_fieldDictionary != null)

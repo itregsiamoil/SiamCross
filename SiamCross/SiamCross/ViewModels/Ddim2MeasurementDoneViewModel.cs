@@ -1,4 +1,5 @@
 ﻿using SiamCross.DataBase.DataBaseModels;
+using SiamCross.Services;
 using System.Collections.ObjectModel;
 
 namespace SiamCross.ViewModels
@@ -65,12 +66,7 @@ namespace SiamCross.ViewModels
         public Ddim2MeasurementDoneViewModel(Ddim2Measurement measurement)
         {
             _measurement = measurement;
-            Fields = new ObservableCollection<string>()
-            {
-                "Первое поле",
-                "Второе поле",
-                "Третье поле"
-            };
+            Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());     
 
             InitDynGraph();
 
