@@ -6,7 +6,6 @@
              xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
              mc:Ignorable="d"
              xmlns:local="clr-namespace:SiamCross.Views"
-             xmlns:forms="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms"
              xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
              x:Class="SiamCross.Views.SiddosA3MMeasurementDonePage">
     <ContentPage.Resources>
@@ -40,8 +39,12 @@
         <!--<forms:ChartView x:Name="Chart1" HeightRequest="200"/>-->
         <skia:SKCanvasView x:Name="CanvasView"
                            PaintSurface="CanvasView_PaintSurface"
+                           HorizontalOptions="FillAndExpand"
+                           Margin="5"
+                           VerticalOptions="FillAndExpand"
+                           IgnorePixelScaling="True"
                            HeightRequest="200"
-                           Margin="10"/>
+                           />
         <TableView Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand"
