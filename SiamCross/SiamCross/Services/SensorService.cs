@@ -5,7 +5,6 @@ using SiamCross.Models;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Ddin2.Measurement;
 using SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement;
-using SiamCross.Models.Sensors.Dynamographs.SiddosA3M;
 using SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement;
 using SiamCross.Models.Tools;
 using SiamCross.Views;
@@ -118,50 +117,26 @@ namespace SiamCross.Services
             {
                 case Ddim2MeasurementData ddim2Data:
                     var dbModelDdim2 = new Ddim2Measurement(ddim2Data);
-
                     addbleId = DataRepository.Instance.SaveDdim2Measurement(dbModelDdim2);
-
                     await App.NavigationPage.Navigation.PushModalAsync(
                             new Ddim2MeasurementDonePage(
                                 DataRepository.Instance.GetDdim2MeasurementById(addbleId)),
                                 true);
-
                     break;
                 case Ddin2MeasurementData ddin2Data:
                     var dbModelDdin2 = new Ddin2Measurement(ddin2Data);
                     addbleId = DataRepository.Instance.SaveDdin2Measurement(dbModelDdin2);
-                    var dbObj = DataRepository.Instance.GetDdin2MeasurementById(dbModelDdin2.Id);
+                    var dbObj = DataRepository.Instance.GetDdin2MeasurementById(addbleId);
                     await App.NavigationPage.Navigation.PushModalAsync(
-                           new Ddin2MeasurementDonePage(
-                               dbObj),
-                               true);
-
-                    var qwe = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
-                    var name = ("ddin2_" +
-                        new DateTimeConverter().DateTimeToString(dbModelDdin2.DateTime) + ".xml").Replace(':', '-');
-                    qwe.SaveXml(name, new XmlCreator().CreateDdin2Xml(dbModelDdin2));
-
-                    //EmailService.Instance.SendEmailWithFile(name);
-                    
+                           new Ddin2MeasurementDonePage(dbObj), true);                    
                     break;
                 case SiddosA3MMeasurementData siddosA3M:
                     var dbModelsiddosA3M = new SiddosA3MMeasurement(siddosA3M);
-
                     addbleId = DataRepository.Instance.SaveSiddosA3MMeasurement(dbModelsiddosA3M);
-
-                    //await App.NavigationPage.Navigation.PushModalAsync(
-                    //        new SiddosA3MMeasurementDonePage(
-                    //            DataRepository.Instance.GetSiddosA3MMeasurementById(addbleId)),
-                    //            true);
-
-                    var qwe2 = new FileSaver(AppContainer.Container.Resolve<IFileManager>());
-                    var name2 = ("siddosA3M_" +
-                        new DateTimeConverter().DateTimeToString(dbModelsiddosA3M.DateTime) + ".xml").Replace(':', '-');
-                    qwe2.SaveXml(name2, new XmlCreator().CreateSiddosA3MXml(dbModelsiddosA3M));
-
-
-                    //   EmailService.Instance.SendEmailWithFile(name1);
-
+                    await App.NavigationPage.Navigation.PushModalAsync(
+                            new SiddosA3MMeasurementDonePage(
+                                DataRepository.Instance.GetSiddosA3MMeasurementById(addbleId)),
+                                true);
                     break;
                 default:
                     break;

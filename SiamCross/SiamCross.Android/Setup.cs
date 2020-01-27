@@ -39,6 +39,7 @@ namespace SiamCross.Droid
             cb.RegisterType<SettingsSaverAndroid>().As<ISettingsSaver>();
             cb.RegisterType<SqliteConnection>().As<IDbConnection>();
             cb.RegisterType<DatabaseCreatorAndroid>().As<IDatabaseCreator>();
+            cb.RegisterType<HandbookManagerAndroid>().As<IHandbookManager>();
         }
     }    
 }

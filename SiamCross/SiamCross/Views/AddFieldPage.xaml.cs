@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace SiamCross.Views.MenuItems
+namespace SiamCross.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DirectoryPanelPage : ContentPage
+    public partial class AddFieldPage : ContentPage
     {
-        public DirectoryPanelPage()
+        public AddFieldPage()
         {
-            var vm = new ViewModel<DirectoryViewModel>();
+            var vm = new ViewModel<AddFieldViewModel>();
             this.BindingContext = vm.GetViewModel;
             InitializeComponent();
         }
