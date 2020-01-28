@@ -21,16 +21,26 @@ namespace SiamCross.Droid.Models
         private IAdapter _adapter;
         private IBluetoothLE _bluetoothBLE;
         private BluetoothAdapter _socketAdapter;
-        private List<IDevice> _deviceList = new List<IDevice>();
-
+        public event Action<ScannedDeviceInfo> Received;
         public BluetoothScannerAndroid()
         {
             _bluetoothBLE = CrossBluetoothLE.Current;
             _adapter = CrossBluetoothLE.Current.Adapter;
             _socketAdapter = BluetoothAdapter.DefaultAdapter;
-        }
+            _adapter.ScanTimeout = 10000;
+            _adapter.ScanMode = ScanMode.Balanced;
 
-        public event Action<ScannedDeviceInfo> Received;
+            _adapter.DeviceDiscovered += (obj, a) =>
+            {
+                if (obj == null || a == null || a.Device == null || a.Device.Name == null)
+                {
+                    return;
+                }
+
+                Received?.Invoke(new ScannedDeviceInfo(a.Device.Name, a.Device.Id, BluetoothType.Le));
+                System.Diagnostics.Debug.WriteLine("Finded device" + a.Device.Name);
+            };
+        }
 
         public void Start()
         {
@@ -58,25 +68,8 @@ namespace SiamCross.Droid.Models
 
         private async void StartScann()
         {
-            if (_bluetoothBLE.State == BluetoothState.Off)
+            if (_bluetoothBLE.State != BluetoothState.Off)
             {
-            }
-            else
-            {
-                //_adapter.ScanTimeout = 10000;
-                //_adapter.ScanMode = ScanMode.Balanced;
-
-                _adapter.DeviceDiscovered += (obj, a) =>
-                {
-                    if (obj == null || a == null || a.Device == null || a.Device.Name == null)
-                    {
-                        return;
-                    }
-
-                    Received?.Invoke(new ScannedDeviceInfo(a.Device.Name, a.Device.Id, BluetoothType.Le));
-                    System.Diagnostics.Debug.WriteLine("Finded device" + a.Device.Name);
-                };
-
                 if (!_bluetoothBLE.Adapter.IsScanning)
                 {
                     await _adapter.StartScanningForDevicesAsync();

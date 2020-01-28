@@ -23,6 +23,11 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
             var vm = new ViewModel<ScannerViewModel>();
             _viewModel = vm.GetViewModel;
             this.BindingContext = _viewModel;
+            boundedDevicesList.RefreshCommand = new Command(() =>
+            {
+                _viewModel.StartScan();
+                boundedDevicesList.IsRefreshing = false;
+            });
         }
 
 

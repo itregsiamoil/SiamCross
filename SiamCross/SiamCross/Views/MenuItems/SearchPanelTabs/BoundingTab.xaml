@@ -6,7 +6,10 @@
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Обнаруженные устройства: " FontSize="Medium" />
-            <ListView x:Name="devicesList" ItemsSource="{Binding ClassicDevices}" ItemSelected="ItemSelected">
+            <ListView x:Name="boundedDevicesList" 
+                      ItemsSource="{Binding ClassicDevices}" 
+                      ItemSelected="ItemSelected"
+                      IsPullToRefreshEnabled="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

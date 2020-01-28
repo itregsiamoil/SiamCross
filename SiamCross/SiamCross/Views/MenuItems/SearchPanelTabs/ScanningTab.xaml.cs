@@ -15,11 +15,17 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ScanningTab : ContentPage
     {
+        private ScannerViewModel _vm;
         public ScanningTab()
         {
             InitializeComponent();
-            var vm = new ViewModel<ScannerViewModel>();
-            this.BindingContext = vm.GetViewModel;
+            _vm = new ViewModel<ScannerViewModel>().GetViewModel;
+            this.BindingContext = _vm;
+            scannedDevicesList.RefreshCommand = new Command(() =>
+            {
+                _vm.StartScan();
+                scannedDevicesList.IsRefreshing = false;
+            });
         }
 
         public void ItemSelected(object sender, SelectedItemChangedEventArgs e)
