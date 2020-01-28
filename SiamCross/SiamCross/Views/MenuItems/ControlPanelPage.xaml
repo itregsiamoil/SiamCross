@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.MenuItems.ControlPanelPage"
+             xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
              x:Name="ControlPanel"
              Title="Панель управления">
     <ContentPage.Content>
@@ -16,7 +17,8 @@
                         <ViewCell>
                             <ViewCell.View>
                                 <StackLayout VerticalOptions="FillAndExpand" HeightRequest="130">
-                                    <Grid VerticalOptions="FillAndExpand">
+                                    <Grid VerticalOptions="FillAndExpand"
+                                          rainbows:DebugRainbow.IsDebug="False">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="20"></RowDefinition>
                                             <RowDefinition Height="20"></RowDefinition>
@@ -34,10 +36,11 @@
                                                 Command="{Binding Path=BindingContext.DeleteSensorCommand, 
                                             Source={x:Reference ControlPanel}}"
                                                 CommandParameter="{Binding Id}" 
-                                                VerticalOptions="FillAndExpand"  Text="Удалить" 
+                                                VerticalOptions="FillAndExpand"  
                                                 HeightRequest="50"
                                                 WidthRequest="100"
-                                                Grid.Row="2" Grid.Column="1"></Button>
+                                                Grid.Row="2" Grid.Column="1"
+                                                ImageSource="trashcan.png"></Button>
                                     </Grid>
                                 </StackLayout>
                             </ViewCell.View>
