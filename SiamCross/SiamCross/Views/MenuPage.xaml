@@ -17,9 +17,10 @@
                    Margin="5"/>
             <ListView ItemsSource="{Binding MenuItems}"
                       x:Name="menuListView"
-                      ItemSelected="menuListView_ItemSelected"                     
+                      ItemTapped="menuListView_ItemTapped"
                       rainbows:DebugRainbow.IsDebug="False"
                       Margin="5">
+                <!--ItemSelected="menuListView_ItemSelected"-->
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
