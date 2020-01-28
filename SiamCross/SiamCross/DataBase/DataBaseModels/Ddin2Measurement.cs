@@ -56,8 +56,8 @@ namespace SiamCross.DataBase.DataBaseModels
             TravelLength = ddin2MeasurementData.Report.Travel *
                 ddin2MeasurementData.Report.Step / 10000;
 
-            SwingCount = (60 / 0.001) / (ddin2MeasurementData.Report.Period *
-                ddin2MeasurementData.Report.TimeDiscr);
+            SwingCount = Math.Round((60 / 0.001) / (ddin2MeasurementData.Report.Period *
+                ddin2MeasurementData.Report.TimeDiscr), 0);
 
             MaxWeight = ddin2MeasurementData.Report.WeightDiscr *
                 ddin2MeasurementData.Report.MaxWeight / 1000f;

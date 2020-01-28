@@ -53,8 +53,8 @@ namespace SiamCross.DataBase.DataBaseModels
             TravelLength = siddosA3MMeasurementData.Report.Travel 
                 * siddosA3MMeasurementData.Report.Step / 10000;
 
-            SwingCount = (60 / 0.001) / (siddosA3MMeasurementData.Report.Period 
-                * siddosA3MMeasurementData.Report.TimeDiscr);
+            SwingCount = Math.Round((60 / 0.001) / (siddosA3MMeasurementData.Report.Period 
+                * siddosA3MMeasurementData.Report.TimeDiscr), 0);
 
             MaxWeight = siddosA3MMeasurementData.Report.WeightDiscr *
                 siddosA3MMeasurementData.Report.MaxWeight / 1000f;
