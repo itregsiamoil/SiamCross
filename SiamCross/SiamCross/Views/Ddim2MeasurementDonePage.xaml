@@ -38,21 +38,45 @@
     18. Тип привод-->
     <StackLayout>
         <!--<forms:ChartView x:Name="Chart1" HeightRequest="200"/>-->
-        <skia:SKCanvasView x:Name="CanvasView"
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label Text="{Binding MaxGraphY}" Grid.Column="0" Grid.Row="0"/>
+            <skia:SKCanvasView x:Name="CanvasView"
                            PaintSurface="CanvasView_PaintSurface"
                            HorizontalOptions="FillAndExpand"
                            Margin="5"
                            VerticalOptions="FillAndExpand"
                            IgnorePixelScaling="True"
                            HeightRequest="200"
-                           />
+                           Grid.Column="1" Grid.Row="0"/>
+            <Label Text="т" VerticalOptions="Center" Grid.Column="0" Grid.Row="0"/>
+            <Label Text="0"  Grid.Column="0" Grid.Row="1"/>
+            <Label Text="м" HorizontalOptions="Center" Grid.Column="1" Grid.Row="1"/>
+            <Label Text="{Binding MaxGraphX}" HorizontalOptions="End" Grid.Column="1" Grid.Row="1"/>
+        </Grid>
+
+        <!--<skia:SKCanvasView x:Name="CanvasView"
+                           PaintSurface="CanvasView_PaintSurface"
+                           HorizontalOptions="FillAndExpand"
+                           Margin="5"
+                           VerticalOptions="FillAndExpand"
+                           IgnorePixelScaling="True"
+                           HeightRequest="200"
+                           />-->
         <TableView Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand"
                >
             <TableRoot >
                 <TableSection>
-                    <ViewCell>
+                    <!--<ViewCell>
                         <StackLayout Orientation="Horizontal">
                             <Label Text="Max X: "/>
                             <Label Text="{Binding MaxGraphX}"/>
@@ -63,7 +87,7 @@
                             <Label Text="Max Y: "/>
                             <Label Text="{Binding MaxGraphY}"/>
                         </StackLayout>
-                    </ViewCell>
+                    </ViewCell>-->
                     <ViewCell>
                         <StackLayout>
                             <Label Text="Месторождение"/>
