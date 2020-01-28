@@ -17,14 +17,16 @@
                    Margin="5"/>
             <ListView ItemsSource="{Binding MenuItems}"
                       x:Name="menuListView"
-                      ItemSelected="menuListView_ItemSelected"
-                      
+                      ItemSelected="menuListView_ItemSelected"                     
                       rainbows:DebugRainbow.IsDebug="False"
                       Margin="5">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <Label Text="{Binding Title}" FontSize="Medium" Margin="5"/>
+                            <Label Text="{Binding Title}" 
+                                   FontSize="Medium" 
+                                   Margin="5"
+                                   rainbows:DebugRainbow.IsDebug="False"/>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
