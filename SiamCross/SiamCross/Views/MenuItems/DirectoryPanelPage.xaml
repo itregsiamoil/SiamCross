@@ -4,12 +4,12 @@
              x:Class="SiamCross.Views.MenuItems.DirectoryPanelPage"
              Title="Справочник">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="+" Command="{Binding AddField}"/>
+        <ToolbarItem IconImageSource ="plus.png"  Command="{Binding AddField}"/>
         <ToolbarItem IconImageSource ="trashcan.png"  Command="{Binding Remove}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
-            <ListView ItemsSource="{Binding Fields, Mode=TwoWay}" SelectedItem="{Binding SelectedField}}">
+            <ListView ItemsSource="{Binding Fields, Mode=TwoWay}" SelectedItem="{Binding SelectedField}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
