@@ -169,6 +169,9 @@ namespace SiamCross.ViewModels
                     else if (mv.Name.Contains("SIDDOSA3M"))
                     {
                         //Get siddos by id
+                        var sdm = DataRepository.Instance.GetSiddosA3MMeasurementById(mv.Id);
+                        var name = CreateName(sdm.Name, sdm.DateTime);
+                        xmlSaver.SaveXml(name, xmlCreator.CreateSiddosA3MXml(sdm));
                     }
                 }
             }
