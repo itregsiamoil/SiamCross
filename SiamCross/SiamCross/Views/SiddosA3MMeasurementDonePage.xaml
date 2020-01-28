@@ -49,6 +49,18 @@
             <TableRoot >
                 <TableSection>
                     <ViewCell>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Max X: "/>
+                        <Label Text="{Binding MaxGraphX}"/>
+                    </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Max Y: "/>
+                            <Label Text="{Binding MaxGraphY}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
                         <StackLayout>
                             <Label Text="Месторождение"/>
                             <Picker ItemsSource="{Binding Fields}"

@@ -1,6 +1,10 @@
 ﻿using SiamCross.DataBase.DataBaseModels;
+using SiamCross.Models.Tools;
 using SiamCross.Services;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace SiamCross.ViewModels
 {
@@ -63,12 +67,18 @@ namespace SiamCross.ViewModels
         public string LowerRodWeight { get;  }
         public string SelectedModelPump { get;  }
 
+        public string MaxGraphX { get; private set; }
+        public string MaxGraphY { get; private set; }
+
         public SiddosA3MMeasurementDoneViewModel(SiddosA3MMeasurement measurement)
         {
             _measurement = measurement;
             Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
 
             InitDynGraph();
+
+            InitMaxMixGraphValue(_measurement.DynGraph.ToList(),
+                _measurement.Step, _measurement.WeightDiscr);
 
             SelectedField = _measurement.Field;
             Well = _measurement.Well;
@@ -114,9 +124,22 @@ namespace SiamCross.ViewModels
             //{
             //    //series.Points.Add(new DataPoint(points[i, 0], points[i, 1]));
             //    series.Points.Add(new DataPoint(i, points[i, 0]));
-            //}
+            //}           
+        }
 
-            
+        private void InitMaxMixGraphValue(List<byte> graph, short step, short weightDiscret)
+        {
+            List<double> movement = new List<double>();
+            List<double> weight = new List<double>();
+            var discrets = DgmConverter.GetXYs(graph, step, weightDiscret);
+            for (int i = 0; i < discrets.GetUpperBound(0); i++)
+            {
+                movement.Add(discrets[i, 0]);
+                weight.Add(discrets[i, 1]);
+            }
+
+            MaxGraphX = Math.Round(movement.Max() / 10, 0).ToString();
+            MaxGraphY = Math.Round(weight.Max() / 1000, 3).ToString();
         }
     }
 }
