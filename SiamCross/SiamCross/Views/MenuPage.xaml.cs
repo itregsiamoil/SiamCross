@@ -30,5 +30,13 @@ namespace SiamCross.Views
                 ((MenuPageItem)e.SelectedItem).Command?.Execute(sender);
             }
         }
+
+        private void menuListView_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            if (e.Item != null)
+            {
+                ((MenuPageItem)e.Item).Command?.Execute(sender);
+            }
+        }
     }
 }
