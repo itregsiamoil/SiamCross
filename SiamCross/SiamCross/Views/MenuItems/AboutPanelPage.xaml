@@ -5,9 +5,32 @@
              Title="О приложении">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="О приложении"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <TableView Intent="Data" 
+               HasUnevenRows="True" 
+               HorizontalOptions="CenterAndExpand">
+                <TableRoot >
+                    <TableSection>
+                        <ViewCell>
+                            <StackLayout>
+                                <Label Text="Caйт"/>
+                                <Label Text="http://www.siamoil.ru"/>
+                            </StackLayout>
+                        </ViewCell>
+                        <ViewCell>
+                        <StackLayout>
+                            <Label Text="О компании"/>
+                            <Label Text="Компания СИАМ — это холдинг предприятий, работающих в области исследований скважин и разработки месторождений. Направления дейтельности — производство оборудования для исследования скважин, оказание сервисных услуг по произведению исследований нефтегазодобывающих скважин и интерпритации исследовательских данных, услуги по химизации технологических процессов добычи и транспортировки нефти  инжинириговые услуги по анализу, оптимизации и проектировании разработки местророждений. Также Компания предоставляет сервисные услуги в энергетической отрасли - диагностику силового высоковольтного оборудования и поиск неисправностей кабельных линий."/>
+                        </StackLayout>
+                        </ViewCell>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Версия приложения: "/>
+                                <Label Text="1.0"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </TableSection>
+                </TableRoot>
+            </TableView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
