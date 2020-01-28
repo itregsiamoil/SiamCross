@@ -42,7 +42,7 @@ namespace SiamCross.Models.Tools
                 dbDdimModel.WeightDiscr);
             for (int i = 0; i < discrets.GetUpperBound(0); i++)
             {
-                movement.Add(discrets[i, 0] * 100);  //////для УМИ умножается на 100
+                movement.Add(discrets[i, 0]); 
                 weight.Add(discrets[i, 1]);
             }
 
@@ -195,8 +195,8 @@ namespace SiamCross.Models.Tools
                 weight.Add(discrets[i, 1]);
             }
 
-            var maxStaticW = weight.Max() / 1000;
-            var minStaticW = weight.Min() / 1000;
+            var maxStaticW = weight.Max();
+            var minStaticW = weight.Min();
 
             var month = dbDdinModel.DateTime.Date.Month.ToString();
             if(month.Length < 2)
@@ -344,7 +344,7 @@ namespace SiamCross.Models.Tools
                 dbSiddosA3MModel.WeightDiscr);
             for (int i = 0; i < discrets.GetUpperBound(0); i++)
             {
-                movement.Add(discrets[i, 0] * 100);  //////для УМИ умножается на 100
+                movement.Add(discrets[i, 0]);  
                 weight.Add(discrets[i, 1]);
             }
 
