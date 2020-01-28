@@ -52,13 +52,7 @@ namespace SiamCross.Services
 
             foreach (var device in savedSensors)
             {
-                var addebleSensor = SensorFactory.CreateSensor(device);
-                if (addebleSensor != null)
-                {
-                    _sensors.Add(addebleSensor);
-                    SensorAdded?.Invoke(addebleSensor.SensorData);
-                  
-                }
+                AddSensor(device);
             }
         }
 
