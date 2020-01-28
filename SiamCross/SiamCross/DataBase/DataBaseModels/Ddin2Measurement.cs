@@ -60,9 +60,9 @@ namespace SiamCross.DataBase.DataBaseModels
                 ddin2MeasurementData.Report.TimeDiscr);
 
             MaxWeight = ddin2MeasurementData.Report.WeightDiscr *
-                ddin2MeasurementData.Report.MaxWeight / 1000f /1000f;
+                ddin2MeasurementData.Report.MaxWeight / 1000f;
             MinWeight = ddin2MeasurementData.Report.WeightDiscr *
-                ddin2MeasurementData.Report.MinWeight / 1000f /1000f;
+                ddin2MeasurementData.Report.MinWeight / 1000f;
 
             Travel = ddin2MeasurementData.Report.Travel;
             Period = ddin2MeasurementData.Report.Period;
