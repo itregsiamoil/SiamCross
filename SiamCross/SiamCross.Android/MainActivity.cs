@@ -9,6 +9,7 @@ using Android.OS;
 using Android;
 using Android.Support.V4.Content;
 using Android.Support.V4.App;
+using Android.Bluetooth;
 
 namespace SiamCross.Droid
 {
@@ -49,6 +50,18 @@ namespace SiamCross.Droid
                 externalFilesPermissionGranted == Permission.Denied)
             {
                 ActivityCompat.RequestPermissions(this, locationPermissions, locationPermissionsRequestCode);
+            }
+
+            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+
+            if(bluetoothAdapter.IsEnabled)
+            {
+                bluetoothAdapter.Disable();
+                bluetoothAdapter.Enable();
+            }
+            else
+            {
+                bluetoothAdapter.Enable();
             }
 
             LoadApplication(new App(new Setup()));
