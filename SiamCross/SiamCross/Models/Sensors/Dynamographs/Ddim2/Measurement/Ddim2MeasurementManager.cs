@@ -180,7 +180,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement
 
                 AddCrc();
                 await _bluetoothAdapter.SendData(command.ToArray());
-                await Task.Delay(200);
+                await Task.Delay(Constants.ShortDelay);
 
                 RemoveCrc();
             }

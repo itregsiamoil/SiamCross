@@ -205,7 +205,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
 
                 AddCrc();
                 await _bluetoothAdapter.SendData(command.ToArray());
-                await Task.Delay(300);
+                await Task.Delay(Constants.ShortDelay);
 
 
                 RemoveCrc();
