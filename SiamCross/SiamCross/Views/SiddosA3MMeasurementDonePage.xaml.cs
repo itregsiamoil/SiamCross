@@ -70,12 +70,10 @@ namespace SiamCross.Views
             var skPoints = new List<SKPoint>();
             for (int i = 0; i < _points.GetUpperBound(0); i++)
             {
-                skPoints.Add(
-                    new SKPoint(
-                        (float)(_points[i, 0] * dx),
-                        (float)(_points[i, 1] * dy)));
+                float y = (float)CanvasView.Height - (float)(_points[i, 1] * dy);
+                float x = (float)(_points[i, 0] * dx);
+                skPoints.Add(new SKPoint(x, y));
             }
-            
             canvas.DrawPoints(SKPointMode.Polygon, skPoints.ToArray(), paint);
         }
 
