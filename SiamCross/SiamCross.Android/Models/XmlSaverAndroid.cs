@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml.Linq;
 using Android.App;
 using Android.Content;
+using Android.Media;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
@@ -46,7 +47,9 @@ namespace SiamCross.Droid.Models
 
             if (Directory.Exists(s))
             {
-                xml.Save(s + (Path.DirectorySeparatorChar + filename));
+                var fullPath = s + (Path.DirectorySeparatorChar + filename);
+                xml.Save(fullPath);
+                MediaScannerConnection.ScanFile(Android.App.Application.Context, new String[] { fullPath }, null, null);
             }
         }
 
