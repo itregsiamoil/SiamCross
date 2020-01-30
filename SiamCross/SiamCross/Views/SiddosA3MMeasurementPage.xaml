@@ -116,6 +116,18 @@
                             HorizontalOptions="CenterAndExpand"></Button>    
                     </StackLayout>
                 </ViewCell>
+                <ViewCell x:Name="Empty">
+                    <StackLayout>
+                        <Label/>
+                        <Label/>
+                        <Label/>
+                        <Label/>
+                        <Label/>
+                        <Label/>
+                        <Label/>
+                        <Label/>
+                    </StackLayout>
+                </ViewCell>
             </TableSection>
             <TableSection>
                 
