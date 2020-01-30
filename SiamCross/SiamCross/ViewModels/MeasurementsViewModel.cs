@@ -24,9 +24,12 @@ namespace SiamCross.ViewModels
                     .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
                 if (measurement != null)
                 {
-                    App.NavigationPage.Navigation
+                    if (CanOpenModalPage(typeof(Ddim2MeasurementDonePage)))
+                    {
+                        App.NavigationPage.Navigation
                         .PushModalAsync(
-                        new Ddim2MeasurementDonePage(measurement), true);                   
+                        new Ddim2MeasurementDonePage(measurement), true);
+                    }
                 }
             }
             else if (selectedMeasurement.Name.Contains("DDIN"))
@@ -35,9 +38,12 @@ namespace SiamCross.ViewModels
                     .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
                 if (measurement != null)
                 {
-                    App.NavigationPage.Navigation
+                    if (CanOpenModalPage(typeof(Ddin2MeasurementDonePage)))
+                    {
+                        App.NavigationPage.Navigation
                         .PushModalAsync(
                         new Ddin2MeasurementDonePage(measurement), true);
+                    }
                 }
             }
             else if (selectedMeasurement.Name.Contains("SIDDOSA3M"))
@@ -46,11 +52,33 @@ namespace SiamCross.ViewModels
                     .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
                 if (measurement != null)
                 {
-                    App.NavigationPage.Navigation
+                    if (CanOpenModalPage(typeof(SiddosA3MMeasurementDonePage)))
+                    {
+                        App.NavigationPage.Navigation
                         .PushModalAsync(
                         new SiddosA3MMeasurementDonePage(measurement), true);
+                    }
                 }
             }
+        }
+
+        private bool CanOpenModalPage(Type type)
+        {
+            bool result = false;
+            var stack = App.NavigationPage.Navigation.ModalStack;
+
+            if (stack.Count > 0 )
+            {
+                if (stack[stack.Count - 1].GetType() != type)
+                {
+                    result = true;
+                }
+            }
+            else
+            {
+                result = true;
+            }
+            return result;
         }
 
         public ObservableCollection<MeasurementView> Measurements { get; set; }

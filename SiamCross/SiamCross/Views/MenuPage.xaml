@@ -10,7 +10,7 @@
                      rainbows:DebugRainbow.IsDebug="False"
                      >
             <!--Padding ="10 , 30 , 10, 10"-->
-            <Label Text="SIAM SERVICE" 
+            <Label Text="SIAM SERVICE 2.0" 
                    FontSize="Large"
                    
                    TextColor="CornflowerBlue" 
