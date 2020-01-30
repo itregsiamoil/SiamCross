@@ -28,13 +28,15 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <Label Grid.Row="0" Text="{Binding Field}"
                                            FontAttributes="Bold"></Label>
-                            <Label Grid.Row="1" Text="{Binding Date}"/>
-                            <Label Grid.Row="2" Text="{Binding MeasurementType}"/>
-                            <Label Grid.Row="3" Text="{Binding Comments}"/>
+                            <Label Grid.Row="1" Text="{Binding Name}"/>
+                            <Label Grid.Row="2" Text="{Binding Date}"/>
+                            <Label Grid.Row="3" Text="{Binding MeasurementType}"/>
+                            <Label Grid.Row="4" Text="{Binding Comments}"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

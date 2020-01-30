@@ -173,7 +173,12 @@ namespace SiamCross.ViewModels
 
             GetMeasurementsFromDb();
 
-            Measurements.OrderBy(m => m.Date);
+            List<MeasurementView> ordered = Measurements.OrderByDescending(m => m.Date).ToList();
+            Measurements.Clear();
+            foreach (var m in ordered)
+            {
+                Measurements.Add(m);
+            }
 
             MessagingCenter
                 .Subscribe<Ddim2MeasurementDonePage, Ddim2Measurement>(

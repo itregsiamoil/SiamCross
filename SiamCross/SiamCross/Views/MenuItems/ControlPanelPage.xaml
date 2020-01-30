@@ -32,13 +32,13 @@
                                         <Label HorizontalOptions="StartAndExpand" Text="{Binding Name}" FontSize="18" Grid.Row="0" Grid.Column="0"/>
                                         <Label HorizontalOptions="StartAndExpand" Text="{Binding Type}" Grid.Row="1" Grid.Column="0" />
                                         <Label HorizontalOptions="StartAndExpand" Text="{Binding Status}" Grid.Row="2" Grid.Column="0"/>
-                                        <Button HorizontalOptions="StartAndExpand" 
+                                        <Button HorizontalOptions="EndAndExpand" 
                                                 Command="{Binding Path=BindingContext.DeleteSensorCommand, 
                                             Source={x:Reference ControlPanel}}"
                                                 CommandParameter="{Binding Id}" 
                                                 VerticalOptions="FillAndExpand"  
-                                                HeightRequest="50"
-                                                WidthRequest="100"
+                                                HeightRequest="20"
+                                                WidthRequest="40"
                                                 Grid.Row="2" Grid.Column="1"
                                                 ImageSource="trashcan.png"></Button>
                                     </Grid>
