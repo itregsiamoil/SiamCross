@@ -57,7 +57,7 @@
                     <StackLayout  >
                         <Label Text="Буферное давление"></Label>
                         <Entry Text="{Binding BufferPressure}" 
-                               >
+                               Keyboard="Numeric">
                             <Entry.Behaviors>
                                 <local:FloatNumberValidationBehavior/>
                             </Entry.Behaviors>
@@ -85,7 +85,7 @@
                     <StackLayout  >
                         <Label Text="Длина хода, м"></Label>
                         <Entry Text="{Binding Imtravel}" 
-                               >
+                               Keyboard="Numeric">
                             <Entry.Behaviors>
                                 <local:FloatNumberValidationBehavior/>
                             </Entry.Behaviors>

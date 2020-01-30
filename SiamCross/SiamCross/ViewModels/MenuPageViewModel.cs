@@ -151,34 +151,5 @@ namespace SiamCross.ViewModels
                 App.MenuIsPresented = false;
             }
         }
-        //void GoSearch(object obj)
-        //{
-        //    App.NavigationPage.Navigation.PushAsync(new SearchPanelPage()); 
-        //    App.MenuIsPresented = false;
-        //}
-
-        //void GoMeasuring(object obj)
-        //{
-        //    App.NavigationPage.Navigation.PushAsync(new MeasurementsPage());
-        //    App.MenuIsPresented = false;
-        //}
-
-        //void GoDirectory(object obj)
-        //{
-        //    App.NavigationPage.Navigation.PushAsync(new DirectoryPanelPage());
-        //    App.MenuIsPresented = false;
-        //}
-
-        //void GoSettings(object obj)
-        //{
-        //    App.NavigationPage.Navigation.PushAsync(new SettingsPanelPage());
-        //    App.MenuIsPresented = false;
-        //}
-
-        //void GoAbout(object obj)
-        //{
-        //    App.NavigationPage.Navigation.PushAsync(new AboutPanelPage());
-        //    App.MenuIsPresented = false;
-        //}
     }
 }
