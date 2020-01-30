@@ -53,19 +53,7 @@ namespace SiamCross.ViewModels
                 "Гидравлический"
             };
             StartMeasurementCommand = new Command(StartMeasurementHandler);
-            //    new Command(() =>
-            //{
-            //    Console.WriteLine(Bush);
-            //    Console.WriteLine(Shop);
-            //    Console.WriteLine(BufferPressure);
-            //    Console.WriteLine(Comments);
-            //    Console.WriteLine(Rod);
-            //    Console.WriteLine(DynPeriod);
-            //    Console.WriteLine(ApertNumber);
-            //    Console.WriteLine(Imtravel);
-            //    Console.WriteLine(SelectedField);
-            //    Console.WriteLine(SelectedModelPump);
-            //});
+
         }
 
         private async void StartMeasurementHandler()
