@@ -1,4 +1,5 @@
-﻿using SiamCross.Models;
+﻿using SiamCross.DataBase.DataBaseModels;
+using SiamCross.Models;
 using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement;
 using SiamCross.Services;
@@ -53,19 +54,6 @@ namespace SiamCross.ViewModels
                 "Гидравлический"
             };
             StartMeasurementCommand = new Command(StartMeasurementHandler);
-            //    new Command(() =>
-            //{
-            //    Console.WriteLine(Bush);
-            //    Console.WriteLine(Shop);
-            //    Console.WriteLine(BufferPressure);
-            //    Console.WriteLine(Comments);
-            //    Console.WriteLine(Rod);
-            //    Console.WriteLine(DynPeriod);
-            //    Console.WriteLine(ApertNumber);
-            //    Console.WriteLine(Imtravel);
-            //    Console.WriteLine(SelectedField);
-            //    Console.WriteLine(SelectedModelPump);
-            //});
         }
 
         private async void StartMeasurementHandler()
@@ -93,7 +81,7 @@ namespace SiamCross.ViewModels
 
             var measurementParams = new Ddim2MeasurementStartParameters(
                 //int.Parse(Rod),
-                24,
+                24, ///////////////////////////////////////////////////// wtf rod for ddim2 ???
                 int.Parse(DynPeriod),
                 int.Parse(ApertNumber),
                 float.Parse(Imtravel),

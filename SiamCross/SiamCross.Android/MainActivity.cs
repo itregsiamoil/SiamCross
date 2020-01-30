@@ -52,17 +52,17 @@ namespace SiamCross.Droid
                 ActivityCompat.RequestPermissions(this, locationPermissions, locationPermissionsRequestCode);
             }
 
-            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+            //BluetoothAdapter bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
 
-            if(bluetoothAdapter.IsEnabled)
-            {
-                bluetoothAdapter.Disable();
-                bluetoothAdapter.Enable();
-            }
-            else
-            {
-                bluetoothAdapter.Enable();
-            }
+            //if(bluetoothAdapter.IsEnabled)
+            //{
+            //    bluetoothAdapter.Disable();
+            //    bluetoothAdapter.Enable();
+            //}
+            //else
+            //{
+            //    bluetoothAdapter.Enable();
+            //}
 
             LoadApplication(new App(new Setup()));
         }
