@@ -49,8 +49,10 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
@@ -62,11 +64,11 @@
                            VerticalOptions="FillAndExpand"
                            IgnorePixelScaling="True"
                            HeightRequest="200"
-                           Grid.Column="1" Grid.Row="0"/>
-            <Label Text="т" VerticalOptions="Center" Grid.Column="0" Grid.Row="0"/>
-            <Label Text="0"  Grid.Column="0" Grid.Row="1"/>
-            <Label Text="м" HorizontalOptions="Center" Grid.Column="1" Grid.Row="1"/>
-            <Label Text="{Binding MaxGraphX}" HorizontalOptions="End" Grid.Column="1" Grid.Row="1"/>
+                           Grid.Column="1" Grid.Row="1"/>
+            <Label Text=", Т" VerticalOptions="Start" Grid.Column="1" Grid.Row="0"/>
+            <Label Text="0"  Grid.Column="0" Grid.Row="2"/>
+            <Label Text=", М" HorizontalOptions="Center" Grid.Column="2" Grid.Row="2"/>
+            <Label Text="{Binding MaxGraphX}" HorizontalOptions="End" Grid.Column="1" Grid.Row="2"/>
         </Grid>
         <TableView Intent="Data" 
                HasUnevenRows="True" 

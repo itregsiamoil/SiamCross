@@ -16,29 +16,12 @@ namespace SiamCross.ViewModels
 {
     public class MeasurementsViewModel : BaseViewModel, IViewModel
     {
-        private MeasurementView _selectedMeasurement;
-
-        public MeasurementView SelectedMeasurement
+        public void PushPage(MeasurementView selectedMeasurement)
         {
-            get => _selectedMeasurement;
-            set
-            {
-                _selectedMeasurement = value;
-
-                if (_selectedMeasurement == null) return;
-
-                PushPage();
-
-                SelectedMeasurement = null;
-            }
-        }
-
-        private void PushPage()
-        {
-            if (_selectedMeasurement.Name.Contains("DDIM"))
+            if (selectedMeasurement.Name.Contains("DDIM"))
             {
                 var measurement = _ddim2Measurements?
-                    .SingleOrDefault(m => m.Id == _selectedMeasurement.Id);
+                    .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
                 if (measurement != null)
                 {
                     App.NavigationPage.Navigation
@@ -46,10 +29,10 @@ namespace SiamCross.ViewModels
                         new Ddim2MeasurementDonePage(measurement), true);                   
                 }
             }
-            else if (_selectedMeasurement.Name.Contains("DDIN"))
+            else if (selectedMeasurement.Name.Contains("DDIN"))
             {
                 var measurement = _ddin2Measurements?
-                    .SingleOrDefault(m => m.Id == _selectedMeasurement.Id);
+                    .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
                 if (measurement != null)
                 {
                     App.NavigationPage.Navigation
@@ -57,10 +40,10 @@ namespace SiamCross.ViewModels
                         new Ddin2MeasurementDonePage(measurement), true);
                 }
             }
-            else if (_selectedMeasurement.Name.Contains("SIDDOSA3M"))
+            else if (selectedMeasurement.Name.Contains("SIDDOSA3M"))
             {
                 var measurement = _siddosA3MMeasurement?
-                    .SingleOrDefault(m => m.Id == _selectedMeasurement.Id);
+                    .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
                 if (measurement != null)
                 {
                     App.NavigationPage.Navigation

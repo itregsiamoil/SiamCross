@@ -12,7 +12,7 @@
             <ListView HasUnevenRows="True"
                       ItemsSource="{Binding Measurements}"
                       rainbows:DebugRainbow.IsDebug="False"
-                      SelectedItem="{Binding SelectedMeasurement}">
+                      ItemTapped="ListView_ItemTapped">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

@@ -13,11 +13,20 @@ namespace SiamCross.Views.MenuItems
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MeasurementsPage : ContentPage
     {
+        private MeasurementsViewModel _vm;
         public MeasurementsPage()
         {
-            var vm = new ViewModel<MeasurementsViewModel>();
-            this.BindingContext = vm.GetViewModel;
+            _vm = new ViewModel<MeasurementsViewModel>().GetViewModel;
+            this.BindingContext = _vm;
             InitializeComponent();
+        }
+
+        private void ListView_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            if (e.Item != null)
+            {
+                _vm.PushPage(e.Item as MeasurementView);
+            }
         }
     }
 }
