@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using SiamCross.Models;
 using SiamCross.Services;
 using SiamCross.ViewModels;
@@ -26,26 +27,35 @@ namespace SiamCross.Views.MenuItems
                 {
                     if (sensorData.Name.Contains("DDIM"))
                     {
-                        if (CanOpenModal(sensorData))
+                        if (CanOpenMeasurement(sensorData))
                         {
-                            App.NavigationPage.Navigation.PushModalAsync(
-                                new Ddim2MeasurementPage(sensorData), true);
+                            if (CanOpenModalPage(typeof(Ddim2MeasurementPage)))
+                            {
+                                App.NavigationPage.Navigation.PushModalAsync(
+                                    new Ddim2MeasurementPage(sensorData), true);
+                            }
                         }
                     }
                     else if (sensorData.Name.Contains("DDIN"))
                     {
-                        if (CanOpenModal(sensorData))
+                        if (CanOpenMeasurement(sensorData))
                         {
-                            App.NavigationPage.Navigation.PushModalAsync(
-                                new Ddin2MeasurementPage(sensorData), true);
+                            if (CanOpenModalPage(typeof(Ddin2MeasurementPage)))
+                            {
+                                App.NavigationPage.Navigation.PushModalAsync(
+                                    new Ddin2MeasurementPage(sensorData), true);
+                            }
                         }
                     }
                     else if (sensorData.Name.Contains("SIDDOSA3M"))
                     {
-                        if (CanOpenModal(sensorData))
+                        if (CanOpenMeasurement(sensorData))
                         {
-                            App.NavigationPage.Navigation.PushModalAsync(
-                                new SiddosA3MMeasurementPage(sensorData), true);
+                            if (CanOpenModalPage(typeof(SiddosA3MMeasurementPage)))
+                            {
+                                App.NavigationPage.Navigation.PushModalAsync(
+                                    new SiddosA3MMeasurementPage(sensorData), true);
+                            }
                         }
                     }
                 }
@@ -53,7 +63,7 @@ namespace SiamCross.Views.MenuItems
         }
 
         
-        private bool CanOpenModal(SensorData sensorData)
+        private bool CanOpenMeasurement(SensorData sensorData)
         {
             bool result = true;
             var sensor = SensorService.Instance.Sensors.SingleOrDefault(
@@ -68,6 +78,25 @@ namespace SiamCross.Views.MenuItems
                 else result = false;
             }
 
+            return result;
+        }
+
+        private bool CanOpenModalPage(Type type)
+        {
+            bool result = false;
+            var stack = App.NavigationPage.Navigation.ModalStack;
+
+            if (stack.Count > 0)
+            {
+                if (stack[stack.Count - 1].GetType() != type)
+                {
+                    result = true;
+                }
+            }
+            else
+            {
+                result = true;
+            }
             return result;
         }
     }
