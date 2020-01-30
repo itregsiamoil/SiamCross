@@ -139,7 +139,22 @@ namespace SiamCross.ViewModels
             }
 
             MaxGraphX = Math.Round(movement.Max() / 10, 0).ToString();
-            MaxGraphY = Math.Round(weight.Max() / 1000, 3).ToString();
+            MaxGraphY = CutOffNumbers(Math.Round(weight.Max() / 1000, 3));
+        }
+
+        private string CutOffNumbers(double number)
+        {
+            string result = "";
+            string s = number.ToString();
+            if (s.Length > 3)
+            {
+                result += s[0];
+                result += s[1];
+                result += s[2];
+                return result;
+            }
+            result = s;
+            return result;
         }
     }
 }
