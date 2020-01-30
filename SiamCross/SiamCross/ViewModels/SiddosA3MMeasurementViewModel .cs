@@ -55,19 +55,21 @@ namespace SiamCross.ViewModels
                 "Гидравлический"
             };
             StartMeasurementCommand = new Command(StartMeasurementHandler);
-            //    new Command(() =>
-            //{
-            //    Console.WriteLine(Bush);
-            //    Console.WriteLine(Shop);
-            //    Console.WriteLine(BufferPressure);
-            //    Console.WriteLine(Comments);
-            //    Console.WriteLine(Rod);
-            //    Console.WriteLine(DynPeriod);
-            //    Console.WriteLine(ApertNumber);
-            //    Console.WriteLine(Imtravel);
-            //    Console.WriteLine(SelectedField);
-            //    Console.WriteLine(SelectedModelPump);
-            //});
+
+            InitDefaultValues();
+        }
+
+        private void InitDefaultValues()
+        {
+            Well = Constants.DefaultWell.ToString();
+            Bush = Constants.DefaultBush.ToString();
+            Shop = Constants.DefaultShop.ToString();
+            BufferPressure = Constants.DefaultBufferPressure.ToString();
+            Comments = Constants.DefaultComment;
+            DynPeriod = Constants.DefaultDynPeriod.ToString();
+            ApertNumber = Constants.DefaultApertNumber.ToString();
+            Imtravel = Constants.DefaultImtravel.ToString();
+            SelectedModelPump = Constants.DefaultModelPump;
         }
 
         private async void StartMeasurementHandler()
@@ -169,6 +171,8 @@ namespace SiamCross.ViewModels
         {
             _errorList.Clear();
 
+            ValidateParameter(SelectedField, "Выберите месторождение!");
+            ValidateParameter(Well, "Введите скважину!");
             ValidateParameter(Bush, "Введите номер куста!");
             ValidateParameter(Shop, "Введите номер цеха!");
             ValidateParameter(BufferPressure, "Введите буфер давления!");
@@ -178,7 +182,6 @@ namespace SiamCross.ViewModels
             ValidateParameter(ApertNumber, "Введите номер отверствия!");
             ValidateParameter(Imtravel, "Введите длину хода");
             ValidateParameter(SelectedModelPump, "Выберите тип привода!");
-            ValidateParameter(SelectedField, "Выберите скважину!");
 
             if (_errorList.Count != 0)
             {
