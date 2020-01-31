@@ -67,6 +67,7 @@ namespace SiamCross.ViewModels
 
         private async void StartMeasurementHandler()
         {
+            StartMeasurementCommand = new Command(() => { });
             if (!ValidateForEmptiness())
             {
                 return;

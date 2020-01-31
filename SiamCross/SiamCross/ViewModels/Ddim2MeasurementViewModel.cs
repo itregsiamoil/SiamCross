@@ -33,7 +33,7 @@ namespace SiamCross.ViewModels
         public ObservableCollection<string> ModelPump { get; set; }
         public string SelectedModelPump { get; set; }
         public ICommand StartMeasurementCommand { get; set; }
-
+        private bool _isButtonPressed;
         private enum ModelPumpEnum
         {
             Balancer,
@@ -54,7 +54,7 @@ namespace SiamCross.ViewModels
                 "Гидравлический"
             };
             StartMeasurementCommand = new Command(StartMeasurementHandler);
-
+            _isButtonPressed = false;
             InitDefaultValues();
         }
 
@@ -73,6 +73,7 @@ namespace SiamCross.ViewModels
 
         private async void StartMeasurementHandler()
         {
+            StartMeasurementCommand = new Command(() => { });
             if (!ValidateForEmptiness())
             {
                 return;
@@ -110,7 +111,7 @@ namespace SiamCross.ViewModels
             }
 
             await Application.Current.MainPage.Navigation.PopModalAsync();
-            await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);           
+            await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);
         }
         
         private int GetModelPump()
