@@ -31,6 +31,7 @@ namespace SiamCross.Models.Tools
                 Port = settings.Port;
                 Username = settings.Username;
                 Password = settings.Password;
+                NeedAuthorization = settings.NeedAuthorization;
             }
         }
 
@@ -42,7 +43,8 @@ namespace SiamCross.Models.Tools
                 SmtpAddress,
                 Port,
                 Username,
-                Password));
+                Password,
+                NeedAuthorization));
         }
 
         public async Task SaveSettings()
@@ -53,7 +55,8 @@ namespace SiamCross.Models.Tools
                 SmtpAddress,
                 Port,
                 Username,
-                Password));
+                Password,
+                NeedAuthorization));
         }
 
         public string FromAddress { get; set; }

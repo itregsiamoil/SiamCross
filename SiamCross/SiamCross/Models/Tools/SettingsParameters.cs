@@ -8,10 +8,12 @@
         public int Port { get; }
         public string Username { get; }
         public string Password { get; }
+        public bool NeedAuthorization { get; }
 
         public SettingsParameters(string fromAddress, string toAddress, 
             string smtpAddress, int port, 
-            string username, string password)
+            string username, string password, 
+            bool needAuthorization)
         {
             FromAddress = fromAddress;
             ToAddress = toAddress;
@@ -19,6 +21,7 @@
             Port = port;
             Username = username;
             Password = password;
+            NeedAuthorization = needAuthorization;
         }
     }
 }

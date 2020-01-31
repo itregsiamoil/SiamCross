@@ -25,6 +25,8 @@ namespace SiamCross.Droid.Models
 
         private readonly string _folder = "Measurements";
 
+        private readonly object _locker = new object();
+
         public void DeleteXml(string filename)
         {
             string s = Directory.CreateDirectory(_path +

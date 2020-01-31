@@ -169,6 +169,7 @@ namespace SiamCross.Droid.Models
                 }
 
                 smtp?.Send(m);
+                m.Dispose();
             }
         }
     }
