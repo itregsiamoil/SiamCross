@@ -56,15 +56,15 @@ namespace SiamCross.Droid.Models
                 MediaScannerConnection.ScanFile(Android.App.Application.Context, new String[] { fullPath }, null, null);
             }
 
-            string s1 = Directory.CreateDirectory(_path +
-                (Path.DirectorySeparatorChar + _folder)).FullName;
+            //string s1 = Directory.CreateDirectory(_path +
+            //    (Path.DirectorySeparatorChar + _folder)).FullName;
 
-            if (Directory.Exists(s1))
-            {
-                var fullPath1 = s1 + (Path.DirectorySeparatorChar + filename);
-                xml.Save(fullPath1);
-                MediaScannerConnection.ScanFile(Android.App.Application.Context, new String[] { fullPath1 }, null, null);
-            }
+            //if (Directory.Exists(s1))
+            //{
+            //    var fullPath1 = s1 + (Path.DirectorySeparatorChar + filename);
+            //    xml.Save(fullPath1);
+            //    MediaScannerConnection.ScanFile(Android.App.Application.Context, new String[] { fullPath1 }, null, null);
+            //}
         }
 
         /// <summary>
@@ -76,10 +76,12 @@ namespace SiamCross.Droid.Models
         {
             string result = null;
 
-            var path = _path + 
-                Path.DirectorySeparatorChar +
-                _folder + Path.DirectorySeparatorChar 
-                + filename;
+            //var path = _path + 
+            //    Path.DirectorySeparatorChar +
+            //    _folder + Path.DirectorySeparatorChar 
+            //    + filename;
+            string path = Directory.CreateDirectory(
+                @"/storage/emulated/0/" + (Path.DirectorySeparatorChar + _folder)).FullName;
 
             if (File.Exists(path))
                 result = path;
