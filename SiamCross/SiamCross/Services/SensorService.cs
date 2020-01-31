@@ -45,15 +45,28 @@ namespace SiamCross.Services
             SensorDataChanged?.Invoke(data);
         }
 
-        public async Task Initinalize()
+        public void Initinalize()
         {
-            var savedSensors = 
-                await SensorsSaverService.Instance.ReadSavedSensors();
+            //Thread t = new Thread(() =>
+            //{
+                var savedSensors = SensorsSaverService.Instance.ReadSavedSensors();
 
-            foreach (var device in savedSensors)
-            {
-                AddSensor(device);
-            }
+                _sensors.Clear();
+
+                if (savedSensors == null) return;
+
+                foreach (var sensor in savedSensors)
+                {
+                    var addebleSensor = SensorFactory.CreateSensor(sensor);
+                    if (addebleSensor != null)
+                    {
+                        _sensors.Add(addebleSensor);
+
+                        SensorAdded?.Invoke(addebleSensor.SensorData);
+                    }
+                }
+            //});
+            //t.Start();
         }
 
         public void AddSensor(ScannedDeviceInfo deviceInfo)

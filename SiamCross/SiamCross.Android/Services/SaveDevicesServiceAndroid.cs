@@ -23,27 +23,33 @@ namespace SiamCross.Droid.Services
 {
     public class SaveDevicesServiceAndroid : ISaveDevicesService
     {
+        private readonly object _locker = new object();
+
         private static readonly JsonSerializerSettings
             _settings = new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All
             };
 
-        public async Task<IEnumerable<ScannedDeviceInfo>> LoadDevices()
+        /// <summary>
+        /// Can return null
+        /// </summary>
+        /// <returns></returns>
+        public List<ScannedDeviceInfo> LoadDevices()
         {
             var devicesInfo = new List<ScannedDeviceInfo>();
 
-            await Task.Run(() =>
+            var backingFile = Path.Combine(
+                System.Environment.GetFolderPath(
+                    System.Environment.SpecialFolder.Personal), "SavedDevices.json");
+
+            if (backingFile == null || !File.Exists(backingFile))
             {
-                var backingFile = Path.Combine(
-                    System.Environment.GetFolderPath(
-                        System.Environment.SpecialFolder.Personal), "SavedDevices.json");
+                return null;
+            }
 
-                if (backingFile == null || !File.Exists(backingFile))
-                {
-                    return;
-                }
-
+            lock (_locker)
+            {
                 var file = new StreamReader(backingFile, true);
 
                 if (file != null)
@@ -85,20 +91,20 @@ namespace SiamCross.Droid.Services
                     }
                 }
                 file.Close();
-            });
+            }
 
             return devicesInfo;
         }
 
-        public async Task SaveDevices(IEnumerable<ScannedDeviceInfo> devices)
+        public void SaveDevices(IEnumerable<ScannedDeviceInfo> devices)
         {
-            await Task.Run(() =>
-            {
-                var backingFile = Path.Combine(
-                    System.Environment.GetFolderPath(
-                        System.Environment.SpecialFolder.Personal),
-                    "SavedDevices.json");
+            var backingFile = Path.Combine(
+                System.Environment.GetFolderPath(
+                    System.Environment.SpecialFolder.Personal),
+                "SavedDevices.json");
 
+            lock (_locker)
+            {
                 using (var file = File.CreateText(backingFile))
                 {
                     foreach (var device in devices)
@@ -139,7 +145,7 @@ namespace SiamCross.Droid.Services
                         }
                     }
                 }
-            });
+            }
         }
     }
 }

@@ -22,15 +22,15 @@ namespace SiamCross.Services
             _manager = DependencyService.Get<ISaveDevicesService>();
             MessagingCenter.Subscribe<SensorService, IEnumerable<ScannedDeviceInfo>>(this,
                 "Refresh saved sensors", 
-                async (sender, arg) => 
+                (sender, arg) => 
                 {
-                    await _manager.SaveDevices(arg);
+                    _manager.SaveDevices(arg);
                 });
         }
 
-        public async Task<IEnumerable<ScannedDeviceInfo>> ReadSavedSensors()
+        public IEnumerable<ScannedDeviceInfo> ReadSavedSensors()
         {
-            var sensors = await _manager.LoadDevices();
+            var sensors = _manager.LoadDevices();
 
             return sensors;
         }

@@ -50,7 +50,6 @@ namespace SiamCross
         {
             // Handle when your app starts
             await Settings.Instance.Initialize();
-            await SensorService.Instance.Initinalize();
         }
 
         protected override void OnSleep()

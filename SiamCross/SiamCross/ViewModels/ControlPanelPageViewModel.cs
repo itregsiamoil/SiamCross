@@ -14,13 +14,10 @@ namespace SiamCross.ViewModels
         public ControlPanelPageViewModel()
         {
             SensorsData = new ObservableCollection<SensorData>();
-            foreach (var sensor in SensorService.Instance.Sensors)
-            {
-                SensorsData.Add(sensor.SensorData);
-            }
 
             SensorService.Instance.SensorAdded += SensorAdded;
             SensorService.Instance.SensorDataChanged += SensorsDataChanged;
+            SensorService.Instance.Initinalize();
         }
 
         public ICommand DeleteSensorCommand

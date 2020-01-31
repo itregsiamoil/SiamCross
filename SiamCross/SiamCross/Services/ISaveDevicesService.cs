@@ -8,8 +8,8 @@ namespace SiamCross.Services
 {
     public interface ISaveDevicesService
     {
-        Task SaveDevices(IEnumerable<ScannedDeviceInfo> devices);
+        void SaveDevices(IEnumerable<ScannedDeviceInfo> devices);
 
-        Task<IEnumerable<ScannedDeviceInfo>> LoadDevices();
+        List<ScannedDeviceInfo> LoadDevices();
     }
 }
