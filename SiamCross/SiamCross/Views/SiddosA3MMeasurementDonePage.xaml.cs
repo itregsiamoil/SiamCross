@@ -55,9 +55,9 @@ namespace SiamCross.Views
                 Color = Color.Black.ToSKColor(),
                 StrokeWidth = 1
             };
-            canvas.DrawLine(0, 0, 0, (float)CanvasView.Height, paintAxies);
-            canvas.DrawLine(0, (float)CanvasView.Height,
-                (float)CanvasView.Width, (float)CanvasView.Height, paintAxies);
+            //canvas.DrawLine(0, 0, 0, (float)CanvasView.Height, paintAxies);
+            //canvas.DrawLine(0, (float)CanvasView.Height,
+            //    (float)CanvasView.Width, (float)CanvasView.Height, paintAxies);
             //canvas.DrawCircle(info.Width / 2, info.Height / 2, 100, paint);
 
             double maxX = GetMaximumX();
@@ -75,6 +75,10 @@ namespace SiamCross.Views
                 skPoints.Add(new SKPoint(x, y));
             }
             canvas.DrawPoints(SKPointMode.Polygon, skPoints.ToArray(), paint);
+
+            canvas.DrawLine(1, 1, 1, (float)CanvasView.Height - 1, paintAxies);
+            canvas.DrawLine(1, (float)CanvasView.Height - 1,
+                (float)CanvasView.Width - 1, (float)CanvasView.Height - 1, paintAxies);
         }
 
         private double GetMaximumX()
