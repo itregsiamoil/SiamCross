@@ -42,14 +42,26 @@ namespace SiamCross.Droid.Models
 
         public void SaveXml(string filename, XDocument xml)
         {
-            string s = Directory.CreateDirectory(_path + 
-                (Path.DirectorySeparatorChar + _folder)).FullName;
+            //string s = Directory.CreateDirectory(_path + 
+            //    (Path.DirectorySeparatorChar + _folder)).FullName;
+            string s = Directory.CreateDirectory(@"/storage/emulated/0/" + (Path.DirectorySeparatorChar + _folder)).FullName;
+
 
             if (Directory.Exists(s))
             {
                 var fullPath = s + (Path.DirectorySeparatorChar + filename);
                 xml.Save(fullPath);
                 MediaScannerConnection.ScanFile(Android.App.Application.Context, new String[] { fullPath }, null, null);
+            }
+
+            string s1 = Directory.CreateDirectory(_path +
+                (Path.DirectorySeparatorChar + _folder)).FullName;
+
+            if (Directory.Exists(s1))
+            {
+                var fullPath1 = s1 + (Path.DirectorySeparatorChar + filename);
+                xml.Save(fullPath1);
+                MediaScannerConnection.ScanFile(Android.App.Application.Context, new String[] { fullPath1 }, null, null);
             }
         }
 
