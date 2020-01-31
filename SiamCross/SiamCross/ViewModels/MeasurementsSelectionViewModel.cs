@@ -28,6 +28,8 @@ namespace SiamCross.ViewModels
         public ICommand SelectionChanged { get; set; }
         public ICommand SendCommand { get; set; }
 
+        private readonly object _locker = new object();
+
         public MeasurementsSelectionViewModel(ObservableCollection<MeasurementView> measurements)
         {
             Measurements = new ObservableCollection<MeasurementView>();
@@ -140,43 +142,46 @@ namespace SiamCross.ViewModels
 
         private string[] SaveXmlsReturnPaths()
         {
-            var xmlCreator = new XmlCreator();
-
-            var xmlSaver = DependencyService.Get<IXmlSaver>();
-
-            var paths = new string[SelectedMeasurements.Count];
-
-            for (int i = 0; i < SelectedMeasurements.Count; i++)
+            lock (_locker)
             {
-                if (SelectedMeasurements[i] is MeasurementView mv)
+                var xmlCreator = new XmlCreator();
+
+                var xmlSaver = DependencyService.Get<IXmlSaver>();
+
+                var paths = new string[SelectedMeasurements.Count];
+
+                for (int i = 0; i < SelectedMeasurements.Count; i++)
                 {
-                    if (mv.Name.Contains("DDIM"))
+                    if (SelectedMeasurements[i] is MeasurementView mv)
                     {
-                        var dmm = DataRepository.Instance.GetDdim2MeasurementById(mv.Id);
-                        var name = CreateName(dmm.Name, dmm.DateTime);
-                        xmlSaver.SaveXml(name, xmlCreator.CreateDdim2Xml(dmm));
+                        if (mv.Name.Contains("DDIM"))
+                        {
+                            var dmm = DataRepository.Instance.GetDdim2MeasurementById(mv.Id);
+                            var name = CreateName(dmm.Name, dmm.DateTime);
+                            xmlSaver.SaveXml(name, xmlCreator.CreateDdim2Xml(dmm));
 
-                        paths[i] = xmlSaver.GetFilepath(name);
-                    }
-                    else if (mv.Name.Contains("DDIN"))
-                    {
-                        var dnm = DataRepository.Instance.GetDdin2MeasurementById(mv.Id);
-                        var name = CreateName(dnm.Name, dnm.DateTime);
-                        xmlSaver.SaveXml(name, xmlCreator.CreateDdin2Xml(dnm));
+                            paths[i] = xmlSaver.GetFilepath(name);
+                        }
+                        else if (mv.Name.Contains("DDIN"))
+                        {
+                            var dnm = DataRepository.Instance.GetDdin2MeasurementById(mv.Id);
+                            var name = CreateName(dnm.Name, dnm.DateTime);
+                            xmlSaver.SaveXml(name, xmlCreator.CreateDdin2Xml(dnm));
 
-                        paths[i] = xmlSaver.GetFilepath(name);
-                    }
-                    else if (mv.Name.Contains("SIDDOSA3M"))
-                    {
-                        //Get siddos by id
-                        var sdm = DataRepository.Instance.GetSiddosA3MMeasurementById(mv.Id);
-                        var name = CreateName(sdm.Name, sdm.DateTime);
-                        xmlSaver.SaveXml(name, xmlCreator.CreateSiddosA3MXml(sdm));
+                            paths[i] = xmlSaver.GetFilepath(name);
+                        }
+                        else if (mv.Name.Contains("SIDDOSA3M"))
+                        {
+                            //Get siddos by id
+                            var sdm = DataRepository.Instance.GetSiddosA3MMeasurementById(mv.Id);
+                            var name = CreateName(sdm.Name, sdm.DateTime);
+                            xmlSaver.SaveXml(name, xmlCreator.CreateSiddosA3MXml(sdm));
+                        }
                     }
                 }
-            }
 
-            return paths;
+                return paths;
+            }
         }
 
         private string CreateName(string deviceName, DateTime date)

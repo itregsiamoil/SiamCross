@@ -16,6 +16,7 @@ namespace SiamCross.Droid.Models
 {
     public class EmailSenderAndroid : IEmailSender
     {
+        private readonly object _locker = new object();
         public void SendEmail(string to, 
                               string subject, 
                               string text)
@@ -88,14 +89,63 @@ namespace SiamCross.Droid.Models
 
         public void SendEmailWithFile(string path)
         {
-            if (File.Exists(path))
+            lock (_locker)
+            {
+                if (File.Exists(path))
+                {
+                    var from = new MailAddress(Settings.Instance.FromAddress);
+                    var toMail = new MailAddress(Settings.Instance.ToAddress);
+                    var m = new MailMessage(from, toMail);
+                    m.Attachments.Add(new Attachment(path));
+                    m.Subject = "Mail with attachment";
+                    m.Body = "Measurement ";
+                    m.IsBodyHtml = true;
+                    SmtpClient smtp = null;
+
+                    if (Settings.Instance.NeedAuthorization)
+                    {
+                        smtp = new SmtpClient(Settings.Instance.SmtpAddress,
+                                              Settings.Instance.Port)
+                        {
+                            Credentials = new NetworkCredential(Settings.Instance.Username,
+                                                                Settings.Instance.Password),
+                            EnableSsl = true
+                        };
+                    }
+                    else
+                    {
+                        smtp = new SmtpClient(Settings.Instance.SmtpAddress,
+                                              Settings.Instance.Port)
+                        {
+                            EnableSsl = false
+                        };
+                    }
+
+                    smtp?.Send(m);
+                }
+            }
+        }
+
+        public void SendEmailWithFiles(string subject, 
+                                       string text, 
+                                       string[] filenames)
+        {
+            lock (_locker)
             {
                 var from = new MailAddress(Settings.Instance.FromAddress);
                 var toMail = new MailAddress(Settings.Instance.ToAddress);
                 var m = new MailMessage(from, toMail);
-                m.Attachments.Add(new Attachment(path));
-                m.Subject = "Mail with attachment";
-                m.Body = "Measurement ";
+
+                foreach (var path in filenames)
+                {
+                    if (File.Exists(path))
+                    {
+                        m.Attachments.Add(new Attachment(path));
+                    }
+                }
+
+                m.Subject = subject;
+                m.Body = text;
                 m.IsBodyHtml = true;
                 SmtpClient smtp = null;
 
@@ -120,49 +170,6 @@ namespace SiamCross.Droid.Models
 
                 smtp?.Send(m);
             }
-        }
-
-        public void SendEmailWithFiles(string subject, 
-                                       string text, 
-                                       string[] filenames)
-        {
-            var from = new MailAddress(Settings.Instance.FromAddress);
-            var toMail = new MailAddress(Settings.Instance.ToAddress);
-            var m = new MailMessage(from, toMail);
-
-            foreach (var path in filenames)
-            {
-                if (File.Exists(path))
-                {
-                    m.Attachments.Add(new Attachment(path));
-                }
-            }
-
-            m.Subject = subject;
-            m.Body = text;
-            m.IsBodyHtml = true;
-            SmtpClient smtp = null;
-
-            if (Settings.Instance.NeedAuthorization)
-            {
-                smtp = new SmtpClient(Settings.Instance.SmtpAddress,
-                                      Settings.Instance.Port)
-                {
-                    Credentials = new NetworkCredential(Settings.Instance.Username,
-                                                        Settings.Instance.Password),
-                    EnableSsl = true
-                };
-            }
-            else
-            {
-                smtp = new SmtpClient(Settings.Instance.SmtpAddress,
-                                      Settings.Instance.Port)
-                {
-                    EnableSsl = false
-                };
-            }
-
-            smtp?.Send(m);
         }
     }
 }
