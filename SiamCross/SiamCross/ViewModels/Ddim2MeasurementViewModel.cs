@@ -109,7 +109,7 @@ namespace SiamCross.ViewModels
                 return;
             }
 
-            Application.Current.MainPage.Navigation.PopModalAsync();
+            await Application.Current.MainPage.Navigation.PopModalAsync();
             await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);           
         }
         

@@ -16,7 +16,7 @@ namespace SiamCross
 
         public const float DefaultBufferPressure = 0f;
 
-        public const string DefaultComment = "Отсутствует";
+        public const string DefaultComment = "Комментарий отсутствует";
 
         public const float DefaultRod = 32;
 

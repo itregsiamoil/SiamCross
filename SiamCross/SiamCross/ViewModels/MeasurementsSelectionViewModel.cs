@@ -35,7 +35,7 @@ namespace SiamCross.ViewModels
             foreach (var m in measurements)
             {
                 Measurements.Add(m);
-                SelectedMeasurements.Add(m);
+                //SelectedMeasurements.Add(m);
             }
             _errorList = new List<string>();
             Title = $"Выбрано: {SelectedMeasurements.Count}";
