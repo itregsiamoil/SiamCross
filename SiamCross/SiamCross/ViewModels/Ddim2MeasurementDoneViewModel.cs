@@ -1,6 +1,10 @@
-﻿using SiamCross.DataBase.DataBaseModels;
+﻿using Autofac;
+using NLog;
+using SiamCross.AppObjects;
+using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
+using SiamCross.Services.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +14,8 @@ namespace SiamCross.ViewModels
 {
     public class Ddim2MeasurementDoneViewModel : BaseViewModel, IViewModel
     {
+        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+
         private Ddim2Measurement _measurement;
 
         public ObservableCollection<string> Fields { get; set; }
@@ -72,43 +78,50 @@ namespace SiamCross.ViewModels
 
         public Ddim2MeasurementDoneViewModel(Ddim2Measurement measurement)
         {
-            _measurement = measurement;
-            Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());     
-
-            InitDynGraph();
-
-            InitMaxMixGraphValue(_measurement.DynGraph.ToList(),
-                _measurement.Step, _measurement.WeightDiscr);
-
-            SelectedField = _measurement.Field;
-            Well = _measurement.Well;
-            Bush = _measurement.Bush;
-            Shop = _measurement.Shop;
-            Date = _measurement.DateTime.ToString();
-            BufferPressure = _measurement.BufferPressure;
-            Comments = _measurement.Comment;
-            DeviceName = _measurement.Name;
-            MeasurementType = "Динамограмма";
-            ApertNumber = _measurement.ApertNumber.ToString();
-            MaxLoad = _measurement.MaxWeight.ToString();
-            MinLoad = _measurement.MinWeight.ToString();
-            Imtravel = _measurement.TravelLength.ToString();    //
-            PumpRate = _measurement.SwingCount.ToString();      //
-            UpperRodWeight = "0";
-            LowerRodWeight = "0";
-            switch (_measurement.ModelPump)
+            try
             {
-                case 0:
-                    SelectedModelPump = "Балансирный";
-                    break;
-                case 1:
-                    SelectedModelPump = "Цепной";
-                    break;
-                case 2:
-                    SelectedModelPump = "Гидравлический";
-                    break;
-                default:
-                    break;
+                _measurement = measurement;
+                Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
+
+                InitDynGraph();
+
+                InitMaxMixGraphValue(_measurement.DynGraph.ToList(),
+                    _measurement.Step, _measurement.WeightDiscr);
+
+                SelectedField = _measurement.Field;
+                Well = _measurement.Well;
+                Bush = _measurement.Bush;
+                Shop = _measurement.Shop;
+                Date = _measurement.DateTime.ToString();
+                BufferPressure = _measurement.BufferPressure;
+                Comments = _measurement.Comment;
+                DeviceName = _measurement.Name;
+                MeasurementType = "Динамограмма";
+                ApertNumber = _measurement.ApertNumber.ToString();
+                MaxLoad = _measurement.MaxWeight.ToString();
+                MinLoad = _measurement.MinWeight.ToString();
+                Imtravel = _measurement.TravelLength.ToString();    //
+                PumpRate = _measurement.SwingCount.ToString();      //
+                UpperRodWeight = "0";
+                LowerRodWeight = "0";
+                switch (_measurement.ModelPump)
+                {
+                    case 0:
+                        SelectedModelPump = "Балансирный";
+                        break;
+                    case 1:
+                        SelectedModelPump = "Цепной";
+                        break;
+                    case 2:
+                        SelectedModelPump = "Гидравлический";
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Ddim2MeasurementDoneVM constructor");
             }
         }
 
