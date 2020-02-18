@@ -15,8 +15,11 @@ namespace SiamCross.Views.MenuItems
             _vm = new ViewModel<SettingsViewModel>();
             this.BindingContext = _vm.GetViewModel;
             InitializeComponent();
-            UsernameEntry.IsEnabled = false;
-            PasswordEntry.IsEnabled = false;
+            if (Settings.Instance.NeedAuthorization)
+            {
+                AuthCheckBox.IsChecked = true;
+            }
+            SwitchFieldsEnability();
         }
 
         protected override async void OnDisappearing()
@@ -27,10 +30,14 @@ namespace SiamCross.Views.MenuItems
 
         private void CheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
         {
-            UsernameEntry.IsEnabled = true;
-            PasswordEntry.IsEnabled = true;
-
+            SwitchFieldsEnability();
             _vm.GetViewModel.NeedAuthorization = e.Value;
+        }
+
+        private void SwitchFieldsEnability()
+        {
+            UsernameEntry.IsEnabled = AuthCheckBox.IsChecked;
+            PasswordEntry.IsEnabled = AuthCheckBox.IsChecked;
         }
     }
 }
