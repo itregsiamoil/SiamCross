@@ -203,7 +203,7 @@ namespace SiamCross.ViewModels
             ValidateParameter(Settings.Instance.SmtpAddress,
                 "Введите адрес SMTP сервера!");
 
-            if (Settings.Instance.NeedAuthorization)
+            if (Settings.Instance.IsNeedAuthorization)
             {
                 ValidateParameter(Settings.Instance.Username,
                 "Введите имя пользователя!");

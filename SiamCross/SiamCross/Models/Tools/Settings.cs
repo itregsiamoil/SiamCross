@@ -31,7 +31,7 @@ namespace SiamCross.Models.Tools
                 Port = settings.Port;
                 Username = settings.Username;
                 Password = settings.Password;
-                NeedAuthorization = settings.NeedAuthorization;
+                IsNeedAuthorization = settings.NeedAuthorization;
             }
         }
 
@@ -44,7 +44,7 @@ namespace SiamCross.Models.Tools
                 Port,
                 Username,
                 Password,
-                NeedAuthorization));
+                IsNeedAuthorization));
         }
 
         public async Task SaveSettings()
@@ -56,7 +56,7 @@ namespace SiamCross.Models.Tools
                 Port,
                 Username,
                 Password,
-                NeedAuthorization));
+                IsNeedAuthorization));
         }
 
         public string FromAddress { get; set; }
@@ -65,6 +65,6 @@ namespace SiamCross.Models.Tools
         public int Port { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public bool NeedAuthorization { get; set; }
+        public bool IsNeedAuthorization { get; set; }
     }
 }

@@ -1,5 +1,10 @@
-﻿using System;
+﻿using SiamCross.AppObjects;
+using System;
 using System.Collections.Generic;
+using Autofac;
+using SiamCross.Services.Logging;
+using System.Threading;
+using System.Text;
 
 namespace SiamCross.Models.Tools
 {
@@ -8,6 +13,9 @@ namespace SiamCross.Models.Tools
     /// </summary>
     public class ByteBuffer
     {
+        private static readonly NLog.Logger _logger = AppContainer.Container
+            .Resolve<ILogManager>().GetLog();
+
         /// <summary>
         /// Буффер
         /// </summary>
@@ -32,9 +40,16 @@ namespace SiamCross.Models.Tools
         {
             if (_byffer.Count > 34)
             {
-                System.Diagnostics.Debug.WriteLine(_byffer.ToString());
+                StringBuilder sb = new StringBuilder();
+                foreach (var b in _byffer)
+                {
+                    sb.Append(b);
+                }
+
+                _logger.Warn($"Buffer of parser is overflow! Buffer has been cleared! " +
+                    $"Thread ID: {Thread.CurrentThread.Name}. Content before cleaning: {sb.ToString()}");
+
                 _byffer.Clear();
-                System.Diagnostics.Debug.WriteLine("Внимание!!! Буффер парсера переполнился и был очищен!!!");
             }
             if (_byffer.Count == 0)                                       // Буффер пуст
             {
