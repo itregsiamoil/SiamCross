@@ -57,7 +57,7 @@ namespace SiamCross.ViewModels
                     var paths = SaveXmlsReturnPaths();
                 });
 
-                var savePath = @"""Download\Measurements""";
+                var savePath = @"""Measurements""";
 
                 DependencyService.Get<IToast>()
                     .Show($"{SelectedMeasurements.Count} " +
