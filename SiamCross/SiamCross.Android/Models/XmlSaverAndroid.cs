@@ -29,15 +29,18 @@ namespace SiamCross.Droid.Models
 
         public void DeleteXml(string filename)
         {
-            string s = Directory.CreateDirectory(_path +
-                (Path.DirectorySeparatorChar + _folder)).FullName;
-
-            if (Directory.Exists(s))
+            lock (_locker)
             {
-                var filepath = s + Path.DirectorySeparatorChar + filename;
-                if (File.Exists(filepath))
+                string s = Directory.CreateDirectory(_path +
+                    (Path.DirectorySeparatorChar + _folder)).FullName;
+
+                if (Directory.Exists(s))
                 {
-                    File.Delete(filepath);
+                    var filepath = s + Path.DirectorySeparatorChar + filename;
+                    if (File.Exists(filepath))
+                    {
+                        File.Delete(filepath);
+                    }
                 }
             }
         }
@@ -46,17 +49,21 @@ namespace SiamCross.Droid.Models
         {
             //string s = Directory.CreateDirectory(_path + 
             //    (Path.DirectorySeparatorChar + _folder)).FullName;
-            string s = Directory.CreateDirectory(@"/storage/emulated/0/" + (Path.DirectorySeparatorChar + _folder)).FullName;
-
-
-            if (Directory.Exists(s))
+            lock (_locker)
             {
-                var fullPath = s + (Path.DirectorySeparatorChar + filename);
-                if (!File.Exists(fullPath))
+                string s = Directory.CreateDirectory(@"/storage/emulated/0/" + (Path.DirectorySeparatorChar + _folder)).FullName;
+
+
+                if (Directory.Exists(s))
                 {
-                    xml.Save(fullPath);
-                    MediaScannerConnection.ScanFile(Android.App.Application.Context, new String[] { fullPath }, null, null);
+                    var fullPath = s + (Path.DirectorySeparatorChar + filename);
+                    if (!File.Exists(fullPath))
+                    {
+                        xml.Save(fullPath);
+                        MediaScannerConnection.ScanFile(Android.App.Application.Context, new String[] { fullPath }, null, null);
+                    }
                 }
+
             }
 
             //string s1 = Directory.CreateDirectory(_path +
