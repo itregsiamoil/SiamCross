@@ -25,6 +25,8 @@ namespace SiamCross.Services
         private static readonly Lazy<SensorService> _instance =
             new Lazy<SensorService>(() => new SensorService());
 
+        private static readonly object _lock = new object();
+
         public int SensorsCount => _sensors.Count;
 
         private SensorService()
@@ -49,8 +51,8 @@ namespace SiamCross.Services
 
         public void Initinalize()
         {
-            //Thread t = new Thread(() =>
-            //{
+            lock (_lock)
+            {
                 var savedSensors = SensorsSaverService.Instance.ReadSavedSensors();
 
                 _sensors.Clear();
@@ -67,45 +69,50 @@ namespace SiamCross.Services
                         SensorAdded?.Invoke(addebleSensor.SensorData);
                     }
                 }
-            //});
-            //t.Start();
+            }
         }
 
         public void AddSensor(ScannedDeviceInfo deviceInfo)
         {
-            foreach(var sensor in Sensors)
+            lock (_lock)
             {
-                if(sensor.SensorData.Name == deviceInfo.Name)
+                foreach (var sensor in Sensors)
+                {
+                    if (sensor.SensorData.Name == deviceInfo.Name)
+                    {
+                        return;
+                    }
+                }
+
+                var addebleSensor = SensorFactory.CreateSensor(deviceInfo);
+                if (addebleSensor == null)
                 {
                     return;
                 }
+
+                _sensors.Add(addebleSensor);
+
+                SensorAdded?.Invoke(addebleSensor.SensorData);
+
+                MessagingCenter.Send(this, "Refresh saved sensors",
+                    _sensors.Select(s => s.ScannedDeviceInfo));
             }
-
-            var addebleSensor = SensorFactory.CreateSensor(deviceInfo);
-            if (addebleSensor == null)
-            {
-                return;
-            }
-
-            _sensors.Add(addebleSensor);
-            
-            SensorAdded?.Invoke(addebleSensor.SensorData);
-
-            MessagingCenter.Send(this, "Refresh saved sensors", 
-                _sensors.Select(s => s.ScannedDeviceInfo));
         }
 
         public void DeleteSensor(int id)
         {
-            var sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
-            if (sensor != null)
+            lock (_lock)
             {
-                //await sensor.BluetoothAdapter.Disconnect();
-                _sensors.Remove(sensor);
-                sensor.Dispose();
+                var sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
+                if (sensor != null)
+                {
+                    //await sensor.BluetoothAdapter.Disconnect();
+                    _sensors.Remove(sensor);
+                    sensor.Dispose();
+                }
+                MessagingCenter.Send(this, "Refresh saved sensors",
+                    _sensors.Select(s => s.ScannedDeviceInfo));
             }
-            MessagingCenter.Send(this, "Refresh saved sensors",
-                _sensors.Select(s => s.ScannedDeviceInfo));
         }
 
         public IFileManager AppCotainer { get; private set; }

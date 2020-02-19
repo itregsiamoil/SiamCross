@@ -20,16 +20,16 @@
                                     <Grid VerticalOptions="FillAndExpand"
                                           rainbows:DebugRainbow.IsDebug="False">
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="20"></RowDefinition>
-                                            <RowDefinition Height="20"></RowDefinition>
-                                            <RowDefinition Height="2*"></RowDefinition>
-                                            <RowDefinition Height="5"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="*"></RowDefinition>
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="3*"></ColumnDefinition>
                                             <ColumnDefinition Width="*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
-                                        <Label HorizontalOptions="StartAndExpand" Text="{Binding Name}" FontSize="18" Grid.Row="0" Grid.Column="0"/>
+                                        <Label HorizontalOptions="StartAndExpand" Text="{Binding Name}" FontSize="18" 
+                                               Grid.Row="0" Grid.Column="0"/>
                                         <Label HorizontalOptions="StartAndExpand" Text="{Binding Type}" Grid.Row="1" Grid.Column="0" />
                                         <Label HorizontalOptions="StartAndExpand" Text="{Binding Status}" Grid.Row="2" Grid.Column="0"/>
                                         <Button HorizontalOptions="EndAndExpand" 

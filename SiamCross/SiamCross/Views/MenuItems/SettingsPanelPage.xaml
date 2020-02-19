@@ -45,7 +45,9 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <CheckBox Grid.Column="0" CheckedChanged="CheckBox_CheckedChanged"/>
+                        <CheckBox x:Name="AuthCheckBox"
+                                  Grid.Column="0" 
+                                  CheckedChanged="CheckBox_CheckedChanged"/>
                         <Label Margin="0, 5" Text="Авторизация" Grid.Column="1"/>
                     </Grid>
                 </ViewCell>
