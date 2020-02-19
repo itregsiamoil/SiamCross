@@ -5,12 +5,18 @@ using Xamarin.Forms;
 using System.ComponentModel;
 using System.Windows.Input;
 using SiamCross.Models;
+using SiamCross.Services.Logging;
+using SiamCross.AppObjects;
+using Autofac;
+using NLog;
 
 namespace SiamCross.ViewModels
 {
     public class ScannerViewModel : IViewModel
     {
-        private  IScannedDevicesService _service;
+        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+
+        private IScannedDevicesService _service;
 
         public ObservableCollection<ScannedDeviceInfo> ScannedDevices { get; }
 
@@ -35,22 +41,29 @@ namespace SiamCross.ViewModels
 
         private void ServicePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Device.BeginInvokeOnMainThread(() =>
+            try
             {
-                ScannedDevices.Clear();
-                ClassicDevices.Clear();
-                foreach (var deviceInfo in _service.ScannedDevices)
+                Device.BeginInvokeOnMainThread(() =>
                 {
-                    if (deviceInfo.BluetoothType == Models.BluetoothType.Classic)
+                    ScannedDevices.Clear();
+                    ClassicDevices.Clear();
+                    foreach (var deviceInfo in _service.ScannedDevices)
                     {
-                        ClassicDevices.Add(deviceInfo);
+                        if (deviceInfo.BluetoothType == Models.BluetoothType.Classic)
+                        {
+                            ClassicDevices.Add(deviceInfo);
+                        }
+                        else
+                        {
+                            ScannedDevices.Add(deviceInfo);
+                        }
                     }
-                    else
-                    {
-                        ScannedDevices.Add(deviceInfo);
-                    }
-                }
-            });
+                });
+            }
+            catch (System.Exception ex)
+            {
+                _logger.Error(ex, "ServicePropertyChanged handler");
+            }
         }
     }
 }

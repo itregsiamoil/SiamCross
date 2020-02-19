@@ -6,11 +6,17 @@ using SiamCross.Models;
 using Xamarin.Forms;
 using SiamCross.Views;
 using SiamCross.Views.MenuItems;
+using SiamCross.Services.Logging;
+using SiamCross.AppObjects;
+using Autofac;
+using NLog;
 
 namespace SiamCross.ViewModels
 {
     public class MenuPageViewModel
     {
+        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+
         private MenuPageItem _selectedItem;
 
         public class MenuPageItem
@@ -101,10 +107,18 @@ namespace SiamCross.ViewModels
         /// <returns></returns>
         private bool CanOpenPage(Type type)
         {
-            var stack = App.NavigationPage.Navigation.NavigationStack;
-            if (stack[stack.Count - 1].GetType() != type)
-                return true;
-            return false;
+            try
+            {
+                var stack = App.NavigationPage.Navigation.NavigationStack;
+                if (stack[stack.Count - 1].GetType() != type)
+                    return true;
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "CanOpenPage method");
+                return false;
+            }
         }
 
         void GoSearch(object obj)

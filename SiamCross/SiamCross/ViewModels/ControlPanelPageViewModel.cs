@@ -4,11 +4,18 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Xamarin.Forms;
 using System.Linq;
+using System;
+using SiamCross.Services.Logging;
+using SiamCross.AppObjects;
+using Autofac;
+using NLog;
 
 namespace SiamCross.ViewModels
 {
     public class ControlPanelPageViewModel : BaseViewModel, IViewModel
     {
+        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+
         public ObservableCollection<SensorData> SensorsData { get; }
 
         public ControlPanelPageViewModel()
@@ -27,19 +34,26 @@ namespace SiamCross.ViewModels
 
         private void DeleteSensorHandler(int id)
         {
-            var sensor = SensorService.Instance.Sensors
-                .SingleOrDefault(s => s.SensorData.Id == id);
-            if (sensor != null)
+            try
             {
-                if (!sensor.IsMeasurement)
+                var sensor = SensorService.Instance.Sensors
+                    .SingleOrDefault(s => s.SensorData.Id == id);
+                if (sensor != null)
                 {
-                    var sensorData = SensorsData.FirstOrDefault(s => s.Id == id);
-                    if (sensorData != null)
+                    if (!sensor.IsMeasurement)
                     {
-                        SensorsData.Remove(sensorData);
+                        var sensorData = SensorsData.FirstOrDefault(s => s.Id == id);
+                        if (sensorData != null)
+                        {
+                            SensorsData.Remove(sensorData);
+                        }
+                        SensorService.Instance.DeleteSensor(id);
                     }
-                    SensorService.Instance.DeleteSensor(id);
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "DeleteSensorHandler");
             }
         }
 

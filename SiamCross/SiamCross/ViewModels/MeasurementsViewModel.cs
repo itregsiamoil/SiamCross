@@ -1,5 +1,9 @@
-﻿using SiamCross.DataBase.DataBaseModels;
+﻿using Autofac;
+using NLog;
+using SiamCross.AppObjects;
+using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Services;
+using SiamCross.Services.Logging;
 using SiamCross.Views;
 using SiamCross.Views.MenuItems;
 using System;
@@ -18,47 +22,54 @@ namespace SiamCross.ViewModels
     {
         public void PushPage(MeasurementView selectedMeasurement)
         {
-            if (selectedMeasurement.Name.Contains("DDIM"))
+            try
             {
-                var measurement = _ddim2Measurements?
-                    .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
-                if (measurement != null)
+                if (selectedMeasurement.Name.Contains("DDIM"))
                 {
-                    if (CanOpenModalPage(typeof(Ddim2MeasurementDonePage)))
+                    var measurement = _ddim2Measurements?
+                        .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
+                    if (measurement != null)
                     {
-                        App.NavigationPage.Navigation
-                        .PushModalAsync(
-                        new Ddim2MeasurementDonePage(measurement), true);
+                        if (CanOpenModalPage(typeof(Ddim2MeasurementDonePage)))
+                        {
+                            App.NavigationPage.Navigation
+                            .PushModalAsync(
+                            new Ddim2MeasurementDonePage(measurement), true);
+                        }
+                    }
+                }
+                else if (selectedMeasurement.Name.Contains("DDIN"))
+                {
+                    var measurement = _ddin2Measurements?
+                        .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
+                    if (measurement != null)
+                    {
+                        if (CanOpenModalPage(typeof(Ddin2MeasurementDonePage)))
+                        {
+                            App.NavigationPage.Navigation
+                            .PushModalAsync(
+                            new Ddin2MeasurementDonePage(measurement), true);
+                        }
+                    }
+                }
+                else if (selectedMeasurement.Name.Contains("SIDDOSA3M"))
+                {
+                    var measurement = _siddosA3MMeasurement?
+                        .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
+                    if (measurement != null)
+                    {
+                        if (CanOpenModalPage(typeof(SiddosA3MMeasurementDonePage)))
+                        {
+                            App.NavigationPage.Navigation
+                            .PushModalAsync(
+                            new SiddosA3MMeasurementDonePage(measurement), true);
+                        }
                     }
                 }
             }
-            else if (selectedMeasurement.Name.Contains("DDIN"))
+            catch (Exception ex)
             {
-                var measurement = _ddin2Measurements?
-                    .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
-                if (measurement != null)
-                {
-                    if (CanOpenModalPage(typeof(Ddin2MeasurementDonePage)))
-                    {
-                        App.NavigationPage.Navigation
-                        .PushModalAsync(
-                        new Ddin2MeasurementDonePage(measurement), true);
-                    }
-                }
-            }
-            else if (selectedMeasurement.Name.Contains("SIDDOSA3M"))
-            {
-                var measurement = _siddosA3MMeasurement?
-                    .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
-                if (measurement != null)
-                {
-                    if (CanOpenModalPage(typeof(SiddosA3MMeasurementDonePage)))
-                    {
-                        App.NavigationPage.Navigation
-                        .PushModalAsync(
-                        new SiddosA3MMeasurementDonePage(measurement), true);
-                    }
-                }
+                _logger.Error(ex, "PushPage method");
             }
         }
 
@@ -67,7 +78,7 @@ namespace SiamCross.ViewModels
             bool result = false;
             var stack = App.NavigationPage.Navigation.ModalStack;
 
-            if (stack.Count > 0 )
+            if (stack.Count > 0)
             {
                 if (stack[stack.Count - 1].GetType() != type)
                 {
@@ -89,6 +100,8 @@ namespace SiamCross.ViewModels
 
         private List<SiddosA3MMeasurement> _siddosA3MMeasurement;
 
+        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+
         public ICommand SelectAll { get; set; }
 
         public MeasurementsViewModel()
@@ -105,6 +118,7 @@ namespace SiamCross.ViewModels
             _ddin2Measurements = new List<Ddin2Measurement>();
             _siddosA3MMeasurement = new List<SiddosA3MMeasurement>();
 
+            #region Comment
             //var ddim2M = new Ddim2Measurement()
             //{
             //    AccelerationGraph = null,
@@ -181,6 +195,7 @@ namespace SiamCross.ViewModels
             //            MeasurementType = "Динамограмма",
             //            Comments = "Комментарии вавыафыафыафывафыва"
             //        });
+            #endregion
 
             GetMeasurementsFromDb();
 
@@ -193,16 +208,23 @@ namespace SiamCross.ViewModels
 
             MessagingCenter
                 .Subscribe<Ddim2MeasurementDonePage, Ddim2Measurement>(
-                    this, 
-                    "Refresh measurement", 
-                    (sender, arg)=>
+                    this,
+                    "Refresh measurement",
+                    (sender, arg) =>
                     {
-                        var mv = Measurements
-                            .SingleOrDefault(m => m.Id == arg.Id && m.Name == arg.Name);
-                        if (mv != null)
+                        try
                         {
-                            mv.Field = arg.Field;
-                            mv.Comments = arg.Comment;
+                            var mv = Measurements
+                                .SingleOrDefault(m => m.Id == arg.Id && m.Name == arg.Name);
+                            if (mv != null)
+                            {
+                                mv.Field = arg.Field;
+                                mv.Comments = arg.Comment;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error(ex, "Refresh measurement Ddim2");
                         }
                     }
                 );
@@ -213,92 +235,120 @@ namespace SiamCross.ViewModels
                     "Refresh measurement",
                     (sender, arg) =>
                     {
-                        var mv = Measurements
-                        .SingleOrDefault(m => m.Id == arg.Id && m.Name == arg.Name);
-                        if (mv != null)
+                        try
                         {
-                            mv.Field = arg.Field;
-                            mv.Comments = arg.Comment;
+                            var mv = Measurements
+                            .SingleOrDefault(m => m.Id == arg.Id && m.Name == arg.Name);
+                            if (mv != null)
+                            {
+                                mv.Field = arg.Field;
+                                mv.Comments = arg.Comment;
+                            }
                         }
-                    }
-                ); 
-
-                MessagingCenter
-                .Subscribe<SiddosA3MMeasurementDonePage, SiddosA3MMeasurement>(
-                    this,
-                    "Refresh measurement",
-                    (sender, arg) =>
-                    {
-                        var mv = Measurements
-                        .SingleOrDefault(m => m.Id == arg.Id && m.Name == arg.Name);
-                        if (mv != null)
+                        catch (Exception ex)
                         {
-                            mv.Field = arg.Field;
-                            mv.Comments = arg.Comment;
+                            _logger.Error(ex, "Refresh measurement Ddin2");
                         }
                     }
                 );
 
             MessagingCenter
-                .Subscribe<MeasurementsSelectionViewModel>(
-                    this, 
-                    "RefreshAfterDeleting", 
-                    (sender)=> 
+            .Subscribe<SiddosA3MMeasurementDonePage, SiddosA3MMeasurement>(
+                this,
+                "Refresh measurement",
+                (sender, arg) =>
+                {
+                    try
                     {
-                        _ddim2Measurements.Clear();
-                        _ddin2Measurements.Clear();
-                        Measurements.Clear();
+                        var mv = Measurements
+                            .SingleOrDefault(m => m.Id == arg.Id && m.Name == arg.Name);
+                        if (mv != null)
+                        {
+                            mv.Field = arg.Field;
+                            mv.Comments = arg.Comment;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex, "Refresh measurement SiddosA3M");
+                    }
+                }
+            );
 
-                        GetMeasurementsFromDb();
+            MessagingCenter
+                .Subscribe<MeasurementsSelectionViewModel>(
+                    this,
+                    "RefreshAfterDeleting",
+                    (sender) =>
+                    {
+                        try
+                        {
+                            _ddim2Measurements.Clear();
+                            _ddin2Measurements.Clear();
+                            Measurements.Clear();
+
+                            GetMeasurementsFromDb();
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error(ex, "RefreshAfterDeleting handler lambda");
+                        }
                     }
                 );
         }
 
         private void GetMeasurementsFromDb()
         {
-            _ddim2Measurements = DataRepository.Instance.GetDdim2Measurements().ToList();
-            _ddin2Measurements = DataRepository.Instance.GetDdin2Measurements().ToList();
-            _siddosA3MMeasurement = DataRepository.Instance.GetSiddosA3MMeasurements().ToList();
-            foreach (var m in _ddim2Measurements)
+            try
             {
-                Measurements.Add(
-                    new MeasurementView
-                    {
-                        Id = m.Id,
-                        Name = m.Name,
-                        Field = m.Field,
-                        Date = m.DateTime,
-                        MeasurementType = "Динамограмма",
-                        Comments = m.Comment
-                    });
-            }
+                _ddim2Measurements = DataRepository.Instance.GetDdim2Measurements().ToList();
+                _ddin2Measurements = DataRepository.Instance.GetDdin2Measurements().ToList();
+                _siddosA3MMeasurement = DataRepository.Instance.GetSiddosA3MMeasurements().ToList();
+                foreach (var m in _ddim2Measurements)
+                {
+                    Measurements.Add(
+                        new MeasurementView
+                        {
+                            Id = m.Id,
+                            Name = m.Name,
+                            Field = m.Field,
+                            Date = m.DateTime,
+                            MeasurementType = "Динамограмма",
+                            Comments = m.Comment
+                        });
+                }
 
-            foreach (var m in _ddin2Measurements)
-            {
-                Measurements.Add(
-                    new MeasurementView
-                    {
-                        Id = m.Id,
-                        Name = m.Name,
-                        Field = m.Field,
-                        Date = m.DateTime,
-                        MeasurementType = "Динамограмма",
-                        Comments = m.Comment
-                    });
-            }
+                foreach (var m in _ddin2Measurements)
+                {
+                    Measurements.Add(
+                        new MeasurementView
+                        {
+                            Id = m.Id,
+                            Name = m.Name,
+                            Field = m.Field,
+                            Date = m.DateTime,
+                            MeasurementType = "Динамограмма",
+                            Comments = m.Comment
+                        });
+                }
 
-            foreach (var m in _siddosA3MMeasurement)
+                foreach (var m in _siddosA3MMeasurement)
+                {
+                    Measurements.Add(
+                        new MeasurementView
+                        {
+                            Id = m.Id,
+                            Name = m.Name,
+                            Field = m.Field,
+                            Date = m.DateTime,
+                            MeasurementType = "Динамограмма",
+                            Comments = m.Comment
+                        });
+                }
+            }
+            catch (Exception ex)
             {
-                Measurements.Add(
-                    new MeasurementView
-                    {
-                        Id = m.Id,
-                        Name = m.Name,
-                        Field = m.Field,
-                        Date = m.DateTime,
-                        MeasurementType = "Динамограмма",
-                        Comments = m.Comment
-                    });
+                _logger.Error(ex, "GetMeasurementFromDb method");
             }
         }
     }

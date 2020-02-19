@@ -1,5 +1,9 @@
-﻿using SiamCross.Models.Tools;
+﻿using Autofac;
+using NLog;
+using SiamCross.AppObjects;
+using SiamCross.Models.Tools;
 using SiamCross.Services;
+using SiamCross.Services.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +16,8 @@ namespace SiamCross.ViewModels
 {
     public class MeasurementsSelectionViewModel : BaseViewModel, IViewModel
     {
+        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+
         private string _title;
         public string Title 
         {
@@ -65,6 +71,7 @@ namespace SiamCross.ViewModels
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, "SaveMeasurements method");
                 await Application.Current.MainPage.DisplayAlert("Ошибка",
                 ex.Message, "OK");
             }
@@ -77,32 +84,39 @@ namespace SiamCross.ViewModels
 
         private void DeleteMeasurements()
         {
-            if (SelectedMeasurements.Count != 0)
+            try
             {
-                foreach (var m in SelectedMeasurements)
+                if (SelectedMeasurements.Count != 0)
                 {
-                    if (m is MeasurementView mv)
+                    foreach (var m in SelectedMeasurements)
                     {
-                        if (mv.Name.Contains("DDIM"))
+                        if (m is MeasurementView mv)
                         {
-                            DataRepository.Instance.RemoveDdim2Measurement(mv.Id);
-                            Measurements.Remove(mv);
-                        }
-                        else if (mv.Name.Contains("DDIN"))
-                        {
-                            DataRepository.Instance.RemoveDdin2Measurement(mv.Id);
-                            Measurements.Remove(mv);
-                        }
-                        else if (mv.Name.Contains("SIDDOSA3M"))
-                        {
-                            DataRepository.Instance.RemoveSiddosA3MMeasurement(mv.Id);
-                            Measurements.Remove(mv);
+                            if (mv.Name.Contains("DDIM"))
+                            {
+                                DataRepository.Instance.RemoveDdim2Measurement(mv.Id);
+                                Measurements.Remove(mv);
+                            }
+                            else if (mv.Name.Contains("DDIN"))
+                            {
+                                DataRepository.Instance.RemoveDdin2Measurement(mv.Id);
+                                Measurements.Remove(mv);
+                            }
+                            else if (mv.Name.Contains("SIDDOSA3M"))
+                            {
+                                DataRepository.Instance.RemoveSiddosA3MMeasurement(mv.Id);
+                                Measurements.Remove(mv);
+                            }
                         }
                     }
+                    MessagingCenter.Send<MeasurementsSelectionViewModel>(this, "RefreshAfterDeleting");
+                    SelectedMeasurements.Clear();
+                    RefreshSelectedCount();
                 }
-                MessagingCenter.Send<MeasurementsSelectionViewModel>(this, "RefreshAfterDeleting");
-                SelectedMeasurements.Clear();
-                RefreshSelectedCount();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "DeleteMeasurements method");
             }
         }
 
@@ -133,8 +147,9 @@ namespace SiamCross.ViewModels
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, "SendMeasurements command handler");
                 await Application.Current.MainPage.DisplayAlert("Ошибка",
-                ex.Message, "OK");
+                    ex.Message, "OK");
             }
         }
 
@@ -203,7 +218,7 @@ namespace SiamCross.ViewModels
             ValidateParameter(Settings.Instance.SmtpAddress,
                 "Введите адрес SMTP сервера!");
 
-            if (Settings.Instance.NeedAuthorization)
+            if (Settings.Instance.IsNeedAuthorization)
             {
                 ValidateParameter(Settings.Instance.Username,
                 "Введите имя пользователя!");

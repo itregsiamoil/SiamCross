@@ -31,7 +31,7 @@ namespace SiamCross.Droid.Models
                 m.IsBodyHtml = true;
                 SmtpClient smtp = null;
 
-                if (Settings.Instance.NeedAuthorization)
+                if (Settings.Instance.IsNeedAuthorization)
                 {
 
                     smtp = new SmtpClient(Settings.Instance.SmtpAddress,
@@ -102,7 +102,7 @@ namespace SiamCross.Droid.Models
                     m.IsBodyHtml = true;
                     SmtpClient smtp = null;
 
-                    if (Settings.Instance.NeedAuthorization)
+                    if (Settings.Instance.IsNeedAuthorization)
                     {
                         smtp = new SmtpClient(Settings.Instance.SmtpAddress,
                                               Settings.Instance.Port)
@@ -149,7 +149,7 @@ namespace SiamCross.Droid.Models
                 m.IsBodyHtml = true;
                 SmtpClient smtp = null;
 
-                if (Settings.Instance.NeedAuthorization)
+                if (Settings.Instance.IsNeedAuthorization)
                 {
                     smtp = new SmtpClient(Settings.Instance.SmtpAddress,
                                           Settings.Instance.Port)

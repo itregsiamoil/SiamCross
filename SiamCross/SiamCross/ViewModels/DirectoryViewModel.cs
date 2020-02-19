@@ -1,6 +1,8 @@
 ﻿using Autofac;
+using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Services;
+using SiamCross.Services.Logging;
 using SiamCross.Views;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,8 @@ namespace SiamCross.ViewModels
 {
     public class DirectoryViewModel : BaseViewModel, IViewModel
     {
+        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+
         public DirectoryViewModel()
         {
             Fields = new ObservableCollection<FieldPair>();
@@ -30,11 +34,18 @@ namespace SiamCross.ViewModels
 
         private void Update()
         {
-            Fields.Clear();
-            var fieldDict = HandbookData.Instance.GetFieldDictionary();
-            foreach (var field in fieldDict)
+            try
             {
-                Fields.Add(new FieldPair(field.Key, field.Value.ToString()));
+                Fields.Clear();
+                var fieldDict = HandbookData.Instance.GetFieldDictionary();
+                foreach (var field in fieldDict)
+                {
+                    Fields.Add(new FieldPair(field.Key, field.Value.ToString()));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Update method");
             }
         }
 
@@ -46,25 +57,39 @@ namespace SiamCross.ViewModels
 
         private void RemoveField()
         {
-            if(SelectedField != null)
+            try
             {
-                HandbookData.Instance.RemoveField((SelectedField as FieldPair).Key);
-                Update();
+                if (SelectedField != null)
+                {
+                    HandbookData.Instance.RemoveField((SelectedField as FieldPair).Key);
+                    Update();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "RemoveField command handler");
             }
         }
         private void OpenAddFieldsPage()
         {
-            var stack = App.NavigationPage.Navigation.ModalStack;
-            if (stack.Count > 0)
+            try
             {
-                if (stack[stack.Count - 1].GetType() != typeof(AddFieldPage))
+                var stack = App.NavigationPage.Navigation.ModalStack;
+                if (stack.Count > 0)
+                {
+                    if (stack[stack.Count - 1].GetType() != typeof(AddFieldPage))
+                    {
+                        App.NavigationPage.Navigation.PushModalAsync(new AddFieldPage());
+                    }
+                }
+                else
                 {
                     App.NavigationPage.Navigation.PushModalAsync(new AddFieldPage());
                 }
             }
-            else
+            catch (Exception ex)
             {
-                App.NavigationPage.Navigation.PushModalAsync(new AddFieldPage());
+                _logger.Error(ex, "OpenAddFieldsPage command handler");
             }
         }
     }

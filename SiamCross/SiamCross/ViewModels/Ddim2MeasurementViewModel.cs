@@ -1,8 +1,12 @@
-﻿using SiamCross.DataBase.DataBaseModels;
+﻿using Autofac;
+using NLog;
+using SiamCross.AppObjects;
+using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
 using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement;
 using SiamCross.Services;
+using SiamCross.Services.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,6 +20,8 @@ namespace SiamCross.ViewModels
 {
     public class Ddim2MeasurementViewModel : BaseViewModel, IViewModel
     {
+        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+
         private SensorData _sensorData;
 
         private List<string> _errorList;
@@ -33,7 +39,6 @@ namespace SiamCross.ViewModels
         public ObservableCollection<string> ModelPump { get; set; }
         public string SelectedModelPump { get; set; }
         public ICommand StartMeasurementCommand { get; set; }
-        private bool _isButtonPressed;
         private enum ModelPumpEnum
         {
             Balancer,
@@ -43,19 +48,25 @@ namespace SiamCross.ViewModels
 
         public Ddim2MeasurementViewModel(SensorData sensorData)
         {
-            _sensorData = sensorData;
-            SensorName = _sensorData.Name;
-            _errorList = new List<string>();
-            Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
-            ModelPump = new ObservableCollection<string>()
+            try
             {
-                "Балансирный",
-                "Цепной",
-                "Гидравлический"
-            };
-            StartMeasurementCommand = new Command(StartMeasurementHandler);
-            _isButtonPressed = false;
-            InitDefaultValues();
+                _sensorData = sensorData;
+                SensorName = _sensorData.Name;
+                _errorList = new List<string>();
+                Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
+                ModelPump = new ObservableCollection<string>()
+                {
+                    "Балансирный",
+                    "Цепной",
+                    "Гидравлический"
+                };
+                StartMeasurementCommand = new Command(StartMeasurementHandler);
+                InitDefaultValues();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Ddim2MeasurementViewModel constructor");
+            }
         }
 
         private void InitDefaultValues()
@@ -73,47 +84,54 @@ namespace SiamCross.ViewModels
 
         private async void StartMeasurementHandler()
         {
-            StartMeasurementCommand = new Command(() => { });
-            if (!ValidateForEmptiness())
+            try
             {
-                return;
-            }
+                StartMeasurementCommand = new Command(() => { });
+                if (!ValidateForEmptiness())
+                {
+                    return;
+                }
 
-            if (Imtravel[0] == 
-                Convert.ToChar(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator))
+                if (Imtravel[0] ==
+                    Convert.ToChar(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator))
+                {
+                    Imtravel.Insert(0, "0");
+                }
+
+                var secondaryParameters = new MeasurementSecondaryParameters(
+                    _sensorData.Name,
+                    "Динамограмма",
+                    SelectedField,
+                    Well,
+                    Bush,
+                    Shop,
+                    BufferPressure,
+                    Comments);
+
+                var measurementParams = new Ddim2MeasurementStartParameters(
+                    //int.Parse(Rod),
+                    24, ///////////////////////////////////////////////////// wtf rod for ddim2 ???
+                    int.Parse(DynPeriod),
+                    int.Parse(ApertNumber),
+                    float.Parse(Imtravel),
+                    GetModelPump(),
+                    secondaryParameters);
+
+                if (!ValidateMeasurementParameters(measurementParams))
+                {
+                    ShowErrors();
+                    return;
+                }
+
+                await Application.Current.MainPage.Navigation.PopModalAsync();
+                await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);
+            }
+            catch (Exception ex)
             {
-                Imtravel.Insert(0, "0");
+                _logger.Error(ex, "StartMeasurementHandler Ddim2MeasurementVM");
             }
-
-            var secondaryParameters = new MeasurementSecondaryParameters(
-                _sensorData.Name,
-                "Динамограмма",
-                SelectedField,
-                Well,
-                Bush,
-                Shop,
-                BufferPressure,
-                Comments);
-
-            var measurementParams = new Ddim2MeasurementStartParameters(
-                //int.Parse(Rod),
-                24, ///////////////////////////////////////////////////// wtf rod for ddim2 ???
-                int.Parse(DynPeriod),
-                int.Parse(ApertNumber),
-                float.Parse(Imtravel),
-                GetModelPump(),
-                secondaryParameters);
-
-            if (!ValidateMeasurementParameters(measurementParams))
-            {
-                ShowErrors();
-                return;
-            }
-
-            await Application.Current.MainPage.Navigation.PopModalAsync();
-            await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);
         }
-        
+
         private int GetModelPump()
         {
             int result = -1;
@@ -134,10 +152,10 @@ namespace SiamCross.ViewModels
             return result;
         }
 
-        public string SensorName 
-        { 
-            get; 
-            set; 
+        public string SensorName
+        {
+            get;
+            set;
         }
 
         private bool ValidateMeasurementParameters(Ddim2MeasurementStartParameters measurementParams)
@@ -207,7 +225,7 @@ namespace SiamCross.ViewModels
                 Application.Current.MainPage.DisplayAlert("Введены неправильные данные",
                 errors, "OK");
             }
-            
+
         }
 
         private void ValidateParameter(string text, string errorMessage)

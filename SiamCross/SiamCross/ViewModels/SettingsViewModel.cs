@@ -18,7 +18,7 @@ namespace SiamCross.ViewModels
             set
             {
                 _needAuthorization = value;
-                Settings.Instance.NeedAuthorization = value;
+                Settings.Instance.IsNeedAuthorization = value;
             }
         }
         public string FromAddress

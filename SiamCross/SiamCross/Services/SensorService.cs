@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using NLog;
 using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
@@ -7,6 +8,7 @@ using SiamCross.Models.Sensors.Ddin2.Measurement;
 using SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement;
 using SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement;
 using SiamCross.Models.Tools;
+using SiamCross.Services.Logging;
 using SiamCross.Views;
 using System;
 using System.Collections.Generic;

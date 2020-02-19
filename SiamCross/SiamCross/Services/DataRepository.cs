@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Dapper;
+using NLog;
 using SiamCross.AppObjects;
 using SiamCross.DataBase;
 using SiamCross.DataBase.DataBaseModels;
