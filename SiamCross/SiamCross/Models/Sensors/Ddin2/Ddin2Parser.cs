@@ -1,4 +1,7 @@
-﻿using SiamCross.Models.Tools;
+﻿using Autofac;
+using SiamCross.AppObjects;
+using SiamCross.Models.Tools;
+using SiamCross.Services.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +11,7 @@ namespace SiamCross.Models.Sensors.Ddin2
 {
     public class Ddin2Parser
     {
+        private static readonly NLog.Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
         /// <summary>
         /// Буффер сообщений
         /// </summary>
@@ -49,61 +53,69 @@ namespace SiamCross.Models.Sensors.Ddin2
         /// <param name="inputBytes"></param>
         public void ByteProcess(byte[] inputBytes)
         {
-            var message = _byteBuffer.AddBytes(inputBytes);
-            if (message.Length == 0)
+            try
             {
-                return;
-            }
+                var message = _byteBuffer.AddBytes(inputBytes);
+                if (message.Length == 0)
+                {
+                    return;
+                }
 
-            var commandName = DefineCommand(message);
-            var commandData = ConvertToStringPayload(message);
+                var commandName = DefineCommand(message);
+                var commandData = ConvertToStringPayload(message);
 
-            switch (commandName)
-            {
-                //case "DeviceNameAddress":
-                //    _commandDictionary.Add(
-                //        new byte[] { message[12], message[13], message[14], message[15] },
-                //        "DeviceName");
-                //    _deviceNameQualifier.DeviceNameAddress = GetPayload(message);
-                //    break;
-                //case "DeviceNameSize":
-                //    _deviceNameQualifier.DeviceNameSize = GetPayload(message);
-                //    break;
-                //case "ProgrammVersionAddress":
-                //    _commandDictionary.Add(
-                //        new byte[] { message[12], message[13], message[14], message[15] },
-                //        "DeviceProgrammVersion");
-                //    _deviceFirmWaveQualifier.DeviceNameAddress = GetPayload(message);
-                //    break;
-                //case "ProgrammVersionSize":
-                //    _deviceFirmWaveQualifier.DeviceNameSize = GetPayload(message);
-                //    break;
-                case "Program":
-                    var adr = BitConverter.ToString(new[] { message[5], message[4] });
-                    MessageReceived?.Invoke(commandName, adr);
-                    break;
-                case "ExportDynGraph":
-                    ExportByteData(commandName, message);
-                    break;
-                case "ExportAccelerationGraph":
-                    ExportByteData(commandName, message);
-                    break;
-                case "ReadMeasurementReport":
-                    ExportByteData(commandName, message);
-                    Console.WriteLine("Read Measurement Report");
-                    break;
-                case "ReadMeasurementErrorCode":
-                    ExportByteData(commandName, message);
-                    break;
-                case "DgmPart1":
-                case "DgmPart2":
-                    ExportByteData(commandName, message);
-                    break;
+                switch (commandName)
+                {
+                    //case "DeviceNameAddress":
+                    //    _commandDictionary.Add(
+                    //        new byte[] { message[12], message[13], message[14], message[15] },
+                    //        "DeviceName");
+                    //    _deviceNameQualifier.DeviceNameAddress = GetPayload(message);
+                    //    break;
+                    //case "DeviceNameSize":
+                    //    _deviceNameQualifier.DeviceNameSize = GetPayload(message);
+                    //    break;
+                    //case "ProgrammVersionAddress":
+                    //    _commandDictionary.Add(
+                    //        new byte[] { message[12], message[13], message[14], message[15] },
+                    //        "DeviceProgrammVersion");
+                    //    _deviceFirmWaveQualifier.DeviceNameAddress = GetPayload(message);
+                    //    break;
+                    //case "ProgrammVersionSize":
+                    //    _deviceFirmWaveQualifier.DeviceNameSize = GetPayload(message);
+                    //    break;
+                    case "Program":
+                        var adr = BitConverter.ToString(new[] { message[5], message[4] });
+                        MessageReceived?.Invoke(commandName, adr);
+                        break;
+                    case "ExportDynGraph":
+                        ExportByteData(commandName, message);
+                        break;
+                    case "ExportAccelerationGraph":
+                        ExportByteData(commandName, message);
+                        break;
+                    case "ReadMeasurementReport":
+                        ExportByteData(commandName, message);
+                        Console.WriteLine("Read Measurement Report");
+                        break;
+                    case "ReadMeasurementErrorCode":
+                        ExportByteData(commandName, message);
+                        break;
+                    case "DgmPart1":
+                    case "DgmPart2":
+                        ExportByteData(commandName, message);
+                        break;
+                }
+                //Если команда чтения
+                if (message[3] == 0x01)
+                {
+                    MessageReceived?.Invoke(commandName, commandData);
+                }
             }
-            //Если команда чтения
-            if (message[3] == 0x01)
+            catch (Exception ex)
             {
-                MessageReceived?.Invoke(commandName, commandData);
+                _logger.Error(ex, "ByteProcess");
+                throw;
             }
         }
 

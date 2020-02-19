@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Autofac;
+using NLog;
+using SiamCross.AppObjects;
 using SiamCross.Models.Tools;
+using SiamCross.Services.Logging;
 
 namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 
 {
     public class Ddim2Parser
     {
+        private static readonly NLog.Logger _logger = AppContainer.Container
+            .Resolve<ILogManager>().GetLog();
         /// <summary>
         /// Буффер сообщений
         /// </summary>
@@ -27,6 +33,8 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         /// Получены данные графика
         /// </summary>
         public Action<string, byte[]> ByteMessageReceived { get; set; }
+
+        public static Logger Logger => _logger;
 
         ///// <summary>
         ///// Определитель имени устройства
@@ -51,61 +59,69 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         /// <param name="inputBytes"></param>
         public void ByteProcess(byte[] inputBytes)
         {
-            var message = _byteBuffer.AddBytes(inputBytes);
-            if (message.Length == 0)
+            try
             {
-                return;
-            }
+                var message = _byteBuffer.AddBytes(inputBytes);
+                if (message.Length == 0)
+                {
+                    return;
+                }
 
-            var commandName = DefineCommand(message);
-            var commandData = ConvertToStringPayload(message);
+                var commandName = DefineCommand(message);
+                var commandData = ConvertToStringPayload(message);
 
-            switch (commandName)
-            {
-                //case "DeviceNameAddress":
-                //    _commandDictionary.Add(
-                //        new byte[] { message[12], message[13], message[14], message[15] },
-                //        "DeviceName");
-                //    _deviceNameQualifier.DeviceNameAddress = GetPayload(message);
-                //    break;
-                //case "DeviceNameSize":
-                //    _deviceNameQualifier.DeviceNameSize = GetPayload(message);
-                //    break;
-                //case "ProgrammVersionAddress":
-                //    _commandDictionary.Add(
-                //        new byte[] { message[12], message[13], message[14], message[15] },
-                //        "DeviceProgrammVersion");
-                //    _deviceFirmWaveQualifier.DeviceNameAddress = GetPayload(message);
-                //    break;
-                //case "ProgrammVersionSize":
-                //    _deviceFirmWaveQualifier.DeviceNameSize = GetPayload(message);
-                //    break;
-                case "Program":
-                    var adr = BitConverter.ToString(new[] { message[5], message[4] });
-                    MessageReceived?.Invoke(commandName, adr);
-                    break;
-                case "ExportDynGraph":
-                    ExportByteData(commandName, message);
-                    break;
-                case "ExportAccelerationGraph":
-                    ExportByteData(commandName, message);
-                    break;
-                case "ReadMeasurementReport":
-                    ExportByteData(commandName, message);
-                    Console.WriteLine("Read Measurement Report");
-                    break;
-                case "ReadMeasurementErrorCode":
-                    ExportByteData(commandName, message);
-                    break;
-                case "DgmPart1":
-                case "DgmPart2":
-                    ExportByteData(commandName, message);
-                    break;
+                switch (commandName)
+                {
+                    //case "DeviceNameAddress":
+                    //    _commandDictionary.Add(
+                    //        new byte[] { message[12], message[13], message[14], message[15] },
+                    //        "DeviceName");
+                    //    _deviceNameQualifier.DeviceNameAddress = GetPayload(message);
+                    //    break;
+                    //case "DeviceNameSize":
+                    //    _deviceNameQualifier.DeviceNameSize = GetPayload(message);
+                    //    break;
+                    //case "ProgrammVersionAddress":
+                    //    _commandDictionary.Add(
+                    //        new byte[] { message[12], message[13], message[14], message[15] },
+                    //        "DeviceProgrammVersion");
+                    //    _deviceFirmWaveQualifier.DeviceNameAddress = GetPayload(message);
+                    //    break;
+                    //case "ProgrammVersionSize":
+                    //    _deviceFirmWaveQualifier.DeviceNameSize = GetPayload(message);
+                    //    break;
+                    case "Program":
+                        var adr = BitConverter.ToString(new[] { message[5], message[4] });
+                        MessageReceived?.Invoke(commandName, adr);
+                        break;
+                    case "ExportDynGraph":
+                        ExportByteData(commandName, message);
+                        break;
+                    case "ExportAccelerationGraph":
+                        ExportByteData(commandName, message);
+                        break;
+                    case "ReadMeasurementReport":
+                        ExportByteData(commandName, message);
+                        Console.WriteLine("Read Measurement Report");
+                        break;
+                    case "ReadMeasurementErrorCode":
+                        ExportByteData(commandName, message);
+                        break;
+                    case "DgmPart1":
+                    case "DgmPart2":
+                        ExportByteData(commandName, message);
+                        break;
+                }
+                //Если команда чтения
+                if (message[3] == 0x01)
+                {
+                    MessageReceived?.Invoke(commandName, commandData);
+                }
             }
-            //Если команда чтения
-            if (message[3] == 0x01)
+            catch (Exception ex)
             {
-                MessageReceived?.Invoke(commandName, commandData);
+                _logger.Error(ex, "ByteProcess");
+                throw;
             }
         }
 
