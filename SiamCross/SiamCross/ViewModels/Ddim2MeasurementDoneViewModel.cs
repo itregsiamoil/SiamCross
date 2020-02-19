@@ -83,8 +83,6 @@ namespace SiamCross.ViewModels
                 _measurement = measurement;
                 Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
 
-                InitDynGraph();
-
                 InitMaxMixGraphValue(_measurement.DynGraph.ToList(),
                     _measurement.Step, _measurement.WeightDiscr);
 
@@ -123,23 +121,6 @@ namespace SiamCross.ViewModels
             {
                 _logger.Error(ex, "Ddim2MeasurementDoneVM constructor");
             }
-        }
-
-        private void InitDynGraph()
-        {
-            
-
-            //var points = DgmConverter.GetXYs(_measurement.DynGraph.ToList(),
-            //    _measurement.Step,
-            //    _measurement.WeightDiscr);
-
-            //for (int i = 0; i < points.GetUpperBound(0); i++)
-            //{
-            //    //series.Points.Add(new DataPoint(points[i, 0], points[i, 1]));
-            //    series.Points.Add(new DataPoint(i, points[i, 0]));
-            //}
-
-            
         }
 
         private void InitMaxMixGraphValue(List<byte> graph, short step, short weightDiscret)

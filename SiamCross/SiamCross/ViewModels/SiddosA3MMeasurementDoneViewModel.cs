@@ -1,6 +1,10 @@
-﻿using SiamCross.DataBase.DataBaseModels;
+﻿using Autofac;
+using NLog;
+using SiamCross.AppObjects;
+using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
+using SiamCross.Services.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +14,8 @@ namespace SiamCross.ViewModels
 {
     public class SiddosA3MMeasurementDoneViewModel : BaseViewModel, IViewModel
     {
+        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+
         private SiddosA3MMeasurement _measurement;
 
         public ObservableCollection<string> Fields { get; set; }
@@ -72,59 +78,49 @@ namespace SiamCross.ViewModels
 
         public SiddosA3MMeasurementDoneViewModel(SiddosA3MMeasurement measurement)
         {
-            _measurement = measurement;
-            Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
-
-            InitDynGraph();
-
-            InitMaxMixGraphValue(_measurement.DynGraph.ToList(),
-                _measurement.Step, _measurement.WeightDiscr);
-
-            SelectedField = _measurement.Field;
-            Well = _measurement.Well;
-            Bush = _measurement.Bush;
-            Shop = _measurement.Shop;
-            Date = _measurement.DateTime.ToString();
-            BufferPressure = _measurement.BufferPressure;
-            Comments = _measurement.Comment;
-            DeviceName = _measurement.Name;
-            MeasurementType = "Динамограмма";
-            ApertNumber = _measurement.ApertNumber.ToString();
-            MaxLoad = _measurement.MaxWeight.ToString();
-            MinLoad = _measurement.MinWeight.ToString();
-            Imtravel = _measurement.TravelLength.ToString();    //
-            PumpRate = _measurement.SwingCount.ToString();      //
-            UpperRodWeight = "0";
-            LowerRodWeight = "0";
-            switch (_measurement.ModelPump)
+            try
             {
-                case 0:
-                    SelectedModelPump = "Балансирный";
-                    break;
-                case 1:
-                    SelectedModelPump = "Цепной";
-                    break;
-                case 2:
-                    SelectedModelPump = "Гидравлический";
-                    break;
-                default:
-                    break;
+                _measurement = measurement;
+                Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
+
+                InitMaxMixGraphValue(_measurement.DynGraph.ToList(),
+                    _measurement.Step, _measurement.WeightDiscr);
+
+                SelectedField = _measurement.Field;
+                Well = _measurement.Well;
+                Bush = _measurement.Bush;
+                Shop = _measurement.Shop;
+                Date = _measurement.DateTime.ToString();
+                BufferPressure = _measurement.BufferPressure;
+                Comments = _measurement.Comment;
+                DeviceName = _measurement.Name;
+                MeasurementType = "Динамограмма";
+                ApertNumber = _measurement.ApertNumber.ToString();
+                MaxLoad = _measurement.MaxWeight.ToString();
+                MinLoad = _measurement.MinWeight.ToString();
+                Imtravel = _measurement.TravelLength.ToString();    //
+                PumpRate = _measurement.SwingCount.ToString();      //
+                UpperRodWeight = "0";
+                LowerRodWeight = "0";
+                switch (_measurement.ModelPump)
+                {
+                    case 0:
+                        SelectedModelPump = "Балансирный";
+                        break;
+                    case 1:
+                        SelectedModelPump = "Цепной";
+                        break;
+                    case 2:
+                        SelectedModelPump = "Гидравлический";
+                        break;
+                    default:
+                        break;
+                }
             }
-        }
-
-        private void InitDynGraph()
-        {
-            
-
-            //var points = DgmConverter.GetXYs(_measurement.DynGraph.ToList(),
-            //    _measurement.Step,
-            //    _measurement.WeightDiscr);
-
-            //for (int i = 0; i < points.GetUpperBound(0); i++)
-            //{
-            //    //series.Points.Add(new DataPoint(points[i, 0], points[i, 1]));
-            //    series.Points.Add(new DataPoint(i, points[i, 0]));
-            //}           
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "SiddosA3MMeasurementDoneVM constructor");
+            }
         }
 
         private void InitMaxMixGraphValue(List<byte> graph, short step, short weightDiscret)

@@ -1,8 +1,12 @@
-﻿using SiamCross.Models;
+﻿using Autofac;
+using NLog;
+using SiamCross.AppObjects;
+using SiamCross.Models;
 using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement;
 using SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement;
 using SiamCross.Services;
+using SiamCross.Services.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,6 +20,8 @@ namespace SiamCross.ViewModels
 {
     public class SiddosA3MMeasurementViewModel : BaseViewModel, IViewModel
     {
+        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+
         private SensorData _sensorData;
 
         private List<string> _errorList;
@@ -43,20 +49,27 @@ namespace SiamCross.ViewModels
 
         public SiddosA3MMeasurementViewModel(SensorData sensorData)
         {
-            _sensorData = sensorData;
-            SensorName = _sensorData.Name;
-            _errorList = new List<string>();
-            Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
-
-            ModelPump = new ObservableCollection<string>()
+            try
             {
+                _sensorData = sensorData;
+                SensorName = _sensorData.Name;
+                _errorList = new List<string>();
+                Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
+
+                ModelPump = new ObservableCollection<string>()
+                {
                 "Балансирный",
                 "Цепной",
                 "Гидравлический"
-            };
-            StartMeasurementCommand = new Command(StartMeasurementHandler);
+                };
+                StartMeasurementCommand = new Command(StartMeasurementHandler);
 
-            InitDefaultValues();
+                InitDefaultValues();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "SiddosA3MMeasureementVM constructor");
+            }
         }
 
         private void InitDefaultValues()
@@ -74,47 +87,54 @@ namespace SiamCross.ViewModels
 
         private async void StartMeasurementHandler()
         {
-            StartMeasurementCommand = new Command(() => { });
-            if (!ValidateForEmptiness())
+            try
             {
-                return;
-            }
+                StartMeasurementCommand = new Command(() => { });
+                if (!ValidateForEmptiness())
+                {
+                    return;
+                }
 
-            if (Imtravel[0] == 
-                Convert.ToChar(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator))
+                if (Imtravel[0] ==
+                    Convert.ToChar(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator))
+                {
+                    Imtravel.Insert(0, "0");
+                }
+
+                var secondaryParameters = new MeasurementSecondaryParameters(
+                    _sensorData.Name,
+                    "Динамограмма",
+                    SelectedField,
+                    Well,
+                    Bush,
+                    Shop,
+                    BufferPressure,
+                    Comments);
+
+                var measurementParams = new SiddosA3MMeasurementStartParameters(
+                    //int.Parse(Rod),
+                    24,
+                    int.Parse(DynPeriod),
+                    int.Parse(ApertNumber),
+                    float.Parse(Imtravel),
+                    GetModelPump(),
+                    secondaryParameters);
+
+                if (!ValidateMeasurementParameters(measurementParams))
+                {
+                    ShowErrors();
+                    return;
+                }
+
+                await Application.Current.MainPage.Navigation.PopModalAsync();
+                await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);
+            }
+            catch (Exception ex)
             {
-                Imtravel.Insert(0, "0");
+                _logger.Error(ex, "StartMeasurementHandler");
             }
-
-            var secondaryParameters = new MeasurementSecondaryParameters(
-                _sensorData.Name,
-                "Динамограмма",
-                SelectedField,
-                Well,
-                Bush,
-                Shop,
-                BufferPressure,
-                Comments);
-
-            var measurementParams = new SiddosA3MMeasurementStartParameters(
-                //int.Parse(Rod),
-                24,
-                int.Parse(DynPeriod),
-                int.Parse(ApertNumber),
-                float.Parse(Imtravel),
-                GetModelPump(),
-                secondaryParameters);
-
-            if (!ValidateMeasurementParameters(measurementParams))
-            {
-                ShowErrors();
-                return;
-            }
-
-            await Application.Current.MainPage.Navigation.PopModalAsync();
-            await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);           
         }
-        
+
         private int GetModelPump()
         {
             int result = -1;
@@ -135,10 +155,10 @@ namespace SiamCross.ViewModels
             return result;
         }
 
-        public string SensorName 
-        { 
-            get; 
-            set; 
+        public string SensorName
+        {
+            get;
+            set;
         }
 
         private bool ValidateMeasurementParameters(SiddosA3MMeasurementStartParameters measurementParams)
@@ -207,7 +227,7 @@ namespace SiamCross.ViewModels
                 Application.Current.MainPage.DisplayAlert("Введены неправильные данные",
                 errors, "OK");
             }
-            
+
         }
 
         private void ValidateParameter(string text, string errorMessage)
