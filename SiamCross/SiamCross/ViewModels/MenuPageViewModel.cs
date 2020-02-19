@@ -117,7 +117,7 @@ namespace SiamCross.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "CanOpenPage method");
-                return false;
+                throw;
             }
         }
 

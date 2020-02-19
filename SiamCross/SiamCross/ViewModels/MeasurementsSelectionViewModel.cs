@@ -74,6 +74,7 @@ namespace SiamCross.ViewModels
                 _logger.Error(ex, "SaveMeasurements method");
                 await Application.Current.MainPage.DisplayAlert("Ошибка",
                 ex.Message, "OK");
+                throw;
             }
         }
 
@@ -117,6 +118,7 @@ namespace SiamCross.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "DeleteMeasurements method");
+                throw;
             }
         }
 
@@ -150,6 +152,7 @@ namespace SiamCross.ViewModels
                 _logger.Error(ex, "SendMeasurements command handler");
                 await Application.Current.MainPage.DisplayAlert("Ошибка",
                     ex.Message, "OK");
+                throw;
             }
         }
 

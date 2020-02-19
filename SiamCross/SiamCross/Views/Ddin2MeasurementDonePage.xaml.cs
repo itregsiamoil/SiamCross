@@ -44,8 +44,8 @@ namespace SiamCross.Views
             catch (Exception ex)
             {
                 _logger.Error(ex, "Ddin2MeasurementDonePage constructor");
+                throw;
             }
-
         }
 
         private void CanvasView_PaintSurface(object sender, SkiaSharp.Views.Forms.SKPaintSurfaceEventArgs args)
@@ -97,6 +97,7 @@ namespace SiamCross.Views
             catch (Exception ex)
             {
                 _logger.Error(ex, "CanvasView_PaintSurface Ddin2MeasurementDonePage");
+                throw;
             }
         }
 

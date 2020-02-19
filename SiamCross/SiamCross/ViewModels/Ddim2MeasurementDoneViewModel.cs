@@ -120,6 +120,7 @@ namespace SiamCross.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "Ddim2MeasurementDoneVM constructor");
+                throw;
             }
         }
 

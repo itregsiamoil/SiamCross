@@ -132,6 +132,7 @@ namespace SiamCross.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "StartMeasurementHandler");
+                throw;
             }
         }
 

@@ -70,6 +70,7 @@ namespace SiamCross.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "PushPage method");
+                throw;
             }
         }
 
@@ -349,6 +350,7 @@ namespace SiamCross.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "GetMeasurementFromDb method");
+                throw;
             }
         }
     }

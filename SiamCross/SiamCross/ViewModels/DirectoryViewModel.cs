@@ -46,6 +46,7 @@ namespace SiamCross.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "Update method");
+                throw;
             }
         }
 
@@ -68,6 +69,7 @@ namespace SiamCross.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "RemoveField command handler");
+                throw;
             }
         }
         private void OpenAddFieldsPage()
@@ -90,6 +92,7 @@ namespace SiamCross.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "OpenAddFieldsPage command handler");
+                throw;
             }
         }
     }
