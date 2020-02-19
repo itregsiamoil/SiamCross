@@ -133,7 +133,7 @@ namespace SiamCross.Droid.Models
             while (!_cancellToken.IsCancellationRequested)
             {
                 if (!_inStream.CanRead || !_inStream.IsDataAvailable())
-                {
+                {                  
                     continue;
                 }
                 byte[] inBuf = new byte[1];
@@ -154,7 +154,7 @@ namespace SiamCross.Droid.Models
                 System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapter.SendData  " + _scannedDeviceInfo.Name + ": " + e.Message);
                 ConnectFailed?.Invoke();
             }
-             await Task.Delay(300);
+             await Task.Delay(Constants.ShortDelay);
         }
 
         public override void OnReceive(Context context, Intent intent)
