@@ -54,6 +54,7 @@ namespace SiamCross.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "DeleteSensorHandler");
+                throw;
             }
         }
 

@@ -63,6 +63,7 @@ namespace SiamCross.ViewModels
             catch (System.Exception ex)
             {
                 _logger.Error(ex, "ServicePropertyChanged handler");
+                throw;
             }
         }
     }

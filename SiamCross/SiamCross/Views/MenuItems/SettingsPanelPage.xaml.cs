@@ -15,7 +15,7 @@ namespace SiamCross.Views.MenuItems
             _vm = new ViewModel<SettingsViewModel>();
             this.BindingContext = _vm.GetViewModel;
             InitializeComponent();
-            if (Settings.Instance.NeedAuthorization)
+            if (Settings.Instance.IsNeedAuthorization)
             {
                 AuthCheckBox.IsChecked = true;
             }

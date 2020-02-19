@@ -44,6 +44,7 @@ namespace SiamCross.Views
             catch (Exception ex)
             {
                 _logger.Error(ex, "SiddosA3MMeasurementDonePage constructor");
+                throw;
             }
         }
 
@@ -98,6 +99,7 @@ namespace SiamCross.Views
             catch (Exception ex)
             {
                 _logger.Error(ex, "CanvasView_PaintSurface");
+                throw;
             }
         }
 
