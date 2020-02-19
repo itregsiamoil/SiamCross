@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Models.Scanners;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using SiamCross.ViewModels;
-
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

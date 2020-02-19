@@ -9,6 +9,7 @@ using SiamCross.Services.Logging;
 using SiamCross.AppObjects;
 using Autofac;
 using NLog;
+using System;
 
 namespace SiamCross.ViewModels
 {
@@ -16,7 +17,7 @@ namespace SiamCross.ViewModels
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 
-        private IScannedDevicesService _service;
+        private IBluetoothScanner _scanner;
 
         public ObservableCollection<ScannedDeviceInfo> ScannedDevices { get; }
 
@@ -24,45 +25,55 @@ namespace SiamCross.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ScannerViewModel(IScannedDevicesService service)
+        public ScannerViewModel(IBluetoothScanner scanner)
         {
-            _service = service;
+            _scanner = scanner;
             ScannedDevices = new ObservableCollection<ScannedDeviceInfo>();
             ClassicDevices = new ObservableCollection<ScannedDeviceInfo>();
 
-            _service.PropertyChanged += ServicePropertyChanged;
-            _service.StartScan();
+            _scanner.Received += ScannerReceivedDevice;
+            _scanner.Start();
+        }
+
+        private void ScannerReceivedDevice(ScannedDeviceInfo dev)
+        {
+            if (dev.Name == null ||
+                dev.BluetoothArgs == null ||
+                dev.Name == "")
+            {
+                return;
+            }
+
+            switch (dev.BluetoothType)
+            {
+                case BluetoothType.Classic:
+                    if (!ClassicDevices.Contains(dev))
+                    {
+                        ClassicDevices.Add(dev);
+                    }
+                    break;
+                case BluetoothType.Le:
+                    if (!ScannedDevices.Contains(dev))
+                    {
+                        ScannedDevices.Add(dev);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         public void StartScan()
         {
-            _service.StartScan();
-        }
-
-        private void ServicePropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
             try
             {
-                Device.BeginInvokeOnMainThread(() =>
-                {
-                    ScannedDevices.Clear();
-                    ClassicDevices.Clear();
-                    foreach (var deviceInfo in _service.ScannedDevices)
-                    {
-                        if (deviceInfo.BluetoothType == Models.BluetoothType.Classic)
-                        {
-                            ClassicDevices.Add(deviceInfo);
-                        }
-                        else
-                        {
-                            ScannedDevices.Add(deviceInfo);
-                        }
-                    }
-                });
+                ScannedDevices.Clear();
+                ClassicDevices.Clear();
+                _scanner.Start();
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                _logger.Error(ex, "ServicePropertyChanged handler");
+                _logger.Error(ex, "StartScan");
                 throw;
             }
         }
