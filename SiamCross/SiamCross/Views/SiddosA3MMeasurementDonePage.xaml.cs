@@ -129,11 +129,19 @@ namespace SiamCross.Views
 
         protected override void OnDisappearing()
         {
-            base.OnDisappearing();
-            DataRepository.Instance.SaveSiddosA3MMeasurement(_measurement);
-            MessagingCenter
-                .Send<SiddosA3MMeasurementDonePage, SiddosA3MMeasurement>(
-                this, "Refresh measurement", _measurement);
+            try
+            {
+                base.OnDisappearing();
+                DataRepository.Instance.SaveSiddosA3MMeasurement(_measurement);
+                MessagingCenter
+                    .Send<SiddosA3MMeasurementDonePage, SiddosA3MMeasurement>(
+                    this, "Refresh measurement", _measurement);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "OnDisappearing");
+                throw;
+            }
         }
     }
 }

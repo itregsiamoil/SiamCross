@@ -1,4 +1,8 @@
-﻿using SiamCross.Models.Tools;
+﻿using Autofac;
+using NLog;
+using SiamCross.AppObjects;
+using SiamCross.Models.Tools;
+using SiamCross.Services.Logging;
 using SiamCross.ViewModels;
 
 using Xamarin.Forms;
@@ -9,13 +13,15 @@ namespace SiamCross.Views.MenuItems
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SettingsPanelPage : ContentPage
     {
+        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+
         private readonly ViewModel<SettingsViewModel> _vm;
         public SettingsPanelPage()
         {
             _vm = new ViewModel<SettingsViewModel>();
             this.BindingContext = _vm.GetViewModel;
             InitializeComponent();
-            if (Settings.Instance.NeedAuthorization)
+            if (Settings.Instance.IsNeedAuthorization)
             {
                 AuthCheckBox.IsChecked = true;
             }
@@ -24,8 +30,16 @@ namespace SiamCross.Views.MenuItems
 
         protected override async void OnDisappearing()
         {
-            base.OnDisappearing();
-            await Settings.Instance.SaveSettings();
+            try
+            {
+                base.OnDisappearing();
+                await Settings.Instance.SaveSettings();
+            }
+            catch (System.Exception ex)
+            {
+                _logger.Error(ex, "OnDisappearing");
+                throw;
+            }
         }
 
         private void CheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
