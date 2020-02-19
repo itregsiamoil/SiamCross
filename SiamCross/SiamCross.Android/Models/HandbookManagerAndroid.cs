@@ -23,12 +23,13 @@ namespace SiamCross.Droid.Models
             TypeNameHandling = TypeNameHandling.All
         };
 
+        private readonly object _locker = new object();
         public Dictionary<string, int> LoadFields()
         {
             var fieldDictionary = new Dictionary<string, int>();
 
-            //await Task.Run(() =>
-            //{
+            lock (_locker)
+            {
                 var backingFile = Path.Combine(
                     System.Environment.GetFolderPath(
                         System.Environment.SpecialFolder.Personal), "Fields.json");
@@ -52,10 +53,10 @@ namespace SiamCross.Droid.Models
                         switch (item)
                         {
                             case Dictionary<string, int> fieldPair:
-                                foreach(var pair in fieldPair)
+                                foreach (var pair in fieldPair)
                                 {
                                     fieldDictionary.TryAdd(pair.Key, pair.Value);
-                                }                               
+                                }
                                 break;
                             default:
                                 break;
@@ -63,15 +64,16 @@ namespace SiamCross.Droid.Models
                     }
                 }
                 file.Close();
-           // });
+            }
 
             return fieldDictionary;
         }
 
         public void SaveFields(Dictionary<string, int> fieldDict)
         {
-           // await Task.Run(() =>
-           // {
+            lock (_locker)
+            {
+
                 var backingFile = Path.Combine(
                     System.Environment.GetFolderPath(
                         System.Environment.SpecialFolder.Personal),
@@ -87,7 +89,7 @@ namespace SiamCross.Droid.Models
                         file.WriteLine(jsonString);
                     }
                 }
-           // });
+            }
         }
     }
 }

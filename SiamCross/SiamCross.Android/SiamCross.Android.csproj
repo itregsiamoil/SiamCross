@@ -140,7 +140,6 @@
     <Compile Include="Models\XmlSaverAndroid.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\HandbookData.cs" />
     <Compile Include="Services\NLogLoggerAndroid.cs" />
     <Compile Include="Services\NLogManagerAndroid.cs" />
     <Compile Include="Services\SaveDevicesServiceAndroid.cs" />
