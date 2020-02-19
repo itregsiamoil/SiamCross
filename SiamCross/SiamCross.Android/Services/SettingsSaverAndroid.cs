@@ -3,6 +3,7 @@ using SiamCross.Droid.Services;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -11,6 +12,8 @@ namespace SiamCross.Droid.Services
 {
     public class SettingsSaverAndroid : ISettingsSaver
     {
+        private readonly SemaphoreSlim _mutex = new SemaphoreSlim(1);
+
         private const string _name = "settings.json";
 
         private readonly string _path;
@@ -32,33 +35,51 @@ namespace SiamCross.Droid.Services
 
             if (!File.Exists(_path)) return null;
 
-            var file = new StreamReader(_path);
-            
-            while (!file.EndOfStream)
+            await _mutex.WaitAsync();
+            try
             {
-                var line = await file.ReadLineAsync();
+                var file = new StreamReader(_path);
 
-                object item = JsonConvert.DeserializeObject(
-                    line, _jsonSettings);
-
-                if (item is SettingsParameters settings)
+                while (!file.EndOfStream)
                 {
-                    result = settings;
+                    var line = await file.ReadLineAsync();
+
+                    object item = JsonConvert.DeserializeObject(
+                        line, _jsonSettings);
+
+                    if (item is SettingsParameters settings)
+                    {
+                        result = settings;
+                    }
                 }
+
+                file.Dispose();
+            }
+            finally
+            {
+                _mutex.Release();
             }
 
-            file.Dispose();
 
             return result;
         }
 
         public async Task SaveSettings(SettingsParameters settings)
         {
-            using (var file = new StreamWriter(_path))
+            await _mutex.WaitAsync();
+
+            try
             {
-                var jsonString = JsonConvert.SerializeObject(settings,
-                                                        _jsonSettings);
-                await file.WriteLineAsync(jsonString);
+                using (var file = new StreamWriter(_path))
+                {
+                    var jsonString = JsonConvert.SerializeObject(settings,
+                                                            _jsonSettings);
+                    await file.WriteLineAsync(jsonString);
+                }
+            }
+            finally
+            {
+                _mutex.Release();
             }
         }
 
