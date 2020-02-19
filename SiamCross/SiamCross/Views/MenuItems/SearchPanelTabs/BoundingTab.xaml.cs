@@ -1,6 +1,9 @@
-﻿using SiamCross.AppObjects;
+﻿using Autofac;
+using NLog;
+using SiamCross.AppObjects;
 using SiamCross.Models.Scanners;
 using SiamCross.Services;
+using SiamCross.Services.Logging;
 using SiamCross.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -16,6 +19,8 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BoundingTab : ContentPage
     {
+        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+
         private ScannerViewModel _viewModel;
         public BoundingTab()
         {
@@ -25,19 +30,33 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
             this.BindingContext = _viewModel;
             boundedDevicesList.RefreshCommand = new Command(() =>
             {
-                _viewModel.StartScan();
-                boundedDevicesList.IsRefreshing = false;
+                try
+                {
+                    _viewModel.StartScan();
+                    boundedDevicesList.IsRefreshing = false;
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex, "RefreshCommand");
+                }
             });
         }
 
 
         public void ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            if (e.SelectedItem != null)
+            try
             {
-                SensorService.Instance.AddSensor((ScannedDeviceInfo)e.SelectedItem);
-                App.NavigationPage.Navigation.PopToRootAsync();
-                App.MenuIsPresented = false;
+                if (e.SelectedItem != null)
+                {
+                    SensorService.Instance.AddSensor((ScannedDeviceInfo)e.SelectedItem);
+                    App.NavigationPage.Navigation.PopToRootAsync();
+                    App.MenuIsPresented = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "ItemSelected, creating sensor");
             }
         }
     }
