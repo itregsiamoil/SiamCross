@@ -32,7 +32,15 @@ namespace SiamCross.ViewModels
             ClassicDevices = new ObservableCollection<ScannedDeviceInfo>();
 
             _scanner.Received += ScannerReceivedDevice;
+            _scanner.ScanTimoutElapsed += ScannerScanTimoutElapsed;
             _scanner.Start();
+        }
+
+        public event Action ScanTimeoutElapsed;
+
+        private void ScannerScanTimoutElapsed()
+        {
+            ScanTimeoutElapsed?.Invoke();
         }
 
         private void ScannerReceivedDevice(ScannedDeviceInfo dev)

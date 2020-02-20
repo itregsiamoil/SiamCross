@@ -22,6 +22,8 @@ namespace SiamCross.Droid.Models
         private IBluetoothLE _bluetoothBLE;
         private BluetoothAdapter _socketAdapter;
         public event Action<ScannedDeviceInfo> Received;
+        public event Action ScanTimoutElapsed;
+
         public BluetoothScannerAndroid()
         {
             _bluetoothBLE = CrossBluetoothLE.Current;
@@ -29,6 +31,7 @@ namespace SiamCross.Droid.Models
             _socketAdapter = BluetoothAdapter.DefaultAdapter;
             _adapter.ScanTimeout = 10000;
             _adapter.ScanMode = ScanMode.Balanced;
+            _adapter.ScanTimeoutElapsed += (s, e) => { ScanTimoutElapsed?.Invoke(); };
 
             _adapter.DeviceDiscovered += (obj, a) =>
             {

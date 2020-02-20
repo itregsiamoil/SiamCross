@@ -12,5 +12,7 @@ namespace SiamCross.Models.Scanners
         void Stop();
 
         event Action<ScannedDeviceInfo> Received;
+
+        event Action ScanTimoutElapsed; 
     }
 }

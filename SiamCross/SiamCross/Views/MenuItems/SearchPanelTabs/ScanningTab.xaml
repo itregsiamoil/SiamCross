@@ -5,7 +5,19 @@
              Title="Low Energy">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Обнаруженные устройства: " FontSize="Medium" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Text="Обнаруженные устройства: " 
+                       FontSize="Medium" 
+                       Grid.Column="0"/>
+                <ActivityIndicator Color="CornflowerBlue"
+                                   x:Name="ScanAnimation"
+                                   HorizontalOptions="Center"
+                                   Grid.Column="1"/>
+            </Grid>
             <ListView x:Name="scannedDevicesList" 
                       ItemsSource="{Binding ScannedDevices}"
                       ItemSelected ="ItemSelected"

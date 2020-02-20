@@ -22,11 +22,13 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
             InitializeComponent();
             _vm = new ViewModel<ScannerViewModel>().GetViewModel;
             this.BindingContext = _vm;
+            _vm.ScanTimeoutElapsed += () => ScanAnimation.IsRunning = false;
             scannedDevicesList.RefreshCommand = new Command(() =>
             {
                 try
                 {
                     _vm.StartScan();
+                    ScanAnimation.IsRunning = true;
                     scannedDevicesList.IsRefreshing = false;
                 }
                 catch (Exception ex)
