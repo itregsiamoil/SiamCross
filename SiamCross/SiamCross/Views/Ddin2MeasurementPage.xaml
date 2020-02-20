@@ -7,6 +7,10 @@
              xmlns:local="clr-namespace:SiamCross.Views"
              x:Class="SiamCross.Views.Ddin2MeasurementPage">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Тест клапанов" Order="Secondary"/>
+    </ContentPage.ToolbarItems>
+    
     <TableView Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand">

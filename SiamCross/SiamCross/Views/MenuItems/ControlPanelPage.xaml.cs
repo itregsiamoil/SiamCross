@@ -29,10 +29,10 @@ namespace SiamCross.Views.MenuItems
                     {
                         if (CanOpenMeasurement(sensorData))
                         {
-                            if (CanOpenModalPage(typeof(Ddim2MeasurementPage)))
+                            if (CanOpenPage(typeof(Ddim2MeasurementPage)))
                             {
-                                App.NavigationPage.Navigation.PushModalAsync(
-                                    new Ddim2MeasurementPage(sensorData), true);
+                                App.NavigationPage.Navigation.PushAsync(
+                                    new Ddim2MeasurementPage(sensorData));
                             }
                         }
                     }
