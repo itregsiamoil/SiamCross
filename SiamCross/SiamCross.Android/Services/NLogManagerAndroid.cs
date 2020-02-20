@@ -45,6 +45,8 @@ namespace SiamCross.Droid.Services
                 fileTarget.FileName = Path.Combine(Directory.CreateDirectory(directory).FullName, "Log.txt");
             }
 
+            fileTarget.Layout = "${longdate}|${level:uppercase=true}|${logger}|${message}|${exception:format=tostring}";
+
             config.AddTarget("file", fileTarget);
 
             var fileRule = new LoggingRule("*", LogLevel.Trace, fileTarget);
