@@ -16,6 +16,7 @@ namespace SiamCross
     {
         public static NavigationPage NavigationPage { get; private set; }
         public static RootPage RootPage;
+        public static INavigation Navigation { get; private set; }
         public static bool MenuIsPresented
         {
             get
@@ -36,6 +37,7 @@ namespace SiamCross
             RootPage.Master = menuPage;
             RootPage.Detail = NavigationPage;
             MainPage = RootPage;
+            App.Navigation = NavigationPage.Navigation;
         }
 
         public App(AppSetup setup)

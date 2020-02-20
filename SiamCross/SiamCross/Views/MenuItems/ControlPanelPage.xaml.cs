@@ -51,10 +51,10 @@ namespace SiamCross.Views.MenuItems
                     {
                         if (CanOpenMeasurement(sensorData))
                         {
-                            if (CanOpenModalPage(typeof(SiddosA3MMeasurementPage)))
+                            if (CanOpenPage(typeof(SiddosA3MMeasurementPage)))
                             {
-                                App.NavigationPage.Navigation.PushModalAsync(
-                                    new SiddosA3MMeasurementPage(sensorData), true);
+                                App.NavigationPage.Navigation.PushAsync(
+                                    new SiddosA3MMeasurementPage(sensorData));
                             }
                         }
                     }
@@ -98,6 +98,14 @@ namespace SiamCross.Views.MenuItems
                 result = true;
             }
             return result;
+        }
+
+        private bool CanOpenPage(Type type)
+        {
+            var stack = App.NavigationPage.Navigation.NavigationStack;
+            if (stack[stack.Count - 1].GetType() != type)
+                return true;
+            return false;
         }
     }
 }

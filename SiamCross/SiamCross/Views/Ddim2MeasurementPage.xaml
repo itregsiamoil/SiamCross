@@ -7,6 +7,10 @@
              xmlns:local="clr-namespace:SiamCross.Views"
              x:Class="SiamCross.Views.Ddim2MeasurementPage">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem></ToolbarItem>
+    </ContentPage.ToolbarItems>
+
     <ScrollView x:Name="ScrollView">
         <TableView x:Name="TableView"
                Intent="Data" 
