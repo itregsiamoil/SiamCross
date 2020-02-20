@@ -8,7 +8,7 @@
              x:Class="SiamCross.Views.Ddim2MeasurementPage">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem></ToolbarItem>
+        <ToolbarItem Text="Тест клапанов" Order="Secondary"/>
     </ContentPage.ToolbarItems>
 
     <ScrollView x:Name="ScrollView">
