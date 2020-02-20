@@ -131,6 +131,9 @@ namespace SiamCross.ViewModels
                 return;
             }
 
+            //Присваиваем команде пустую лямбду
+            SendCommand = new Command(() => { });
+
             try
             {
                 DependencyService.Get<IToast>().Show("Отправка измерений на почту");
@@ -152,8 +155,10 @@ namespace SiamCross.ViewModels
                 _logger.Error(ex, "SendMeasurements command handler");
                 await Application.Current.MainPage.DisplayAlert("Ошибка",
                     ex.Message, "OK");
+                SendCommand = new Command(SendMeasurements);
                 throw;
             }
+            SendCommand = new Command(SendMeasurements);
         }
 
         private DateTimeConverter _timeConverter = new DateTimeConverter();
