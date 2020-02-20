@@ -5,7 +5,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:local="clr-namespace:SiamCross.Views"
-             x:Class="SiamCross.Views.Ddin2MeasurementPage">
+             x:Class="SiamCross.Views.Ddin2MeasurementPage"
+             Title="DDIN2">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Тест клапанов" Order="Secondary"/>
