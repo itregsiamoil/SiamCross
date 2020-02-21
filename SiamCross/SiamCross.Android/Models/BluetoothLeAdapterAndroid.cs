@@ -69,7 +69,17 @@ namespace SiamCross.Droid.Models
 
             Device.BeginInvokeOnMainThread(async () =>
             {
-                await _adapter.StopScanningForDevicesAsync();
+                if (_adapter != null)
+                {
+                    await _adapter.StopScanningForDevicesAsync();
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения" +
+                        " _adapter == null. Будет произведена переинициализация адаптера");
+                    _adapter = CrossBluetoothLE.Current.Adapter;
+                }
+
                 try
                 {
                     await _adapter.ConnectToKnownDeviceAsync(_deviceGuid);
@@ -167,7 +177,8 @@ namespace SiamCross.Droid.Models
                 _readCharacteristic = null;
                 _adapter = null;
 
-                _device.Dispose();
+                _device?.Dispose();
+
                 _targetService?.Dispose();
 
                 _device = null;
