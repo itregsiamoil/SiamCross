@@ -16,7 +16,7 @@
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand">
         <TableRoot>
-            <TableSection Title="Данные для замера">
+            <TableSection Title="Данные измерения">
                 <ViewCell>
                     <StackLayout  >
                         <Label Text="Месторождение"></Label>

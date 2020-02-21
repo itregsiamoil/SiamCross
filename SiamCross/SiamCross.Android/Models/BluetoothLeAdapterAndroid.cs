@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac;
 
 using Android.App;
 using Android.Content;
@@ -20,6 +21,9 @@ using SiamCross.Models.Scanners;
 using SiamCross.Models.Adapters;
 using Xamarin.Forms;
 using Plugin.BLE.Abstractions.EventArgs;
+using NLog;
+using SiamCross.AppObjects;
+using SiamCross.Services.Logging;
 
 [assembly: Dependency(typeof(BluetoothLeAdapterAndroid))]
 namespace SiamCross.Droid.Models
@@ -124,15 +128,33 @@ namespace SiamCross.Droid.Models
             }
         }
 
+        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+
         public async Task SendData(byte[] data)
         {
             try
             {
                 await _writeCharacteristic.WriteAsync(data);
             }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine("Ошибка отправки сообщения BLE: " + e.Message);
+            catch (Exception sendingEx)
+            {               
+                _logger.Error(sendingEx, "Ошибка отправки сообщения BLE: "
+                    + BitConverter.ToString(data)
+                    + " " + sendingEx.Message + " " + sendingEx.GetType() + " " + sendingEx.StackTrace);
+                for(int i = 1; i < 11; i++)
+                {
+                    try
+                    {
+                        await _writeCharacteristic.WriteAsync(data);
+                        _logger.Warn($"Повторная попытка отправки номер {i}/10 прошла успешно!"); 
+                        return;
+                    }
+                    catch(Exception resendingEx)
+                    {
+                        _logger.Error(resendingEx, $"Ошибка повторной попытки отправки номер {i}/10 сообщения BLE: ");
+                    }
+                }
+                // Возможно нужно сделать дисконект
                 ConnectFailed();
             }
         }

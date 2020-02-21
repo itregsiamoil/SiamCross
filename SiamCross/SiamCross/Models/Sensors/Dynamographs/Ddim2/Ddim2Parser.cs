@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -120,7 +121,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "ByteProcess");
+                _logger.Error(ex, "ByteProcess " + ex.StackTrace);
                 throw;
             }
         }
@@ -142,14 +143,14 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             var payloadBytes = new byte[payloadSize];
             if (message.Length > 12)
             {
-                for (int i = 0; i < payloadSize; i++)
-                {
+               for (int i = 0; i < payloadSize; i++)
+                 {
                     payloadBytes[i] =
                         message[12 + i]; // с 13 байта начинается полезная нагрузка, которая имеет размер payloadSize
                 }
             }
 
-            return payloadBytes;
+            return payloadBytes; ///////////////////////////////////////////////////////////////////////////////////////////////////Баг выход за пределы массива
         }
 
         /// <summary>
@@ -336,6 +337,17 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             {
                 return "int16";
             }
+            if (message[5] == 0x88 && message[4] == 0x00)
+            {
+                if(message[3] != 0x82)
+                    Debug.WriteLine("///////////////////////////////////////////" +
+                        "initOrStartMeasurement Answer//////////////////////////////////////");
+                if (message[3] == 0x82)
+                    Debug.WriteLine("Error///Error///Error///Error///Error///Error///" +
+                        "initOrStartMeasurement AnswerError///Error///Error///Error///Error///");
+                return "initOrStartMeasurement";
+            }
+
 
             else return "string";
         }

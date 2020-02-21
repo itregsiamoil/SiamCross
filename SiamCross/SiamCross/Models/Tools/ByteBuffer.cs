@@ -40,14 +40,9 @@ namespace SiamCross.Models.Tools
         {
             if (_byffer.Count > 34)
             {
-                StringBuilder sb = new StringBuilder();
-                foreach (var b in _byffer)
-                {
-                    sb.Append(b);
-                }
-
                 _logger.Warn($"Buffer of parser is overflow! Buffer has been cleared! " +
-                    $"Thread ID: {Thread.CurrentThread.Name}. Content before cleaning: {sb.ToString()}");
+                    $"Thread ID: {Thread.CurrentThread.Name}. Content before cleaning: " +
+                    BitConverter.ToString(_byffer.ToArray()));
 
                 _byffer.Clear();
             }
