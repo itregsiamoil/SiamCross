@@ -8,6 +8,8 @@ namespace SiamCross
     {
         public const int ShortDelay = 50;
 
+        public const int LongDelay = 300;
+
         public const int DefaultWell = 0;
 
         public const int DefaultBush = 0;
