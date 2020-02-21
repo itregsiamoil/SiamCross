@@ -31,7 +31,7 @@ namespace SiamCross.Models.Sensors.Ddin2
                 switch (stringStatus)
                 {
                     case "0": return "Подготовка";
-                    case "1": return "Замер";
+                    case "1": return "Измерение";
                     case "2": return "Расчет";
                     case "4": return "Экспорт";
                     case "5": return "Сохранение";

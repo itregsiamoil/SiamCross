@@ -30,7 +30,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
                 switch (stringStatus)
                 {
                     case "0": return "Датчик свободен"; 
-                    case "1": return "Замер";
+                    case "1": return "Измерение";
                     case "2": return "Расчет";
                     case "4": return "Экспорт";
                     case "5": return "Сохранение";
