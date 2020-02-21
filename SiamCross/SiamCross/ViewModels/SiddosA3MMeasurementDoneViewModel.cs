@@ -143,7 +143,7 @@ namespace SiamCross.ViewModels
         {
             string result = "";
             string s = number.ToString();
-            if (s.Length > 3)
+            if (s.Length > 4)
             {
                 result += s[0];
                 result += s[1];
