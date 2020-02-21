@@ -25,7 +25,7 @@
                         <ViewCell>
                             <StackLayout Orientation="Horizontal">
                                 <Label Text="Версия приложения: "/>
-                                <Label Text="1.0"/>
+                                <Label Text="1.0.1"/>
                             </StackLayout>
                         </ViewCell>
                     </TableSection>

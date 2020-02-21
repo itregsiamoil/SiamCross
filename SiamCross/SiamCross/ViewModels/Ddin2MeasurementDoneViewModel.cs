@@ -147,6 +147,7 @@ namespace SiamCross.ViewModels
                 result += s[0];
                 result += s[1];
                 result += s[2];
+                result += s[3];
                 return result;
             }
             result = s;
