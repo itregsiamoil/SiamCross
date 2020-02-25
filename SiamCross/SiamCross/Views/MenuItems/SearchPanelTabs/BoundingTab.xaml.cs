@@ -45,9 +45,12 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
             {
                 if (e.SelectedItem != null)
                 {
-                    SensorService.Instance.AddSensor((ScannedDeviceInfo)e.SelectedItem);
-                    App.NavigationPage.Navigation.PopToRootAsync();
-                    App.MenuIsPresented = false;
+                    if (e.SelectedItem is ScannedDeviceInfo dev)
+                    {
+                        SensorService.Instance.AddSensor(dev);
+                        App.NavigationPage.Navigation.PopToRootAsync();
+                        App.MenuIsPresented = false;
+                    }
                 }
             }
             catch (Exception ex)
