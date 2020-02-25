@@ -90,15 +90,30 @@
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout >
-                            <Label Text="Период качания, сек"></Label>
-                            <Entry x:Name="DynPeriodEntry" Text="{Binding DynPeriod}" 
-                               Keyboard="Numeric">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="Период качания, сек"
+                                   Grid.Column="0" Grid.Row="0"/>
+                            <Entry x:Name="DynPeriodEntry" 
+                                   Text="{Binding DynPeriod}" 
+                                   Keyboard="Numeric"
+                                   Grid.Column="0" Grid.Row="1">
                                 <Entry.Behaviors>
                                     <local:IntegerNumberValidationBehavior/>
                                 </Entry.Behaviors>
                             </Entry>
-                        </StackLayout>
+                            <Button ImageSource="stopwatch.png"
+                                    Grid.Column="1" Grid.RowSpan="2"
+                                    Margin="10"/>
+                        </Grid>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout >
