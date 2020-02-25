@@ -29,10 +29,10 @@ namespace SiamCross.ViewModels
 
         public ICommand DeleteSensorCommand
         {
-            get => new Command<int>(DeleteSensorHandler);
+            get => new Command<Guid>(DeleteSensorHandler);
         }
 
-        private void DeleteSensorHandler(int id)
+        private void DeleteSensorHandler(Guid id)
         {
             try
             {

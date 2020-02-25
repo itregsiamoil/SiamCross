@@ -67,17 +67,20 @@ namespace SiamCross.Droid.Models
                 _connectQueue.Add(_deviceInfo.Name);
             }
 
-            Device.BeginInvokeOnMainThread(async () =>
-            {
+           // Device.BeginInvokeOnMainThread(async () =>
+            //{
                 if (_adapter != null)
                 {
-                    await _adapter.StopScanningForDevicesAsync();
+                    //await _adapter.StopScanningForDevicesAsync();
                 }
                 else
                 {
                     System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения" +
                         " _adapter == null. Будет произведена переинициализация адаптера");
+                    await Disconnect();
                     _adapter = CrossBluetoothLE.Current.Adapter;
+                    _connectQueue.Remove(_deviceInfo.Name);
+                    return;
                 }
 
                 try
@@ -88,22 +91,37 @@ namespace SiamCross.Droid.Models
                 {
                     System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения по Guid "
                         + _deviceInfo.Name + ": " + e.Message);
+                    await Disconnect();
                     _connectQueue.Remove(_deviceInfo.Name);
                     return;
                 }
 
-                _device = _adapter.ConnectedDevices.Where(x => x.Id == _deviceGuid)
-                    .LastOrDefault();
+                if (_adapter != null)
+                {
+                    _device = _adapter.ConnectedDevices.Where(x => x.Id == _deviceGuid)
+                        .LastOrDefault();
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения" +
+                        " _adapter == null. Будет произведена переинициализация адаптера");
+                    _adapter = CrossBluetoothLE.Current.Adapter;
+                    await Disconnect();
+                    _connectQueue.Remove(_deviceInfo.Name);
+                    return;
+                }
+
                 if (_device == null)
                 {
                     System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect"
                         + _deviceInfo.Name + "ошибка соединения BLE - _device был null");
                     ConnectFailed();
+                    await Disconnect();
                     _connectQueue.Remove(_deviceInfo.Name);
                     return;
                 }
                 await Initialize();
-            });
+            //});
         }
 
         private async Task Initialize()

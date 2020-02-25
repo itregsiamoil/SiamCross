@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace SiamCross.Models
 {
@@ -20,9 +21,9 @@ namespace SiamCross.Models
             }
         }
 
-        public int Id { get; private set; }
+        public Guid Id { get; private set; }
 
-        public SensorData(int id, string name, string type, string status)
+        public SensorData(Guid id, string name, string type, string status)
         {
             Id = id;
             Name = name;

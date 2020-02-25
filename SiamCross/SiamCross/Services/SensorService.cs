@@ -27,7 +27,17 @@ namespace SiamCross.Services
 
         private static readonly object _lock = new object();
 
-        public int SensorsCount => _sensors.Count;
+        public int SensorsCount
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _sensors.Count;
+                }
+            }
+        }
+
 
         private SensorService()
         {
@@ -61,14 +71,36 @@ namespace SiamCross.Services
 
                 foreach (var sensor in savedSensors)
                 {
-                    var addebleSensor = SensorFactory.CreateSensor(sensor);
-                    if (addebleSensor != null)
+                    if (sensor.BluetoothType == BluetoothType.Le)
                     {
-                        _sensors.Add(addebleSensor);
+                        var addebleSensor = SensorFactory.CreateSensor(sensor);
+                        if (addebleSensor != null)
+                        {
+                            _sensors.Add(addebleSensor);
 
-                        SensorAdded?.Invoke(addebleSensor.SensorData);
+                            SensorAdded?.Invoke(addebleSensor.SensorData);
+                        }
                     }
                 }
+
+                Thread initBt2 = new Thread(() =>
+                {
+                    Thread.Sleep(2500);
+                    foreach (var sensor in savedSensors)
+                    {
+                        if (sensor.BluetoothType == BluetoothType.Classic)
+                        {
+                            var addebleSensor = SensorFactory.CreateSensor(sensor);
+                            if (addebleSensor != null)
+                            {
+                                _sensors.Add(addebleSensor);
+
+                                SensorAdded?.Invoke(addebleSensor.SensorData);
+                            }
+                        }
+                    }
+                });
+                initBt2.Start();
             }
         }
 
@@ -99,7 +131,7 @@ namespace SiamCross.Services
             }
         }
 
-        public void DeleteSensor(int id)
+        public void DeleteSensor(Guid id)
         {
             lock (_lock)
             {
@@ -117,7 +149,7 @@ namespace SiamCross.Services
 
         public IFileManager AppCotainer { get; private set; }
 
-        public async Task StartMeasurementOnSensor(int id, object parameters)
+        public async Task StartMeasurementOnSensor(Guid id, object parameters)
         {
             var sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
             if (sensor != null)
