@@ -156,7 +156,6 @@ namespace SiamCross.ViewModels
                 await Application.Current.MainPage.DisplayAlert("Ошибка",
                     ex.Message, "OK");
                 SendCommand = new Command(SendMeasurements);
-                throw;
             }
             SendCommand = new Command(SendMeasurements);
         }
