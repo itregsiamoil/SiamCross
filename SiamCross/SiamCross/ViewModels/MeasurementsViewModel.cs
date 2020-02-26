@@ -47,7 +47,7 @@ namespace SiamCross.ViewModels
                         if (CanOpenModalPage(typeof(Ddin2MeasurementDonePage)))
                         {
                             App.NavigationPage.Navigation
-                            .PushModalAsync(
+                            .PushAsync(
                             new Ddin2MeasurementDonePage(measurement), true);
                         }
                     }
@@ -61,7 +61,7 @@ namespace SiamCross.ViewModels
                         if (CanOpenModalPage(typeof(SiddosA3MMeasurementDonePage)))
                         {
                             App.NavigationPage.Navigation
-                            .PushModalAsync(
+                            .PushAsync(
                             new SiddosA3MMeasurementDonePage(measurement), true);
                         }
                     }

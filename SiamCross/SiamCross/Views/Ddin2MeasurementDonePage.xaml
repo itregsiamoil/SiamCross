@@ -6,7 +6,11 @@
              mc:Ignorable="d"
              xmlns:local ="clr-namespace:SiamCross.Views"
              xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
-             x:Class="SiamCross.Views.Ddin2MeasurementDonePage">
+             x:Class="SiamCross.Views.Ddin2MeasurementDonePage"
+             Title="DDIN2">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Share" Command="{Binding ShareCommand}"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style x:Key="labelStyle" TargetType="Label">
@@ -72,7 +76,7 @@
         <TableView Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand"
-               >
+               Margin="5">
             <TableRoot >
                 <TableSection>
                     <!--<ViewCell>

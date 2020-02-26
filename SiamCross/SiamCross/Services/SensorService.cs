@@ -166,10 +166,7 @@ namespace SiamCross.Services
                 case Ddim2MeasurementData ddim2Data:
                     var dbModelDdim2 = new Ddim2Measurement(ddim2Data);
                     addbleId = DataRepository.Instance.SaveDdim2Measurement(dbModelDdim2);
-                    //await App.NavigationPage.Navigation.PushModalAsync(
-                    //        new Ddim2MeasurementDonePage(
-                    //            DataRepository.Instance.GetDdim2MeasurementById(addbleId)),
-                    //            true);
+
                     await App.NavigationPage.Navigation.PushAsync(
                         new Ddim2MeasurementDonePage(
                             DataRepository.Instance.GetDdim2MeasurementById(addbleId)), true);
@@ -178,13 +175,14 @@ namespace SiamCross.Services
                     var dbModelDdin2 = new Ddin2Measurement(ddin2Data);
                     addbleId = DataRepository.Instance.SaveDdin2Measurement(dbModelDdin2);
                     var dbObj = DataRepository.Instance.GetDdin2MeasurementById(addbleId);
-                    await App.NavigationPage.Navigation.PushModalAsync(
+
+                    await App.NavigationPage.Navigation.PushAsync(
                            new Ddin2MeasurementDonePage(dbObj), true);                    
                     break;
                 case SiddosA3MMeasurementData siddosA3M:
                     var dbModelsiddosA3M = new SiddosA3MMeasurement(siddosA3M);
                     addbleId = DataRepository.Instance.SaveSiddosA3MMeasurement(dbModelsiddosA3M);
-                    await App.NavigationPage.Navigation.PushModalAsync(
+                    await App.NavigationPage.Navigation.PushAsync(
                             new SiddosA3MMeasurementDonePage(
                                 DataRepository.Instance.GetSiddosA3MMeasurementById(addbleId)),
                                 true);
