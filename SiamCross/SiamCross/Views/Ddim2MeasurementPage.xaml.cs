@@ -1,13 +1,8 @@
 ﻿using SiamCross.Models;
 using SiamCross.ViewModels;
-using SiamCross.Views.MenuItems;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -19,14 +14,12 @@ namespace SiamCross.Views
     {
         private Stopwatch _stopwatch;
         private Ddim2MeasurementViewModel _vm;
-        private StopwatchState _stopwatchState;
         public Ddim2MeasurementPage(SensorData sensorData)
         {
             var vm = new ViewModel<Ddim2MeasurementViewModel>(sensorData);
             _vm = vm.GetViewModel;
             BindingContext = _vm;
             _stopwatch = new Stopwatch();
-            _stopwatchState = StopwatchState.NeverStarted;
             InitializeComponent();
         }
 
@@ -53,13 +46,6 @@ namespace SiamCross.Views
                             return true;
                     });
             }
-        }
-
-        private enum StopwatchState
-        {
-            NeverStarted,
-            Started,
-            Stoped
         }
     }
 }

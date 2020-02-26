@@ -217,7 +217,7 @@ namespace SiamCross.ViewModels
 
         private void ValidateParameter(string text, string errorMessage)
         {
-            if (string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text) || text == ".")
             {
                 _errorList.Add(errorMessage);
             }
