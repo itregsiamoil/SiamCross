@@ -9,14 +9,14 @@
             <TableSection Title="Настройки почты">
                 <ViewCell>
                     <StackLayout>
-                        <Label Text="Адресат отправителя"/>
+                        <Label Text="Адрес отправителя"/>
                         <Entry Text="{Binding FromAddress}" 
                                Keyboard="Email"/>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
                     <StackLayout>
-                        <Label Text="Адресат назначения"/>
+                        <Label Text="Адрес назначения"/>
                         <Entry Text="{Binding ToAddress}"
                                Keyboard="Email"/>
                     </StackLayout>
