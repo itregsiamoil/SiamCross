@@ -89,12 +89,6 @@ namespace SiamCross.ViewModels
                     return;
                 }
 
-                if (Imtravel[0] ==
-                    Convert.ToChar(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator))
-                {
-                    Imtravel.Insert(0, "0");
-                }
-
                 var secondaryParameters = new MeasurementSecondaryParameters(
                     _sensorData.Name,
                     "Динамограмма",
@@ -106,16 +100,15 @@ namespace SiamCross.ViewModels
                     Comments);
 
                 var measurementParams = new Ddin2MeasurementStartParameters(
-                    int.Parse(Rod),
-                    int.Parse(DynPeriod),
+                    float.Parse(Rod, CultureInfo.InvariantCulture),
+                    float.Parse(DynPeriod, CultureInfo.InvariantCulture),
                     int.Parse(ApertNumber),
-                    float.Parse(Imtravel),
+                    float.Parse(Imtravel, CultureInfo.InvariantCulture),
                     GetModelPump(),
                     secondaryParameters);
 
                 if (!ValidateMeasurementParameters(measurementParams))
                 {
-                    ShowErrors();
                     return;
                 }
 
@@ -227,7 +220,7 @@ namespace SiamCross.ViewModels
 
         private void ValidateParameter(string text, string errorMessage)
         {
-            if (string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text) || text == ".")
             {
                 _errorList.Add(errorMessage);
             }
