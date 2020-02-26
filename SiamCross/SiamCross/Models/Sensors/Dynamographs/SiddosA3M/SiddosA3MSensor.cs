@@ -25,6 +25,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
         private SiddosA3MQuickReportBuilder _reportBuilder;
         private DynamographStatusAdapter _statusAdapter;
         private SiddosA3MParser _parser;
+        private FirmWaveQualifier _firmwareQualifier;
 
         private Task _liveTask;
         public SiddosA3MSensor(IBluetoothAdapter adapter, SensorData sensorData)
@@ -33,7 +34,8 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             IsAlive = false;
             SensorData = sensorData;
             BluetoothAdapter = adapter;
-            _parser = new SiddosA3MParser();
+            _firmwareQualifier = new FirmWaveQualifier(adapter.SendData);
+            _parser = new SiddosA3MParser(_firmwareQualifier);
             _reportBuilder = new SiddosA3MQuickReportBuilder();
             _statusAdapter = new DynamographStatusAdapter();
             BluetoothAdapter.DataReceived += _parser.ByteProcess;
@@ -55,11 +57,12 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 
         private void ConnectHandler()
         {
-            _parser = new SiddosA3MParser();
+            _firmwareQualifier = new FirmWaveQualifier(BluetoothAdapter.SendData);
+            _parser = new SiddosA3MParser(_firmwareQualifier);
             _parser.MessageReceived += ReceiveHandler;
 
             IsAlive = true;
-            System.Diagnostics.Debug.WriteLine("Ддим2 успешно подключен!");
+            System.Diagnostics.Debug.WriteLine("СиддосА3М успешно подключен!");
         }
 
         private void ReceiveHandler(string commandName, string dataValue)
@@ -85,8 +88,10 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
                     break;
                 case "AccelerationChanel":
                     _reportBuilder.Acceleration = dataValue;
-
                     break;
+                case "DeviceProgrammVersion":
+                    SensorData.Firmware = dataValue;
+                    return;
                 default: return;
             }
 
@@ -114,6 +119,10 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             {
                 if (IsAlive)
                 {
+                    if (SensorData.Firmware == "")
+                    {
+                        await _firmwareQualifier.Qualify();
+                    }
                     if (!IsMeasurement)
                     {
                         await QuickReport();

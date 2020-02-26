@@ -15,6 +15,8 @@ namespace SiamCross.Models.Sensors.Ddin2
         private CancellationTokenSource _cancellToken =
             new CancellationTokenSource();
 
+        private FirmWaveQualifier _firmwareQualifier;
+
         public IBluetoothAdapter BluetoothAdapter { get; }
 
         public SensorData SensorData { get; }
@@ -36,13 +38,15 @@ namespace SiamCross.Models.Sensors.Ddin2
             IsAlive = false;
             BluetoothAdapter = bluetoothAdapter;
             SensorData = sensorData;
-            _parser = new Ddin2Parser();
+            _firmwareQualifier = new FirmWaveQualifier(bluetoothAdapter.SendData);
+            _parser = new Ddin2Parser(_firmwareQualifier);
             _reportBuilder = new Ddin2QuickReportBuiler();
             _statusAdapter = new Ddin2StatusAdapter();
 
             BluetoothAdapter.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += MessageReceivedHandler;
             _parser.ByteMessageReceived += MeasurementRecieveHandler; 
+
             BluetoothAdapter.ConnectSucceed += ConnectSucceedHandler;
             BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
 
@@ -64,7 +68,8 @@ namespace SiamCross.Models.Sensors.Ddin2
 
         private void ConnectSucceedHandler()
         {
-            _parser = new Ddin2Parser();
+            _firmwareQualifier = new FirmWaveQualifier(BluetoothAdapter.SendData);
+            _parser = new Ddin2Parser(_firmwareQualifier);
             _parser.MessageReceived += MessageReceivedHandler;
 
             IsAlive = true;
@@ -77,12 +82,15 @@ namespace SiamCross.Models.Sensors.Ddin2
             {
                 if (IsAlive)
                 {
+                    if (SensorData.Firmware == "")
+                    {
+                        await _firmwareQualifier.Qualify();
+                    }
                     if (!IsMeasurement)
                     {
                         await QuickReport();
                         await Task.Delay(1500);
-                    }
-                   
+                    }                 
                 }
                 else
                 {
@@ -98,8 +106,6 @@ namespace SiamCross.Models.Sensors.Ddin2
         public async Task StartMeasurement(object measurementParameters)
         {
             IsMeasurement = true;
-            //_cancellToken.Cancel();
-            //_parser.MessageReceived -= MessageReceivedHandler;
             Ddin2MeasurementStartParameters specificMeasurementParameters =
                 (Ddin2MeasurementStartParameters)measurementParameters;
             _measurementManager = new Ddin2MeasurementManager(BluetoothAdapter, SensorData,
@@ -147,6 +153,9 @@ namespace SiamCross.Models.Sensors.Ddin2
                 case "AccelerationChanel":
                     _reportBuilder.Acceleration = dataValue;
                     break;
+                case "DeviceProgrammVersion":
+                    SensorData.Firmware = dataValue;
+                    return;
                 default: return;
             }
 

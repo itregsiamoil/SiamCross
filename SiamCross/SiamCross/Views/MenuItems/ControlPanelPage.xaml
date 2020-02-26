@@ -31,6 +31,10 @@
                                         <Label HorizontalOptions="StartAndExpand" Text="{Binding Name}" FontSize="18" 
                                                Grid.Row="0" Grid.Column="0"/>
                                         <Label HorizontalOptions="StartAndExpand" Text="{Binding Type}" Grid.Row="1" Grid.Column="0" />
+                                        <StackLayout HorizontalOptions="EndAndExpand" Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                                            <Label HorizontalOptions="StartAndExpand" Text="ПО: " />
+                                            <Label HorizontalOptions="EndAndExpand" Text="{Binding Firmware}" />
+                                        </StackLayout>
                                         <Label HorizontalOptions="StartAndExpand" Text="{Binding Status}" Grid.Row="2" Grid.Column="0"/>
                                         <Button HorizontalOptions="EndAndExpand" 
                                                 Command="{Binding Path=BindingContext.DeleteSensorCommand, 

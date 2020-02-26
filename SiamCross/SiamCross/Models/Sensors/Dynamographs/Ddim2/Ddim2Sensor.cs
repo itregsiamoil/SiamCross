@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement;
 using SiamCross.Models.Sensors.Dynamographs.Shared;
+using SiamCross.Models.Tools;
 using SiamCross.Services;
 
 namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
@@ -23,6 +24,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         private Ddim2QuickReportBuilder _reportBuilder;
         private DynamographStatusAdapter _statusAdapter;
         private Ddim2Parser _parser;
+        private FirmWaveQualifier _firmwareQualifier;
 
         private Task _liveTask;
         public Ddim2Sensor(IBluetoothAdapter adapter, SensorData sensorData)
@@ -31,9 +33,11 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             IsAlive = false;
             SensorData = sensorData;
             BluetoothAdapter = adapter;
-            _parser = new Ddim2Parser();
+            _firmwareQualifier = new FirmWaveQualifier(adapter.SendData);
+            _parser = new Ddim2Parser(_firmwareQualifier);
             _reportBuilder = new Ddim2QuickReportBuilder();
             _statusAdapter = new DynamographStatusAdapter();
+
             BluetoothAdapter.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += ReceiveHandler;
             _parser.ByteMessageReceived += MeasurementRecieveHandler;
@@ -53,7 +57,8 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 
         private void ConnectHandler()
         {
-            _parser = new Ddim2Parser();
+            _firmwareQualifier = new FirmWaveQualifier(BluetoothAdapter.SendData);
+            _parser = new Ddim2Parser(_firmwareQualifier);
             _parser.MessageReceived += ReceiveHandler;
 
             IsAlive = true;
@@ -62,7 +67,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 
         private void ReceiveHandler(string commandName, string dataValue)
         {
-            switch (commandName) // TODO: replace to enum 
+            switch (commandName)
             {
                 case "DeviceStatus":
                     /*/ Для замера /*/
@@ -83,13 +88,14 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
                     break;
                 case "AccelerationChanel":
                     _reportBuilder.Acceleration = dataValue;
-
                     break;
+                case "DeviceProgrammVersion":
+                    SensorData.Firmware = dataValue;
+                    return;
                 default: return;             
             }
 
             SensorData.Status = _reportBuilder.GetReport();
-            //Notify?.Invoke(SensorData);
         }
 
         public async Task QuickReport()
@@ -112,6 +118,10 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             {
                 if(IsAlive)
                 {
+                    if(SensorData.Firmware == "")
+                    {
+                        await _firmwareQualifier.Qualify();
+                    }
                     if(!IsMeasurement)
                     {
                         await QuickReport();
