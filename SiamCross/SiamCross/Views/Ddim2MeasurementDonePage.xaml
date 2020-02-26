@@ -10,7 +10,7 @@
              x:Class="SiamCross.Views.Ddim2MeasurementDonePage"
              Title="DDIM2">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Share" Command="{Binding ShareCommand}"/>
+        <ToolbarItem IconImageSource="share.png" Text="Share" Command="{Binding ShareCommand}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <ResourceDictionary>
