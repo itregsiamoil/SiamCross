@@ -33,7 +33,7 @@ namespace SiamCross.ViewModels
                         if (CanOpenModalPage(typeof(Ddim2MeasurementDonePage)))
                         {
                             App.NavigationPage.Navigation
-                            .PushModalAsync(
+                            .PushAsync(
                             new Ddim2MeasurementDonePage(measurement), true);
                         }
                     }
