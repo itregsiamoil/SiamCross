@@ -86,11 +86,15 @@ namespace SiamCross.Models.Sensors.Ddin2
                     {
                         await _firmwareQualifier.Qualify();
                     }
+                    if (!_reportBuilder.IsKillosParametersReady)
+                    {
+                        await KillosParametersQuery();
+                    }
                     if (!IsMeasurement)
                     {
                         await QuickReport();
                         await Task.Delay(1500);
-                    }                 
+                    }
                 }
                 else
                 {
@@ -113,6 +117,12 @@ namespace SiamCross.Models.Sensors.Ddin2
             var report = await _measurementManager.RunMeasurement();
             SensorService.Instance.MeasurementHandler(report);
             IsMeasurement = false;
+        }
+
+        public async Task KillosParametersQuery()
+        {
+            await BluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["SensorLoadRKP"]);
+            await BluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["SensorLoadNKP"]);
         }
 
         public async Task CheckStatus()
@@ -155,6 +165,12 @@ namespace SiamCross.Models.Sensors.Ddin2
                     break;
                 case "DeviceProgrammVersion":
                     SensorData.Firmware = dataValue;
+                    return;
+                case "SensorLoadRKP":
+                    _reportBuilder.SensitivityLoad = dataValue;
+                    return;
+                case "SensorLoadNKP":
+                    _reportBuilder.ZeroOffsetLoad = dataValue;
                     return;
                 default: return;
             }

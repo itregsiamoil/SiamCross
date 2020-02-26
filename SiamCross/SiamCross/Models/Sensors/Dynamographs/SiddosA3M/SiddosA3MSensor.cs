@@ -38,6 +38,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             _parser = new SiddosA3MParser(_firmwareQualifier);
             _reportBuilder = new SiddosA3MQuickReportBuilder();
             _statusAdapter = new DynamographStatusAdapter();
+
             BluetoothAdapter.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += ReceiveHandler;
             _parser.ByteMessageReceived += MeasurementRecieveHandler;
@@ -92,11 +93,16 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
                 case "DeviceProgrammVersion":
                     SensorData.Firmware = dataValue;
                     return;
+                case "SensorLoadRKP":
+                    _reportBuilder.SensitivityLoad = dataValue;
+                    return;
+                case "SensorLoadNKP":
+                    _reportBuilder.ZeroOffsetLoad = dataValue;
+                    return;
                 default: return;
             }
 
             SensorData.Status = _reportBuilder.GetReport();
-            //Notify?.Invoke(SensorData);
         }
 
         public async Task QuickReport()
@@ -105,6 +111,12 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["Тemperature"]);
             await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["LoadChanel"]);
             await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["AccelerationChanel"]);
+        }
+
+        public async Task KillosParametersQuery()
+        {
+            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["SensorLoadRKP"]);
+            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["SensorLoadNKP"]);
         }
 
         public async Task CheckStatus()
@@ -122,6 +134,10 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
                     if (SensorData.Firmware == "")
                     {
                         await _firmwareQualifier.Qualify();
+                    }
+                    if (!_reportBuilder.IsKillosParametersReady)
+                    {
+                        await KillosParametersQuery();
                     }
                     if (!IsMeasurement)
                     {

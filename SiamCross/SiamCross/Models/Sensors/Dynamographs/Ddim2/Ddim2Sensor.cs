@@ -92,6 +92,12 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
                 case "DeviceProgrammVersion":
                     SensorData.Firmware = dataValue;
                     return;
+                case "SensorLoadRKP":
+                    _reportBuilder.SensitivityLoad = dataValue;
+                    return;
+                case "SensorLoadNKP":
+                    _reportBuilder.ZeroOffsetLoad = dataValue;
+                    return;
                 default: return;             
             }
 
@@ -104,6 +110,12 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["Тemperature"]);
             await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["LoadChanel"]);
             await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["AccelerationChanel"]);
+        }
+
+        public async Task KillosParametersQuery()
+        {
+            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["SensorLoadRKP"]);
+            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["SensorLoadNKP"]);
         }
 
         public async Task CheckStatus()
@@ -122,7 +134,11 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
                     {
                         await _firmwareQualifier.Qualify();
                     }
-                    if(!IsMeasurement)
+                    if (!_reportBuilder.IsKillosParametersReady)
+                    {
+                        await KillosParametersQuery();
+                    }
+                    if (!IsMeasurement)
                     {
                         await QuickReport();
                         await Task.Delay(1500);
