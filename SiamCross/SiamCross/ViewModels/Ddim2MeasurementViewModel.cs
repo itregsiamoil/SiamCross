@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using NLog;
 using SiamCross.AppObjects;
-using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
 using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement;
@@ -11,8 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -93,12 +90,6 @@ namespace SiamCross.ViewModels
                     return;
                 }
 
-                if (Imtravel[0] ==
-                    Convert.ToChar(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator))
-                {
-                    Imtravel.Insert(0, "0");
-                }
-
                 var secondaryParameters = new MeasurementSecondaryParameters(
                     _sensorData.Name,
                     "Динамограмма",
@@ -110,17 +101,14 @@ namespace SiamCross.ViewModels
                     Comments);
 
                 var measurementParams = new Ddim2MeasurementStartParameters(
-                    //int.Parse(Rod),
-                    24, ///////////////////////////////////////////////////// wtf rod for ddim2 ???
-                    int.Parse(DynPeriod),
+                    float.Parse(DynPeriod, CultureInfo.InvariantCulture),
                     int.Parse(ApertNumber),
-                    float.Parse(Imtravel),
+                    float.Parse(Imtravel, CultureInfo.InvariantCulture),
                     GetModelPump(),
                     secondaryParameters);
 
                 if (!ValidateMeasurementParameters(measurementParams))
                 {
-                    ShowErrors();
                     return;
                 }
 
@@ -164,8 +152,6 @@ namespace SiamCross.ViewModels
         {
             bool result = true;
 
-            if (!IsNumberValid(120, 400, measurementParams.Rod))
-                _errorList.Add("Диаметр штока должен быть в пределе от 12 до 40!");
             if (!IsNumberValid(4000, 180000, measurementParams.DynPeriod))
                 _errorList.Add("Период качания должен быть в пределе от 4 до 180!");
             if (!IsNumberValid(1, 5, measurementParams.ApertNumber))
@@ -197,7 +183,6 @@ namespace SiamCross.ViewModels
             ValidateParameter(Shop, "Введите номер цеха!");
             ValidateParameter(BufferPressure, "Введите буфер давления!");
             ValidateParameter(Comments, "Введите комментарий!");
-            //ValidateParameter(Rod, "Введите диаметр штока!");
             ValidateParameter(DynPeriod, "Введите период качания!");
             ValidateParameter(ApertNumber, "Введите номер отверствия!");
             ValidateParameter(Imtravel, "Введите длину хода");
@@ -232,7 +217,7 @@ namespace SiamCross.ViewModels
 
         private void ValidateParameter(string text, string errorMessage)
         {
-            if (string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text) || text == ".")
             {
                 _errorList.Add(errorMessage);
             }

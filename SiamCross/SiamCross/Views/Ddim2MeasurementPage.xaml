@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:local="clr-namespace:SiamCross.Views"
+             xmlns:local1="clr-namespace:SiamCross.Views.ValidationBehavior"
              x:Class="SiamCross.Views.Ddim2MeasurementPage"
              Title="DDIM2">
 
@@ -79,26 +80,36 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout  >
-                            <Label Text="Длина хода, м"></Label>
-                            <Entry x:Name="ImtravelEntry"
-                                Text="{Binding Imtravel}" 
-                               Keyboard="Numeric">
-                                <Entry.Behaviors>
-                                    <local:FloatNumberValidationBehavior/>
-                                </Entry.Behaviors>
-                            </Entry>
+                            <Label Text="Длина хода, м"/>
+                            <local1:CustomEntry x:Name="ImtravelEntry"
+                                                Text="{Binding Imtravel}"
+                                                Keyboard="Numeric">
+                            </local1:CustomEntry>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout >
-                            <Label Text="Период качания, сек"></Label>
-                            <Entry x:Name="DynPeriodEntry" Text="{Binding DynPeriod}" 
-                               Keyboard="Numeric">
-                                <Entry.Behaviors>
-                                    <local:IntegerNumberValidationBehavior/>
-                                </Entry.Behaviors>
-                            </Entry>
-                        </StackLayout>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="Период качания, сек"
+                                   Grid.Column="0" Grid.Row="0"/>
+                            <local1:CustomEntry x:Name="DynPeriodEntry" 
+                                   Text="{Binding DynPeriod}" 
+                                   Keyboard="Numeric"
+                                   Grid.Column="0" Grid.Row="1">
+                            </local1:CustomEntry>
+                            <Button ImageSource="stopwatch.png"
+                                    Grid.Column="1" Grid.RowSpan="2"
+                                    Margin="10"
+                                    Clicked="StopwatchButton_Clicked"/>
+                        </Grid>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout >

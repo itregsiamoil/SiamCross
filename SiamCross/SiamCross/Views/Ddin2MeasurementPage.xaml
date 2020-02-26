@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:local="clr-namespace:SiamCross.Views"
+             xmlns:local1="clr-namespace:SiamCross.Views.ValidationBehavior"
              x:Class="SiamCross.Views.Ddin2MeasurementPage"
              Title="DDIN2">
 
@@ -78,30 +79,46 @@
                 <ViewCell>
                     <StackLayout >
                         <Label Text="Диаметр штока, м"></Label>
-                        <Entry Text="{Binding Rod}" 
-                               Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:FloatNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
+                        <local1:CustomEntry Text="{Binding Rod}" 
+                                            Keyboard="Numeric">
+                        </local1:CustomEntry>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
                     <StackLayout  >
-                        <Label Text="Длина хода, м"></Label>
-                        <Entry Text="{Binding Imtravel}" 
-                               Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:FloatNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                        <Label Text="Период качания, сек"></Label>
-                        <Entry Text="{Binding DynPeriod}" 
-                               Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:IntegerNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
+                        <Label Text="Длина хода, м"/>
+                        <local1:CustomEntry x:Name="ImtravelEntry"
+                                                Text="{Binding Imtravel}"
+                                                Keyboard="Numeric">
+                        </local1:CustomEntry>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Период качания, сек"
+                                   Grid.Column="0" Grid.Row="0"/>
+                        <local1:CustomEntry x:Name="DynPeriodEntry" 
+                                   Text="{Binding DynPeriod}" 
+                                   Keyboard="Numeric"
+                                   Grid.Column="0" Grid.Row="1">
+                        </local1:CustomEntry>
+                        <Button ImageSource="stopwatch.png"
+                                    Grid.Column="1" Grid.RowSpan="2"
+                                    Margin="10"
+                                    Clicked="StopwatchButton_Clicked"/>
+                    </Grid>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout>
                         <Label Text="Номер отверствия"></Label>
                         <Entry Text="{Binding ApertNumber}" 
                                Keyboard="Numeric">
@@ -109,10 +126,14 @@
                                 <local:IntegerNumberValidationBehavior/>
                             </Entry.Behaviors>
                         </Entry>
+                    </StackLayout>
+                </ViewCell>
+                <ViewCell>
+                    <StackLayout>
                         <Label Text="Тип привода"></Label>
                         <Picker ItemsSource="{Binding ModelPump}"
-                                SelectedItem="{Binding SelectedModelPump}"
-                                ></Picker>
+                                SelectedItem="{Binding SelectedModelPump}">
+                        </Picker>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
