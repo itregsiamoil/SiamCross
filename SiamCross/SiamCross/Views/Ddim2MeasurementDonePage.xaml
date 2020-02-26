@@ -78,7 +78,7 @@
         <TableView Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand"
-               >
+               Margin="5">
             <TableRoot >
                 <TableSection>
                     <!--<ViewCell>
