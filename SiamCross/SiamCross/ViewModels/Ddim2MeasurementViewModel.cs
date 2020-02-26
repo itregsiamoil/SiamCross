@@ -36,6 +36,7 @@ namespace SiamCross.ViewModels
         public ObservableCollection<string> ModelPump { get; set; }
         public string SelectedModelPump { get; set; }
         public ICommand StartMeasurementCommand { get; set; }
+        public ICommand ValveTestCommand { get; set; }
         private enum ModelPumpEnum
         {
             Balancer,
@@ -58,6 +59,9 @@ namespace SiamCross.ViewModels
                     "Гидравлический"
                 };
                 StartMeasurementCommand = new Command(StartMeasurementHandler);
+
+                ValveTestCommand = new Command(() => DependencyService.Get<IToast>().Show("Тест клапанов"));
+
                 InitDefaultValues();
             }
             catch (Exception ex)

@@ -44,6 +44,7 @@ namespace SiamCross.ViewModels
             Hydraulic
         }
 
+        public ICommand ValveTestCommand { get; set; }
         public SiddosA3MMeasurementViewModel(SensorData sensorData)
         {
             try
@@ -60,6 +61,8 @@ namespace SiamCross.ViewModels
                 "Гидравлический"
                 };
                 StartMeasurementCommand = new Command(StartMeasurementHandler);
+
+                ValveTestCommand = new Command(() => DependencyService.Get<IToast>().Show("Тест клапанов"));
 
                 InitDefaultValues();
             }

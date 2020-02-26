@@ -10,7 +10,7 @@
              Title="DDIM2">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Тест клапанов" Order="Secondary"/>
+        <ToolbarItem Text="Тест клапанов" Order="Secondary" Command="{Binding ValveTestCommand}"/>
     </ContentPage.ToolbarItems>
 
     <ScrollView x:Name="ScrollView">

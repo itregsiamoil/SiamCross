@@ -6387,6 +6387,9 @@ namespace SiamCross.Droid
 			// aapt resource value: 0x7f090193
 			public const int AppCompatDialogStyle = 2131296659;
 			
+			// aapt resource value: 0x7f090194
+			public const int AppToolbarTheme = 2131296660;
+			
 			// aapt resource value: 0x7f0900ab
 			public const int Base_AlertDialog_AppCompat = 2131296427;
 			
