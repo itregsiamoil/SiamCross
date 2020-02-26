@@ -41,7 +41,7 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
         public void ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             try
-            {
+            {        
                 if (e.SelectedItem != null)
                 {
                     if (e.SelectedItem is ScannedDeviceInfo dev)
