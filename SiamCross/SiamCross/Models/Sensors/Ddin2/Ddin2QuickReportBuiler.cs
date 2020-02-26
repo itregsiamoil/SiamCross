@@ -11,6 +11,15 @@ namespace SiamCross.Models.Sensors.Ddin2
         private string _load;
         private string _acceleration;
 
+        public string ZeroOffsetLoad { get; set; }
+        public string SensitivityLoad { get; set; }
+
+        public Ddin2QuickReportBuiler()
+        {
+            ZeroOffsetLoad = null;
+            SensitivityLoad = null;
+        }
+
         public string BatteryVoltage
         {
             get
@@ -39,13 +48,34 @@ namespace SiamCross.Models.Sensors.Ddin2
             }
         }
 
+        public bool IsKillosParametersReady
+        {
+            get => ZeroOffsetLoad != null && SensitivityLoad != null;
+        }
+
         public string Load
         {
             get
             {
-                return _load != null ?
-                   "Нагрузка: " + _load + ", мВ\n"
-                    : "";
+                if (_load != null)
+                {
+                    float load = float.Parse(_load);
+                    if (IsKillosParametersReady)
+                    {
+                        return "Нагрузка: " + Math.Round(load, 2) + @", мВ \ " +
+                            ((int)((load - float.Parse(ZeroOffsetLoad))
+                                / float.Parse(SensitivityLoad))).ToString() +
+                            ", КГ\n";
+                    }
+                    else
+                    {
+                        return "Нагрузка: " + Math.Round(load, 2) + ", мВ\n";
+                    }
+                }
+                else
+                {
+                    return "";
+                }
             }
             set
             {
@@ -58,7 +88,7 @@ namespace SiamCross.Models.Sensors.Ddin2
             get
             {
                 return _acceleration != null ?
-                   "Ускорение: " + _acceleration + ", мВ"
+                   "Ускорение: " + Math.Round(float.Parse(_acceleration), 2) + ", мВ"
                     : "";
             }
             set
@@ -71,6 +101,7 @@ namespace SiamCross.Models.Sensors.Ddin2
         {
             return BatteryVoltage + Temperature + Load + Acceleration;
         }
+
         public void Clear()
         {
             BatteryVoltage = "";
