@@ -157,12 +157,12 @@ namespace SiamCross.ViewModels
         {
             bool result = true;
 
-            if (!IsNumberValid(4000, 180000, measurementParams.DynPeriod))
-                _errorList.Add("Период качания должен быть в пределе от 4 до 180!");
+            if (!IsNumberValid(4000, 300000, measurementParams.DynPeriod))
+                _errorList.Add("Период качания должен быть в пределе от 4 до 300!");
             if (!IsNumberValid(1, 5, measurementParams.ApertNumber))
-                _errorList.Add("Номер отверстия должен быть в пределе от 1 до 6!");
-            if (!IsNumberValid(500, 9999, measurementParams.Imtravel))
-                _errorList.Add("Длина хода должна быть в пределе от 0,5 до 9,999!");
+                _errorList.Add("Номер отверстия должен быть в пределе от 1 до 5!");
+            if (!IsNumberValid(500, 10000, measurementParams.Imtravel))
+                _errorList.Add("Длина хода должна быть в пределе от 0,5 до 10!");
 
             if (_errorList.Count != 0)
             {

@@ -155,14 +155,14 @@ namespace SiamCross.ViewModels
         {
             bool result = true;
 
-            if (!IsNumberValid(160, 390, measurementParams.Rod))
-                _errorList.Add("Диаметр штока должен быть в пределе от 16 до 39!");
-            if (!IsNumberValid(4000, 180000, measurementParams.DynPeriod))
-                _errorList.Add("Период качания должен быть в пределе от 4 до 180!");
+            if (!IsNumberValid(120, 400, measurementParams.Rod))
+                _errorList.Add("Диаметр штока должен быть в пределе от 12 до 40!");
+            if (!IsNumberValid(4000, 300000, measurementParams.DynPeriod))
+                _errorList.Add("Период качания должен быть в пределе от 4 до 300!");
             if (!IsNumberValid(1, 5, measurementParams.ApertNumber))
-                _errorList.Add("Номер отверстия должен быть в пределе от 1 до 6!");
-            if (!IsNumberValid(500, 9999, measurementParams.Imtravel))
-                _errorList.Add("Длина хода должна быть в пределе от 0,5 до 9,999!");
+                _errorList.Add("Номер отверстия должен быть в пределе от 1 до 5!");
+            if (!IsNumberValid(500, 10000, measurementParams.Imtravel))
+                _errorList.Add("Длина хода должна быть в пределе от 0,5 до 10000!");
 
             if (_errorList.Count != 0)
             {
