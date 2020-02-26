@@ -6,7 +6,6 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement
 {
     public class Ddim2MeasurementStartParameters
     {
-        public int Rod { get; }
         public int DynPeriod { get; }
         public int ApertNumber { get; }
         public int Imtravel { get; }
@@ -14,15 +13,14 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement
 
         public MeasurementSecondaryParameters SecondaryParameters { get; }
 
-        public Ddim2MeasurementStartParameters(int rod,
-                                 int dynPeriod,
+        public Ddim2MeasurementStartParameters(
+                                 float dynPeriod,
                                  int apertNumber,
                                  float imtravel,
                                  int modelPump,
                                  MeasurementSecondaryParameters secondaryParameters)
         {
-            Rod = rod * 10;
-            DynPeriod = dynPeriod * 1000;
+            DynPeriod = Convert.ToInt32(dynPeriod * 1000);
             ApertNumber = apertNumber;
             Imtravel = Convert.ToInt32(imtravel * 1000);
             ModelPump = modelPump;

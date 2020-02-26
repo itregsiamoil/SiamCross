@@ -112,8 +112,6 @@ namespace SiamCross.ViewModels
                     Comments);
 
                 var measurementParams = new SiddosA3MMeasurementStartParameters(
-                    //int.Parse(Rod),
-                    24,
                     int.Parse(DynPeriod),
                     int.Parse(ApertNumber),
                     float.Parse(Imtravel),
@@ -166,8 +164,6 @@ namespace SiamCross.ViewModels
         {
             bool result = true;
 
-            if (!IsNumberValid(120, 400, measurementParams.Rod))/////////////////////////////////////!!!???!!! у ддим/сидоса3м нет поля rod!
-                _errorList.Add("Диаметр штока должен быть в пределе от 12 до 40!");
             if (!IsNumberValid(4000, 180000, measurementParams.DynPeriod))
                 _errorList.Add("Период качания должен быть в пределе от 4 до 180!");
             if (!IsNumberValid(1, 5, measurementParams.ApertNumber))
@@ -199,7 +195,6 @@ namespace SiamCross.ViewModels
             ValidateParameter(Shop, "Введите номер цеха!");
             ValidateParameter(BufferPressure, "Введите буфер давления!");
             ValidateParameter(Comments, "Введите комментарий!");
-            //ValidateParameter(Rod, "Введите диаметр штока!");
             ValidateParameter(DynPeriod, "Введите период качания!");
             ValidateParameter(ApertNumber, "Введите номер отверствия!");
             ValidateParameter(Imtravel, "Введите длину хода");
