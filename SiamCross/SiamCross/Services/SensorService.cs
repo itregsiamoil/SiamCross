@@ -166,10 +166,13 @@ namespace SiamCross.Services
                 case Ddim2MeasurementData ddim2Data:
                     var dbModelDdim2 = new Ddim2Measurement(ddim2Data);
                     addbleId = DataRepository.Instance.SaveDdim2Measurement(dbModelDdim2);
-                    await App.NavigationPage.Navigation.PushModalAsync(
-                            new Ddim2MeasurementDonePage(
-                                DataRepository.Instance.GetDdim2MeasurementById(addbleId)),
-                                true);
+                    //await App.NavigationPage.Navigation.PushModalAsync(
+                    //        new Ddim2MeasurementDonePage(
+                    //            DataRepository.Instance.GetDdim2MeasurementById(addbleId)),
+                    //            true);
+                    await App.NavigationPage.Navigation.PushAsync(
+                        new Ddim2MeasurementDonePage(
+                            DataRepository.Instance.GetDdim2MeasurementById(addbleId)), true);
                     break;
                 case Ddin2MeasurementData ddin2Data:
                     var dbModelDdin2 = new Ddin2Measurement(ddin2Data);
