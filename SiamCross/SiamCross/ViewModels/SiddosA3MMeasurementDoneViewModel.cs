@@ -9,6 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
+using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
@@ -75,6 +78,7 @@ namespace SiamCross.ViewModels
 
         public string MaxGraphX { get; private set; }
         public string MaxGraphY { get; private set; }
+        public ICommand ShareCommand { get; set; }
 
         public SiddosA3MMeasurementDoneViewModel(SiddosA3MMeasurement measurement)
         {
@@ -116,6 +120,7 @@ namespace SiamCross.ViewModels
                     default:
                         break;
                 }
+                ShareCommand = new Command(ShareCommandHandler);
             }
             catch (Exception ex)
             {
@@ -124,6 +129,39 @@ namespace SiamCross.ViewModels
             }
         }
 
+        private DateTimeConverter _timeConverter = new DateTimeConverter();
+
+        private async void ShareCommandHandler()
+        {
+            try
+            {
+                var xmlCreator = new XmlCreator();
+
+                var xmlSaver = DependencyService.Get<IXmlSaver>();
+
+                var name = CreateName(_measurement.Name, _measurement.DateTime);
+                xmlSaver.SaveXml(name, xmlCreator.CreateSiddosA3MXml(_measurement));
+
+                string filepath = xmlSaver.GetFilepath(name);
+
+                await Share.RequestAsync(new ShareFileRequest
+                {
+                    Title = "Поделиться измерением",
+                    File = new ShareFile(filepath)
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "ShareCommandHandler");
+                throw;
+            }
+        }
+
+        private string CreateName(string deviceName, DateTime date)
+        {
+            return $"{deviceName}_{_timeConverter.DateTimeToString(date)}.xml"
+                .Replace(':', '-');
+        }
         private void InitMaxMixGraphValue(List<byte> graph, short step, short weightDiscret)
         {
             List<double> movement = new List<double>();
