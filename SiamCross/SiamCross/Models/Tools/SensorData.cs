@@ -9,7 +9,15 @@ namespace SiamCross.Models
 
         public string Type { get; private set; }
 
-        private string _status;
+        public string Firmware
+        {
+            get => _firmware;
+            set
+            {
+                _firmware = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Firmware)));
+            }
+        }
 
         public string Status
         {
@@ -21,6 +29,10 @@ namespace SiamCross.Models
             }
         }
 
+        private string _firmware;
+
+        private string _status;
+
         public Guid Id { get; private set; }
 
         public SensorData(Guid id, string name, string type, string status)
@@ -29,6 +41,7 @@ namespace SiamCross.Models
             Name = name;
             Type = type;
             Status = status;
+            Firmware = "";
         }
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };

@@ -35,17 +35,15 @@ namespace SiamCross.Models.Sensors.Ddin2
         ///// </summary>
         //private DeviceNameQualifier _deviceNameQualifier;
 
-        ///// <summary>
-        ///// Определитель версии прошивки
-        ///// </summary>
-        //private DeviceFirmWaveQualifier _deviceFirmWaveQualifier;
+        /// <summary>
+        /// Определитель версии прошивки
+        /// </summary>
+        private FirmWaveQualifier _deviceFirmWaveQualifier;
 
-        //public Parser(DeviceNameQualifier deviceNameQualifier,
-        //    DeviceFirmWaveQualifier deviceFirmWaveQualifier)
-        //{
-        //    _deviceNameQualifier = deviceNameQualifier;
-        //    _deviceFirmWaveQualifier = deviceFirmWaveQualifier;
-        //}
+        public Ddin2Parser(FirmWaveQualifier deviceFirmWaveQualifier)
+        {
+            _deviceFirmWaveQualifier = deviceFirmWaveQualifier;
+        }
 
         /// <summary>
         /// Обработать входящие байты
@@ -75,15 +73,15 @@ namespace SiamCross.Models.Sensors.Ddin2
                     //case "DeviceNameSize":
                     //    _deviceNameQualifier.DeviceNameSize = GetPayload(message);
                     //    break;
-                    //case "ProgrammVersionAddress":
-                    //    _commandDictionary.Add(
-                    //        new byte[] { message[12], message[13], message[14], message[15] },
-                    //        "DeviceProgrammVersion");
-                    //    _deviceFirmWaveQualifier.DeviceNameAddress = GetPayload(message);
-                    //    break;
-                    //case "ProgrammVersionSize":
-                    //    _deviceFirmWaveQualifier.DeviceNameSize = GetPayload(message);
-                    //    break;
+                    case "ProgrammVersionAddress":
+                        _commandDictionary.Add(
+                            new byte[] { message[12], message[13], message[14], message[15] },
+                            "DeviceProgrammVersion");
+                        _deviceFirmWaveQualifier.DeviceNameAddress = GetPayload(message);
+                        break;
+                    case "ProgrammVersionSize":
+                        _deviceFirmWaveQualifier.DeviceNameSize = GetPayload(message);
+                        break;
                     case "Program":
                         var adr = BitConverter.ToString(new[] { message[5], message[4] });
                         MessageReceived?.Invoke(commandName, adr);
