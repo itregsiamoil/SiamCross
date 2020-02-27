@@ -54,13 +54,13 @@ namespace SiamCross.ViewModels
                 Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
                 ModelPump = new ObservableCollection<string>()
                 {
-                    "Балансирный",
-                    "Цепной",
-                    "Гидравлический"
+                    Resource.BalancedModelPump,
+                    Resource.ChainModelPump,
+                    Resource.HydraulicModelPump
                 };
                 StartMeasurementCommand = new Command(StartMeasurementHandler);
 
-                ValveTestCommand = new Command(() => DependencyService.Get<IToast>().Show("Тест клапанов"));
+                ValveTestCommand = new Command(() => DependencyService.Get<IToast>().Show(Resource.ValveTest));
 
                 InitDefaultValues();
             }
@@ -96,7 +96,7 @@ namespace SiamCross.ViewModels
 
                 var secondaryParameters = new MeasurementSecondaryParameters(
                     _sensorData.Name,
-                    "Динамограмма",
+                    Resource.Dynamogram,
                     SelectedField,
                     Well,
                     Bush,
@@ -129,20 +129,20 @@ namespace SiamCross.ViewModels
         private int GetModelPump()
         {
             int result = -1;
-            switch (SelectedModelPump)
+
+            if (SelectedModelPump == Resource.BalancedModelPump)
             {
-                case "Балансирный":
-                    result = 0;
-                    break;
-                case "Цепной":
-                    result = 1;
-                    break;
-                case "Гидравлический":
-                    result = 2;
-                    break;
-                default:
-                    break;
+                result = 0;
             }
+            else if (SelectedModelPump == Resource.ChainModelPump)
+            {
+                result = 1;
+            }
+            else if (SelectedModelPump == Resource.HydraulicModelPump)
+            {
+                result = 2;
+            }
+
             return result;
         }
 
@@ -157,11 +157,11 @@ namespace SiamCross.ViewModels
             bool result = true;
 
             if (!IsNumberValid(4000, 300000, measurementParams.DynPeriod))
-                _errorList.Add("Период качания должен быть в пределе от 4 до 300!");
+                _errorList.Add(Resource.DynPeriodErrorTextDdimSiddos);
             if (!IsNumberValid(1, 5, measurementParams.ApertNumber))
-                _errorList.Add("Номер отверстия должен быть в пределе от 1 до 5!");
+                _errorList.Add(Resource.ApertNumberErrorTextDdimSiddos);
             if (!IsNumberValid(500, 10000, measurementParams.Imtravel))
-                _errorList.Add("Длина хода должна быть в пределе от 0,5 до 10!");
+                _errorList.Add(Resource.ImtravelErrorTextDdimSiddos);
 
             if (_errorList.Count != 0)
             {
@@ -181,16 +181,16 @@ namespace SiamCross.ViewModels
         {
             _errorList.Clear();
 
-            ValidateParameter(SelectedField, "Выберите месторождение!");
-            ValidateParameter(Well, "Введите скважину!");
-            ValidateParameter(Bush, "Введите номер куста!");
-            ValidateParameter(Shop, "Введите номер цеха!");
-            ValidateParameter(BufferPressure, "Введите буфер давления!");
-            ValidateParameter(Comments, "Введите комментарий!");
-            ValidateParameter(DynPeriod, "Введите период качания!");
-            ValidateParameter(ApertNumber, "Введите номер отверствия!");
-            ValidateParameter(Imtravel, "Введите длину хода");
-            ValidateParameter(SelectedModelPump, "Выберите тип привода!");
+            ValidateParameter(SelectedField, Resource.SelectedFieldChoiceText);
+            ValidateParameter(Well, Resource.WellChoiceText);
+            ValidateParameter(Bush, Resource.BushChoiceText);
+            ValidateParameter(Shop, Resource.ShopChoiceText);
+            ValidateParameter(BufferPressure, Resource.BufferPressureChoiceText);
+            ValidateParameter(Comments, Resource.CommentsChoiceText);
+            ValidateParameter(DynPeriod, Resource.DynPeriodChoiceText);
+            ValidateParameter(ApertNumber, Resource.ApertNumberChoiceText);
+            ValidateParameter(Imtravel, Resource.ImtravelChoiceText);
+            ValidateParameter(SelectedModelPump, Resource.SelectedModelPumpChoiceText);
 
 
             if (_errorList.Count != 0)
@@ -213,7 +213,7 @@ namespace SiamCross.ViewModels
                     errors += _errorList[i] + Environment.NewLine;
                 }
 
-                Application.Current.MainPage.DisplayAlert("Введены неправильные данные",
+                Application.Current.MainPage.DisplayAlert(Resource.IncorrectDataEnteredErrorText,
                 errors, "OK");
             }
 

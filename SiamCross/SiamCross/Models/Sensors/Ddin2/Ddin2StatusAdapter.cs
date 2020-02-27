@@ -30,15 +30,15 @@ namespace SiamCross.Models.Sensors.Ddin2
             {
                 switch (stringStatus)
                 {
-                    case "0": return "Подготовка";
-                    case "1": return "Измерение";
-                    case "2": return "Расчет";
-                    case "4": return "Экспорт";
-                    case "5": return "Сохранение";
+                    case "0": return Resource.PreparationStatus;
+                    case "1": return Resource.MeasurementStatus;
+                    case "2": return Resource.CalculationStatus;
+                    case "4": return Resource.ExportStatus;
+                    case "5": return Resource.SavingStatus;
                 }
             }
 
-            return "Датчик свободен"; //stub
+            return Resource.FreeStatus; //stub
         }
     }
 }

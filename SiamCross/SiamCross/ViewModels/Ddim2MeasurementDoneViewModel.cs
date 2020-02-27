@@ -99,7 +99,7 @@ namespace SiamCross.ViewModels
                 BufferPressure = _measurement.BufferPressure;
                 Comments = _measurement.Comment;
                 DeviceName = _measurement.Name;
-                MeasurementType = "Динамограмма";
+                MeasurementType = Resource.Dynamogram;
                 ApertNumber = _measurement.ApertNumber.ToString();
                 MaxLoad = _measurement.MaxWeight.ToString();
                 MinLoad = _measurement.MinWeight.ToString();
@@ -110,13 +110,13 @@ namespace SiamCross.ViewModels
                 switch (_measurement.ModelPump)
                 {
                     case 0:
-                        SelectedModelPump = "Балансирный";
+                        SelectedModelPump = Resource.BalancedModelPump;
                         break;
                     case 1:
-                        SelectedModelPump = "Цепной";
+                        SelectedModelPump = Resource.ChainModelPump;
                         break;
                     case 2:
-                        SelectedModelPump = "Гидравлический";
+                        SelectedModelPump = Resource.HydraulicModelPump;
                         break;
                     default:
                         break;
@@ -147,7 +147,7 @@ namespace SiamCross.ViewModels
 
                 await Share.RequestAsync(new ShareFileRequest
                 {
-                    Title = "Поделиться измерением",
+                    Title = Resource.ShareMeasurement,
                     File = new ShareFile(filepath)
                 });
             }

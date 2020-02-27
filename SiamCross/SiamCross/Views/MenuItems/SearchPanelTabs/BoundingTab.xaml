@@ -2,10 +2,12 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.MenuItems.SearchPanelTabs.BoundingTab"
-             Title="Classic">
+             Title="Classic"
+             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross">
+
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Обнаруженные устройства: " FontSize="Medium" />
+            <Label Text="{local:Translate FoundDevices}" FontSize="Medium" />
             <ListView x:Name="boundedDevicesList" 
                       ItemsSource="{Binding ClassicDevices}" 
                       ItemSelected="ItemSelected"

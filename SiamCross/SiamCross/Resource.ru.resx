@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Acceleration" xml:space="preserve">
+    <value>Ускорение</value>
+    <comment>Ускорение в быстром замере</comment>
+  </data>
+  <data name="ApertNumberChoiceText" xml:space="preserve">
+    <value>Введите номер отверствия!</value>
+  </data>
+  <data name="ApertNumberErrorTextDdimSiddos" xml:space="preserve">
+    <value>Номер отверстия должен быть в пределе от 1 до 5!</value>
+  </data>
+  <data name="BalancedModelPump" xml:space="preserve">
+    <value>Балансирный</value>
+  </data>
+  <data name="BufferPressureChoiceText" xml:space="preserve">
+    <value>Введите буфер давления!</value>
+  </data>
+  <data name="BushChoiceText" xml:space="preserve">
+    <value>Введите номер куста!</value>
+  </data>
+  <data name="CalculationStatus" xml:space="preserve">
+    <value>Расчет</value>
+  </data>
+  <data name="ChainModelPump" xml:space="preserve">
+    <value>Цепной</value>
+  </data>
+  <data name="CommentsChoiceText" xml:space="preserve">
+    <value>Введите комментарий!</value>
+  </data>
+  <data name="DegCentigradeUnits" xml:space="preserve">
+    <value>°C</value>
+    <comment>Единицы измерния "Градусы цельсия"</comment>
+  </data>
+  <data name="Dynamogram" xml:space="preserve">
+    <value>Динамограмма</value>
+  </data>
+  <data name="DynamographSensorType" xml:space="preserve">
+    <value>Динамограф</value>
+    <comment>Тип датчиков</comment>
+  </data>
+  <data name="DynPeriodChoiceText" xml:space="preserve">
+    <value>Введите период качания!</value>
+  </data>
+  <data name="DynPeriodErrorTextDdimSiddos" xml:space="preserve">
+    <value>Период качания должен быть в пределе от 4 до 300!</value>
+  </data>
+  <data name="ExportStatus" xml:space="preserve">
+    <value>Экспорт</value>
+  </data>
+  <data name="FoundDevices" xml:space="preserve">
+    <value>Обнаруженные устройства</value>
+    <comment>Заголовок окна найденных устройств</comment>
+  </data>
+  <data name="FreeStatus" xml:space="preserve">
+    <value>Датчик свободен</value>
+  </data>
+  <data name="HydraulicModelPump" xml:space="preserve">
+    <value>Гидравлический</value>
+  </data>
+  <data name="ImtravelChoiceText" xml:space="preserve">
+    <value>Введите длину хода!</value>
+  </data>
+  <data name="ImtravelErrorTextDdimSiddos" xml:space="preserve">
+    <value>Длина хода должна быть в пределе от 0,5 до 10!</value>
+  </data>
+  <data name="IncorrectDataEnteredErrorText" xml:space="preserve">
+    <value>Введены неверные данные!</value>
+  </data>
+  <data name="Kilograms" xml:space="preserve">
+    <value>КГ</value>
+    <comment>Единицы измерния "Килограммы"</comment>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>Нагрузка</value>
+    <comment>Нагрузка в быстром замере</comment>
+  </data>
+  <data name="MeasurementStatus" xml:space="preserve">
+    <value>Измерение</value>
+  </data>
+  <data name="MilliVoltsUnits" xml:space="preserve">
+    <value>мВ</value>
+    <comment>Единицы измерния "Мили вольты"</comment>
+  </data>
+  <data name="NoConnection" xml:space="preserve">
+    <value>Нет связи</value>
+    <comment>Статус датчика на панели управения "Нет связи"</comment>
+  </data>
+  <data name="PreparationStatus" xml:space="preserve">
+    <value>Подготовка</value>
+  </data>
+  <data name="SavingStatus" xml:space="preserve">
+    <value>Сохранение</value>
+  </data>
+  <data name="SelectedFieldChoiceText" xml:space="preserve">
+    <value>Выберите месторождение!</value>
+  </data>
+  <data name="SelectedModelPumpChoiceText" xml:space="preserve">
+    <value>Выберите тип привода!</value>
+  </data>
+  <data name="ShareMeasurement" xml:space="preserve">
+    <value>Поделиться измерением</value>
+  </data>
+  <data name="ShopChoiceText" xml:space="preserve">
+    <value>Введите номер цеха!</value>
+  </data>
+  <data name="Temperature" xml:space="preserve">
+    <value>Температура</value>
+    <comment>Температура в быстром замере</comment>
+  </data>
+  <data name="ValveTest" xml:space="preserve">
+    <value>Тест клапанов</value>
+  </data>
+  <data name="Voltage" xml:space="preserve">
+    <value>Напряжение</value>
+    <comment>Напряжение в быстром замере</comment>
+  </data>
+  <data name="VoltsUnits" xml:space="preserve">
+    <value>В</value>
+    <comment>Единицы измерения "Вольты"</comment>
+  </data>
+  <data name="WellChoiceText" xml:space="preserve">
+    <value>Введите скважину!</value>
+  </data>
+</root>
