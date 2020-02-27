@@ -61,6 +61,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на О приложении.
+        /// </summary>
+        public static string AboutTitle {
+            get {
+                return ResourceManager.GetString("AboutTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на .
         /// </summary>
         public static string Acceleration {
@@ -138,6 +147,15 @@ namespace SiamCross {
         public static string CommentsChoiceText {
             get {
                 return ResourceManager.GetString("CommentsChoiceText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Панель управления.
+        /// </summary>
+        public static string ControlPanelTitle {
+            get {
+                return ResourceManager.GetString("ControlPanelTitle", resourceCulture);
             }
         }
         
@@ -268,6 +286,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Справочник.
+        /// </summary>
+        public static string HandbookTitle {
+            get {
+                return ResourceManager.GetString("HandbookTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Hydraulic.
         /// </summary>
         public static string HydraulicModelPump {
@@ -349,6 +376,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Измерения.
+        /// </summary>
+        public static string MeasurementsTitle {
+            get {
+                return ResourceManager.GetString("MeasurementsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на .
         /// </summary>
         public static string MilliVoltsUnits {
@@ -412,6 +448,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Поиск.
+        /// </summary>
+        public static string SearchTitle {
+            get {
+                return ResourceManager.GetString("SearchTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Выберите месторождение!.
         /// </summary>
         public static string SelectedFieldChoiceText {
@@ -444,6 +489,15 @@ namespace SiamCross {
         public static string SendingMeasurements {
             get {
                 return ResourceManager.GetString("SendingMeasurements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на &quot;Настройки&quot;.
+        /// </summary>
+        public static string SettingsTitle {
+            get {
+                return ResourceManager.GetString("SettingsTitle", resourceCulture);
             }
         }
         
