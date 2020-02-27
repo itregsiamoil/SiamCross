@@ -10,7 +10,7 @@
              Title="DDIM2">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Тест клапанов" Order="Secondary" Command="{Binding ValveTestCommand}"/>
+        <ToolbarItem Text="{local1:Translate ValveTest}" Order="Secondary" Command="{Binding ValveTestCommand}"/>
     </ContentPage.ToolbarItems>
 
     <ScrollView x:Name="ScrollView">
@@ -19,10 +19,10 @@
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand">
             <TableRoot>
-                <TableSection Title="Данные измерения">
+                <TableSection Title="{local1:Translate MeasurementData}">
                     <ViewCell>
                         <StackLayout  >
-                            <Label Text="Месторождение"></Label>
+                            <Label Text="{local1:Translate Field}"></Label>
                             <Picker ItemsSource="{Binding Fields}"
                                 SelectedItem="{Binding SelectedField}"
                                 ></Picker>
@@ -30,7 +30,7 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout  >
-                            <Label Text="Скважина"></Label>
+                            <Label Text="{local1:Translate Well}"></Label>
                             <Entry Text="{Binding Well}" 
                                Keyboard="Numeric">
                                 <Entry.Behaviors>
@@ -41,7 +41,7 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout   >
-                            <Label Text="Куст"></Label>
+                            <Label Text="{local1:Translate Bush}"></Label>
                             <Entry Text="{Binding Bush}" 
                                Keyboard="Numeric">
                                 <Entry.Behaviors>
@@ -52,7 +52,7 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout  >
-                            <Label Text="Цех"></Label>
+                            <Label Text="{local1:Translate Shop}"></Label>
                             <Entry Text="{Binding Shop}" 
                                Keyboard="Numeric">
                                 <Entry.Behaviors>
@@ -63,7 +63,7 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout  >
-                            <Label Text="Буферное давление"></Label>
+                            <Label Text="{local1:Translate BufferPressure}"></Label>
                             <Entry Text="{Binding BufferPressure}" 
                                Keyboard="Numeric">
                                 <Entry.Behaviors>
@@ -74,13 +74,13 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout  >
-                            <Label Text="Комментарии"></Label>
+                            <Label Text="{local1:Translate Comments}"></Label>
                             <Editor Text="{Binding Comments}"></Editor>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout  >
-                            <Label Text="Длина хода, м"/>
+                            <Label Text="{local1:Translate Imtravel}"/>
                             <local1:CustomEntry x:Name="ImtravelEntry"
                                                 Text="{Binding Imtravel}"
                                                 Keyboard="Numeric">
@@ -98,7 +98,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <Label Text="Период качания, сек"
+                            <Label Text="{local1:Translate DynPeriod}"
                                    Grid.Column="0" Grid.Row="0"/>
                             <local1:CustomEntry x:Name="DynPeriodEntry" 
                                    Text="{Binding DynPeriod}" 
@@ -113,14 +113,14 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout >
-                            <Label Text="Номер отверствия"></Label>
+                            <Label Text="{local1:Translate ApertNumber}"></Label>
                             <Entry x:Name="ApertNumberEntry" Text="{Binding ApertNumber}" 
                                Keyboard="Numeric">
                                 <Entry.Behaviors>
                                     <local:IntegerNumberValidationBehavior/>
                                 </Entry.Behaviors>
                             </Entry>
-                            <Label Text="Тип привода"></Label>
+                            <Label Text="{local1:Translate ModelPump}"></Label>
                             <Picker ItemsSource="{Binding ModelPump}"
                                 SelectedItem="{Binding SelectedModelPump}"
                                 ></Picker>
@@ -129,7 +129,7 @@
                     <ViewCell>
                         <StackLayout>
                             <Button 
-                            Text="Начать измерение"
+                            Text="{local1:Translate StartMeasurement}"
                             Command="{Binding StartMeasurementCommand}"
                             Margin="20"
                             HorizontalOptions="CenterAndExpand"></Button>

@@ -190,6 +190,9 @@
     <value>Dynamograph</value>
     <comment>Тип датчиков</comment>
   </data>
+  <data name="DynPeriod" xml:space="preserve">
+    <value>Период качания, сек</value>
+  </data>
   <data name="DynPeriodChoiceText" xml:space="preserve">
     <value>Введите период качания!</value>
   </data>
@@ -268,6 +271,9 @@
   </data>
   <data name="MaxLoad" xml:space="preserve">
     <value>Максимальная нагрузка, т</value>
+  </data>
+  <data name="MeasurementData" xml:space="preserve">
+    <value>Данные измерения</value>
   </data>
   <data name="MeasurementsSavedSuccesfully" xml:space="preserve">
     <value>измерений успешно сохранены в</value>
@@ -358,6 +364,9 @@
   </data>
   <data name="SmtpAddress" xml:space="preserve">
     <value>Адрес SMTP сервера</value>
+  </data>
+  <data name="StartMeasurement" xml:space="preserve">
+    <value>Начать измерение</value>
   </data>
   <data name="String11" xml:space="preserve">
     <value />

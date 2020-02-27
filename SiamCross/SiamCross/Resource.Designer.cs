@@ -277,6 +277,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Период качания, сек.
+        /// </summary>
+        public static string DynPeriod {
+            get {
+                return ResourceManager.GetString("DynPeriod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Введите период качания!.
         /// </summary>
         public static string DynPeriodChoiceText {
@@ -507,6 +516,15 @@ namespace SiamCross {
         public static string MaxLoad {
             get {
                 return ResourceManager.GetString("MaxLoad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Данные измерения.
+        /// </summary>
+        public static string MeasurementData {
+            get {
+                return ResourceManager.GetString("MeasurementData", resourceCulture);
             }
         }
         
@@ -777,6 +795,15 @@ namespace SiamCross {
         public static string SmtpAddress {
             get {
                 return ResourceManager.GetString("SmtpAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Начать измерение.
+        /// </summary>
+        public static string Start_measurement {
+            get {
+                return ResourceManager.GetString("Start measurement", resourceCulture);
             }
         }
         
