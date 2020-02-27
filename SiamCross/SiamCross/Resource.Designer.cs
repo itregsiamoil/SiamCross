@@ -187,6 +187,60 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Введите адрес отправителя!.
+        /// </summary>
+        public static string EnterFromAddress {
+            get {
+                return ResourceManager.GetString("EnterFromAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Введите пароль.
+        /// </summary>
+        public static string EnterPassword {
+            get {
+                return ResourceManager.GetString("EnterPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Введите адрес SMTP сервера.
+        /// </summary>
+        public static string EnterSmtpAddress {
+            get {
+                return ResourceManager.GetString("EnterSmtpAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Введите адрес назначения.
+        /// </summary>
+        public static string EnterToAddress {
+            get {
+                return ResourceManager.GetString("EnterToAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Введите имя пользователя.
+        /// </summary>
+        public static string EnterUsername {
+            get {
+                return ResourceManager.GetString("EnterUsername", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка.
+        /// </summary>
+        public static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Экспорт.
         /// </summary>
         public static string ExportStatus {
@@ -268,6 +322,24 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на измерений успешно сохранены в.
+        /// </summary>
+        public static string MeasurementsSavedSuccesfully {
+            get {
+                return ResourceManager.GetString("MeasurementsSavedSuccesfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на измерений успешно отправлено на почту.
+        /// </summary>
+        public static string MeasurementsSentSuccesfully {
+            get {
+                return ResourceManager.GetString("MeasurementsSentSuccesfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Измерение.
         /// </summary>
         public static string MeasurementStatus {
@@ -322,6 +394,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Сохранение измерений.
+        /// </summary>
+        public static string SavingMeasurements {
+            get {
+                return ResourceManager.GetString("SavingMeasurements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Сохранение.
         /// </summary>
         public static string SavingStatus {
@@ -340,11 +421,29 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Выбрано.
+        /// </summary>
+        public static string SelectedMeasurements {
+            get {
+                return ResourceManager.GetString("SelectedMeasurements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Выберите тип привода!.
         /// </summary>
         public static string SelectedModelPumpChoiceText {
             get {
                 return ResourceManager.GetString("SelectedModelPumpChoiceText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отправка измерений на почту.
+        /// </summary>
+        public static string SendingMeasurements {
+            get {
+                return ResourceManager.GetString("SendingMeasurements", resourceCulture);
             }
         }
         

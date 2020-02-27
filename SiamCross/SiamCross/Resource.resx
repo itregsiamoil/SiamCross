@@ -160,6 +160,24 @@
   <data name="DynPeriodErrorTextDdimSiddos" xml:space="preserve">
     <value>Период качания должен быть в пределе от 4 до 300!</value>
   </data>
+  <data name="EnterFromAddress" xml:space="preserve">
+    <value>Введите адрес отправителя!</value>
+  </data>
+  <data name="EnterPassword" xml:space="preserve">
+    <value>Введите пароль</value>
+  </data>
+  <data name="EnterSmtpAddress" xml:space="preserve">
+    <value>Введите адрес SMTP сервера</value>
+  </data>
+  <data name="EnterToAddress" xml:space="preserve">
+    <value>Введите адрес назначения</value>
+  </data>
+  <data name="EnterUsername" xml:space="preserve">
+    <value>Введите имя пользователя</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
   <data name="ExportStatus" xml:space="preserve">
     <value>Экспорт</value>
   </data>
@@ -188,6 +206,12 @@
   <data name="Load" xml:space="preserve">
     <value />
   </data>
+  <data name="MeasurementsSavedSuccesfully" xml:space="preserve">
+    <value>измерений успешно сохранены в</value>
+  </data>
+  <data name="MeasurementsSentSuccesfully" xml:space="preserve">
+    <value>измерений успешно отправлено на почту</value>
+  </data>
   <data name="MeasurementStatus" xml:space="preserve">
     <value>Измерение</value>
   </data>
@@ -206,14 +230,23 @@
   <data name="RodErrorTextDdin2" xml:space="preserve">
     <value>Диаметр штока должен быть в пределе от 12 до 40!</value>
   </data>
+  <data name="SavingMeasurements" xml:space="preserve">
+    <value>Сохранение измерений</value>
+  </data>
   <data name="SavingStatus" xml:space="preserve">
     <value>Сохранение</value>
   </data>
   <data name="SelectedFieldChoiceText" xml:space="preserve">
     <value>Выберите месторождение!</value>
   </data>
+  <data name="SelectedMeasurements" xml:space="preserve">
+    <value>Выбрано</value>
+  </data>
   <data name="SelectedModelPumpChoiceText" xml:space="preserve">
     <value>Выберите тип привода!</value>
+  </data>
+  <data name="SendingMeasurements" xml:space="preserve">
+    <value>Отправка измерений на почту</value>
   </data>
   <data name="ShareMeasurement" xml:space="preserve">
     <value>Share measurement</value>

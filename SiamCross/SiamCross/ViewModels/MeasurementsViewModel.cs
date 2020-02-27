@@ -314,7 +314,7 @@ namespace SiamCross.ViewModels
                             Name = m.Name,
                             Field = m.Field,
                             Date = m.DateTime,
-                            MeasurementType = "Динамограмма",
+                            MeasurementType = Resource.Dynamogram,
                             Comments = m.Comment
                         });
                 }
@@ -328,7 +328,7 @@ namespace SiamCross.ViewModels
                             Name = m.Name,
                             Field = m.Field,
                             Date = m.DateTime,
-                            MeasurementType = "Динамограмма",
+                            MeasurementType = Resource.Dynamogram,
                             Comments = m.Comment
                         });
                 }
@@ -342,7 +342,7 @@ namespace SiamCross.ViewModels
                             Name = m.Name,
                             Field = m.Field,
                             Date = m.DateTime,
-                            MeasurementType = "Динамограмма",
+                            MeasurementType = Resource.Dynamogram,
                             Comments = m.Comment
                         });
                 }
