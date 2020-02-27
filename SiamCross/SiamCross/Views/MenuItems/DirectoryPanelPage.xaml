@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.MenuItems.DirectoryPanelPage"
-             Title="Справочник">
+             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
+             Title="{local:Translate HandbookTitle}">
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource ="plus.png"  Command="{Binding AddField}"/>
         <ToolbarItem IconImageSource ="trashcan.png"  Command="{Binding Remove}"/>

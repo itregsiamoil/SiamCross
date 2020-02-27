@@ -115,6 +115,24 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Аутентификационные данные.
+        /// </summary>
+        public static string AuthentificationData {
+            get {
+                return ResourceManager.GetString("AuthentificationData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Авторизация.
+        /// </summary>
+        public static string Authorization {
+            get {
+                return ResourceManager.GetString("Authorization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Balanced.
         /// </summary>
         public static string BalancedModelPump {
@@ -223,6 +241,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Настройки почты.
+        /// </summary>
+        public static string EmailSettings {
+            get {
+                return ResourceManager.GetString("EmailSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Введите адрес отправителя!.
         /// </summary>
         public static string EnterFromAddress {
@@ -286,6 +313,24 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Код.
+        /// </summary>
+        public static string FieldCode {
+            get {
+                return ResourceManager.GetString("FieldCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Название.
+        /// </summary>
+        public static string FieldName {
+            get {
+                return ResourceManager.GetString("FieldName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Found devices:.
         /// </summary>
         public static string FoundDevices {
@@ -300,6 +345,15 @@ namespace SiamCross {
         public static string FreeStatus {
             get {
                 return ResourceManager.GetString("FreeStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Адрес отправителя.
+        /// </summary>
+        public static string FromAddress {
+            get {
+                return ResourceManager.GetString("FromAddress", resourceCulture);
             }
         }
         
@@ -412,11 +466,38 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Новое месторождение.
+        /// </summary>
+        public static string NewField {
+            get {
+                return ResourceManager.GetString("NewField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на .
         /// </summary>
         public static string NoConnection {
             get {
                 return ResourceManager.GetString("NoConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пароль.
+        /// </summary>
+        public static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Порт.
+        /// </summary>
+        public static string Port {
+            get {
+                return ResourceManager.GetString("Port", resourceCulture);
             }
         }
         
@@ -471,6 +552,15 @@ namespace SiamCross {
         public static string SearchTitle {
             get {
                 return ResourceManager.GetString("SearchTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выделить.
+        /// </summary>
+        public static string Select {
+            get {
+                return ResourceManager.GetString("Select", resourceCulture);
             }
         }
         
@@ -547,6 +637,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Адрес SMTP сервера.
+        /// </summary>
+        public static string SmtpAddress {
+            get {
+                return ResourceManager.GetString("SmtpAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на .
         /// </summary>
         public static string String11 {
@@ -570,6 +669,24 @@ namespace SiamCross {
         public static string TextAboutCompany {
             get {
                 return ResourceManager.GetString("TextAboutCompany", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Адрес назначения.
+        /// </summary>
+        public static string ToAddress {
+            get {
+                return ResourceManager.GetString("ToAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Имя пользователя.
+        /// </summary>
+        public static string Username {
+            get {
+                return ResourceManager.GetString("Username", resourceCulture);
             }
         }
         

@@ -135,6 +135,12 @@
   <data name="AppVersion" xml:space="preserve">
     <value>Версия приложения:</value>
   </data>
+  <data name="AuthentificationData" xml:space="preserve">
+    <value>Аутентификационные данные</value>
+  </data>
+  <data name="Authorization" xml:space="preserve">
+    <value>Авторизация</value>
+  </data>
   <data name="BalancedModelPump" xml:space="preserve">
     <value>Balanced</value>
   </data>
@@ -172,6 +178,9 @@
   <data name="DynPeriodErrorTextDdimSiddos" xml:space="preserve">
     <value>Период качания должен быть в пределе от 4 до 300!</value>
   </data>
+  <data name="EmailSettings" xml:space="preserve">
+    <value>Настройки почты</value>
+  </data>
   <data name="EnterFromAddress" xml:space="preserve">
     <value>Введите адрес отправителя!</value>
   </data>
@@ -193,12 +202,21 @@
   <data name="ExportStatus" xml:space="preserve">
     <value>Экспорт</value>
   </data>
+  <data name="FieldCode" xml:space="preserve">
+    <value>Код</value>
+  </data>
+  <data name="FieldName" xml:space="preserve">
+    <value>Название</value>
+  </data>
   <data name="FoundDevices" xml:space="preserve">
     <value>Found devices:</value>
     <comment>Заголовок окна найденных устройств</comment>
   </data>
   <data name="FreeStatus" xml:space="preserve">
     <value>Датчик свободен</value>
+  </data>
+  <data name="FromAddress" xml:space="preserve">
+    <value>Адрес отправителя</value>
   </data>
   <data name="HandbookTitle" xml:space="preserve">
     <value>Справочник</value>
@@ -236,8 +254,17 @@
   <data name="MilliVoltsUnits" xml:space="preserve">
     <value />
   </data>
+  <data name="NewField" xml:space="preserve">
+    <value>Новое месторождение</value>
+  </data>
   <data name="NoConnection" xml:space="preserve">
     <value />
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Порт</value>
   </data>
   <data name="PreparationStatus" xml:space="preserve">
     <value>Подготовка</value>
@@ -256,6 +283,9 @@
   </data>
   <data name="SearchTitle" xml:space="preserve">
     <value>Поиск</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Выделить</value>
   </data>
   <data name="SelectedFieldChoiceText" xml:space="preserve">
     <value>Выберите месторождение!</value>
@@ -281,6 +311,9 @@
   <data name="Site" xml:space="preserve">
     <value>Сайт</value>
   </data>
+  <data name="SmtpAddress" xml:space="preserve">
+    <value>Адрес SMTP сервера</value>
+  </data>
   <data name="String11" xml:space="preserve">
     <value />
   </data>
@@ -289,6 +322,12 @@
   </data>
   <data name="TextAboutCompany" xml:space="preserve">
     <value>Компания СИАМ — это холдинг предприятий, работающих в области исследований скважин и разработки месторождений. Направления дейтельности — производство оборудования для исследования скважин, оказание сервисных услуг по произведению исследований нефтегазодобывающих скважин и интерпритации исследовательских данных, услуги по химизации технологических процессов добычи и транспортировки нефти  инжинириговые услуги по анализу, оптимизации и проектировании разработки местророждений. Также Компания предоставляет сервисные услуги в энергетической отрасли - диагностику силового высоковольтного оборудования и поиск неисправностей кабельных линий.</value>
+  </data>
+  <data name="ToAddress" xml:space="preserve">
+    <value>Адрес назначения</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Имя пользователя</value>
   </data>
   <data name="ValveTest" xml:space="preserve">
     <value>Valve test</value>

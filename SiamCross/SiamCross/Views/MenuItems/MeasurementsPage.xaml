@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.MenuItems.MeasurementsPage"
              xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
-             Title="Измерения">
+             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
+             Title="{local:Translate MeasurementsTitle}">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Выделить" Command="{Binding SelectAll}"/>
+        <ToolbarItem Text="{local:Translate Select}" Command="{Binding SelectAll}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>

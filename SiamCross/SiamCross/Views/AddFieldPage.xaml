@@ -2,22 +2,23 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.AddFieldPage"
-             xmlns:local="clr-namespace:SiamCross.Views">
+             xmlns:local="clr-namespace:SiamCross.Views"
+             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross">
     <ContentPage.Content>
         <TableView Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand">
             <TableRoot>
-                <TableSection Title="Новое месторождение">
+                <TableSection Title="{local1:Translate NewField}">
                     <ViewCell>
                         <StackLayout  >
-                            <Label Text="Название"></Label>
+                            <Label Text="{local1:Translate FieldName}"></Label>
                             <Editor Text="{Binding FieldName}"></Editor>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout  >
-                            <Label Text="Код"></Label>
+                            <Label Text="{local1:Translate FieldCode}"></Label>
                             <Entry Text="{Binding FieldCode, Mode=TwoWay}" 
                                Keyboard="Numeric">
                                 <Entry.Behaviors>
