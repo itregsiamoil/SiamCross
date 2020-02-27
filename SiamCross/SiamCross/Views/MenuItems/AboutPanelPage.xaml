@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.MenuItems.AboutPanelPage"
-             Title="О приложении">
+             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
+             Title="{local:Translate AboutTitle}">
     <ContentPage.Content>
         <StackLayout>
             <TableView Intent="Data" 
@@ -12,19 +13,19 @@
                     <TableSection>
                         <ViewCell>
                             <StackLayout>
-                                <Label Text="Caйт"/>
+                                <Label Text="{local:Translate Site}"/>
                                 <Label Text="http://www.siamoil.ru"/>
                             </StackLayout>
                         </ViewCell>
                         <ViewCell>
                         <StackLayout>
-                            <Label Text="О компании"/>
-                            <Label Text="Компания СИАМ — это холдинг предприятий, работающих в области исследований скважин и разработки месторождений. Направления дейтельности — производство оборудования для исследования скважин, оказание сервисных услуг по произведению исследований нефтегазодобывающих скважин и интерпритации исследовательских данных, услуги по химизации технологических процессов добычи и транспортировки нефти  инжинириговые услуги по анализу, оптимизации и проектировании разработки местророждений. Также Компания предоставляет сервисные услуги в энергетической отрасли - диагностику силового высоковольтного оборудования и поиск неисправностей кабельных линий."/>
+                            <Label Text="{local:Translate AboutCompany}"/>
+                            <Label Text="{local:Translate TextAboutCompany}"/>
                         </StackLayout>
                         </ViewCell>
                         <ViewCell>
                             <StackLayout Orientation="Horizontal">
-                                <Label Text="Версия приложения: "/>
+                                <Label Text="{local:Translate AppVersion} "/>
                                 <Label Text="1.0.1"/>
                             </StackLayout>
                         </ViewCell>

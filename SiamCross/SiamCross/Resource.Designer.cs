@@ -61,6 +61,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на О компании.
+        /// </summary>
+        public static string AboutCompany {
+            get {
+                return ResourceManager.GetString("AboutCompany", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на О приложении.
         /// </summary>
         public static string AboutTitle {
@@ -93,6 +102,15 @@ namespace SiamCross {
         public static string ApertNumberErrorTextDdimSiddos {
             get {
                 return ResourceManager.GetString("ApertNumberErrorTextDdimSiddos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Версия приложения:.
+        /// </summary>
+        public static string AppVersion {
+            get {
+                return ResourceManager.GetString("AppVersion", resourceCulture);
             }
         }
         
@@ -520,6 +538,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Сайт.
+        /// </summary>
+        public static string Site {
+            get {
+                return ResourceManager.GetString("Site", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на .
         /// </summary>
         public static string String11 {
@@ -534,6 +561,15 @@ namespace SiamCross {
         public static string Temperature {
             get {
                 return ResourceManager.GetString("Temperature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Компания СИАМ — это холдинг предприятий, работающих в области исследований скважин и разработки месторождений. Направления дейтельности — производство оборудования для исследования скважин, оказание сервисных услуг по произведению исследований нефтегазодобывающих скважин и интерпритации исследовательских данных, услуги по химизации технологических процессов добычи и транспортировки нефти  инжинириговые услуги по анализу, оптимизации и проектировании разработки местророждений. Также Компания предоставляет се [остаток строки не уместился]&quot;;.
+        /// </summary>
+        public static string TextAboutCompany {
+            get {
+                return ResourceManager.GetString("TextAboutCompany", resourceCulture);
             }
         }
         
