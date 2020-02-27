@@ -126,6 +126,9 @@
   <data name="Acceleration" xml:space="preserve">
     <value />
   </data>
+  <data name="ApertNumber" xml:space="preserve">
+    <value>Номер отверствия</value>
+  </data>
   <data name="ApertNumberChoiceText" xml:space="preserve">
     <value>Введите номер отверствия!</value>
   </data>
@@ -144,8 +147,14 @@
   <data name="BalancedModelPump" xml:space="preserve">
     <value>Balanced</value>
   </data>
+  <data name="BufferPressure" xml:space="preserve">
+    <value>Буферное давление</value>
+  </data>
   <data name="BufferPressureChoiceText" xml:space="preserve">
     <value>Введите буфер давления!</value>
+  </data>
+  <data name="Bush" xml:space="preserve">
+    <value>Куст</value>
   </data>
   <data name="BushChoiceText" xml:space="preserve">
     <value>Введите номер куста!</value>
@@ -156,14 +165,23 @@
   <data name="ChainModelPump" xml:space="preserve">
     <value>Chain</value>
   </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Комментарии</value>
+  </data>
   <data name="CommentsChoiceText" xml:space="preserve">
     <value>Введите комментарий!</value>
   </data>
   <data name="ControlPanelTitle" xml:space="preserve">
     <value>Панель управления</value>
   </data>
+  <data name="Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
   <data name="DegCentigradeUnits" xml:space="preserve">
     <value />
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Прибор</value>
   </data>
   <data name="Dynamogram" xml:space="preserve">
     <value>Dynamogram</value>
@@ -202,6 +220,9 @@
   <data name="ExportStatus" xml:space="preserve">
     <value>Экспорт</value>
   </data>
+  <data name="Field" xml:space="preserve">
+    <value>Месторождение</value>
+  </data>
   <data name="FieldCode" xml:space="preserve">
     <value>Код</value>
   </data>
@@ -224,6 +245,9 @@
   <data name="HydraulicModelPump" xml:space="preserve">
     <value>Hydraulic</value>
   </data>
+  <data name="Imtravel" xml:space="preserve">
+    <value>Длина хода, м</value>
+  </data>
   <data name="ImtravelChoiceText" xml:space="preserve">
     <value>Введите длину хода!</value>
   </data>
@@ -239,6 +263,12 @@
   <data name="Load" xml:space="preserve">
     <value />
   </data>
+  <data name="LowerRodWeight" xml:space="preserve">
+    <value>Вес штанг в нижнем положении, т</value>
+  </data>
+  <data name="MaxLoad" xml:space="preserve">
+    <value>Максимальная нагрузка, т</value>
+  </data>
   <data name="MeasurementsSavedSuccesfully" xml:space="preserve">
     <value>измерений успешно сохранены в</value>
   </data>
@@ -251,8 +281,17 @@
   <data name="MeasurementsTitle" xml:space="preserve">
     <value>Измерения</value>
   </data>
+  <data name="MeasurementType" xml:space="preserve">
+    <value>Тип исследования</value>
+  </data>
   <data name="MilliVoltsUnits" xml:space="preserve">
     <value />
+  </data>
+  <data name="MinLoad" xml:space="preserve">
+    <value>Минимальная нагрузка, т</value>
+  </data>
+  <data name="ModelPump" xml:space="preserve">
+    <value>Тип привода</value>
   </data>
   <data name="NewField" xml:space="preserve">
     <value>Новое месторождение</value>
@@ -268,6 +307,9 @@
   </data>
   <data name="PreparationStatus" xml:space="preserve">
     <value>Подготовка</value>
+  </data>
+  <data name="PumpRate" xml:space="preserve">
+    <value>Темп качания, кач/мин</value>
   </data>
   <data name="RodChoiceText" xml:space="preserve">
     <value>"Введите диаметр штока!"</value>
@@ -305,6 +347,9 @@
   <data name="ShareMeasurement" xml:space="preserve">
     <value>Share measurement</value>
   </data>
+  <data name="Shop" xml:space="preserve">
+    <value>Цех</value>
+  </data>
   <data name="ShopChoiceText" xml:space="preserve">
     <value>Введите номер цеха!</value>
   </data>
@@ -326,6 +371,9 @@
   <data name="ToAddress" xml:space="preserve">
     <value>Адрес назначения</value>
   </data>
+  <data name="UpperRodWeight" xml:space="preserve">
+    <value>Вес штанг в верхнем положении, т</value>
+  </data>
   <data name="Username" xml:space="preserve">
     <value>Имя пользователя</value>
   </data>
@@ -337,6 +385,9 @@
   </data>
   <data name="VoltsUnits" xml:space="preserve">
     <value />
+  </data>
+  <data name="Well" xml:space="preserve">
+    <value>Скважина</value>
   </data>
   <data name="WellChoiceText" xml:space="preserve">
     <value>Введите скважину!</value>

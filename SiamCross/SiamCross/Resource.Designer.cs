@@ -88,6 +88,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Номер отверствия.
+        /// </summary>
+        public static string ApertNumber {
+            get {
+                return ResourceManager.GetString("ApertNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Введите номер отверствия!.
         /// </summary>
         public static string ApertNumberChoiceText {
@@ -142,11 +151,29 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Буферное давление.
+        /// </summary>
+        public static string BufferPressure {
+            get {
+                return ResourceManager.GetString("BufferPressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Введите буфер давления!.
         /// </summary>
         public static string BufferPressureChoiceText {
             get {
                 return ResourceManager.GetString("BufferPressureChoiceText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Куст.
+        /// </summary>
+        public static string Bush {
+            get {
+                return ResourceManager.GetString("Bush", resourceCulture);
             }
         }
         
@@ -178,6 +205,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Комментарии.
+        /// </summary>
+        public static string Comments {
+            get {
+                return ResourceManager.GetString("Comments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Введите комментарий!.
         /// </summary>
         public static string CommentsChoiceText {
@@ -196,11 +232,29 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Дата.
+        /// </summary>
+        public static string Date {
+            get {
+                return ResourceManager.GetString("Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на .
         /// </summary>
         public static string DegCentigradeUnits {
             get {
                 return ResourceManager.GetString("DegCentigradeUnits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Прибор.
+        /// </summary>
+        public static string Device {
+            get {
+                return ResourceManager.GetString("Device", resourceCulture);
             }
         }
         
@@ -313,6 +367,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Месторождение.
+        /// </summary>
+        public static string Field {
+            get {
+                return ResourceManager.GetString("Field", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Код.
         /// </summary>
         public static string FieldCode {
@@ -376,6 +439,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Длина хода, м.
+        /// </summary>
+        public static string Imtravel {
+            get {
+                return ResourceManager.GetString("Imtravel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Введите длину хода!.
         /// </summary>
         public static string ImtravelChoiceText {
@@ -421,6 +493,24 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Вес штанг в нижнем положении, т.
+        /// </summary>
+        public static string LowerRodWeight {
+            get {
+                return ResourceManager.GetString("LowerRodWeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Максимальная нагрузка, т.
+        /// </summary>
+        public static string MaxLoad {
+            get {
+                return ResourceManager.GetString("MaxLoad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на измерений успешно сохранены в.
         /// </summary>
         public static string MeasurementsSavedSuccesfully {
@@ -457,11 +547,38 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Тип исследования.
+        /// </summary>
+        public static string MeasurementType {
+            get {
+                return ResourceManager.GetString("MeasurementType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на .
         /// </summary>
         public static string MilliVoltsUnits {
             get {
                 return ResourceManager.GetString("MilliVoltsUnits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Минимальная нагрузка, т.
+        /// </summary>
+        public static string MinLoad {
+            get {
+                return ResourceManager.GetString("MinLoad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тип привода.
+        /// </summary>
+        public static string ModelPump {
+            get {
+                return ResourceManager.GetString("ModelPump", resourceCulture);
             }
         }
         
@@ -507,6 +624,15 @@ namespace SiamCross {
         public static string PreparationStatus {
             get {
                 return ResourceManager.GetString("PreparationStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Темп качания, кач/мин.
+        /// </summary>
+        public static string PumpRate {
+            get {
+                return ResourceManager.GetString("PumpRate", resourceCulture);
             }
         }
         
@@ -619,6 +745,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Цех.
+        /// </summary>
+        public static string Shop {
+            get {
+                return ResourceManager.GetString("Shop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Введите номер цеха!.
         /// </summary>
         public static string ShopChoiceText {
@@ -682,6 +817,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Вес штанг в верхнем положении, т.
+        /// </summary>
+        public static string UpperRodWeight {
+            get {
+                return ResourceManager.GetString("UpperRodWeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Имя пользователя.
         /// </summary>
         public static string Username {
@@ -714,6 +858,15 @@ namespace SiamCross {
         public static string VoltsUnits {
             get {
                 return ResourceManager.GetString("VoltsUnits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Скважина.
+        /// </summary>
+        public static string Well {
+            get {
+                return ResourceManager.GetString("Well", resourceCulture);
             }
         }
         
