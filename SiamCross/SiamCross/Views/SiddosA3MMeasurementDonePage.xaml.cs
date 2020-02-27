@@ -47,6 +47,27 @@ namespace SiamCross.Views
                 throw;
             }
         }
+        protected override void OnSizeAllocated(double width, double height)
+        {
+            base.OnSizeAllocated(width, height);
+
+            if (width > height)
+            {
+                outerStack.Orientation = StackOrientation.Horizontal;
+                graphGrid.HeightRequest = 180;
+                graphGrid.MinimumHeightRequest = 180;
+                graphGrid.WidthRequest = 240;
+                graphGrid.MinimumWidthRequest = 240;
+            }
+            else
+            {
+                outerStack.Orientation = StackOrientation.Vertical;
+                graphGrid.HeightRequest = -1;
+                graphGrid.MinimumHeightRequest = -1;
+                graphGrid.WidthRequest = -1;
+                graphGrid.MinimumWidthRequest = -1;
+            }
+        }
 
         private void CanvasView_PaintSurface(object sender, SkiaSharp.Views.Forms.SKPaintSurfaceEventArgs args)
         {

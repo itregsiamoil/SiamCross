@@ -38,7 +38,7 @@
     16. Вес штанг в верхнем положении, т
     17. Вес штанг в нижнем положении, т
     18. Тип привод-->
-    <StackLayout>
+    <StackLayout x:Name="outerStack">
         <!--<forms:ChartView x:Name="Chart1" HeightRequest="200"/>-->
         <!--<skia:SKCanvasView x:Name="CanvasView"
                            PaintSurface="CanvasView_PaintSurface"
@@ -48,7 +48,7 @@
                            IgnorePixelScaling="True"
                            HeightRequest="200"
                            />-->
-        <Grid>
+        <Grid x:Name="graphGrid" Margin="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -67,7 +67,7 @@
                            VerticalOptions="FillAndExpand"
                            IgnorePixelScaling="True"
                            HeightRequest="200"
-                           Grid.Column="1" Grid.Row="1"/>
+                           Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"/>
             <Label Text=", Т" VerticalOptions="Start" Grid.Column="1" Grid.Row="0"/>
             <Label Text="0"  Grid.Column="0" Grid.Row="2"/>
             <Label Text=", М" HorizontalOptions="Center" Grid.Column="2" Grid.Row="2"/>
