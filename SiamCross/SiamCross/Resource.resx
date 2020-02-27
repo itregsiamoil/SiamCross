@@ -317,6 +317,9 @@
   <data name="PumpRate" xml:space="preserve">
     <value>Темп качания, кач/мин</value>
   </data>
+  <data name="Rod" xml:space="preserve">
+    <value>Диаметр штока, м</value>
+  </data>
   <data name="RodChoiceText" xml:space="preserve">
     <value>"Введите диаметр штока!"</value>
   </data>

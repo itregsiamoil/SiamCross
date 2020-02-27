@@ -655,6 +655,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Диаметр штока, м.
+        /// </summary>
+        public static string Rod {
+            get {
+                return ResourceManager.GetString("Rod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на &quot;Введите диаметр штока!&quot;.
         /// </summary>
         public static string RodChoiceText {
