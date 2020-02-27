@@ -200,6 +200,12 @@
   <data name="PreparationStatus" xml:space="preserve">
     <value>Подготовка</value>
   </data>
+  <data name="RodChoiceText" xml:space="preserve">
+    <value>"Введите диаметр штока!"</value>
+  </data>
+  <data name="RodErrorTextDdin2" xml:space="preserve">
+    <value>Диаметр штока должен быть в пределе от 12 до 40!</value>
+  </data>
   <data name="SavingStatus" xml:space="preserve">
     <value>Сохранение</value>
   </data>

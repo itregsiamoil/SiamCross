@@ -211,7 +211,7 @@ namespace SiamCross.ViewModels
                     errors += _errorList[i] + Environment.NewLine;
                 }
 
-                Application.Current.MainPage.DisplayAlert("Введены неправильные данные",
+                Application.Current.MainPage.DisplayAlert(Resource.IncorrectDataEnteredErrorText,
                 errors, "OK");
             }
 
