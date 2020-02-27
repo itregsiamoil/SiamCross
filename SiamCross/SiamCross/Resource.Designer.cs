@@ -801,9 +801,9 @@ namespace SiamCross {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Начать измерение.
         /// </summary>
-        public static string Start_measurement {
+        public static string StartMeasurement {
             get {
-                return ResourceManager.GetString("Start measurement", resourceCulture);
+                return ResourceManager.GetString("StartMeasurement", resourceCulture);
             }
         }
         
