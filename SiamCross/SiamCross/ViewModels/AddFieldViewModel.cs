@@ -27,6 +27,8 @@ namespace SiamCross.ViewModels
 
         private void SaveField()
         {
+            if (FieldName == null || FieldCode == null)
+                return;
             try
             {
                 HandbookData.Instance.AddField(FieldName, int.Parse(FieldCode));
