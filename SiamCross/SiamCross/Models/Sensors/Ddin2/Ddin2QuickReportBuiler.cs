@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
+
 namespace SiamCross.Models.Sensors.Ddin2
 { 
     public class Ddin2QuickReportBuiler
@@ -25,7 +26,7 @@ namespace SiamCross.Models.Sensors.Ddin2
             get
             {
                 return _batteryVoltage != null ?
-                    "Напряжение: " + _batteryVoltage + ", В\n"
+                    $"{Resource.Voltage}: " + _batteryVoltage + $", {Resource.VoltsUnits}\n"
                     : "";
             }
             set
@@ -39,7 +40,7 @@ namespace SiamCross.Models.Sensors.Ddin2
             get
             {
                 return _temperatute != null ?
-                    "Температура: " + _temperatute + ", °C\n"
+                    $"{Resource.Temperature}: " + _temperatute + $", {Resource.DegCentigradeUnits}\n"
                     : "";
             }
             set
@@ -62,14 +63,14 @@ namespace SiamCross.Models.Sensors.Ddin2
                     float load = float.Parse(_load);
                     if (IsKillosParametersReady)
                     {
-                        return "Нагрузка: " + Math.Round(load, 2) + @", мВ \ " +
+                        return $"{Resource.Load}: " + Math.Round(load, 2) + $", {Resource.MilliVoltsUnits}" + @" \ " +
                             ((int)((load - float.Parse(ZeroOffsetLoad))
                                 / float.Parse(SensitivityLoad))).ToString() +
-                            ", КГ\n";
+                            $", {Resource.Kilograms}\n";
                     }
                     else
                     {
-                        return "Нагрузка: " + Math.Round(load, 2) + ", мВ\n";
+                        return $"{Resource.Load}: " + Math.Round(load, 2) + $", {Resource.MilliVoltsUnits}\n";
                     }
                 }
                 else
@@ -88,7 +89,7 @@ namespace SiamCross.Models.Sensors.Ddin2
             get
             {
                 return _acceleration != null ?
-                   "Ускорение: " + Math.Round(float.Parse(_acceleration), 2) + ", мВ"
+                   $"{Resource.Acceleration}: " + Math.Round(float.Parse(_acceleration), 2) + $", {Resource.MilliVoltsUnits}"
                     : "";
             }
             set

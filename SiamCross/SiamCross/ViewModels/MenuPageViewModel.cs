@@ -62,32 +62,32 @@ namespace SiamCross.ViewModels
             {
                 new MenuPageItem()
                 {
-                    Title = "Панель управления",
+                    Title = Resource.ControlPanelTitle,
                     Command = GoControlPanel
                 },
                 new MenuPageItem()
                 {
-                    Title = "Поиск",
+                    Title = Resource.SearchTitle,
                     Command = GoSearchPanel
                 },
                 new MenuPageItem()
                 {
-                    Title = "Измерения",
+                    Title = Resource.MeasurementsTitle,
                     Command = GoMeasuringPanel
                 },
                 new MenuPageItem()
                 {
-                    Title = "Справочник",
+                    Title = Resource.HandbookTitle,
                     Command = GoDirectoryPanel
                 },
                 new MenuPageItem()
                 {
-                    Title = "Настройки",
+                    Title = Resource.SettingsTitle,
                     Command = GoSettingsPanel
                 },
                 new MenuPageItem()
                 {
-                    Title = "О приложении",
+                    Title = Resource.AboutTitle,
                     Command = GoAboutPanel
                 }
             };

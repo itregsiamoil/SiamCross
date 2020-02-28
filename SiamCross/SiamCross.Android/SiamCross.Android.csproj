@@ -129,6 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomEntryRenderer.cs" />
+    <Compile Include="LocalizeAndroid.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Models\BluetoothClassicAdapterAndroid.cs" />
     <Compile Include="Models\BluetoothLeAdapterAndroid.cs" />

@@ -8,6 +8,7 @@
              xmlns:local="clr-namespace:SiamCross.Views"
              xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
              x:Class="SiamCross.Views.SiddosA3MMeasurementDonePage"
+             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
              Title="SIDDOS3AM">
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="share.png" Text="Share" Command="{Binding ShareCommand}"/>
@@ -94,14 +95,14 @@
                     </ViewCell>-->
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Месторождение"/>
+                            <Label Text="{local1:Translate Field}"/>
                             <Picker ItemsSource="{Binding Fields}"
                                 SelectedItem="{Binding SelectedField}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Скважина"/>
+                            <Label Text="{local1:Translate Well}"/>
                             <Entry Text="{Binding Well}" 
                                Keyboard="Numeric">
                                 <Entry.Behaviors>
@@ -112,7 +113,7 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Куст"/>
+                            <Label Text="{local1:Translate Bush}"/>
                             <Entry Text="{Binding Bush}" 
                                Keyboard="Numeric">
                                 <Entry.Behaviors>
@@ -123,7 +124,7 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Цех"/>
+                            <Label Text="{local1:Translate Shop}"/>
                             <Entry Text="{Binding Shop}" 
                                Keyboard="Numeric">
                                 <Entry.Behaviors>
@@ -134,14 +135,14 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Дата"/>
+                            <Label Text="{local1:Translate Date}"/>
                             <Label Text="{Binding Date, Mode=OneWay}" 
                                    Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Буферное давление"/>
+                            <Label Text="{local1:Translate BufferPressure}"/>
                             <Entry Text="{Binding BufferPressure}">
                                 <Entry.Behaviors>
                                     <local:FloatNumberValidationBehavior/>
@@ -151,27 +152,27 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Комментарии"/>
+                            <Label Text="{local1:Translate Comments}"/>
                             <Editor Text="{Binding Comments, Mode=TwoWay}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Прибор"/>
+                            <Label Text="{local1:Translate Device}"/>
                             <Label Text="{Binding DeviceName, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Тип исследования"/>
+                            <Label Text="{local1:Translate MeasurementType}"/>
                             <Label Text="{Binding MeasurementType, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Номер отверствия"/>
+                            <Label Text="{local1:Translate ApertNumber}"/>
                             <Entry Text="{Binding ApertNumber}" 
                                Keyboard="Numeric">
                                 <Entry.Behaviors>
@@ -182,49 +183,49 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Максимальная нагрузка, т"/>
+                            <Label Text="{local1:Translate MaxLoad}"/>
                             <Label Text="{Binding MaxLoad, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Минимальная нагрузка, т"/>
+                            <Label Text="{local1:Translate MinLoad}"/>
                             <Label Text="{Binding MinLoad, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Длина хода, м"/>
+                            <Label Text="{local1:Translate Imtravel}"/>
                             <Label Text="{Binding Imtravel, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Темп качания, кач/мин"/>
+                            <Label Text="{local1:Translate PumpRate}"/>
                             <Label Text="{Binding PumpRate, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Вес штанг в верхнем положении, т"/>
+                            <Label Text="{local1:Translate UpperRodWeight}"/>
                             <Label Text="{Binding UpperRodWeight, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="Вес штанг в нижнем положении, т"/>
+                            <Label Text="{local1:Translate LowerRodWeight}"/>
                             <Label Text="{Binding LowerRodWeight, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout >
-                            <Label Text="Тип привода"/>
+                            <Label Text="{local1:Translate ModelPump}"/>
                             <Label Text="{Binding SelectedModelPump, Mode=OneWay}"
                                    Style="{StaticResource labelStyle}"/>
                         </StackLayout>

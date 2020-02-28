@@ -3,8 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.MenuItems.ControlPanelPage"
              xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
+             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
              x:Name="ControlPanel"
-             Title="Панель управления">
+             Title="{local:Translate ControlPanelTitle}">
     <ContentPage.Content>
         <StackLayout>
             <ListView x:Name="sensorList"

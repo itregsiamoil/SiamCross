@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.MenuItems.SearchPanelTabs.ScanningTab"
+             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
              Title="Low Energy">
     <ContentPage.Content>
         <StackLayout>
@@ -10,7 +11,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Label Text="Обнаруженные устройства: " 
+                <Label Text="{local:Translate FoundDevices}" 
                        FontSize="Medium" 
                        Grid.Column="0"/>
                 <ActivityIndicator Color="CornflowerBlue"

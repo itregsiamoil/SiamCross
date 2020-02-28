@@ -23,7 +23,7 @@ namespace SiamCross.Services
                     var ddin2 = new Ddin2Sensor(
                         AppContainer.Container.Resolve<IBluetoothClassicAdapter>
                         (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                        new SensorData(Guid.NewGuid(), deviceInfo.Name, "Динамограф", ""));
+                        new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
                     ddin2.Notify += SensorService.Instance.SensorDataChangedHandler;
                     ddin2.ScannedDeviceInfo = deviceInfo;
                     return ddin2;
@@ -35,7 +35,7 @@ namespace SiamCross.Services
                         var sensor = new Ddim2Sensor(
                             AppContainer.Container.Resolve<IBluetoothLeAdapter>
                             (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                            new SensorData(Guid.NewGuid(), deviceInfo.Name, "Динамограф", ""));
+                            new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
                         sensor.Notify += SensorService.Instance.SensorDataChangedHandler;
                         sensor.MeasurementRecieved += SensorService.Instance.MeasurementHandler;
                         sensor.ScannedDeviceInfo = deviceInfo;
@@ -46,7 +46,7 @@ namespace SiamCross.Services
                         var sensor = new Ddim2Sensor(
                             AppContainer.Container.Resolve<IBluetoothClassicAdapter>
                             (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                            new SensorData(Guid.NewGuid(), deviceInfo.Name, "Динамограф", ""));
+                            new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
                         sensor.Notify += SensorService.Instance.SensorDataChangedHandler;
                         sensor.ScannedDeviceInfo = deviceInfo;
                         return sensor;
@@ -59,7 +59,7 @@ namespace SiamCross.Services
                         var sensor = new SiddosA3MSensor(
                             AppContainer.Container.Resolve<IBluetoothLeAdapter>
                             (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                            new SensorData(Guid.NewGuid(), deviceInfo.Name, "Динамограф", ""));
+                            new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
                         sensor.Notify += SensorService.Instance.SensorDataChangedHandler;
                         sensor.MeasurementRecieved += SensorService.Instance.MeasurementHandler;
                         sensor.ScannedDeviceInfo = deviceInfo;

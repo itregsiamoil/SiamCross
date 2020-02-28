@@ -5,152 +5,153 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:local="clr-namespace:SiamCross.Views"
-             xmlns:local1="clr-namespace:SiamCross.Views.ValidationBehavior"
+             xmlns:local2="clr-namespace:SiamCross.Views.ValidationBehavior"
+             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
              x:Class="SiamCross.Views.SiddosA3MMeasurementPage"
              Title="SIDDOSA3M">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Тест клапанов" Order="Secondary" Command="{Binding ValveTestCommand}"/>
+        <ToolbarItem Text="{local1:Translate ValveTest}" Order="Secondary" Command="{Binding ValveTestCommand}"/>
     </ContentPage.ToolbarItems>
 
-    <TableView Intent="Data" 
+    <ScrollView x:Name="ScrollView">
+        <TableView x:Name="TableView"
+               Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand">
-        <TableRoot>
-            <TableSection Title="Данные измерения">
-                <ViewCell>
-                    <StackLayout  >
-                        <Label Text="Месторождение"></Label>
-                        <Picker ItemsSource="{Binding Fields}"
+            <TableRoot>
+                <TableSection Title="{local1:Translate MeasurementData}">
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="{local1:Translate Field}"></Label>
+                            <Picker ItemsSource="{Binding Fields}"
                                 SelectedItem="{Binding SelectedField}"
                                 ></Picker>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout  >
-                        <Label Text="Скважина"></Label>
-                        <Entry Text="{Binding Well}" 
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="{local1:Translate Well}"></Label>
+                            <Entry Text="{Binding Well}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:IntegerNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout   >
-                        <Label Text="Куст"></Label>
-                        <Entry Text="{Binding Bush}" 
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout   >
+                            <Label Text="{local1:Translate Bush}"></Label>
+                            <Entry Text="{Binding Bush}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:IntegerNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout  >
-                        <Label Text="Цех"></Label>
-                        <Entry Text="{Binding Shop}" 
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="{local1:Translate Shop}"></Label>
+                            <Entry Text="{Binding Shop}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:IntegerNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout  >
-                        <Label Text="Буферное давление"></Label>
-                        <Entry Text="{Binding BufferPressure}" 
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="{local1:Translate BufferPressure}"></Label>
+                            <Entry Text="{Binding BufferPressure}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:FloatNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout  >
-                        <Label Text="Комментарии"></Label>
-                        <Editor Text="{Binding Comments}"></Editor>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout  >
-                        <Label Text="Длина хода, м"></Label>
-                        <local1:CustomEntry x:Name="ImtravelEntry"
-                                            Text="{Binding Imtravel}"
-                                            Keyboard="Numeric">
-                        </local1:CustomEntry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+                                <Entry.Behaviors>
+                                    <local:FloatNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="{local1:Translate Comments}"></Label>
+                            <Editor Text="{Binding Comments}"></Editor>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="{local1:Translate Imtravel}"/>
+                            <local2:CustomEntry x:Name="ImtravelEntry"
+                                                Text="{Binding Imtravel}"
+                                                Keyboard="Numeric">
+                            </local2:CustomEntry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
 
-                        <Label Text="Период качания, сек"
+                            <Label Text="{local1:Translate DynPeriod}"
                                    Grid.Column="0" Grid.Row="0"/>
-                        <local1:CustomEntry x:Name="DynPeriodEntry" 
+                            <local2:CustomEntry x:Name="DynPeriodEntry" 
                                    Text="{Binding DynPeriod}" 
                                    Keyboard="Numeric"
                                    Grid.Column="0" Grid.Row="1">
-                        </local1:CustomEntry>
-                        <Button ImageSource="stopwatch.png"
+                            </local2:CustomEntry>
+                            <Button ImageSource="stopwatch.png"
                                     Grid.Column="1" Grid.RowSpan="2"
                                     Margin="10"
                                     Clicked="StopwatchButton_Clicked"/>
-                    </Grid>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout >
-                        <Label Text="Номер отверствия"></Label>
-                        <Entry Text="{Binding ApertNumber}" 
+                        </Grid>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout >
+                            <Label Text="{local1:Translate ApertNumber}"></Label>
+                            <Entry x:Name="ApertNumberEntry" Text="{Binding ApertNumber}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:IntegerNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                        <Label Text="Тип привода"></Label>
-                        <Picker ItemsSource="{Binding ModelPump}"
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                            <Label Text="{local1:Translate ModelPump}"></Label>
+                            <Picker ItemsSource="{Binding ModelPump}"
                                 SelectedItem="{Binding SelectedModelPump}"
                                 ></Picker>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout>
-                        <Button 
-                            Text="Начать измерение"
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Button 
+                            Text="{local1:Translate StartMeasurement}"
                             Command="{Binding StartMeasurementCommand}"
                             Margin="20"
-                            HorizontalOptions="CenterAndExpand"></Button>    
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell x:Name="Empty">
-                    <StackLayout>
-                        <Label/>
-                        <Label/>
-                        <Label/>
-                        <Label/>
-                        <Label/>
-                        <Label/>
-                        <Label/>
-                        <Label/>
-                    </StackLayout>
-                </ViewCell>
-            </TableSection>
-            <TableSection>
-                
-            </TableSection>
-        </TableRoot>
-    </TableView>
+                            HorizontalOptions="CenterAndExpand"></Button>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell x:Name="Empty">
+                        <StackLayout>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                        </StackLayout>
+                    </ViewCell>
+                </TableSection>
+            </TableRoot>
+        </TableView>
 
+    </ScrollView>
 
 </ContentPage>

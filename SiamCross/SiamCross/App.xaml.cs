@@ -44,7 +44,13 @@ namespace SiamCross
         {
             InitializeComponent();
             AppContainer.Container = setup.CreateContainer();
-            // MainPage = new MainPage();
+            
+            if (Device.OS != TargetPlatform.WinPhone)
+            {
+                Resource.Culture = DependencyService.Get<ILocalize>()
+                                    .GetCurrentCultureInfo();
+            }
+
             CallMain();
         }
 

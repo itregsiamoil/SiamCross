@@ -2,35 +2,36 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.MenuItems.SettingsPanelPage"
+             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
              xmlns:local="clr-namespace:SiamCross.Views"
-             Title="Настройки">
+             Title="{local1:Translate SettingsTitle}">
     <TableView HasUnevenRows="True" Margin="5">
         <TableRoot>
-            <TableSection Title="Настройки почты">
+            <TableSection Title="{local1:Translate EmailSettings}">
                 <ViewCell>
                     <StackLayout>
-                        <Label Text="Адрес отправителя"/>
+                        <Label Text="{local1:Translate FromAddress}"/>
                         <Entry Text="{Binding FromAddress}" 
                                Keyboard="Email"/>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
                     <StackLayout>
-                        <Label Text="Адрес назначения"/>
+                        <Label Text="{local1:Translate ToAddress}"/>
                         <Entry Text="{Binding ToAddress}"
                                Keyboard="Email"/>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
                     <StackLayout>
-                        <Label Text="Адрес SMTP сервера"/>
+                        <Label Text="{local1:Translate SmtpAddress}"/>
                         <Entry Text="{Binding SmtpAddress}"
                                Keyboard="Email"/>
                     </StackLayout>
                 </ViewCell>
                 <ViewCell>
                     <StackLayout>
-                        <Label Text="Порт"></Label>
+                        <Label Text="{local1:Translate Port}"></Label>
                         <Entry Text="{Binding Port}" 
                                Keyboard="Numeric">
                             <Entry.Behaviors>
@@ -48,14 +49,14 @@
                         <CheckBox x:Name="AuthCheckBox"
                                   Grid.Column="0" 
                                   CheckedChanged="CheckBox_CheckedChanged"/>
-                        <Label Margin="0, 5" Text="Авторизация" Grid.Column="1"/>
+                        <Label Margin="0, 5" Text="{local1:Translate Authorization}" Grid.Column="1"/>
                     </Grid>
                 </ViewCell>
             </TableSection>
-            <TableSection Title="Аутентификационные данные" x:Name="Authtorization">
+            <TableSection Title="{local1:Translate AuthentificationData}" x:Name="Authtorization">
                 <ViewCell>
                     <StackLayout>
-                        <Label Text="Имя пользователя"/>
+                        <Label Text="{local1:Translate Username}"/>
                         <Entry Text="{Binding Username}"
                                Keyboard="Email" 
                                x:Name="UsernameEntry"/>
@@ -63,7 +64,7 @@
                 </ViewCell>
                 <ViewCell>
                     <StackLayout>
-                        <Label Text="Пароль"/>
+                        <Label Text="{local1:Translate Password}"/>
                         <Entry Text="{Binding Password}"
                                IsPassword="True"
                                Keyboard="Default"

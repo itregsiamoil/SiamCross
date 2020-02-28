@@ -112,8 +112,10 @@ namespace SiamCross.Models.Sensors.Ddin2
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "ByteProcess");
-                throw;
+                _logger.Error(ex, "ByteProcess" + ex.StackTrace);
+                _logger.Error(ex, "ByteBuffer is recreate, throw force skip!");
+                _byteBuffer = new ByteBuffer();
+               // throw;
             }
         }
 

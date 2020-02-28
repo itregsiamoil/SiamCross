@@ -46,7 +46,7 @@ namespace SiamCross.ViewModels
                 //SelectedMeasurements.Add(m);
             }
             _errorList = new List<string>();
-            Title = $"Выбрано: {SelectedMeasurements.Count}";
+            Title = $"{Resource.SelectedMeasurements}: {SelectedMeasurements.Count}";
             DeleteCommand = new Command(DeleteMeasurements);
             SelectionChanged = new Command(RefreshSelectedCount);
             SendCommand = new Command(SendMeasurements);
@@ -56,7 +56,7 @@ namespace SiamCross.ViewModels
         {
             try
             {
-                DependencyService.Get<IToast>().Show("Сохранение измерений...");
+                DependencyService.Get<IToast>().Show($"{Resource.SavingMeasurements}...");
 
                 await Task.Run(() =>
                 {
@@ -67,12 +67,12 @@ namespace SiamCross.ViewModels
 
                 DependencyService.Get<IToast>()
                     .Show($"{SelectedMeasurements.Count} " +
-                    $"измерений успешно сохранены в {savePath}");
+                    $"{Resource.MeasurementsSavedSuccesfully} {savePath}");
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "SaveMeasurements method");
-                await Application.Current.MainPage.DisplayAlert("Ошибка",
+                await Application.Current.MainPage.DisplayAlert(Resource.Error,
                 ex.Message, "OK");
                 throw;
             }
@@ -80,7 +80,7 @@ namespace SiamCross.ViewModels
 
         private void RefreshSelectedCount()
         {
-            Title = $"Выбрано: {SelectedMeasurements.Count}";
+            Title = $"{Resource.SelectedMeasurements}: {SelectedMeasurements.Count}";
         }
 
         private void DeleteMeasurements()
@@ -136,7 +136,7 @@ namespace SiamCross.ViewModels
 
             try
             {
-                DependencyService.Get<IToast>().Show("Отправка измерений на почту");
+                DependencyService.Get<IToast>().Show($"{Resource.SendingMeasurements}...");
 
                 await Task.Run(() =>
                 {
@@ -148,12 +148,12 @@ namespace SiamCross.ViewModels
                 });
 
                 DependencyService.Get<IToast>()
-                    .Show($"{SelectedMeasurements.Count} измерений успешно отправлено на почту");
+                    .Show($"{SelectedMeasurements.Count} {Resource.MeasurementsSentSuccesfully}");
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "SendMeasurements command handler");
-                await Application.Current.MainPage.DisplayAlert("Ошибка",
+                await Application.Current.MainPage.DisplayAlert(Resource.Error,
                     ex.Message, "OK");
                 SendCommand = new Command(SendMeasurements);
             }
@@ -219,18 +219,18 @@ namespace SiamCross.ViewModels
             _errorList.Clear();
 
             ValidateParameter(Settings.Instance.FromAddress, 
-                "Введите адресат отправителя!");
+                $"{Resource.EnterFromAddress}");
             ValidateParameter(Settings.Instance.ToAddress,
-                "Введите адресат назначения!");
+                $"{Resource.EnterToAddress}!");
             ValidateParameter(Settings.Instance.SmtpAddress,
-                "Введите адрес SMTP сервера!");
+                $"{Resource.EnterSmtpAddress}!");
 
             if (Settings.Instance.IsNeedAuthorization)
             {
                 ValidateParameter(Settings.Instance.Username,
-                "Введите имя пользователя!");
+                $"{Resource.EnterUsername}!");
                 ValidateParameter(Settings.Instance.Password,
-                    "Введите пароль!");
+                    $"{Resource.EnterPassword}!");
             }
             
 
@@ -254,7 +254,7 @@ namespace SiamCross.ViewModels
                     errors += _errorList[i] + Environment.NewLine;
                 }
 
-                Application.Current.MainPage.DisplayAlert("Введены неправильные данные",
+                Application.Current.MainPage.DisplayAlert(Resource.IncorrectDataEnteredErrorText,
                 errors, "OK");
             }
         }

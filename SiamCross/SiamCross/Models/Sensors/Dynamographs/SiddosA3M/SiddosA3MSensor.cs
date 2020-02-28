@@ -147,7 +147,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
                 }
                 else
                 {
-                    SensorData.Status = "Нет связи";
+                    SensorData.Status = Resource.NoConnection;
 
                     await BluetoothAdapter.Connect();
                     await Task.Delay(4000);

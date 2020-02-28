@@ -98,7 +98,7 @@ namespace SiamCross.Models.Sensors.Ddin2
                 }
                 else
                 {
-                    SensorData.Status = "Нет связи";
+                    SensorData.Status = Resource.NoConnection;
                     Notify?.Invoke(SensorData);
 
                     await BluetoothAdapter.Connect();

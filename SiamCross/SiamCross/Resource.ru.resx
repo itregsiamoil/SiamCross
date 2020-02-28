@@ -1,0 +1,416 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ApertNumberChoiceText" xml:space="preserve">
+    <value>Введите номер отверствия!</value>
+  </data>
+  <data name="ApertNumberErrorTextDdimSiddos" xml:space="preserve">
+    <value>Номер отверстия должен быть в пределе от 1 до 5!</value>
+  </data>
+  <data name="BalancedModelPump" xml:space="preserve">
+    <value>Балансирный</value>
+  </data>
+  <data name="BufferPressureChoiceText" xml:space="preserve">
+    <value>Введите буфер давления!</value>
+  </data>
+  <data name="BushChoiceText" xml:space="preserve">
+    <value>Введите номер куста!</value>
+  </data>
+  <data name="CalculationStatus" xml:space="preserve">
+    <value>Расчет</value>
+  </data>
+  <data name="ChainModelPump" xml:space="preserve">
+    <value>Цепной</value>
+  </data>
+  <data name="CommentsChoiceText" xml:space="preserve">
+    <value>Введите комментарий!</value>
+  </data>
+  <data name="DegCentigradeUnits" xml:space="preserve">
+    <value>°C</value>
+    <comment>Единицы измерния "Градусы цельсия"</comment>
+  </data>
+  <data name="Dynamogram" xml:space="preserve">
+    <value>Динамограмма</value>
+  </data>
+  <data name="DynamographSensorType" xml:space="preserve">
+    <value>Динамограф</value>
+    <comment>Тип датчиков</comment>
+  </data>
+  <data name="DynPeriodChoiceText" xml:space="preserve">
+    <value>Введите период качания!</value>
+  </data>
+  <data name="DynPeriodErrorTextDdimSiddos" xml:space="preserve">
+    <value>Период качания должен быть в пределе от 4 до 300!</value>
+  </data>
+  <data name="ExportStatus" xml:space="preserve">
+    <value>Экспорт</value>
+  </data>
+  <data name="FoundDevices" xml:space="preserve">
+    <value>Обнаруженные устройства</value>
+    <comment>Заголовок окна найденных устройств</comment>
+  </data>
+  <data name="FreeStatus" xml:space="preserve">
+    <value>Датчик свободен</value>
+  </data>
+  <data name="HydraulicModelPump" xml:space="preserve">
+    <value>Гидравлический</value>
+  </data>
+  <data name="ImtravelChoiceText" xml:space="preserve">
+    <value>Введите длину хода!</value>
+  </data>
+  <data name="ImtravelErrorTextDdimSiddos" xml:space="preserve">
+    <value>Длина хода должна быть в пределе от 0,5 до 10!</value>
+  </data>
+  <data name="IncorrectDataEnteredErrorText" xml:space="preserve">
+    <value>Введены неверные данные!</value>
+  </data>
+  <data name="Kilograms" xml:space="preserve">
+    <value>КГ</value>
+    <comment>Единицы измерния "Килограммы"</comment>
+  </data>
+  <data name="Load" xml:space="preserve">
+    <value>Нагрузка</value>
+    <comment>Нагрузка в быстром замере</comment>
+  </data>
+  <data name="MeasurementStatus" xml:space="preserve">
+    <value>Измерение</value>
+  </data>
+  <data name="MilliVoltsUnits" xml:space="preserve">
+    <value>мВ</value>
+    <comment>Единицы измерния "Мили вольты"</comment>
+  </data>
+  <data name="NoConnection" xml:space="preserve">
+    <value>Нет связи</value>
+    <comment>Статус датчика на панели управения "Нет связи"</comment>
+  </data>
+  <data name="PreparationStatus" xml:space="preserve">
+    <value>Подготовка</value>
+  </data>
+  <data name="SavingStatus" xml:space="preserve">
+    <value>Сохранение</value>
+  </data>
+  <data name="SelectedFieldChoiceText" xml:space="preserve">
+    <value>Выберите месторождение!</value>
+  </data>
+  <data name="SelectedModelPumpChoiceText" xml:space="preserve">
+    <value>Выберите тип привода!</value>
+  </data>
+  <data name="ShareMeasurement" xml:space="preserve">
+    <value>Поделиться измерением</value>
+  </data>
+  <data name="ShopChoiceText" xml:space="preserve">
+    <value>Введите номер цеха!</value>
+  </data>
+  <data name="Temperature" xml:space="preserve">
+    <value>Температура</value>
+    <comment>Температура в быстром замере</comment>
+  </data>
+  <data name="ValveTest" xml:space="preserve">
+    <value>Тест клапанов</value>
+  </data>
+  <data name="Voltage" xml:space="preserve">
+    <value>Напряжение</value>
+    <comment>Напряжение в быстром замере</comment>
+  </data>
+  <data name="VoltsUnits" xml:space="preserve">
+    <value>В</value>
+    <comment>Единицы измерения "Вольты"</comment>
+  </data>
+  <data name="WellChoiceText" xml:space="preserve">
+    <value>Введите скважину!</value>
+  </data>
+  <data name="AboutCompany" xml:space="preserve">
+    <value>О компании</value>
+  </data>
+  <data name="AboutTitle" xml:space="preserve">
+    <value>О приложении</value>
+  </data>
+  <data name="Acceleration" xml:space="preserve">
+    <value>Ускорение</value>
+    <comment>Ускорение в быстром замере</comment>
+  </data>
+  <data name="ApertNumber" xml:space="preserve">
+    <value>Номер отверствия</value>
+  </data>
+  <data name="AppVersion" xml:space="preserve">
+    <value>Версия приложения:</value>
+  </data>
+  <data name="AuthentificationData" xml:space="preserve">
+    <value>Аутентификационные данные</value>
+  </data>
+  <data name="Authorization" xml:space="preserve">
+    <value>Авторизация</value>
+  </data>
+  <data name="BufferPressure" xml:space="preserve">
+    <value>Буферное давление</value>
+  </data>
+  <data name="Bush" xml:space="preserve">
+    <value>Куст</value>
+  </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Комментарии</value>
+  </data>
+  <data name="ControlPanelTitle" xml:space="preserve">
+    <value>Панель управления</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Прибор</value>
+  </data>
+  <data name="DynPeriod" xml:space="preserve">
+    <value>Период качания, сек</value>
+  </data>
+  <data name="EmailSettings" xml:space="preserve">
+    <value>Настройки почты</value>
+  </data>
+  <data name="EnterFromAddress" xml:space="preserve">
+    <value>Введите адрес отправителя!</value>
+  </data>
+  <data name="EnterPassword" xml:space="preserve">
+    <value>Введите пароль</value>
+  </data>
+  <data name="EnterSmtpAddress" xml:space="preserve">
+    <value>Введите адрес SMTP сервера</value>
+  </data>
+  <data name="EnterToAddress" xml:space="preserve">
+    <value>Введите адрес назначения</value>
+  </data>
+  <data name="EnterUsername" xml:space="preserve">
+    <value>Введите имя пользователя</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="Field" xml:space="preserve">
+    <value>Месторождение</value>
+  </data>
+  <data name="FieldCode" xml:space="preserve">
+    <value>Код</value>
+  </data>
+  <data name="FieldName" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="FromAddress" xml:space="preserve">
+    <value>Адрес отправителя</value>
+  </data>
+  <data name="HandbookTitle" xml:space="preserve">
+    <value>Справочник</value>
+  </data>
+  <data name="Imtravel" xml:space="preserve">
+    <value>Длина хода, м</value>
+  </data>
+  <data name="LowerRodWeight" xml:space="preserve">
+    <value>Вес штанг в нижнем положении, т</value>
+  </data>
+  <data name="MaxLoad" xml:space="preserve">
+    <value>Максимальная нагрузка, т</value>
+  </data>
+  <data name="MeasurementData" xml:space="preserve">
+    <value>Данные измерения</value>
+  </data>
+  <data name="MeasurementsSavedSuccesfully" xml:space="preserve">
+    <value>измерений успешно сохранены в</value>
+  </data>
+  <data name="MeasurementsSentSuccesfully" xml:space="preserve">
+    <value>измерений успешно отправлено на почту</value>
+  </data>
+  <data name="MeasurementsTitle" xml:space="preserve">
+    <value>Измерения</value>
+  </data>
+  <data name="MeasurementType" xml:space="preserve">
+    <value>Тип исследования</value>
+  </data>
+  <data name="MinLoad" xml:space="preserve">
+    <value>Минимальная нагрузка, т</value>
+  </data>
+  <data name="ModelPump" xml:space="preserve">
+    <value>Тип привода</value>
+  </data>
+  <data name="NewField" xml:space="preserve">
+    <value>Новое месторождение</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Порт</value>
+  </data>
+  <data name="PumpRate" xml:space="preserve">
+    <value>Темп качания, кач/мин</value>
+  </data>
+  <data name="Rod" xml:space="preserve">
+    <value>Диаметр штока, м</value>
+  </data>
+  <data name="RodChoiceText" xml:space="preserve">
+    <value>Введите диаметр штока!</value>
+  </data>
+  <data name="RodErrorTextDdin2" xml:space="preserve">
+    <value>Диаметр штока должен быть в пределе от 12 до 40!</value>
+  </data>
+  <data name="SavingMeasurements" xml:space="preserve">
+    <value>Сохранение измерений</value>
+  </data>
+  <data name="SearchTitle" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Выделить</value>
+  </data>
+  <data name="SelectedMeasurements" xml:space="preserve">
+    <value>Выбрано</value>
+  </data>
+  <data name="SendingMeasurements" xml:space="preserve">
+    <value>Отправка измерений на почту</value>
+  </data>
+  <data name="SettingsTitle" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="Shop" xml:space="preserve">
+    <value>Цех</value>
+  </data>
+  <data name="Site" xml:space="preserve">
+    <value>Сайт</value>
+  </data>
+  <data name="SmtpAddress" xml:space="preserve">
+    <value>Адрес SMTP сервера</value>
+  </data>
+  <data name="StartMeasurement" xml:space="preserve">
+    <value>Начать измерение</value>
+  </data>
+  <data name="TextAboutCompany" xml:space="preserve">
+    <value>Компания СИАМ — это холдинг предприятий, работающих в области исследований скважин и разработки месторождений. Направления дейтельности — производство оборудования для исследования скважин, оказание сервисных услуг по произведению исследований нефтегазодобывающих скважин и интерпритации исследовательских данных, услуги по химизации технологических процессов добычи и транспортировки нефти  инжинириговые услуги по анализу, оптимизации и проектировании разработки местрождений. Также Компания предоставляет сервисные услуги в энергетической отрасли - диагностику силового высоковольтного оборудования и поиск неисправностей кабельных линий.</value>
+  </data>
+  <data name="ToAddress" xml:space="preserve">
+    <value>Адрес назначения</value>
+  </data>
+  <data name="UpperRodWeight" xml:space="preserve">
+    <value>Вес штанг в верхнем положении, т</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Имя пользователя</value>
+  </data>
+  <data name="Well" xml:space="preserve">
+    <value>Скважина</value>
+  </data>
+  <data name="NoСomment" xml:space="preserve">
+    <value>Комментарий отсутствует</value>
+  </data>
+</root>
