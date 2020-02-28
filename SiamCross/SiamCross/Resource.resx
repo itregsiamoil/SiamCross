@@ -118,70 +118,70 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutCompany" xml:space="preserve">
-    <value>О компании</value>
+    <value>About company</value>
   </data>
   <data name="AboutTitle" xml:space="preserve">
-    <value>О приложении</value>
+    <value>About app</value>
   </data>
   <data name="Acceleration" xml:space="preserve">
-    <value />
+    <value>Acceleration</value>
   </data>
   <data name="ApertNumber" xml:space="preserve">
-    <value>Номер отверствия</value>
+    <value>Hole number</value>
   </data>
   <data name="ApertNumberChoiceText" xml:space="preserve">
-    <value>Введите номер отверствия!</value>
+    <value>Enter the hole number!</value>
   </data>
   <data name="ApertNumberErrorTextDdimSiddos" xml:space="preserve">
-    <value>Номер отверстия должен быть в пределе от 1 до 5!</value>
+    <value>The hole number must be from 1 to 5!</value>
   </data>
   <data name="AppVersion" xml:space="preserve">
-    <value>Версия приложения:</value>
+    <value>Application version:</value>
   </data>
   <data name="AuthentificationData" xml:space="preserve">
-    <value>Аутентификационные данные</value>
+    <value>Authentication data</value>
   </data>
   <data name="Authorization" xml:space="preserve">
-    <value>Авторизация</value>
+    <value>Login</value>
   </data>
   <data name="BalancedModelPump" xml:space="preserve">
     <value>Balanced</value>
   </data>
   <data name="BufferPressure" xml:space="preserve">
-    <value>Буферное давление</value>
+    <value>Buffer pressure</value>
   </data>
   <data name="BufferPressureChoiceText" xml:space="preserve">
-    <value>Введите буфер давления!</value>
+    <value>Enter pressure buffer!</value>
   </data>
   <data name="Bush" xml:space="preserve">
-    <value>Куст</value>
+    <value>Bush</value>
   </data>
   <data name="BushChoiceText" xml:space="preserve">
-    <value>Введите номер куста!</value>
+    <value>Enter the bush number!</value>
   </data>
   <data name="CalculationStatus" xml:space="preserve">
-    <value>Расчет</value>
+    <value>Calculate</value>
   </data>
   <data name="ChainModelPump" xml:space="preserve">
     <value>Chain</value>
   </data>
   <data name="Comments" xml:space="preserve">
-    <value>Комментарии</value>
+    <value>Comment</value>
   </data>
   <data name="CommentsChoiceText" xml:space="preserve">
-    <value>Введите комментарий!</value>
+    <value>Enter a comment!</value>
   </data>
   <data name="ControlPanelTitle" xml:space="preserve">
-    <value>Панель управления</value>
+    <value>Control panel</value>
   </data>
   <data name="Date" xml:space="preserve">
-    <value>Дата</value>
+    <value>Date</value>
   </data>
   <data name="DegCentigradeUnits" xml:space="preserve">
-    <value />
+    <value>°C</value>
   </data>
   <data name="Device" xml:space="preserve">
-    <value>Прибор</value>
+    <value>Device</value>
   </data>
   <data name="Dynamogram" xml:space="preserve">
     <value>Dynamogram</value>
@@ -191,217 +191,217 @@
     <comment>Тип датчиков</comment>
   </data>
   <data name="DynPeriod" xml:space="preserve">
-    <value>Период качания, сек</value>
+    <value>Pump time, sec</value>
   </data>
   <data name="DynPeriodChoiceText" xml:space="preserve">
-    <value>Введите период качания!</value>
+    <value>Enter the pump period!</value>
   </data>
   <data name="DynPeriodErrorTextDdimSiddos" xml:space="preserve">
-    <value>Период качания должен быть в пределе от 4 до 300!</value>
+    <value>Pump time must be from 4 to 300!</value>
   </data>
   <data name="EmailSettings" xml:space="preserve">
-    <value>Настройки почты</value>
+    <value>E-mail settings</value>
   </data>
   <data name="EnterFromAddress" xml:space="preserve">
-    <value>Введите адрес отправителя!</value>
+    <value>Enter the sender address!</value>
   </data>
   <data name="EnterPassword" xml:space="preserve">
-    <value>Введите пароль</value>
+    <value>Enter password</value>
   </data>
   <data name="EnterSmtpAddress" xml:space="preserve">
-    <value>Введите адрес SMTP сервера</value>
+    <value>Enter the SMTP server address</value>
   </data>
   <data name="EnterToAddress" xml:space="preserve">
-    <value>Введите адрес назначения</value>
+    <value>Enter destination address</value>
   </data>
   <data name="EnterUsername" xml:space="preserve">
-    <value>Введите имя пользователя</value>
+    <value>Enter username</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>Ошибка</value>
+    <value>Error</value>
   </data>
   <data name="ExportStatus" xml:space="preserve">
-    <value>Экспорт</value>
+    <value>Export</value>
   </data>
   <data name="Field" xml:space="preserve">
-    <value>Месторождение</value>
+    <value>Field</value>
   </data>
   <data name="FieldCode" xml:space="preserve">
-    <value>Код</value>
+    <value>Code</value>
   </data>
   <data name="FieldName" xml:space="preserve">
-    <value>Название</value>
+    <value>Name</value>
   </data>
   <data name="FoundDevices" xml:space="preserve">
     <value>Found devices:</value>
     <comment>Заголовок окна найденных устройств</comment>
   </data>
   <data name="FreeStatus" xml:space="preserve">
-    <value>Датчик свободен</value>
+    <value>Sensor is free</value>
   </data>
   <data name="FromAddress" xml:space="preserve">
-    <value>Адрес отправителя</value>
+    <value>Sender address</value>
   </data>
   <data name="HandbookTitle" xml:space="preserve">
-    <value>Справочник</value>
+    <value>Handbook</value>
   </data>
   <data name="HydraulicModelPump" xml:space="preserve">
     <value>Hydraulic</value>
   </data>
   <data name="Imtravel" xml:space="preserve">
-    <value>Длина хода, м</value>
+    <value>Stroke length, m</value>
   </data>
   <data name="ImtravelChoiceText" xml:space="preserve">
-    <value>Введите длину хода!</value>
+    <value>Enter the stroke length!</value>
   </data>
   <data name="ImtravelErrorTextDdimSiddos" xml:space="preserve">
-    <value>Длина хода должна быть в пределе от 0,5 до 10!</value>
+    <value>Stroke length must be from 0.5 to 10!</value>
   </data>
   <data name="IncorrectDataEnteredErrorText" xml:space="preserve">
     <value>Incorrect data entered!</value>
   </data>
   <data name="Kilograms" xml:space="preserve">
-    <value />
+    <value>КG</value>
   </data>
   <data name="Load" xml:space="preserve">
-    <value />
+    <value>Load</value>
   </data>
   <data name="LowerRodWeight" xml:space="preserve">
-    <value>Вес штанг в нижнем положении, т</value>
+    <value>Weight of the rods in the lower position, t</value>
   </data>
   <data name="MaxLoad" xml:space="preserve">
-    <value>Максимальная нагрузка, т</value>
+    <value>Load max., t</value>
   </data>
   <data name="MeasurementData" xml:space="preserve">
-    <value>Данные измерения</value>
+    <value>Measurement data</value>
   </data>
   <data name="MeasurementsSavedSuccesfully" xml:space="preserve">
-    <value>измерений успешно сохранены в</value>
+    <value>measurements were successfully saved</value>
   </data>
   <data name="MeasurementsSentSuccesfully" xml:space="preserve">
-    <value>измерений успешно отправлено на почту</value>
+    <value>measurements were successfully sent</value>
   </data>
   <data name="MeasurementStatus" xml:space="preserve">
-    <value>Измерение</value>
+    <value>Measurement</value>
   </data>
   <data name="MeasurementsTitle" xml:space="preserve">
-    <value>Измерения</value>
+    <value>Measurements</value>
   </data>
   <data name="MeasurementType" xml:space="preserve">
-    <value>Тип исследования</value>
+    <value>Test type</value>
   </data>
   <data name="MilliVoltsUnits" xml:space="preserve">
-    <value />
+    <value>mV</value>
   </data>
   <data name="MinLoad" xml:space="preserve">
-    <value>Минимальная нагрузка, т</value>
+    <value>Load min., t</value>
   </data>
   <data name="ModelPump" xml:space="preserve">
-    <value>Тип привода</value>
+    <value>Drive type</value>
   </data>
   <data name="NewField" xml:space="preserve">
-    <value>Новое месторождение</value>
+    <value>New field</value>
   </data>
   <data name="NoConnection" xml:space="preserve">
-    <value />
+    <value>No connection</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>Пароль</value>
+    <value>Password</value>
   </data>
   <data name="Port" xml:space="preserve">
-    <value>Порт</value>
+    <value>Port</value>
   </data>
   <data name="PreparationStatus" xml:space="preserve">
-    <value>Подготовка</value>
+    <value>Preprocessing</value>
   </data>
   <data name="PumpRate" xml:space="preserve">
-    <value>Темп качания, кач/мин</value>
+    <value>Pump speed, SPM</value>
   </data>
   <data name="Rod" xml:space="preserve">
-    <value>Диаметр штока, м</value>
+    <value>Rod diameter, m</value>
   </data>
   <data name="RodChoiceText" xml:space="preserve">
-    <value>"Введите диаметр штока!"</value>
+    <value>Enter the rod!</value>
   </data>
   <data name="RodErrorTextDdin2" xml:space="preserve">
-    <value>Диаметр штока должен быть в пределе от 12 до 40!</value>
+    <value>Rod diameter must be from 12 to 40!</value>
   </data>
   <data name="SavingMeasurements" xml:space="preserve">
-    <value>Сохранение измерений</value>
+    <value>Save measurement</value>
   </data>
   <data name="SavingStatus" xml:space="preserve">
-    <value>Сохранение</value>
+    <value>Save</value>
   </data>
   <data name="SearchTitle" xml:space="preserve">
-    <value>Поиск</value>
+    <value>Search</value>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Выделить</value>
+    <value>Select</value>
   </data>
   <data name="SelectedFieldChoiceText" xml:space="preserve">
-    <value>Выберите месторождение!</value>
+    <value>Choose a field</value>
   </data>
   <data name="SelectedMeasurements" xml:space="preserve">
-    <value>Выбрано</value>
+    <value>Selected</value>
   </data>
   <data name="SelectedModelPumpChoiceText" xml:space="preserve">
-    <value>Выберите тип привода!</value>
+    <value>Choose drive type!</value>
   </data>
   <data name="SendingMeasurements" xml:space="preserve">
-    <value>Отправка измерений на почту</value>
+    <value>Send to e-mail</value>
   </data>
   <data name="SettingsTitle" xml:space="preserve">
-    <value>"Настройки"</value>
+    <value>Settings</value>
   </data>
   <data name="ShareMeasurement" xml:space="preserve">
     <value>Share measurement</value>
   </data>
   <data name="Shop" xml:space="preserve">
-    <value>Цех</value>
+    <value>Area</value>
   </data>
   <data name="ShopChoiceText" xml:space="preserve">
-    <value>Введите номер цеха!</value>
+    <value>Enter the area number!</value>
   </data>
   <data name="Site" xml:space="preserve">
-    <value>Сайт</value>
+    <value>Site</value>
   </data>
   <data name="SmtpAddress" xml:space="preserve">
-    <value>Адрес SMTP сервера</value>
+    <value>SMTP server address</value>
   </data>
   <data name="StartMeasurement" xml:space="preserve">
-    <value>Начать измерение</value>
-  </data>
-  <data name="String11" xml:space="preserve">
-    <value />
+    <value>Start measurement</value>
   </data>
   <data name="Temperature" xml:space="preserve">
-    <value />
+    <value>Temperature</value>
   </data>
   <data name="TextAboutCompany" xml:space="preserve">
-    <value>Компания СИАМ — это холдинг предприятий, работающих в области исследований скважин и разработки месторождений. Направления дейтельности — производство оборудования для исследования скважин, оказание сервисных услуг по произведению исследований нефтегазодобывающих скважин и интерпритации исследовательских данных, услуги по химизации технологических процессов добычи и транспортировки нефти  инжинириговые услуги по анализу, оптимизации и проектировании разработки местророждений. Также Компания предоставляет сервисные услуги в энергетической отрасли - диагностику силового высоковольтного оборудования и поиск неисправностей кабельных линий.</value>
+    <value>SIAM is a holding of companies providing well testing and field development service. Business lines are: well testing equipment manufacturing, oil and gas well testing and test data interpretation services, chemicalization of oil production and transportation technological processes, engineering services for field development design, optimization and analyses. The Company also provides services in the energy industry: diagnostics of high-voltage power equipment and cable lines troubleshooting.</value>
   </data>
   <data name="ToAddress" xml:space="preserve">
-    <value>Адрес назначения</value>
+    <value>Destination address</value>
   </data>
   <data name="UpperRodWeight" xml:space="preserve">
-    <value>Вес штанг в верхнем положении, т</value>
+    <value>The weight of the rods in the upper position, t</value>
   </data>
   <data name="Username" xml:space="preserve">
-    <value>Имя пользователя</value>
+    <value>User name</value>
   </data>
   <data name="ValveTest" xml:space="preserve">
     <value>Valve test</value>
   </data>
   <data name="Voltage" xml:space="preserve">
-    <value />
+    <value>Voltage</value>
   </data>
   <data name="VoltsUnits" xml:space="preserve">
-    <value />
+    <value>V</value>
   </data>
   <data name="Well" xml:space="preserve">
-    <value>Скважина</value>
+    <value>Well</value>
   </data>
   <data name="WellChoiceText" xml:space="preserve">
-    <value>Введите скважину!</value>
+    <value>Enter the well!</value>
+  </data>
+  <data name="NoСomment" xml:space="preserve">
+    <value>No comment</value>
   </data>
 </root>

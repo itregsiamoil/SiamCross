@@ -117,10 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Acceleration" xml:space="preserve">
-    <value>Ускорение</value>
-    <comment>Ускорение в быстром замере</comment>
-  </data>
   <data name="ApertNumberChoiceText" xml:space="preserve">
     <value>Введите номер отверствия!</value>
   </data>
@@ -238,5 +234,183 @@
   </data>
   <data name="WellChoiceText" xml:space="preserve">
     <value>Введите скважину!</value>
+  </data>
+  <data name="AboutCompany" xml:space="preserve">
+    <value>О компании</value>
+  </data>
+  <data name="AboutTitle" xml:space="preserve">
+    <value>О приложении</value>
+  </data>
+  <data name="Acceleration" xml:space="preserve">
+    <value>Ускорение</value>
+    <comment>Ускорение в быстром замере</comment>
+  </data>
+  <data name="ApertNumber" xml:space="preserve">
+    <value>Номер отверствия</value>
+  </data>
+  <data name="AppVersion" xml:space="preserve">
+    <value>Версия приложения:</value>
+  </data>
+  <data name="AuthentificationData" xml:space="preserve">
+    <value>Аутентификационные данные</value>
+  </data>
+  <data name="Authorization" xml:space="preserve">
+    <value>Авторизация</value>
+  </data>
+  <data name="BufferPressure" xml:space="preserve">
+    <value>Буферное давление</value>
+  </data>
+  <data name="Bush" xml:space="preserve">
+    <value>Куст</value>
+  </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Комментарии</value>
+  </data>
+  <data name="ControlPanelTitle" xml:space="preserve">
+    <value>Панель управления</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Прибор</value>
+  </data>
+  <data name="DynPeriod" xml:space="preserve">
+    <value>Период качания, сек</value>
+  </data>
+  <data name="EmailSettings" xml:space="preserve">
+    <value>Настройки почты</value>
+  </data>
+  <data name="EnterFromAddress" xml:space="preserve">
+    <value>Введите адрес отправителя!</value>
+  </data>
+  <data name="EnterPassword" xml:space="preserve">
+    <value>Введите пароль</value>
+  </data>
+  <data name="EnterSmtpAddress" xml:space="preserve">
+    <value>Введите адрес SMTP сервера</value>
+  </data>
+  <data name="EnterToAddress" xml:space="preserve">
+    <value>Введите адрес назначения</value>
+  </data>
+  <data name="EnterUsername" xml:space="preserve">
+    <value>Введите имя пользователя</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="Field" xml:space="preserve">
+    <value>Месторождение</value>
+  </data>
+  <data name="FieldCode" xml:space="preserve">
+    <value>Код</value>
+  </data>
+  <data name="FieldName" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="FromAddress" xml:space="preserve">
+    <value>Адрес отправителя</value>
+  </data>
+  <data name="HandbookTitle" xml:space="preserve">
+    <value>Справочник</value>
+  </data>
+  <data name="Imtravel" xml:space="preserve">
+    <value>Длина хода, м</value>
+  </data>
+  <data name="LowerRodWeight" xml:space="preserve">
+    <value>Вес штанг в нижнем положении, т</value>
+  </data>
+  <data name="MaxLoad" xml:space="preserve">
+    <value>Максимальная нагрузка, т</value>
+  </data>
+  <data name="MeasurementData" xml:space="preserve">
+    <value>Данные измерения</value>
+  </data>
+  <data name="MeasurementsSavedSuccesfully" xml:space="preserve">
+    <value>измерений успешно сохранены в</value>
+  </data>
+  <data name="MeasurementsSentSuccesfully" xml:space="preserve">
+    <value>измерений успешно отправлено на почту</value>
+  </data>
+  <data name="MeasurementsTitle" xml:space="preserve">
+    <value>Измерения</value>
+  </data>
+  <data name="MeasurementType" xml:space="preserve">
+    <value>Тип исследования</value>
+  </data>
+  <data name="MinLoad" xml:space="preserve">
+    <value>Минимальная нагрузка, т</value>
+  </data>
+  <data name="ModelPump" xml:space="preserve">
+    <value>Тип привода</value>
+  </data>
+  <data name="NewField" xml:space="preserve">
+    <value>Новое месторождение</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Порт</value>
+  </data>
+  <data name="PumpRate" xml:space="preserve">
+    <value>Темп качания, кач/мин</value>
+  </data>
+  <data name="Rod" xml:space="preserve">
+    <value>Диаметр штока, м</value>
+  </data>
+  <data name="RodChoiceText" xml:space="preserve">
+    <value>Введите диаметр штока!</value>
+  </data>
+  <data name="RodErrorTextDdin2" xml:space="preserve">
+    <value>Диаметр штока должен быть в пределе от 12 до 40!</value>
+  </data>
+  <data name="SavingMeasurements" xml:space="preserve">
+    <value>Сохранение измерений</value>
+  </data>
+  <data name="SearchTitle" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Выделить</value>
+  </data>
+  <data name="SelectedMeasurements" xml:space="preserve">
+    <value>Выбрано</value>
+  </data>
+  <data name="SendingMeasurements" xml:space="preserve">
+    <value>Отправка измерений на почту</value>
+  </data>
+  <data name="SettingsTitle" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="Shop" xml:space="preserve">
+    <value>Цех</value>
+  </data>
+  <data name="Site" xml:space="preserve">
+    <value>Сайт</value>
+  </data>
+  <data name="SmtpAddress" xml:space="preserve">
+    <value>Адрес SMTP сервера</value>
+  </data>
+  <data name="StartMeasurement" xml:space="preserve">
+    <value>Начать измерение</value>
+  </data>
+  <data name="TextAboutCompany" xml:space="preserve">
+    <value>Компания СИАМ — это холдинг предприятий, работающих в области исследований скважин и разработки месторождений. Направления дейтельности — производство оборудования для исследования скважин, оказание сервисных услуг по произведению исследований нефтегазодобывающих скважин и интерпритации исследовательских данных, услуги по химизации технологических процессов добычи и транспортировки нефти  инжинириговые услуги по анализу, оптимизации и проектировании разработки местрождений. Также Компания предоставляет сервисные услуги в энергетической отрасли - диагностику силового высоковольтного оборудования и поиск неисправностей кабельных линий.</value>
+  </data>
+  <data name="ToAddress" xml:space="preserve">
+    <value>Адрес назначения</value>
+  </data>
+  <data name="UpperRodWeight" xml:space="preserve">
+    <value>Вес штанг в верхнем положении, т</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Имя пользователя</value>
+  </data>
+  <data name="Well" xml:space="preserve">
+    <value>Скважина</value>
+  </data>
+  <data name="NoСomment" xml:space="preserve">
+    <value>Комментарий отсутствует</value>
   </data>
 </root>

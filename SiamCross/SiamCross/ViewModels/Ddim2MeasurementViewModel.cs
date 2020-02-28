@@ -77,11 +77,13 @@ namespace SiamCross.ViewModels
             Bush = Constants.DefaultBush.ToString();
             Shop = Constants.DefaultShop.ToString();
             BufferPressure = Constants.DefaultBufferPressure.ToString();
-            Comments = Constants.DefaultComment;
+            //Comments = Constants.DefaultComment;
+            Comments = Resource.NoСomment;
             DynPeriod = Constants.DefaultDynPeriod.ToString();
             ApertNumber = Constants.DefaultApertNumber.ToString();
             Imtravel = Constants.DefaultImtravel.ToString();
-            SelectedModelPump = Constants.DefaultModelPump;
+            //SelectedModelPump = Constants.DefaultModelPump;
+            SelectedModelPump = Resource.BalancedModelPump;
         }
 
         private async void StartMeasurementHandler()
@@ -129,7 +131,6 @@ namespace SiamCross.ViewModels
         private int GetModelPump()
         {
             int result = -1;
-
             if (SelectedModelPump == Resource.BalancedModelPump)
             {
                 result = 0;
@@ -142,7 +143,6 @@ namespace SiamCross.ViewModels
             {
                 result = 2;
             }
-
             return result;
         }
 
