@@ -403,6 +403,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FW: .
+        /// </summary>
+        public static string Firmware {
+            get {
+                return ResourceManager.GetString("Firmware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Found devices:.
         /// </summary>
         public static string FoundDevices {

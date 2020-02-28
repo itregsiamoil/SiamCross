@@ -404,4 +404,7 @@
   <data name="NoСomment" xml:space="preserve">
     <value>No comment</value>
   </data>
+  <data name="Firmware" xml:space="preserve">
+    <value>FW: </value>
+  </data>
 </root>

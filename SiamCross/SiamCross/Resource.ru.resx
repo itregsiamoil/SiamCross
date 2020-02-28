@@ -413,4 +413,7 @@
   <data name="NoСomment" xml:space="preserve">
     <value>Комментарий отсутствует</value>
   </data>
+  <data name="Firmware" xml:space="preserve">
+    <value>ПО: </value>
+  </data>
 </root>
