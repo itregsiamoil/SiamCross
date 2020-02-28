@@ -120,6 +120,8 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             catch (Exception ex)
             {
                 _logger.Error(ex, "ByteProcess " + ex.StackTrace);
+                _logger.Error(ex, "ByteBuffer is recreate, throw force skip!");
+                _byteBuffer = new ByteBuffer();
                 throw;
             }
         }
