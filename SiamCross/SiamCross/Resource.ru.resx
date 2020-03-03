@@ -118,22 +118,22 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ApertNumberChoiceText" xml:space="preserve">
-    <value>Введите номер отверстия!</value>
+    <value>Введите номер отверстия кривошипа!</value>
   </data>
   <data name="ApertNumberErrorTextDdimSiddos" xml:space="preserve">
-    <value>Номер отверстия должен быть в пределе от 1 до 5!</value>
+    <value>Номер отверстия кривошипа должен быть в пределе от 1 до 5!</value>
   </data>
   <data name="BalancedModelPump" xml:space="preserve">
     <value>Балансирный</value>
   </data>
   <data name="BufferPressureChoiceText" xml:space="preserve">
-    <value>Введите буфер давления!</value>
+    <value>Введите буферное давление!</value>
   </data>
   <data name="BushChoiceText" xml:space="preserve">
     <value>Введите номер куста!</value>
   </data>
   <data name="CalculationStatus" xml:space="preserve">
-    <value>Расчет</value>
+    <value>Статус - расчет</value>
   </data>
   <data name="ChainModelPump" xml:space="preserve">
     <value>Цепной</value>
@@ -156,17 +156,17 @@
     <value>Введите период качания!</value>
   </data>
   <data name="DynPeriodErrorTextDdimSiddos" xml:space="preserve">
-    <value>Период качания должен быть в пределе от 4 до 300!</value>
+    <value>Период качания должен быть в пределе от 4 до 300,с!</value>
   </data>
   <data name="ExportStatus" xml:space="preserve">
     <value>Экспорт</value>
   </data>
   <data name="FoundDevices" xml:space="preserve">
-    <value>Обнаруженные устройства</value>
+    <value>Обнаруженные устройства:</value>
     <comment>Заголовок окна найденных устройств</comment>
   </data>
   <data name="FreeStatus" xml:space="preserve">
-    <value>Датчик свободен</value>
+    <value>Статус - свободен</value>
   </data>
   <data name="HydraulicModelPump" xml:space="preserve">
     <value>Гидравлический</value>
@@ -175,7 +175,7 @@
     <value>Введите длину хода!</value>
   </data>
   <data name="ImtravelErrorTextDdimSiddos" xml:space="preserve">
-    <value>Длина хода должна быть в пределе от 0,5 до 10!</value>
+    <value>Длина хода должна быть от 0,5 до 10!</value>
   </data>
   <data name="IncorrectDataEnteredErrorText" xml:space="preserve">
     <value>Введены неверные данные!</value>
@@ -189,7 +189,7 @@
     <comment>Нагрузка в быстром замере</comment>
   </data>
   <data name="MeasurementStatus" xml:space="preserve">
-    <value>Измерение</value>
+    <value>Статус - измерение</value>
   </data>
   <data name="MilliVoltsUnits" xml:space="preserve">
     <value>мВ</value>
@@ -200,10 +200,10 @@
     <comment>Статус датчика на панели управения "Нет связи"</comment>
   </data>
   <data name="PreparationStatus" xml:space="preserve">
-    <value>Подготовка</value>
+    <value>Статус - подготовка</value>
   </data>
   <data name="SavingStatus" xml:space="preserve">
-    <value>Сохранение</value>
+    <value>Статус - cохранение</value>
   </data>
   <data name="SelectedFieldChoiceText" xml:space="preserve">
     <value>Выберите месторождение!</value>
@@ -246,7 +246,7 @@
     <comment>Ускорение в быстром замере</comment>
   </data>
   <data name="ApertNumber" xml:space="preserve">
-    <value>Номер отверстия</value>
+    <value>Номер отверстия кривошипа</value>
   </data>
   <data name="AppVersion" xml:space="preserve">
     <value>Версия приложения:</value>
@@ -264,7 +264,7 @@
     <value>Куст</value>
   </data>
   <data name="Comments" xml:space="preserve">
-    <value>Комментарии</value>
+    <value>Комментарий</value>
   </data>
   <data name="ControlPanelTitle" xml:space="preserve">
     <value>Панель управления</value>
@@ -303,7 +303,7 @@
     <value>Месторождение</value>
   </data>
   <data name="FieldCode" xml:space="preserve">
-    <value>Код</value>
+    <value>Код месторождения</value>
   </data>
   <data name="FieldName" xml:space="preserve">
     <value>Название</value>
@@ -363,7 +363,7 @@
     <value>Введите диаметр штока!</value>
   </data>
   <data name="RodErrorTextDdin2" xml:space="preserve">
-    <value>Диаметр штока должен быть в пределе от 12 до 40!</value>
+    <value>Диаметр штока должен быть от 12 до 40!</value>
   </data>
   <data name="SavingMeasurements" xml:space="preserve">
     <value>Сохранение измерений</value>
@@ -396,7 +396,9 @@
     <value>Начать измерение</value>
   </data>
   <data name="TextAboutCompany" xml:space="preserve">
-    <value>Компания СИАМ — это холдинг предприятий, работающих в области исследований скважин и разработки месторождений. Направления дейтельности — производство оборудования для исследования скважин, оказание сервисных услуг по произведению исследований нефтегазодобывающих скважин и интерпритации исследовательских данных, услуги по химизации технологических процессов добычи и транспортировки нефти  инжинириговые услуги по анализу, оптимизации и проектировании разработки местрождений. Также Компания предоставляет сервисные услуги в энергетической отрасли - диагностику силового высоковольтного оборудования и поиск неисправностей кабельных линий.</value>
+    <value>Компания "СИАМ" работает с 1990г., и достигла лидирующих позиций на рынке оборудования и услуг для гидродинамических и геолого-промысловых исследований скважин. Компания входит в структуру Группы компаний «Интегра», которая по праву считается ведущей интегрированной нефтесервисной компанией в России и странах СНГ.
+С 1990 года Томское Научное Производственное и Внедренческое Общество "СИАМ" занимается разработкой, производством оборудования для исследования скважин. За эти годы было создано множество уникального оборудования, часть из которого  защищено патентами. Наше оборудование пользуется заслуженным уважением у работников нефтяной и газовой промышленности.
+Данное программное обеспечение «SIAM SERVICE 2» – это программный комплекс компании «СИАМ», предназначенный для хранения, передачи, обработки и интерпретации данных, полученных в процессе исследования скважин по каналу беспроводной передачи данных Bluetooth, с портативных приборов (динамографов/уровнемеров).</value>
   </data>
   <data name="ToAddress" xml:space="preserve">
     <value>Адрес назначения</value>

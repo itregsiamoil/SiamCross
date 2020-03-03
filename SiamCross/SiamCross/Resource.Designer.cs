@@ -88,7 +88,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hole number.
+        ///   Looks up a localized string similar to Crank hole number.
         /// </summary>
         public static string ApertNumber {
             get {
@@ -97,7 +97,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter the hole number!.
+        ///   Looks up a localized string similar to Enter the crank hole number!.
         /// </summary>
         public static string ApertNumberChoiceText {
             get {
@@ -133,7 +133,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Login.
+        ///   Looks up a localized string similar to Authorization.
         /// </summary>
         public static string Authorization {
             get {
@@ -142,7 +142,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Balanced.
+        ///   Looks up a localized string similar to Balancer.
         /// </summary>
         public static string BalancedModelPump {
             get {
@@ -160,7 +160,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter pressure buffer!.
+        ///   Looks up a localized string similar to Enter the buffer pressure!.
         /// </summary>
         public static string BufferPressureChoiceText {
             get {
@@ -169,7 +169,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bush.
+        ///   Looks up a localized string similar to Cluster.
         /// </summary>
         public static string Bush {
             get {
@@ -178,7 +178,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter the bush number!.
+        ///   Looks up a localized string similar to Enter the cluster number!.
         /// </summary>
         public static string BushChoiceText {
             get {
@@ -187,7 +187,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Calculate.
+        ///   Looks up a localized string similar to Status - calculation.
         /// </summary>
         public static string CalculationStatus {
             get {
@@ -277,7 +277,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pump time, sec.
+        ///   Looks up a localized string similar to Swing period, sec.
         /// </summary>
         public static string DynPeriod {
             get {
@@ -286,7 +286,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter the pump period!.
+        ///   Looks up a localized string similar to Enter the swing period!.
         /// </summary>
         public static string DynPeriodChoiceText {
             get {
@@ -295,7 +295,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pump time must be from 4 to 300!.
+        ///   Looks up a localized string similar to The swing period must be between 4 and 300,s!.
         /// </summary>
         public static string DynPeriodErrorTextDdimSiddos {
             get {
@@ -385,7 +385,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Code.
+        ///   Looks up a localized string similar to Field code.
         /// </summary>
         public static string FieldCode {
             get {
@@ -394,7 +394,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Name.
+        ///   Looks up a localized string similar to Field name.
         /// </summary>
         public static string FieldName {
             get {
@@ -412,7 +412,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Found devices:.
+        ///   Looks up a localized string similar to Discovered devices:.
         /// </summary>
         public static string FoundDevices {
             get {
@@ -421,7 +421,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sensor is free.
+        ///   Looks up a localized string similar to Status - free.
         /// </summary>
         public static string FreeStatus {
             get {
@@ -475,7 +475,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Stroke length must be from 0.5 to 10!.
+        ///   Looks up a localized string similar to The stroke length must be between 0.5 and 10!.
         /// </summary>
         public static string ImtravelErrorTextDdimSiddos {
             get {
@@ -556,7 +556,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Measurement.
+        ///   Looks up a localized string similar to Status - measuring.
         /// </summary>
         public static string MeasurementStatus {
             get {
@@ -655,7 +655,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Preprocessing.
+        ///   Looks up a localized string similar to Status - preprocessing.
         /// </summary>
         public static string PreparationStatus {
             get {
@@ -682,7 +682,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter the rod!.
+        ///   Looks up a localized string similar to Enter the rod diameter!.
         /// </summary>
         public static string RodChoiceText {
             get {
@@ -691,7 +691,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rod diameter must be from 12 to 40!.
+        ///   Looks up a localized string similar to The rod diameter must be from 12 to 40!.
         /// </summary>
         public static string RodErrorTextDdin2 {
             get {
@@ -700,7 +700,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save measurement.
+        ///   Looks up a localized string similar to Saving measurements.
         /// </summary>
         public static string SavingMeasurements {
             get {
@@ -709,7 +709,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save.
+        ///   Looks up a localized string similar to Status - saving.
         /// </summary>
         public static string SavingStatus {
             get {
@@ -736,7 +736,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Choose a field.
+        ///   Looks up a localized string similar to Choose a field!.
         /// </summary>
         public static string SelectedFieldChoiceText {
             get {
@@ -763,7 +763,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Send to e-mail.
+        ///   Looks up a localized string similar to Send to E-mail.
         /// </summary>
         public static string SendingMeasurements {
             get {
@@ -790,7 +790,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Area.
+        ///   Looks up a localized string similar to Department.
         /// </summary>
         public static string Shop {
             get {
@@ -799,7 +799,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter the area number!.
+        ///   Looks up a localized string similar to Enter the department number!.
         /// </summary>
         public static string ShopChoiceText {
             get {
@@ -844,7 +844,8 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SIAM is a holding of companies providing well testing and field development service. Business lines are: well testing equipment manufacturing, oil and gas well testing and test data interpretation services, chemicalization of oil production and transportation technological processes, engineering services for field development design, optimization and analyses. The Company also provides services in the energy industry: diagnostics of high-voltage power equipment and cable lines troubleshooting..
+        ///   Looks up a localized string similar to The «SIAM» company has been operating since 1990, and has reached a leading position in the market of equipment and services for hydrodynamic and geological field research of wells. The company is part of the «Integra Group of Companies», which is rightfully considered the leading integrated oilfield services company in Russia and the CIS countries.
+        ///Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» has been developing, producing equipment for well research. Over the years, many  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string TextAboutCompany {
             get {

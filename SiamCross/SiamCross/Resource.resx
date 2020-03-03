@@ -127,10 +127,10 @@
     <value>Acceleration</value>
   </data>
   <data name="ApertNumber" xml:space="preserve">
-    <value>Hole number</value>
+    <value>Crank hole number</value>
   </data>
   <data name="ApertNumberChoiceText" xml:space="preserve">
-    <value>Enter the hole number!</value>
+    <value>Enter the crank hole number!</value>
   </data>
   <data name="ApertNumberErrorTextDdimSiddos" xml:space="preserve">
     <value>The hole number must be from 1 to 5!</value>
@@ -142,25 +142,25 @@
     <value>Authentication data</value>
   </data>
   <data name="Authorization" xml:space="preserve">
-    <value>Login</value>
+    <value>Authorization</value>
   </data>
   <data name="BalancedModelPump" xml:space="preserve">
-    <value>Balanced</value>
+    <value>Balancer</value>
   </data>
   <data name="BufferPressure" xml:space="preserve">
     <value>Buffer pressure</value>
   </data>
   <data name="BufferPressureChoiceText" xml:space="preserve">
-    <value>Enter pressure buffer!</value>
+    <value>Enter the buffer pressure!</value>
   </data>
   <data name="Bush" xml:space="preserve">
-    <value>Bush</value>
+    <value>Cluster</value>
   </data>
   <data name="BushChoiceText" xml:space="preserve">
-    <value>Enter the bush number!</value>
+    <value>Enter the cluster number!</value>
   </data>
   <data name="CalculationStatus" xml:space="preserve">
-    <value>Calculate</value>
+    <value>Status - calculation</value>
   </data>
   <data name="ChainModelPump" xml:space="preserve">
     <value>Chain</value>
@@ -191,13 +191,13 @@
     <comment>Тип датчиков</comment>
   </data>
   <data name="DynPeriod" xml:space="preserve">
-    <value>Pump time, sec</value>
+    <value>Swing period, sec</value>
   </data>
   <data name="DynPeriodChoiceText" xml:space="preserve">
-    <value>Enter the pump period!</value>
+    <value>Enter the swing period!</value>
   </data>
   <data name="DynPeriodErrorTextDdimSiddos" xml:space="preserve">
-    <value>Pump time must be from 4 to 300!</value>
+    <value>The swing period must be between 4 and 300,s!</value>
   </data>
   <data name="EmailSettings" xml:space="preserve">
     <value>E-mail settings</value>
@@ -227,17 +227,17 @@
     <value>Field</value>
   </data>
   <data name="FieldCode" xml:space="preserve">
-    <value>Code</value>
+    <value>Field code</value>
   </data>
   <data name="FieldName" xml:space="preserve">
-    <value>Name</value>
+    <value>Field name</value>
   </data>
   <data name="FoundDevices" xml:space="preserve">
-    <value>Found devices:</value>
+    <value>Discovered devices:</value>
     <comment>Заголовок окна найденных устройств</comment>
   </data>
   <data name="FreeStatus" xml:space="preserve">
-    <value>Sensor is free</value>
+    <value>Status - free</value>
   </data>
   <data name="FromAddress" xml:space="preserve">
     <value>Sender address</value>
@@ -255,7 +255,7 @@
     <value>Enter the stroke length!</value>
   </data>
   <data name="ImtravelErrorTextDdimSiddos" xml:space="preserve">
-    <value>Stroke length must be from 0.5 to 10!</value>
+    <value>The stroke length must be between 0.5 and 10!</value>
   </data>
   <data name="IncorrectDataEnteredErrorText" xml:space="preserve">
     <value>Incorrect data entered!</value>
@@ -282,7 +282,7 @@
     <value>measurements were successfully sent</value>
   </data>
   <data name="MeasurementStatus" xml:space="preserve">
-    <value>Measurement</value>
+    <value>Status - measuring</value>
   </data>
   <data name="MeasurementsTitle" xml:space="preserve">
     <value>Measurements</value>
@@ -312,7 +312,7 @@
     <value>Port</value>
   </data>
   <data name="PreparationStatus" xml:space="preserve">
-    <value>Preprocessing</value>
+    <value>Status - preprocessing</value>
   </data>
   <data name="PumpRate" xml:space="preserve">
     <value>Pump speed, SPM</value>
@@ -321,16 +321,16 @@
     <value>Rod diameter, m</value>
   </data>
   <data name="RodChoiceText" xml:space="preserve">
-    <value>Enter the rod!</value>
+    <value>Enter the rod diameter!</value>
   </data>
   <data name="RodErrorTextDdin2" xml:space="preserve">
-    <value>Rod diameter must be from 12 to 40!</value>
+    <value>The rod diameter must be from 12 to 40!</value>
   </data>
   <data name="SavingMeasurements" xml:space="preserve">
-    <value>Save measurement</value>
+    <value>Saving measurements</value>
   </data>
   <data name="SavingStatus" xml:space="preserve">
-    <value>Save</value>
+    <value>Status - saving</value>
   </data>
   <data name="SearchTitle" xml:space="preserve">
     <value>Search</value>
@@ -339,7 +339,7 @@
     <value>Select</value>
   </data>
   <data name="SelectedFieldChoiceText" xml:space="preserve">
-    <value>Choose a field</value>
+    <value>Choose a field!</value>
   </data>
   <data name="SelectedMeasurements" xml:space="preserve">
     <value>Selected</value>
@@ -348,7 +348,7 @@
     <value>Choose drive type!</value>
   </data>
   <data name="SendingMeasurements" xml:space="preserve">
-    <value>Send to e-mail</value>
+    <value>Send to E-mail</value>
   </data>
   <data name="SettingsTitle" xml:space="preserve">
     <value>Settings</value>
@@ -357,10 +357,10 @@
     <value>Share measurement</value>
   </data>
   <data name="Shop" xml:space="preserve">
-    <value>Area</value>
+    <value>Department</value>
   </data>
   <data name="ShopChoiceText" xml:space="preserve">
-    <value>Enter the area number!</value>
+    <value>Enter the department number!</value>
   </data>
   <data name="Site" xml:space="preserve">
     <value>Site</value>
@@ -375,7 +375,9 @@
     <value>Temperature</value>
   </data>
   <data name="TextAboutCompany" xml:space="preserve">
-    <value>SIAM is a holding of companies providing well testing and field development service. Business lines are: well testing equipment manufacturing, oil and gas well testing and test data interpretation services, chemicalization of oil production and transportation technological processes, engineering services for field development design, optimization and analyses. The Company also provides services in the energy industry: diagnostics of high-voltage power equipment and cable lines troubleshooting.</value>
+    <value>The «SIAM» company has been operating since 1990, and has reached a leading position in the market of equipment and services for hydrodynamic and geological field research of wells. The company is part of the «Integra Group of Companies», which is rightfully considered the leading integrated oilfield services company in Russia and the CIS countries.
+Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» has been developing, producing equipment for well research. Over the years, many unique equipment has been created, some of which are protected by patents. Our equipment is well-respected by workers in the oil and gas industry.
+This software «SIAM SERVICE 2» is a «SIAM» software package designed for storing, transmitting, processing and interpreting data obtained during well testing via Bluetooth wireless data transmission from portable devices (dynamographs / level gauges).</value>
   </data>
   <data name="ToAddress" xml:space="preserve">
     <value>Destination address</value>
