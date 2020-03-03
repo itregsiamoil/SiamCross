@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ApertNumberChoiceText" xml:space="preserve">
-    <value>Введите номер отверствия!</value>
+    <value>Введите номер отверстия!</value>
   </data>
   <data name="ApertNumberErrorTextDdimSiddos" xml:space="preserve">
     <value>Номер отверстия должен быть в пределе от 1 до 5!</value>
@@ -246,7 +246,7 @@
     <comment>Ускорение в быстром замере</comment>
   </data>
   <data name="ApertNumber" xml:space="preserve">
-    <value>Номер отверствия</value>
+    <value>Номер отверстия</value>
   </data>
   <data name="AppVersion" xml:space="preserve">
     <value>Версия приложения:</value>
