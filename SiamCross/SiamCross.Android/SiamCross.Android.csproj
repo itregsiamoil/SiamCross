@@ -135,6 +135,7 @@
     <Compile Include="Models\BluetoothLeAdapterAndroid.cs" />
     <Compile Include="Models\BluetoothScannerAndroid.cs" />
     <Compile Include="Models\DatabaseCreatorAndroid.cs" />
+    <Compile Include="Models\DefaultAdapterAndroid.cs" />
     <Compile Include="Models\EmailSenderAndroid.cs" />
     <Compile Include="Models\FileManagerAndroid.cs" />
     <Compile Include="Models\HandbookManagerAndroid.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Models\XmlSaverAndroid.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AlertDisplayer.cs" />
     <Compile Include="Services\NLogLoggerAndroid.cs" />
     <Compile Include="Services\NLogManagerAndroid.cs" />
     <Compile Include="Services\SaveDevicesServiceAndroid.cs" />

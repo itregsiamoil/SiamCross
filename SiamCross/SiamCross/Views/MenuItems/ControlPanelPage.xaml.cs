@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Linq;
+using SiamCross.AppObjects;
 using SiamCross.Models;
+using SiamCross.Models.Adapters;
 using SiamCross.Services;
 using SiamCross.ViewModels;
+using Autofac;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace SiamCross.Views.MenuItems
 {
@@ -17,6 +22,19 @@ namespace SiamCross.Views.MenuItems
             var vm = new ViewModel<ControlPanelPageViewModel>();
             BindingContext = vm.GetViewModel;
             InitializeComponent();
+            var checkBuetooth = new Thread(async () =>
+            {
+                var defaultAdapter = AppContainer.Container.Resolve<IDefaultAdapter>();
+                if (!defaultAdapter.IsEnbaled)
+                {
+                    bool result = await DisplayAlert("Bluetooth выключен!", "Включить bluetooth?", "Да", "Нет");
+                    if (result)
+                    {
+                        defaultAdapter.Enable();
+                    }
+                }
+            });
+            checkBuetooth.Start();
         }
 
         private void sensorList_ItemTapped(object sender, ItemTappedEventArgs e)
@@ -62,7 +80,7 @@ namespace SiamCross.Views.MenuItems
             }
         }
 
-        
+
         private bool CanOpenMeasurement(SensorData sensorData)
         {
             bool result = true;

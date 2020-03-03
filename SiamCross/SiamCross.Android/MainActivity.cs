@@ -54,7 +54,7 @@ namespace SiamCross.Droid
 
             //BluetoothAdapter bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
 
-            //if(bluetoothAdapter.IsEnabled)
+            //if (bluetoothAdapter.IsEnabled)
             //{
             //    bluetoothAdapter.Disable();
             //    bluetoothAdapter.Enable();
@@ -66,6 +66,7 @@ namespace SiamCross.Droid
 
             LoadApplication(new App(new Setup()));
         }
+
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);

@@ -9,6 +9,7 @@ using SiamCross.Services.Logging;
 using SiamCross.AppObjects;
 using Autofac;
 using NLog;
+using SiamCross.Models.Adapters;
 
 namespace SiamCross.ViewModels
 {
@@ -70,5 +71,7 @@ namespace SiamCross.ViewModels
         {
             
         }
+
+
     }
 }
