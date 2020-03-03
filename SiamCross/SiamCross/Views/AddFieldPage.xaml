@@ -13,7 +13,7 @@
                     <ViewCell>
                         <StackLayout  >
                             <Label Text="{local1:Translate FieldName}"></Label>
-                            <Editor Text="{Binding FieldName}"></Editor>
+                            <Entry Text="{Binding FieldName}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
