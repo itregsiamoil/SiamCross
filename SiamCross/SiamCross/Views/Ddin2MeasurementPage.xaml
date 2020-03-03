@@ -77,7 +77,8 @@
                     <ViewCell>
                         <StackLayout  >
                             <Label Text="{local1:Translate Comments}"></Label>
-                            <Editor Text="{Binding Comments}"></Editor>
+                            <Editor Text="{Binding Comments}"
+                                    AutoSize="TextChanges"></Editor>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
