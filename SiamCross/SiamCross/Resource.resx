@@ -409,4 +409,16 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="Firmware" xml:space="preserve">
     <value>FW: </value>
   </data>
+  <data name="BluetoothIsDisable" xml:space="preserve">
+    <value>Bluetooth is disable</value>
+  </data>
+  <data name="EnableBluetooth" xml:space="preserve">
+    <value>Enable bluetooth?</value>
+  </data>
+  <data name="NotButton" xml:space="preserve">
+    <value>Not</value>
+  </data>
+  <data name="YesButton" xml:space="preserve">
+    <value>Yes</value>
+  </data>
 </root>

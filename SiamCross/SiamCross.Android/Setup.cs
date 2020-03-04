@@ -42,6 +42,7 @@ namespace SiamCross.Droid
             cb.RegisterType<DatabaseCreatorAndroid>().As<IDatabaseCreator>();
             cb.RegisterType<HandbookManagerAndroid>().As<IHandbookManager>();
             cb.RegisterType<NLogManagerAndroid>().As<ILogManager>();
+            cb.RegisterType<DefaultAdapterAndroid>().As<IDefaultAdapter>();
         }
     }    
 }

@@ -418,4 +418,16 @@
   <data name="Firmware" xml:space="preserve">
     <value>ПО: </value>
   </data>
+  <data name="BluetoothIsDisable" xml:space="preserve">
+    <value>Bluetooth выключен</value>
+  </data>
+  <data name="EnableBluetooth" xml:space="preserve">
+    <value>Включить bluetooth?</value>
+  </data>
+  <data name="NotButton" xml:space="preserve">
+    <value>Нет</value>
+  </data>
+  <data name="YesButton" xml:space="preserve">
+    <value>Да</value>
+  </data>
 </root>

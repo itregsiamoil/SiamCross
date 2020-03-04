@@ -27,7 +27,11 @@ namespace SiamCross.Views.MenuItems
                 var defaultAdapter = AppContainer.Container.Resolve<IDefaultAdapter>();
                 if (!defaultAdapter.IsEnbaled)
                 {
-                    bool result = await DisplayAlert("Bluetooth выключен!", "Включить bluetooth?", "Да", "Нет");
+                    bool result = await DisplayAlert(
+                        Resource.BluetoothIsDisable, 
+                        Resource.EnableBluetooth,
+                        Resource.YesButton,
+                        Resource.NotButton);
                     if (result)
                     {
                         defaultAdapter.Enable();

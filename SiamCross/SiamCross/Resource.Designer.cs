@@ -151,6 +151,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bluetooth is disable.
+        /// </summary>
+        public static string BluetoothIsDisable {
+            get {
+                return ResourceManager.GetString("BluetoothIsDisable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Buffer pressure.
         /// </summary>
         public static string BufferPressure {
@@ -309,6 +318,15 @@ namespace SiamCross {
         public static string EmailSettings {
             get {
                 return ResourceManager.GetString("EmailSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable bluetooth?.
+        /// </summary>
+        public static string EnableBluetooth {
+            get {
+                return ResourceManager.GetString("EnableBluetooth", resourceCulture);
             }
         }
         
@@ -628,6 +646,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not.
+        /// </summary>
+        public static string NotButton {
+            get {
+                return ResourceManager.GetString("NotButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No comment.
         /// </summary>
         public static string NoСomment {
@@ -922,6 +949,15 @@ namespace SiamCross {
         public static string WellChoiceText {
             get {
                 return ResourceManager.GetString("WellChoiceText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yes.
+        /// </summary>
+        public static string YesButton {
+            get {
+                return ResourceManager.GetString("YesButton", resourceCulture);
             }
         }
     }
