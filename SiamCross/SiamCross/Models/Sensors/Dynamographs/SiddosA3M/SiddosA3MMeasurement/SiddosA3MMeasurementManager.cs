@@ -113,6 +113,8 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
 
             await GetDgm4kB();
 
+            await Task.Delay(500);
+
             var dynRawBytes = new List<byte>();
             foreach (var bytes in _currentDynGraph)
             {

@@ -112,6 +112,8 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement
 
             await GetDgm4kB();
 
+            await Task.Delay(500);
+
             var dynRawBytes = new List<byte>();
             foreach (var bytes in _currentDynGraph)
             {

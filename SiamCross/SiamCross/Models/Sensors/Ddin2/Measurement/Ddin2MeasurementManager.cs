@@ -133,6 +133,8 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
 
             await GetDgm4kB();
 
+            await Task.Delay(Constants.ShortDelay);
+
             var dynRawBytes = new List<byte>();
             foreach (var bytes in _currentDynGraph)
             {
@@ -141,6 +143,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
                     dynRawBytes.Add(b);
                 }
             }
+
 
             Ddin2MeasurementData measurement = isError ?
                 new Ddin2MeasurementData(
