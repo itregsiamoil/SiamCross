@@ -42,7 +42,7 @@ namespace SiamCross.Droid.Models
         private const string _serviceGuid = "569a1101-b87f-490c-92cb-11ba5ea5167c";
         private ScannedDeviceInfo _deviceInfo;
 
-        private static List<string> _connectQueue;
+        private List<string> _connectQueue;
 
         public BluetoothLeAdapterAndroid(ScannedDeviceInfo deviceInfo)
         {

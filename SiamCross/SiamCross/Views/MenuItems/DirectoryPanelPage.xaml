@@ -15,11 +15,21 @@
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <StackLayout x:Name="stackLayout" Spacing="8" Orientation="Horizontal">
-                                    <Label Text="{Binding Key}" />
-                                    <Label Text=": " />
-                                    <Label Text="{Binding Code}" />
-                                </StackLayout>
+                                <Grid Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="{Binding Key}" 
+                                           FontSize="Medium"
+                                           Grid.Column="0"/>
+                                    <Label Text=": " 
+                                           Grid.Column="1"/>
+                                    <Label Text="{Binding Code}" 
+                                           FontSize="Medium"
+                                           Grid.Column="2"/>
+                                </Grid>
                             </ViewCell.View>
                         </ViewCell>
                     </DataTemplate>

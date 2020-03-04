@@ -152,7 +152,8 @@
                     <ViewCell>
                         <StackLayout>
                             <Label Text="{local1:Translate Comments}"/>
-                            <Editor Text="{Binding Comments, Mode=TwoWay}"/>
+                            <Editor Text="{Binding Comments, Mode=TwoWay}"
+                                    AutoSize="TextChanges"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
