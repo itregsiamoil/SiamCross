@@ -28,6 +28,8 @@ namespace SiamCross
 
         public const int DefaultApertNumber = 5;
 
+        public const int ConnectTimeOut = 10000;
+
         public const string DefaultModelPump = "Балансирный";
     }
 }
