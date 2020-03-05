@@ -243,7 +243,7 @@ namespace SiamCross.Models.Sensors.Du
         {
             [DuCommandsEnum.ResearchData] = new byte[]
             {
-                0x00, 0x00, 0x00, 0x80
+                0x00, 0x00, 0x00, 0x81
             },
         };
     }

@@ -23,6 +23,8 @@
         SensorOff,
         SensorState,
         ResearchTitle,
-        ResearchData
+        ResearchData,
+        DeviceProgrammVersion,
+        StubCommand
     }
 }
