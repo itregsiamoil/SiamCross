@@ -278,6 +278,20 @@ namespace SiamCross.Services
             }
         }
 
+        public void RemoveDuMeasurement(int removebleId)
+        {
+            NonQueryCheck();
+            try
+            {
+                _database.Execute("DELETE FROM DuMeasurement WHERE Id =" + removebleId);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "RemoveDuMeasurement");
+                throw;
+            }
+        }
+
         public int SaveDdim2Measurement(Ddim2Measurement ddim2Measurement)
         {
             NonQueryCheck();
@@ -401,20 +415,6 @@ namespace SiamCross.Services
             }
         }
 
-        public void RemoveDuMeasurement(int removebleId)
-        {
-            NonQueryCheck();
-            try
-            {
-                _database.Execute("DELETE FROM DuMeasurement WHERE Id =" + removebleId);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "RemoveDuMeasurement");
-                throw;
-            }
-        }
-
         public void RemoveDdim2Measurement(int removebleId)
         {
             NonQueryCheck();
@@ -425,6 +425,22 @@ namespace SiamCross.Services
             catch(Exception e)
             {
                 _logger.Error(e, $"Ddim2Delete database error!");
+                throw;
+            }
+        }
+
+        public IEnumerable<DuMeasurement> GetDuMeasurements()
+        {
+            NonQueryCheck();
+            try
+            {
+                var duItems = _database.Query<DuMeasurement>(
+                    "SELECT * FROM DuMeasurement");
+                return duItems;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "GetDuMeasurements");
                 throw;
             }
         }
@@ -442,6 +458,21 @@ namespace SiamCross.Services
             catch (Exception e)
             {
                 _logger.Error(e, $"Ddim2Get database error!");
+                throw;
+            }
+        }
+
+        public DuMeasurement GetDuMeasurementById(int id)
+        {
+            NonQueryCheck();
+            try
+            {
+                return _database.Query<DuMeasurement>(
+                    "SELECT * FROM DuMeasurement WHERE Id =" + id).First();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "GetDuMeasurementById");
                 throw;
             }
         }
