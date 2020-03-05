@@ -32,6 +32,7 @@ namespace SiamCross.Models.Sensors.Du
             IsMeasurement = false;
             IsAlive = false;
             _liveTask = new Task(async () => await LiveWhile(_cancelSource.Token));
+            _liveTask.Start();
         }
 
         private async Task LiveWhile(CancellationToken token)
@@ -40,14 +41,25 @@ namespace SiamCross.Models.Sensors.Du
             {
                 if (IsAlive)
                 {
-
+                    if (!IsMeasurement)
+                    {
+                        await QuickReport();
+                        await Task.Delay(1500);
+                    }
+                }
+                else
+                {
+                    SensorData.Status = Resource.NoConnection;
+                    await BluetoothAdapter.Connect();
+                    await Task.Delay(4000);
                 }
             }
         }
 
         public void Dispose()
         {
-            
+            _cancelSource.Cancel();
+            BluetoothAdapter.Disconnect();
         }
 
         public Task QuickReport()
