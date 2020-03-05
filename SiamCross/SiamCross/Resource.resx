@@ -424,4 +424,28 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="FillInAllTheFields" xml:space="preserve">
     <value>Fill in all the fields!</value>
   </data>
+  <data name="AdditionalAmp" xml:space="preserve">
+    <value>Additional amplification</value>
+    <comment>дополнительное усиление</comment>
+  </data>
+  <data name="Chdav" xml:space="preserve">
+    <value>Pressure sensor sensitivity</value>
+    <comment>Чувствительность датчика давления</comment>
+  </data>
+  <data name="Chpiezo" xml:space="preserve">
+    <value>Piezoelectric sensor sensitivity in arbitrary units from 0 to 255</value>
+    <comment>чувствительность пьезодатчика в условных единицах от 0 до 255</comment>
+  </data>
+  <data name="GasFromWell" xml:space="preserve">
+    <value>Gas discharge / inlet from a well</value>
+    <comment>выпуск/впуск газа из скважины</comment>
+  </data>
+  <data name="MaxLevelAt341" xml:space="preserve">
+    <value>Maximum level at a speed of sound 341m / s</value>
+    <comment>максимальный уровень при скорости звука 341м/с</comment>
+  </data>
+  <data name="Noldav" xml:space="preserve">
+    <value>Pressure sensor zero offset, 0.1 atm</value>
+    <comment>смещение нуля датчика давления , 0.1атм</comment>
+  </data>
 </root>

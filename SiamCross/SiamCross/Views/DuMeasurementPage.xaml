@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:SiamCross.Views"
+             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
+             xmlns:local2="clr-namespace:SiamCross.Views.ValidationBehavior"
+             mc:Ignorable="d"
+             x:Class="SiamCross.Views.DuMeasurementPage"
+             Title="DU">
+    
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{local1:Translate ValveTest}" Order="Secondary" Command="{Binding ValveTestCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <ScrollView x:Name="ScrollView">
+        <TableView x:Name="TableView"
+               Intent="Data" 
+               HasUnevenRows="True" 
+               HorizontalOptions="CenterAndExpand">
+            <TableRoot>
+                <TableSection Title="{local1:Translate MeasurementData}">
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="{local1:Translate Field}"></Label>
+                            <Picker ItemsSource="{Binding Fields}"
+                                SelectedItem="{Binding SelectedField}"
+                                ></Picker>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="{local1:Translate Well}"></Label>
+                            <Entry Text="{Binding Well}" 
+                               Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout   >
+                            <Label Text="{local1:Translate Bush}"></Label>
+                            <Entry Text="{Binding Bush}" 
+                               Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="{local1:Translate Shop}"></Label>
+                            <Entry Text="{Binding Shop}" 
+                               Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="{local1:Translate BufferPressure}"></Label>
+                            <Entry Text="{Binding BufferPressure}" 
+                               Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:FloatNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="{local1:Translate Comments}"></Label>
+                            <Editor Text="{Binding Comments}"
+                                    AutoSize="TextChanges"></Editor>
+                        </StackLayout>
+                    </ViewCell>
+
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Chdav}"/>
+                            <local2:CustomEntry x:Name="ChdavEntry"
+                                                Text="{Binding Chdav}"
+                                                Keyboard="Numeric">
+                            </local2:CustomEntry>
+                        </StackLayout>
+                    </ViewCell>
+                    
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Chpiezo}"/>
+                            <Entry x:Name="ChpiezoEntry"
+                                   Text="{Binding Chpiezo}"
+                                   Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Noldav}"/>
+                            <Entry x:Name="NoldavEntry"
+                                   Text="{Binding Noldav}"
+                                   Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate MaxLevelAt341}"/>
+                            <Picker ItemsSource="{Binding MaxLevels}"
+                                    SelectedItem="{Binding SelectedMaxLevel}"/>
+                        </StackLayout>
+                    </ViewCell>
+
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate GasFromWell}"/>
+                            <Picker ItemsSource="{Binding GasActions}"
+                                    SelectedItem="{Binding SelectedGasAction}"/>
+                        </StackLayout>
+                    </ViewCell>
+
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate GasFromWell}"/>
+                            <Picker ItemsSource="{Binding GasActions}"
+                                    SelectedItem="{Binding SelectedGasAction}"/>
+                        </StackLayout>
+                    </ViewCell>
+
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate AdditionalAmp}"/>
+                            <Picker ItemsSource="{Binding AdditionalAmpPicks}"
+                                    SelectedItem="{Binding SelectectedAdditionalAmp}"/>
+                        </StackLayout>
+                    </ViewCell>
+
+                    <ViewCell>
+                        <StackLayout>
+                            <Button 
+                            Text="{local1:Translate StartMeasurement}"
+                            Command="{Binding StartMeasurementCommand}"
+                            Margin="20"
+                            HorizontalOptions="CenterAndExpand"></Button>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell x:Name="Empty">
+                        <StackLayout>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                        </StackLayout>
+                    </ViewCell>
+                </TableSection>
+            </TableRoot>
+        </TableView>
+
+    </ScrollView>
+</ContentPage>

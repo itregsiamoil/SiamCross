@@ -433,4 +433,31 @@
   <data name="FillInAllTheFields" xml:space="preserve">
     <value>Заполните все поля!</value>
   </data>
+  <data name="AdditionalAmp" xml:space="preserve">
+    <value>Дополнительное усиление</value>
+    <comment>дополнительное усиление</comment>
+  </data>
+  <data name="Chdav" xml:space="preserve">
+    <value>Чувствительность датчика давления, 0.1мВ/100 атм</value>
+    <comment>Чувствительность датчика давления</comment>
+  </data>
+  <data name="Chpiezo" xml:space="preserve">
+    <value>Чувствительность пьезодатчика в условных единицах от 0 до 255</value>
+    <comment>чувствительность пьезодатчика в условных единицах от 0 до 255</comment>
+  </data>
+  <data name="GasFromWell" xml:space="preserve">
+    <value>Выпуск/впуск газа из скважины</value>
+    <comment>выпуск/впуск газа из скважины</comment>
+  </data>
+  <data name="MaxLevelAt341" xml:space="preserve">
+    <value>Максимальный уровень при скорости звука 341м/с</value>
+    <comment>максимальный уровень при скорости звука 341м/с</comment>
+  </data>
+  <data name="Noldav" xml:space="preserve">
+    <value>Смещение нуля датчика давления , 0.1атм</value>
+    <comment>смещение нуля датчика давления , 0.1атм</comment>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value />
+  </data>
 </root>
