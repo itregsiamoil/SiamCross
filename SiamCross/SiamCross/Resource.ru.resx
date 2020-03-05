@@ -430,4 +430,7 @@
   <data name="YesButton" xml:space="preserve">
     <value>Да</value>
   </data>
+  <data name="FillInAllTheFields" xml:space="preserve">
+    <value>Заполните все поля!</value>
+  </data>
 </root>

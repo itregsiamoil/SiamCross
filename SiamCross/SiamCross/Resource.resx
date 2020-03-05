@@ -421,4 +421,7 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="YesButton" xml:space="preserve">
     <value>Yes</value>
   </data>
+  <data name="FillInAllTheFields" xml:space="preserve">
+    <value>Fill in all the fields!</value>
+  </data>
 </root>
