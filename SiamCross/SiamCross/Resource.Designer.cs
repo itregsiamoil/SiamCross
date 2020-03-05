@@ -421,6 +421,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fill in all the fields!.
+        /// </summary>
+        public static string FillInAllTheFields {
+            get {
+                return ResourceManager.GetString("FillInAllTheFields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FW: .
         /// </summary>
         public static string Firmware {

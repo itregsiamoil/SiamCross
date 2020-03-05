@@ -18,7 +18,10 @@ namespace SiamCross.ViewModels
         public AddFieldViewModel()
         {
             Add = new Command(SaveField);
+            _toater = DependencyService.Get<IToast>();
         }
+
+        private IToast _toater;
 
         public string FieldName { get; set; }
         public string FieldCode { get; set; }
@@ -28,7 +31,16 @@ namespace SiamCross.ViewModels
         private void SaveField()
         {
             if (FieldName == null || FieldCode == null)
+            {
+                _toater.Show(Resource.FillInAllTheFields);
                 return;
+            }
+            else if (FieldName == "" || FieldCode == "")
+            {
+                _toater.Show(Resource.FillInAllTheFields);
+                return;
+            }
+
             try
             {
                 HandbookData.Instance.AddField(FieldName, int.Parse(FieldCode));
