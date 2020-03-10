@@ -22,20 +22,20 @@
                                           rainbows:DebugRainbow.IsDebug="False">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto" ></RowDefinition>
                                             <RowDefinition Height="*"></RowDefinition>
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="3*"></ColumnDefinition>
+                                            <ColumnDefinition Width="2.5*"></ColumnDefinition>
                                             <ColumnDefinition Width="*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
                                         <Label HorizontalOptions="StartAndExpand" Text="{Binding Name}" FontSize="18" 
                                                Grid.Row="0" Grid.Column="0"/>
-                                        <Label HorizontalOptions="StartAndExpand" Text="{Binding Type}" Grid.Row="1" Grid.Column="0" />
-                                        <StackLayout HorizontalOptions="EndAndExpand" Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
-                                            <Label HorizontalOptions="StartAndExpand" Text="{local:Translate Firmware}" />
-                                            <Label HorizontalOptions="EndAndExpand" Text="{Binding Firmware}" />
-                                        </StackLayout>
+                                        <Label HorizontalOptions="Start" Text="{Binding Type}" Grid.Row="1" Grid.Column="0" />
+                                        
+                                        <Label HorizontalOptions="Start" Text="{local:Translate Firmware}" Grid.Row="1" Grid.Column="1"/>
+                                            <Label HorizontalOptions="EndAndExpand" Text="{Binding Firmware}" Grid.Row="1" Grid.Column="1"/>
+                                        
                                         <Label HorizontalOptions="StartAndExpand" Text="{Binding Status}" Grid.Row="2" Grid.Column="0"/>
                                         <Button HorizontalOptions="EndAndExpand" 
                                                 Command="{Binding Path=BindingContext.DeleteSensorCommand, 
