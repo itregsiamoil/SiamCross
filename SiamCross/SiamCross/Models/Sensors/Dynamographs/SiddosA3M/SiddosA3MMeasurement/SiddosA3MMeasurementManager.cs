@@ -184,7 +184,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
 
                 AddCrc();
                 await _bluetoothAdapter.SendData(command.ToArray());
-                await Task.Delay(Constants.LongDelay);
+                //await Task.Delay(Constants.LongDelay);
 
                 RemoveCrc();
             }

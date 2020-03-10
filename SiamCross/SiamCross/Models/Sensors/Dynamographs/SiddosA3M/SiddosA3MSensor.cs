@@ -34,7 +34,11 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             IsAlive = false;
             SensorData = sensorData;
             BluetoothAdapter = adapter;
-            _firmwareQualifier = new FirmWaveQualifier(adapter.SendData);
+            _firmwareQualifier = new FirmWaveQualifier(
+                BluetoothAdapter.SendData,
+                DynamographCommands.FullCommandDictionary["ProgrammVersionAddress"],
+                DynamographCommands.FullCommandDictionary["ProgrammVersionSize"]
+            );
             _parser = new SiddosA3MParser(_firmwareQualifier);
             _reportBuilder = new SiddosA3MQuickReportBuilder();
             _statusAdapter = new DynamographStatusAdapter();
@@ -47,7 +51,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
 
             _cancellToken = new CancellationTokenSource();
-            _liveTask = new Task(() => ExecuteAsync(_cancellToken.Token));
+            _liveTask = new Task(async () => await ExecuteAsync(_cancellToken.Token));
             _liveTask.Start();
         }
 
@@ -58,7 +62,11 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 
         private void ConnectHandler()
         {
-            _firmwareQualifier = new FirmWaveQualifier(BluetoothAdapter.SendData);
+            _firmwareQualifier = new FirmWaveQualifier(
+                BluetoothAdapter.SendData,
+                DynamographCommands.FullCommandDictionary["ProgrammVersionAddress"],
+                DynamographCommands.FullCommandDictionary["ProgrammVersionSize"]
+            );
             _parser = new SiddosA3MParser(_firmwareQualifier);
             _parser.MessageReceived += ReceiveHandler;
 
