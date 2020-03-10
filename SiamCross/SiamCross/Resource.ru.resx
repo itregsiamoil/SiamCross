@@ -433,4 +433,19 @@
   <data name="FillInAllTheFields" xml:space="preserve">
     <value>Заполните все поля!</value>
   </data>
+  <data name="ClickStatus" xml:space="preserve">
+    <value>Статус - ожидание нажатия на клапан</value>
+  </data>
+  <data name="NoiseStatus" xml:space="preserve">
+    <value>Статус - замер шумов</value>
+  </data>
+  <data name="Pressure" xml:space="preserve">
+    <value>Давление</value>
+  </data>
+  <data name="PressureUnits" xml:space="preserve">
+    <value>атм</value>
+  </data>
+  <data name="LevelGaugeSensorType" xml:space="preserve">
+    <value>Уровнемер</value>
+  </data>
 </root>

@@ -214,6 +214,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Status - waiting for the valve to be pressed.
+        /// </summary>
+        public static string ClickStatus {
+            get {
+                return ResourceManager.GetString("ClickStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Comment.
         /// </summary>
         public static string Comments {
@@ -529,6 +538,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Level gauge sensor.
+        /// </summary>
+        public static string LevelGaugeSensorType {
+            get {
+                return ResourceManager.GetString("LevelGaugeSensorType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Load.
         /// </summary>
         public static string Load {
@@ -655,6 +673,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Status - noise measuring.
+        /// </summary>
+        public static string NoiseStatus {
+            get {
+                return ResourceManager.GetString("NoiseStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not.
         /// </summary>
         public static string NotButton {
@@ -696,6 +723,24 @@ namespace SiamCross {
         public static string PreparationStatus {
             get {
                 return ResourceManager.GetString("PreparationStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pressure.
+        /// </summary>
+        public static string Pressure {
+            get {
+                return ResourceManager.GetString("Pressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to at.
+        /// </summary>
+        public static string PressureUnits {
+            get {
+                return ResourceManager.GetString("PressureUnits", resourceCulture);
             }
         }
         

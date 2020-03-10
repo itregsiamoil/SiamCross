@@ -424,4 +424,19 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="FillInAllTheFields" xml:space="preserve">
     <value>Fill in all the fields!</value>
   </data>
+  <data name="ClickStatus" xml:space="preserve">
+    <value>Status - waiting for the valve to be pressed</value>
+  </data>
+  <data name="NoiseStatus" xml:space="preserve">
+    <value>Status - noise measuring</value>
+  </data>
+  <data name="Pressure" xml:space="preserve">
+    <value>Pressure</value>
+  </data>
+  <data name="PressureUnits" xml:space="preserve">
+    <value>at</value>
+  </data>
+  <data name="LevelGaugeSensorType" xml:space="preserve">
+    <value>Level gauge sensor</value>
+  </data>
 </root>
