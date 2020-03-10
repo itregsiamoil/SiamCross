@@ -134,30 +134,26 @@ namespace SiamCross.Models.Sensors.Du
         /// <returns></returns>
         public string ConvertToStringPayload(byte[] message)
         {
+            string result = "";
             var payloadBytes = GetPayload(message);
 
-            string result = "Данные потеряны";
             var dataType = DefineDataType(message);
             switch (dataType)
             {
-                case "int32":
+                case DeviceRegistersTypes.Int32:
                     result = BitConverter.ToInt32(payloadBytes, 0).ToString();
                     break;
-                case "float":
-                    result = BitConverter.ToSingle(payloadBytes, 0).ToString();
-                    break;
-                case "int16":
+                case DeviceRegistersTypes.Int16:
                     result = BitConverter.ToInt16(payloadBytes, 0).ToString();
                     break;
-                case "Device":
-                    result = DefineDeviceType(
-                        BitConverter.ToString(payloadBytes, 0).ToString());
+                case DeviceRegistersTypes.Int8:
+                    result = BitConverter.ToInt16(payloadBytes, 0).ToString();
                     break;
-                case "S16":
+                case DeviceRegistersTypes.S16:
                     float value = BitConverter.ToInt16(payloadBytes, 0);
                     result = (value / 10).ToString();
                     break;
-                case "string":
+                case DeviceRegistersTypes.String:
                     if (payloadBytes.Length > 20)
                     {
                         result = Encoding.UTF8.GetString(payloadBytes);
@@ -166,52 +162,10 @@ namespace SiamCross.Models.Sensors.Du
                     {
                         result = Encoding.GetEncoding(1251).GetString(payloadBytes);
                     }
-                    //result = Encoding.UTF8.GetString(payloadBytes);
-                    //result = Encoding.GetEncoding
-                    break;
-                case "Program":
-                    result = ":" + BitConverter.ToString(new byte[] { message[8] })
-                                 + BitConverter.ToString(new byte[] { message[5] })
-                                 + BitConverter.ToString(new byte[] { message[4] }) + "00";
-                    foreach (var character in payloadBytes.Reverse())
-                    {
-                        result += BitConverter.ToString(new byte[] { character });
-                    }
-
-                    result += "XX";
-                    break;
-                case "report":
-                    string resultString = "";
-                    foreach (var oneByte in payloadBytes.Reverse())
-                    {
-                        resultString = resultString + oneByte + " ";
-                    }
-                    result = resultString;
-                    break;
-                case "graph":
-
-                    break;
+                    break;            
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Определить ТИП устройства
-        /// </summary>
-        /// <param name="deviceCode"></param>
-        /// <returns></returns>
-        public string DefineDeviceType(string deviceCode)
-        {
-            switch (deviceCode)
-            {
-                case "01-14":
-                    return "ДДИМ-2";
-                case "02-13":
-                    return "ДДИН-2";
-                default:
-                    return "Неизвестное устройство";
-            }
         }
 
         /// <summary>
@@ -219,96 +173,64 @@ namespace SiamCross.Models.Sensors.Du
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public string DefineDataType(byte[] message)
+        public DeviceRegistersTypes DefineDataType(byte[] message)
         {
-            if (message[5] == 0x00)             // Общие регистры
+            switch(message[7])
             {
-                if (message[4] == 0x00)
-                {
-                    if (message[6] == 0x00 && message[7] == 0x80)
+                case 0x00:                                  
                     {
-                        return "report";
+                        switch (message[5])
+                        {
+                            case 0x00:                                          // Общие регистры
+                                {
+                                    switch (message[4])
+                                    {
+                                        case 0x00:
+                                        case 0x02:
+                                        case 0x08:
+                                            return DeviceRegistersTypes.Int16;
+                                        case 0x04:
+                                        case 0x0A:
+                                            return DeviceRegistersTypes.Int32;
+                                    }
+                                    break;
+                                }
+                            case 0x10:                                          // Справочные регистры
+                                {
+                                    switch(message[4])
+                                    {
+                                        case 0x00:
+                                            return DeviceRegistersTypes.Int32;
+                                        case 0x04:
+                                            return DeviceRegistersTypes.Int16;
+                                    }
+                                }
+                                break;
+                            case 0x80:                                          // Параметры прибора и исследования
+                                return DeviceRegistersTypes.Int16;
+                            case 0x84:                                          // Текущие данные
+                                return DeviceRegistersTypes.S16;                
+                            case 0x88:                                          // Операционные регистры
+                                {
+                                    switch(message[4])
+                                    {
+                                        case 0x00:
+                                            return DeviceRegistersTypes.Int8;
+                                        case 0x02:
+                                            return DeviceRegistersTypes.Int16;
+                                    }
+                                }
+                                break;
+                        }
                     }
-                    return "Device";
-                }
-                else if (message[4] == 0x08)
-                {
-                    return "int16";
-                }
-                else
-                {
-                    return "int32";
-                }
-
-            }
-            else if (message[5] == 0x10)        // Информационные регистры
-            {
-                if (message[4] == 0x04)
-                {
-                    return "int16";
-                }
-                else
-                {
-                    return "int32";
-                }
-            }
-            else if (message[5] == 0x80)        // Параметры измерения
-            {
-                if (message[4] == 0x02) //DynPeriod U32
-                {
-                    return "int32";
-                }
-                return "int16";
-            }
-            else if (message[5] == 0x81)        // Энергозависимые параметры
-            {
-                if (message[4] != 0x10 &&
-                    message[4] != 0x20 &&
-                    message[4] != 0x22)
-                {
-                    return "float";
-                }
-                else if (message[4] == 0x10)
-                {
-                    return "int32";
-                }
-                else
-                {
-                    return "int16";
-                }
-            }
-            else if (message[5] == 0x84)        // Текущие параметры
-            {
-                if (message[4] == 0x00 || message[4] == 0x02)
-                {
-                    return "S16";
-                }
-                else
-                {
-                    return "float";
-                }
-            }
-            else if (message[5] == 0x88 && message[4] == 0x02) // Статус измерения 
-            {
-                return "int16";
-            }
-            else if (message[5] == 0x88 && message[4] == 0x04) // Код ошибки измерения
-            {
-                return "int16";
-            }
-            if (message[5] == 0x88 && message[4] == 0x00)
-            {
-                if (message[3] != 0x82)
-                    Debug.WriteLine("///////////////////////////////////////////" +
-                        "initOrStartMeasurement Answer//////////////////////////////////////");
-                if (message[3] == 0x82)
-                    Debug.WriteLine("Error///Error///Error///Error///Error///Error///" +
-                        "initOrStartMeasurement AnswerError///Error///Error///Error///Error///");
-                return "initOrStartMeasurement";
+                    break;
+                case 0x80:                                                      // Заголовок исследования
+                    return DeviceRegistersTypes.Report;
+                case 0x81:                                                      // Данные исследования
+                    return DeviceRegistersTypes.Graph;
             }
 
-
-            else return "string";
+            return DeviceRegistersTypes.String;
         }
 
         /// <summary>
@@ -365,7 +287,7 @@ namespace SiamCross.Models.Sensors.Du
             { new byte[]{ 0x06, 0x80, 0x00, 0x00}, DuCommandsEnum.PiezoelectricOffset },
             { new byte[]{ 0x08, 0x80, 0x00, 0x00}, DuCommandsEnum.Revbit },
             { new byte[]{ 0x00, 0x84, 0x00, 0x00}, DuCommandsEnum.Voltage },
-            { new byte[]{ 0x02, 0x84, 0x00, 0x00}, DuCommandsEnum.Pressure },
+            { new byte[]{ 0x04, 0x84, 0x00, 0x00}, DuCommandsEnum.Pressure },
             { new byte[]{ 0x00, 0x88, 0x00, 0x00}, DuCommandsEnum.StartMeasurement }, // по данному адрессу ответ на 5 комманд           
             { new byte[]{ 0x02, 0x88, 0x00, 0x00}, DuCommandsEnum.SensorState },
             { new byte[]{ 0x00, 0x00, 0x00, 0x80}, DuCommandsEnum.ResearchTitle },

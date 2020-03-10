@@ -112,8 +112,4 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\Sensors\Du\Measurement\" />
-  </ItemGroup>
 </Project>

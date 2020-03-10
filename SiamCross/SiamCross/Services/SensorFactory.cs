@@ -4,6 +4,7 @@ using SiamCross.Models;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Ddin2;
+using SiamCross.Models.Sensors.Du;
 using SiamCross.Models.Sensors.Dynamographs.Ddim2;
 using SiamCross.Models.Sensors.Dynamographs.SiddosA3M;
 using System;
@@ -63,6 +64,27 @@ namespace SiamCross.Services
                         sensor.Notify += SensorService.Instance.SensorDataChangedHandler;
                         sensor.MeasurementRecieved += SensorService.Instance.MeasurementHandler;
                         sensor.ScannedDeviceInfo = deviceInfo;
+                        return sensor;
+                    }
+                }
+                else if (deviceInfo.Name.Contains("DU"))
+                {
+                    if (deviceInfo.BluetoothType == BluetoothType.Le)
+                    {
+                        var sensor = new DuSensor(
+                            AppContainer.Container.Resolve<IBluetoothLeAdapter>
+                            (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
+                            new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, ""));
+
+                        return sensor;
+                    }
+                    else if (deviceInfo.BluetoothType == BluetoothType.Classic)
+                    {
+                        var sensor = new DuSensor(
+                           AppContainer.Container.Resolve<IBluetoothClassicAdapter>
+                           (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
+                           new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, ""));
+
                         return sensor;
                     }
                 }

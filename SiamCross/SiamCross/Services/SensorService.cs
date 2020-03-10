@@ -38,7 +38,6 @@ namespace SiamCross.Services
             }
         }
 
-
         private SensorService()
         {
             _sensors = new List<ISensor>();
@@ -56,7 +55,7 @@ namespace SiamCross.Services
 
         public void SensorDataChangedHandler(SensorData data)
         {
-            SensorDataChanged?.Invoke(data);
+            //SensorDataChanged?.Invoke(data);
         }
 
         public void Initinalize()
