@@ -188,6 +188,5 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         }
 
         public event Action<SensorData> Notify;
-        public event Action<Ddim2MeasurementData> MeasurementRecieved;
     }
 }

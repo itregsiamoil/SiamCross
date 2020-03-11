@@ -189,6 +189,5 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
         }
 
         public event Action<SensorData> Notify;
-        public event Action<SiddosA3MMeasurementData> MeasurementRecieved;
     }
 }

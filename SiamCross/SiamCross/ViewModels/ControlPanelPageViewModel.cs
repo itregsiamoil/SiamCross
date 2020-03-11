@@ -24,7 +24,6 @@ namespace SiamCross.ViewModels
             SensorsData = new ObservableCollection<SensorData>();
 
             SensorService.Instance.SensorAdded += SensorAdded;
-            SensorService.Instance.SensorDataChanged += SensorsDataChanged;
             SensorService.Instance.Initinalize();
         }
 
@@ -66,12 +65,5 @@ namespace SiamCross.ViewModels
                 SensorsData.Add(sensorData);
             }
         }
-
-        public void SensorsDataChanged(SensorData data)
-        {
-            
-        }
-
-
     }
 }
