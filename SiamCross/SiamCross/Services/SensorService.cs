@@ -130,7 +130,6 @@ namespace SiamCross.Services
                 var sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
                 if (sensor != null)
                 {
-                    //await sensor.BluetoothAdapter.Disconnect();
                     _sensors.Remove(sensor);
                     sensor.Dispose();
                 }

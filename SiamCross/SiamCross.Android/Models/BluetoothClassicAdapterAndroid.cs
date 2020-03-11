@@ -47,7 +47,6 @@ namespace SiamCross.Droid.Models
 
         public async Task Connect()
         {
-            //await Disconnect();
             if (_scannedDeviceInfo.BluetoothArgs is string address)
             {
                 _bluetoothDevice = _bluetoothAdapter.GetRemoteDevice(address);
@@ -55,9 +54,7 @@ namespace SiamCross.Droid.Models
             if (_bluetoothDevice == null) return;
             try
             {               
-                //_bluetoothDevice.FetchUuidsWithSdp(); 
-                _socket = _bluetoothDevice.CreateRfcommSocketToServiceRecord(UUID.FromString(_uuid)/*/_bluetoothDevice.GetUuids()[0].Uuid/*/);
-                //_socket = _bluetoothDevice.CreateInsecureRfcommSocketToServiceRecord(UUID.FromString(_uuid)/*/_bluetoothDevice.GetUuids()[0].Uuid/*/);
+                _socket = _bluetoothDevice.CreateRfcommSocketToServiceRecord(UUID.FromString(_uuid));
 
                 if (_socket == null)
                 {
@@ -92,6 +89,18 @@ namespace SiamCross.Droid.Models
                     + _scannedDeviceInfo.Name + ": "  + e.Message);
                 await Disconnect();
             }
+            catch(ObjectDisposedException e)
+            {
+                System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile.Connect "
+                    + _scannedDeviceInfo.Name + ": " + e.Message);
+                await Disconnect();
+            }
+            catch (Java.Lang.NullPointerException e)
+            {
+                System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile.Connect "
+                    + _scannedDeviceInfo.Name + ": " + e.Message);
+                await Disconnect();
+            }
         }
 
         public async Task Disconnect()
@@ -115,7 +124,7 @@ namespace SiamCross.Droid.Models
             }
             try
             {
-                connectedObject.Dispose();
+                connectedObject?.Dispose();
             }
             catch (Exception)
             {

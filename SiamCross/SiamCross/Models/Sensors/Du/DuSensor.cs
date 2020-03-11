@@ -113,7 +113,7 @@ namespace SiamCross.Models.Sensors.Du
                     if (!IsMeasurement)
                     {
                         await QuickReport();
-                        await Task.Delay(1500);
+                        await Task.Delay(1000);
                     }
                 }
                 else
@@ -135,6 +135,7 @@ namespace SiamCross.Models.Sensors.Du
         public async Task QuickReport()
         {
             await BluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Voltage]);
+            await Task.Delay(300);
             await BluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure]);
         }
 
