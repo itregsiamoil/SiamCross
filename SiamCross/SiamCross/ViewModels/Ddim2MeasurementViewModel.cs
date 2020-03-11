@@ -216,7 +216,6 @@ namespace SiamCross.ViewModels
                 Application.Current.MainPage.DisplayAlert(Resource.IncorrectDataEnteredErrorText,
                 errors, "OK");
             }
-
         }
 
         private void ValidateParameter(string text, string errorMessage)

@@ -455,6 +455,9 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
     <value>Measurement type</value>
     <comment>Тип исследоания</comment>
   </data>
+  <data name="DynamicLevel" xml:space="preserve">
+    <value>Dynamic level</value>
+  </data>
   <data name="Inlet" xml:space="preserve">
     <value>Inlet</value>
   </data>
@@ -465,5 +468,8 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="SoundSpeedCorrection" xml:space="preserve">
     <value>Sound speed correction</value>
     <comment>Поправка скорости звука</comment>
+  </data>
+  <data name="StaticLevel" xml:space="preserve">
+    <value>Static level</value>
   </data>
 </root>

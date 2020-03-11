@@ -467,6 +467,9 @@
     <value>Тип исследования</value>
     <comment>Тип исследоания</comment>
   </data>
+  <data name="DynamicLevel" xml:space="preserve">
+    <value>Динамический уровень</value>
+  </data>
   <data name="Inlet" xml:space="preserve">
     <value>Впуск</value>
   </data>
@@ -477,5 +480,8 @@
   <data name="SoundSpeedCorrection" xml:space="preserve">
     <value>Поправка скорости звука</value>
     <comment>Поправка скорости звука</comment>
+  </data>
+  <data name="StaticLevel" xml:space="preserve">
+    <value>Статический уровень</value>
   </data>
 </root>

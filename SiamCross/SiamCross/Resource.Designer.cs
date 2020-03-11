@@ -313,6 +313,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Dynamic level.
+        /// </summary>
+        public static string DynamicLevel {
+            get {
+                return ResourceManager.GetString("DynamicLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Dynamogram.
         /// </summary>
         public static string Dynamogram {
@@ -966,6 +975,15 @@ namespace SiamCross {
         public static string StartMeasurement {
             get {
                 return ResourceManager.GetString("StartMeasurement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Static level.
+        /// </summary>
+        public static string StaticLevel {
+            get {
+                return ResourceManager.GetString("StaticLevel", resourceCulture);
             }
         }
         
