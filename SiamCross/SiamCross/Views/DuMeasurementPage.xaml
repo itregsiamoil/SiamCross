@@ -81,7 +81,7 @@
                         </StackLayout>
                     </ViewCell>
 
-                    <ViewCell>
+                    <!--<ViewCell>
                         <StackLayout>
                             <Label Text="{local1:Translate Chdav}"/>
                             <local2:CustomEntry x:Name="ChdavEntry"
@@ -147,7 +147,7 @@
                             <Picker ItemsSource="{Binding AdditionalAmpPicks}"
                                     SelectedItem="{Binding SelectectedAdditionalAmp}"/>
                         </StackLayout>
-                    </ViewCell>
+                    </ViewCell>-->
 
                     <ViewCell>
                         <StackLayout>
@@ -155,7 +155,7 @@
                             Text="{local1:Translate StartMeasurement}"
                             Command="{Binding StartMeasurementCommand}"
                             Margin="20"
-                            HorizontalOptions="CenterAndExpand"></Button>
+                            HorizontalOptions="CenterAndExpand"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell x:Name="Empty">
