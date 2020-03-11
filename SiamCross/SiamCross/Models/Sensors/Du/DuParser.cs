@@ -64,6 +64,8 @@ namespace SiamCross.Models.Sensors.Du
                     return;
                 }
 
+                Debug.WriteLine("DU: " + BitConverter.ToString(message) + "\n");
+
                 var commandName = DefineCommand(message);
                 var commandData = ConvertToStringPayload(message);
 

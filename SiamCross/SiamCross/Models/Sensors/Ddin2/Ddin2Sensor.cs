@@ -24,8 +24,6 @@ namespace SiamCross.Models.Sensors.Ddin2
         public bool IsAlive { get; private set; }
         public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
 
-        public event Action<SensorData> Notify;
-
         private Ddin2MeasurementManager _measurementManager;
 
         public bool IsMeasurement { get; private set; }
@@ -107,7 +105,6 @@ namespace SiamCross.Models.Sensors.Ddin2
                 else
                 {
                     SensorData.Status = Resource.NoConnection;
-                    Notify?.Invoke(SensorData);
 
                     await BluetoothAdapter.Connect();
                     await Task.Delay(4000);
@@ -184,7 +181,6 @@ namespace SiamCross.Models.Sensors.Ddin2
             }
 
             SensorData.Status = _reportBuilder.GetReport();
-            Notify?.Invoke(SensorData);
         }
 
         public void Dispose()

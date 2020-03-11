@@ -16,6 +16,5 @@ namespace SiamCross.Models
         Task StartMeasurement(object measurementParameters);
         SensorData SensorData { get; }
         ScannedDeviceInfo ScannedDeviceInfo { get; set; }
-        event Action<SensorData> Notify;
     }
 }
