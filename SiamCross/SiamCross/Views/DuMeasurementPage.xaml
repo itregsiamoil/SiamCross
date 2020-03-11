@@ -18,7 +18,8 @@
         <TableView x:Name="TableView"
                Intent="Data" 
                HasUnevenRows="True" 
-               HorizontalOptions="CenterAndExpand">
+               HorizontalOptions="CenterAndExpand"
+               Margin="5">
             <TableRoot>
                 <TableSection Title="{local1:Translate MeasurementData}">
                     <ViewCell>

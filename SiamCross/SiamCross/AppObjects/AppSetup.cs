@@ -33,6 +33,7 @@ namespace SiamCross.AppObjects
             cb.RegisterType<MeasurementsSelectionViewModel>().AsSelf();
             cb.RegisterType<SettingsViewModel>().AsSelf(); 
             cb.RegisterType<AddFieldViewModel>().AsSelf();
+            cb.RegisterType<DuMeasurementViewModel>().AsSelf();
         }
     }
 }

@@ -474,7 +474,7 @@
     <value>Впуск</value>
   </data>
   <data name="SoundSpeed" xml:space="preserve">
-    <value>Sound speed</value>
+    <value>Скорость звука</value>
     <comment>Скорость звука</comment>
   </data>
   <data name="SoundSpeedCorrection" xml:space="preserve">
