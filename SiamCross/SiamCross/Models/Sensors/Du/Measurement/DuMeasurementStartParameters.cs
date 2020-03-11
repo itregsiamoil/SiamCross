@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SiamCross.Models.Sensors.Du.Measurement
+﻿namespace SiamCross.Models.Sensors.Du.Measurement
 {
     public class DuMeasurementStartParameters
     {
-        public int SoundSpeed { get; }
+        public bool Amplification { get; }
 
-        public int Amplification { get; }
-
-        public int Inlet { get; }
+        public bool Inlet { get; }
+        public DuMeasurementSecondaryParameters SecondaryParameters { get; }
+        public DuMeasurementStartParameters(bool amplification, bool inlet,
+            DuMeasurementSecondaryParameters secondaryParameters)
+        {
+            Amplification = amplification;
+            Inlet = inlet;
+            SecondaryParameters = secondaryParameters;
+        }
     }
 }

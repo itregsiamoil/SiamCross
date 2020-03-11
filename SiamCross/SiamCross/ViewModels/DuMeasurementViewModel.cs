@@ -2,14 +2,11 @@
 using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Models;
-using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -58,27 +55,22 @@ namespace SiamCross.ViewModels
                     return;
                 }
 
-                //var secondaryParameters = new MeasurementSecondaryParameters(
-                //    _sensorData.Name,
-                //    Resource.Dynamogram,
-                //    SelectedField,
-                //    Well,
-                //    Bush,
-                //    Shop,
-                //    BufferPressure,
-                //    Comments);
+                var secondaryParameters = new DuMeasurementSecondaryParameters(
+                    _sensorData.Name,
+                    Resource.Dynamogram,
+                    SelectedField,
+                    Well,
+                    Bush,
+                    Shop,
+                    BufferPressure,
+                    Comments,
+                    SelectedReasearchType,
+                    SelectedSoundSpeedCorrection,
+                    SoundSpeed);
 
-                //var measurementParams = new Ddim2MeasurementStartParameters(
-                //    float.Parse(DynPeriod, CultureInfo.InvariantCulture),
-                //    int.Parse(ApertNumber),
-                //    float.Parse(Imtravel, CultureInfo.InvariantCulture),
-                //    GetModelPump(),
-                //    secondaryParameters);
-
-                //if (!ValidateMeasurementParameters(measurementParams))
-                //{
-                //    return;
-                //}
+                var measurementParams = new DuMeasurementStartParameters(Amplification,
+                    Inlet,
+                    secondaryParameters);
 
                 await App.Navigation.PopAsync();
                 //await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);
