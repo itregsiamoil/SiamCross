@@ -38,7 +38,11 @@ namespace SiamCross.Models.Sensors.Ddin2
             IsAlive = false;
             BluetoothAdapter = bluetoothAdapter;
             SensorData = sensorData;
-            _firmwareQualifier = new FirmWaveQualifier(bluetoothAdapter.SendData);
+            _firmwareQualifier = new FirmWaveQualifier(
+                BluetoothAdapter.SendData,
+                Ddin2Commands.FullCommandDictionary["ProgrammVersionAddress"],
+                Ddin2Commands.FullCommandDictionary["ProgrammVersionSize"]
+            );
             _parser = new Ddin2Parser(_firmwareQualifier);
             _reportBuilder = new Ddin2QuickReportBuiler();
             _statusAdapter = new Ddin2StatusAdapter();
@@ -68,7 +72,11 @@ namespace SiamCross.Models.Sensors.Ddin2
 
         private void ConnectSucceedHandler()
         {
-            _firmwareQualifier = new FirmWaveQualifier(BluetoothAdapter.SendData);
+            _firmwareQualifier = new FirmWaveQualifier(
+                BluetoothAdapter.SendData,
+                Ddin2Commands.FullCommandDictionary["ProgrammVersionAddress"],
+                Ddin2Commands.FullCommandDictionary["ProgrammVersionSize"]
+            );
             _parser = new Ddin2Parser(_firmwareQualifier);
             _parser.MessageReceived += MessageReceivedHandler;
 

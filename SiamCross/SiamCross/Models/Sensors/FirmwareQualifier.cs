@@ -16,6 +16,9 @@ namespace SiamCross.Models.Sensors
 
         private Func<byte[], Task> QueryParamerter;
 
+        private byte[] _programmVersionAddressCommand;
+        private byte[] _programmVersionSizeCommand;
+
         /// <summary>
         /// Адресс версии программы
         /// </summary>
@@ -47,11 +50,11 @@ namespace SiamCross.Models.Sensors
         {
             if (DeviceNameAddress == null)
             {
-                await QueryParamerter(DynamographCommands.FullCommandDictionary["ProgrammVersionAddress"]);
+                await QueryParamerter(_programmVersionAddressCommand);
             }
             if (DeviceNameSize == null)
             {
-                await QueryParamerter(DynamographCommands.FullCommandDictionary["ProgrammVersionSize"]);
+                await QueryParamerter(_programmVersionSizeCommand);
             }
             if(DeviceNameAddress != null && DeviceNameSize != null)
             {
@@ -64,9 +67,13 @@ namespace SiamCross.Models.Sensors
         /// </summary>
         private byte[] _programmVersionSize;
 
-        public FirmWaveQualifier(Func<byte[], Task> queryParamerters)
+        public FirmWaveQualifier(Func<byte[], Task> queryParamerters,
+            byte[] programmVersionAddressCommand, byte[] programmVersionSizeCommand)
         {
             QueryParamerter = queryParamerters;
+            _programmVersionAddressCommand = programmVersionAddressCommand;
+            _programmVersionSizeCommand = programmVersionSizeCommand;
+
             IsFullFirmWaveInformation += GetFirmware;
         }
 

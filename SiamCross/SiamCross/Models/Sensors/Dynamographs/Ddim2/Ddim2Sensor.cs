@@ -33,7 +33,11 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             IsAlive = false;
             SensorData = sensorData;
             BluetoothAdapter = adapter;
-            _firmwareQualifier = new FirmWaveQualifier(adapter.SendData);
+            _firmwareQualifier = new FirmWaveQualifier(
+                adapter.SendData,
+                DynamographCommands.FullCommandDictionary["ProgrammVersionAddress"],
+                DynamographCommands.FullCommandDictionary["ProgrammVersionSize"]
+            );
             _parser = new Ddim2Parser(_firmwareQualifier);
             _reportBuilder = new Ddim2QuickReportBuilder();
             _statusAdapter = new DynamographStatusAdapter();
@@ -46,7 +50,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
 
             _cancellToken = new CancellationTokenSource();
-            _liveTask = new Task(() => ExecuteAsync(_cancellToken.Token));
+            _liveTask = new Task(async () => await ExecuteAsync(_cancellToken.Token));
             _liveTask.Start();
         }
 
@@ -57,7 +61,11 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 
         private void ConnectHandler()
         {
-            _firmwareQualifier = new FirmWaveQualifier(BluetoothAdapter.SendData);
+            _firmwareQualifier = new FirmWaveQualifier(
+                BluetoothAdapter.SendData,
+                DynamographCommands.FullCommandDictionary["ProgrammVersionAddress"],
+                DynamographCommands.FullCommandDictionary["ProgrammVersionSize"]
+            );
             _parser = new Ddim2Parser(_firmwareQualifier);
             _parser.MessageReceived += ReceiveHandler;
 
@@ -65,9 +73,9 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             System.Diagnostics.Debug.WriteLine("Ддим2 успешно подключен!");
         }
 
-        private void ReceiveHandler(string commandName, string dataValue)
+        private void ReceiveHandler(string dataName, string dataValue)
         {
-            switch (commandName)
+            switch (dataName)
             {
                 case "DeviceStatus":
                     /*/ Для замера /*/

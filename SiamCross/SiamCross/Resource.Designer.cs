@@ -232,25 +232,16 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Pressure sensor sensitivity.
+        ///   Looks up a localized string similar to Status - waiting for the valve to be pressed.
         /// </summary>
-        public static string Chdav {
+        public static string ClickStatus {
             get {
-                return ResourceManager.GetString("Chdav", resourceCulture);
+                return ResourceManager.GetString("ClickStatus", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Piezoelectric sensor sensitivity in arbitrary units from 0 to 255.
-        /// </summary>
-        public static string Chpiezo {
-            get {
-                return ResourceManager.GetString("Chpiezo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Comment.
+        ///   Looks up a localized string similar to Comment.
         /// </summary>
         public static string Comments {
             get {
@@ -601,7 +592,16 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Load.
+        ///   Looks up a localized string similar to Level gauge sensor.
+        /// </summary>
+        public static string LevelGaugeSensorType {
+            get {
+                return ResourceManager.GetString("LevelGaugeSensorType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load.
         /// </summary>
         public static string Load {
             get {
@@ -736,7 +736,16 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Pressure sensor zero offset, 0.1 atm.
+        ///   Looks up a localized string similar to Status - noise measuring.
+        /// </summary>
+        public static string NoiseStatus {
+            get {
+                return ResourceManager.GetString("NoiseStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not.
         /// </summary>
         public static string Noldav {
             get {
@@ -790,7 +799,25 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Pump speed, SPM.
+        ///   Looks up a localized string similar to Pressure.
+        /// </summary>
+        public static string Pressure {
+            get {
+                return ResourceManager.GetString("Pressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to at.
+        /// </summary>
+        public static string PressureUnits {
+            get {
+                return ResourceManager.GetString("PressureUnits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pump speed, SPM.
         /// </summary>
         public static string PumpRate {
             get {
