@@ -186,7 +186,5 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             _cancellToken.Cancel();
             BluetoothAdapter.Disconnect();
         }
-
-        public event Action<SensorData> Notify;
     }
 }

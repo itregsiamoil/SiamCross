@@ -27,8 +27,6 @@ namespace SiamCross.Models.Sensors.Du
         private FirmWaveQualifier _firmwareQualifier;
         private Task _liveTask;
 
-        public event Action<SensorData> Notify;
-
         public DuSensor(IBluetoothAdapter adapter, 
                         SensorData sensorData)
         {

@@ -187,7 +187,5 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             _cancellToken.Cancel();
             BluetoothAdapter.Disconnect();
         }
-
-        public event Action<SensorData> Notify;
     }
 }
