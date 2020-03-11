@@ -499,4 +499,10 @@
   <data name="LevelGaugeSensorType" xml:space="preserve">
     <value>Уровнемер</value>
   </data>
+  <data name="SelectedReasearchTypeChoice" xml:space="preserve">
+    <value>Выберите тип исследования!</value>
+  </data>
+  <data name="SelectedSoundSpeedCorrectionChoice" xml:space="preserve">
+    <value>Выберите поправку скорости звука!</value>
+  </data>
 </root>

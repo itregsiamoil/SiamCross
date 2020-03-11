@@ -52,11 +52,11 @@ namespace SiamCross.ViewModels
         {
             try
             {
-                //StartMeasurementCommand = new Command(() => { });
-                //if (!ValidateForEmptiness())
-                //{
-                //    return;
-                //}
+                StartMeasurementCommand = new Command(() => { });
+                if (!ValidateForEmptinessEveryParameter())
+                {
+                    return;
+                }
 
                 //var secondaryParameters = new MeasurementSecondaryParameters(
                 //    _sensorData.Name,
@@ -92,17 +92,34 @@ namespace SiamCross.ViewModels
 
         protected override void InitMeasurementStartParameters()
         {
-            throw new NotImplementedException();
+            //Чекбоксы "Усиление" и "Впуск" и так инициализируются false
         }
 
         protected override bool ValidateForEmptinessEveryParameter()
         {
-            throw new NotImplementedException();
+            _errorList.Clear();
+
+            ValidateParameterForEmtpiness(SelectedField, Resource.SelectedFieldChoiceText);
+            ValidateParameterForEmtpiness(Well, Resource.WellChoiceText);
+            ValidateParameterForEmtpiness(Bush, Resource.BushChoiceText);
+            ValidateParameterForEmtpiness(Shop, Resource.ShopChoiceText);
+            ValidateParameterForEmtpiness(BufferPressure, Resource.BufferPressureChoiceText);
+            ValidateParameterForEmtpiness(Comments, Resource.CommentsChoiceText);
+            ValidateParameterForEmtpiness(SelectedReasearchType, Resource.SelectedReasearchTypeChoice);
+            ValidateParameterForEmtpiness(SelectedSoundSpeedCorrection, Resource.SelectedSoundSpeedCorrectionChoice);
+
+            if (_errorList.Count != 0)
+            {
+                ShowErrors();
+                return false;
+            }
+
+            return true;
         }
 
         protected override bool ValidateMeasurementParameters(DuMeasurementStartParameters measurementParameters)
         {
-            throw new NotImplementedException();
+            return true;
         }
     }
 }

@@ -487,4 +487,10 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="StaticLevel" xml:space="preserve">
     <value>Static level</value>
   </data>
+  <data name="SelectedReasearchTypeChoice" xml:space="preserve">
+    <value>Choose research type!</value>
+  </data>
+  <data name="SelectedSoundSpeedCorrectionChoice" xml:space="preserve">
+    <value>Choose sound speed correction!</value>
+  </data>
 </root>

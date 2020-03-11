@@ -232,7 +232,25 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Status - waiting for the valve to be pressed.
+        ///   Ищет локализованную строку, похожую на Pressure sensor sensitivity.
+        /// </summary>
+        public static string Chdav {
+            get {
+                return ResourceManager.GetString("Chdav", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Piezoelectric sensor sensitivity in arbitrary units from 0 to 255.
+        /// </summary>
+        public static string Chpiezo {
+            get {
+                return ResourceManager.GetString("Chpiezo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Status - waiting for the valve to be pressed.
         /// </summary>
         public static string ClickStatus {
             get {
@@ -241,7 +259,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Comment.
+        ///   Ищет локализованную строку, похожую на Comment.
         /// </summary>
         public static string Comments {
             get {
@@ -592,7 +610,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Level gauge sensor.
+        ///   Ищет локализованную строку, похожую на Level gauge sensor.
         /// </summary>
         public static string LevelGaugeSensorType {
             get {
@@ -601,7 +619,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Load.
+        ///   Ищет локализованную строку, похожую на Load.
         /// </summary>
         public static string Load {
             get {
@@ -736,7 +754,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Status - noise measuring.
+        ///   Ищет локализованную строку, похожую на Status - noise measuring.
         /// </summary>
         public static string NoiseStatus {
             get {
@@ -745,7 +763,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Not.
+        ///   Ищет локализованную строку, похожую на Pressure sensor zero offset, 0.1 atm.
         /// </summary>
         public static string Noldav {
             get {
@@ -799,7 +817,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pressure.
+        ///   Ищет локализованную строку, похожую на Pressure.
         /// </summary>
         public static string Pressure {
             get {
@@ -808,7 +826,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to at.
+        ///   Ищет локализованную строку, похожую на at.
         /// </summary>
         public static string PressureUnits {
             get {
@@ -817,7 +835,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pump speed, SPM.
+        ///   Ищет локализованную строку, похожую на Pump speed, SPM.
         /// </summary>
         public static string PumpRate {
             get {
@@ -912,6 +930,24 @@ namespace SiamCross {
         public static string SelectedModelPumpChoiceText {
             get {
                 return ResourceManager.GetString("SelectedModelPumpChoiceText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Choose research type!.
+        /// </summary>
+        public static string SelectedReasearchTypeChoice {
+            get {
+                return ResourceManager.GetString("SelectedReasearchTypeChoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Choose sound speed correction!.
+        /// </summary>
+        public static string SelectedSoundSpeedCorrectionChoice {
+            get {
+                return ResourceManager.GetString("SelectedSoundSpeedCorrectionChoice", resourceCulture);
             }
         }
         
