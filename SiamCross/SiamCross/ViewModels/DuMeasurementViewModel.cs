@@ -72,21 +72,21 @@ namespace SiamCross.ViewModels
         {
             try
             {
-                StartMeasurementCommand = new Command(() => { });
-                if (!ValidateForEmptiness())
-                {
-                    return;
-                }
+                //StartMeasurementCommand = new Command(() => { });
+                //if (!ValidateForEmptiness())
+                //{
+                //    return;
+                //}
 
-                var secondaryParameters = new MeasurementSecondaryParameters(
-                    _sensorData.Name,
-                    Resource.Dynamogram,
-                    SelectedField,
-                    Well,
-                    Bush,
-                    Shop,
-                    BufferPressure,
-                    Comments);
+                //var secondaryParameters = new MeasurementSecondaryParameters(
+                //    _sensorData.Name,
+                //    Resource.Dynamogram,
+                //    SelectedField,
+                //    Well,
+                //    Bush,
+                //    Shop,
+                //    BufferPressure,
+                //    Comments);
 
                 //var measurementParams = new Ddim2MeasurementStartParameters(
                 //    float.Parse(DynPeriod, CultureInfo.InvariantCulture),
@@ -95,13 +95,13 @@ namespace SiamCross.ViewModels
                 //    GetModelPump(),
                 //    secondaryParameters);
 
-                if (!ValidateMeasurementParameters(measurementParams))
-                {
-                    return;
-                }
+                //if (!ValidateMeasurementParameters(measurementParams))
+                //{
+                //    return;
+                //}
 
                 await App.Navigation.PopAsync();
-                await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);
+                //await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);
             }
             catch (Exception ex)
             {
@@ -110,25 +110,25 @@ namespace SiamCross.ViewModels
             }
         }
 
-        private bool ValidateMeasurementParameters(DuMeasurementStartParameters measurementParams)
-        {
-            bool result = true;
+        //private bool ValidateMeasurementParameters(DuMeasurementStartParameters measurementParams)
+        //{
+        //    bool result = true;
 
-            if (!IsNumberValid(4000, 300000, measurementParams.DynPeriod))
-                _errorList.Add(Resource.DynPeriodErrorTextDdimSiddos);
-            if (!IsNumberValid(1, 5, measurementParams.ApertNumber))
-                _errorList.Add(Resource.ApertNumberErrorTextDdimSiddos);
-            if (!IsNumberValid(500, 10000, measurementParams.Imtravel))
-                _errorList.Add(Resource.ImtravelErrorTextDdimSiddos);
+        //    if (!IsNumberValid(4000, 300000, measurementParams.DynPeriod))
+        //        _errorList.Add(Resource.DynPeriodErrorTextDdimSiddos);
+        //    if (!IsNumberValid(1, 5, measurementParams.ApertNumber))
+        //        _errorList.Add(Resource.ApertNumberErrorTextDdimSiddos);
+        //    if (!IsNumberValid(500, 10000, measurementParams.Imtravel))
+        //        _errorList.Add(Resource.ImtravelErrorTextDdimSiddos);
 
-            if (_errorList.Count != 0)
-            {
-                ShowErrors();
-                result = false;
-            }
+        //    if (_errorList.Count != 0)
+        //    {
+        //        ShowErrors();
+        //        result = false;
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
         private bool IsNumberValid(int from, int to, int number)
         {
