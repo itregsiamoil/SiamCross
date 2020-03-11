@@ -3,6 +3,7 @@ using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Models;
 using SiamCross.Models.Sensors;
+using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using System;
@@ -14,18 +15,10 @@ using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
-    public class DuMeasurementViewModel: BaseSensorMeasurementViewModel, IViewModel
+    public class DuMeasurementViewModel: BaseSensorMeasurementViewModel<DuMeasurementStartParameters>, IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
-        private List<string> _errorList;
-        private SensorData _sensorData;
-        public ObservableCollection<string> Fields { get; set; }
-        public string SelectedField { get; set; }
-        public string Well { get; set; }
-        public string Bush { get; set; }
-        public string Shop { get; set; }
-        public string BufferPressure { get; set; }
-        public string Comments { get; set; }
+        
         public ObservableCollection<string> ResearchTypes { get; set; }
         public string SelectedReasearchType { get; set; }
         public ObservableCollection<string> SoundSpeedCorrections { get; set; }
@@ -36,13 +29,10 @@ namespace SiamCross.ViewModels
 
         public ICommand StartMeasurementCommand { get; set; }
         public ICommand ValveTestCommand { get; set; }
-        public DuMeasurementViewModel(SensorData sensorData)
+        public DuMeasurementViewModel(SensorData sensorData) : base(sensorData)
         {
             try
             {
-                _sensorData = sensorData;
-                _errorList = new List<string>();
-                Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
                 ResearchTypes = new ObservableCollection<string>
                 {
                     Resource.DynamicLevel,
@@ -50,22 +40,12 @@ namespace SiamCross.ViewModels
                 };
                 StartMeasurementCommand = new Command(StartMeasurementHandler);
                 ValveTestCommand = new Command(() => DependencyService.Get<IToast>().Show(Resource.ValveTest));
-                InitDefaultValues();
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Ddim2MeasurementViewModel constructor");
                 throw;
             }
-        }
-
-        private void InitDefaultValues()
-        {
-            Well = Constants.DefaultWell.ToString();
-            Bush = Constants.DefaultBush.ToString();
-            Shop = Constants.DefaultShop.ToString();
-            BufferPressure = Constants.DefaultBufferPressure.ToString();
-            Comments = Resource.NoСomment;            
         }
 
         private async void StartMeasurementHandler(object obj)
@@ -110,74 +90,19 @@ namespace SiamCross.ViewModels
             }
         }
 
-        //private bool ValidateMeasurementParameters(DuMeasurementStartParameters measurementParams)
-        //{
-        //    bool result = true;
-
-        //    if (!IsNumberValid(4000, 300000, measurementParams.DynPeriod))
-        //        _errorList.Add(Resource.DynPeriodErrorTextDdimSiddos);
-        //    if (!IsNumberValid(1, 5, measurementParams.ApertNumber))
-        //        _errorList.Add(Resource.ApertNumberErrorTextDdimSiddos);
-        //    if (!IsNumberValid(500, 10000, measurementParams.Imtravel))
-        //        _errorList.Add(Resource.ImtravelErrorTextDdimSiddos);
-
-        //    if (_errorList.Count != 0)
-        //    {
-        //        ShowErrors();
-        //        result = false;
-        //    }
-
-        //    return result;
-        //}
-
-        private bool IsNumberValid(int from, int to, int number)
+        protected override void InitMeasurementStartParameters()
         {
-            return number >= from && number <= to;
+            throw new NotImplementedException();
         }
 
-        private bool ValidateForEmptiness()
+        protected override bool ValidateForEmptinessEveryParameter()
         {
-            _errorList.Clear();
-
-            ValidateParameter(SelectedField, Resource.SelectedFieldChoiceText);
-            ValidateParameter(Well, Resource.WellChoiceText);
-            ValidateParameter(Bush, Resource.BushChoiceText);
-            ValidateParameter(Shop, Resource.ShopChoiceText);
-            ValidateParameter(BufferPressure, Resource.BufferPressureChoiceText);
-            ValidateParameter(Comments, Resource.CommentsChoiceText);
-
-
-            if (_errorList.Count != 0)
-            {
-                ShowErrors();
-                return false;
-            }
-
-            return true;
+            throw new NotImplementedException();
         }
 
-        private void ShowErrors()
+        protected override bool ValidateMeasurementParameters(DuMeasurementStartParameters measurementParameters)
         {
-            if (_errorList.Count != 0)
-            {
-                string errors = "";
-
-                for (int i = 0; i < _errorList.Count; i++)
-                {
-                    errors += _errorList[i] + Environment.NewLine;
-                }
-
-                Application.Current.MainPage.DisplayAlert(Resource.IncorrectDataEnteredErrorText,
-                errors, "OK");
-            }
-        }
-
-        private void ValidateParameter(string text, string errorMessage)
-        {
-            if (string.IsNullOrEmpty(text) || text == ".")
-            {
-                _errorList.Add(errorMessage);
-            }
+            throw new NotImplementedException();
         }
     }
 }

@@ -13,7 +13,7 @@ using SiamCross.Models.Adapters;
 
 namespace SiamCross.ViewModels
 {
-    public class ControlPanelPageViewModel : BaseSensorMeasurementViewModel, IViewModel
+    public class ControlPanelPageViewModel : BaseViewModel, IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 

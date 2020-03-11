@@ -10,7 +10,7 @@ using SiamCross.Models;
 
 namespace SiamCross.ViewModels
 {
-    public class SearchViewModel : BaseSensorMeasurementViewModel
+    public class SearchViewModel : BaseViewModel
     {
         private MainPageModel _mainPageModel = new MainPageModel();
         private IBluetoothScanner _bluetoothScaner;
