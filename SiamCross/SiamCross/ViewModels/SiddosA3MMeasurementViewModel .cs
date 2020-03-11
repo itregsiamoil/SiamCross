@@ -7,7 +7,6 @@ using SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows.Input;
@@ -15,21 +14,10 @@ using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
-    public class SiddosA3MMeasurementViewModel : BaseSensorMeasurementViewModel, IViewModel
+    public class SiddosA3MMeasurementViewModel : BaseSensorMeasurementViewModel<SiddosA3MMeasurementStartParameters>, IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 
-        private SensorData _sensorData;
-
-        private List<string> _errorList;
-
-        public ObservableCollection<string> Fields { get; set; }
-        public string SelectedField { get; set; }
-        public string Well { get; set; }
-        public string Bush { get; set; }
-        public string Shop { get; set; }
-        public string BufferPressure { get; set; }
-        public string Comments { get; set; }
         public string DynPeriod { get; set; }
         public string ApertNumber { get; set; }
         public string Imtravel { get; set; }
@@ -45,14 +33,11 @@ namespace SiamCross.ViewModels
         }
 
         public ICommand ValveTestCommand { get; set; }
-        public SiddosA3MMeasurementViewModel(SensorData sensorData)
+        public SiddosA3MMeasurementViewModel(SensorData sensorData) : base(sensorData)
         {
             try
             {
-                _sensorData = sensorData;
                 SensorName = _sensorData.Name;
-                _errorList = new List<string>();
-                Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
 
                 ModelPump = new ObservableCollection<string>()
                 {
@@ -63,8 +48,6 @@ namespace SiamCross.ViewModels
                 StartMeasurementCommand = new Command(StartMeasurementHandler);
 
                 ValveTestCommand = new Command(() => DependencyService.Get<IToast>().Show(Resource.ValveTest));
-
-                InitDefaultValues();
             }
             catch (Exception ex)
             {
@@ -72,18 +55,11 @@ namespace SiamCross.ViewModels
             }
         }
 
-        private void InitDefaultValues()
+        protected override void InitMeasurementStartParameters()
         {
-            Well = Constants.DefaultWell.ToString();
-            Bush = Constants.DefaultBush.ToString();
-            Shop = Constants.DefaultShop.ToString();
-            BufferPressure = Constants.DefaultBufferPressure.ToString();
-            //Comments = Constants.DefaultComment;
-            Comments = Resource.NoСomment;
             DynPeriod = Constants.DefaultDynPeriod.ToString();
             ApertNumber = Constants.DefaultApertNumber.ToString();
             Imtravel = Constants.DefaultImtravel.ToString();
-            //SelectedModelPump = Constants.DefaultModelPump;
             SelectedModelPump = Resource.BalancedModelPump;
         }
 
@@ -92,7 +68,7 @@ namespace SiamCross.ViewModels
             try
             {
                 StartMeasurementCommand = new Command(() => { });
-                if (!ValidateForEmptiness())
+                if (!ValidateForEmptinessEveryParameter())
                 {
                     return;
                 }
@@ -153,15 +129,15 @@ namespace SiamCross.ViewModels
             set;
         }
 
-        private bool ValidateMeasurementParameters(SiddosA3MMeasurementStartParameters measurementParams)
+        protected override bool ValidateMeasurementParameters(SiddosA3MMeasurementStartParameters measurementParams)
         {
             bool result = true;
 
-            if (!IsNumberValid(4000, 300000, measurementParams.DynPeriod))
+            if (!IsNumberInRange(4000, 300000, measurementParams.DynPeriod))
                 _errorList.Add(Resource.DynPeriodErrorTextDdimSiddos);
-            if (!IsNumberValid(1, 5, measurementParams.ApertNumber))
+            if (!IsNumberInRange(1, 5, measurementParams.ApertNumber))
                 _errorList.Add(Resource.ApertNumberErrorTextDdimSiddos);
-            if (!IsNumberValid(500, 10000, measurementParams.Imtravel))
+            if (!IsNumberInRange(500, 10000, measurementParams.Imtravel))
                 _errorList.Add(Resource.ImtravelErrorTextDdimSiddos);
 
             if (_errorList.Count != 0)
@@ -173,25 +149,20 @@ namespace SiamCross.ViewModels
             return result;
         }
 
-        private bool IsNumberValid(int from, int to, int number)
-        {
-            return number >= from && number <= to;
-        }
-
-        private bool ValidateForEmptiness()
+        protected override bool ValidateForEmptinessEveryParameter()
         {
             _errorList.Clear();
 
-            ValidateParameter(SelectedField, Resource.SelectedFieldChoiceText);
-            ValidateParameter(Well, Resource.WellChoiceText);
-            ValidateParameter(Bush, Resource.BushChoiceText);
-            ValidateParameter(Shop, Resource.ShopChoiceText);
-            ValidateParameter(BufferPressure, Resource.BufferPressureChoiceText);
-            ValidateParameter(Comments, Resource.CommentsChoiceText);
-            ValidateParameter(DynPeriod, Resource.DynPeriodChoiceText);
-            ValidateParameter(ApertNumber, Resource.ApertNumberChoiceText);
-            ValidateParameter(Imtravel, Resource.ImtravelChoiceText);
-            ValidateParameter(SelectedModelPump, Resource.SelectedModelPumpChoiceText);
+            ValidateParameterForEmtpiness(SelectedField, Resource.SelectedFieldChoiceText);
+            ValidateParameterForEmtpiness(Well, Resource.WellChoiceText);
+            ValidateParameterForEmtpiness(Bush, Resource.BushChoiceText);
+            ValidateParameterForEmtpiness(Shop, Resource.ShopChoiceText);
+            ValidateParameterForEmtpiness(BufferPressure, Resource.BufferPressureChoiceText);
+            ValidateParameterForEmtpiness(Comments, Resource.CommentsChoiceText);
+            ValidateParameterForEmtpiness(DynPeriod, Resource.DynPeriodChoiceText);
+            ValidateParameterForEmtpiness(ApertNumber, Resource.ApertNumberChoiceText);
+            ValidateParameterForEmtpiness(Imtravel, Resource.ImtravelChoiceText);
+            ValidateParameterForEmtpiness(SelectedModelPump, Resource.SelectedModelPumpChoiceText);
 
             if (_errorList.Count != 0)
             {
@@ -202,29 +173,5 @@ namespace SiamCross.ViewModels
             return true;
         }
 
-        private void ShowErrors()
-        {
-            if (_errorList.Count != 0)
-            {
-                string errors = "";
-
-                for (int i = 0; i < _errorList.Count; i++)
-                {
-                    errors += _errorList[i] + Environment.NewLine;
-                }
-
-                Application.Current.MainPage.DisplayAlert(Resource.IncorrectDataEnteredErrorText,
-                errors, "OK");
-            }
-
-        }
-
-        private void ValidateParameter(string text, string errorMessage)
-        {
-            if (string.IsNullOrEmpty(text) || text == ".")
-            {
-                _errorList.Add(errorMessage);
-            }
-        }
     }
 }
