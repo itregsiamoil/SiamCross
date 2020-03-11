@@ -51,13 +51,6 @@ namespace SiamCross.Services
 
         public event Action<SensorData> SensorAdded;
 
-        public event Action<SensorData> SensorDataChanged;
-
-        public void SensorDataChangedHandler(SensorData data)
-        {
-            //SensorDataChanged?.Invoke(data);
-        }
-
         public void Initinalize()
         {
             lock (_lock)
