@@ -2,7 +2,7 @@
 
 namespace SiamCross.ViewModels
 {
-    public class SettingsViewModel : BaseViewModel, IViewModel
+    public class SettingsViewModel : BaseSensorMeasurementViewModel, IViewModel
     {
         private string _fromAddress;
         private string _toAddress;

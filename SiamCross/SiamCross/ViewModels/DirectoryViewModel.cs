@@ -13,7 +13,7 @@ using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
-    public class DirectoryViewModel : BaseViewModel, IViewModel
+    public class DirectoryViewModel : BaseSensorMeasurementViewModel, IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 

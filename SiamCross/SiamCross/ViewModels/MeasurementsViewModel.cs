@@ -18,7 +18,7 @@ using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
-    public class MeasurementsViewModel : BaseViewModel, IViewModel
+    public class MeasurementsViewModel : BaseSensorMeasurementViewModel, IViewModel
     {
         public void PushPage(MeasurementView selectedMeasurement)
         {

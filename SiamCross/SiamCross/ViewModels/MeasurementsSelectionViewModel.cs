@@ -14,7 +14,7 @@ using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
-    public class MeasurementsSelectionViewModel : BaseViewModel, IViewModel
+    public class MeasurementsSelectionViewModel : BaseSensorMeasurementViewModel, IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 
