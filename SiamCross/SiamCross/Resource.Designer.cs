@@ -97,6 +97,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Amplification.
+        /// </summary>
+        public static string Amplification {
+            get {
+                return ResourceManager.GetString("Amplification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Crank hole number.
         /// </summary>
         public static string ApertNumber {
@@ -291,6 +300,15 @@ namespace SiamCross {
         public static string Device {
             get {
                 return ResourceManager.GetString("Device", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Measurement type.
+        /// </summary>
+        public static string DuResearchType {
+            get {
+                return ResourceManager.GetString("DuResearchType", resourceCulture);
             }
         }
         
@@ -552,6 +570,15 @@ namespace SiamCross {
         public static string IncorrectDataEnteredErrorText {
             get {
                 return ResourceManager.GetString("IncorrectDataEnteredErrorText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Inlet.
+        /// </summary>
+        public static string Inlet {
+            get {
+                return ResourceManager.GetString("Inlet", resourceCulture);
             }
         }
         
@@ -912,6 +939,24 @@ namespace SiamCross {
         public static string SmtpAddress {
             get {
                 return ResourceManager.GetString("SmtpAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Sound speed.
+        /// </summary>
+        public static string SoundSpeed {
+            get {
+                return ResourceManager.GetString("SoundSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Sound speed correction.
+        /// </summary>
+        public static string SoundSpeedCorrection {
+            get {
+                return ResourceManager.GetString("SoundSpeedCorrection", resourceCulture);
             }
         }
         

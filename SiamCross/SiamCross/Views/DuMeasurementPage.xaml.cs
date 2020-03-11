@@ -16,5 +16,15 @@ namespace SiamCross.Views
         {
             InitializeComponent();
         }
+
+        private void AmplificationCheckboxChanged(object sender, CheckedChangedEventArgs e)
+        {
+            
+        }
+        
+        private void InletCheckboxChanged(object sender, CheckedChangedEventArgs e)
+        {
+            
+        }
     }
 }

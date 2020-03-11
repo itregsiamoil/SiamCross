@@ -65,22 +65,69 @@
                     <ViewCell>
                         <StackLayout  >
                             <Label Text="{local1:Translate BufferPressure}"></Label>
-                            <Entry Text="{Binding BufferPressure}" 
-                               Keyboard="Numeric">
-                                <Entry.Behaviors>
-                                    <local:FloatNumberValidationBehavior/>
-                                </Entry.Behaviors>
-                            </Entry>
+                            <local2:CustomEntry Text="{Binding BufferPressure}" 
+                                            Keyboard="Numeric">
+                            </local2:CustomEntry>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout  >
-                            <Label Text="{local1:Translate Comments}"></Label>
+                            <Label Text="{local1:Translate Comments}"/>
                             <Editor Text="{Binding Comments}"
                                     AutoSize="TextChanges"></Editor>
                         </StackLayout>
                     </ViewCell>
 
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate DuResearchType}"/>
+                            <Picker ItemsSource="{Binding ResearchTypes}"
+                                    SelectedItem="{Binding SelectedResearchType}"/>
+                        </StackLayout>
+                    </ViewCell>
+
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate SoundSpeedCorrection}"/>
+                            <Picker ItemsSource="{Binding SoundSpeedCorrections}"
+                                    SelectedItem="{Binding SelectedSoundSpeedCorrection}"/>
+                        </StackLayout>
+                    </ViewCell>
+
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate SoundSpeed}"/>
+                            <local2:CustomEntry Text="{Binding SoundSpeed}" 
+                                            Keyboard="Numeric">
+                            </local2:CustomEntry>
+                        </StackLayout>
+                    </ViewCell>
+
+                    <ViewCell>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <CheckBox CheckedChanged="AmplificationCheckboxChanged" 
+                                      Grid.Column="0"
+                                      Grid.Row="0"/>
+                            <Label Text="{local1:Translate Amplification}" 
+                                      Grid.Column="1"
+                                      Grid.Row="0"/>
+                            <CheckBox CheckedChanged="InletCheckboxChanged" 
+                                      Grid.Column="0"
+                                      Grid.Row="1"/>
+                            <Label Text="{local1:Translate Inlet}" 
+                                      Grid.Column="1"
+                                      Grid.Row="1"/>
+                        </Grid>
+                    </ViewCell>
                     <!--<ViewCell>
                         <StackLayout>
                             <Label Text="{local1:Translate Chdav}"/>

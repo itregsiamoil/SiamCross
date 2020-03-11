@@ -448,4 +448,22 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
     <value>Pressure sensor zero offset, 0.1 atm</value>
     <comment>смещение нуля датчика давления , 0.1атм</comment>
   </data>
+  <data name="Amplification" xml:space="preserve">
+    <value>Amplification</value>
+  </data>
+  <data name="DuResearchType" xml:space="preserve">
+    <value>Measurement type</value>
+    <comment>Тип исследоания</comment>
+  </data>
+  <data name="Inlet" xml:space="preserve">
+    <value>Inlet</value>
+  </data>
+  <data name="SoundSpeed" xml:space="preserve">
+    <value>Sound speed</value>
+    <comment>Скорость звука</comment>
+  </data>
+  <data name="SoundSpeedCorrection" xml:space="preserve">
+    <value>Sound speed correction</value>
+    <comment>Поправка скорости звука</comment>
+  </data>
 </root>

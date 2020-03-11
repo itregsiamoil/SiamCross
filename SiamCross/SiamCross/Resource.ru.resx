@@ -460,4 +460,22 @@
   <data name="String1" xml:space="preserve">
     <value />
   </data>
+  <data name="Amplification" xml:space="preserve">
+    <value>Усиление</value>
+  </data>
+  <data name="DuResearchType" xml:space="preserve">
+    <value>Тип исследования</value>
+    <comment>Тип исследоания</comment>
+  </data>
+  <data name="Inlet" xml:space="preserve">
+    <value>Впуск</value>
+  </data>
+  <data name="SoundSpeed" xml:space="preserve">
+    <value>Sound speed</value>
+    <comment>Скорость звука</comment>
+  </data>
+  <data name="SoundSpeedCorrection" xml:space="preserve">
+    <value>Поправка скорости звука</value>
+    <comment>Поправка скорости звука</comment>
+  </data>
 </root>
