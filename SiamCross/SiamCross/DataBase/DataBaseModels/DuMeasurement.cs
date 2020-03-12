@@ -7,11 +7,11 @@ namespace SiamCross.DataBase.DataBaseModels
     public class DuMeasurement
     {
         public int Id { get; set; }
-        public UInt16 Urov { get; set; }
-        public UInt16 Otr { get; set; }
+        public int Urov { get; set; }
+        public int Otr { get; set; }
         public int AnnularPressure { get; set; }
         public float SoundSpeed { get; set; }
-        public Byte[] Echogram { get; set; }
+        public byte[] Echogram { get; set; }
 
         /*/ Secondary /*/
         public string Field { get; set; }
@@ -26,8 +26,8 @@ namespace SiamCross.DataBase.DataBaseModels
         public DuMeasurement(DuMeasurementData measurementData,
             MeasurementSecondaryParameters secondaryParams)
         {
-            Urov = (UInt16)measurementData.FluidLevel;
-            Otr = (UInt16)measurementData.NumberOfReflections;
+            Urov = measurementData.FluidLevel;
+            Otr = measurementData.NumberOfReflections;
             Echogram = measurementData.Echogram.ToArray();
             AnnularPressure = measurementData.AnnularPressure;
             SoundSpeed = measurementData.SoundSpeed;
