@@ -25,8 +25,8 @@ namespace SiamCross.Services
                         AppContainer.Container.Resolve<IBluetoothClassicAdapter>
                         (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                         new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
-                    ddin2.Notify += SensorService.Instance.SensorDataChangedHandler;
                     ddin2.ScannedDeviceInfo = deviceInfo;
+
                     return ddin2;
                 }
                 else if (deviceInfo.Name.Contains("DDIM"))
@@ -37,8 +37,6 @@ namespace SiamCross.Services
                             AppContainer.Container.Resolve<IBluetoothLeAdapter>
                             (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                             new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
-                        sensor.Notify += SensorService.Instance.SensorDataChangedHandler;
-                        sensor.MeasurementRecieved += SensorService.Instance.MeasurementHandler;
                         sensor.ScannedDeviceInfo = deviceInfo;
                         return sensor;
                     }
@@ -48,7 +46,6 @@ namespace SiamCross.Services
                             AppContainer.Container.Resolve<IBluetoothClassicAdapter>
                             (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                             new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
-                        sensor.Notify += SensorService.Instance.SensorDataChangedHandler;
                         sensor.ScannedDeviceInfo = deviceInfo;
                         return sensor;
                     }
@@ -61,8 +58,6 @@ namespace SiamCross.Services
                             AppContainer.Container.Resolve<IBluetoothLeAdapter>
                             (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                             new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
-                        sensor.Notify += SensorService.Instance.SensorDataChangedHandler;
-                        sensor.MeasurementRecieved += SensorService.Instance.MeasurementHandler;
                         sensor.ScannedDeviceInfo = deviceInfo;
                         return sensor;
                     }
@@ -75,7 +70,7 @@ namespace SiamCross.Services
                             AppContainer.Container.Resolve<IBluetoothLeAdapter>
                             (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                             new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, ""));
-
+                        sensor.ScannedDeviceInfo = deviceInfo;
                         return sensor;
                     }
                     else if (deviceInfo.BluetoothType == BluetoothType.Classic)
@@ -84,10 +79,11 @@ namespace SiamCross.Services
                            AppContainer.Container.Resolve<IBluetoothClassicAdapter>
                            (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                            new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, ""));
-
+                        sensor.ScannedDeviceInfo = deviceInfo;
                         return sensor;
                     }
                 }
+
                 return null;
             }
         }
