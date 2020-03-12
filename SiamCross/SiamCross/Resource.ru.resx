@@ -505,4 +505,13 @@
   <data name="SelectedSoundSpeedCorrectionChoice" xml:space="preserve">
     <value>Выберите поправку скорости звука!</value>
   </data>
+  <data name="AnnularPressure" xml:space="preserve">
+    <value>Затрубное давление, кгс/см2</value>
+  </data>
+  <data name="FluidLevel" xml:space="preserve">
+    <value>Уровень жидкости, м</value>
+  </data>
+  <data name="NumberOfReflections" xml:space="preserve">
+    <value>Количество отражений</value>
+  </data>
 </root>

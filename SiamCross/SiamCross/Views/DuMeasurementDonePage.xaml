@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
+             xmlns:local="clr-namespace:SiamCross.Views"
+             xmlns:local2="clr-namespace:SiamCross.Views.ValidationBehavior"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
+             x:Class="SiamCross.Views.DuMeasurementDonePage"
+             Title="DU">
+    
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="share.png" Text="Share" Command="{Binding ShareCommand}"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="labelStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="Medium"/>
+                <Setter Property="Margin" Value="2, 6"/>
+                <Setter Property="TextColor" Value="Black" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <StackLayout x:Name="outerStack" Orientation="Vertical">
+        <!--<forms:ChartView x:Name="Chart1" HeightRequest="200"/>-->
+        <Grid x:Name="graphGrid" Margin="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label Text="{Binding MaxGraphY}" Grid.Column="0" Grid.Row="0"/>
+            <skia:SKCanvasView x:Name="CanvasView"
+                           PaintSurface="CanvasView_PaintSurface"
+                           HorizontalOptions="FillAndExpand"
+                           Margin="5"
+                           VerticalOptions="FillAndExpand"
+                           IgnorePixelScaling="True"
+                           HeightRequest="200"
+                           Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"/>
+            <Label Text=", Т" VerticalOptions="Start" Grid.Column="1" Grid.Row="0"/>
+            <Label Text="0"  Grid.Column="0" Grid.Row="2"/>
+            <Label Text=", М" HorizontalOptions="Center" Grid.Column="2" Grid.Row="2"/>
+            <Label Text="{Binding MaxGraphX}" HorizontalOptions="End" Grid.Column="1" Grid.Row="2"/>
+        </Grid>
+        
+        <TableView Intent="Data" 
+               HasUnevenRows="True" 
+               HorizontalOptions="CenterAndExpand"
+               Margin="5">
+            <TableRoot >
+                <TableSection>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Field}"/>
+                            <Picker ItemsSource="{Binding Fields}"
+                                SelectedItem="{Binding SelectedField}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Well}"/>
+                            <Entry Text="{Binding Well}" 
+                               Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Bush}"/>
+                            <Entry Text="{Binding Bush}" 
+                               Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Shop}"/>
+                            <Entry Text="{Binding Shop}" 
+                               Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Date}"/>
+                            <Label Text="{Binding Date, Mode=OneWay}" 
+                                   Style="{StaticResource labelStyle}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate BufferPressure}"/>
+                            <local2:CustomEntry Text="{Binding BufferPressure}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Comments}"/>
+                            <Editor Text="{Binding Comments, Mode=TwoWay}"
+                                    AutoSize="TextChanges"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Device}"/>
+                            <Label Text="{Binding DeviceName, Mode=OneWay}"
+                                   Style="{StaticResource labelStyle}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate MeasurementType}"/>
+                            <Label Text="{Binding MeasurementType, Mode=OneWay}"
+                                   Style="{StaticResource labelStyle}"/>
+                        </StackLayout>
+                    </ViewCell>
+
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate FluidLevel}"/>
+                            <Label Text="{Binding FluidLevel}"
+                                   Style="{StaticResource labelStyle}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate AnnularPressure}"/>
+                            <Label Text="{Binding AnnularPressure}"
+                                   Style="{StaticResource labelStyle}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate NumberOfReflections}"/>
+                            <Label Text="{Binding NumberOfReflections}"
+                                   Style="{StaticResource labelStyle}"/>
+                        </StackLayout>    
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate SoundSpeedCorrection}"/>
+                            <Picker ItemsSource="{Binding SoundSpeedCorrections}"
+                                    SelectedItem="{Binding SelectedSoundSpeedCorrection}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate SoundSpeed}"/>
+                            <local2:CustomEntry Text="{Binding SoundSpeed}"/>
+                        </StackLayout>
+                    </ViewCell>
+
+
+                </TableSection>
+            </TableRoot>
+        </TableView>
+    </StackLayout>
+</ContentPage>

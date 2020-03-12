@@ -493,4 +493,13 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="SelectedSoundSpeedCorrectionChoice" xml:space="preserve">
     <value>Choose sound speed correction!</value>
   </data>
+  <data name="AnnularPressure" xml:space="preserve">
+    <value>Annular pressure, kgf/cm2</value>
+  </data>
+  <data name="FluidLevel" xml:space="preserve">
+    <value>Fluid level, m</value>
+  </data>
+  <data name="NumberOfReflections" xml:space="preserve">
+    <value>Number of reflections</value>
+  </data>
 </root>

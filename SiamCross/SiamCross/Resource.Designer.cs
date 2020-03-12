@@ -106,6 +106,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Annular pressure, kgf/cm2.
+        /// </summary>
+        public static string AnnularPressure {
+            get {
+                return ResourceManager.GetString("AnnularPressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Crank hole number.
         /// </summary>
         public static string ApertNumber {
@@ -502,6 +511,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Fluid level, m.
+        /// </summary>
+        public static string FluidLevel {
+            get {
+                return ResourceManager.GetString("FluidLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Discovered devices:.
         /// </summary>
         public static string FoundDevices {
@@ -786,6 +804,15 @@ namespace SiamCross {
         public static string NoСomment {
             get {
                 return ResourceManager.GetString("NoСomment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Number of reflections.
+        /// </summary>
+        public static string NumberOfReflections {
+            get {
+                return ResourceManager.GetString("NumberOfReflections", resourceCulture);
             }
         }
         
