@@ -11,7 +11,6 @@ namespace SiamCross.DataBase.DataBaseModels
         public UInt16 Urov { get; set; }
         public UInt16 Otr { get; set; }
         public Byte[] Echogram { get; set; }
-        public DateTime DateTime { get; set; }
 
         /*/ Secondary /*/
         public string Field { get; set; }
@@ -21,6 +20,7 @@ namespace SiamCross.DataBase.DataBaseModels
         public string BufferPressure { get; set; }
         public string Comment { get; set; }
         public string Name { get; set; }
+        public DateTime DateTime { get; set; }
 
         public DuMeasurement(UInt16 urov, UInt16 otr, Byte[] echogram,
             DateTime date,

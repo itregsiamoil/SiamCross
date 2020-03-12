@@ -385,6 +385,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Echogram.
+        /// </summary>
+        public static string Echogram {
+            get {
+                return ResourceManager.GetString("Echogram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на E-mail settings.
         /// </summary>
         public static string EmailSettings {

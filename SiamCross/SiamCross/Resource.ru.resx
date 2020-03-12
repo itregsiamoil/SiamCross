@@ -508,6 +508,9 @@
   <data name="AnnularPressure" xml:space="preserve">
     <value>Затрубное давление, кгс/см2</value>
   </data>
+  <data name="Echogram" xml:space="preserve">
+    <value>Эхограмма</value>
+  </data>
   <data name="FluidLevel" xml:space="preserve">
     <value>Уровень жидкости, м</value>
   </data>

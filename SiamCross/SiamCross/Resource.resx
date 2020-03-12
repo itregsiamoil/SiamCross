@@ -496,6 +496,9 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="AnnularPressure" xml:space="preserve">
     <value>Annular pressure, kgf/cm2</value>
   </data>
+  <data name="Echogram" xml:space="preserve">
+    <value>Echogram</value>
+  </data>
   <data name="FluidLevel" xml:space="preserve">
     <value>Fluid level, m</value>
   </data>
