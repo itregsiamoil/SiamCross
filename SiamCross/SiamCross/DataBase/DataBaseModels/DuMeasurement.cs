@@ -1,7 +1,6 @@
 ﻿using SiamCross.Models.Sensors;
+using SiamCross.Models.Sensors.Du.Measurement;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SiamCross.DataBase.DataBaseModels
 {
@@ -10,6 +9,8 @@ namespace SiamCross.DataBase.DataBaseModels
         public int Id { get; set; }
         public UInt16 Urov { get; set; }
         public UInt16 Otr { get; set; }
+        public int AnnularPressure { get; set; }
+        public float SoundSpeed { get; set; }
         public Byte[] Echogram { get; set; }
 
         /*/ Secondary /*/
@@ -22,14 +23,16 @@ namespace SiamCross.DataBase.DataBaseModels
         public string Name { get; set; }
         public DateTime DateTime { get; set; }
 
-        public DuMeasurement(UInt16 urov, UInt16 otr, Byte[] echogram,
-            DateTime date,
+        public DuMeasurement(DuMeasurementData measurementData,
             MeasurementSecondaryParameters secondaryParams)
         {
-            Urov = urov;
-            Otr = otr;
-            Echogram = echogram;
-            DateTime = date;
+            Urov = (UInt16)measurementData.FluidLevel;
+            Otr = (UInt16)measurementData.NumberOfReflections;
+            Echogram = measurementData.Echogram.ToArray();
+            AnnularPressure = measurementData.AnnularPressure;
+            SoundSpeed = measurementData.SoundSpeed;
+
+            DateTime = measurementData.Date;
             Field = secondaryParams.Field;
             Well = secondaryParams.Well;
             Bush = secondaryParams.Bush;

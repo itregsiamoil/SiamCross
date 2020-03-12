@@ -78,6 +78,11 @@ namespace SiamCross.ViewModels
         {
             _measurement = measurement;
             Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
+            SoundSpeedCorrections = new ObservableCollection<string>
+            {
+                Resource.DynamicLevel,
+
+            };
 
             SelectedField = _measurement.Field;
             Well = _measurement.Well;
