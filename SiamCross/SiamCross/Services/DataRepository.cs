@@ -181,7 +181,116 @@ namespace SiamCross.Services
             )");
         }
 
+        private void CreateDuTable()
+        {
+            NonQueryCheck();
+
+            _database.Execute(@"
+            CREATE TABLE IF NOT EXISTS [DuMeasurement] (
+                [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                [Urov] INTEGER NOT NULL,
+                [Otr] INTEGER NOT NULL,
+                [Echogram] BLOB,
+                [DateTime] TEXT NOT NULL,
+                [Field] NVARCHAR(128) NOT NULL,
+                [Well] NVARCHAR(128) NOT NULL,
+                [Bush] NVARCHAR(128) NOT NULL,
+                [Shop] NVARCHAR(128) NOT NULL,
+                [BufferPressure] NVARCHAR(128) NOT NULL,
+                [Comment] NVARCHAR(128) NOT NULL,
+                [Name] NVARCHAR(128) NOT NULL)");
+        }
+
         #endregion 
+
+        public int SaveDuMeasurement(DuMeasurement duMeasurement)
+        {
+            NonQueryCheck();
+            try
+            {
+                if (duMeasurement.Id == 0)
+                {
+                    duMeasurement.Id = (int)_database.Query(string.Format(
+                        "SELECT COUNT(1) as 'Count' FROM DuMeasurement")).First().Count +1;
+                }
+
+                var rows = _database.Query(string.Format(
+                    "SELECT COUNT(1) AS 'Count' FROM DuMeasurement WHERE Id = '{0}'", duMeasurement.Id));
+
+                if (rows.First().Count > 0)
+                {
+                    UpdateDuMeasurement(duMeasurement);
+                    return duMeasurement.Id;
+                }
+
+                string sql = "INSERT INTO DuMeasurement " +
+                        "(Urov, Otr, Echogram, DateTime, Field, Well, Bush, Shop, BufferPressure, Comment, Name)" +
+                        "Value (@Urov, @Otr, @Echogram, @DateTime,  @Field, @Well, @Bush, @Shop, @BufferPressure, @Comment, @Name);";
+                var affectedRows = _database.Execute(sql, new
+                {
+                    duMeasurement.Urov,
+                    duMeasurement.Otr,
+                    duMeasurement.Echogram,
+                    duMeasurement.DateTime,
+                    duMeasurement.Field,
+                    duMeasurement.Well,
+                    duMeasurement.Bush,
+                    duMeasurement.Shop,
+                    duMeasurement.BufferPressure,
+                    duMeasurement.Comment
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "SaveDuMeasurement");
+                throw;
+            }
+            return duMeasurement.Id;
+        }
+
+        public void UpdateDuMeasurement(DuMeasurement duMeasurement)
+        {
+            try
+            {
+                string sql = "UPDATE DuMeasurement SET " +
+                    "Urov = @Urov, Otr = @Otr, Echogram = @Echogram, DateTime = @DateTime," +
+                    " Field = @Field, Well = @Well, Bush = @Bush, Shop = @Shop, BufferPressure = @BufferPressure," +
+                    " Comment = @Comment, Name = @Name WHERE Id = @Id;";
+                var affectedRows = _database.Execute(sql, new
+                {
+                    duMeasurement.Urov,
+                    duMeasurement.Otr,
+                    duMeasurement.Echogram,
+                    duMeasurement.DateTime,
+                    duMeasurement.Field,
+                    duMeasurement.Well,
+                    duMeasurement.Bush,
+                    duMeasurement.Shop,
+                    duMeasurement.BufferPressure,
+                    duMeasurement.Comment,
+                    duMeasurement.Id
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "UpdateDuMeasurement");
+                throw;
+            }
+        }
+
+        public void RemoveDuMeasurement(int removebleId)
+        {
+            NonQueryCheck();
+            try
+            {
+                _database.Execute("DELETE FROM DuMeasurement WHERE Id =" + removebleId);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "RemoveDuMeasurement");
+                throw;
+            }
+        }
 
         public int SaveDdim2Measurement(Ddim2Measurement ddim2Measurement)
         {
@@ -213,6 +322,8 @@ namespace SiamCross.Services
                         " @AccelerationGraph, @Field, @Well, @Bush, @Shop, @BufferPressure, @Comment, " +
                         "@Name, @DateTime, @ErrorCode, @ApertNumber, @ModelPump, @MaxBarbellWeight," +
                         " @MinBarbellWeight, @TravelLength, @SwingCount);";
+
+                
 
                 var affectedRows = _database.Execute(sql, new
                 {
@@ -251,6 +362,7 @@ namespace SiamCross.Services
             return ddim2Measurement.Id;
         }
 
+        
         private void UpdateDdim2Measurement(Ddim2Measurement ddim2Measurement)
         {
             try
@@ -317,6 +429,22 @@ namespace SiamCross.Services
             }
         }
 
+        public IEnumerable<DuMeasurement> GetDuMeasurements()
+        {
+            NonQueryCheck();
+            try
+            {
+                var duItems = _database.Query<DuMeasurement>(
+                    "SELECT * FROM DuMeasurement");
+                return duItems;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "GetDuMeasurements");
+                throw;
+            }
+        }
+
         public IEnumerable<Ddim2Measurement> GetDdim2Measurements()
         {
             NonQueryCheck();
@@ -330,6 +458,21 @@ namespace SiamCross.Services
             catch (Exception e)
             {
                 _logger.Error(e, $"Ddim2Get database error!");
+                throw;
+            }
+        }
+
+        public DuMeasurement GetDuMeasurementById(int id)
+        {
+            NonQueryCheck();
+            try
+            {
+                return _database.Query<DuMeasurement>(
+                    "SELECT * FROM DuMeasurement WHERE Id =" + id).First();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "GetDuMeasurementById");
                 throw;
             }
         }
