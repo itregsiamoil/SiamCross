@@ -80,11 +80,11 @@ namespace SiamCross.Models.Sensors.Du
                     case DuCommandsEnum.ProgrammVersionSize:
                         _deviceFirmWaveQualifier.DeviceNameSize = GetPayload(message);
                         break;
-                    case DuCommandsEnum.ResearchData:
-                        ExportByteData(DuCommandsEnum.ResearchData, message);
+                    case DuCommandsEnum.EchogramData:
+                        ExportByteData(DuCommandsEnum.EchogramData, message);
                         break;
-                    case DuCommandsEnum.ResearchTitle:
-                        ExportByteData(DuCommandsEnum.ResearchTitle, message);
+                    case DuCommandsEnum.ResearchHeader:
+                        ExportByteData(DuCommandsEnum.ResearchHeader, message);
                         Console.WriteLine("Read Measurement Report");
                         break;
                     case DuCommandsEnum.Revbit:
@@ -105,6 +105,9 @@ namespace SiamCross.Models.Sensors.Du
                             return binary;
                         }
                         break;
+                    //case DuCommandsEnum.SensorState:
+                    //    ExportByteData(DuCommandsEnum.SensorState, message);
+                    //    break;
                 }
                 //Если команда чтения
                 if (message[3] == 0x01)
@@ -269,7 +272,7 @@ namespace SiamCross.Models.Sensors.Du
             }; 
             if (commandBytes[3] == 0x81) //Если чтение графика эхограммы
             {
-                return DuCommandsEnum.ResearchData;
+                return DuCommandsEnum.EchogramData;
             }
 
             else
@@ -310,8 +313,8 @@ namespace SiamCross.Models.Sensors.Du
             { new byte[]{ 0x04, 0x84, 0x00, 0x00}, DuCommandsEnum.Pressure },
             { new byte[]{ 0x00, 0x88, 0x00, 0x00}, DuCommandsEnum.StartMeasurement }, // по данному адрессу ответ на 5 комманд           
             { new byte[]{ 0x02, 0x88, 0x00, 0x00}, DuCommandsEnum.SensorState },
-            { new byte[]{ 0x00, 0x00, 0x00, 0x80}, DuCommandsEnum.ResearchTitle },
-            { new byte[]{ 0x00, 0x00, 0x00, 0x81}, DuCommandsEnum.ResearchData }
+            { new byte[]{ 0x00, 0x00, 0x00, 0x80}, DuCommandsEnum.ResearchHeader },
+            { new byte[]{ 0x00, 0x00, 0x00, 0x81}, DuCommandsEnum.EchogramData }
         };
     }
 }

@@ -1,6 +1,7 @@
 ﻿using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Models.Sensors.Dynamographs.Ddim2;
+using SiamCross.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +57,11 @@ namespace SiamCross.Models.Sensors.Du
             _liveTask.Start();
         }
 
+        private void MeasurementRecieveHandler(DuCommandsEnum arg1, byte[] arg2)
+        {
+            _measurementManager.MeasurementRecieveHandler(arg1, arg2);
+        }
+
         private void ConnectFailedHandler()
         {
             IsAlive = false;
@@ -82,10 +88,10 @@ namespace SiamCross.Models.Sensors.Du
                 case DuCommandsEnum.SensorState:
                     if(_measurementManager != null)
                     {
-                        //
+                        _measurementManager.MeasurementStatus = _statusAdapter.StringStatusToEnum(dataValue);
                     }
                     SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
-                    break;
+                    return;
                 case DuCommandsEnum.Voltage:
                     _reportBuilder.BatteryVoltage = dataValue;
                     break;
@@ -143,26 +149,14 @@ namespace SiamCross.Models.Sensors.Du
         public async Task StartMeasurement(object measurementParameters)
         {
             IsMeasurement = true;
-            var _commandGenerator = new CommandGenerator();
-            
-            await BluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Revbit]);
-            byte[] data = new byte[]
-            {
-                Convert.ToByte("00000001", 2),
-                Convert.ToByte("00000001", 2)
-            };
-
-            byte[] command = _commandGenerator.GenerateWriteCommand(
-                DuCommands.FullCommandDictionary[DuCommandsEnum.Revbit], data);
-
-            await BluetoothAdapter.SendData(command);
-            await BluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Revbit]);
+            var startParams = (DuMeasurementStartParameters)measurementParameters;
+            _measurementManager = new DuMeasurementManager(BluetoothAdapter, SensorData,
+                startParams);
+            var result = await _measurementManager.RunMeasurement();
+            SensorService.Instance.MeasurementHandler(result);
             IsMeasurement = false;
         }
 
-        private void MeasurementRecieveHandler(DuCommandsEnum commandName, byte[] data)
-        {
-            //_measurementManager.MeasurementRecieveHandler(commandName, data);
-        }
+        
     }
 }

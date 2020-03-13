@@ -224,7 +224,7 @@ namespace SiamCross.Models.Sensors.Du
             },
 
             // Заголовок исследования
-            [DuCommandsEnum.ResearchTitle] = new byte[]
+            [DuCommandsEnum.ResearchHeader] = new byte[]
             {
                 0x0D, 0x0A,
                 0x01, 0x01,
@@ -241,7 +241,7 @@ namespace SiamCross.Models.Sensors.Du
         public static Dictionary<DuCommandsEnum, byte[]> CommandRegistersDictionary =
             new Dictionary<DuCommandsEnum, byte[]>()
         {
-            [DuCommandsEnum.ResearchData] = new byte[]
+            [DuCommandsEnum.EchogramData] = new byte[]
             {
                 0x00, 0x00, 0x00, 0x81
             },

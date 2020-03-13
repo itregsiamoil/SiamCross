@@ -32,8 +32,8 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                     case "0": return Resource.FreeStatus;
                     case "1": return Resource.NoiseStatus;
                     case "2": return Resource.ClickStatus;
-                    case "4": return Resource.MeasurementStatus;
-                    case "5": return Resource.SavingStatus;
+                    case "3": return Resource.MeasurementStatus;
+                    case "4": return Resource.SavingStatus;
                 }
             }
 

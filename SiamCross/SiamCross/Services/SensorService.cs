@@ -5,6 +5,7 @@ using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Ddin2.Measurement;
+using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement;
 using SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement;
 using SiamCross.Models.Tools;
@@ -177,6 +178,9 @@ namespace SiamCross.Services
                             new SiddosA3MMeasurementDonePage(
                                 DataRepository.Instance.GetSiddosA3MMeasurementById(addbleId)),
                                 true);
+                    break;
+                case DuMeasurementData duData:
+                    var data = duData;
                     break;
                 default:
                     break;

@@ -85,6 +85,9 @@ namespace SiamCross.ViewModels
         protected override void InitMeasurementStartParameters()
         {
             //Чекбоксы "Усиление" и "Впуск" и так инициализируются false
+            SoundSpeed = "";
+            SelectedSoundSpeedCorrection = "";
+            SelectedReasearchType = "";
         }
 
         protected override bool ValidateForEmptinessEveryParameter()

@@ -22,8 +22,8 @@
         StateZeroing,
         SensorOff,
         SensorState,
-        ResearchTitle,
-        ResearchData,
+        ResearchHeader,
+        EchogramData,
         DeviceProgrammVersion,
         StubCommand
     }
