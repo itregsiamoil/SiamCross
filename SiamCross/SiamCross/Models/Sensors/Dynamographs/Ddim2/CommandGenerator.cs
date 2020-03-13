@@ -7,7 +7,7 @@ using System.Text;
 
 namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 {
-    public class Ddim2DeviceConfigCommandGenerator
+    public class CommandGenerator
     {
         /// <summary>
         /// Калькулятор контрольной суммы
@@ -17,13 +17,13 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         /// <summary>
         /// Преобразовать команду чтения в команду записи
         /// </summary>
-        /// <param name="command"></param>
+        /// <param name="readCommand"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        private byte[] moldCommand(byte[] command, byte[] data)
+        public byte[] GenerateWriteCommand(byte[] readCommand, byte[] data)
         {
             var bufList = new List<byte>();
-            bufList.AddRange(command);
+            bufList.AddRange(readCommand);
             bufList.RemoveAt(0);
             bufList.RemoveAt(0);
             bufList.RemoveAt(bufList.Count - 1);
@@ -54,14 +54,14 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             var number = BitConverter.GetBytes(Convert.ToUInt16(value));
             byte[] command = DynamographCommands.FullCommandDictionary["DeviceNumber"];
 
-            return moldCommand(command, number);
+            return GenerateWriteCommand(command, number);
         }
 
         public byte[] SetRod(int value)
         {
             var rod = BitConverter.GetBytes(Convert.ToUInt16(value));
             byte[] command = DynamographCommands.FullCommandDictionary["Rod"];
-            return moldCommand(command, rod);
+            return GenerateWriteCommand(command, rod);
         }
 
         public byte[] SetDynPeriod(int value)
@@ -69,7 +69,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             var dyn = BitConverter.GetBytes(Convert.ToUInt32(value));
             byte[] command = DynamographCommands.FullCommandDictionary["DynPeriod"];
 
-            return moldCommand(command, dyn);
+            return GenerateWriteCommand(command, dyn);
         }
 
         public byte[] SetApertNumber(int value)
@@ -77,14 +77,14 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             var apert = BitConverter.GetBytes(Convert.ToUInt16(value));
             byte[] command = DynamographCommands.FullCommandDictionary["ApertNumber"];
 
-            return moldCommand(command, apert);
+            return GenerateWriteCommand(command, apert);
         }
         public byte[] SetImtravel(int value)
         {
             var imravel = BitConverter.GetBytes(Convert.ToUInt16(value));
             byte[] command = DynamographCommands.FullCommandDictionary["Imtravel"];
 
-            return moldCommand(command, imravel);
+            return GenerateWriteCommand(command, imravel);
         }
 
         public byte[] SetModelPump(int value)
@@ -92,14 +92,14 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             var pump = BitConverter.GetBytes(Convert.ToUInt16(value));
             byte[] command = DynamographCommands.FullCommandDictionary["ModelPump"];
 
-            return moldCommand(command, pump);
+            return GenerateWriteCommand(command, pump);
         }
         public byte[] SensorLoadNKP(float value)
         {
             var nkp = BitConverter.GetBytes(Convert.ToSingle(value));
             byte[] command = DynamographCommands.FullCommandDictionary["SensorLoadNKP"];
 
-            return moldCommand(command, nkp);
+            return GenerateWriteCommand(command, nkp);
         }
 
         public byte[] SensorLoadRKP(float value)
@@ -107,7 +107,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             var rkp = BitConverter.GetBytes(Convert.ToSingle(value));
             byte[] command = DynamographCommands.FullCommandDictionary["SensorLoadRKP"];
 
-            return moldCommand(command, rkp);
+            return GenerateWriteCommand(command, rkp);
         }
 
         public byte[] SensorAcceleration0G(float value)
@@ -115,7 +115,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             var zeroG = BitConverter.GetBytes(Convert.ToSingle(value));
             byte[] command = DynamographCommands.FullCommandDictionary["SensorAcceleration0G"];
 
-            return moldCommand(command, zeroG);
+            return GenerateWriteCommand(command, zeroG);
         }
 
         public byte[] SensorAcceleration1G(float value)
@@ -123,7 +123,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             var oneG = BitConverter.GetBytes(Convert.ToSingle(value));
             byte[] command = DynamographCommands.FullCommandDictionary["SensorAcceleration1G"];
 
-            return moldCommand(command, oneG);
+            return GenerateWriteCommand(command, oneG);
         }
 
         public byte[] SwitchingInterval(int value)
@@ -131,7 +131,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             var interval = BitConverter.GetBytes(Convert.ToUInt32(value));
             byte[] command = DynamographCommands.FullCommandDictionary["SwitchingInterval"];
 
-            return moldCommand(command, interval);
+            return GenerateWriteCommand(command, interval);
         }
 
         public byte[] SensorAccelerationMinus1G(float value)
@@ -139,7 +139,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             var minusOneG = BitConverter.GetBytes(Convert.ToSingle(value));
             byte[] command = DynamographCommands.FullCommandDictionary["SensorAccelerationMinus1G"];
 
-            return moldCommand(command, minusOneG);
+            return GenerateWriteCommand(command, minusOneG);
         }
 
         public byte[] ZeroOffsetTemperature(float value)
@@ -147,7 +147,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             var zeroOffsetTemperature = BitConverter.GetBytes(Convert.ToSingle(value));
             byte[] command = DynamographCommands.FullCommandDictionary["ZeroOffsetTemperature"];
 
-            return moldCommand(command, zeroOffsetTemperature);
+            return GenerateWriteCommand(command, zeroOffsetTemperature);
         }
 
         public byte[] SlopeFactorTemperature(float value)
@@ -155,7 +155,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             var slope = BitConverter.GetBytes(Convert.ToSingle(value));
             byte[] command = DynamographCommands.FullCommandDictionary["SlopeFactorTemperature"];
 
-            return moldCommand(command, slope);
+            return GenerateWriteCommand(command, slope);
         }
 
         public byte[] OffInterval(int value)
@@ -163,7 +163,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             var interval = BitConverter.GetBytes(Convert.ToUInt16(value));
             byte[] command = DynamographCommands.FullCommandDictionary["TimeOff"];
 
-            return moldCommand(command, interval);
+            return GenerateWriteCommand(command, interval);
         }
 
         public byte[] EnableOff(int value)
@@ -171,7 +171,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             var flag = BitConverter.GetBytes(Convert.ToUInt16(value));
             byte[] command = DynamographCommands.FullCommandDictionary["EnableTimeOff"];
 
-            return moldCommand(command, flag);
+            return GenerateWriteCommand(command, flag);
         }
     }
 }

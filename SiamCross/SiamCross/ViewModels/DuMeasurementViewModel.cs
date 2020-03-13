@@ -50,10 +50,10 @@ namespace SiamCross.ViewModels
             try
             {
                 StartMeasurementCommand = new Command(() => { });
-                if (!ValidateForEmptinessEveryParameter())
-                {
-                    return;
-                }
+                //if (!ValidateForEmptinessEveryParameter())
+                //{
+                //    return;
+                //}
 
                 var secondaryParameters = new DuMeasurementSecondaryParameters(
                     _sensorData.Name,
@@ -73,7 +73,7 @@ namespace SiamCross.ViewModels
                     secondaryParameters);
 
                 await App.Navigation.PopAsync();
-                //await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);
+                await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);
             }
             catch (Exception ex)
             {

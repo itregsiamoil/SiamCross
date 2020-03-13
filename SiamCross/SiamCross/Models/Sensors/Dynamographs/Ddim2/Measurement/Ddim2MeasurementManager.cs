@@ -12,7 +12,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement
     public class Ddim2MeasurementManager
     {
         private IBluetoothAdapter _bluetoothAdapter;
-        private Ddim2DeviceConfigCommandGenerator _configGenerator;
+        private CommandGenerator _configGenerator;
         private Ddim2MeasurementStartParameters _measurementParameters;
         private Ddim2MeasurementReport _report;
         public SensorData SensorData { get; private set; }
@@ -27,7 +27,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement
         {
             _bluetoothAdapter = bluetoothAdapter;
             _measurementParameters = measurementParameters;
-            _configGenerator = new Ddim2DeviceConfigCommandGenerator();
+            _configGenerator = new CommandGenerator();
             SensorData = sensorData;
 
             _currentDynGraph = new List<byte[]>();

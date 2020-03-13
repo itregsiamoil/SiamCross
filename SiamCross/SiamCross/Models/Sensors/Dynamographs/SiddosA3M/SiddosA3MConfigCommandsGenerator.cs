@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 {
-    public class SiddosA3MConfigCommandsGenerator : Ddim2DeviceConfigCommandGenerator
+    public class SiddosA3MConfigCommandsGenerator : CommandGenerator
     {
     }
 }

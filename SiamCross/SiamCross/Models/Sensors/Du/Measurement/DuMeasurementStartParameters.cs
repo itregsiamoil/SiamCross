@@ -3,7 +3,6 @@
     public class DuMeasurementStartParameters
     {
         public bool Amplification { get; }
-
         public bool Inlet { get; }
         public DuMeasurementSecondaryParameters SecondaryParameters { get; }
         public DuMeasurementStartParameters(bool amplification, bool inlet,

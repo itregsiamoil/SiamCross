@@ -87,6 +87,24 @@ namespace SiamCross.Models.Sensors.Du
                         ExportByteData(DuCommandsEnum.ResearchTitle, message);
                         Console.WriteLine("Read Measurement Report");
                         break;
+                    case DuCommandsEnum.Revbit:
+                        var payload = GetPayload(message);
+                        Debug.WriteLine(BitConverter.ToString(payload));
+                        Debug.WriteLine(AddZerosToBinary(Convert.ToString(payload[1], 2)));
+                        Debug.WriteLine(AddZerosToBinary(Convert.ToString(payload[0], 2)));
+
+                        string AddZerosToBinary(string binary)
+                        {
+                            if (binary.Length < 8)
+                            {
+                                while (binary.Length < 8)
+                                {
+                                    binary = binary.Insert(0, "0");
+                                }
+                            }
+                            return binary;
+                        }
+                        break;
                 }
                 //Если команда чтения
                 if (message[3] == 0x01)

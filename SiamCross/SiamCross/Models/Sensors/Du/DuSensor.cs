@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Du.Measurement;
+using SiamCross.Models.Sensors.Dynamographs.Ddim2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -139,9 +140,24 @@ namespace SiamCross.Models.Sensors.Du
             await BluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure]);
         }
 
-        public Task StartMeasurement(object measurementParameters)
+        public async Task StartMeasurement(object measurementParameters)
         {
-            throw new NotImplementedException();
+            IsMeasurement = true;
+            var _commandGenerator = new CommandGenerator();
+            
+            await BluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Revbit]);
+            byte[] data = new byte[]
+            {
+                Convert.ToByte("00000001", 2),
+                Convert.ToByte("00000001", 2)
+            };
+
+            byte[] command = _commandGenerator.GenerateWriteCommand(
+                DuCommands.FullCommandDictionary[DuCommandsEnum.Revbit], data);
+
+            await BluetoothAdapter.SendData(command);
+            await BluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Revbit]);
+            IsMeasurement = false;
         }
 
         private void MeasurementRecieveHandler(DuCommandsEnum commandName, byte[] data)
