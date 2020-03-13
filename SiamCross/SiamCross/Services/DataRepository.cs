@@ -188,9 +188,13 @@ namespace SiamCross.Services
             _database.Execute(@"
             CREATE TABLE IF NOT EXISTS [DuMeasurement] (
                 [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                [Urov] INTEGER NOT NULL,
-                [Otr] INTEGER NOT NULL,
+                [FluidLevel] INTEGER NOT NULL,
+                [NumberOfReflections] INTEGER NOT NULL,
+                [AnnularPressure] INTEGER NOT NULL,
                 [Echogram] BLOB,
+                [SoundSpeed] NVARCHAR(128) NOT NULL,
+                [MeasurementType] NVARCHAR(128) NOT NULL,
+                [SoundSpeedCorrection] NVARCHAR(128) NOT NULL,
                 [DateTime] TEXT NOT NULL,
                 [Field] NVARCHAR(128) NOT NULL,
                 [Well] NVARCHAR(128) NOT NULL,
@@ -228,8 +232,8 @@ namespace SiamCross.Services
                         "Value (@Urov, @Otr, @Echogram, @DateTime,  @Field, @Well, @Bush, @Shop, @BufferPressure, @Comment, @Name);";
                 var affectedRows = _database.Execute(sql, new
                 {
-                    duMeasurement.Urov,
-                    duMeasurement.Otr,
+                    duMeasurement.FluidLevel,
+                    duMeasurement.NumberOfReflections,
                     duMeasurement.Echogram,
                     duMeasurement.DateTime,
                     duMeasurement.Field,
@@ -258,8 +262,8 @@ namespace SiamCross.Services
                     " Comment = @Comment, Name = @Name WHERE Id = @Id;";
                 var affectedRows = _database.Execute(sql, new
                 {
-                    duMeasurement.Urov,
-                    duMeasurement.Otr,
+                    duMeasurement.FluidLevel,
+                    duMeasurement.NumberOfReflections,
                     duMeasurement.Echogram,
                     duMeasurement.DateTime,
                     duMeasurement.Field,

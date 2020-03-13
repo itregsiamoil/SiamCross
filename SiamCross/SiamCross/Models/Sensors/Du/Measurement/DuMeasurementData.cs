@@ -10,14 +10,12 @@ namespace SiamCross.Models.Sensors.Du.Measurement
         public List<byte> Echogram { get; }
         public int FluidLevel { get; }
         public int AnnularPressure { get; }
-        public float SoundSpeed { get; }
         public int NumberOfReflections { get; }
         public DateTime Date { get; }
 
         public DuMeasurementData(List<byte> echogram, 
                                  int fluidLevel,
                                  int annualPressure,
-                                 float soundSpeed,
                                  int numberOfReflections,
                                  DateTime date,
                                  DuMeasurementSecondaryParameters secondaryParameters)
@@ -25,7 +23,6 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             Echogram = echogram;
             FluidLevel = fluidLevel;
             AnnularPressure = annualPressure;
-            SoundSpeed = soundSpeed;
             NumberOfReflections = numberOfReflections;
             Date = date;
             SecondaryParameters = secondaryParameters;
