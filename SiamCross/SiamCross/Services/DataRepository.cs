@@ -228,13 +228,20 @@ namespace SiamCross.Services
                 }
 
                 string sql = "INSERT INTO DuMeasurement " +
-                        "(Urov, Otr, Echogram, DateTime, Field, Well, Bush, Shop, BufferPressure, Comment, Name)" +
-                        "Value (@Urov, @Otr, @Echogram, @DateTime,  @Field, @Well, @Bush, @Shop, @BufferPressure, @Comment, @Name);";
+                        "(FluidLevel, NumberOfReflections, AnnularPressure, Echogram, SoundSpeed, MeasurementType, " +
+                        "SoudSpeedCorrection, DateTime, Field, Well, Bush, Shop, BufferPressure, Comment, Name)" +
+                        "Value (@FluidLevel, @NumberOfReflections, @AnnularPressure, @Echogram, @SoundSpeed, " +
+                        "@MeasurementType, @SoudSpeedCorrection, @DateTime,  @Field, @Well, @Bush, @Shop, " +
+                        "@BufferPressure, @Comment, @Name);";
                 var affectedRows = _database.Execute(sql, new
                 {
                     duMeasurement.FluidLevel,
                     duMeasurement.NumberOfReflections,
+                    duMeasurement.AnnularPressure,
                     duMeasurement.Echogram,
+                    duMeasurement.SoundSpeed,
+                    duMeasurement.MeasurementType,
+                    duMeasurement.SoundSpeedCorrection,
                     duMeasurement.DateTime,
                     duMeasurement.Field,
                     duMeasurement.Well,
@@ -252,19 +259,27 @@ namespace SiamCross.Services
             return duMeasurement.Id;
         }
 
+        
         public void UpdateDuMeasurement(DuMeasurement duMeasurement)
         {
             try
             {
                 string sql = "UPDATE DuMeasurement SET " +
-                    "Urov = @Urov, Otr = @Otr, Echogram = @Echogram, DateTime = @DateTime," +
+                    "FluidLevel = @FluidLevel, NumberOfReflections = @NumberOfReflecions, " +
+                    "AnnularPressure = @AnnularPressure, Echogram = @Echogram, SoundSpeed = @SoundSpeedd, " +
+                    "MeasurementType = @MeasurementType, SoundSpeedCorrection = @SoundSpeedCorrection, " +
+                    "DateTime = @DateTime," +
                     " Field = @Field, Well = @Well, Bush = @Bush, Shop = @Shop, BufferPressure = @BufferPressure," +
                     " Comment = @Comment, Name = @Name WHERE Id = @Id;";
                 var affectedRows = _database.Execute(sql, new
                 {
                     duMeasurement.FluidLevel,
                     duMeasurement.NumberOfReflections,
+                    duMeasurement.AnnularPressure,
                     duMeasurement.Echogram,
+                    duMeasurement.SoundSpeed,
+                    duMeasurement.MeasurementType,
+                    duMeasurement.SoundSpeedCorrection,
                     duMeasurement.DateTime,
                     duMeasurement.Field,
                     duMeasurement.Well,
