@@ -505,4 +505,10 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="Editing" xml:space="preserve">
     <value>Editing</value>
   </data>
+  <data name="Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
 </root>

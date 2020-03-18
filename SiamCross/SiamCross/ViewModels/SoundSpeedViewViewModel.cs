@@ -24,9 +24,6 @@ namespace SiamCross.ViewModels
 
         private SoundSpeedModel _targetSoundSpeed;
 
-        private string NewName;
-        private string NewCode;
-
         public string Name { get; set; }
 
         public string Code { get; set; }

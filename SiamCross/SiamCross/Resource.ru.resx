@@ -514,4 +514,10 @@
   <data name="Editing" xml:space="preserve">
     <value>Редактирование</value>
   </data>
+  <data name="Code" xml:space="preserve">
+    <value>Код</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Имя</value>
+  </data>
 </root>
