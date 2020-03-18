@@ -114,6 +114,7 @@ namespace SiamCross.Droid.Models
                 if (backingFile == null || !File.Exists(backingFile))
                 {
                     soundSpeedList.AddRange(CreateDefaultSoundSpeeds());
+                    SaveSoundSpeeds(soundSpeedList);
 
                     return soundSpeedList;
                 }
@@ -131,11 +132,8 @@ namespace SiamCross.Droid.Models
 
                         switch (item)
                         {
-                            case List<SoundSpeedModel> fileSoundSpeedList:
-                                foreach (var node in fileSoundSpeedList)
-                                {
-                                    soundSpeedList.Add(node);
-                                }
+                            case SoundSpeedModel soundSpeedItem:
+                                soundSpeedList.Add(soundSpeedItem);
                                 break;
                             default:
                                 break;

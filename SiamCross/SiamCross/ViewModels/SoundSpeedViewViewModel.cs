@@ -16,6 +16,8 @@ namespace SiamCross.ViewModels
             _targetSoundSpeed = soundSpeed;
             Edit = new Command(TrySaveEdits);
             _toater = DependencyService.Get<IToast>();
+            Name = soundSpeed.Name;
+            Code = soundSpeed.Code.ToString();
         }
 
         private IToast _toater;
@@ -25,29 +27,15 @@ namespace SiamCross.ViewModels
         private string NewName;
         private string NewCode;
 
-        public string Name
-        {
-            get => _targetSoundSpeed.Name;
-            set
-            {
-                NewName = value;
-            }
-        }
+        public string Name { get; set; }
 
-        public string Code
-        {
-            get => _targetSoundSpeed.Code.ToString();
-            set
-            {
-                NewCode = value;
-            }
-        }
+        public string Code { get; set; }
 
         public ICommand Edit { get; set; }
 
         private void TrySaveEdits()
         {
-            if(string.IsNullOrWhiteSpace(Name) && 
+            if(string.IsNullOrWhiteSpace(Name) || 
                string.IsNullOrWhiteSpace(Code))
             {
                 _toater.Show(Resource.FillInAllTheFields);
