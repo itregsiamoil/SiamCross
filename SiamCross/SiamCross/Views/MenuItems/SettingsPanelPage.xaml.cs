@@ -15,11 +15,11 @@ namespace SiamCross.Views.MenuItems
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 
-        private readonly ViewModel<SettingsViewModel> _vm;
+        private readonly ViewModelWrap<SettingsViewModel> _vm;
         public SettingsPanelPage()
         {
-            _vm = new ViewModel<SettingsViewModel>();
-            this.BindingContext = _vm.GetViewModel;
+            _vm = new ViewModelWrap<SettingsViewModel>();
+            this.BindingContext = _vm.ViewModel;
             InitializeComponent();
             if (Settings.Instance.IsNeedAuthorization)
             {
@@ -45,7 +45,7 @@ namespace SiamCross.Views.MenuItems
         private void CheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
         {
             SwitchFieldsEnability();
-            _vm.GetViewModel.NeedAuthorization = e.Value;
+            _vm.ViewModel.NeedAuthorization = e.Value;
         }
 
         private void SwitchFieldsEnability()

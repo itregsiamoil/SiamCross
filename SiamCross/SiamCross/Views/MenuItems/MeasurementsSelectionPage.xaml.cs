@@ -14,18 +14,18 @@ namespace SiamCross.Views.MenuItems
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MeasurementsSelectionPage : ContentPage
     {
-        private readonly ViewModel<MeasurementsSelectionViewModel> _vm;
+        private readonly ViewModelWrap<MeasurementsSelectionViewModel> _vm;
 
         public MeasurementsSelectionPage(ObservableCollection<MeasurementView> measurements)
         {
-            _vm = new ViewModel<MeasurementsSelectionViewModel>(measurements);
-            this.BindingContext = _vm.GetViewModel;
+            _vm = new ViewModelWrap<MeasurementsSelectionViewModel>(measurements);
+            this.BindingContext = _vm.ViewModel;
             InitializeComponent();
         }
 
         private async void ToolbarItem_Clicked(object sender, EventArgs e)
         {
-            _vm.GetViewModel.SaveMeasurements(sender);
+            _vm.ViewModel.SaveMeasurements(sender);
         }
     }
 }

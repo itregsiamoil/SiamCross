@@ -16,8 +16,8 @@ namespace SiamCross.Views
         private Ddim2MeasurementViewModel _vm;
         public Ddim2MeasurementPage(SensorData sensorData)
         {
-            var vm = new ViewModel<Ddim2MeasurementViewModel>(sensorData);
-            _vm = vm.GetViewModel;
+            var vm = new ViewModelWrap<Ddim2MeasurementViewModel>(sensorData);
+            _vm = vm.ViewModel;
             BindingContext = _vm;
             _stopwatch = new Stopwatch();
             InitializeComponent();

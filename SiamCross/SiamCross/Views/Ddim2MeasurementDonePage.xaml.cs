@@ -29,8 +29,8 @@ namespace SiamCross.Views
             try
             {
                 _measurement = measurement;
-                var vm = new ViewModel<Ddim2MeasurementDoneViewModel>(measurement);
-                this.BindingContext = vm.GetViewModel;
+                var vm = new ViewModelWrap<Ddim2MeasurementDoneViewModel>(measurement);
+                this.BindingContext = vm.ViewModel;
                 InitializeComponent();
 
                 _points = DgmConverter.GetXYs(_measurement.DynGraph.ToList(),

@@ -15,8 +15,8 @@ namespace SiamCross.Views
         private Stopwatch _stopwatch;
         public SiddosA3MMeasurementPage(SensorData sensorData)
         {
-            var vm = new ViewModel<SiddosA3MMeasurementViewModel>(sensorData);
-            BindingContext = vm.GetViewModel;
+            var vm = new ViewModelWrap<SiddosA3MMeasurementViewModel>(sensorData);
+            BindingContext = vm.ViewModel;
             _stopwatch = new Stopwatch();
             InitializeComponent();
         }

@@ -16,7 +16,7 @@ namespace SiamCross.Views.MenuItems
         private MeasurementsViewModel _vm;
         public MeasurementsPage()
         {
-            _vm = new ViewModel<MeasurementsViewModel>().GetViewModel;
+            _vm = new ViewModelWrap<MeasurementsViewModel>().ViewModel;
             this.BindingContext = _vm;
             InitializeComponent();
         }

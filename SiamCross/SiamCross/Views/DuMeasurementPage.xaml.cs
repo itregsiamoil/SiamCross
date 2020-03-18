@@ -17,8 +17,8 @@ namespace SiamCross.Views
         private DuMeasurementViewModel _vm;
         public DuMeasurementPage(SensorData sensorData)
         {
-            var vm = new ViewModel<DuMeasurementViewModel>(sensorData);
-            _vm = vm.GetViewModel;
+            var vm = new ViewModelWrap<DuMeasurementViewModel>(sensorData);
+            _vm = vm.ViewModel;
             this.BindingContext = _vm;
             InitializeComponent();
         }

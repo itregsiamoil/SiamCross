@@ -19,8 +19,8 @@ namespace SiamCross.Views.MenuItems
     {
         public ControlPanelPage()
         {
-            var vm = new ViewModel<ControlPanelPageViewModel>();
-            BindingContext = vm.GetViewModel;
+            var vm = new ViewModelWrap<ControlPanelPageViewModel>();
+            BindingContext = vm.ViewModel;
             InitializeComponent();
             var checkBuetooth = new Thread(async () =>
             {

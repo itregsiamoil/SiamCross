@@ -33,8 +33,8 @@ namespace SiamCross.Views
             try
             {
                 _measurement = measurement;
-                var vm = new ViewModel<SiddosA3MMeasurementDoneViewModel>(measurement);
-                this.BindingContext = vm.GetViewModel;
+                var vm = new ViewModelWrap<SiddosA3MMeasurementDoneViewModel>(measurement);
+                this.BindingContext = vm.ViewModel;
                 InitializeComponent();
 
                 _points = DgmConverter.GetXYs(_measurement.DynGraph.ToList(),

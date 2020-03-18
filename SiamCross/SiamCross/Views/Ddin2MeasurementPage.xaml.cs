@@ -16,8 +16,8 @@ namespace SiamCross.Views
 
         public Ddin2MeasurementPage(SensorData sensorData)
         {
-            var vm = new ViewModel<Ddin2MeasurementViewModel>(sensorData);
-            BindingContext = vm.GetViewModel;
+            var vm = new ViewModelWrap<Ddin2MeasurementViewModel>(sensorData);
+            BindingContext = vm.ViewModel;
             _stopwatch = new Stopwatch();
             InitializeComponent();
         }

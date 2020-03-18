@@ -20,7 +20,7 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
         public ScanningTab()
         {
             InitializeComponent();
-            _vm = new ViewModel<ScannerViewModel>().GetViewModel;
+            _vm = new ViewModelWrap<ScannerViewModel>().ViewModel;
             this.BindingContext = _vm;
             _vm.ScanTimeoutElapsed += () => ScanAnimation.IsRunning = false;
             scannedDevicesList.RefreshCommand = new Command(() =>

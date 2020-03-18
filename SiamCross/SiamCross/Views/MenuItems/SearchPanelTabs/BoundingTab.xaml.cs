@@ -21,8 +21,8 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
         public BoundingTab()
         {
             InitializeComponent();
-            var vm = new ViewModel<ScannerViewModel>();
-            _viewModel = vm.GetViewModel;
+            var vm = new ViewModelWrap<ScannerViewModel>();
+            _viewModel = vm.ViewModel;
             this.BindingContext = _viewModel;
             boundedDevicesList.RefreshCommand = new Command(() =>
             {

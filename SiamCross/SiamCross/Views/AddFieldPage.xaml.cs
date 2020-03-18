@@ -15,8 +15,8 @@ namespace SiamCross.Views
     {
         public AddFieldPage()
         {
-            var vm = new ViewModel<AddFieldViewModel>();
-            this.BindingContext = vm.GetViewModel;
+            var vm = new ViewModelWrap<AddFieldViewModel>();
+            this.BindingContext = vm.ViewModel;
             InitializeComponent();
         }
     }

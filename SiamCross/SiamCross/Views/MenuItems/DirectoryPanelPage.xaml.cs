@@ -15,8 +15,8 @@ namespace SiamCross.Views.MenuItems
     {
         public DirectoryPanelPage()
         {
-            var vm = new ViewModel<DirectoryViewModel>();
-            this.BindingContext = vm.GetViewModel;
+            var vm = new ViewModelWrap<DirectoryViewModel>();
+            this.BindingContext = vm.ViewModel;
             InitializeComponent();
         }
     }
