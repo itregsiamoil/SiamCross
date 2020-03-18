@@ -47,8 +47,7 @@ namespace SiamCross.Views
                 base.OnDisappearing();
                 DataRepository.Instance.SaveDuMeasurement(_measurement);
                 MessagingCenter
-                    .Send<DuMeasurementDonePage, DuMeasurement>(
-                    this, "Refresh measurement", _measurement);
+                    .Send(this, "Refresh measurement", _measurement);
             }
             catch (Exception ex)
             {
