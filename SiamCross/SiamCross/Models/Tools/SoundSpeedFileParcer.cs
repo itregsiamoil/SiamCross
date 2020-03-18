@@ -7,9 +7,9 @@ namespace SiamCross.Models.Tools
 {
     public class SoundSpeedFileParcer
     {
-        public Dictionary<float, float> TryToParce(Stream stream)
+        public List<KeyValuePair<float, float>> TryToParce(Stream stream)
         {
-            var soundSpeedsDictionary = new Dictionary<float, float>();
+            var soundSpeedsList = new List<KeyValuePair<float, float>>();
 
             using (var reader = new StreamReader(stream))
             {
@@ -33,8 +33,10 @@ namespace SiamCross.Models.Tools
                     }
                     try
                     {
-                        soundSpeedsDictionary.Add(float.Parse(lineValues[1].Replace(".", ",")),
-                            float.Parse(lineValues[2].Replace(".", ",")));
+                        soundSpeedsList.Add(
+                            new KeyValuePair<float, float>(
+                                float.Parse(lineValues[1].Replace(".", ",")),
+                                float.Parse(lineValues[2].Replace(".", ","))));                   
                     }
                     catch
                     {
@@ -43,7 +45,7 @@ namespace SiamCross.Models.Tools
                 }
             }
 
-            return soundSpeedsDictionary;
+            return soundSpeedsList;
         }
     }
 }

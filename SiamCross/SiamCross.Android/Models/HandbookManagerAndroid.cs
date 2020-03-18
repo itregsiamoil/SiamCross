@@ -179,11 +179,7 @@ namespace SiamCross.Droid.Models
             var langepasDictionary = soundFileParcer.TryToParce(langepasStream);
 
             Stream tatariaStream = assembly.GetManifestResourceStream("SiamCross.DefaultSoundSpeedResources.tataria");
-            var tatariaDictonary = soundFileParcer.TryToParce(tatariaStream);
-
-            
-
-
+            var tatariaDictonary = soundFileParcer.TryToParce(tatariaStream);           
 
             return new List<SoundSpeedModel>()
             {

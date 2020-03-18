@@ -26,12 +26,12 @@ namespace SiamCross.Models.Tools
             }
         }
 
-        public Dictionary<float, float> LevelSpeedTable { get; set; }
+        public List<KeyValuePair<float, float>> LevelSpeedTable { get; set; }
 
         private int _code;
         private string _name;
 
-        public SoundSpeedModel(int code, string name, Dictionary<float, float> table)
+        public SoundSpeedModel(int code, string name, List<KeyValuePair<float, float>> table)
         {
             Code = code;
             Name = name;
