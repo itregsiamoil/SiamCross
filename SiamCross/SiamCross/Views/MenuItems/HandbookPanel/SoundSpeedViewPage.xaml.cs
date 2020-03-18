@@ -16,8 +16,8 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
     {
         public SoundSpeedViewPage(SoundSpeedModel soundSpeedModel)
         {
-            var vm = new ViewModel<SoundSpeedViewViewModel>(soundSpeedModel);
-            this.BindingContext = vm.GetViewModel;
+            var vm = new ViewModelWrap<SoundSpeedViewViewModel>(soundSpeedModel);
+            this.BindingContext = vm.ViewModel;
             InitializeComponent();
         }
     }

@@ -52,6 +52,7 @@ namespace SiamCross.Services
                 CreateDdim2Table();
                 CreateDdin2Table();
                 CreateSiddosA3MTable();
+                CreateDuTable();
             }
             catch(Exception e)
             {

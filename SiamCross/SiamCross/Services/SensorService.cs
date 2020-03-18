@@ -155,35 +155,39 @@ namespace SiamCross.Services
 
         public async void MeasurementHandler(object measurementArgs)
         {
-            int addbleId;
+            int addId;
             switch (measurementArgs)
             {
                 case Ddim2MeasurementData ddim2Data:
                     var dbModelDdim2 = new Ddim2Measurement(ddim2Data);
-                    addbleId = DataRepository.Instance.SaveDdim2Measurement(dbModelDdim2);
+                    addId = DataRepository.Instance.SaveDdim2Measurement(dbModelDdim2);
 
                     await App.NavigationPage.Navigation.PushAsync(
                         new Ddim2MeasurementDonePage(
-                            DataRepository.Instance.GetDdim2MeasurementById(addbleId)), true);
+                            DataRepository.Instance.GetDdim2MeasurementById(addId)), true);
                     break;
                 case Ddin2MeasurementData ddin2Data:
                     var dbModelDdin2 = new Ddin2Measurement(ddin2Data);
-                    addbleId = DataRepository.Instance.SaveDdin2Measurement(dbModelDdin2);
-                    var dbObj = DataRepository.Instance.GetDdin2MeasurementById(addbleId);
+                    addId = DataRepository.Instance.SaveDdin2Measurement(dbModelDdin2);
+                    var dbObj = DataRepository.Instance.GetDdin2MeasurementById(addId);
 
                     await App.NavigationPage.Navigation.PushAsync(
                            new Ddin2MeasurementDonePage(dbObj), true);                    
                     break;
                 case SiddosA3MMeasurementData siddosA3M:
                     var dbModelsiddosA3M = new SiddosA3MMeasurement(siddosA3M);
-                    addbleId = DataRepository.Instance.SaveSiddosA3MMeasurement(dbModelsiddosA3M);
+                    addId = DataRepository.Instance.SaveSiddosA3MMeasurement(dbModelsiddosA3M);
                     await App.NavigationPage.Navigation.PushAsync(
                             new SiddosA3MMeasurementDonePage(
-                                DataRepository.Instance.GetSiddosA3MMeasurementById(addbleId)),
+                                DataRepository.Instance.GetSiddosA3MMeasurementById(addId)),
                                 true);
                     break;
                 case DuMeasurementData duData:
-                    var data = duData;
+                    var dbModelDu = new DuMeasurement(duData);
+                    addId = DataRepository.Instance.SaveDuMeasurement(dbModelDu);
+                    await App.NavigationPage.Navigation.PushAsync(
+                        new DuMeasurementDonePage(DataRepository.Instance.GetDuMeasurementById(addId)), 
+                        true);
                     break;
                 default:
                     break;

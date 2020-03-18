@@ -3,9 +3,11 @@ using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Models;
 using SiamCross.Models.Sensors.Du.Measurement;
+using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using System;
+using System.Linq;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -35,6 +37,11 @@ namespace SiamCross.ViewModels
                     Resource.DynamicLevel,
                     Resource.StaticLevel
                 };
+                SoundSpeedCorrections = new ObservableCollection<string>();
+                foreach (var elem in HandbookData.Instance.GetSoundSpeedList())
+                {
+                    SoundSpeedCorrections.Add(elem.ToString());
+                }
                 StartMeasurementCommand = new Command(StartMeasurementHandler);
                 ValveTestCommand = new Command(() => DependencyService.Get<IToast>().Show(Resource.ValveTest));
             }
@@ -65,7 +72,7 @@ namespace SiamCross.ViewModels
                     BufferPressure,
                     Comments,
                     SelectedReasearchType,
-                    SelectedSoundSpeedCorrection,
+                    SelectedSoundSpeedCorrection.ToString(),
                     SoundSpeed);
 
                 var measurementParams = new DuMeasurementStartParameters(Amplification,

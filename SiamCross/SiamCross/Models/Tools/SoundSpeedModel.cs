@@ -7,6 +7,8 @@ namespace SiamCross.Models.Tools
 {
     public class SoundSpeedModel : INotifyPropertyChanged
     {
+        private int _code;
+        private string _name;
         public int Code
         {
             get => _code;
@@ -27,9 +29,8 @@ namespace SiamCross.Models.Tools
         }
 
         public Dictionary<float, float> LevelSpeedTable { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
-        private int _code;
-        private string _name;
 
         public SoundSpeedModel(int code, string name, Dictionary<float, float> table)
         {
@@ -37,6 +38,10 @@ namespace SiamCross.Models.Tools
             Name = name;
             LevelSpeedTable = table;
         }
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
+        public override string ToString()
+        {
+            return $"{Name}: {Code}";
+        }
     }
 }

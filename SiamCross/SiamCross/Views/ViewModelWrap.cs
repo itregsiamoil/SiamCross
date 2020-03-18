@@ -75,11 +75,11 @@ namespace SiamCross.Views
             }
         }
 
-        public ViewModel(SoundSpeedModel soundSpeedModel)
+        public ViewModelWrap(SoundSpeedModel soundSpeedModel)
         {
             using (var scope = AppContainer.Container.BeginLifetimeScope())
             {
-                GetViewModel = AppContainer.Container.Resolve<T>(
+                ViewModel = AppContainer.Container.Resolve<T>(
                     new TypedParameter(
                         typeof(SoundSpeedModel), soundSpeedModel));
             }
