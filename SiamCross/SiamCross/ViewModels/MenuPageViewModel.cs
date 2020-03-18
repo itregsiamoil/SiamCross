@@ -10,6 +10,8 @@ using SiamCross.Services.Logging;
 using SiamCross.AppObjects;
 using Autofac;
 using NLog;
+using SiamCross.Views.MenuItems.SearchPanel;
+using SiamCross.Views.MenuItems.HandbookPanel;
 
 namespace SiamCross.ViewModels
 {
@@ -41,12 +43,6 @@ namespace SiamCross.ViewModels
             set
             {
                 _selectedItem = value;
-
-                //if (_selectedItem == null) return;
-
-                //_selectedItem.Command?.Execute(this);
-
-                //SelectedItem = null;
             }
         }
         public MenuPageViewModel()
@@ -54,7 +50,7 @@ namespace SiamCross.ViewModels
             GoControlPanel = new Command(GoHome);
             GoSearchPanel = new Command(GoSearch);
             GoMeasuringPanel = new Command(GoMeasuring);
-            GoDirectoryPanel = new Command(GoDirectory);
+            GoDirectoryPanel = new Command(GoHandbook);
             GoSettingsPanel = new Command(GoSettings);
             GoAboutPanel = new Command(GoAbout);
 
@@ -139,11 +135,11 @@ namespace SiamCross.ViewModels
             }
         }
 
-        void GoDirectory(object obj)
+        void GoHandbook(object obj)
         {
-            if (CanOpenPage(typeof(DirectoryPanelPage)))
+            if (CanOpenPage(typeof(DirectoryPage)))
             {
-                App.NavigationPage.Navigation.PushAsync(new DirectoryPanelPage());
+                App.NavigationPage.Navigation.PushAsync(new HandbookPage());
                 App.MenuIsPresented = false;
             }
         }

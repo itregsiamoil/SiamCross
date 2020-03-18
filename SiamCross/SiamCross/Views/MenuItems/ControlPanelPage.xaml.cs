@@ -95,7 +95,6 @@ namespace SiamCross.Views.MenuItems
             }
         }
 
-
         private bool CanOpenMeasurement(SensorData sensorData)
         {
             bool result = true;

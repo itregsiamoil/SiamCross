@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SiamCross.Views.MenuItems.HandbookPanel.DirectoryPage"
+             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
+             Title="{local:Translate Fields}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource ="plus.png"  Command="{Binding AddField}"/>
+        <ToolbarItem IconImageSource ="trashcan.png"  Command="{Binding Remove}"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout>
+            <ListView ItemsSource="{Binding Fields, Mode=TwoWay}" SelectedItem="{Binding SelectedField}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <Grid Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="{Binding Key}" 
+                                           FontSize="Medium"
+                                           Grid.Column="0"/>
+                                    <Label Text=": " 
+                                           Grid.Column="1"/>
+                                    <Label Text="{Binding Code}" 
+                                           FontSize="Medium"
+                                           Grid.Column="2"/>
+                                </Grid>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

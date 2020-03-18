@@ -10,6 +10,7 @@ using SiamCross.AppObjects;
 using Autofac;
 using NLog;
 using SiamCross.Models.Adapters;
+using System.Diagnostics;
 
 namespace SiamCross.ViewModels
 {
@@ -60,6 +61,8 @@ namespace SiamCross.ViewModels
 
         private void SensorAdded(SensorData sensorData)
         {
+
+            Debug.WriteLine("SensorAdded in view");
             if (!SensorsData.Contains(sensorData))
             {
                 SensorsData.Add(sensorData);

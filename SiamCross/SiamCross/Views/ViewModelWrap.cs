@@ -2,6 +2,7 @@
 using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
+using SiamCross.Models.Tools;
 using SiamCross.ViewModels;
 using System.Collections.ObjectModel;
 
@@ -71,6 +72,16 @@ namespace SiamCross.Views
                 ViewModel = AppContainer.Container.Resolve<T>(
                     new TypedParameter(
                         typeof(ObservableCollection<MeasurementView>), measurements));
+            }
+        }
+
+        public ViewModel(SoundSpeedModel soundSpeedModel)
+        {
+            using (var scope = AppContainer.Container.BeginLifetimeScope())
+            {
+                GetViewModel = AppContainer.Container.Resolve<T>(
+                    new TypedParameter(
+                        typeof(SoundSpeedModel), soundSpeedModel));
             }
         }
     }

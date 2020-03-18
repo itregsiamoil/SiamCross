@@ -457,9 +457,6 @@
     <value>Смещение нуля датчика давления , 0.1атм</value>
     <comment>смещение нуля датчика давления , 0.1атм</comment>
   </data>
-  <data name="String1" xml:space="preserve">
-    <value />
-  </data>
   <data name="Amplification" xml:space="preserve">
     <value>Усиление</value>
   </data>
@@ -516,5 +513,17 @@
   </data>
   <data name="NumberOfReflections" xml:space="preserve">
     <value>Количество отражений</value>
+  </data>
+  <data name="Fields" xml:space="preserve">
+    <value>Месторождения</value>
+  </data>
+  <data name="Langepas" xml:space="preserve">
+    <value>Лангепас</value>
+  </data>
+  <data name="Tataria" xml:space="preserve">
+    <value>Татария</value>
+  </data>
+  <data name="Editing" xml:space="preserve">
+    <value>Редактирование</value>
   </data>
 </root>

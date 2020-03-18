@@ -35,6 +35,8 @@ namespace SiamCross.AppObjects
             cb.RegisterType<SettingsViewModel>().AsSelf(); 
             cb.RegisterType<AddFieldViewModel>().AsSelf();
             cb.RegisterType<DuMeasurementViewModel>().AsSelf();
+            cb.RegisterType<SoundSpeedViewModel>().AsSelf();
+            cb.RegisterType<SoundSpeedViewViewModel>().AsSelf();
         }
     }
 }

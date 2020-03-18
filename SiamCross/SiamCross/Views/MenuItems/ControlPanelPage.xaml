@@ -32,9 +32,11 @@
                                         <Label HorizontalOptions="StartAndExpand" Text="{Binding Name}" FontSize="18" 
                                                Grid.Row="0" Grid.Column="0"/>
                                         <Label HorizontalOptions="Start" Text="{Binding Type}" Grid.Row="1" Grid.Column="0" />
-                                        
-                                        <Label HorizontalOptions="Start" Text="{local:Translate Firmware}" Grid.Row="1" Grid.Column="1"/>
-                                            <Label HorizontalOptions="EndAndExpand" Text="{Binding Firmware}" Grid.Row="1" Grid.Column="1"/>
+
+                                        <StackLayout Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                                            <Label HorizontalOptions="Start" Text="{local:Translate Firmware}" />
+                                            <Label HorizontalOptions="EndAndExpand" Text="{Binding Firmware}" />
+                                        </StackLayout>
                                         
                                         <Label HorizontalOptions="StartAndExpand" Text="{Binding Status}" Grid.Row="2" Grid.Column="0"/>
                                         <Button HorizontalOptions="EndAndExpand" 

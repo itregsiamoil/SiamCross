@@ -17,6 +17,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="DefaultSoundSpeedResources\langepas" />
+    <None Remove="DefaultSoundSpeedResources\tataria" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="DefaultSoundSpeedResources\langepas" />
+    <EmbeddedResource Include="DefaultSoundSpeedResources\tataria" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.4" />
     <PackageReference Include="Dapper" Version="2.0.30" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
@@ -38,6 +48,15 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Update="Views\MenuItems\HandbookPanel\DirectoryPage.xaml.cs">
+      <DependentUpon>DirectoryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MenuItems\HandbookPanel\HandbookPage.xaml.cs">
+      <DependentUpon>HandbookPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MenuItems\HandbookPanel\SoundSpeedPage.xaml.cs">
+      <DependentUpon>SoundSpeedPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\SiddosA3MMeasurementPage.xaml.cs">
       <DependentUpon>SiddosA3MMeasurementPage.xaml</DependentUpon>
     </Compile>
@@ -47,7 +66,7 @@
     <Compile Update="Views\MenuItems\MeasurementsPage.xaml.cs">
       <DependentUpon>MeasurementsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\MenuItems\SearchPanelTabs\BoundingTab.xaml.cs">
+    <Compile Update="Views\MenuItems\SearchPanel\BoundingTab.xaml.cs">
       <DependentUpon>BoundingTab.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\SiddosA3MMeasurementDonePage.xaml.cs">
@@ -87,7 +106,13 @@
     <EmbeddedResource Update="Views\MenuItems\ControlPanelPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\MenuItems\DirectoryPanelPage.xaml">
+    <EmbeddedResource Update="Views\MenuItems\HandbookPanel\DirectoryPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\MenuItems\HandbookPanel\HandbookPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\MenuItems\HandbookPanel\SoundSpeedViewPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MenuItems\MeasurementsPage.xaml">
@@ -96,13 +121,16 @@
     <EmbeddedResource Update="Views\MenuItems\MeasurementsSelectionPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\MenuItems\SearchPanelPage.xaml">
+    <EmbeddedResource Update="Views\MenuItems\HandbookPanel\SoundSpeedPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\MenuItems\SearchPanelTabs\BoundingTab.xaml">
+    <EmbeddedResource Update="Views\MenuItems\SearchPanel\SearchPanelPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\MenuItems\SearchPanelTabs\ScanningTab.xaml">
+    <EmbeddedResource Update="Views\MenuItems\SearchPanel\BoundingTab.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\MenuItems\SearchPanel\ScanningTab.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MenuItems\SettingsPanelPage.xaml">

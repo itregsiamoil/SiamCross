@@ -1,16 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SiamCross.Views.MenuItems.DirectoryPanelPage"
-             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
-             Title="{local:Translate HandbookTitle}">
+             x:Class="SiamCross.Views.MenuItems.HandbookPanel.SoundSpeedPage"
+             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
+             Title="{local1:Translate SoundSpeed}">
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource ="plus.png"  Command="{Binding AddField}"/>
-        <ToolbarItem IconImageSource ="trashcan.png"  Command="{Binding Remove}"/>
+        <ToolbarItem IconImageSource ="plus.png"  Command="{Binding AddSoundSpeed}"/>
+        <ToolbarItem IconImageSource ="trashcan.png"  Command="{Binding RemoveSoundSpeed}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
-            <ListView ItemsSource="{Binding Fields, Mode=TwoWay}" SelectedItem="{Binding SelectedField}">
+            <ListView ItemsSource="{Binding SoundSpeedList, Mode=TwoWay}" 
+                      SelectedItem="{Binding SelectedField}"
+                      ItemTapped="ListView_ItemTapped">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -21,7 +23,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Label Text="{Binding Key}" 
+                                    <Label Text="{Binding Name}" 
                                            FontSize="Medium"
                                            Grid.Column="0"/>
                                     <Label Text=": " 

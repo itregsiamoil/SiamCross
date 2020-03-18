@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace SiamCross.Views.MenuItems
+namespace SiamCross.Views.MenuItems.HandbookPanel
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DirectoryPanelPage : ContentPage
+    public partial class DirectoryPage : ContentPage
     {
-        public DirectoryPanelPage()
+        public DirectoryPage()
         {
             var vm = new ViewModelWrap<DirectoryViewModel>();
             this.BindingContext = vm.ViewModel;

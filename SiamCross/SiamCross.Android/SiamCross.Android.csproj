@@ -139,6 +139,7 @@
     <Compile Include="Models\EmailSenderAndroid.cs" />
     <Compile Include="Models\FileManagerAndroid.cs" />
     <Compile Include="Models\HandbookManagerAndroid.cs" />
+    <None Include="Models\1" />
     <Compile Include="Models\SQLiteAndroid.cs" />
     <Compile Include="Models\XmlSaverAndroid.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
