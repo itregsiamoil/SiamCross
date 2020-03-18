@@ -33,7 +33,7 @@ namespace SiamCross.Models.Sensors.Ddin2
                     case "0": return Resource.PreparationStatus;
                     case "1": return Resource.MeasurementStatus;
                     case "2": return Resource.CalculationStatus;
-                    case "4": return Resource.ExportStatus;
+                    case "4": return Resource.SavingStatus;
                     case "5": return Resource.SavingStatus;
                 }
             }
