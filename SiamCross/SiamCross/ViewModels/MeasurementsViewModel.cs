@@ -9,10 +9,7 @@ using SiamCross.Views.MenuItems;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -54,7 +51,7 @@ namespace SiamCross.ViewModels
                 }
                 else if (selectedMeasurement.Name.Contains("SIDDOSA3M"))
                 {
-                    var measurement = _siddosA3MMeasurement?
+                    var measurement = _siddosA3MMeasurements?
                         .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
                     if (measurement != null)
                     {
@@ -63,6 +60,20 @@ namespace SiamCross.ViewModels
                             App.NavigationPage.Navigation
                             .PushAsync(
                             new SiddosA3MMeasurementDonePage(measurement), true);
+                        }
+                    }
+                }
+                else if (selectedMeasurement.Name.Contains("DU"))
+                {
+                    var measurement = _duMeasurements?
+                        .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
+                    if (measurement != null)
+                    {
+                        if (CanOpenModalPage(typeof(DuMeasurementDonePage)))
+                        {
+                            App.NavigationPage.Navigation
+                                .PushAsync(
+                                    new DuMeasurementDonePage(measurement), true);
                         }
                     }
                 }
@@ -99,7 +110,9 @@ namespace SiamCross.ViewModels
 
         private List<Ddin2Measurement> _ddin2Measurements;
 
-        private List<SiddosA3MMeasurement> _siddosA3MMeasurement;
+        private List<SiddosA3MMeasurement> _siddosA3MMeasurements;
+
+        private List<DuMeasurement> _duMeasurements;
 
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 
@@ -117,7 +130,8 @@ namespace SiamCross.ViewModels
             Measurements = new ObservableCollection<MeasurementView>();
             _ddim2Measurements = new List<Ddim2Measurement>();
             _ddin2Measurements = new List<Ddin2Measurement>();
-            _siddosA3MMeasurement = new List<SiddosA3MMeasurement>();
+            _siddosA3MMeasurements = new List<SiddosA3MMeasurement>();
+            _duMeasurements = new List<DuMeasurement>();
 
             #region Comment
             //var ddim2M = new Ddim2Measurement()
@@ -277,6 +291,29 @@ namespace SiamCross.ViewModels
             );
 
             MessagingCenter
+                .Subscribe<DuMeasurementDonePage, DuMeasurement>(
+                this,
+                "Refresh measurement",
+                (sender, args) =>
+                {
+                    try
+                    {
+                        var mv = Measurements
+                            .SingleOrDefault(m => m.Id == args.Id && m.Name == args.Name);
+                        if (mv != null)
+                        {
+                            mv.Field = args.Field;
+                            mv.Comments = args.Comment;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex, "Refresh Du measurement");
+                        throw;
+                    }
+                });
+
+            MessagingCenter
                 .Subscribe<MeasurementsSelectionViewModel>(
                     this,
                     "RefreshAfterDeleting",
@@ -286,6 +323,8 @@ namespace SiamCross.ViewModels
                         {
                             _ddim2Measurements.Clear();
                             _ddin2Measurements.Clear();
+                            _siddosA3MMeasurements.Clear();
+                            _duMeasurements.Clear();
                             Measurements.Clear();
 
                             GetMeasurementsFromDb();
@@ -304,7 +343,8 @@ namespace SiamCross.ViewModels
             {
                 _ddim2Measurements = DataRepository.Instance.GetDdim2Measurements().ToList();
                 _ddin2Measurements = DataRepository.Instance.GetDdin2Measurements().ToList();
-                _siddosA3MMeasurement = DataRepository.Instance.GetSiddosA3MMeasurements().ToList();
+                _siddosA3MMeasurements = DataRepository.Instance.GetSiddosA3MMeasurements().ToList();
+                _duMeasurements = DataRepository.Instance.GetDuMeasurements().ToList();
                 foreach (var m in _ddim2Measurements)
                 {
                     Measurements.Add(
@@ -333,7 +373,7 @@ namespace SiamCross.ViewModels
                         });
                 }
 
-                foreach (var m in _siddosA3MMeasurement)
+                foreach (var m in _siddosA3MMeasurements)
                 {
                     Measurements.Add(
                         new MeasurementView
@@ -343,6 +383,20 @@ namespace SiamCross.ViewModels
                             Field = m.Field,
                             Date = m.DateTime,
                             MeasurementType = Resource.Dynamogram,
+                            Comments = m.Comment
+                        });
+                }
+
+                foreach (var m in _duMeasurements)
+                {
+                    Measurements.Add(
+                        new MeasurementView
+                        {
+                            Id = m.Id,
+                            Name = m.Name,
+                            Field = m.Field,
+                            Date = m.DateTime,
+                            MeasurementType = Resource.Echogram,
                             Comments = m.Comment
                         });
                 }
