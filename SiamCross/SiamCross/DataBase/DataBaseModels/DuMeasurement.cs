@@ -25,6 +25,8 @@ namespace SiamCross.DataBase.DataBaseModels
         public string Name { get; set; }
         public DateTime DateTime { get; set; }
 
+        public DuMeasurement() { }
+
         public DuMeasurement(DuMeasurementData measurementData)
         {
             FluidLevel = measurementData.FluidLevel;

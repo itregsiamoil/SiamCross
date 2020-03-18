@@ -230,10 +230,23 @@ namespace SiamCross.Services
                 }
 
                 string sql = "INSERT INTO DuMeasurement " +
-                        "(FluidLevel, NumberOfReflections, AnnularPressure, Echogram, SoundSpeed, MeasurementType, " +
-                        "SoudSpeedCorrection, DateTime, Field, Well, Bush, Shop, BufferPressure, Comment, Name)" +
-                        "Values (@FluidLevel, @NumberOfReflections, @AnnularPressure, @Echogram, @SoundSpeed, " +
-                        "@MeasurementType, @SoudSpeedCorrection, @DateTime,  @Field, @Well, @Bush, @Shop, " +
+                        "(FluidLevel, " +
+                        "NumberOfReflections, " +
+                        "AnnularPressure, " +
+                        "Echogram, " +
+                        "SoundSpeed, " +
+                        "MeasurementType, " +
+                        "SoundSpeedCorrection, " +
+                        "DateTime, Field, Well, Bush, Shop, BufferPressure, Comment, Name)" +
+                        "Values " +
+                        "(@FluidLevel, " +
+                        "@NumberOfReflections, " +
+                        "@AnnularPressure, " +
+                        "@Echogram, " +
+                        "@SoundSpeed, " +
+                        "@MeasurementType, " +
+                        "@SoundSpeedCorrection, " +
+                        "@DateTime,  @Field, @Well, @Bush, @Shop, " +
                         "@BufferPressure, @Comment, @Name);";
                 var affectedRows = _database.Execute(sql, new
                 {
@@ -250,7 +263,8 @@ namespace SiamCross.Services
                     duMeasurement.Bush,
                     duMeasurement.Shop,
                     duMeasurement.BufferPressure,
-                    duMeasurement.Comment
+                    duMeasurement.Comment,
+                    duMeasurement.Name
                 });
             }
             catch (Exception ex)

@@ -78,12 +78,17 @@ namespace SiamCross.ViewModels
         {
             _measurement = measurement;
             Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
-            SoundSpeedCorrections = new ObservableCollection<string>
+            SoundSpeedCorrections = new ObservableCollection<string>();
+            foreach (var elem in HandbookData.Instance.GetSoundSpeedList())
             {
-                Resource.DynamicLevel,
+                SoundSpeedCorrections.Add(elem.ToString());
+            }
 
-            };
-
+            FluidLevel = _measurement.FluidLevel.ToString();
+            NumberOfReflections = _measurement.NumberOfReflections.ToString();
+            AnnularPressure = _measurement.AnnularPressure.ToString();
+            SelectedSoundSpeedCorrection = _measurement.SoundSpeedCorrection;
+            SoundSpeed = _measurement.SoundSpeed;
             SelectedField = _measurement.Field;
             Well = _measurement.Well;
             Bush = _measurement.Bush;
@@ -92,7 +97,7 @@ namespace SiamCross.ViewModels
             BufferPressure = _measurement.BufferPressure;
             Comments = _measurement.Comment;
             DeviceName = _measurement.Name;
-            MeasurementType = Resource.Echogram;
+            MeasurementType = _measurement.MeasurementType;
 
             ShareCommand = new Command(ShareCommandHandler);
         }
