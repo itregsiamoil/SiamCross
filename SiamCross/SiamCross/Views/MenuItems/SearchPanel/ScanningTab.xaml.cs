@@ -6,10 +6,11 @@ using SiamCross.Services;
 using SiamCross.Services.Logging;
 using SiamCross.ViewModels;
 using System;
+using System.Diagnostics;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace SiamCross.Views.MenuItems.SearchPanelTabs
+namespace SiamCross.Views.MenuItems.SearchPanel
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ScanningTab : ContentPage
@@ -27,9 +28,11 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
             {
                 try
                 {
+                    Debug.WriteLine("StartScan");
                     _vm.StartScan();
                     ScanAnimation.IsRunning = true;
                     scannedDevicesList.IsRefreshing = false;
+                    Debug.WriteLine("EndScan");
                 }
                 catch (Exception ex)
                 {
@@ -46,9 +49,11 @@ namespace SiamCross.Views.MenuItems.SearchPanelTabs
                 {
                     if (e.SelectedItem is ScannedDeviceInfo dev)
                     {
+                        Debug.WriteLine("Start ItemSelected");
                         SensorService.Instance.AddSensor(dev);
                         App.NavigationPage.Navigation.PopToRootAsync();
                         App.MenuIsPresented = false;
+                        Debug.WriteLine("Finish ItemSelected");
                     }
                 }
             }

@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Autofac;
+using SiamCross.Models.Tools;
 
 namespace SiamCross.Services
 {
@@ -15,9 +16,10 @@ namespace SiamCross.Services
             new Lazy<HandbookData>(() => new HandbookData());
 
         public static HandbookData Instance { get => _instance.Value; }
-        public IHandbookManager _handbookManager;
+        private IHandbookManager _handbookManager;
 
         private Dictionary<string, int> _fieldDictionary;
+        private List<SoundSpeedModel> _soundSpeedList;
 
         private HandbookData()
         {
@@ -30,8 +32,14 @@ namespace SiamCross.Services
             {
                 _handbookManager.SaveFields(_fieldDictionary);
             }
+
+            if (_soundSpeedList != null)
+            {
+                _handbookManager.SaveSoundSpeeds(_soundSpeedList);
+            }
         }
 
+        #region Fields
         public Dictionary<string, int> GetFieldDictionary()
         {
             if (_fieldDictionary == null)
@@ -84,5 +92,40 @@ namespace SiamCross.Services
 
             _handbookManager.SaveFields(_fieldDictionary);
         }
+
+        #endregion
+
+        #region SoundSpeed
+
+        public List<SoundSpeedModel> GetSoundSpeedList()
+        {
+            if (_soundSpeedList == null)
+            {
+                _soundSpeedList = _handbookManager.LoadSoundSpeeds();
+            }
+
+            return _soundSpeedList;
+        }
+
+        public void AddSoundSpeed(SoundSpeedModel soundSpeed)
+        {
+            if (_soundSpeedList != null)
+            {
+                _soundSpeedList.Add(soundSpeed);
+                _handbookManager.SaveSoundSpeeds(_soundSpeedList);
+            }
+        }
+
+        public void RemoveSoundSpeed(SoundSpeedModel soundSpeed)
+        {
+            if (_soundSpeedList != null)
+            {
+                _soundSpeedList.Remove(soundSpeed);
+            }
+
+            _handbookManager.SaveSoundSpeeds(_soundSpeedList);
+        }
+
+        #endregion
     }
 }

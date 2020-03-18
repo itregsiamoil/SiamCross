@@ -12,6 +12,7 @@ using SiamCross.Services.Logging;
 using SiamCross.Views;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -120,6 +121,8 @@ namespace SiamCross.Services
 
                 MessagingCenter.Send(this, "Refresh saved sensors",
                     _sensors.Select(s => s.ScannedDeviceInfo));
+
+                Debug.WriteLine("AddSensor");
             }
         }
 

@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SiamCross.Views.MenuItems.HandbookPanel.SoundSpeedViewPage"
+             Title="{local1:Translate Editing}"
+             xmlns:local="clr-namespace:SiamCross.Views"
+             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross">
+    <ContentPage.Content>
+        <TableView Intent="Data" 
+               HasUnevenRows="True" 
+               HorizontalOptions="CenterAndExpand">
+            <TableRoot>
+                <TableSection>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Name}"></Label>
+                            <Entry Text="{Binding Name}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="{local1:Translate Code}"></Label>
+                            <Entry Text="{Binding Code, Mode=TwoWay}" 
+                               Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Button 
+                            Text="Ок"
+                            Command="{Binding Edit}"
+                            Margin="20"
+                            HorizontalOptions="CenterAndExpand"></Button>
+                        </StackLayout>
+                    </ViewCell>
+                </TableSection>
+            </TableRoot>
+        </TableView>
+    </ContentPage.Content>
+</ContentPage>

@@ -10,7 +10,7 @@ using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace SiamCross.Views.MenuItems.SearchPanelTabs
+namespace SiamCross.Views.MenuItems.SearchPanel
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BoundingTab : ContentPage
