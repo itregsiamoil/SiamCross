@@ -22,7 +22,8 @@ namespace SiamCross.Services
         private static object _locker = new object();
         private string _databasePart;
 
-        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static readonly Logger _logger = 
+            AppContainer.Container.Resolve<ILogManager>().GetLog();
 
         private DataRepository()
         {
@@ -231,7 +232,7 @@ namespace SiamCross.Services
                 string sql = "INSERT INTO DuMeasurement " +
                         "(FluidLevel, NumberOfReflections, AnnularPressure, Echogram, SoundSpeed, MeasurementType, " +
                         "SoudSpeedCorrection, DateTime, Field, Well, Bush, Shop, BufferPressure, Comment, Name)" +
-                        "Value (@FluidLevel, @NumberOfReflections, @AnnularPressure, @Echogram, @SoundSpeed, " +
+                        "Values (@FluidLevel, @NumberOfReflections, @AnnularPressure, @Echogram, @SoundSpeed, " +
                         "@MeasurementType, @SoudSpeedCorrection, @DateTime,  @Field, @Well, @Bush, @Shop, " +
                         "@BufferPressure, @Comment, @Name);";
                 var affectedRows = _database.Execute(sql, new
