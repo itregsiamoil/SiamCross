@@ -27,7 +27,7 @@ namespace SiamCross.ViewModels
                         .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
                     if (measurement != null)
                     {
-                        if (CanOpenModalPage(typeof(Ddim2MeasurementDonePage)))
+                        if (CanOpenPage(typeof(Ddim2MeasurementDonePage)))
                         {
                             App.NavigationPage.Navigation
                             .PushAsync(
@@ -41,7 +41,7 @@ namespace SiamCross.ViewModels
                         .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
                     if (measurement != null)
                     {
-                        if (CanOpenModalPage(typeof(Ddin2MeasurementDonePage)))
+                        if (CanOpenPage(typeof(Ddin2MeasurementDonePage)))
                         {
                             App.NavigationPage.Navigation
                             .PushAsync(
@@ -55,7 +55,7 @@ namespace SiamCross.ViewModels
                         .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
                     if (measurement != null)
                     {
-                        if (CanOpenModalPage(typeof(SiddosA3MMeasurementDonePage)))
+                        if (CanOpenPage(typeof(SiddosA3MMeasurementDonePage)))
                         {
                             App.NavigationPage.Navigation
                             .PushAsync(
@@ -69,7 +69,7 @@ namespace SiamCross.ViewModels
                         .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
                     if (measurement != null)
                     {
-                        if (CanOpenModalPage(typeof(DuMeasurementDonePage)))
+                        if (CanOpenPage(typeof(DuMeasurementDonePage)))
                         {
                             App.NavigationPage.Navigation
                                 .PushAsync(
@@ -102,6 +102,14 @@ namespace SiamCross.ViewModels
                 result = true;
             }
             return result;
+        }
+
+        private bool CanOpenPage(Type type)
+        {
+            var stack = App.NavigationPage.Navigation.NavigationStack;
+            if (stack[stack.Count - 1].GetType() != type)
+                return true;
+            return false;
         }
 
         public ObservableCollection<MeasurementView> Measurements { get; set; }
