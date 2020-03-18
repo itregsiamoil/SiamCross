@@ -157,7 +157,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
                     SensorData.Status = Resource.NoConnection;
 
                     await BluetoothAdapter.Connect();
-                    await Task.Delay(4000);
+                    await Task.Delay(1000);
                 }
             }
         }
