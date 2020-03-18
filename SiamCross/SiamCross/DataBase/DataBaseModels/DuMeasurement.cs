@@ -35,7 +35,7 @@ namespace SiamCross.DataBase.DataBaseModels
             var secondaryParams = measurementData.SecondaryParameters;
             SoundSpeed = secondaryParams.SoundSpeed;
             MeasurementType = secondaryParams.MeasurementType;
-            //SoundSpeedCorrection = secondaryParams;
+            SoundSpeedCorrection = secondaryParams.SoundSpeedCorrection;
             DateTime = measurementData.Date;
             Field = secondaryParams.Field;
             Well = secondaryParams.Well;
