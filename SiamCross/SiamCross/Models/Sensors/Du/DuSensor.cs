@@ -47,7 +47,7 @@ namespace SiamCross.Models.Sensors.Du
 
             BluetoothAdapter.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += ReceiveHandler;
-            _parser.ByteMessageReceived += MeasurementRecieveHandler;
+            _parser.ByteMessageReceived += MeasurementBytesReceiveHandler;
 
             BluetoothAdapter.ConnectSucceed += ConnectHandler;
             BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
@@ -57,7 +57,7 @@ namespace SiamCross.Models.Sensors.Du
             _liveTask.Start();
         }
 
-        private void MeasurementRecieveHandler(DuCommandsEnum arg1, byte[] arg2)
+        private void MeasurementBytesReceiveHandler(DuCommandsEnum arg1, byte[] arg2)
         {
             _measurementManager.MeasurementRecieveHandler(arg1, arg2);
         }
@@ -101,6 +101,8 @@ namespace SiamCross.Models.Sensors.Du
                 case DuCommandsEnum.DeviceProgrammVersion:
                     SensorData.Firmware = dataValue;
                     break;
+                default:
+                    return;
             }
 
             SensorData.Status = _reportBuilder.GetReport();
