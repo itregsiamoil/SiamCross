@@ -59,7 +59,10 @@ namespace SiamCross.Models.Sensors.Du
 
         private void MeasurementBytesReceiveHandler(DuCommandsEnum arg1, byte[] arg2)
         {
-            _measurementManager.MeasurementRecieveHandler(arg1, arg2);
+            if (_measurementManager != null)
+            {
+                _measurementManager.MeasurementRecieveHandler(arg1, arg2);
+            }
         }
 
         private void ConnectFailedHandler()

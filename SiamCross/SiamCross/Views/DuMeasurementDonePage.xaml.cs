@@ -2,6 +2,7 @@
 using NLog;
 using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
+using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using SiamCross.ViewModels;
@@ -24,6 +25,8 @@ namespace SiamCross.Views
         private static readonly Logger _logger = 
             AppContainer.Container.Resolve<ILogManager>().GetLog();
 
+        private double[,] _points;
+
         private readonly DuMeasurement _measurement;
 
         public DuMeasurementDonePage(DuMeasurement measurement)
@@ -34,6 +37,7 @@ namespace SiamCross.Views
                 var vmWrap = new ViewModelWrap<DuMeasurementDoneViewModel>(measurement);
                 this.BindingContext = vmWrap.ViewModel;
                 InitializeComponent();
+                _points = EchogramConverter.GetXYs(measurement);
             }
             catch (Exception ex)
             {
@@ -54,14 +58,13 @@ namespace SiamCross.Views
 
                 SKPaint paint = new SKPaint
                 {
-                    Style = SKPaintStyle.Fill,
+                    Style = SKPaintStyle.Stroke,
                     Color = Color.Blue.ToSKColor(),
-                    StrokeWidth = 2,
-                    IsAntialias = true
+                    StrokeWidth = 1
                 };
                 SKPaint paintAxies = new SKPaint
                 {
-                    Style = SKPaintStyle.Fill,
+                    Style = SKPaintStyle.Stroke,
                     Color = Color.Black.ToSKColor(),
                     StrokeWidth = 1
                 };
@@ -78,10 +81,15 @@ namespace SiamCross.Views
                 var skPoints = new List<SKPoint>();
                 for (int i = 0; i < _points.GetUpperBound(0); i++)
                 {
-                    float y = (float)CanvasView.Height - (float)(_points[i, 1] * dy);
+                    float y = (float)CanvasView.Height - (float)(_points[i, 1] * dy); //+ (float)CanvasView.Height/2;
                     float x = (float)(_points[i, 0] * dx);
                     skPoints.Add(new SKPoint(x, y));
                 }
+
+                //for (int i = 0; i < skPoints.Count - 1; i++)
+                //{
+                //    canvas.DrawLine(skPoints[i], skPoints[i + 1], paint);
+                //}
 
                 canvas.DrawPoints(SKPointMode.Polygon, skPoints.ToArray(), paint);
                 canvas.DrawLine(1, 1, 1, (float)CanvasView.Height - 1, paintAxies);

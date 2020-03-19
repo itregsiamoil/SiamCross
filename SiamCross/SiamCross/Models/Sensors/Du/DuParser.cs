@@ -108,9 +108,9 @@ namespace SiamCross.Models.Sensors.Du
                     case DuCommandsEnum.Pressure:
                         ExportByteData(DuCommandsEnum.Pressure, message);
                         break;
-                    //case DuCommandsEnum.SensorState:
-                    //    ExportByteData(DuCommandsEnum.SensorState, message);
-                    //    break;
+                        //case DuCommandsEnum.SensorState:
+                        //    ExportByteData(DuCommandsEnum.SensorState, message);
+                        //    break;
                 }
                 //Если команда чтения
                 if (message[3] == 0x01)
@@ -122,6 +122,7 @@ namespace SiamCross.Models.Sensors.Du
             {
                 _logger.Error(ex, "ByteProcess " + ex.StackTrace);
                 _logger.Error(ex, "ByteBuffer is recreate, throw force skip!");
+                Debug.WriteLine(BitConverter.ToString(_byteBuffer.Buffer.ToArray()));
                 _byteBuffer = new ByteBuffer();
             }
         }
@@ -160,38 +161,46 @@ namespace SiamCross.Models.Sensors.Du
         /// <returns></returns>
         public string ConvertToStringPayload(byte[] message)
         {
-            string result = "";
-            var payloadBytes = GetPayload(message);
-
-            var dataType = DefineDataType(message);
-            switch (dataType)
+            try
             {
-                case DeviceRegistersTypes.Int32:
-                    result = BitConverter.ToInt32(payloadBytes, 0).ToString();
-                    break;
-                case DeviceRegistersTypes.Int16:
-                    result = BitConverter.ToInt16(payloadBytes, 0).ToString();
-                    break;
-                case DeviceRegistersTypes.Int8:
-                    result = BitConverter.ToInt16(payloadBytes, 0).ToString();
-                    break;
-                case DeviceRegistersTypes.S16:
-                    float value = BitConverter.ToInt16(payloadBytes, 0);
-                    result = (value / 10).ToString();
-                    break;
-                case DeviceRegistersTypes.String:
-                    if (payloadBytes.Length > 20)
-                    {
-                        result = Encoding.UTF8.GetString(payloadBytes);
-                    }
-                    else
-                    {
-                        result = Encoding.GetEncoding(1251).GetString(payloadBytes);
-                    }
-                    break;            
-            }
+                string result = "";
+                var payloadBytes = GetPayload(message);
 
-            return result;
+                var dataType = DefineDataType(message);
+                switch (dataType)
+                {
+                    case DeviceRegistersTypes.Int32:
+                        result = BitConverter.ToInt32(payloadBytes, 0).ToString();
+                        break;
+                    case DeviceRegistersTypes.Int16:
+                        result = BitConverter.ToInt16(payloadBytes, 0).ToString();
+                        Debug.WriteLine($"TO INT16 {BitConverter.ToString(payloadBytes)}");
+                        break;
+                    case DeviceRegistersTypes.Int8:
+                        result = BitConverter.ToInt16(payloadBytes, 0).ToString();
+                        break;
+                    case DeviceRegistersTypes.S16:
+                        float value = BitConverter.ToInt16(payloadBytes, 0);
+                        Debug.WriteLine($"TO S16 {BitConverter.ToString(payloadBytes)}");
+                        result = (value / 10).ToString();
+                        break;
+                    case DeviceRegistersTypes.String:
+                        if (payloadBytes.Length > 20)
+                        {
+                            result = Encoding.UTF8.GetString(payloadBytes);
+                        }
+                        else
+                        {
+                            result = Encoding.GetEncoding(1251).GetString(payloadBytes);
+                        }
+                        break;
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>

@@ -36,6 +36,8 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             Debug.WriteLine("SENDING PARAMETERS");
             await SendParameters();
             await Start();
+            //await Task.Delay(2000);
+            await _bluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure]);
             await IsMeasurementDone();
             await _bluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.SensorState]);
             await DownloadHeader();
@@ -158,10 +160,6 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                 //_writeLog(DuCommands.FullCommandDictionary[DuCommandsEnum.SensorState]);
                 await _bluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.SensorState]);
 
-                if (MeasurementStatus == DuMeasurementStatus.WaitingForClick)
-                {
-                    await _bluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure]);
-                }
                 if (MeasurementStatus == DuMeasurementStatus.Сompleted)
                 {
                     isDone = true;
@@ -196,6 +194,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                     _currentEchogram.Add(data);
                     break;
                 case DuCommandsEnum.Pressure:
+                    Debug.WriteLine("ANNULAR PRESSURE: " + BitConverter.ToString(data));
                     _pressure = Convert.ToSingle(data);
                     break;
                 default:

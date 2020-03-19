@@ -21,6 +21,8 @@ namespace SiamCross.Models.Tools
         /// </summary>
         private List<byte> _byffer = new List<byte>();
 
+        public List<byte> Buffer { get => _byffer; }
+
         /// <summary>
         /// Ожидаемый размер данных
         /// </summary>
