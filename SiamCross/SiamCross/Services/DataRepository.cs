@@ -192,7 +192,7 @@ namespace SiamCross.Services
                 [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                 [FluidLevel] INTEGER NOT NULL,
                 [NumberOfReflections] INTEGER NOT NULL,
-                [AnnularPressure] INTEGER NOT NULL,
+                [AnnularPressure] REAL NOT NULL,
                 [Echogram] BLOB,
                 [SoundSpeed] NVARCHAR(128) NOT NULL,
                 [MeasurementType] NVARCHAR(128) NOT NULL,

@@ -9,7 +9,7 @@ namespace SiamCross.DataBase.DataBaseModels
         public int Id { get; set; }
         public int FluidLevel { get; set; }
         public int NumberOfReflections { get; set; }
-        public int AnnularPressure { get; set; }
+        public float AnnularPressure { get; set; }
         public byte[] Echogram { get; set; }
 
         /*/ Secondary /*/

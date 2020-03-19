@@ -105,6 +105,9 @@ namespace SiamCross.Models.Sensors.Du
                             return binary;
                         }
                         break;
+                    case DuCommandsEnum.Pressure:
+                        ExportByteData(DuCommandsEnum.Pressure, message);
+                        break;
                     //case DuCommandsEnum.SensorState:
                     //    ExportByteData(DuCommandsEnum.SensorState, message);
                     //    break;

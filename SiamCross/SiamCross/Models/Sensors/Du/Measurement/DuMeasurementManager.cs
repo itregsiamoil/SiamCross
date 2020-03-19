@@ -64,7 +64,8 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             }
 
             var data = new DuMeasurementData(echogramRawBytes,
-                _fluidLevel, 0, _numberOfReflections, DateTime.Now, _measurementParameters.SecondaryParameters);
+                _fluidLevel, _pressure, 
+                _numberOfReflections, DateTime.Now, _measurementParameters.SecondaryParameters);
 
 
             return data;
@@ -157,6 +158,10 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                 //_writeLog(DuCommands.FullCommandDictionary[DuCommandsEnum.SensorState]);
                 await _bluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.SensorState]);
 
+                if (MeasurementStatus == DuMeasurementStatus.WaitingForClick)
+                {
+                    await _bluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure]);
+                }
                 if (MeasurementStatus == DuMeasurementStatus.Сompleted)
                 {
                     isDone = true;
@@ -168,6 +173,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
 
         private short _fluidLevel = 0;
         private short _numberOfReflections = 0;
+        private float _pressure;
 
         public void MeasurementRecieveHandler(DuCommandsEnum commandName, byte[] data)
         {
@@ -188,6 +194,9 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                     break;
                 case DuCommandsEnum.EchogramData:
                     _currentEchogram.Add(data);
+                    break;
+                case DuCommandsEnum.Pressure:
+                    _pressure = Convert.ToSingle(data);
                     break;
                 default:
                     break;
