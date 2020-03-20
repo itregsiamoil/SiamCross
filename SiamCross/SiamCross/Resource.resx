@@ -511,4 +511,37 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="Attention" xml:space="preserve">
+    <value>Attention</value>
+  </data>
+  <data name="DeleteQuestion" xml:space="preserve">
+    <value>Delete?</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Choose" xml:space="preserve">
+    <value>Choose</value>
+  </data>
+  <data name="ChooseAFile" xml:space="preserve">
+    <value>Choose a file</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="NewFolder" xml:space="preserve">
+    <value>New folder</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="WrongFormatOrContent" xml:space="preserve">
+    <value>Wrong format or content</value>
+  </data>
+  <data name="KGFCMUnits" xml:space="preserve">
+    <value>kgs/cm2</value>
+  </data>
+  <data name="MSUnits" xml:space="preserve">
+    <value>m/s</value>
+  </data>
 </root>

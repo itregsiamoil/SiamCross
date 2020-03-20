@@ -520,4 +520,37 @@
   <data name="Name" xml:space="preserve">
     <value>Имя</value>
   </data>
+  <data name="Attention" xml:space="preserve">
+    <value>Внимание</value>
+  </data>
+  <data name="DeleteQuestion" xml:space="preserve">
+    <value>Удалить?</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Choose" xml:space="preserve">
+    <value>Выбрать</value>
+  </data>
+  <data name="ChooseAFile" xml:space="preserve">
+    <value>Выберите файл</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="NewFolder" xml:space="preserve">
+    <value>Новая папка</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>Ок</value>
+  </data>
+  <data name="WrongFormatOrContent" xml:space="preserve">
+    <value>Неверный формат или содержание</value>
+  </data>
+  <data name="KGFCMUnits" xml:space="preserve">
+    <value>кгс/см2</value>
+  </data>
+  <data name="MSUnits" xml:space="preserve">
+    <value>м/с</value>
+  </data>
 </root>

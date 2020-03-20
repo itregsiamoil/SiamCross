@@ -142,6 +142,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attention.
+        /// </summary>
+        public static string Attention {
+            get {
+                return ResourceManager.GetString("Attention", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Authentication data.
         /// </summary>
         public static string AuthentificationData {
@@ -223,6 +232,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chain.
         /// </summary>
         public static string ChainModelPump {
@@ -237,6 +255,24 @@ namespace SiamCross {
         public static string Chdav {
             get {
                 return ResourceManager.GetString("Chdav", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose.
+        /// </summary>
+        public static string Choose {
+            get {
+                return ResourceManager.GetString("Choose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose a file.
+        /// </summary>
+        public static string ChooseAFile {
+            get {
+                return ResourceManager.GetString("ChooseAFile", resourceCulture);
             }
         }
         
@@ -309,6 +345,24 @@ namespace SiamCross {
         public static string DegCentigradeUnits {
             get {
                 return ResourceManager.GetString("DegCentigradeUnits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete?.
+        /// </summary>
+        public static string DeleteQuestion {
+            get {
+                return ResourceManager.GetString("DeleteQuestion", resourceCulture);
             }
         }
         
@@ -628,6 +682,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to kgs/cm2.
+        /// </summary>
+        public static string KGFCMUnits {
+            get {
+                return ResourceManager.GetString("KGFCMUnits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to КG.
         /// </summary>
         public static string Kilograms {
@@ -772,6 +835,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to m/s.
+        /// </summary>
+        public static string MSUnits {
+            get {
+                return ResourceManager.GetString("MSUnits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string Name {
@@ -786,6 +858,15 @@ namespace SiamCross {
         public static string NewField {
             get {
                 return ResourceManager.GetString("NewField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New folder.
+        /// </summary>
+        public static string NewFolder {
+            get {
+                return ResourceManager.GetString("NewFolder", resourceCulture);
             }
         }
         
@@ -831,6 +912,15 @@ namespace SiamCross {
         public static string NoСomment {
             get {
                 return ResourceManager.GetString("NoСomment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        public static string Ok {
+            get {
+                return ResourceManager.GetString("Ok", resourceCulture);
             }
         }
         
@@ -1192,6 +1282,15 @@ namespace SiamCross {
         public static string WellChoiceText {
             get {
                 return ResourceManager.GetString("WellChoiceText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wrong format or content.
+        /// </summary>
+        public static string WrongFormatOrContent {
+            get {
+                return ResourceManager.GetString("WrongFormatOrContent", resourceCulture);
             }
         }
         
