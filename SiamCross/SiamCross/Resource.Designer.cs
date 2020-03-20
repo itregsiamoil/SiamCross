@@ -106,7 +106,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Annular pressure, kgf/cm2.
+        ///   Looks up a localized string similar to Annular pressure, kgf/cm2.
         /// </summary>
         public static string AnnularPressure {
             get {
@@ -115,7 +115,6 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Crank hole number.
         ///   Looks up a localized string similar to Crank hole number.
         /// </summary>
         public static string ApertNumber {
@@ -449,7 +448,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Echogram.
+        ///   Looks up a localized string similar to Echogram.
         /// </summary>
         public static string Echogram {
             get {
@@ -458,7 +457,6 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на E-mail settings.
         ///   Looks up a localized string similar to Editing.
         /// </summary>
         public static string Editing {
@@ -603,7 +601,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Fluid level, m.
+        ///   Looks up a localized string similar to Fluid level, m.
         /// </summary>
         public static string FluidLevel {
             get {
@@ -612,7 +610,6 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Discovered devices:.
         ///   Looks up a localized string similar to Discovered devices:.
         /// </summary>
         public static string FoundDevices {
@@ -721,7 +718,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to КG.
+        ///   Looks up a localized string similar to �G.
         /// </summary>
         public static string Kilograms {
             get {
@@ -946,13 +943,16 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Number of reflections.
+        ///   Looks up a localized string similar to Number of reflections.
         /// </summary>
         public static string NumberOfReflections {
             get {
                 return ResourceManager.GetString("NumberOfReflections", resourceCulture);
             }
-        }        ///   Looks up a localized string similar to Ok.
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok.
         /// </summary>
         public static string Ok {
             get {
@@ -1240,8 +1240,8 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The «SIAM» company has been operating since 1990, and has reached a leading position in the market of equipment and services for hydrodynamic and geological field research of wells. The company is part of the «Integra Group of Companies», which is rightfully considered the leading integrated oilfield services company in Russia and the CIS countries.
-        ///Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» has been developing, producing equipment for well research. Over the years, many  [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to The �SIAM� company has been operating since 1990, and has reached a leading position in the market of equipment and services for hydrodynamic and geological field research of wells. The company is part of the �Integra Group of Companies�, which is rightfully considered the leading integrated oilfield services company in Russia and the CIS countries.
+        ///Since 1990, the Tomsk Scientific Production and Implementation Society �SIAM� has been developing, producing equipment for well research. Over the years, many  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string TextAboutCompany {
             get {

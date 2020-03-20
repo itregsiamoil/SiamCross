@@ -184,7 +184,7 @@ namespace SiamCross.Droid.Models
             }
 
             Stream tatariaStream = assembly.GetManifestResourceStream("SiamCross.DefaultSoundSpeedResources.tataria");
-            using (var reader = new StreamReader(langepasStream))
+            using (var reader = new StreamReader(tatariaStream))
             {
                 var text = reader.ReadToEnd();
                 tatariaDictonary = soundFileParcer.TryToParce(text);

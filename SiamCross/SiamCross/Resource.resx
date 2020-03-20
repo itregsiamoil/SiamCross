@@ -178,7 +178,7 @@
     <value>Date</value>
   </data>
   <data name="DegCentigradeUnits" xml:space="preserve">
-    <value>°C</value>
+    <value>В°C</value>
   </data>
   <data name="Device" xml:space="preserve">
     <value>Device</value>
@@ -188,7 +188,7 @@
   </data>
   <data name="DynamographSensorType" xml:space="preserve">
     <value>Dynamograph</value>
-    <comment>Тип датчиков</comment>
+    <comment>пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</comment>
   </data>
   <data name="DynPeriod" xml:space="preserve">
     <value>Swing period, sec</value>
@@ -234,7 +234,7 @@
   </data>
   <data name="FoundDevices" xml:space="preserve">
     <value>Discovered devices:</value>
-    <comment>Заголовок окна найденных устройств</comment>
+    <comment>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</comment>
   </data>
   <data name="FreeStatus" xml:space="preserve">
     <value>Status - free</value>
@@ -261,7 +261,7 @@
     <value>Incorrect data entered!</value>
   </data>
   <data name="Kilograms" xml:space="preserve">
-    <value>КG</value>
+    <value>пїЅG</value>
   </data>
   <data name="Load" xml:space="preserve">
     <value>Load</value>
@@ -375,9 +375,9 @@
     <value>Temperature</value>
   </data>
   <data name="TextAboutCompany" xml:space="preserve">
-    <value>The «SIAM» company has been operating since 1990, and has reached a leading position in the market of equipment and services for hydrodynamic and geological field research of wells. The company is part of the «Integra Group of Companies», which is rightfully considered the leading integrated oilfield services company in Russia and the CIS countries.
-Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» has been developing, producing equipment for well research. Over the years, many unique equipment has been created, some of which are protected by patents. Our equipment is well-respected by workers in the oil and gas industry.
-This software «SIAM SERVICE 2» is a «SIAM» software package designed for storing, transmitting, processing and interpreting data obtained during well testing via Bluetooth wireless data transmission from portable devices (dynamographs / level gauges).</value>
+    <value>The пїЅSIAMпїЅ company has been operating since 1990, and has reached a leading position in the market of equipment and services for hydrodynamic and geological field research of wells. The company is part of the пїЅIntegra Group of CompaniesпїЅ, which is rightfully considered the leading integrated oilfield services company in Russia and the CIS countries.
+Since 1990, the Tomsk Scientific Production and Implementation Society пїЅSIAMпїЅ has been developing, producing equipment for well research. Over the years, many unique equipment has been created, some of which are protected by patents. Our equipment is well-respected by workers in the oil and gas industry.
+This software пїЅSIAM SERVICE 2пїЅ is a пїЅSIAMпїЅ software package designed for storing, transmitting, processing and interpreting data obtained during well testing via Bluetooth wireless data transmission from portable devices (dynamographs / level gauges).</value>
   </data>
   <data name="ToAddress" xml:space="preserve">
     <value>Destination address</value>
@@ -403,7 +403,7 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for storing
   <data name="WellChoiceText" xml:space="preserve">
     <value>Enter the well!</value>
   </data>
-  <data name="NoСomment" xml:space="preserve">
+  <data name="NoРЎomment" xml:space="preserve">
     <value>No comment</value>
   </data>
   <data name="Firmware" xml:space="preserve">
@@ -441,34 +441,34 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for storing
   </data>
   <data name="AdditionalAmp" xml:space="preserve">
     <value>Additional amplification</value>
-    <comment>дополнительное усиление</comment>
+    <comment>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</comment>
   </data>
   <data name="Chdav" xml:space="preserve">
     <value>Pressure sensor sensitivity</value>
-    <comment>Чувствительность датчика давления</comment>
+    <comment>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</comment>
   </data>
   <data name="Chpiezo" xml:space="preserve">
     <value>Piezoelectric sensor sensitivity in arbitrary units from 0 to 255</value>
-    <comment>чувствительность пьезодатчика в условных единицах от 0 до 255</comment>
+    <comment>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 0 пїЅпїЅ 255</comment>
   </data>
   <data name="GasFromWell" xml:space="preserve">
     <value>Gas discharge / inlet from a well</value>
-    <comment>выпуск/впуск газа из скважины</comment>
+    <comment>пїЅпїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</comment>
   </data>
   <data name="MaxLevelAt341" xml:space="preserve">
     <value>Maximum level at a speed of sound 341m / s</value>
-    <comment>максимальный уровень при скорости звука 341м/с</comment>
+    <comment>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ 341пїЅ/пїЅ</comment>
   </data>
   <data name="Noldav" xml:space="preserve">
     <value>Pressure sensor zero offset, 0.1 atm</value>
-    <comment>смещение нуля датчика давления , 0.1атм</comment>
+    <comment>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ , 0.1пїЅпїЅпїЅ</comment>
   </data>
   <data name="Amplification" xml:space="preserve">
     <value>Amplification</value>
   </data>
   <data name="DuResearchType" xml:space="preserve">
     <value>Measurement type</value>
-    <comment>Тип исследоания</comment>
+    <comment>пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</comment>
   </data>
   <data name="DynamicLevel" xml:space="preserve">
     <value>Dynamic level</value>
@@ -478,11 +478,11 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for storing
   </data>
   <data name="SoundSpeed" xml:space="preserve">
     <value>Sound speed</value>
-    <comment>Скорость звука</comment>
+    <comment>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ</comment>
   </data>
   <data name="SoundSpeedCorrection" xml:space="preserve">
     <value>Sound speed correction</value>
-    <comment>Поправка скорости звука</comment>
+    <comment>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ</comment>
   </data>
   <data name="StaticLevel" xml:space="preserve">
     <value>Static level</value>
@@ -516,6 +516,7 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for storing
   </data>
   <data name="NumberOfReflections" xml:space="preserve">
     <value>Number of reflections</value>
+  </data>
   <data name="Code" xml:space="preserve">
     <value>Code</value>
   </data>
