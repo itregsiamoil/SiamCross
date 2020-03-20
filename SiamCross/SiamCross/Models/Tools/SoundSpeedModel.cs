@@ -28,11 +28,12 @@ namespace SiamCross.Models.Tools
             }
         }
 
-        public Dictionary<float, float> LevelSpeedTable { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
+        public List<KeyValuePair<float, float>> LevelSpeedTable { get; set; }
 
-        public SoundSpeedModel(int code, string name, Dictionary<float, float> table)
+        public SoundSpeedModel(int code, string name, List<KeyValuePair<float, float>> table)
         {
             Code = code;
             Name = name;

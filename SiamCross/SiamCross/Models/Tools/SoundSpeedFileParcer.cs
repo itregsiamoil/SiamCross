@@ -7,43 +7,41 @@ namespace SiamCross.Models.Tools
 {
     public class SoundSpeedFileParcer
     {
-        public Dictionary<float, float> TryToParce(Stream stream)
+        public List<KeyValuePair<float, float>> TryToParce(string fileText)
         {
-            var soundSpeedsDictionary = new Dictionary<float, float>();
+            var soundSpeedsList = new List<KeyValuePair<float, float>>();
 
-            using (var reader = new StreamReader(stream))
+            string[] lines = fileText.Split('\n');
+
+            foreach (var line in lines)
             {
-                var text = reader.ReadToEnd();
-
-                string[] lines = text.Split('\n');
-
-                foreach(var line in lines)
+                if (line.Length == 0)
                 {
-                    if(line.Length == 0)
+                    continue;
+                }
+                List<string> lineValues = new List<string>();
+                foreach (var str in line.Split(' '))
+                {
+                    if (str != "")
                     {
-                        continue;
-                    }
-                    List<string> lineValues = new List<string>(); 
-                    foreach(var str in line.Split(' '))
-                    {
-                        if(str !="")
-                        {
-                            lineValues.Add(str);
-                        }
-                    }
-                    try
-                    {
-                        soundSpeedsDictionary.Add(float.Parse(lineValues[1].Replace(".", ",")),
-                            float.Parse(lineValues[2].Replace(".", ",")));
-                    }
-                    catch
-                    {
-                        return null;
+                        lineValues.Add(str);
                     }
                 }
+                try
+                {
+                    soundSpeedsList.Add(
+                        new KeyValuePair<float, float>(
+                            float.Parse(lineValues[1].Replace(".", ",")),
+                            float.Parse(lineValues[2].Replace(".", ","))));
+                }
+                catch
+                {
+                    return null;
+                }
+
             }
 
-            return soundSpeedsDictionary;
+            return soundSpeedsList;
         }
     }
 }

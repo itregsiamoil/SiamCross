@@ -21,6 +21,7 @@ using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
+using SiamCross.Services.UserOutput;
 
 namespace SiamCross.Droid
 {
@@ -43,6 +44,7 @@ namespace SiamCross.Droid
             cb.RegisterType<HandbookManagerAndroid>().As<IHandbookManager>();
             cb.RegisterType<NLogManagerAndroid>().As<ILogManager>();
             cb.RegisterType<DefaultAdapterAndroid>().As<IDefaultAdapter>();
+            cb.RegisterType<FileOpenDialogAndroid>().As<IFileOpenDialog>();
         }
     }    
 }

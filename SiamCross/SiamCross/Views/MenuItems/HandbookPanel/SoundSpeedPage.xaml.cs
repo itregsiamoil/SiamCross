@@ -3,9 +3,11 @@ using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Models.Tools;
 using SiamCross.Services.Logging;
+using SiamCross.Services.UserOutput;
 using SiamCross.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,6 +58,40 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
                 _logger.Error(ex, "OpenSoundSpeedViewPage command handler");
                 throw;
             }
+        }
+
+        private async void ToolbarItem_Clicked(object sender, EventArgs e)
+        {
+            var dialog = AppContainer.Container.Resolve<IFileOpenDialog>();
+           
+            var path = await dialog.Show();
+
+            if(string.IsNullOrWhiteSpace(path))
+            {
+                return;
+            }
+
+            var fileParcer = new SoundSpeedFileParcer();
+            List<KeyValuePair<float, float>> newSoundTable;
+
+            using (StreamReader reader = new StreamReader(path))
+            {
+                newSoundTable = fileParcer.TryToParce(reader.ReadToEnd());
+            }
+
+            if(newSoundTable == null)
+            {
+                await DisplayAlert(
+                    Resource.Attention, 
+                    Resource.WrongFormatOrContent,
+                    Resource.Ok);
+                return;
+            }
+
+            var newSpeedSoundModel = new SoundSpeedModel(0, "", newSoundTable);
+
+            await App.NavigationPage.Navigation.PushAsync(
+                            new SoundSpeedViewPage(newSpeedSoundModel));
         }
     }
 }
