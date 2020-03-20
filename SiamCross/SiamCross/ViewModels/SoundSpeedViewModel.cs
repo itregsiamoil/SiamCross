@@ -23,7 +23,6 @@ namespace SiamCross.ViewModels
             Update();
                 
             AddSoundSpeed = new Command(AddSound);
-            RemoveSoundSpeed = new Command(RemoveSound);
 
             MessagingCenter.Subscribe<SoundSpeedViewViewModel>(
                 this,
@@ -46,14 +45,8 @@ namespace SiamCross.ViewModels
         }
 
         public ICommand AddSoundSpeed { get; set; }
-        public ICommand RemoveSoundSpeed { get; set; }
 
         private void AddSound()
-        {
-            //todo
-        }
-
-        private void RemoveSound()
         {
             //todo
         }

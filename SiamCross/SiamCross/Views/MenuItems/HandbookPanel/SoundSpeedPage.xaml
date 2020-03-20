@@ -5,8 +5,7 @@
              xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
              Title="{local1:Translate SoundSpeed}">
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource ="plus.png"  Command="{Binding AddSoundSpeed}"/>
-        <ToolbarItem IconImageSource ="trashcan.png"  Command="{Binding RemoveSoundSpeed}"/>
+        <ToolbarItem IconImageSource ="plus.png"  Clicked="ToolbarItem_Clicked"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
