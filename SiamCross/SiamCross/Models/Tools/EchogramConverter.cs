@@ -17,7 +17,7 @@ namespace SiamCross.Models.Tools
                 if (table != null)
                 {
                     float v = table.LevelSpeedTable[measurement.AnnularPressure];
-                    float xDiscrete = v / 341.33f;
+                    float xDiscrete = 3000* v / 341.33f;
 
                     for (int i = 0; i < measurement.Echogram.Length; i++)
                     {
@@ -45,7 +45,7 @@ namespace SiamCross.Models.Tools
             else
             {
                 float v = Convert.ToSingle(measurement.SoundSpeed);
-                float xDiscrete = 3000 * v / 341.33f;
+                float xDiscrete = v / 341.33f;
 
                 for (int i = 0; i < measurement.Echogram.Length; i++)
                 {

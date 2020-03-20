@@ -81,17 +81,18 @@ namespace SiamCross.Views
                 var skPoints = new List<SKPoint>();
                 for (int i = 0; i < _points.GetUpperBound(0); i++)
                 {
-                    float y = (float)CanvasView.Height - (float)(_points[i, 1] * dy); //+ (float)CanvasView.Height/2;
+                    float y = (float)CanvasView.Height - (float)(_points[i, 1] * dy) + (float)CanvasView.Height/2;
+                    //float y = (float)(_points[i, 1] * dy); //+ (float)CanvasView.Height/2;
                     float x = (float)(_points[i, 0] * dx);
                     skPoints.Add(new SKPoint(x, y));
                 }
 
-                //for (int i = 0; i < skPoints.Count - 1; i++)
-                //{
-                //    canvas.DrawLine(skPoints[i], skPoints[i + 1], paint);
-                //}
+                for (int i = 0; i < skPoints.Count - 1; i++)
+                {
+                    canvas.DrawLine(skPoints[i], skPoints[i + 1], paint);
+                }
 
-                canvas.DrawPoints(SKPointMode.Polygon, skPoints.ToArray(), paint);
+                //canvas.DrawPoints(SKPointMode.Polygon, skPoints.ToArray(), paint);
                 canvas.DrawLine(1, 1, 1, (float)CanvasView.Height - 1, paintAxies);
                 canvas.DrawLine(1, (float)CanvasView.Height - 1,
                     (float)CanvasView.Width - 1, (float)CanvasView.Height - 1, paintAxies);
@@ -105,7 +106,7 @@ namespace SiamCross.Views
 
         private double GetMaximumX()
         {
-            double max = -43;
+            double max = double.MinValue;
             for (int i = 0; i < _points.GetUpperBound(0); i++)
             {
                 if (_points[i, 0] > max)
@@ -118,7 +119,7 @@ namespace SiamCross.Views
 
         private double GetMaximumY()
         {
-            double max = -43;
+            double max = double.MinValue;
             for (int i = 0; i < _points.GetUpperBound(0); i++)
             {
                 if (_points[i, 1] > max)
