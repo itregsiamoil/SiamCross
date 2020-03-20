@@ -64,8 +64,13 @@ namespace SiamCross.Droid
             //    bluetoothAdapter.Enable();
             //}
 
+            // Set it in the constructor
+            CurrentActivity = this;
+
             LoadApplication(new App(new Setup()));
         }
+
+        public static Activity CurrentActivity;
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
