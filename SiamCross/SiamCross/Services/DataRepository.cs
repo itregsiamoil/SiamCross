@@ -86,7 +86,7 @@ namespace SiamCross.Services
 
             _database.Execute(@"
             CREATE TABLE IF NOT EXISTS [Ddim2Measurement] (
-                [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                [Id] INTEGER NOT NULL PRIMARY KEY,
                 [MaxWeight] REAL NOT NULL,
                 [MinWeight] REAL NOT NULL,
                 [Travel] REAL NOT NULL,
@@ -120,7 +120,7 @@ namespace SiamCross.Services
 
             _database.Execute(@"
             CREATE TABLE IF NOT EXISTS [SiddosA3MMeasurement] (
-                [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                [Id] INTEGER NOT NULL PRIMARY KEY,
                 [MaxWeight] REAL NOT NULL,
                 [MinWeight] REAL NOT NULL,
                 [Travel] REAL NOT NULL,
@@ -154,7 +154,7 @@ namespace SiamCross.Services
 
             _database.Execute(@"
             CREATE TABLE IF NOT EXISTS [Ddin2Measurement] (
-                [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                [Id] INTEGER NOT NULL PRIMARY KEY,
                 [MaxWeight] REAL NOT NULL,
                 [MinWeight] REAL NOT NULL,
                 [Travel] REAL NOT NULL,
@@ -189,7 +189,7 @@ namespace SiamCross.Services
 
             _database.Execute(@"
             CREATE TABLE IF NOT EXISTS [DuMeasurement] (
-                [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                [Id] INTEGER NOT NULL PRIMARY KEY,
                 [FluidLevel] INTEGER NOT NULL,
                 [NumberOfReflections] INTEGER NOT NULL,
                 [AnnularPressure] REAL NOT NULL,
@@ -216,8 +216,16 @@ namespace SiamCross.Services
             {
                 if (duMeasurement.Id == 0)
                 {
-                    duMeasurement.Id = (int)_database.Query(string.Format(
-                        "SELECT COUNT(1) as 'Count' FROM DuMeasurement")).First().Count +1;
+                    var idsColumn = _database.Query<int>(string.Format(
+                        "SELECT Id FROM DuMeasurement"));
+                    if (idsColumn.Count() > 0)
+                    {
+                        duMeasurement.Id = idsColumn.Max() + 1;
+                    }
+                    else
+                    {
+                        duMeasurement.Id = 1;
+                    }
                 }
 
                 var rows = _database.Query(string.Format(
@@ -334,8 +342,16 @@ namespace SiamCross.Services
             {
                 if (ddim2Measurement.Id == 0)
                 {
-                    ddim2Measurement.Id = (int)_database.Query(string.Format(
-                        "SELECT COUNT(1) as 'Count' FROM Ddim2Measurement")).First().Count + 1;
+                    var idsColumn = _database.Query<int>(string.Format(
+                        "SELECT Id FROM Ddim2Measurement"));
+                    if (idsColumn.Count() > 0)
+                    {
+                        ddim2Measurement.Id = idsColumn.Max() + 1;
+                    }
+                    else
+                    {
+                        ddim2Measurement.Id = 1;
+                    }
                 }
 
                 var rows = _database.Query(string.Format(
@@ -537,8 +553,16 @@ namespace SiamCross.Services
             {
                 if (ddin2Measurement.Id == 0)
                 {
-                    ddin2Measurement.Id = (int)_database.Query(string.Format(
-                    "SELECT COUNT(1) as 'Count' FROM Ddin2Measurement")).First().Count + 1;
+                    var idsColumn = _database.Query<int>(string.Format(
+                        "SELECT Id FROM Ddin2Measurement"));
+                    if (idsColumn.Count() > 0)
+                    {
+                        ddin2Measurement.Id = idsColumn.Max() + 1;
+                    }
+                    else
+                    {
+                        ddin2Measurement.Id = 1;
+                    }
                 }
 
                 var rows = _database.Query(string.Format(
@@ -708,8 +732,16 @@ namespace SiamCross.Services
             {
                 if (siddosA3MMeasurement.Id == 0)
                 {
-                    siddosA3MMeasurement.Id = (int)_database.Query(string.Format(
-                        "SELECT COUNT(1) as 'Count' FROM SiddosA3MMeasurement")).First().Count + 1;
+                    var idsColumn =_database.Query<int>(string.Format(
+                        "SELECT Id FROM SiddosA3MMeasurement"));
+                    if(idsColumn.Count() > 0)
+                    {
+                        siddosA3MMeasurement.Id = idsColumn.Max() + 1;
+                    }
+                    else
+                    {
+                        siddosA3MMeasurement.Id = 1;
+                    }
                 }
 
                 var rows = _database.Query(string.Format(
@@ -730,7 +762,7 @@ namespace SiamCross.Services
                         " @Travel, @Period, @Step, @WeightDiscr, @TimeDiscr, @DynGraph," +
                         " @AccelerationGraph, @Field, @Well, @Bush, @Shop, @BufferPressure, @Comment, " +
                         "@Name, @DateTime, @ErrorCode, @ApertNumber, @ModelPump, @MaxBarbellWeight," +
-                        " @MinBarbellWeight, @TravelLength, @SwingCount);";
+                        " @MinBarbellWeight, @TravelLength, @SwingCount)";
 
                 var affectedRows = _database.Execute(sql, new
                 {
@@ -842,8 +874,9 @@ namespace SiamCross.Services
 
             try
             {
-                return _database.Query<SiddosA3MMeasurement>(
+                var siddosMeasutemenrs = _database.Query<SiddosA3MMeasurement>(
                     "SELECT * FROM SiddosA3MMeasurement");
+                return siddosMeasutemenrs;
             }
             catch(Exception e)
             {
@@ -858,8 +891,9 @@ namespace SiamCross.Services
 
             try
             {
-                return _database.Query<SiddosA3MMeasurement>(
-                    "SELECT * FROM SiddosA3MMeasurement WHERE Id =" + id).First();
+                var siddosMeasurement = _database.Query<SiddosA3MMeasurement>(
+                    "SELECT * FROM SiddosA3MMeasurement WHERE Id =" + id);
+                return siddosMeasurement.First();
             }
             catch(Exception e)
             {
