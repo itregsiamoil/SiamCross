@@ -183,6 +183,7 @@ namespace SiamCross.Droid.Models
                 {
                     try
                     {
+                        await Task.Delay(500);
                         await _writeCharacteristic.WriteAsync(data);
                         _logger.Warn($"Повторная попытка отправки номер {i}/10 прошла успешно!");
                         return;
