@@ -31,5 +31,7 @@ namespace SiamCross
         public const int ConnectTimeOut = 10000;
 
         public const string DefaultModelPump = "Балансирный";
+
+        public const float EhoFixedSoundSpeed = 341.33f;
     }
 }
