@@ -35,13 +35,19 @@ namespace SiamCross.Models.Sensors.Du.Measurement
         {
             Debug.WriteLine("SENDING PARAMETERS");
             await SendParameters();
+            await Task.Delay(300);
             await Start();
-            //await Task.Delay(2000);
+            await Task.Delay(300);
             await _bluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure]);
+            await Task.Delay(300);
             await IsMeasurementDone();
+            await Task.Delay(300);
             await _bluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.SensorState]);
+            await Task.Delay(300);
             await DownloadHeader();
+            await Task.Delay(300);
             var result = await GetMeasurementData();
+            await Task.Delay(2000);
             return result;
         }
 
@@ -54,7 +60,9 @@ namespace SiamCross.Models.Sensors.Du.Measurement
         private async Task<DuMeasurementData> GetMeasurementData()
         {
             await DownloadEchogram();
+            await Task.Delay(300);
             await _bluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.StateZeroing]);
+            await Task.Delay(300);
 
             var echogramRawBytes = new List<byte>();
             foreach (var bytes in _currentEchogram)
@@ -90,7 +98,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             //Read first 500 bytes
 
             await _bluetoothAdapter.SendData(command.ToArray());
-            //await Task.Delay(300);
+            await Task.Delay(300);
 
             RemoveCrc();
 
@@ -104,7 +112,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
 
                 AddCrc();
                 await _bluetoothAdapter.SendData(command.ToArray());
-                await Task.Delay(Constants.ShortDelay);
+                await Task.Delay(150);
 
                 RemoveCrc();
             }
@@ -128,6 +136,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
         {
             //_writeLog(DuCommands.FullCommandDictionary[DuCommandsEnum.StartMeasurement]);
             await _bluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.StartMeasurement]);
+            await Task.Delay(300);
         }
 
         private async Task SendParameters()
@@ -149,15 +158,12 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             await _bluetoothAdapter.SendData(command);
         }
 
-        //private Action<byte[]> _writeLog = (data) => Debug.WriteLine(BitConverter.ToString(data));
-
         private async Task<bool> IsMeasurementDone()
         {
             bool isDone = false;
             while (!isDone)
             {
                 await Task.Delay(300);
-                //_writeLog(DuCommands.FullCommandDictionary[DuCommandsEnum.SensorState]);
                 await _bluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.SensorState]);
 
                 if (MeasurementStatus == DuMeasurementStatus.Сompleted)
@@ -195,7 +201,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                     break;
                 case DuCommandsEnum.Pressure:
                     Debug.WriteLine("ANNULAR PRESSURE: " + BitConverter.ToString(data));
-                    _pressure = Convert.ToSingle(data);
+                    _pressure = BitConverter.ToSingle(new byte[] { data[0], data[1], 0x00, 0x00 }, 0);
                     break;
                 default:
                     break;
