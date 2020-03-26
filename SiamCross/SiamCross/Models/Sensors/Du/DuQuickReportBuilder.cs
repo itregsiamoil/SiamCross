@@ -34,7 +34,7 @@ namespace SiamCross.Models.Sensors.Du
                 return _pressure != null ?
                     $"{Resource.Pressure}: " 
                     + _pressure 
-                    + $", {Resource.PressureUnits}\n"
+                    + $", {Resource.KGFCMUnits}\n"
                 : "";
             }
 
