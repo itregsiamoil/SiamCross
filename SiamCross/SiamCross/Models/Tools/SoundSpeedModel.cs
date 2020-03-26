@@ -44,5 +44,21 @@ namespace SiamCross.Models.Tools
         {
             return $"{Name}: {Code}";
         }
+
+        public float GetApproximatedSpeedFromTable(float pressure)
+        {
+            float speed = LevelSpeedTable[0].Value;
+
+            for (int i = 1; i < LevelSpeedTable.Count; i++)
+            {
+                var average = (LevelSpeedTable[i].Key + LevelSpeedTable[i - 1].Key) / 2;
+                if(pressure > average)
+                {
+                    speed = LevelSpeedTable[i].Value;
+                }
+            }
+
+            return speed;
+        }
     }
 }
