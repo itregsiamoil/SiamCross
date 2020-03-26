@@ -25,7 +25,7 @@
     </ContentPage.Resources>
 
     <StackLayout x:Name="outerStack" Orientation="Vertical">
-        <Grid x:Name="graphGrid" Margin="2">
+        <!--<Grid x:Name="graphGrid" Margin="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -49,8 +49,43 @@
             <Label Text="0"  Grid.Column="0" Grid.Row="2"/>
             <Label Text=", М" HorizontalOptions="Center" Grid.Column="2" Grid.Row="2"/>
             <Label Text="{Binding MaxGraphX}" HorizontalOptions="End" Grid.Column="1" Grid.Row="2"/>
+        </Grid>-->
+
+        <Grid x:Name="graphGrid" Margin="2">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Label Text="{Binding MaxGraphY}" Grid.Column="0" Grid.Row="0"/>
+        <StackLayout Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
+                <Label Text=", "/>
+                <Label Text="{local1:Translate KGFCMUnits}"/>
+                <Label Text="^0.5/0.35"/>
+            </StackLayout>
+        <Label Text="{Binding MinGraphY}" Grid.Column="0" Grid.Row="1" VerticalOptions="End"/>
+        <skia:SKCanvasView x:Name="CanvasView"
+                           PaintSurface="CanvasView_PaintSurface"
+                           HorizontalOptions="FillAndExpand"
+                           Margin="5"
+                           VerticalOptions="FillAndExpand"
+                           IgnorePixelScaling="True"
+                           HeightRequest="200"
+                           Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"/>
+        <Label Text="{Binding MinGraphX}" Grid.Column="1" Grid.Row="2" HorizontalOptions="Start"/>
+        <StackLayout Orientation="Horizontal" Grid.Column="2" Grid.Row="2" HorizontalOptions="End">
+            <Label Text="{Binding MaxGraphX}"/>
+            <Label Text=", "/>
+            <Label Text="M"/>
+        </StackLayout>
         </Grid>
-        
+
         <TableView Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand"

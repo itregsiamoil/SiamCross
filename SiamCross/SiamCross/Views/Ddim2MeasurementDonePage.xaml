@@ -67,33 +67,12 @@
             <Label Text=", М" HorizontalOptions="Center" Grid.Column="2" Grid.Row="2"/>
             <Label Text="{Binding MaxGraphX}" HorizontalOptions="End" Grid.Column="1" Grid.Row="2"/>
         </Grid>
-
-        <!--<skia:SKCanvasView x:Name="CanvasView"
-                           PaintSurface="CanvasView_PaintSurface"
-                           HorizontalOptions="FillAndExpand"
-                           Margin="5"
-                           VerticalOptions="FillAndExpand"
-                           IgnorePixelScaling="True"
-                           HeightRequest="200"
-                           />-->
         <TableView Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand"
                Margin="5">
             <TableRoot >
                 <TableSection>
-                    <!--<ViewCell>
-                        <StackLayout Orientation="Horizontal">
-                            <Label Text="Max X: "/>
-                            <Label Text="{Binding MaxGraphX}"/>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout Orientation="Horizontal">
-                            <Label Text="Max Y: "/>
-                            <Label Text="{Binding MaxGraphY}"/>
-                        </StackLayout>
-                    </ViewCell>-->
                     <ViewCell>
                         <StackLayout>
                             <Label Text="{local1:Translate Field}"/>

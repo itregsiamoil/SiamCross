@@ -74,6 +74,8 @@ namespace SiamCross.ViewModels
 
         public ICommand ShareCommand { get; set; }
 
+        private double[,] _points;
+
         public DuMeasurementDoneViewModel(DuMeasurement measurement)
         {
             _measurement = measurement;
@@ -100,6 +102,13 @@ namespace SiamCross.ViewModels
             MeasurementType = _measurement.MeasurementType;
 
             ShareCommand = new Command(ShareCommandHandler);
+
+             _points = EchogramConverter.GetPoints(measurement);
+
+            MaxGraphX = Math.Round(GetMaximumX(), 0).ToString();
+            MaxGraphY = Math.Round(GetMaximumY(), 0).ToString();
+            MinGraphX = Math.Round(GetMinimumX(), 0).ToString();
+            MinGraphY = Math.Round(GetMinimumY(), 0).ToString();
         }
 
         private DateTimeConverter _timeConverter = new DateTimeConverter();
@@ -134,6 +143,63 @@ namespace SiamCross.ViewModels
         {
             return $"{deviceName}_{_timeConverter.DateTimeToString(date)}.xml"
                 .Replace(':', '-');
+        }
+
+        public string MaxGraphY { get; set; }
+        public string MinGraphY { get; set; }
+        public string MaxGraphX { get; set; }
+        public string MinGraphX { get; set; }
+
+        public double GetMaximumX()
+        {
+            double max = _points[0, 0];
+            for (int i = 0; i < _points.GetUpperBound(0); i++)
+            {
+                if (_points[i, 0] > max)
+                {
+                    max = _points[i, 0];
+                }
+            }
+            return max;
+        }
+
+        public double GetMinimumX()
+        {
+            double min = _points[0, 0];
+            for (int i = 0; i < _points.GetUpperBound(0); i++)
+            {
+                if (_points[i, 0] < min)
+                {
+                    min = _points[i, 0];
+                }
+            }
+            return min;
+        }
+
+        public double GetMaximumY()
+        {
+            double max = _points[1, 0];
+            for (int i = 0; i < _points.GetUpperBound(0); i++)
+            {
+                if (_points[i, 1] > max)
+                {
+                    max = _points[i, 1];
+                }
+            }
+            return max;
+        }
+
+        public double GetMinimumY()
+        {
+            double min = _points[1, 0];
+            for (int i = 0; i < _points.GetUpperBound(0); i++)
+            {
+                if (_points[i, 1] < min)
+                {
+                    min = _points[i, 1];
+                }
+            }
+            return min;
         }
     }
 }

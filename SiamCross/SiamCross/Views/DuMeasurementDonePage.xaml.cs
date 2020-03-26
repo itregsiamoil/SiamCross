@@ -37,7 +37,8 @@ namespace SiamCross.Views
                 var vmWrap = new ViewModelWrap<DuMeasurementDoneViewModel>(measurement);
                 this.BindingContext = vmWrap.ViewModel;
                 InitializeComponent();
-                _points = EchogramConverter.GetXYs(measurement);
+                //_points = EchogramConverter.GetXYs(measurement);
+                _points = EchogramConverter.GetPoints(measurement);
             }
             catch (Exception ex)
             {
@@ -64,35 +65,49 @@ namespace SiamCross.Views
                 };
                 SKPaint paintAxies = new SKPaint
                 {
-                    Style = SKPaintStyle.Stroke,
+                    Style = SKPaintStyle.Fill,
                     Color = Color.Black.ToSKColor(),
                     StrokeWidth = 1
                 };
-                //canvas.DrawLine(0, 0, 0, (float)CanvasView.Height, paintAxies);
-                //canvas.DrawLine(0, (float)CanvasView.Height, 
-                //    (float)CanvasView.Width, (float)CanvasView.Height, paintAxies);
-                //canvas.DrawCircle(info.Width / 2, info.Height / 2, 100, paint);
 
-                double maxX = GetMaximumX();
-                double maxY = GetMaximumY();
-                double dx = (CanvasView.Width) / maxX;
-                double dy = (CanvasView.Height) / maxY;
+                DuMeasurementDoneViewModel vm =
+                   (DuMeasurementDoneViewModel)BindingContext;
+
+                const float yReserve = 5;
+                double maxX = vm.GetMaximumX();
+                double maxY = vm.GetMaximumY();
+                double minX = vm.GetMinimumX();
+                double minY = vm.GetMinimumY();
+                double dx = (CanvasView.Width) / (maxX - minX);
+                double dy = (CanvasView.Height - yReserve) / (maxY - minY);
+                double yOffset = minY;               
 
                 var skPoints = new List<SKPoint>();
                 for (int i = 0; i < _points.GetUpperBound(0); i++)
                 {
-                    float y = (float)CanvasView.Height - (float)(_points[i, 1] * dy) + (float)CanvasView.Height/2;
-                    //float y = (float)(_points[i, 1] * dy); //+ (float)CanvasView.Height/2;
+                    float p = (float)_points[i, 1];
+                    double pdy = p * dy;
+                    float y = (float)CanvasView.Height - (float)(pdy + Math.Abs(yOffset) * dy + yReserve / 2);
                     float x = (float)(_points[i, 0] * dx);
+
+                    if(y > CanvasView.Height)
+                    {
+                        ;
+                    }
+
                     skPoints.Add(new SKPoint(x, y));
                 }
 
+                List<float> pList = new List<float>();
                 for (int i = 0; i < skPoints.Count - 1; i++)
                 {
                     canvas.DrawLine(skPoints[i], skPoints[i + 1], paint);
+                    if(skPoints[i].Y > CanvasView.Height)
+                    {
+                        pList.Add(skPoints[i].Y);
+                    }
                 }
 
-                //canvas.DrawPoints(SKPointMode.Polygon, skPoints.ToArray(), paint);
                 canvas.DrawLine(1, 1, 1, (float)CanvasView.Height - 1, paintAxies);
                 canvas.DrawLine(1, (float)CanvasView.Height - 1,
                     (float)CanvasView.Width - 1, (float)CanvasView.Height - 1, paintAxies);
@@ -102,32 +117,6 @@ namespace SiamCross.Views
                 _logger.Error(ex, "CanvasView_PaintSurface Ddin2MeasurementDonePage");
                 throw;
             }
-        }
-
-        private double GetMaximumX()
-        {
-            double max = double.MinValue;
-            for (int i = 0; i < _points.GetUpperBound(0); i++)
-            {
-                if (_points[i, 0] > max)
-                {
-                    max = _points[i, 0];
-                }
-            }
-            return max;
-        }
-
-        private double GetMaximumY()
-        {
-            double max = double.MinValue;
-            for (int i = 0; i < _points.GetUpperBound(0); i++)
-            {
-                if (_points[i, 1] > max)
-                {
-                    max = _points[i, 1];
-                }
-            }
-            return max;
         }
 
         protected override void OnDisappearing()
