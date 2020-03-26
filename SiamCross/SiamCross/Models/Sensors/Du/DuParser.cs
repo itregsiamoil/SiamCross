@@ -89,21 +89,11 @@ namespace SiamCross.Models.Sensors.Du
                         break;
                     case DuCommandsEnum.Revbit:
                         var payload = GetPayload(message);
+
                         Debug.WriteLine(BitConverter.ToString(payload));
                         Debug.WriteLine(AddZerosToBinary(Convert.ToString(payload[1], 2)));
                         Debug.WriteLine(AddZerosToBinary(Convert.ToString(payload[0], 2)));
-
-                        string AddZerosToBinary(string binary)
-                        {
-                            if (binary.Length < 8)
-                            {
-                                while (binary.Length < 8)
-                                {
-                                    binary = binary.Insert(0, "0");
-                                }
-                            }
-                            return binary;
-                        }
+                     
                         break;
                     case DuCommandsEnum.Pressure:
                         ExportByteData(DuCommandsEnum.Pressure, message);
@@ -125,6 +115,18 @@ namespace SiamCross.Models.Sensors.Du
                 Debug.WriteLine(BitConverter.ToString(_byteBuffer.Buffer.ToArray()));
                 _byteBuffer = new ByteBuffer();
             }
+        }
+
+        private string AddZerosToBinary(string binary)
+        {
+            if (binary.Length < 8)
+            {
+                while (binary.Length < 8)
+                {
+                    binary = binary.Insert(0, "0");
+                }
+            }
+            return binary;
         }
 
         private void ExportByteData(DuCommandsEnum commandName, byte[] message)
@@ -177,7 +179,8 @@ namespace SiamCross.Models.Sensors.Du
                         Debug.WriteLine($"TO INT16 {BitConverter.ToString(payloadBytes)}");
                         break;
                     case DeviceRegistersTypes.Int8:
-                        result = BitConverter.ToInt16(payloadBytes, 0).ToString();
+                        if(payloadBytes.Length == 1)
+                        result = BitConverter.ToInt16(new byte[]{ payloadBytes[0], 0x00}, 0).ToString();
                         break;
                     case DeviceRegistersTypes.S16:
                         float value = BitConverter.ToInt16(payloadBytes, 0);
