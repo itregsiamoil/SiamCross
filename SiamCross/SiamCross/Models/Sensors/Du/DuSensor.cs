@@ -160,8 +160,6 @@ namespace SiamCross.Models.Sensors.Du
             var result = await _measurementManager.RunMeasurement();
             SensorService.Instance.MeasurementHandler(result);
             IsMeasurement = false;
-        }
-
-        
+        }   
     }
 }
