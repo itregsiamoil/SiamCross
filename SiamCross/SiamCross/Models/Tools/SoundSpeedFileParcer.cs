@@ -41,7 +41,7 @@ namespace SiamCross.Models.Tools
 
             }
 
-            return soundSpeedsList;
+            return soundSpeedsList.Count != 0 ? soundSpeedsList : null;
         }
     }
 }
