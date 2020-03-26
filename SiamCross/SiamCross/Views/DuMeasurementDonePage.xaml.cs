@@ -85,15 +85,9 @@ namespace SiamCross.Views
                 var skPoints = new List<SKPoint>();
                 for (int i = 0; i < _points.GetUpperBound(0); i++)
                 {
-                    float p = (float)_points[i, 1];
-                    double pdy = p * dy;
-                    float y = (float)CanvasView.Height - (float)(pdy + Math.Abs(yOffset) * dy + yReserve / 2);
+                    float y = (float)CanvasView.Height - 
+                        (float)(_points[i, 1] * dy + Math.Abs(yOffset) * dy + yReserve / 2);
                     float x = (float)(_points[i, 0] * dx);
-
-                    if(y > CanvasView.Height)
-                    {
-                        ;
-                    }
 
                     skPoints.Add(new SKPoint(x, y));
                 }
