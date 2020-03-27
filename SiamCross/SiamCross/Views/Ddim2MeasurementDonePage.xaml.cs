@@ -89,15 +89,9 @@ namespace SiamCross.Views
                     Color = Color.Black.ToSKColor(),
                     StrokeWidth = 1
                 };
-                //canvas.DrawLine(0, 0, 0, (float)CanvasView.Height, paintAxies);
-                //canvas.DrawLine(0, (float)CanvasView.Height,
-                //    (float)CanvasView.Width, (float)CanvasView.Height, paintAxies);
-                //canvas.DrawCircle(info.Width / 2, info.Height / 2, 100, paint);
 
                 double maxX = GetMaximumX();
                 double maxY = GetMaximumY();
-                //maxX = maxX < 1 ? maxX * 0.1 : maxX * 10;
-                //maxY = maxY < 1 ? maxY * 0.1 : maxY * 10;
                 double dx = CanvasView.Width / maxX;
                 double dy = CanvasView.Height / maxY;
 

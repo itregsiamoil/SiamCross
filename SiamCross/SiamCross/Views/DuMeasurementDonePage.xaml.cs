@@ -37,7 +37,6 @@ namespace SiamCross.Views
                 var vmWrap = new ViewModelWrap<DuMeasurementDoneViewModel>(measurement);
                 this.BindingContext = vmWrap.ViewModel;
                 InitializeComponent();
-                //_points = EchogramConverter.GetXYs(measurement);
                 _points = EchogramConverter.GetPoints(measurement);
             }
             catch (Exception ex)
