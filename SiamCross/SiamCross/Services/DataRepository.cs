@@ -289,8 +289,8 @@ namespace SiamCross.Services
             try
             {
                 string sql = "UPDATE DuMeasurement SET " +
-                    "FluidLevel = @FluidLevel, NumberOfReflections = @NumberOfReflecions, " +
-                    "AnnularPressure = @AnnularPressure, Echogram = @Echogram, SoundSpeed = @SoundSpeedd, " +
+                    "FluidLevel = @FluidLevel, NumberOfReflections = @NumberOfReflections, " +
+                    "AnnularPressure = @AnnularPressure, Echogram = @Echogram, SoundSpeed = @SoundSpeed, " +
                     "MeasurementType = @MeasurementType, SoundSpeedCorrection = @SoundSpeedCorrection, " +
                     "DateTime = @DateTime," +
                     " Field = @Field, Well = @Well, Bush = @Bush, Shop = @Shop, BufferPressure = @BufferPressure," +
@@ -311,6 +311,7 @@ namespace SiamCross.Services
                     duMeasurement.Shop,
                     duMeasurement.BufferPressure,
                     duMeasurement.Comment,
+                    duMeasurement.Name,
                     duMeasurement.Id
                 });
             }
