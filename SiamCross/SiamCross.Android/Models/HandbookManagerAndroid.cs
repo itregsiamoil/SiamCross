@@ -192,8 +192,8 @@ namespace SiamCross.Droid.Models
 
             return new List<SoundSpeedModel>()
             {
-                new SoundSpeedModel(0, "Лангепас", langepasDictionary),
-                new SoundSpeedModel(1, "Татария", tatariaDictonary)
+                new SoundSpeedModel(1, SiamCross.Resource.Langepas, langepasDictionary),
+                new SoundSpeedModel(2, SiamCross.Resource.Tataria, tatariaDictonary)
             };
         }
         #endregion
