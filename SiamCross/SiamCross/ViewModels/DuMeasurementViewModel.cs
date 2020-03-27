@@ -11,34 +11,69 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Xamarin.Forms;
+using System.Collections.Generic;
 
 namespace SiamCross.ViewModels
 {
     public class DuMeasurementViewModel: BaseSensorMeasurementViewModel<DuMeasurementStartParameters>, IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
-        
+        private List<SoundSpeedModel> _soundSpeedModels;
         public ObservableCollection<string> ResearchTypes { get; set; }
-        public string SelectedReasearchType { get; set; }
+        public string SelectedResearchType { get; set; }
         public ObservableCollection<string> SoundSpeedCorrections { get; set; }
-        public string SelectedSoundSpeedCorrection { get; set; }
         public bool Amplification { get; set; }
-        public bool Inlet { get; set; }
-        public string SoundSpeed { get; set; }
-
+        public bool Inlet { get; set; } //Впуск
         public ICommand StartMeasurementCommand { get; set; }
         public ICommand ValveTestCommand { get; set; }
+        private string _selectedSoundSpeedCorrection;
+        public string SelectedSoundSpeedCorrection
+        {
+            get
+            {
+                return _selectedSoundSpeedCorrection;
+            }
+            set
+            {
+                if (!string.IsNullOrEmpty(_soundSpeed))
+                {
+                    _soundSpeed = null;
+                    NotifyPropertyChanged(nameof(SoundSpeed));                 
+                }
+                _selectedSoundSpeedCorrection = value;
+                NotifyPropertyChanged(nameof(SelectedSoundSpeedCorrection));
+            }
+        }
+        private string _soundSpeed;
+        public string SoundSpeed
+        {
+            get
+            {
+                return _soundSpeed;
+            }
+            set
+            {
+                if (!string.IsNullOrEmpty(SelectedSoundSpeedCorrection))
+                {
+                    _selectedSoundSpeedCorrection = null;
+                    NotifyPropertyChanged(nameof(SelectedSoundSpeedCorrection));
+                }
+                _soundSpeed = value;
+                NotifyPropertyChanged(nameof(SoundSpeed));
+            }
+        }
         public DuMeasurementViewModel(SensorData sensorData) : base(sensorData)
         {
             try
             {
+                _soundSpeedModels = HandbookData.Instance.GetSoundSpeedList();
                 ResearchTypes = new ObservableCollection<string>
                 {
                     Resource.DynamicLevel,
                     Resource.StaticLevel
                 };
                 SoundSpeedCorrections = new ObservableCollection<string>();
-                foreach (var elem in HandbookData.Instance.GetSoundSpeedList())
+                foreach (var elem in _soundSpeedModels)
                 {
                     SoundSpeedCorrections.Add(elem.ToString());
                 }
@@ -47,7 +82,7 @@ namespace SiamCross.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Ddim2MeasurementViewModel constructor");
+                _logger.Error(ex, "DuMeasurementViewModel constructor");
                 throw;
             }
         }
@@ -56,11 +91,9 @@ namespace SiamCross.ViewModels
         {
             try
             {
+                if (!ValidateForEmptinessEveryParameter()) return;
+
                 StartMeasurementCommand = new Command(() => { });
-                //if (!ValidateForEmptinessEveryParameter())
-                //{
-                //    return;
-                //}
 
                 var secondaryParameters = new DuMeasurementSecondaryParameters(
                     _sensorData.Name,
@@ -71,7 +104,7 @@ namespace SiamCross.ViewModels
                     Shop,
                     BufferPressure,
                     Comments,
-                    SelectedReasearchType,
+                    SelectedResearchType,
                     SelectedSoundSpeedCorrection.ToString(),
                     SoundSpeed);
 
@@ -84,7 +117,7 @@ namespace SiamCross.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "StartMeasurementHandler Ddim2MeasurementVM");
+                _logger.Error(ex, "StartMeasurementHandler DuMeasurementVM");
                 throw;
             }
         }
@@ -94,21 +127,25 @@ namespace SiamCross.ViewModels
             //Чекбоксы "Усиление" и "Впуск" и так инициализируются false
             SoundSpeed = "";
             SelectedSoundSpeedCorrection = "";
-            SelectedReasearchType = "";
+            SelectedResearchType = "";
         }
 
         protected override bool ValidateForEmptinessEveryParameter()
         {
-            _errorList.Clear();
+            base._errorList.Clear();
 
-            ValidateParameterForEmtpiness(SelectedField, Resource.SelectedFieldChoiceText);
-            ValidateParameterForEmtpiness(Well, Resource.WellChoiceText);
-            ValidateParameterForEmtpiness(Bush, Resource.BushChoiceText);
-            ValidateParameterForEmtpiness(Shop, Resource.ShopChoiceText);
-            ValidateParameterForEmtpiness(BufferPressure, Resource.BufferPressureChoiceText);
-            ValidateParameterForEmtpiness(Comments, Resource.CommentsChoiceText);
-            ValidateParameterForEmtpiness(SelectedReasearchType, Resource.SelectedReasearchTypeChoice);
-            ValidateParameterForEmtpiness(SelectedSoundSpeedCorrection, Resource.SelectedSoundSpeedCorrectionChoice);
+            base.ValidateParameterForEmtpiness(SelectedField, Resource.SelectedFieldChoiceText);
+            base.ValidateParameterForEmtpiness(Well, Resource.WellChoiceText);
+            base.ValidateParameterForEmtpiness(Bush, Resource.BushChoiceText);
+            base.ValidateParameterForEmtpiness(Shop, Resource.ShopChoiceText);
+            base.ValidateParameterForEmtpiness(BufferPressure, Resource.BufferPressureChoiceText);
+            base.ValidateParameterForEmtpiness(Comments, Resource.CommentsChoiceText);
+            base.ValidateParameterForEmtpiness(SelectedResearchType, Resource.SelectedReasearchTypeChoice);
+            
+            if(string.IsNullOrEmpty(SoundSpeed) && string.IsNullOrEmpty(SelectedSoundSpeedCorrection))
+            {
+                _errorList.Add(Resource.ChoiceSpeedCorrectionTableOrInpunSpeed);
+            }
 
             if (_errorList.Count != 0)
             {
