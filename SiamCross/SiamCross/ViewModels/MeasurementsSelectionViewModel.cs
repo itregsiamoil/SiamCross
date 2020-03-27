@@ -108,6 +108,11 @@ namespace SiamCross.ViewModels
                                 DataRepository.Instance.RemoveSiddosA3MMeasurement(mv.Id);
                                 Measurements.Remove(mv);
                             }
+                            else if (mv.Name.Contains("DU"))
+                            {
+                                DataRepository.Instance.RemoveDuMeasurement(mv.Id);
+                                Measurements.Remove(mv);
+                            }
                         }
                     }
                     MessagingCenter.Send<MeasurementsSelectionViewModel>(this, "RefreshAfterDeleting");
