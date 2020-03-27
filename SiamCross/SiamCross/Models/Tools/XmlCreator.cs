@@ -12,7 +12,7 @@ namespace SiamCross.Models.Tools
     {
         public XDocument CreateDdim2Xml(Ddim2Measurement dbDdimModel)
         {
-            //////////////////////////////////////////////////////////////////////////////////////// Setup
+            #region Setup
 
             string name = "";
             string number = "";
@@ -75,7 +75,7 @@ namespace SiamCross.Models.Tools
                 }
             }
 
-            ////////////////////////////////////////////////////////////////////////////////////////////
+            #endregion
 
             XDocument document =
                 new XDocument(
@@ -102,11 +102,11 @@ namespace SiamCross.Models.Tools
 
                                         new XElement("Value",
                                             new XAttribute("MSVDICTIONARYID", "dynmovement"),
-                                            new XAttribute("MSVDATA", BinaryToBase64(movement.ToArray()))),                                    //!
+                                            new XAttribute("MSVDATA", BinaryToBase64(movement.ToArray(), 1000f))),                                    //!
 
                                         new XElement("Value",
                                             new XAttribute("MSVDICTIONARYID", "dynburden"),
-                                            new XAttribute("MSVDATA", BinaryToBase64(weight.ToArray()))),                                    //!
+                                            new XAttribute("MSVDATA", BinaryToBase64(weight.ToArray(), 1000f))),                                    //!
 
                                         new XElement("Value",
                                             new XAttribute("MSVINTEGER", "2"),                                      //Межтраверсный
@@ -161,7 +161,7 @@ namespace SiamCross.Models.Tools
 
         public XDocument CreateDdin2Xml(Ddin2Measurement dbDdinModel)
         {
-            //////////////////////////////////////////////////////////////////////////////////////// Setup
+            #region Setup
 
             string name = "";
             string number = "";
@@ -224,7 +224,7 @@ namespace SiamCross.Models.Tools
                 }
             }
 
-            ////////////////////////////////////////////////////////////////////////////////////////////
+            #endregion
 
             XDocument document =
                 new XDocument(
@@ -251,11 +251,11 @@ namespace SiamCross.Models.Tools
 
                                         new XElement("Value",
                                             new XAttribute("MSVDICTIONARYID", "dynmovement"),
-                                            new XAttribute("MSVDATA", BinaryToBase64(movement.ToArray()))),                                    //!
+                                            new XAttribute("MSVDATA", BinaryToBase64(movement.ToArray(), 1000f))),                                    //!
 
                                         new XElement("Value",
                                             new XAttribute("MSVDICTIONARYID", "dynburden"),
-                                            new XAttribute("MSVDATA", BinaryToBase64(weight.ToArray()))),                                    //!
+                                            new XAttribute("MSVDATA", BinaryToBase64(weight.ToArray(), 1000f))),                                    //!
 
                                         new XElement("Value",
                                             new XAttribute("MSVINTEGER", "1"),                                      //Накладной
@@ -314,7 +314,7 @@ namespace SiamCross.Models.Tools
 
         public XDocument CreateSiddosA3MXml(SiddosA3MMeasurement dbSiddosA3MModel)
         {
-            //////////////////////////////////////////////////////////////////////////////////////// Setup
+            #region Setup
 
             string name = "";
             string number = "";
@@ -377,7 +377,7 @@ namespace SiamCross.Models.Tools
                 }
             }
 
-            ////////////////////////////////////////////////////////////////////////////////////////////
+            #endregion
 
             XDocument document =
                 new XDocument(
@@ -404,11 +404,11 @@ namespace SiamCross.Models.Tools
 
                                         new XElement("Value",
                                             new XAttribute("MSVDICTIONARYID", "dynmovement"),
-                                            new XAttribute("MSVDATA", BinaryToBase64(movement.ToArray()))),                                    //!
+                                            new XAttribute("MSVDATA", BinaryToBase64(movement.ToArray(), 1000f))),                                    //!
 
                                         new XElement("Value",
                                             new XAttribute("MSVDICTIONARYID", "dynburden"),
-                                            new XAttribute("MSVDATA", BinaryToBase64(weight.ToArray()))),                                    //!
+                                            new XAttribute("MSVDATA", BinaryToBase64(weight.ToArray(), 1000f))),                                    //!
 
                                         new XElement("Value",
                                             new XAttribute("MSVINTEGER", "0"),                                      //Домкрат
@@ -461,10 +461,15 @@ namespace SiamCross.Models.Tools
             return document;
         }
 
-        private String BinaryToBase64(double[] array)
+        //public XDocument CreateDuXml(DuMeasurement dbDuModel)
+        //{
+
+        //}
+
+        private String BinaryToBase64(double[] array, float divider)
         {          
             return Convert.ToBase64String(array.SelectMany(n => {
-                return BitConverter.GetBytes(n / 1000f);
+                return BitConverter.GetBytes(n / divider);
             }).ToArray(), 
             Base64FormattingOptions.None);
         }
