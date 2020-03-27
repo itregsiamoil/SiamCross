@@ -268,6 +268,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select the table for adjusting the speed of sound or enter the speed of sound manually!.
+        /// </summary>
+        public static string ChoiceSpeedCorrectionTableOrInpunSpeed {
+            get {
+                return ResourceManager.GetString("ChoiceSpeedCorrectionTableOrInpunSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Choose.
         /// </summary>
         public static string Choose {
@@ -718,7 +727,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to �G.
+        ///   Looks up a localized string similar to KG.
         /// </summary>
         public static string Kilograms {
             get {
@@ -1240,8 +1249,8 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The �SIAM� company has been operating since 1990, and has reached a leading position in the market of equipment and services for hydrodynamic and geological field research of wells. The company is part of the �Integra Group of Companies�, which is rightfully considered the leading integrated oilfield services company in Russia and the CIS countries.
-        ///Since 1990, the Tomsk Scientific Production and Implementation Society �SIAM� has been developing, producing equipment for well research. Over the years, many  [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to The «SIAM» company has been operating since 1990, and has reached a leading position in the market of equipment and services for hydrodynamic and geological field research of wells. The company is part of the «Integra Group of Companies», which is rightfully considered the leading integrated oilfield services company in Russia and the CIS countries.
+        ///Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» has been developing, producing equipment for well research. Over the years, many  [rest of string was truncated]&quot;;.
         /// </summary>
         public static string TextAboutCompany {
             get {

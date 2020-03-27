@@ -261,7 +261,7 @@
     <value>Incorrect data entered!</value>
   </data>
   <data name="Kilograms" xml:space="preserve">
-    <value>�G</value>
+    <value>KG</value>
   </data>
   <data name="Load" xml:space="preserve">
     <value>Load</value>
@@ -375,9 +375,9 @@
     <value>Temperature</value>
   </data>
   <data name="TextAboutCompany" xml:space="preserve">
-    <value>The �SIAM� company has been operating since 1990, and has reached a leading position in the market of equipment and services for hydrodynamic and geological field research of wells. The company is part of the �Integra Group of Companies�, which is rightfully considered the leading integrated oilfield services company in Russia and the CIS countries.
-Since 1990, the Tomsk Scientific Production and Implementation Society �SIAM� has been developing, producing equipment for well research. Over the years, many unique equipment has been created, some of which are protected by patents. Our equipment is well-respected by workers in the oil and gas industry.
-This software �SIAM SERVICE 2� is a �SIAM� software package designed for storing, transmitting, processing and interpreting data obtained during well testing via Bluetooth wireless data transmission from portable devices (dynamographs / level gauges).</value>
+    <value>The «SIAM» company has been operating since 1990, and has reached a leading position in the market of equipment and services for hydrodynamic and geological field research of wells. The company is part of the «Integra Group of Companies», which is rightfully considered the leading integrated oilfield services company in Russia and the CIS countries.
+Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» has been developing, producing equipment for well research. Over the years, many unique equipment has been created, some of which are protected by patents. Our equipment is well-respected by workers in the oil and gas industry.
+This software «SIAM SERVICE 2» is a «SIAM» software package designed for storing, transmitting, processing and interpreting data obtained during well testing via Bluetooth wireless data transmission from portable devices (dynamographs / level gauges).</value>
   </data>
   <data name="ToAddress" xml:space="preserve">
     <value>Destination address</value>
@@ -555,5 +555,8 @@ This software �SIAM SERVICE 2� is a �SIAM� software package designed for
   </data>
   <data name="MSUnits" xml:space="preserve">
     <value>m/s</value>
+  </data>
+  <data name="ChoiceSpeedCorrectionTableOrInpunSpeed" xml:space="preserve">
+    <value>Select the table for adjusting the speed of sound or enter the speed of sound manually!</value>
   </data>
 </root>

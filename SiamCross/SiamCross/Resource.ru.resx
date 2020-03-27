@@ -565,4 +565,7 @@
   <data name="MSUnits" xml:space="preserve">
     <value>м/с</value>
   </data>
+  <data name="ChoiceSpeedCorrectionTableOrInpunSpeed" xml:space="preserve">
+    <value>Выберите таблицу поправки скорости звука или введите скорость звука вручную!</value>
+  </data>
 </root>
