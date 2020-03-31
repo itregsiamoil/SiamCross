@@ -461,10 +461,134 @@ namespace SiamCross.Models.Tools
             return document;
         }
 
-        //public XDocument CreateDuXml(DuMeasurement dbDuModel)
-        //{
+        public XDocument CreateDuXml(DuMeasurement dbDuModel)
+        {
+            #region Setup
 
-        //}
+            string name = "";
+            string number = "";
+            foreach (char ch in dbDuModel.Name)
+            {
+                if (ch > 47 || ch < 58)
+                {
+                    name += ch;
+                }
+                else
+                {
+                    number += ch;
+                }
+            }
+
+            number = dbDuModel.Name.Substring(dbDuModel.Name.Length - 4);
+            if (number[0] == '0')
+            {
+                number.Substring(number.Length - 1);
+            }
+
+
+            List<double> discretsY = new List<double>();
+            var convertedEhogram = EchogramConverter.GetPoints(dbDuModel);
+            for (int i = 0; i < convertedEhogram.GetUpperBound(0); i++)
+            {
+                discretsY.Add(convertedEhogram[i, 1]);
+            }
+
+            var month = dbDuModel.DateTime.Date.Month.ToString();
+            if (month.Length < 2)
+            {
+                month = "0" + month;
+            }
+
+            var day = dbDuModel.DateTime.Date.Day.ToString();
+            if (day.Length < 2)
+            {
+                day = "0" + day;
+            }
+
+            string date = dbDuModel.DateTime.Date.Year.ToString() + "-" +
+                month + "-" + day;
+            string time = dbDuModel.DateTime.TimeOfDay.ToString().Split('.')[0];
+
+            string field = "";
+            var tempField = dbDuModel.Field.Split(':');
+            if (tempField.Length > 1)
+            {
+                if (tempField[1].Length > 1)
+                {
+                    field = tempField[1].Remove(0, 1);
+                }
+            }
+
+            int measurementType = 0;
+            if (dbDuModel.MeasurementType == Resource.StaticLevel)
+            {
+                measurementType = 1;
+            }
+            else if(dbDuModel.MeasurementType == Resource.DynamicLevel)
+            {
+                measurementType = 2;
+            }
+
+            #endregion
+
+            XDocument document =
+                new XDocument(
+                new XElement("Device_List",
+                    new XElement("Device",
+
+                        new XAttribute("DEVTID", "siddos01"),
+                        new XAttribute("DSTID", "ДУ-1"),
+                        new XAttribute("DEVSERIALNUMBER", number),
+
+                            new XElement("Measurement_List",
+                                new XElement("Measurement",
+                                    new XElement("Header",
+                                        new XAttribute("MESTYPEID", "levelgage"),
+                                        new XAttribute("MESSTARTDATE", date + "T" + time),
+                                        new XAttribute("MESDEVICEOPERATORID", "0"),                                             
+                                        new XAttribute("MESDEVICEFIELDID", field),
+                                        new XAttribute("MESDEVICEWELLCLUSTERID", dbDuModel.Bush.ToString()),
+                                        new XAttribute("MESDEVICEWELLID", dbDuModel.Well.ToString()),
+                                        new XAttribute("MESDEVICEDEPARTMENTID", dbDuModel.Shop.ToString()),
+                                        new XAttribute("MESDEVICEBUFFERPRESSUREID", dbDuModel.BufferPressure.ToString())),
+
+                                    new XElement("Value_List",
+                                    new XElement("Value",
+                                            new XAttribute("MSVINTEGER", dbDuModel.SoundSpeedCorrection.Split(' ')[1]),
+                                            new XAttribute("MSVDICTIONARYID", "sudcorrectiontype")),
+                                    new XElement("Value",
+                                            new XAttribute("MSVINTEGER", dbDuModel.SoundSpeedCorrection.Split(' ')[1]),
+                                            new XAttribute("MSVDICTIONARYID", "sudcorrectiontypeud")),
+                                    new XElement("Value",
+                                            new XAttribute("MSVINTEGER", measurementType),
+                                            new XAttribute("MSVDICTIONARYID", "sudresearchtype")),
+                                    new XElement("Value",
+                                            new XAttribute("MSVDOUBLE", dbDuModel.AnnularPressure),
+                                            new XAttribute("MSVDICTIONARYID", "sudpressure")),
+                                    new XElement("Value",
+                                            new XAttribute("MSVDOUBLE", dbDuModel.FluidLevel),
+                                            new XAttribute("MSVDICTIONARYID", "lglevel")),
+                                        new XElement("Value",
+                                            new XAttribute("MSVDOUBLE", dbDuModel.FluidLevel),
+                                            new XAttribute("MSVDICTIONARYID", "lglevelud")),
+                                        new XElement("Value",
+                                            new XAttribute("MSVDOUBLE", dbDuModel.SoundSpeed),
+                                            new XAttribute("MSVDICTIONARYID", "lgsoundspeed")),
+                                        new XElement("Value",
+                                            new XAttribute("MSVDOUBLE", dbDuModel.SoundSpeed),
+                                            new XAttribute("MSVDICTIONARYID", "lgsoundspeedud")),
+                                        new XElement("Value",
+                                            new XAttribute("MSVINTEGER", dbDuModel.NumberOfReflections),
+                                            new XAttribute("MSVDICTIONARYID", "lgreflectioncount")),
+                                        new XElement("Value",
+                                            new XAttribute("MSVDICTIONARYID", "lgtimediscrete"),
+                                            new XAttribute("MSVDOUBLE", "0.00585938")),
+                                        new XElement("Value",
+                                            new XAttribute("MSVDICTIONARYID", "lgechogram"),
+                                            new XAttribute("MSVDATA", BinaryToBase64(discretsY.ToArray(), 1)))))))));
+
+            return document;
+        }
 
         private String BinaryToBase64(double[] array, float divider)
         {          
