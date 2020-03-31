@@ -4,7 +4,7 @@
     {
         public string ResearchType { get; }
         public string SoundSpeedCorrection { get; }
-        public string SoundSpeed { get; }
+        public string SoundSpeed { get; set; }
 
         public DuMeasurementSecondaryParameters(
             string name, string measurementType, 
