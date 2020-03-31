@@ -122,7 +122,7 @@ namespace SiamCross.ViewModels
                 var xmlSaver = DependencyService.Get<IXmlSaver>();
 
                 var name = CreateName(_measurement.Name, _measurement.DateTime);
-                //xmlSaver.SaveXml(name, xmlCreator.CreateDdim2Xml(_measurement));
+                xmlSaver.SaveXml(name, xmlCreator.CreateDuXml(_measurement));
 
                 string filepath = xmlSaver.GetFilepath(name);
 
