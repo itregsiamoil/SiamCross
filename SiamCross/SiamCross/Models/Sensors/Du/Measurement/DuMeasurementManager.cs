@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models.Sensors.Dynamographs.Ddim2;
 using SiamCross.Models.Tools;
+using SiamCross.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -74,9 +75,16 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             }
 
             var data = new DuMeasurementData(echogramRawBytes,
-                _fluidLevel, _pressure, 
+                _fluidLevel, (float)Math.Round(_pressure, 1), 
                 _numberOfReflections, DateTime.Now, _measurementParameters.SecondaryParameters);
 
+            if(string.IsNullOrEmpty(data.SecondaryParameters.SoundSpeed))
+            {
+                var correctionTable = HandbookData.Instance.GetSoundSpeedList().Find(
+                    x => x.ToString() == data.SecondaryParameters.SoundSpeedCorrection);
+                data.SecondaryParameters.SoundSpeed = 
+                    correctionTable.GetApproximatedSpeedFromTable(data.AnnularPressure).ToString();
+            }
 
             return data;
         }
