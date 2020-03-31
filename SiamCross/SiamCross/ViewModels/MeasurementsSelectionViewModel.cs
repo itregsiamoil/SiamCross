@@ -206,6 +206,15 @@ namespace SiamCross.ViewModels
 
                             paths[i] = xmlSaver.GetFilepath(name);
                         }
+                        else if (mv.Name.Contains("DU"))
+                        {
+                            //Get siddos by id
+                            var du = DataRepository.Instance.GetSiddosA3MMeasurementById(mv.Id);
+                            var name = CreateName(du.Name, du.DateTime);
+                            xmlSaver.SaveXml(name, xmlCreator.CreateSiddosA3MXml(du));
+
+                            paths[i] = xmlSaver.GetFilepath(name);
+                        }
                     }
                 }
 
