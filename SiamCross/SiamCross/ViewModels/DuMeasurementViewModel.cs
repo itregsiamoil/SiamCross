@@ -62,6 +62,7 @@ namespace SiamCross.ViewModels
                 NotifyPropertyChanged(nameof(SoundSpeed));
             }
         }
+
         public DuMeasurementViewModel(SensorData sensorData) : base(sensorData)
         {
             try
@@ -97,7 +98,7 @@ namespace SiamCross.ViewModels
 
                 var secondaryParameters = new DuMeasurementSecondaryParameters(
                     _sensorData.Name,
-                    Resource.Dynamogram,
+                    SelectedResearchType,
                     SelectedField,
                     Well,
                     Bush,
