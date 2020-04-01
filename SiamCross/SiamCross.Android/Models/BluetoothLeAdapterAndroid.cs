@@ -176,22 +176,25 @@ namespace SiamCross.Droid.Models
             }
             catch (Exception sendingEx)
             {
-                _logger.Error(sendingEx, "Ошибка отправки сообщения BLE: "
+                System.Diagnostics.Debug.WriteLine("Ошибка отправки сообщения BLE: "
                     + BitConverter.ToString(data)
-                    + " " + sendingEx.Message + " " + sendingEx.GetType() + " " + sendingEx.StackTrace
-                     + "\n");
+                    + " " + sendingEx.Message + " " 
+                    + sendingEx.GetType() + " " 
+                    + sendingEx.StackTrace + "\n");
                 for (int i = 1; i < 11; i++)
                 {
                     try
                     {
                         await Task.Delay(500);
                         await _writeCharacteristic.WriteAsync(data);
-                        _logger.Warn($"Повторная попытка отправки номер {i}/10 прошла успешно!" + "\n");
+                        System.Diagnostics.Debug.WriteLine(
+                            $"Повторная попытка отправки номер {i}/10 прошла успешно!" + "\n");
                         return;
                     }
                     catch (Exception resendingEx)
                     {
-                        _logger.Error(resendingEx, $"Ошибка повторной попытки отправки номер {i}/10 сообщения BLE: " + "\n");
+                        System.Diagnostics.Debug.WriteLine(
+                            $"Ошибка повторной попытки отправки номер {i}/10 сообщения BLE: " + "\n");
                     }
                 }
                 // Возможно нужно сделать дисконект
