@@ -55,7 +55,6 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement
 
         private async Task SendParameters()
         {
-            //await _bluetoothAdapter.SendData(_configGenerator.SetRod(_measurementParameters.Rod));
             await Task.Delay(300);
             await _bluetoothAdapter.SendData(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod));
             await Task.Delay(300);

@@ -15,6 +15,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
         private SiddosA3MConfigCommandsGenerator _configGenerator;
         private SiddosA3MMeasurementStartParameters _measurementParameters;
         private SiddosA3MMeasurementReport _report;
+        private DynStructuredContainer _dynContainer;
         public SensorData SensorData { get; private set; }
         public byte[] ErrorCode { get; private set; }
         public DynamographMeasurementStatus MeasurementStatus { get; set; }
@@ -155,32 +156,30 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
 
         private async Task GetDgm4kB()
         {
+            _dynContainer = new DynStructuredContainer();
+            var addresses = _dynContainer.GetEmptyAddresses();
+
             byte[] length = BitConverter.GetBytes(20);
             var command = new List<byte>
             {
                 0x0D, 0x0A,
                 0x01, 0x01,
-                0x00, 0x00, 0x00, 0x81,
             };
+            command.AddRange(addresses[0]);
             command.Add(length[0]);
             command.Add(length[1]);
 
             AddCrc();
-
-            //Read first 500 bytes
 
             await _bluetoothAdapter.SendData(command.ToArray());
             await Task.Delay(Constants.LongDelay);
 
             RemoveCrc();
 
-            //Read rest
-            for (int i = 0; i < 198; i++)
+            for (int i = 1; i < addresses.Count; i++)
             {
-                short newAdress = (short)(BitConverter.ToInt16(new byte[] { command[4], command[5] }, 0) + 20);
-                byte[] newAdressBytes = BitConverter.GetBytes(newAdress);
-                command[4] = newAdressBytes[0];
-                command[5] = newAdressBytes[1];
+                command[4] = addresses[i][0];
+                command[5] = addresses[i][1];
 
                 AddCrc();
                 await _bluetoothAdapter.SendData(command.ToArray());
@@ -188,7 +187,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
 
                 RemoveCrc();
             }
-
+            #region AddRemoveCRC
             void AddCrc()
             {
                 var crcCalculator = new CrcModbusCalculator();
@@ -202,6 +201,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
                 command.RemoveAt(command.Count - 1);
                 command.RemoveAt(command.Count - 1);
             }
+            #endregion
         }
 
         public void MeasurementRecieveHandler(string commandName, byte[] data)

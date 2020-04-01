@@ -132,7 +132,6 @@ namespace SiamCross.Droid.Models
             await Initialize();
         }
 
-
         private async Task Initialize()
         {
             try
