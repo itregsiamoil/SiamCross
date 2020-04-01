@@ -55,7 +55,7 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "OpenSoundSpeedViewPage command handler");
+                _logger.Error(ex, "OpenSoundSpeedViewPage command handler" + "\n");
                 throw;
             }
         }

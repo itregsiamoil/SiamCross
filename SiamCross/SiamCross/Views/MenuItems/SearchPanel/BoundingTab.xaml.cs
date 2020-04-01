@@ -33,7 +33,7 @@ namespace SiamCross.Views.MenuItems.SearchPanel
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex, "RefreshCommand");
+                    _logger.Error(ex, "RefreshCommand" + "\n");
                 }
             });
         }
@@ -55,7 +55,7 @@ namespace SiamCross.Views.MenuItems.SearchPanel
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "ItemSelected, creating sensor");
+                _logger.Error(ex, "ItemSelected, creating sensor" + "\n");
             }
         }
     }

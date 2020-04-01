@@ -80,7 +80,7 @@ namespace SiamCross.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "PushPage method");
+                _logger.Error(ex, "PushPage method" + "\n");
                 throw;
             }
         }
@@ -168,7 +168,7 @@ namespace SiamCross.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            _logger.Error(ex, "Refresh measurement Ddim2");
+                            _logger.Error(ex, "Refresh measurement Ddim2" + "\n");
                         }
                     }
                 );
@@ -191,7 +191,7 @@ namespace SiamCross.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            _logger.Error(ex, "Refresh measurement Ddin2");
+                            _logger.Error(ex, "Refresh measurement Ddin2" + "\n");
                         }
                     }
                 );
@@ -214,7 +214,7 @@ namespace SiamCross.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error(ex, "Refresh measurement SiddosA3M");
+                        _logger.Error(ex, "Refresh measurement SiddosA3M" + "\n");
                     }
                 }
             );
@@ -237,7 +237,7 @@ namespace SiamCross.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error(ex, "Refresh Du measurement");
+                        _logger.Error(ex, "Refresh Du measurement" + "\n");
                         throw;
                     }
                 });
@@ -260,7 +260,7 @@ namespace SiamCross.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            _logger.Error(ex, "RefreshAfterDeleting handler lambda");
+                            _logger.Error(ex, "RefreshAfterDeleting handler lambda" + "\n");
                         }
                     }
                 );
@@ -332,7 +332,7 @@ namespace SiamCross.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "GetMeasurementFromDb method");
+                _logger.Error(ex, "GetMeasurementFromDb method" + "\n");
                 throw;
             }
         }

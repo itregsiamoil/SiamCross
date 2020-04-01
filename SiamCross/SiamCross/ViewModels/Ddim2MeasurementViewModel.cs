@@ -51,7 +51,7 @@ namespace SiamCross.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Ddim2MeasurementViewModel constructor");
+                _logger.Error(ex, "Ddim2MeasurementViewModel constructor" + "\n");
                 throw;
             }
         }
@@ -101,7 +101,7 @@ namespace SiamCross.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "StartMeasurementHandler Ddim2MeasurementVM");
+                _logger.Error(ex, "StartMeasurementHandler Ddim2MeasurementVM" + "\n");
                 throw;
             }
         }

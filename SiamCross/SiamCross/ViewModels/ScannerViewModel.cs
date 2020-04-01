@@ -81,7 +81,7 @@ namespace SiamCross.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "StartScan");
+                _logger.Error(ex, "StartScan" + "\n");
                 throw;
             }
         }

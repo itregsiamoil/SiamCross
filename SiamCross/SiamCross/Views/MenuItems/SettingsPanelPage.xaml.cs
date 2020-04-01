@@ -37,7 +37,7 @@ namespace SiamCross.Views.MenuItems
             }
             catch (System.Exception ex)
             {
-                _logger.Error(ex, "OnDisappearing");
+                _logger.Error(ex, "OnDisappearing" + "\n");
                 throw;
             }
         }

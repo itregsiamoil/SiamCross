@@ -43,7 +43,7 @@ namespace SiamCross.Views
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "SiddosA3MMeasurementDonePage constructor");
+                _logger.Error(ex, "SiddosA3MMeasurementDonePage constructor" + "\n");
                 throw;
             }
         }
@@ -119,7 +119,7 @@ namespace SiamCross.Views
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "CanvasView_PaintSurface");
+                _logger.Error(ex, "CanvasView_PaintSurface" + "\n");
                 throw;
             }
         }
@@ -162,7 +162,7 @@ namespace SiamCross.Views
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "OnDisappearing");
+                _logger.Error(ex, "OnDisappearing" + "\n");
                 throw;
             }
         }

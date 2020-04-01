@@ -44,7 +44,7 @@ namespace SiamCross.Services
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"Database creation error! Database path: {_databasePart}");
+                _logger.Error(e, $"Database creation error! Database path: {_databasePart}" + "\n");
                 throw;
             }
 
@@ -57,7 +57,7 @@ namespace SiamCross.Services
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"Table creation error!");
+                _logger.Error(e, $"Table creation error!" + "\n");
                 throw;
             }
         }
@@ -67,8 +67,8 @@ namespace SiamCross.Services
             // Ensure we have a connection
             if (_database == null)
             {
-                _logger.Error($"NonQueryCheck database error!");
-                throw new NullReferenceException("Please provide a connection");
+                _logger.Error($"NonQueryCheck database error!" + "\n");
+                throw new NullReferenceException("Please provide a connection" + "\n");
             }
 
             // Ensure that the connection state is Open
@@ -277,7 +277,7 @@ namespace SiamCross.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "SaveDuMeasurement");
+                _logger.Error(ex, "SaveDuMeasurement" + "\n");
                 throw;
             }
             return duMeasurement.Id;
@@ -317,7 +317,7 @@ namespace SiamCross.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "UpdateDuMeasurement");
+                _logger.Error(ex, "UpdateDuMeasurement" + "\n");
                 throw;
             }
         }
@@ -331,7 +331,7 @@ namespace SiamCross.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "RemoveDuMeasurement");
+                _logger.Error(ex, "RemoveDuMeasurement" + "\n");
                 throw;
             }
         }
@@ -407,7 +407,7 @@ namespace SiamCross.Services
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"Ddim2Save database error!");
+                _logger.Error(e, $"Ddim2Save database error!" + "\n");
                 throw;
             }
 
@@ -462,7 +462,7 @@ namespace SiamCross.Services
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"Ddim2Update database error!");
+                _logger.Error(e, $"Ddim2Update database error!" + "\n");
                 throw;
             }
         }
@@ -476,7 +476,7 @@ namespace SiamCross.Services
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"Ddim2Delete database error!");
+                _logger.Error(e, $"Ddim2Delete database error!" + "\n");
                 throw;
             }
         }
@@ -492,7 +492,7 @@ namespace SiamCross.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "GetDuMeasurements");
+                _logger.Error(ex, "GetDuMeasurements" + "\n");
                 throw;
             }
         }
@@ -509,7 +509,7 @@ namespace SiamCross.Services
             }
             catch (Exception e)
             {
-                _logger.Error(e, $"Ddim2Get database error!");
+                _logger.Error(e, $"Ddim2Get database error!" + "\n");
                 throw;
             }
         }
@@ -524,7 +524,7 @@ namespace SiamCross.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "GetDuMeasurementById");
+                _logger.Error(ex, "GetDuMeasurementById" + "\n");
                 throw;
             }
         }
@@ -539,7 +539,7 @@ namespace SiamCross.Services
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"Ddim2GetById database error!");
+                _logger.Error(e, $"Ddim2GetById database error!" + "\n");
                 throw;
             }
         }
@@ -617,7 +617,7 @@ namespace SiamCross.Services
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"Ddin2Save database error!");
+                _logger.Error(e, $"Ddin2Save database error!" + "\n");
                 throw;
             }
 
@@ -672,7 +672,7 @@ namespace SiamCross.Services
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"Ddin2Update database error!");
+                _logger.Error(e, $"Ddin2Update database error!" + "\n");
                 throw;
             }
         }
@@ -687,7 +687,7 @@ namespace SiamCross.Services
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"Ddim2Remove database error!");
+                _logger.Error(e, $"Ddim2Remove database error!" + "\n");
                 throw;
             }
         }
@@ -703,7 +703,7 @@ namespace SiamCross.Services
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"Ddin2Get database error!");
+                _logger.Error(e, $"Ddin2Get database error!" + "\n");
                 throw;
             }
         }
@@ -718,7 +718,7 @@ namespace SiamCross.Services
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"Ddin2GetById database error!");
+                _logger.Error(e, $"Ddin2GetById database error!" + "\n");
                 throw;
             }
         }
@@ -795,7 +795,7 @@ namespace SiamCross.Services
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"SiddosSave database error!");
+                _logger.Error(e, $"SiddosSave database error!" + "\n");
                 throw;
             }
 
@@ -849,7 +849,7 @@ namespace SiamCross.Services
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"SiddosUpdate database error!");
+                _logger.Error(e, $"SiddosUpdate database error!" + "\n");
                 throw;
             }
         }
@@ -864,7 +864,7 @@ namespace SiamCross.Services
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"SiddosRemove database error!");
+                _logger.Error(e, $"SiddosRemove database error!" + "\n");
                 throw;
             }
         }
@@ -881,7 +881,7 @@ namespace SiamCross.Services
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"SiddosGet database error!");
+                _logger.Error(e, $"SiddosGet database error!" + "\n");
                 throw;
             }
         }
@@ -898,7 +898,7 @@ namespace SiamCross.Services
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"SiddosGetById database error!");
+                _logger.Error(e, $"SiddosGetById database error!" + "\n");
                 throw;
             }
         }

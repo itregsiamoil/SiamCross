@@ -125,7 +125,7 @@ namespace SiamCross.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Ddim2MeasurementDoneVM constructor");
+                _logger.Error(ex, "Ddim2MeasurementDoneVM constructor" + "\n");
                 throw;
             }
         }
@@ -153,7 +153,7 @@ namespace SiamCross.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "ShareCommandHandler");
+                _logger.Error(ex, "ShareCommandHandler" + "\n");
                 throw;
             }
         }

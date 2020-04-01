@@ -110,8 +110,8 @@ namespace SiamCross.Models.Sensors.Du
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "ByteProcess " + ex.StackTrace);
-                _logger.Error(ex, "ByteBuffer is recreate, throw force skip!");
+                _logger.Error(ex, "ByteProcess " + ex.StackTrace + "\n");
+                _logger.Error(ex, "ByteBuffer is recreate, throw force skip!" + "\n");
                 Debug.WriteLine(BitConverter.ToString(_byteBuffer.Buffer.ToArray()));
                 _byteBuffer = new ByteBuffer();
             }

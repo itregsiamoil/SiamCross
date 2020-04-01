@@ -92,7 +92,7 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "CanvasView_PaintSurface");
+                _logger.Error(ex, "CanvasView_PaintSurface" + "\n");
                 throw;
             }
         }

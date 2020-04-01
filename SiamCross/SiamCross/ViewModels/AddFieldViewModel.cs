@@ -49,7 +49,7 @@ namespace SiamCross.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "SaveField command handler");
+                _logger.Error(ex, "SaveField command handler" + "\n");
                 throw;
             }
         }

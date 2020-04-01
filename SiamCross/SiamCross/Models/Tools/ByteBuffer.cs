@@ -44,7 +44,7 @@ namespace SiamCross.Models.Tools
             {
                 _logger.Warn($"Buffer of parser is overflow! Buffer has been cleared! " +
                     $"Thread ID: {Thread.CurrentThread.Name}. Content before cleaning: " +
-                    BitConverter.ToString(_byffer.ToArray()));
+                    BitConverter.ToString(_byffer.ToArray()) + "\n");
 
                 _byffer.Clear();
             }

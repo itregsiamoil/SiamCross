@@ -83,7 +83,7 @@ namespace SiamCross.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "DuMeasurementViewModel constructor");
+                _logger.Error(ex, "DuMeasurementViewModel constructor" + "\n");
                 throw;
             }
         }
@@ -118,7 +118,7 @@ namespace SiamCross.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "StartMeasurementHandler DuMeasurementVM");
+                _logger.Error(ex, "StartMeasurementHandler DuMeasurementVM" + "\n");
                 throw;
             }
         }

@@ -39,7 +39,7 @@ namespace SiamCross.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Update method");
+                _logger.Error(ex, "Update method" + "\n");
                 throw;
             }
         }
