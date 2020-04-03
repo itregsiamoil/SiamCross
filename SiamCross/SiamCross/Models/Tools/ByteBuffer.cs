@@ -5,6 +5,7 @@ using Autofac;
 using SiamCross.Services.Logging;
 using System.Threading;
 using System.Text;
+using System.Linq;
 
 namespace SiamCross.Models.Tools
 {
@@ -20,6 +21,8 @@ namespace SiamCross.Models.Tools
         /// Буффер
         /// </summary>
         private List<byte> _byffer = new List<byte>();
+
+        private CrcModbusCalculator _crcCalulator = new CrcModbusCalculator();
 
         public List<byte> Buffer { get => _byffer; }
 
@@ -106,11 +109,95 @@ namespace SiamCross.Models.Tools
 
             if (_byffer.Count >= _expectedLength && _expectedLength != -1)
             {
+                byte[] calcedCrc;
+                switch (_expectedLength)
+                {
+                    case 12:
+                        calcedCrc = _crcCalulator.ModbusCrc(
+                            new byte[] 
+                            {
+                                _byffer[2],
+                                _byffer[3],
+                                _byffer[4],
+                                _byffer[5],
+                                _byffer[6],
+                                _byffer[7],
+                                _byffer[8],
+                                _byffer[9]
+                            });
+                        if(!calcedCrc.SequenceEqual(new byte[] { _byffer[10], _byffer[11]}))
+                        {
+                            _dataSize = -1;
+                            _expectedLength = -1;
+                            _byffer.Clear();
+                            return new byte[] { };
+                        }
+                        break;
+                    case 14:
+                        calcedCrc = _crcCalulator.ModbusCrc(
+                            new byte[]
+                            {
+                                _byffer[2],
+                                _byffer[3],
+                                _byffer[4],
+                                _byffer[5],
+                                _byffer[6],
+                                _byffer[7],
+                                _byffer[8],
+                                _byffer[9],
+                                _byffer[10],
+                                _byffer[11],
+                            });
+                        if (!calcedCrc.SequenceEqual(new byte[] { _byffer[12], _byffer[13] }))
+                        {
+                            _dataSize = -1;
+                            _expectedLength = -1;
+                            _byffer.Clear();
+                            return new byte[] { };
+                        }
+                        break;
+                    default:
+                        calcedCrc = _crcCalulator.ModbusCrc(
+                           new byte[]
+                           {
+                                _byffer[2],
+                                _byffer[3],
+                                _byffer[4],
+                                _byffer[5],
+                                _byffer[6],
+                                _byffer[7],
+                                _byffer[8],
+                                _byffer[9]
+                           });
+                        if (!calcedCrc.SequenceEqual(new byte[] { _byffer[10], _byffer[11] }))
+                        {
+                            _dataSize = -1;
+                            _expectedLength = -1;
+                            _byffer.Clear();
+                            return new byte[] { };
+                        }
+                        var startDataIndex = _expectedLength - _dataSize - 2;
+                        List<byte> payloadDataList = new List<byte>();
+                        for(int i = startDataIndex; i < _expectedLength - 2; i++)
+                        {
+                            payloadDataList.Add(_byffer[i]);
+                        }
+                        calcedCrc = _crcCalulator.ModbusCrc(payloadDataList.ToArray());
+                        if (!calcedCrc.SequenceEqual(new byte[] { _byffer[_expectedLength - 2],
+                            _byffer[_expectedLength - 1] }))
+                        {
+                            _dataSize = -1;
+                            _expectedLength = -1;
+                            _byffer.Clear();
+                            return new byte[] { };
+                        }
+                        break;
+                }
+
                 _dataSize = -1;
                 _expectedLength = -1;
                 var result = _byffer.ToArray();
-                _byffer.Clear();
-                //Console.WriteLine($"Answer message: {BitConverter.ToString(result)}");
+                _byffer.Clear();               
                 return result;
             }
             else
