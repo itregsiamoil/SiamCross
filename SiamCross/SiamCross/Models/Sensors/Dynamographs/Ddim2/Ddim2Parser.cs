@@ -35,6 +35,10 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         /// </summary>
         public Action<string, byte[]> ByteMessageReceived { get; set; }
 
+        public delegate void MemoryFragmentHanler(byte[] address, byte[] data);
+
+        public event MemoryFragmentHanler ExportMemoryFragment;
+
         public static Logger Logger => _logger;
 
         ///// <summary>
@@ -68,7 +72,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 
                 var commandName = DefineCommand(message);
                 var commandData = ConvertToStringPayload(message);
-
+                //Debug.WriteLine($"|||||||||||||||{commandName}|||||||||||||||");
                 switch (commandName)
                 {
                     //case "DeviceNameAddress":
@@ -94,7 +98,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
                         MessageReceived?.Invoke(commandName, adr);
                         break;
                     case "ExportDynGraph":
-                        ExportByteData(commandName, message);
+                        ExportByteData(commandName, message);                    
                         break;
                     case "ExportAccelerationGraph":
                         ExportByteData(commandName, message);
@@ -108,7 +112,11 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
                         break;
                     case "DgmPart1":
                     case "DgmPart2":
-                        ExportByteData(commandName, message);
+                        //ExportByteData(commandName, message);
+                        ExportMemoryFragment.Invoke(
+                           new byte[] { message[4], message[5], message[6], message[7] },
+                           GetPayload(message));
+                        //Debug.WriteLine("|||||||||||||||Expot|||||||||||||||");
                         break;
                 }
                 //Если команда чтения

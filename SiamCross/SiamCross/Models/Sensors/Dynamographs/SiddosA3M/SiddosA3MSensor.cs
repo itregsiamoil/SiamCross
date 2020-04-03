@@ -46,6 +46,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             BluetoothAdapter.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += ReceiveHandler;
             _parser.ByteMessageReceived += MeasurementRecieveHandler;
+            _parser.ExportMemoryFragment += MemoryRecieveHandler;
 
             BluetoothAdapter.ConnectSucceed += ConnectHandler;
             BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
@@ -171,6 +172,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
                 (SiddosA3MMeasurementStartParameters)measurementParameters;
             _measurementManager = new SiddosA3MMeasurementManager(BluetoothAdapter, SensorData,
                 specificMeasurementParameters);
+            //_parser.ExportMemoryFragment += _measurementManager.MemoryRecieveHandler;
             var report = await _measurementManager.RunMeasurement();
             SensorService.Instance.MeasurementHandler(report);
             IsMeasurement = false;
@@ -180,6 +182,15 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
         private void MeasurementRecieveHandler(string commandName, byte[] data)
         {
             _measurementManager.MeasurementRecieveHandler(commandName, data);
+        }
+
+        private void MemoryRecieveHandler(byte[] address, byte[] data)
+        {
+            if(_measurementManager != null)
+            {
+                _measurementManager.MemoryRecieveHandler(address, data);
+            }
+
         }
 
         public void Dispose()
