@@ -181,6 +181,14 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             _measurementManager.MeasurementRecieveHandler(commandName, data);
         }
 
+        private void MemoryRecieveHandler(byte[] address, byte[] data)
+        {
+            if (_measurementManager != null)
+            {
+                _measurementManager.MemoryRecieveHandler(address, data);
+            }
+        }
+
         public void Dispose()
         {
             _cancellToken.Cancel();

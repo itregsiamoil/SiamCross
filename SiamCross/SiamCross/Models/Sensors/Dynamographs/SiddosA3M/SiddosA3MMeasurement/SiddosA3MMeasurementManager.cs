@@ -57,7 +57,6 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
 
         private async Task SendParameters()
         {
-            //await _bluetoothAdapter.SendData(_configGenerator.SetRod(_measurementParameters.Rod));
             await Task.Delay(Constants.LongDelay);
             await _bluetoothAdapter.SendData(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod));
             await Task.Delay(Constants.LongDelay);
@@ -261,9 +260,6 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
                     break;
                 case "ReadMeasurementErrorCode":
                     ErrorCode = data;
-                    break;
-                case "DgmPart1":
-                    _currentDynGraph.Add(data);
                     break;
                 default:
                     break;

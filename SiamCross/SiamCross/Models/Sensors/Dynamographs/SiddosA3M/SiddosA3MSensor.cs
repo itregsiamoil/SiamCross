@@ -190,7 +190,6 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             {
                 _measurementManager.MemoryRecieveHandler(address, data);
             }
-
         }
 
         public void Dispose()
