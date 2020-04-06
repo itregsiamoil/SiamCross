@@ -559,4 +559,7 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="ChoiceSpeedCorrectionTableOrInpunSpeed" xml:space="preserve">
     <value>Select the table for adjusting the speed of sound or enter the speed of sound manually!</value>
   </data>
+  <data name="ConnectedStatus" xml:space="preserve">
+    <value>Connected</value>
+  </data>
 </root>

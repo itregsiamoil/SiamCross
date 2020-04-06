@@ -568,4 +568,7 @@
   <data name="ChoiceSpeedCorrectionTableOrInpunSpeed" xml:space="preserve">
     <value>Выберите таблицу поправки скорости звука или введите скорость звука вручную!</value>
   </data>
+  <data name="ConnectedStatus" xml:space="preserve">
+    <value>Соединен</value>
+  </data>
 </root>

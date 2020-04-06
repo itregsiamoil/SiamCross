@@ -340,6 +340,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Connected.
+        /// </summary>
+        public static string ConnectedStatus {
+            get {
+                return ResourceManager.GetString("ConnectedStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Control panel.
         /// </summary>
         public static string ControlPanelTitle {
