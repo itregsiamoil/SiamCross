@@ -407,7 +407,7 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
     <value>No comment</value>
   </data>
   <data name="Firmware" xml:space="preserve">
-    <value>FW: </value>
+    <value>FW:</value>
   </data>
   <data name="BluetoothIsDisable" xml:space="preserve">
     <value>Bluetooth is disable</value>

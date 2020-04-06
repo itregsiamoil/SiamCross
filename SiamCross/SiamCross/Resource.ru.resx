@@ -416,7 +416,7 @@
     <value>Комментарий отсутствует</value>
   </data>
   <data name="Firmware" xml:space="preserve">
-    <value>ПО: </value>
+    <value>ПО:</value>
   </data>
   <data name="BluetoothIsDisable" xml:space="preserve">
     <value>Bluetooth выключен</value>
