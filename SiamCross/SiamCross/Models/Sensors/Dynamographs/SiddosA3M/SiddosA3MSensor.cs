@@ -73,6 +73,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 
             IsAlive = true;
             System.Diagnostics.Debug.WriteLine("СиддосА3М успешно подключен!");
+            SensorData.Status = Resource.ConnectedStatus;
         }
 
         private void ReceiveHandler(string commandName, string dataValue)

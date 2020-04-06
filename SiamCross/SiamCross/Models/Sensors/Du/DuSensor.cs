@@ -82,6 +82,7 @@ namespace SiamCross.Models.Sensors.Du
 
             IsAlive = true;
             System.Diagnostics.Debug.WriteLine("ДУ успешно подключен!");
+            SensorData.Status = Resource.ConnectedStatus;
         }
 
         private void ReceiveHandler(DuCommandsEnum dataName, string dataValue)

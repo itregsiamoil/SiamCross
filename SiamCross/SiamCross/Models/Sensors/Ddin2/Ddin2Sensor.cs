@@ -80,6 +80,7 @@ namespace SiamCross.Models.Sensors.Ddin2
 
             IsAlive = true;
             System.Diagnostics.Debug.WriteLine("Ддин2 успешно подключен!");
+            SensorData.Status = Resource.ConnectedStatus;
         }
 
         private async Task LiveWhileAsync(CancellationToken cancellationToken)

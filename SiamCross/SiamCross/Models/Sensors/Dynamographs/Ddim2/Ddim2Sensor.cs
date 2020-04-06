@@ -71,6 +71,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 
             IsAlive = true;
             System.Diagnostics.Debug.WriteLine("Ддим2 успешно подключен!");
+            SensorData.Status = Resource.ConnectedStatus;
         }
 
         private void ReceiveHandler(string dataName, string dataValue)
