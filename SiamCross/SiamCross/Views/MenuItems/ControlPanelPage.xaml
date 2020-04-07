@@ -43,6 +43,7 @@
                                                 Command="{Binding Path=BindingContext.DeleteSensorCommand, 
                                             Source={x:Reference ControlPanel}}"
                                                 CommandParameter="{Binding Id}" 
+                                                BackgroundColor="Transparent"
                                                 VerticalOptions="FillAndExpand"  
                                                 HeightRequest="20"
                                                 WidthRequest="40"
