@@ -22,11 +22,26 @@
             <TableRoot>
                 <TableSection Title="{local1:Translate MeasurementData}">
                     <ViewCell>
-                        <StackLayout  >
+                        <StackLayout>
                             <Label Text="{local1:Translate Field}"></Label>
-                            <Picker ItemsSource="{Binding Fields}"
-                                SelectedItem="{Binding SelectedField}"
-                                ></Picker>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="50"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="0.2*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Picker ItemsSource="{Binding Fields}" SelectedItem="{Binding SelectedField}"
+                                        Grid.Row="0" Grid.Column="0"/>
+                                <Image Source="plus.png" Grid.Row="0" Grid.Column="1">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding AddField}"
+                                            CommandParameter="Image1" />
+                                    </Image.GestureRecognizers>
+                                </Image>
+                            </Grid>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
