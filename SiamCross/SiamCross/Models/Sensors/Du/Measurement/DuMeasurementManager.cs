@@ -164,11 +164,13 @@ namespace SiamCross.Models.Sensors.Du.Measurement
            // _writeLog(command);
 
             await _bluetoothAdapter.SendData(command);
+            await Task.Delay(Constants.ShortDelay);
         }
 
         private async Task<bool> IsMeasurementDone()
         {
             bool isDone = false;
+            short restartCounter = 0;
             while (!isDone)
             {
                 await Task.Delay(300);
@@ -177,6 +179,15 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                 if (MeasurementStatus == DuMeasurementStatus.Сompleted)
                 {
                     isDone = true;
+                }
+                if(MeasurementStatus == DuMeasurementStatus.Empty)
+                {
+                    restartCounter++;
+                    if(restartCounter == 5)
+                    {
+                        restartCounter = 0;
+                        await Start();
+                    }
                 }
             }
 
