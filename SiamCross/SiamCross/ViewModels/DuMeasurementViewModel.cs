@@ -53,7 +53,7 @@ namespace SiamCross.ViewModels
             }
             set
             {
-                if (!string.IsNullOrEmpty(SelectedSoundSpeedCorrection))
+                if (!string.IsNullOrEmpty(SelectedSoundSpeedCorrection) && !string.IsNullOrEmpty(value))
                 {
                     _selectedSoundSpeedCorrection = null;
                     NotifyPropertyChanged(nameof(SelectedSoundSpeedCorrection));
@@ -80,6 +80,12 @@ namespace SiamCross.ViewModels
                 }
                 StartMeasurementCommand = new Command(StartMeasurementHandler);
                 ValveTestCommand = new Command(() => DependencyService.Get<IToast>().Show(Resource.ValveTest));
+
+                if (SoundSpeedCorrections.Count != 0)
+                {
+                    SelectedSoundSpeedCorrection = SoundSpeedCorrections[0];
+                }
+                SelectedResearchType = ResearchTypes[0];
             }
             catch (Exception ex)
             {
