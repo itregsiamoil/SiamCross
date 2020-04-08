@@ -41,7 +41,7 @@ namespace SiamCross.Models.Sensors.Du
                 DuCommands.FullCommandDictionary[DuCommandsEnum.ProgrammVersionAddress],
                 DuCommands.FullCommandDictionary[DuCommandsEnum.ProgrammVersionSize]
             );
-            _parser = new DuParser(_firmwareQualifier);
+            _parser = new DuParser(_firmwareQualifier, false);
             _reportBuilder = new DuQuickReportBuilder();
             _statusAdapter = new DuStatusAdapter();
 
@@ -77,7 +77,7 @@ namespace SiamCross.Models.Sensors.Du
                 DuCommands.FullCommandDictionary[DuCommandsEnum.ProgrammVersionAddress],
                 DuCommands.FullCommandDictionary[DuCommandsEnum.ProgrammVersionSize]
             );
-            _parser = new DuParser(_firmwareQualifier);
+            _parser = new DuParser(_firmwareQualifier, false);
             _parser.MessageReceived += ReceiveHandler;
 
             IsAlive = true;

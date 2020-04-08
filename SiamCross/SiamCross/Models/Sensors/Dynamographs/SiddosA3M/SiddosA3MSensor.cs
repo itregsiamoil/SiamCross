@@ -39,7 +39,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
                 DynamographCommands.FullCommandDictionary["ProgrammVersionAddress"],
                 DynamographCommands.FullCommandDictionary["ProgrammVersionSize"]
             );
-            _parser = new SiddosA3MParser(_firmwareQualifier);
+            _parser = new SiddosA3MParser(_firmwareQualifier, true);
             _reportBuilder = new SiddosA3MQuickReportBuilder();
             _statusAdapter = new DynamographStatusAdapter();
 
@@ -68,7 +68,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
                 DynamographCommands.FullCommandDictionary["ProgrammVersionAddress"],
                 DynamographCommands.FullCommandDictionary["ProgrammVersionSize"]
             );
-            _parser = new SiddosA3MParser(_firmwareQualifier);
+            _parser = new SiddosA3MParser(_firmwareQualifier, true);
             _parser.MessageReceived += ReceiveHandler;
 
             IsAlive = true;

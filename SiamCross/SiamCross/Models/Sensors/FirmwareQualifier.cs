@@ -44,6 +44,7 @@ namespace SiamCross.Models.Sensors
         {
             var command = new MessageCreator().CreateReadMessage(address, size);
             await QueryParamerter(command);
+            await Task.Delay(Constants.ShortDelay);
         }
 
         public async Task Qualify()
@@ -51,10 +52,12 @@ namespace SiamCross.Models.Sensors
             if (DeviceNameAddress == null)
             {
                 await QueryParamerter(_programmVersionAddressCommand);
-            }
+                await Task.Delay(Constants.ShortDelay);
+;           }
             if (DeviceNameSize == null)
             {
                 await QueryParamerter(_programmVersionSizeCommand);
+                await Task.Delay(Constants.ShortDelay);
             }
             if(DeviceNameAddress != null && DeviceNameSize != null)
             {

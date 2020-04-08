@@ -38,7 +38,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
                 DynamographCommands.FullCommandDictionary["ProgrammVersionAddress"],
                 DynamographCommands.FullCommandDictionary["ProgrammVersionSize"]
             );
-            _parser = new Ddim2Parser(_firmwareQualifier);
+            _parser = new Ddim2Parser(_firmwareQualifier, true);
             _reportBuilder = new Ddim2QuickReportBuilder();
             _statusAdapter = new DynamographStatusAdapter();
 
@@ -66,7 +66,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
                 DynamographCommands.FullCommandDictionary["ProgrammVersionAddress"],
                 DynamographCommands.FullCommandDictionary["ProgrammVersionSize"]
             );
-            _parser = new Ddim2Parser(_firmwareQualifier);
+            _parser = new Ddim2Parser(_firmwareQualifier, true);
             _parser.MessageReceived += ReceiveHandler;
 
             IsAlive = true;

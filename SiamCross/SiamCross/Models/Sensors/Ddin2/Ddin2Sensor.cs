@@ -41,7 +41,7 @@ namespace SiamCross.Models.Sensors.Ddin2
                 Ddin2Commands.FullCommandDictionary["ProgrammVersionAddress"],
                 Ddin2Commands.FullCommandDictionary["ProgrammVersionSize"]
             );
-            _parser = new Ddin2Parser(_firmwareQualifier);
+            _parser = new Ddin2Parser(_firmwareQualifier, false);
             _reportBuilder = new Ddin2QuickReportBuiler();
             _statusAdapter = new Ddin2StatusAdapter();
 
@@ -75,7 +75,7 @@ namespace SiamCross.Models.Sensors.Ddin2
                 Ddin2Commands.FullCommandDictionary["ProgrammVersionAddress"],
                 Ddin2Commands.FullCommandDictionary["ProgrammVersionSize"]
             );
-            _parser = new Ddin2Parser(_firmwareQualifier);
+            _parser = new Ddin2Parser(_firmwareQualifier, false);
             _parser.MessageReceived += MessageReceivedHandler;
 
             IsAlive = true;

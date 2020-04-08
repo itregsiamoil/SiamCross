@@ -20,7 +20,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         /// <summary>
         /// Буффер сообщений
         /// </summary>
-        private ByteBuffer _byteBuffer = new ByteBuffer();
+        private ByteBuffer _byteBuffer;
 
         // Делегат обработки данных из сообшений
         public delegate void DataHandler(string dataName, string dataValue);
@@ -51,9 +51,11 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         /// </summary>
         private FirmWaveQualifier _deviceFirmWaveQualifier;
 
-        public Ddim2Parser(FirmWaveQualifier deviceFirmWaveQualifier)
+        public Ddim2Parser(FirmWaveQualifier deviceFirmWaveQualifier, 
+            bool isResponseCheck)
         {
             _deviceFirmWaveQualifier = deviceFirmWaveQualifier;
+            _byteBuffer = new ByteBuffer(isResponseCheck);
         }
 
         /// <summary>
@@ -129,7 +131,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             {
                 _logger.Error(ex, "ByteProcess " + ex.StackTrace + "\n");
                 _logger.Error(ex, "ByteBuffer is recreate, throw force skip!" + "\n");
-                _byteBuffer = new ByteBuffer();
+                _byteBuffer = new ByteBuffer(_byteBuffer.IsResponseCheck);
                 //throw;
             }
         }

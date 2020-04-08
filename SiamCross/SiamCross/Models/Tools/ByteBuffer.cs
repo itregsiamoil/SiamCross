@@ -14,6 +14,13 @@ namespace SiamCross.Models.Tools
     /// </summary>
     public class ByteBuffer
     {
+
+        public bool IsResponseCheck { get; private set; }
+        public ByteBuffer(bool isResponseCheck)
+        {
+            IsResponseCheck = isResponseCheck;
+        }
+
         private static readonly NLog.Logger _logger = AppContainer.Container
             .Resolve<ILogManager>().GetLog();
 
@@ -128,6 +135,11 @@ namespace SiamCross.Models.Tools
 
         private bool IsСoincidenceCrc()
         {
+            if(!IsResponseCheck)
+            {
+                return true;
+            }
+
             byte[] calcedCrc;
             switch (_expectedLength)
             {
@@ -206,6 +218,8 @@ namespace SiamCross.Models.Tools
 
         private byte[] FailCrc()
         {
+            System.Diagnostics.Debug.WriteLine($"Failed CRC: {BitConverter.ToString(_byffer.ToArray())}" +
+                $" _dataSize={_dataSize} _expectedLength={_expectedLength}\n");
             _dataSize = -1;
             _expectedLength = -1;
             _byffer.Clear();
