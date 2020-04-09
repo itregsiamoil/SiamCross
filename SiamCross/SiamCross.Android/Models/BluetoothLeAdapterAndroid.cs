@@ -149,7 +149,7 @@ namespace SiamCross.Droid.Models
                 _readCharacteristic.ValueUpdated += (o, args) =>
                 {
                     DataReceived?.Invoke(args.Characteristic.Value);
-                    //System.Diagnostics.Debug.WriteLine("Recieved: " + BitConverter.ToString(args.Characteristic.Value) + "\n");
+                    System.Diagnostics.Debug.WriteLine("Recieved: " + BitConverter.ToString(args.Characteristic.Value) + "\n");
                 };
 
                 await _readCharacteristic.StartUpdatesAsync();
@@ -169,6 +169,7 @@ namespace SiamCross.Droid.Models
 
         public async Task SendData(byte[] data)
         {
+            System.Diagnostics.Debug.WriteLine("Send: " + BitConverter.ToString(data) + "\n");
             try
             {
                 await _writeCharacteristic.WriteAsync(data);

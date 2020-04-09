@@ -72,8 +72,7 @@ namespace SiamCross.Models.Tools
         public void AddData(byte[] address, byte[] data)
         {
             _dynDictionary[address] = data;
-            Debug.WriteLine($"{BitConverter.ToString(address)} : {BitConverter.ToString(data)}\n");
-            Debug.WriteLine($"Dict count = {_dynDictionary.Count}\n");
+            Debug.WriteLine($"Add: {BitConverter.ToString(address)} : {BitConverter.ToString(data)}\n");
         }
     }
 
