@@ -114,11 +114,9 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
                         break;
                     case "DgmPart1":
                     case "DgmPart2":
-                        //ExportByteData(commandName, message);
-                        ExportMemoryFragment.Invoke(
+                        ExportMemoryFragment?.Invoke(
                            new byte[] { message[4], message[5], message[6], message[7] },
                            GetPayload(message));
-                        //Debug.WriteLine("|||||||||||||||Expot|||||||||||||||");
                         break;
                 }
                 //Если команда чтения

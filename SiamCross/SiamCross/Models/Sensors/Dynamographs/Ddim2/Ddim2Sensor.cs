@@ -45,6 +45,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             BluetoothAdapter.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += ReceiveHandler;
             _parser.ByteMessageReceived += MeasurementRecieveHandler;
+            _parser.ExportMemoryFragment += MemoryRecieveHandler;
 
             BluetoothAdapter.ConnectSucceed += ConnectHandler;
             BluetoothAdapter.ConnectFailed += ConnectFailedHandler;

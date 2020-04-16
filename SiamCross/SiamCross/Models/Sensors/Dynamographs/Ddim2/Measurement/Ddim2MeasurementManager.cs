@@ -125,7 +125,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement
             await Task.Delay(500);
 
             var dynRawBytes = new List<byte>();
-            foreach (var bytes in _currentDynGraph)
+            foreach (var bytes in _dynContainer.GetDynData())
             {
                 foreach (var b in bytes)
                 {
