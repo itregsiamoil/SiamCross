@@ -84,6 +84,9 @@
     <PackageReference Include="Dapper">
       <Version>2.0.30</Version>
     </PackageReference>
+    <PackageReference Include="LusoVU.XamarinUsbSerialForAndroid">
+      <Version>0.2.3</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.CSharp">
       <Version>4.7.0</Version>
     </PackageReference>
@@ -141,8 +144,12 @@
     <Compile Include="Models\DatabaseCreatorAndroid.cs" />
     <Compile Include="Models\DefaultAdapterAndroid.cs" />
     <Compile Include="Models\EmailSenderAndroid.cs" />
+    <Compile Include="Models\EventHandlerExtensions.cs" />
     <Compile Include="Models\FileManagerAndroid.cs" />
     <Compile Include="Models\HandbookManagerAndroid.cs" />
+    <Compile Include="Models\SerialIOManager.cs" />
+    <Compile Include="Models\SerialUsbConnector.cs" />
+    <Compile Include="Models\SerialUsbManagerAndroid.cs" />
     <Compile Include="Models\SQLiteAndroid.cs" />
     <Compile Include="Models\XmlSaverAndroid.cs" />
     <Compile Include="Resources\Resource.designer.cs" />

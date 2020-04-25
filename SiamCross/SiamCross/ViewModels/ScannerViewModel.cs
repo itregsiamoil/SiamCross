@@ -10,6 +10,8 @@ using SiamCross.AppObjects;
 using Autofac;
 using NLog;
 using System;
+using SiamCross.Models;
+using SiamCross.Droid.Models;
 
 namespace SiamCross.ViewModels
 {
@@ -34,6 +36,12 @@ namespace SiamCross.ViewModels
             _scanner.Received += ScannerReceivedDevice;
             _scanner.ScanTimoutElapsed += ScannerScanTimoutElapsed;
             _scanner.Start();
+
+            var testUsb = AppContainer.Container.Resolve<ISerialUsbManager>();
+            //var testDeviceNet = new DeviceNetSerialUsb();
+            //testDeviceNet.InitializeTrezorAsync();
+            //testUsb.Devices();
+            //testUsb.ConnectAndSend(null, 0, 0);
         }
 
         public event Action ScanTimeoutElapsed;

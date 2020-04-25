@@ -32,7 +32,7 @@ namespace SiamCross.Views
                 _stopwatch.Reset();
                 _stopwatch.Start();
 
-                Device.StartTimer(TimeSpan.FromMilliseconds(100),
+                Xamarin.Forms.Device.StartTimer(TimeSpan.FromMilliseconds(100),
                     () =>
                     {
                         DynPeriodEntry.Text = _stopwatch.Elapsed.TotalSeconds.ToString(
