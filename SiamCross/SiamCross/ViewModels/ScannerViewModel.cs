@@ -12,6 +12,8 @@ using NLog;
 using System;
 using SiamCross.Models;
 using SiamCross.Droid.Models;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SiamCross.ViewModels
 {
@@ -27,6 +29,8 @@ namespace SiamCross.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private ISerialUsbManager _serialUsbManager;
+
         public ScannerViewModel(IBluetoothScanner scanner)
         {
             _scanner = scanner;
@@ -37,7 +41,16 @@ namespace SiamCross.ViewModels
             _scanner.ScanTimoutElapsed += ScannerScanTimoutElapsed;
             _scanner.Start();
 
-            var testUsb = AppContainer.Container.Resolve<ISerialUsbManager>();
+            var _serialUsbManager = AppContainer.Container.Resolve<ISerialUsbManager>();
+
+            new Thread(async () =>
+            {
+                await Task.Delay(1000);
+                await _serialUsbManager.Initialize();
+                await Task.Delay(1000);
+                //_serialUsbManager.ConnectAndSend();
+                _serialUsbManager.TestWrite();
+            }).Start();
             //var testDeviceNet = new DeviceNetSerialUsb();
             //testDeviceNet.InitializeTrezorAsync();
             //testUsb.Devices();

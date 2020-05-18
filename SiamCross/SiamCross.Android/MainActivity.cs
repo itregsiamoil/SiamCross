@@ -10,10 +10,19 @@ using Android;
 using Android.Support.V4.Content;
 using Android.Support.V4.App;
 using Android.Bluetooth;
+using Android.Content;
+using Android.Hardware.Usb;
+using Hoho.Android.UsbSerial.Extensions;
+using Hoho.Android.UsbSerial.Driver;
+
+[assembly: UsesFeature("android.hardware.usb.host")]
+[assembly: UsesFeature("android.hardware.usb.accessory")]
 
 namespace SiamCross.Droid
 {
     [Activity(Label = "SIAM SERVICE 2.0", Icon = "@mipmap/main_icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [IntentFilter(new[] { UsbManager.ActionUsbDeviceAttached })]
+    [MetaData(UsbManager.ActionUsbDeviceAttached, Resource = "@xml/device_filter")]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
@@ -52,22 +61,16 @@ namespace SiamCross.Droid
                 ActivityCompat.RequestPermissions(this, locationPermissions, locationPermissionsRequestCode);
             }
 
-            //BluetoothAdapter bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-
-            //if (bluetoothAdapter.IsEnabled)
-            //{
-            //    bluetoothAdapter.Disable();
-            //    bluetoothAdapter.Enable();
-            //}
-            //else
-            //{
-            //    bluetoothAdapter.Enable();
-            //}
-
             // Set it in the constructor
             CurrentActivity = this;
 
+            DetachedReceiver = new UsbDeviceDetachedReceiver();
+            RegisterReceiver(DetachedReceiver, new IntentFilter(UsbManager.ActionUsbDeviceDetached));
+            AttachedReceiver = new UsbDeviceAttachedReceiver();
+            RegisterReceiver(DetachedReceiver, new IntentFilter(UsbManager.ActionUsbDeviceAttached));
+
             LoadApplication(new App(new Setup()));
+
         }
 
         public static Activity CurrentActivity;
@@ -78,5 +81,59 @@ namespace SiamCross.Droid
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+
+        #region UsbDeviceDetachedReceiver implementation
+
+        public class UsbDeviceDetachedReceiver
+            : BroadcastReceiver
+        {
+            readonly string TAG = typeof(UsbDeviceDetachedReceiver).Name;
+            readonly MainActivity activity;
+
+            public UsbDeviceDetachedReceiver()
+            {
+                //this.activity = activity;
+            }
+
+            public async override void OnReceive(Context context, Intent intent)
+            {
+                var device = intent.GetParcelableExtra(UsbManager.ExtraDevice) as UsbDevice;
+
+                //Log.Info(TAG, "USB device detached: " + device.DeviceName);
+
+                //await activity.PopulateListAsync();
+            }
+        }
+
+        #endregion
+
+        #region UsbDeviceAttachedReceiver implementation
+
+        public class UsbDeviceAttachedReceiver
+            : BroadcastReceiver
+        {
+            readonly string TAG = typeof(UsbDeviceAttachedReceiver).Name;
+            readonly MainActivity activity;
+
+            public UsbDeviceAttachedReceiver()
+            {
+                //this.activity = activity;
+            }
+
+            public override async void OnReceive(Context context, Intent intent)
+            {
+                //var device = intent.GetParcelableExtra(UsbManager.ExtraDevice) as UsbDevice;
+                Device = intent.GetParcelableExtra(UsbManager.ExtraDevice) as UsbDevice;
+                //Log.Info(TAG, "USB device attached: " + device.DeviceName);
+
+                //await activity.PopulateListAsync();
+            }
+        }
+
+        #endregion
+
+        public static UsbDevice Device { get; set; }
+        public UsbDeviceDetachedReceiver DetachedReceiver { get; set; }
+        public UsbDeviceAttachedReceiver AttachedReceiver { get; set; }
     }
 }

@@ -45,7 +45,8 @@ namespace SiamCross.Droid
             cb.RegisterType<NLogManagerAndroid>().As<ILogManager>();
             cb.RegisterType<DefaultAdapterAndroid>().As<IDefaultAdapter>();
             cb.RegisterType<FileOpenDialogAndroid>().As<IFileOpenDialog>();
-            cb.RegisterType<SerialUsbManagerAndroid>().As<ISerialUsbManager>();
+            //cb.RegisterType<SerialUsbManagerAndroid>().As<ISerialUsbManager>();
+            cb.RegisterType<SerialUsbConnector>().As<ISerialUsbManager>();
         }
     }    
 }
