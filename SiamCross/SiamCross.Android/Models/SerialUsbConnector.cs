@@ -44,7 +44,7 @@ namespace SiamCross.Droid.Models
                 return;
             }
 
-            GetPremission(driver.Device);
+            await GetPremission(driver.Device);
 
             var portInfo = new UsbSerialPortInfo(_port);
 
@@ -128,23 +128,29 @@ namespace SiamCross.Droid.Models
             return prober.FindAllDriversAsync(usbManager);
         }
         
-        private async void GetPremission(UsbDevice device)
+        private async Task<bool> GetPremission(UsbDevice device)
         {
+            var premissionCompletion = new TaskCompletionSource<bool>();
+            bool premissionGranted = false;
             if (!_usbManager.HasPermission(device))
             {
                 try
                 {
-                    var permissionGranted = await _usbManager.RequestPermissionAsync(device, Forms.Context);////
-                    //PendingIntent pi = PendingIntent.GetBroadcast(Forms.Context, 0, new Intent(ACTION_USB_PERMISSION), 0);
-                    //_usbManager.RequestPermission(device, pi);
-                    throw new Exception();
+                    premissionGranted = await _usbManager.RequestPermissionAsync(device, Forms.Context);
                 }
                 catch (Exception ex)
                 {
-                    //throw new Exception(ex.Message);
-                    //GetPremission(device);
+                    premissionGranted = false;
                 }
+
+                premissionCompletion.SetResult(premissionGranted);
             }
+            else
+            {
+                premissionGranted = true;
+            }
+
+            return await premissionCompletion.Task;
         }
 
         private void WriteData(string str)
