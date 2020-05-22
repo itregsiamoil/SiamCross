@@ -26,31 +26,6 @@ namespace SiamCross.Droid.Models
         private UsbSerialPort _port;
         private UsbManager _usbManager;
         private SerialInputOutputManager _serialIoManager;
-        //private UsbDeviceDetachedReceiver _detachedReceiver;
-        //private UsbDeviceAttachedReceiver _attachedReceiver;
-
-        public SerialUsbConnector()
-        {
-            //register the broadcast receivers
-            //_detachedReceiver = new UsbDeviceDetachedReceiver();
-            //RegisterReceiver(_detachedReceiver, new IntentFilter(UsbManager.ActionUsbDeviceDetached));
-            //_attachedReceiver = new UsbDeviceAttachedReceiver();
-            //RegisterReceiver(_detachedReceiver, new IntentFilter(UsbManager.ActionUsbDeviceAttached));
-        }
-
-        public async Task Test()
-        {
-        //        var LibSerialPort = new SerialPort(
-        //        "/dev/tty",
-        //        115200,
-        //        Stopbits.One,
-        //        Parity.None,
-        //        ByteSize.EightBits,
-        //        FlowControl.Software,
-        //        new Timeout(50, 50, 50, 50, 50));
-
-        //    LibSerialPort.OnReceived += SerialPort_OnReceived;
-        }
 
         public async Task Initialize()
         {
@@ -73,7 +48,6 @@ namespace SiamCross.Droid.Models
 
             var portInfo = new UsbSerialPortInfo(_port);
 
-            ////var portInfo = MainActivity.CurrentActivity.Intent.GetParcelableExtra(EXTRA_TAG) as UsbSerialPortInfo;
             int vendorId = portInfo.VendorId;
             int deviceId = portInfo.DeviceId;
             int portNumber = portInfo.PortNumber;
@@ -88,7 +62,6 @@ namespace SiamCross.Droid.Models
             _serialIoManager = new SerialInputOutputManager(_port)
             {
                 BaudRate = 115200,
-                //BaudRate = 19200,
                 DataBits = 8,
                 StopBits = StopBits.One,
                 Parity = Parity.None,
@@ -97,26 +70,18 @@ namespace SiamCross.Droid.Models
 
             _serialIoManager.DataReceived += (sender, e) =>
             {
-                //RunOnUiThread(() => {
-                //    UpdateReceivedData(e.Data);
-                //});
                 System.Diagnostics.Debug.WriteLine("\nModem: " + 
                                                    Encoding.Default.GetString(e.Data) + "\n");
             };
 
             _serialIoManager.ErrorReceived += (sender, e) =>
             {
-                //RunOnUiThread(() => {
-                //    var intent = new Intent(this, typeof(DeviceListActivity));
-                //    StartActivity(intent);
-                //});
-                ;
+                System.Diagnostics.Debug.WriteLine("\nModem error: " + e.ToString() + "\n");
             };
 
             try
             {
                 _serialIoManager.Open(_usbManager);
-                //_port.SetRTS(true);
             }
             catch (Java.IO.IOException e)
             {
