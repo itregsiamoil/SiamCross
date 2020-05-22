@@ -87,21 +87,20 @@ namespace SiamCross.Droid
         public class UsbDeviceDetachedReceiver
             : BroadcastReceiver
         {
-            readonly string TAG = typeof(UsbDeviceDetachedReceiver).Name;
-            readonly MainActivity activity;
+            private string attached = "android.hardware.usb.action.USB_DEVICE_ATTACHED";
+            private string detached = "android.hardware.usb.action.USB_DEVICE_DETACHED";
 
-            public UsbDeviceDetachedReceiver()
+            public override void OnReceive(Context context, Intent intent)
             {
-                //this.activity = activity;
-            }
+                if (intent.Action == attached)
+                {
+                    System.Diagnostics.Debug.WriteLine(intent.Action);
+                }
 
-            public async override void OnReceive(Context context, Intent intent)
-            {
-                var device = intent.GetParcelableExtra(UsbManager.ExtraDevice) as UsbDevice;
-
-                //Log.Info(TAG, "USB device detached: " + device.DeviceName);
-
-                //await activity.PopulateListAsync();
+                if (intent.Action == detached)
+                {
+                    System.Diagnostics.Debug.WriteLine(intent.Action);
+                }
             }
         }
 
@@ -112,22 +111,7 @@ namespace SiamCross.Droid
         public class UsbDeviceAttachedReceiver
             : BroadcastReceiver
         {
-            readonly string TAG = typeof(UsbDeviceAttachedReceiver).Name;
-            readonly MainActivity activity;
-
-            public UsbDeviceAttachedReceiver()
-            {
-                //this.activity = activity;
-            }
-
-            public override async void OnReceive(Context context, Intent intent)
-            {
-                //var device = intent.GetParcelableExtra(UsbManager.ExtraDevice) as UsbDevice;
-                Device = intent.GetParcelableExtra(UsbManager.ExtraDevice) as UsbDevice;
-                //Log.Info(TAG, "USB device attached: " + device.DeviceName);
-
-                //await activity.PopulateListAsync();
-            }
+            public override async void OnReceive(Context context, Intent intent) { }
         }
 
         #endregion
