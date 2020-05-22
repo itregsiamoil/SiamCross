@@ -9,6 +9,7 @@ using Android.Content;
 using Android.Hardware.Usb;
 using Android.OS;
 using Android.Runtime;
+using Android.Telecom;
 using Android.Views;
 using Android.Widget;
 using Hoho.Android.UsbSerial.Driver;
@@ -26,6 +27,9 @@ namespace SiamCross.Droid.Models
         private UsbSerialPort _port;
         private UsbManager _usbManager;
         private SerialInputOutputManager _serialIoManager;
+
+        public event Action DataReceived;
+        public event Action ErrorReceived;
 
         public async Task Initialize()
         {
@@ -72,11 +76,14 @@ namespace SiamCross.Droid.Models
             {
                 System.Diagnostics.Debug.WriteLine("\nModem: " + 
                                                    Encoding.Default.GetString(e.Data) + "\n");
+                DataReceived?.Invoke();
             };
 
             _serialIoManager.ErrorReceived += (sender, e) =>
             {
                 System.Diagnostics.Debug.WriteLine("\nModem error: " + e.ToString() + "\n");
+
+                ErrorReceived?.Invoke();
             };
 
             try
@@ -131,7 +138,7 @@ namespace SiamCross.Droid.Models
         private async Task<bool> GetPremission(UsbDevice device)
         {
             var premissionCompletion = new TaskCompletionSource<bool>();
-            bool premissionGranted = false;
+            bool premissionGranted;
             if (!_usbManager.HasPermission(device))
             {
                 try
@@ -172,6 +179,25 @@ namespace SiamCross.Droid.Models
         public void ConnectAndSend()
         {
             throw new NotImplementedException();
+        }
+
+        public void Disconnect()
+        {
+            if (_serialIoManager != null)
+            {
+                if (_serialIoManager.IsOpen)
+                {
+                    try
+                    {
+                        _serialIoManager.Close();
+                    }
+                    catch (InvalidOperationException e)
+                    { }
+                }
+                
+                _serialIoManager.Dispose();
+                _serialIoManager = null;
+            }
         }
     }
 }

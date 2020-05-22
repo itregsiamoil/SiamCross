@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SiamCross.Droid.Models
 {
     public interface ISerialUsbManager
     {
-        //List<string> Devices();
-        //void ConnectAndSend(byte[] bytesToPrint, int productId, int vendorId);
         void TestWrite();
 
         void ConnectAndSend();
@@ -16,5 +15,10 @@ namespace SiamCross.Droid.Models
         void TestAddSensor();
 
         Task Initialize();
+
+        void Disconnect();
+
+        event Action DataReceived;
+        event Action ErrorReceived;
     }
 }

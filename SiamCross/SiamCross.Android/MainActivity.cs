@@ -14,6 +14,7 @@ using Android.Content;
 using Android.Hardware.Usb;
 using Hoho.Android.UsbSerial.Extensions;
 using Hoho.Android.UsbSerial.Driver;
+using SiamCross.Models.USB;
 
 [assembly: UsesFeature("android.hardware.usb.host")]
 [assembly: UsesFeature("android.hardware.usb.accessory")]
@@ -95,11 +96,13 @@ namespace SiamCross.Droid
                 if (intent.Action == attached)
                 {
                     System.Diagnostics.Debug.WriteLine(intent.Action);
+                    USBService.Instance.IsUsbConnected = true;
                 }
 
                 if (intent.Action == detached)
                 {
                     System.Diagnostics.Debug.WriteLine(intent.Action);
+                    USBService.Instance.IsUsbConnected = false;
                 }
             }
         }

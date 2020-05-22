@@ -40,25 +40,6 @@ namespace SiamCross.ViewModels
             _scanner.Received += ScannerReceivedDevice;
             _scanner.ScanTimoutElapsed += ScannerScanTimoutElapsed;
             _scanner.Start();
-
-            var _serialUsbManager = AppContainer.Container.Resolve<ISerialUsbManager>();
-
-            new Thread(async () =>
-            {
-                await Task.Delay(1000);
-                await _serialUsbManager.Initialize();
-                await Task.Delay(1000);
-                //_serialUsbManager.ConnectAndSend();
-                _serialUsbManager.TestWrite();
-                await Task.Delay(1000);
-                _serialUsbManager.Search();
-                await Task.Delay(20000);
-                _serialUsbManager.TestAddSensor();
-            }).Start();
-            //var testDeviceNet = new DeviceNetSerialUsb();
-            //testDeviceNet.InitializeTrezorAsync();
-            //testUsb.Devices();
-            //testUsb.ConnectAndSend(null, 0, 0);
         }
 
         public event Action ScanTimeoutElapsed;
