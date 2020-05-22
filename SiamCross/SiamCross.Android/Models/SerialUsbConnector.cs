@@ -100,7 +100,8 @@ namespace SiamCross.Droid.Models
                 //RunOnUiThread(() => {
                 //    UpdateReceivedData(e.Data);
                 //});
-                System.Diagnostics.Debug.WriteLine(BitConverter.ToString(e.Data));
+                System.Diagnostics.Debug.WriteLine("\nModem: " + 
+                                                   Encoding.Default.GetString(e.Data) + "\n");
             };
 
             _serialIoManager.ErrorReceived += (sender, e) =>
@@ -126,11 +127,17 @@ namespace SiamCross.Droid.Models
 
         public void TestWrite()
         {
-            WriteData("0*");
-            WriteData("0*\r");
-            WriteData("0*\r\n");
-            WriteData("0*\n\r");
-            WriteData("0*\n");
+            WriteData("10*1*4*\r\n");
+        }
+
+        public void Search()
+        {
+            WriteData("1*\r\n");
+        }
+
+        public void TestAddSensor()
+        {
+            WriteData("3*0*\r\n");
         }
 
         internal static Task<IList<IUsbSerialDriver>> FindAllDriversAsync(UsbManager usbManager)

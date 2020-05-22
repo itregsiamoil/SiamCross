@@ -11,6 +11,10 @@ namespace SiamCross.Droid.Models
 
         void ConnectAndSend();
 
+        void Search();
+
+        void TestAddSensor();
+
         Task Initialize();
     }
 }

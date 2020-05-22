@@ -50,6 +50,10 @@ namespace SiamCross.ViewModels
                 await Task.Delay(1000);
                 //_serialUsbManager.ConnectAndSend();
                 _serialUsbManager.TestWrite();
+                await Task.Delay(1000);
+                _serialUsbManager.Search();
+                await Task.Delay(20000);
+                _serialUsbManager.TestAddSensor();
             }).Start();
             //var testDeviceNet = new DeviceNetSerialUsb();
             //testDeviceNet.InitializeTrezorAsync();
