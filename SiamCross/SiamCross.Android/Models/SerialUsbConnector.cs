@@ -142,14 +142,13 @@ namespace SiamCross.Droid.Models
                 {
                     premissionGranted = false;
                 }
-
-                premissionCompletion.SetResult(premissionGranted);
             }
             else
             {
                 premissionGranted = true;
             }
 
+            premissionCompletion.SetResult(premissionGranted);
             return await premissionCompletion.Task;
         }
 
