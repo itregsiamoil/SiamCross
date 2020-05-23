@@ -6,13 +6,7 @@ namespace SiamCross.Droid.Models
 {
     public interface ISerialUsbManager
     {
-        void TestWrite();
-
-        void ConnectAndSend();
-
-        void Search();
-
-        void TestAddSensor();
+        void Write(string message);
 
         Task Initialize();
 

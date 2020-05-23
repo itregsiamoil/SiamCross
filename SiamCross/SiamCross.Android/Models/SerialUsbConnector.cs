@@ -22,8 +22,6 @@ namespace SiamCross.Droid.Models
 {
     public class SerialUsbConnector : ISerialUsbManager
     {
-        const string ACTION_USB_PERMISSION = "USB_PERMISSION";
-        public const string EXTRA_TAG = "PortInfo";
         private UsbSerialPort _port;
         private UsbManager _usbManager;
         private SerialInputOutputManager _serialIoManager;
@@ -97,39 +95,19 @@ namespace SiamCross.Droid.Models
             }
         }
 
-        public void TestWrite()
+        public void Write(string message)
         {
-            WriteData("10*1*4*\r\n");
+            WriteData(message + "\r\n");
         }
 
-        public void Search()
+        private Task<IList<IUsbSerialDriver>> FindAllDriversAsync(UsbManager usbManager)
         {
-            WriteData("1*\r\n");
-        }
-
-        public void TestAddSensor()
-        {
-            WriteData("3*0*\r\n");
-        }
-
-        internal static Task<IList<IUsbSerialDriver>> FindAllDriversAsync(UsbManager usbManager)
-        {
-            // using the default probe table
-            // return UsbSerialProber.DefaultProber.FindAllDriversAsync (usbManager);
-
-            // adding a custom driver to the default probe table
-            //var table = UsbSerialProber.DefaultProbeTable;
-            //table.AddProduct(0x1b4f, 0x0008, Java.Lang.Class.FromType(typeof(CdcAcmSerialDriver))); // IOIO OTG
-            //var prober = new UsbSerialProber(table);
-            //return prober.FindAllDriversAsync(usbManager);
-
             var table = UsbSerialProber.DefaultProbeTable;
             table.AddProduct(0x1b4f, 0x0008, typeof(CdcAcmSerialDriver)); // IOIO OTG
 
             table.AddProduct(0x09D8, 0x0420, typeof(CdcAcmSerialDriver)); // Elatec TWN4
 
-            table.AddProduct(0x10C4, 0x8293, typeof(Cp21xxSerialDriver)); 
-
+            table.AddProduct(0x10C4, 0x8293, typeof(Cp21xxSerialDriver));
 
             var prober = new UsbSerialProber(table);
             return prober.FindAllDriversAsync(usbManager);

@@ -56,29 +56,14 @@ namespace SiamCross.Models.USB
             await _serialUsbManager.Initialize();
         }
 
-        private void Test()
-        {
-            new Thread(async () =>
-            {
-                await Task.Delay(1000);
-                await _serialUsbManager.Initialize();
-                await Task.Delay(1000);
-                _serialUsbManager.TestWrite();
-                await Task.Delay(1000);
-                _serialUsbManager.Search();
-                await Task.Delay(20000);
-                _serialUsbManager.TestAddSensor();
-            }).Start();
-        }
-
         private void _serialUsbManager_ErrorReceived()
         {
-            System.Diagnostics.Debug.WriteLine("Usb Service Error Recieved");
+            System.Diagnostics.Debug.WriteLine("Usb Service Error Received");
         }
 
         private void _serialUsbManager_DataReceived()
         {
-            System.Diagnostics.Debug.WriteLine("Usb Service Data Recieved");
+            System.Diagnostics.Debug.WriteLine("Usb Service Data Received");
         }
     }
 }
