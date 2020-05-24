@@ -4,14 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Android.App;
 using Android.Content;
 using Android.Hardware.Usb;
-using Android.OS;
-using Android.Runtime;
-using Android.Telecom;
-using Android.Views;
-using Android.Widget;
 using Hoho.Android.UsbSerial.Driver;
 using Hoho.Android.UsbSerial.Util;
 using Xamarin.Forms;
@@ -152,11 +146,6 @@ namespace SiamCross.Droid.Models
             {
                 System.Diagnostics.Debug.WriteLine("Write data error!");
             }
-        }
-
-        public void ConnectAndSend()
-        {
-            throw new NotImplementedException();
         }
 
         public void Disconnect()
