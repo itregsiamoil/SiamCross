@@ -6,9 +6,9 @@ namespace SiamCross.Models.USB
 {
     public interface IUsbDataSubject
     {
-        void Regisеter(IUsbObserver observer);
+        void Regisеter(IUsbDataObserver dataObserver);
 
-        void Anregisеter(IUsbObserver observer);
+        void Anregisеter(IUsbDataObserver dataObserver);
 
         void Notify(string address, byte[] data);
     }

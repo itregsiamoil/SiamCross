@@ -7,22 +7,22 @@ namespace SiamCross.Models.USB
 {
     public class UsbDataDataSubject : IUsbDataSubject
     {
-        private List<IUsbObserver> _observerList;
+        private List<IUsbDataObserver> _observerList;
 
         public UsbDataDataSubject()
         {
-            _observerList = new List<IUsbObserver>();
+            _observerList = new List<IUsbDataObserver>();
         }
-        public void Regisеter(IUsbObserver observer)
+        public void Regisеter(IUsbDataObserver dataObserver)
         {
-            _observerList.Add(observer);
+            _observerList.Add(dataObserver);
         }
 
-        public void Anregisеter(IUsbObserver observer)
+        public void Anregisеter(IUsbDataObserver dataObserver)
         {
-            if(_observerList.Contains(observer))
+            if(_observerList.Contains(dataObserver))
             {
-                _observerList.Remove(observer);
+                _observerList.Remove(dataObserver);
             }
         }
 

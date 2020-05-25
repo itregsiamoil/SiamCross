@@ -8,7 +8,7 @@ using SiamCross.Models.USB;
 
 namespace SiamCross.Droid.Models.BluetoothAdapters
 {
-    public class CustomBluetooth5Adapter : IBluetoothAdapter, IUsbObserver
+    public class CustomBluetooth5Adapter : IBluetoothAdapter, IUsbDataObserver
     {
         public string Address { get; private set; }
 

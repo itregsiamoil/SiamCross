@@ -38,8 +38,8 @@ namespace SiamCross.Models.USB
                 }
             }
         }
-    
-        private Dictionary<string, int> _hardwareDevices;
+
+        private IUsbDataSubject _dataSubject;
 
         public USBService()
         {
@@ -47,6 +47,8 @@ namespace SiamCross.Models.USB
 
             _serialUsbManager.DataReceived += _serialUsbManager_DataReceived;
             _serialUsbManager.ErrorReceived += _serialUsbManager_ErrorReceived;
+
+            _dataSubject = new UsbDataDataSubject();
 
             System.Diagnostics.Debug.WriteLine("Usb Service Creates!");
         }

@@ -6,7 +6,7 @@ using Mono.Data.Sqlite;
 
 namespace SiamCross.Models.USB
 {
-    public interface IUsbObserver
+    public interface IUsbDataObserver
     {
         String Address { get; }
 
