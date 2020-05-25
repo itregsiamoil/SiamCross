@@ -65,14 +65,19 @@ namespace SiamCross.Services
 
                 foreach (var sensor in savedSensors)
                 {
-                    if (sensor.BluetoothType == BluetoothType.Le)
+                    switch (sensor.BluetoothType)
                     {
-                        var addebleSensor = SensorFactory.CreateSensor(sensor);
-                        if (addebleSensor != null)
+                        case BluetoothType.Le:
                         {
-                            _sensors.Add(addebleSensor);
+                            var addebleSensor = SensorFactory.CreateSensor(sensor);
+                            if (addebleSensor != null)
+                            {
+                                _sensors.Add(addebleSensor);
 
-                            SensorAdded?.Invoke(addebleSensor.SensorData);
+                                SensorAdded?.Invoke(addebleSensor.SensorData);
+                            }
+
+                            break;
                         }
                     }
                 }
@@ -82,14 +87,19 @@ namespace SiamCross.Services
                     Thread.Sleep(2500);
                     foreach (var sensor in savedSensors)
                     {
-                        if (sensor.BluetoothType == BluetoothType.Classic)
+                        switch (sensor.BluetoothType)
                         {
-                            var addebleSensor = SensorFactory.CreateSensor(sensor);
-                            if (addebleSensor != null)
+                            case BluetoothType.Classic:
                             {
-                                _sensors.Add(addebleSensor);
+                                var addebleSensor = SensorFactory.CreateSensor(sensor);
+                                if (addebleSensor != null)
+                                {
+                                    _sensors.Add(addebleSensor);
 
-                                SensorAdded?.Invoke(addebleSensor.SensorData);
+                                    SensorAdded?.Invoke(addebleSensor.SensorData);
+                                }
+
+                                break;
                             }
                         }
                     }
