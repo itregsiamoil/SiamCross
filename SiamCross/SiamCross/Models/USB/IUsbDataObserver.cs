@@ -8,8 +8,12 @@ namespace SiamCross.Models.USB
 {
     public interface IUsbDataObserver
     {
-        String Address { get; }
+        string Address { get; }
 
-        void Update(byte[] data);
+        void OnDataRecieved(byte[] data);
+
+        void OnConnectSucceed();
+
+        void OnDisconnected();
     }
 }
