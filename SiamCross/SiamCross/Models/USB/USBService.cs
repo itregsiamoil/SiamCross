@@ -51,12 +51,18 @@ namespace SiamCross.Models.USB
         {
             _serialUsbManager = AppContainer.Container.Resolve<ISerialUsbManager>();
 
-            _serialUsbManager.DataReceived += OnDataReceived;
-            _serialUsbManager.ErrorReceived += OnErrorReceived;
+            _serialUsbManager.DataReceived += OnUsbDataReceived;
+            _serialUsbManager.ErrorReceived += OnUsbErrorReceived;
 
             _hardwareDevicesTable = new HardwareDevicesTable();
             _dataSubject = new UsbDataDataSubject();
             _usbMessageParcer = new UsbMessageParcer();
+
+            _usbMessageParcer.TableComponentRecieved += OnTableComponentRecieved;
+            _usbMessageParcer.DataRecieved += OnDataRecieved;
+            _usbMessageParcer.DeviceConnected += OnDeviceConnected;
+            _usbMessageParcer.DeviceDisconnected += OnDeviceDisconnected;
+            _usbMessageParcer.DeviceFounded += OnDeviceFounded;
 
             System.Diagnostics.Debug.WriteLine("Usb Service Creates!");
         }
@@ -66,12 +72,12 @@ namespace SiamCross.Models.USB
             await _serialUsbManager.Initialize();
         }
 
-        private void OnErrorReceived()
+        private void OnUsbErrorReceived()
         {
             System.Diagnostics.Debug.WriteLine("Usb Service Error Received");
         }
 
-        private void OnDataReceived(string stringMessage)
+        private void OnUsbDataReceived(string stringMessage)
         {
             System.Diagnostics.Debug.WriteLine("Usb Service Data Received");
             try
