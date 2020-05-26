@@ -20,7 +20,7 @@ namespace SiamCross.Droid.Models
         private UsbManager _usbManager;
         private SerialInputOutputManager _serialIoManager;
 
-        public event Action DataReceived;
+        public event Action<string> DataReceived;
         public event Action ErrorReceived;
 
         public async Task Initialize()
@@ -66,9 +66,9 @@ namespace SiamCross.Droid.Models
 
             _serialIoManager.DataReceived += (sender, e) =>
             {
-                System.Diagnostics.Debug.WriteLine("\nModem: " + 
-                                                   Encoding.Default.GetString(e.Data) + "\n");
-                DataReceived?.Invoke();
+                var str = Encoding.Default.GetString(e.Data);
+                System.Diagnostics.Debug.WriteLine("\nModem: " + str + "\n");
+                DataReceived?.Invoke(str);
             };
 
             _serialIoManager.ErrorReceived += (sender, e) =>
