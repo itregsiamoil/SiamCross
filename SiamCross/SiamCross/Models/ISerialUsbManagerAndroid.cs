@@ -12,7 +12,7 @@ namespace SiamCross.Droid.Models
 
         void Disconnect();
 
-        event Action DataReceived;
+        event Action<string> DataReceived;
         event Action ErrorReceived;
     }
 }

@@ -32,9 +32,19 @@ namespace SiamCross.Droid.Models.BluetoothAdapters
             throw new NotImplementedException();
         }
 
-        public void Update(byte[] data)
+        public void OnDataRecieved(byte[] data)
         {
             DataReceived?.Invoke(data);
+        }
+
+        public void OnConnectSucceed()
+        {
+            ConnectSucceed?.Invoke();
+        }
+
+        public void OnDisconnected()
+        {
+            ConnectFailed?.Invoke();
         }
 
         public event Action<byte[]> DataReceived;
