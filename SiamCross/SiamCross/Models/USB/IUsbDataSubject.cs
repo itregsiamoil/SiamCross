@@ -11,5 +11,7 @@ namespace SiamCross.Models.USB
         void Anregisеter(IUsbDataObserver dataObserver);
 
         void Notify(string address, byte[] data);
+
+        IUsbDataObserver GetObserverByAddress(string address);
     }
 }

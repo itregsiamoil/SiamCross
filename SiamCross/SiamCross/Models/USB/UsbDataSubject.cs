@@ -32,9 +32,22 @@ namespace SiamCross.Models.USB
             {
                 if (observer.Address.Equals(address))
                 {
-                    observer.Update(data);
+                    observer.OnDataRecieved(data);
                 }
             }
+        }
+
+        public IUsbDataObserver GetObserverByAddress(string address)
+        {
+            foreach (var observer in _observerList)
+            {
+                if (observer.Address == address)
+                {
+                    return observer;
+                }
+            }
+
+            return null;
         }
     }
 }
