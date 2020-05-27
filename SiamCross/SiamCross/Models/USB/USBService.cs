@@ -24,6 +24,7 @@ namespace SiamCross.Models.USB
 
         private bool _isUsbConnected = false;
         private UsbMessageParcer _usbMessageParcer;
+        private bool _isScannig;
         public bool IsUsbConnected
         {
             get => _isUsbConnected;
@@ -63,6 +64,10 @@ namespace SiamCross.Models.USB
             _usbMessageParcer.DeviceConnected += OnDeviceConnected;
             _usbMessageParcer.DeviceDisconnected += OnDeviceDisconnected;
             _usbMessageParcer.DeviceFounded += OnDeviceFounded;
+            _usbMessageParcer.ScanStarted += OnScanStarted;
+            _usbMessageParcer.ScanStopped += OnScanStopped;
+
+            _isScannig = false;
 
             System.Diagnostics.Debug.WriteLine("Usb Service Creates!");
         }
@@ -127,6 +132,16 @@ namespace SiamCross.Models.USB
             var observer = GetDataObserver(numberInTable);
 
             observer?.OnDisconnected();
+        }
+
+        private void OnScanStarted()
+        {
+            _isScannig = true;
+        }
+
+        private void OnScanStopped()
+        {
+            _isScannig = false;
         }
 
         private IUsbDataObserver GetDataObserver(int numberInTable)
