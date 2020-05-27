@@ -571,4 +571,7 @@
   <data name="ConnectedStatus" xml:space="preserve">
     <value>Соединен</value>
   </data>
+  <data name="Bluetooth5" xml:space="preserve">
+    <value>Bluetooth 5</value>
+  </data>
 </root>

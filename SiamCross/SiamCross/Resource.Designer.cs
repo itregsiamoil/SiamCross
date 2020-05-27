@@ -187,6 +187,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Bluetooth 5.
+        /// </summary>
+        public static string Bluetooth5 {
+            get {
+                return ResourceManager.GetString("Bluetooth5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Bluetooth is disable.
         /// </summary>
         public static string BluetoothIsDisable {
