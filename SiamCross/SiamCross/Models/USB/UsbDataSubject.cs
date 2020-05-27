@@ -15,7 +15,10 @@ namespace SiamCross.Models.USB
         }
         public void Regisеter(IUsbDataObserver dataObserver)
         {
-            _observerList.Add(dataObserver);
+            if (!_observerList.Contains(dataObserver))
+            {
+                _observerList.Add(dataObserver);
+            }
         }
 
         public void Anregisеter(IUsbDataObserver dataObserver)
