@@ -87,7 +87,7 @@ namespace SiamCross.Models.USB
 
         private void ParceStopScanMessage(string message)
         {
-            if (!message.Contains("Scan stopped") && !message.Contains("dev in table"))
+            if (!message.Contains("Scan stopped") && !message.Contains("dev in table") )
             {
                 var messageBlocks = GetMessageBlocks(message, '*');
                 var numberInTable = int.Parse(messageBlocks[1]);
@@ -114,7 +114,6 @@ namespace SiamCross.Models.USB
                                 [1], '№')
                             [1], ' ')[0];
 
-
                 int numberInTable;
 
                 if (int.TryParse(numberInTableStr, out numberInTable))
@@ -126,7 +125,7 @@ namespace SiamCross.Models.USB
 
         private void ParceDisconnectMessage(string message)
         {
-            if (!message.Contains("Close"))
+            if (message.Contains("Disconnected"))
             {
                 var numberInTableStr = GetMessageBlocks(message, '*')[1];
 
