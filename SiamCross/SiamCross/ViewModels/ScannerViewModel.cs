@@ -27,15 +27,16 @@ namespace SiamCross.ViewModels
 
         public ObservableCollection<ScannedDeviceInfo> ClassicDevices { get; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public  ObservableCollection<ScannedDeviceInfo> UsbDevices { get; }
 
-        private ISerialUsbManager _serialUsbManager;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public ScannerViewModel(IBluetoothScanner scanner)
         {
             _scanner = scanner;
             ScannedDevices = new ObservableCollection<ScannedDeviceInfo>();
             ClassicDevices = new ObservableCollection<ScannedDeviceInfo>();
+            UsbDevices = new ObservableCollection<ScannedDeviceInfo>();
 
             _scanner.Received += ScannerReceivedDevice;
             _scanner.ScanTimoutElapsed += ScannerScanTimoutElapsed;
