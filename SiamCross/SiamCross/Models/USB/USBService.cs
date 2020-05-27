@@ -96,11 +96,91 @@ namespace SiamCross.Models.USB
             }
         }
 
-        public void StartScanning()
+        public void RegisterUsbObserver(IUsbDataObserver observer)
         {
-            _serialUsbManager.Write("1*");
+            _dataSubject.Regisеter(observer);
         }
 
+        public void AnregisterUsbObserver(IUsbDataObserver observer)
+        {
+            _dataSubject.Anregisеter(observer);
+        }
+
+        public void StartScanQuery()
+        {
+            if (!IsUsbConnected)
+            {
+                return;
+            }
+
+            if (!_isScannig)
+            {
+                _serialUsbManager.Write("1*");
+            }
+        }
+
+        public void ConnectQuery(string address)
+        {
+            if (!IsUsbConnected)
+            {
+                return;
+            }
+
+            var numberInTable = _hardwareDevicesTable.GetNumberForAddress(address);
+
+            if (numberInTable == -1)
+            {
+                throw new NotSupportedException(
+                    "The device is not in the local modem device table!");
+            }
+
+            _serialUsbManager.Write($"*3*{numberInTable}*");
+        }
+
+        public void TableQuery()
+        {
+            if (!IsUsbConnected)
+            {
+                return;
+            }
+
+            _serialUsbManager.Write("*2");
+        }
+
+        public void SendDataQuery(byte[] data, string senderAddress)
+        {
+            if (!IsUsbConnected)
+            {
+                return;
+            }
+
+            string base64data = Convert.ToBase64String(data);
+            var numberInTable = _hardwareDevicesTable.GetNumberForAddress(senderAddress);
+
+            if (numberInTable == -1)
+            {
+                throw new NotSupportedException(
+                    "The device is not in the local modem device table!");
+            }
+        }
+
+        public void DisconnecDeviceQuery(string senderAddress)
+        {
+            if (!IsUsbConnected)
+            {
+                return;
+            }
+
+            var numberInTable = _hardwareDevicesTable.GetNumberForAddress(senderAddress);
+
+            if (numberInTable == -1)
+            {
+                throw new NotSupportedException(
+                    "The device is not in the local modem device table!");
+            }
+
+            _serialUsbManager.Write($"*9*{numberInTable}*");
+        }
         #region Parcer events handlers
 
         private void OnDeviceFounded(ScannedDeviceInfo deviceInfo)
