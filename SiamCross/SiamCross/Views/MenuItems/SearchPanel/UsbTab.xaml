@@ -2,12 +2,12 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.MenuItems.SearchPanel.UsbTab"
-             Title="Classic"
+             Title="Bluetooth 5"
              xmlns:local="clr-namespace:SiamCross;assembly=SiamCross">
 
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="{local:Translate Bluetooth5}" FontSize="Medium" />
+            <Label Text="{local:Translate FoundDevices}" FontSize="Medium" />
             <ListView x:Name="usbDevicesList" 
                       ItemsSource="{Binding UsbDevices}" 
                       ItemSelected="ItemSelected"
