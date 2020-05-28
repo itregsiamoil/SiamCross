@@ -8,7 +8,7 @@ namespace SiamCross.Droid.Models
     {
         void Write(string message);
 
-        Task Initialize();
+        Task<bool> Initialize();
 
         void Disconnect();
 
