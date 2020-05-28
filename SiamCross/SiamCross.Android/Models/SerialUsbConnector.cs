@@ -23,12 +23,12 @@ namespace SiamCross.Droid.Models
         public event Action<string> DataReceived;
         public event Action ErrorReceived;
 
-        public async Task Initialize()
+        public async Task<bool> Initialize()
         {
             _usbManager = Android.App.Application.Context.GetSystemService(Context.UsbService) as UsbManager;
             var drivers = await FindAllDriversAsync(_usbManager);
 
-            if (drivers.Count == 0) return;
+            if (drivers.Count == 0) return false;
 
             var driver = drivers.ToArray()[0];
             if (driver == null)
@@ -37,7 +37,7 @@ namespace SiamCross.Droid.Models
 
             if (_port == null)
             {
-                return;
+                return false;
             }
 
             await GetPremission(driver.Device);
@@ -52,7 +52,7 @@ namespace SiamCross.Droid.Models
 
             if (_port == null)
             {
-                return;
+                return false;
             }
 
             _serialIoManager = new SerialInputOutputManager(_port)
@@ -85,8 +85,10 @@ namespace SiamCross.Droid.Models
             catch (Java.IO.IOException e)
             {
                 System.Diagnostics.Debug.WriteLine(e.Message);
-                return;
+                return false;
             }
+
+            return true;
         }
 
         public void Write(string message)
