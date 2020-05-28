@@ -18,26 +18,26 @@ namespace SiamCross.Models.USB
 
             var messages = GetMessageBlocks(message, '$');
 
-            foreach (var mes in messages)
+            foreach (var singleMessage in messages)
             {
-                var messageType = DefineMessageType(mes);
+                var messageType = DefineMessageType(singleMessage);
 
                 switch (messageType)
                 {
                     case UsbMessageType.Scan:
-                        ParceScanMessage(message);
+                        ParceScanMessage(singleMessage);
                         break;
                     case UsbMessageType.StopScan:
-                        ParceStopScanMessage(message);
+                        ParceStopScanMessage(singleMessage);
                         break;
                     case UsbMessageType.Connection:
-                        ParceConnectionMessage(message);
+                        ParceConnectionMessage(singleMessage);
                         break;
                     case UsbMessageType.Data:
-                        ParceDataMessage(message);
+                        ParceDataMessage(singleMessage);
                         break;
                     case UsbMessageType.Disconnect:
-                        ParceDisconnectMessage(message);
+                        ParceDisconnectMessage(singleMessage);
                         break;
                     case UsbMessageType.NoSupport:
                     default:
@@ -48,6 +48,10 @@ namespace SiamCross.Models.USB
 
         private UsbMessageType DefineMessageType(string message)
         {
+            if (message.Length < 2)
+            {
+                return UsbMessageType.NoSupport;
+            }
             switch (message[1])
             {
                 case '1':
