@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Threading;
 using Android.App;
 using Android.Content.PM;
 using Android.Runtime;
@@ -71,7 +71,7 @@ namespace SiamCross.Droid
             RegisterReceiver(DetachedReceiver, new IntentFilter(UsbManager.ActionUsbDeviceAttached));
 
             LoadApplication(new App(new Setup()));
-
+            new Thread(async () => { await USBService.Instance.Initialize(); }).Start();
         }
 
         public static Activity CurrentActivity;
