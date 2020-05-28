@@ -73,6 +73,12 @@ namespace SiamCross.ViewModels
                         ScannedDevices.Add(dev);
                     }
                     break;
+                case BluetoothType.UsbCustom5:
+                    if (!UsbDevices.Contains(dev))
+                    {
+                        UsbDevices.Add(dev);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -84,6 +90,7 @@ namespace SiamCross.ViewModels
             {
                 ScannedDevices.Clear();
                 ClassicDevices.Clear();
+                UsbDevices.Clear();
                 _scanner.Start();
             }
             catch (Exception ex)
