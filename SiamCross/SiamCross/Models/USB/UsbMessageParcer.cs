@@ -16,6 +16,14 @@ namespace SiamCross.Models.USB
                 return;
             }
 
+            if (message.Length > 0)
+            {
+                if (message[0] != '$')
+                {
+                    return;
+                }
+            }
+
             var messages = GetMessageBlocks(message, '$');
 
             foreach (var singleMessage in messages)
@@ -91,7 +99,10 @@ namespace SiamCross.Models.USB
 
         private void ParceStopScanMessage(string message)
         {
-            if (!message.Contains("Scan stopped") && !message.Contains("dev in table") )
+            if (!message.Contains("Scan stopped") &&
+                !message.Contains("Scanning stopped") &&
+                !message.Contains("dev in table") &&
+                !message.Contains("device in table"))
             {
                 var messageBlocks = GetMessageBlocks(message, '*');
                 var numberInTable = int.Parse(messageBlocks[1]);
