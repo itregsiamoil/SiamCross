@@ -39,7 +39,7 @@ namespace SiamCross.Models.USB
                 else
                 {
                     _hardwareDevicesTable.Clear();
-                    _serialUsbManager.Disconnect();
+                    //_serialUsbManager.Disconnect();
                 }
             }
         }
@@ -72,9 +72,14 @@ namespace SiamCross.Models.USB
             System.Diagnostics.Debug.WriteLine("Usb Service Creates!");
         }
 
-        private async Task Initialize()
+        public async Task Initialize()
         {
-            await _serialUsbManager.Initialize();
+            var isConnect = await _serialUsbManager.Initialize();
+            if (isConnect)
+            {
+                _isUsbConnected = true;
+                _serialUsbManager.Write("10*1*4*");
+            }
         }
 
         private void OnUsbErrorReceived()
