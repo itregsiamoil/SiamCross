@@ -51,6 +51,15 @@ namespace SiamCross.Services
                             sensor.ScannedDeviceInfo = deviceInfo;
                             return sensor;
                         }
+                        case BluetoothType.UsbCustom5:
+                        {
+                            var sensor = new Ddim2Sensor(
+                                AppContainer.Container.Resolve<IBluetooth5CustomAdapter>
+                                    (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
+                                new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
+                            sensor.ScannedDeviceInfo = deviceInfo;
+                            return sensor;
+                        }
                     }
                 }
                 else if (deviceInfo.Name.Contains("SIDDOSA3M"))
