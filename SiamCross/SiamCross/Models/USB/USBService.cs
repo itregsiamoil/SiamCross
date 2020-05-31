@@ -78,7 +78,7 @@ namespace SiamCross.Models.USB
             if (isConnect)
             {
                 _isUsbConnected = true;
-                _serialUsbManager.Write("10*1*4*");
+                await _serialUsbManager.Write("10*1*4*");
             }
         }
 
@@ -111,20 +111,22 @@ namespace SiamCross.Models.USB
             _dataSubject.Anregisеter(observer);
         }
 
-        public void StartScanQuery()
+        public async Task StartScanQuery()
         {
             if (!IsUsbConnected)
             {
                 return;
             }
 
-            if (!_isScannig)
-            {
-                _serialUsbManager.Write("1*");
-            }
+            // if (!_isScannig)
+            // {
+            await _serialUsbManager.Write("2*");
+            await _serialUsbManager.Write("1*");
+           //
+           // }
         }
 
-        public void ConnectQuery(string address)
+        public async Task ConnectQuery(string address)
         {
             if (!IsUsbConnected)
             {
@@ -139,43 +141,27 @@ namespace SiamCross.Models.USB
                     "The device is not in the local modem device table!");
             }
 
-            _serialUsbManager.Write($"*3*{numberInTable}*");
+            await _serialUsbManager.Write($"3*{numberInTable}*");
         }
 
-        public void TableQuery()
+        public async Task TableQuery()
         {
             if (!IsUsbConnected)
             {
                 return;
             }
 
-            _serialUsbManager.Write("*2");
+            await _serialUsbManager.Write("*2");
         }
 
-        public void SendDataQuery(byte[] data, string senderAddress)
+        public async Task SendDataQuery(byte[] data, string senderAddress)
         {
             if (!IsUsbConnected)
             {
                 return;
             }
 
-            string base64data = Convert.ToBase64String(data);
-            var numberInTable = _hardwareDevicesTable.GetNumberForAddress(senderAddress);
-
-            if (numberInTable == -1)
-            {
-                throw new NotSupportedException(
-                    "The device is not in the local modem device table!");
-            }
-        }
-
-        public void DisconnecDeviceQuery(string senderAddress)
-        {
-            if (!IsUsbConnected)
-            {
-                return;
-            }
-
+            var strBytes = BitConverter.ToString(data).Replace("-", String.Empty);
             var numberInTable = _hardwareDevicesTable.GetNumberForAddress(senderAddress);
 
             if (numberInTable == -1)
@@ -184,7 +170,25 @@ namespace SiamCross.Models.USB
                     "The device is not in the local modem device table!");
             }
 
-            _serialUsbManager.Write($"*9*{numberInTable}*");
+            await _serialUsbManager.Write($"7*{numberInTable}*{strBytes}");
+        }
+
+        public async Task DisconnecDeviceQuery(string senderAddress)
+        {
+            if (!IsUsbConnected)
+            {
+                return;
+            }
+
+            var numberInTable = _hardwareDevicesTable.GetNumberForAddress(senderAddress);
+
+            if (numberInTable == -1)
+            {
+                throw new NotSupportedException(
+                    "The device is not in the local modem device table!");
+            }
+
+            await _serialUsbManager.Write($"*9*{numberInTable}*");
         }
         #region Parcer events handlers
 

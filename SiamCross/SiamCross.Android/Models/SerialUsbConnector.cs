@@ -91,9 +91,13 @@ namespace SiamCross.Droid.Models
             return true;
         }
 
-        public void Write(string message)
+        public async Task Write(string message)
         {
+            //var writeCompletion = new TaskCompletionSource<object>();
             WriteData(message + "\r\n");
+            await Task.Delay(20);
+           // writeCompletion.SetResult(null);
+            //return await writeCompletion;
         }
 
         private Task<IList<IUsbSerialDriver>> FindAllDriversAsync(UsbManager usbManager)

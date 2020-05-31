@@ -6,7 +6,7 @@ namespace SiamCross.Droid.Models
 {
     public interface ISerialUsbManager
     {
-        void Write(string message);
+        Task Write(string message);
 
         Task<bool> Initialize();
 
