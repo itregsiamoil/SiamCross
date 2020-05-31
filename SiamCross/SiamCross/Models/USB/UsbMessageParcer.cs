@@ -155,15 +155,26 @@ namespace SiamCross.Models.USB
 
         private void ParceDataMessage(string message)
         {
-            var payloadData = GetMessageBlocks(message, '*')[3];
-
-            var numberInTableStr = GetMessageBlocks(message, '*')[1];
-            int numberInTable;
-
-            if (int.TryParse(numberInTableStr, out numberInTable))
+            try
             {
-                DataRecieved?.Invoke(numberInTable, StringToByteArray(payloadData));
+                var payloadData = GetMessageBlocks(message, '*')[3];
+
+                var numberInTableStr = GetMessageBlocks(message, '*')[1];
+                int numberInTable;
+
+                payloadData = payloadData.Replace(System.Environment.NewLine, string.Empty);
+
+                if (int.TryParse(numberInTableStr, out numberInTable))
+                {
+                    DataRecieved?.Invoke(numberInTable, StringToByteArray(payloadData));
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine("UsbDataRecieve parce error\n");
+                Console.WriteLine($"Message = {message}\n");
+            }
+            
         }
 
         private List<string> GetMessageBlocks(string message, char separator)
@@ -176,10 +187,19 @@ namespace SiamCross.Models.USB
 
         public byte[] StringToByteArray(string hex)
         {
-            return Enumerable.Range(0, hex.Length)
-                .Where(x => x % 2 == 0)
-                .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
-                .ToArray();
+            List<byte> bytes = new List<byte>();
+            try
+            {
+                bytes = Enumerable.Range(0, hex.Length)
+                    .Where(x => x % 2 == 0)
+                    .Select(x => Convert.ToByte(hex.Substring(x, 2), 16)).ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return bytes.ToArray();
         }
 
         public event Action ScanStarted;
