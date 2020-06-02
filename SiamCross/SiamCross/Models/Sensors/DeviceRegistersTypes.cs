@@ -11,6 +11,11 @@
         Program,
         Report,
         Graph,
+        InvalidBloks,
+        Time,
+        DateTime,
+        ResearchHeader,
+        Page,
         DataLost
     }
 }
