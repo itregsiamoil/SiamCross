@@ -62,6 +62,17 @@ namespace SiamCross.Models.USB
 
             return -1;
         }
+
+        public List<string> GetAllAddresses()
+        {
+            var addresses = new List<string>();
+            foreach (var item in _itemBag)
+            {
+                addresses.Add(item.Address);
+            }
+
+            return addresses;
+        }
     }
 
     internal class HardwareDeviceTableItem

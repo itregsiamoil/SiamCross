@@ -179,6 +179,7 @@ namespace SiamCross.Models.USB
 
         private List<string> GetMessageBlocks(string message, char separator)
         {
+
             return message.Split(separator)
                 .Where(s => !string.IsNullOrWhiteSpace(s))
                 .Distinct()
@@ -210,7 +211,6 @@ namespace SiamCross.Models.USB
         public event Action<int> DeviceConnected;
         public event Action<int> DeviceDisconnected;
     }
-
 
     public enum UsbMessageType
     {

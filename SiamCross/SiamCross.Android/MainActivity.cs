@@ -96,13 +96,13 @@ namespace SiamCross.Droid
                 if (intent.Action == attached)
                 {
                     System.Diagnostics.Debug.WriteLine(intent.Action);
-                    USBService.Instance.IsUsbConnected = true;
+                    USBService.Instance.OnUsbAttached();
                 }
 
                 if (intent.Action == detached)
                 {
                     System.Diagnostics.Debug.WriteLine(intent.Action);
-                    USBService.Instance.IsUsbConnected = false;
+                    USBService.Instance.OnUsbDetached();
                 }
             }
         }
