@@ -571,4 +571,10 @@
   <data name="ConnectedStatus" xml:space="preserve">
     <value>Соединен</value>
   </data>
+  <data name="PressureGauge" xml:space="preserve">
+    <value>Манометр</value>
+  </data>
+  <data name="AtmosphereUnits" xml:space="preserve">
+    <value>атм</value>
+  </data>
 </root>

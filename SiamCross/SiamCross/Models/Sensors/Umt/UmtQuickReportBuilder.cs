@@ -8,7 +8,25 @@ namespace SiamCross.Models.Sensors.Umt
     {
         private string _batteryVoltage;
         private string _pressure;
+        private string _temperature;
 
+        public string Temperature
+        {
+            get
+            {
+                return
+                    _temperature != null ?
+                        $"{Resource.Temperature}: "
+                        + _temperature
+                        + $", {Resource.DegCentigradeUnits}\n"
+                    : "";
+            }
+
+            set
+            {
+                _temperature = value;
+            }
+        }
 
         public string BatteryVoltage
         {
@@ -35,7 +53,7 @@ namespace SiamCross.Models.Sensors.Umt
                 return _pressure != null ?
                     $"{Resource.Pressure}: "
                     + _pressure
-                    + $", {Resource.KGFCMUnits}\n"
+                    + $", {Resource.AtmosphereUnits}\n"
                 : "";
             }
 
@@ -47,7 +65,7 @@ namespace SiamCross.Models.Sensors.Umt
 
         public string GetReport()
         {
-            return BatteryVoltage + Pressure;
+            return BatteryVoltage + Temperature + Pressure;
         }
     }
 }

@@ -61,6 +61,7 @@ namespace SiamCross.Models.Sensors.Umt
         MeasurePage,
         ResearchHeaders,
         DeviceProgrammVersion,
+        CurrentParametersFrame,
         StubCommand
     }
 }

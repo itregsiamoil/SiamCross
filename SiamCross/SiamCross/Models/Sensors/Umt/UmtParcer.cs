@@ -66,6 +66,11 @@ namespace SiamCross.Models.Sensors.Umt
                 var commandData = ConvertToStringPayload(message);
                 switch (commandName)
                 {
+                    case UmtCommandsEnum.CurrentParametersFrame:
+                        {
+                            HandleCurrentParamsFrame(GetPayload(message));
+                            return;
+                        }
                     case UmtCommandsEnum.ProgrammVersionAddress:
                         _commandDictionary.Add(
                             new byte[] { message[12], message[13], message[14], message[15] },
@@ -82,6 +87,48 @@ namespace SiamCross.Models.Sensors.Umt
                         Debug.WriteLine(AddZerosToBinary(Convert.ToString(payload[1], 2)));
                         Debug.WriteLine(AddZerosToBinary(Convert.ToString(payload[0], 2)));
                         break;
+                    case UmtCommandsEnum.Dav:
+                        {
+                            if (commandData.Length >= 6)
+                            {
+
+                                commandData =  commandData[0].ToString() +
+                                               commandData[1].ToString() +
+                                               commandData[2].ToString() +
+                                               commandData[3].ToString() +
+                                               commandData[4].ToString() +
+                                               commandData[5].ToString();
+                                if (commandData[commandData.Length - 1] == '.')
+                                {
+                                    commandData = commandData[0].ToString() +
+                                    commandData[1].ToString() +
+                                    commandData[2].ToString() +
+                                    commandData[3].ToString() +
+                                    commandData[4].ToString();
+                                }
+                            }
+                            break;
+                        }
+                    case UmtCommandsEnum.Acc:
+                    case UmtCommandsEnum.Temp:
+                        {
+                            if (commandData.Length >= 4)
+                            {
+
+                                commandData = commandData[0].ToString() +
+                                               commandData[1].ToString() +
+                                               commandData[2].ToString() +
+                                               commandData[3].ToString();
+                                if (commandData[commandData.Length - 1] == '.')
+                                {
+
+                                    commandData = commandData[0].ToString() +
+                                                   commandData[1].ToString() +
+                                                   commandData[2].ToString();
+                                }
+                            }
+                            break;
+                        }
                 }
                 //Если команда чтения
                 if (message[3] == 0x01)
@@ -117,6 +164,44 @@ namespace SiamCross.Models.Sensors.Umt
             }
 
             return payloadBytes;
+        }
+
+        private void HandleCurrentParamsFrame(byte[] payload)
+        {
+            var size = payload.Length;
+            var pressureBytes = new byte[] 
+            {
+                payload[0],
+                payload[1],
+                payload[2],
+                payload[3]
+            };
+            var temperatureBytes = new byte[] 
+            {
+                payload[4],
+                payload[5],
+                payload[6],
+                payload[7]
+            };
+            var voltageBytes = new byte[] 
+            {
+                payload[12],
+                payload[13],
+                payload[14],
+                payload[15]
+            };
+
+            var pressureF = BitConverter.ToSingle(pressureBytes, 0);
+            var pressure = pressureF.ToString();
+            MessageReceived?.Invoke(UmtCommandsEnum.Dav, pressure);
+
+            var temperatureF = BitConverter.ToSingle(temperatureBytes, 0);
+            var temperature = temperatureF.ToString();
+            MessageReceived?.Invoke(UmtCommandsEnum.Temp, temperature);
+
+            var voltageF = BitConverter.ToSingle(voltageBytes, 0).ToString();
+            var voltage = voltageF.ToString();
+            MessageReceived?.Invoke(UmtCommandsEnum.Acc, voltage);
         }
 
         public string ConvertToStringPayload(byte[] message)
@@ -252,6 +337,14 @@ namespace SiamCross.Models.Sensors.Umt
                                     switch (message[4])
                                     {
                                         case 0x00:
+                                            if(message[8] == 0x10)
+                                            {
+                                                return DeviceRegistersTypes.CurrentParFrame;
+                                            }
+                                            else
+                                            {
+                                                return DeviceRegistersTypes.Float;
+                                            }
                                         case 0x04:
                                         case 0x08:
                                         case 0x0C:
@@ -331,6 +424,11 @@ namespace SiamCross.Models.Sensors.Umt
                    key[2] == commandBytes[2] &&
                    key[3] == commandBytes[3])
                 {
+                    if(message[8] == 0x10 && _commandDictionary[key] == UmtCommandsEnum.Dav)
+                    {
+                        return UmtCommandsEnum.CurrentParametersFrame;
+                    }
+
                     return _commandDictionary[key];
                 }
             }

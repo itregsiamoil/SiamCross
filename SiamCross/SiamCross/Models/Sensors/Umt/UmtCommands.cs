@@ -430,6 +430,15 @@ namespace SiamCross.Models.Sensors.Umt
                 0x02, 0x88, 0x00, 0x00, 0x02, 0x00,
                 0x71, 0x9A
             },
+
+            //фрейм с текущими данными
+            [UmtCommandsEnum.CurrentParametersFrame] = new byte[]
+            {
+                0x0D, 0x0A,
+                0x01, 0x01,
+                0x00, 0x84, 0x00, 0x00, 0x10, 0x00,
+                0x6C, 0xD9
+            },
         };
 
         /// <summary>

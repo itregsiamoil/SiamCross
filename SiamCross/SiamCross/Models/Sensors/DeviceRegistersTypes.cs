@@ -16,6 +16,7 @@
         DateTime,
         ResearchHeader,
         Page,
-        DataLost
+        DataLost,
+        CurrentParFrame
     }
 }
