@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
+             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
+             mc:Ignorable="d"
+             xmlns:local="clr-namespace:SiamCross.Views"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
+             x:Class="SiamCross.Views.Ddim2MeasurementDonePage"
+             Title="DDIM2">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="share.png" Text="Share" Command="{Binding ShareCommand}"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="labelStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="Medium"/>
+                <Setter Property="Margin" Value="2, 6"/>
+                <Setter Property="TextColor" Value="Black" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <!--1. График
+    2. Месторождение
+    3. Скважина
+    4. Куст
+    5. Цех
+    6. Дата 
+    7. Буферное давление 
+    8. Комментарий
+    9. Прибор ДДИМ-2: 170
+    10. Тип исследования Динамограмма
+    11. Номер отверствия 1
+    12 Максимальная нагрузка, т
+    13. Минимальная нагрузка, т
+    14. Длина хода, м
+    15. Темп качания, кач/мин
+    16. Вес штанг в верхнем положении, т
+    17. Вес штанг в нижнем положении, т
+    18. Тип привод-->
+    <StackLayout x:Name="outerStack" Orientation="Vertical">
+        <!--<forms:ChartView x:Name="Chart1" HeightRequest="200"/>-->
+        <Grid x:Name="graphGrid" Margin="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label Text="{Binding MaxGraphY}" Grid.Column="0" Grid.Row="0"/>
+            <skia:SKCanvasView x:Name="CanvasView"
+                           PaintSurface="CanvasView_PaintSurface"
+                           HorizontalOptions="FillAndExpand"
+                           Margin="5"
+                           VerticalOptions="FillAndExpand"
+                           IgnorePixelScaling="True"
+                           HeightRequest="200"
+                           Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"/>
+            <Label Text=", Т" VerticalOptions="Start" Grid.Column="1" Grid.Row="0"/>
+            <Label Text="0"  Grid.Column="0" Grid.Row="2"/>
+            <Label Text=", М" HorizontalOptions="Center" Grid.Column="2" Grid.Row="2"/>
+            <Label Text="{Binding MaxGraphX}" HorizontalOptions="End" Grid.Column="1" Grid.Row="2"/>
+        </Grid>
+        <TableView Intent="Data" 
+               HasUnevenRows="True" 
+               HorizontalOptions="CenterAndExpand"
+               Margin="5">
+            <TableRoot >
+                <TableSection>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Field}"/>
+                            <Picker ItemsSource="{Binding Fields}"
+                                SelectedItem="{Binding SelectedField}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Well}"/>
+                            <Entry Text="{Binding Well}" 
+                               Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Bush}"/>
+                            <Entry Text="{Binding Bush}" 
+                               Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Shop}"/>
+                            <Entry Text="{Binding Shop}" 
+                               Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Date}"/>
+                            <Label Text="{Binding Date, Mode=OneWay}" 
+                                   Style="{StaticResource labelStyle}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate BufferPressure}"/>
+                            <Entry Text="{Binding BufferPressure}">
+                                <Entry.Behaviors>
+                                    <local:FloatNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Comments}"/>
+                            <Editor Text="{Binding Comments, Mode=TwoWay}"
+                                    AutoSize="TextChanges"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Device}"/>
+                            <Label Text="{Binding DeviceName, Mode=OneWay}"
+                                   Style="{StaticResource labelStyle}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate MeasurementType}"/>
+                            <Label Text="{Binding MeasurementType, Mode=OneWay}"
+                                   Style="{StaticResource labelStyle}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate ApertNumber}"/>
+                            <Entry Text="{Binding ApertNumber}" 
+                               Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate MaxLoad}"/>
+                            <Label Text="{Binding MaxLoad, Mode=OneWay}"
+                                   Style="{StaticResource labelStyle}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate MinLoad}"/>
+                            <Label Text="{Binding MinLoad, Mode=OneWay}"
+                                   Style="{StaticResource labelStyle}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate Imtravel}"/>
+                            <Label Text="{Binding Imtravel, Mode=OneWay}"
+                                   Style="{StaticResource labelStyle}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate PumpRate}"/>
+                            <Label Text="{Binding PumpRate, Mode=OneWay}"
+                                   Style="{StaticResource labelStyle}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate UpperRodWeight}"/>
+                            <Label Text="{Binding UpperRodWeight, Mode=OneWay}"
+                                   Style="{StaticResource labelStyle}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate LowerRodWeight}"/>
+                            <Label Text="{Binding LowerRodWeight, Mode=OneWay}"
+                                   Style="{StaticResource labelStyle}"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout >
+                            <Label Text="{local1:Translate ModelPump}"/>
+                            <Label Text="{Binding SelectedModelPump, Mode=OneWay}"
+                                   Style="{StaticResource labelStyle}"/>
+                        </StackLayout>
+                    </ViewCell>
+                </TableSection>
+            </TableRoot>
+        </TableView>
+    </StackLayout>
+    
+</ContentPage>
