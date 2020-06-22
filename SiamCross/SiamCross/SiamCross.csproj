@@ -60,7 +60,7 @@
     <Compile Update="Views\SiddosA3MMeasurementPage.xaml.cs">
       <DependentUpon>SiddosA3MMeasurementPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Ddim2MeasurementPage.xaml.cs">
+    <Compile Update="Views\MeasurementViews\Ddim2MeasurementPage.xaml.cs">
       <DependentUpon>Ddim2MeasurementPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\MenuItems\MeasurementsPage.xaml.cs">
@@ -69,7 +69,7 @@
     <Compile Update="Views\MenuItems\SearchPanel\BoundingTab.xaml.cs">
       <DependentUpon>BoundingTab.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\SiddosA3MMeasurementDonePage.xaml.cs">
+    <Compile Update="Views\MeasurementViews\SiddosA3MMeasurementDonePage.xaml.cs">
       <DependentUpon>SiddosA3MMeasurementDonePage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -82,22 +82,25 @@
     <EmbeddedResource Update="Views\AddFieldPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Ddim2MeasurementDonePage.xaml">
+    <EmbeddedResource Update="Views\MeasurementViews\Ddim2MeasurementDonePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Ddim2MeasurementPage.xaml">
+    <EmbeddedResource Update="Views\MeasurementViews\Ddim2MeasurementPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Ddin2MeasurementDonePage.xaml">
+    <EmbeddedResource Update="Views\MeasurementViews\Ddin2MeasurementDonePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Ddin2MeasurementPage.xaml">
+    <EmbeddedResource Update="Views\MeasurementViews\Ddin2MeasurementPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\DuMeasurementDonePage.xaml">
+    <EmbeddedResource Update="Views\MeasurementViews\DuMeasurementDonePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\DuMeasurementPage.xaml">
+    <EmbeddedResource Update="Views\MeasurementViews\DuMeasurementPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\MeasurementViews\UmtMeasurementPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MenuItems\AboutPanelPage.xaml">
