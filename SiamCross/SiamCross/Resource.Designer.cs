@@ -196,6 +196,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bluetooth 5.
+        /// </summary>
+        public static string Bluetooth5 {
+            get {
+                return ResourceManager.GetString("Bluetooth5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bluetooth is disable.
         /// </summary>
         public static string BluetoothIsDisable {
@@ -259,6 +268,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel research.
+        /// </summary>
+        public static string CancelResearch {
+            get {
+                return ResourceManager.GetString("CancelResearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chain.
         /// </summary>
         public static string ChainModelPump {
@@ -309,6 +327,15 @@ namespace SiamCross {
         public static string Chpiezo {
             get {
                 return ResourceManager.GetString("Chpiezo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear memory.
+        /// </summary>
+        public static string ClearMemory {
+            get {
+                return ResourceManager.GetString("ClearMemory", resourceCulture);
             }
         }
         
@@ -412,6 +439,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Download measurements.
+        /// </summary>
+        public static string DownloadMeasurements {
+            get {
+                return ResourceManager.GetString("DownloadMeasurements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Measurement type.
         /// </summary>
         public static string DuResearchType {
@@ -426,6 +462,24 @@ namespace SiamCross {
         public static string DynamicLevel {
             get {
                 return ResourceManager.GetString("DynamicLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dynamic pressure.
+        /// </summary>
+        public static string DynamicPressure {
+            get {
+                return ResourceManager.GetString("DynamicPressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dynamic pressure (single).
+        /// </summary>
+        public static string DynamicPressureSingle {
+            get {
+                return ResourceManager.GetString("DynamicPressureSingle", resourceCulture);
             }
         }
         
@@ -1258,6 +1312,24 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Static pressure.
+        /// </summary>
+        public static string StaticPressure {
+            get {
+                return ResourceManager.GetString("StaticPressure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Static pressure (single).
+        /// </summary>
+        public static string StaticPressureSingle {
+            get {
+                return ResourceManager.GetString("StaticPressureSingle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tataria.
         /// </summary>
         public static string Tataria {
@@ -1372,6 +1444,15 @@ namespace SiamCross {
         public static string YesButton {
             get {
                 return ResourceManager.GetString("YesButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeroing sensor.
+        /// </summary>
+        public static string ZeroingSensor {
+            get {
+                return ResourceManager.GetString("ZeroingSensor", resourceCulture);
             }
         }
     }

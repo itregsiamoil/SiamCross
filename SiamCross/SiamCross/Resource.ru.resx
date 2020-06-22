@@ -571,10 +571,37 @@
   <data name="ConnectedStatus" xml:space="preserve">
     <value>Соединен</value>
   </data>
-  <data name="PressureGauge" xml:space="preserve">
+   <data name="PressureGauge" xml:space="preserve">
     <value>Манометр</value>
   </data>
   <data name="AtmosphereUnits" xml:space="preserve">
     <value>атм</value>
+  </data>
+  <data name="Bluetooth5" xml:space="preserve">
+    <value>Bluetooth 5</value>
+  </data>
+  <data name="CancelResearch" xml:space="preserve">
+    <value>Отменить исследование</value>
+  </data>
+  <data name="ClearMemory" xml:space="preserve">
+    <value>Очистить память</value>
+  </data>
+  <data name="DownloadMeasurements" xml:space="preserve">
+    <value>Загрузить исследования</value>
+  </data>
+  <data name="ZeroingSensor" xml:space="preserve">
+    <value>Обнулить датчик</value>
+  </data>
+  <data name="DynamicPressure" xml:space="preserve">
+    <value>Динамическое давление</value>
+  </data>
+  <data name="DynamicPressureSingle" xml:space="preserve">
+    <value>Дин. давление(одиночный)</value>
+  </data>
+  <data name="StaticPressure" xml:space="preserve">
+    <value>Статическое давление</value>
+  </data>
+  <data name="StaticPressureSingle" xml:space="preserve">
+    <value>Стат. давление(одиночный)</value>
   </data>
 </root>

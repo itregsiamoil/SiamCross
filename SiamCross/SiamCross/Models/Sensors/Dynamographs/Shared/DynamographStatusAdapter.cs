@@ -39,5 +39,10 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
 
             return Resource.FreeStatus; //stub
         }
+
+        public string CreateProgressStatus(int progress)
+        {
+            return Resource.SavingStatus + $" {progress}%";
+        }
     }
 }

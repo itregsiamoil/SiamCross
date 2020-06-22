@@ -7,6 +7,7 @@ namespace SiamCross.Models
     public enum BluetoothType
     {
         Classic,
-        Le
+        Le, 
+        UsbCustom5
     }
 }

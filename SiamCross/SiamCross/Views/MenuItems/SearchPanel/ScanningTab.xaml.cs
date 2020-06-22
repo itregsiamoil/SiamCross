@@ -28,11 +28,9 @@ namespace SiamCross.Views.MenuItems.SearchPanel
             {
                 try
                 {
-                    Debug.WriteLine("StartScan");
                     _vm.StartScan();
                     ScanAnimation.IsRunning = true;
                     scannedDevicesList.IsRefreshing = false;
-                    Debug.WriteLine("EndScan");
                 }
                 catch (Exception ex)
                 {
@@ -49,11 +47,9 @@ namespace SiamCross.Views.MenuItems.SearchPanel
                 {
                     if (e.SelectedItem is ScannedDeviceInfo dev)
                     {
-                        Debug.WriteLine("Start ItemSelected");
                         SensorService.Instance.AddSensor(dev);
                         App.NavigationPage.Navigation.PopToRootAsync();
                         App.MenuIsPresented = false;
-                        Debug.WriteLine("Finish ItemSelected");
                     }
                 }
             }

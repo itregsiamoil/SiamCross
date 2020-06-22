@@ -220,9 +220,21 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement
 
         }
 
+        private float _progress = 0;
+        public int Progress
+        {
+            get
+            {
+                return (int)_progress;
+            }
+        }
+
         public void MemoryRecieveHandler(byte[] address, byte[] data)
         {
-            _dynContainer.AddData(address, data);
+            if(_dynContainer.AddData(address, data))
+            {
+                _progress += 0.5f;
+            }
         }
 
         public void MeasurementRecieveHandler(string commandName, byte[] data)

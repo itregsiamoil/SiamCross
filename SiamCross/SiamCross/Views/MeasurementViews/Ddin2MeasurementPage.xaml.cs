@@ -10,15 +10,14 @@ using Xamarin.Forms.Xaml;
 namespace SiamCross.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class Ddim2MeasurementPage : ContentPage
+    public partial class Ddin2MeasurementPage : ContentPage
     {
         private Stopwatch _stopwatch;
-        private Ddim2MeasurementViewModel _vm;
-        public Ddim2MeasurementPage(SensorData sensorData)
+
+        public Ddin2MeasurementPage(SensorData sensorData)
         {
-            var vm = new ViewModelWrap<Ddim2MeasurementViewModel>(sensorData);
-            _vm = vm.ViewModel;
-            BindingContext = _vm;
+            var vm = new ViewModelWrap<Ddin2MeasurementViewModel>(sensorData);
+            BindingContext = vm.ViewModel;
             _stopwatch = new Stopwatch();
             InitializeComponent();
         }
@@ -34,7 +33,7 @@ namespace SiamCross.Views
                 _stopwatch.Reset();
                 _stopwatch.Start();
 
-                Device.StartTimer(TimeSpan.FromMilliseconds(100),
+                Xamarin.Forms.Device.StartTimer(TimeSpan.FromMilliseconds(100),
                     () =>
                     {
                         DynPeriodEntry.Text = _stopwatch.Elapsed.TotalSeconds.ToString(
@@ -42,7 +41,7 @@ namespace SiamCross.Views
 
                         if (!_stopwatch.IsRunning)
                             return false;
-                        else 
+                        else
                             return true;
                     });
             }

@@ -12,6 +12,7 @@ using SiamCross.Models.Scanners;
 using System.Threading.Tasks;
 using System.Threading;
 using Plugin.BLE.Abstractions;
+using SiamCross.Models.USB;
 
 [assembly: Dependency(typeof(BluetoothScannerAndroid))]
 namespace SiamCross.Droid.Models
@@ -21,6 +22,7 @@ namespace SiamCross.Droid.Models
         private IAdapter _adapter;
         private IBluetoothLE _bluetoothBLE;
         private BluetoothAdapter _socketAdapter;
+        private USBService _usbService;
         public event Action<ScannedDeviceInfo> Received;
         public event Action ScanTimoutElapsed;
 
@@ -43,6 +45,14 @@ namespace SiamCross.Droid.Models
                 Received?.Invoke(new ScannedDeviceInfo(a.Device.Name, a.Device.Id, BluetoothType.Le));
                 System.Diagnostics.Debug.WriteLine("Finded device" + a.Device.Name);
             };
+
+            _usbService = USBService.Instance;
+            _usbService.DeviceFounded += _usbService_DeviceFounded;
+        }
+
+        private void _usbService_DeviceFounded(ScannedDeviceInfo scannedDeviceInfo)
+        {
+            Received?.Invoke(scannedDeviceInfo);
         }
 
         public void Start()
@@ -66,10 +76,11 @@ namespace SiamCross.Droid.Models
                 Received?.Invoke(new ScannedDeviceInfo(device.Name, device.Address, bluetoothType));
             }
 
-            StartScann();
+            StartLE();
+            StartScanUsb();
         }
 
-        private async void StartScann()
+        private async void StartLE()
         {
             if (_bluetoothBLE.State != BluetoothState.Off)
             {
@@ -78,6 +89,11 @@ namespace SiamCross.Droid.Models
                     await _adapter.StartScanningForDevicesAsync();
                 }
             }
+        }
+
+        private void StartScanUsb()
+        {
+            _usbService.StartScanQuery();
         }
 
         public void Stop()

@@ -10,6 +10,10 @@ using SiamCross.AppObjects;
 using Autofac;
 using NLog;
 using System;
+using SiamCross.Models;
+using SiamCross.Droid.Models;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SiamCross.ViewModels
 {
@@ -23,6 +27,8 @@ namespace SiamCross.ViewModels
 
         public ObservableCollection<ScannedDeviceInfo> ClassicDevices { get; }
 
+        public  ObservableCollection<ScannedDeviceInfo> UsbDevices { get; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ScannerViewModel(IBluetoothScanner scanner)
@@ -30,6 +36,7 @@ namespace SiamCross.ViewModels
             _scanner = scanner;
             ScannedDevices = new ObservableCollection<ScannedDeviceInfo>();
             ClassicDevices = new ObservableCollection<ScannedDeviceInfo>();
+            UsbDevices = new ObservableCollection<ScannedDeviceInfo>();
 
             _scanner.Received += ScannerReceivedDevice;
             _scanner.ScanTimoutElapsed += ScannerScanTimoutElapsed;
@@ -66,6 +73,12 @@ namespace SiamCross.ViewModels
                         ScannedDevices.Add(dev);
                     }
                     break;
+                case BluetoothType.UsbCustom5:
+                    if (!UsbDevices.Contains(dev))
+                    {
+                        UsbDevices.Add(dev);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -77,6 +90,7 @@ namespace SiamCross.ViewModels
             {
                 ScannedDevices.Clear();
                 ClassicDevices.Clear();
+                UsbDevices.Clear();
                 _scanner.Start();
             }
             catch (Exception ex)

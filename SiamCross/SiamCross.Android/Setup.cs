@@ -15,6 +15,7 @@ using Mono.Data.Sqlite;
 using SiamCross.AppObjects;
 using SiamCross.DataBase;
 using SiamCross.Droid.Models;
+using SiamCross.Droid.Models.BluetoothAdapters;
 using SiamCross.Droid.Services;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Scanners;
@@ -34,6 +35,7 @@ namespace SiamCross.Droid
 
             cb.RegisterType<BluetoothClassicAdapterAndroid>().As<IBluetoothClassicAdapter>();
             cb.RegisterType<BluetoothLeAdapterAndroid>().As<IBluetoothLeAdapter>();
+            cb.RegisterType<CustomBluetooth5Adapter>().As<IBluetooth5CustomAdapter>();
             cb.RegisterType<SaveDevicesServiceAndroid>().As<ISaveDevicesService>();
             cb.RegisterType<SQLiteAndroid>().As<ISQLite>();
             cb.RegisterType<FileManagerAndroid>().As<IFileManager>();
@@ -45,6 +47,8 @@ namespace SiamCross.Droid
             cb.RegisterType<NLogManagerAndroid>().As<ILogManager>();
             cb.RegisterType<DefaultAdapterAndroid>().As<IDefaultAdapter>();
             cb.RegisterType<FileOpenDialogAndroid>().As<IFileOpenDialog>();
+            //cb.RegisterType<SerialUsbManagerAndroid>().As<ISerialUsbManager>();
+            cb.RegisterType<SerialUsbConnector>().As<ISerialUsbManager>();
         }
     }    
 }

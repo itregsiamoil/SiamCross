@@ -69,10 +69,16 @@ namespace SiamCross.Models.Tools
             return dynData;
         }
 
-        public void AddData(byte[] address, byte[] data)
+        public bool AddData(byte[] address, byte[] data)
         {
+            var isNew = false;
+            if(_dynDictionary[address] == null)
+            {
+                isNew = true;
+            }
             _dynDictionary[address] = data;
             Debug.WriteLine($"Add: {BitConverter.ToString(address)} : {BitConverter.ToString(data)}\n");
+            return isNew; 
         }
     }
 

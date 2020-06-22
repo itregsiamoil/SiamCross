@@ -188,6 +188,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             if (_measurementManager != null)
             {
                 _measurementManager.MemoryRecieveHandler(address, data);
+                SensorData.Status = _statusAdapter.CreateProgressStatus(_measurementManager.Progress);             
             }
         }
 

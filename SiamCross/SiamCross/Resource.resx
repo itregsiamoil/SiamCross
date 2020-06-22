@@ -568,4 +568,31 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="AtmosphereUnits" xml:space="preserve">
     <value>Atm</value>
   </data>
+  <data name="Bluetooth5" xml:space="preserve">
+    <value>Bluetooth 5</value>
+  </data>
+  <data name="CancelResearch" xml:space="preserve">
+    <value>Cancel research</value>
+  </data>
+  <data name="ClearMemory" xml:space="preserve">
+    <value>Clear memory</value>
+  </data>
+  <data name="DownloadMeasurements" xml:space="preserve">
+    <value>Download measurements</value>
+  </data>
+  <data name="ZeroingSensor" xml:space="preserve">
+    <value>Zeroing sensor</value>
+  </data>
+  <data name="DynamicPressure" xml:space="preserve">
+    <value>Dynamic pressure</value>
+  </data>
+  <data name="DynamicPressureSingle" xml:space="preserve">
+    <value>Dynamic pressure (single)</value>
+  </data>
+  <data name="StaticPressure" xml:space="preserve">
+    <value>Static pressure</value>
+  </data>
+  <data name="StaticPressureSingle" xml:space="preserve">
+    <value>Static pressure (single)</value>
+  </data>
 </root>

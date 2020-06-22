@@ -32,56 +32,74 @@ namespace SiamCross.Services
                 }
                 else if (deviceInfo.Name.Contains("DDIM"))
                 {
-                    if (deviceInfo.BluetoothType == BluetoothType.Le)
+                    switch (deviceInfo.BluetoothType)
                     {
-                        var sensor = new Ddim2Sensor(
-                            AppContainer.Container.Resolve<IBluetoothLeAdapter>
-                            (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                            new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
-                        sensor.ScannedDeviceInfo = deviceInfo;
-                        return sensor;
-                    }
-                    else if (deviceInfo.BluetoothType == BluetoothType.Classic)
-                    {
-                        var sensor = new Ddim2Sensor(
-                            AppContainer.Container.Resolve<IBluetoothClassicAdapter>
-                            (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                            new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
-                        sensor.ScannedDeviceInfo = deviceInfo;
-                        return sensor;
+                        case BluetoothType.Le:
+                        {
+                            var sensor = new Ddim2Sensor(
+                                AppContainer.Container.Resolve<IBluetoothLeAdapter>
+                                    (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
+                                new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
+                            sensor.ScannedDeviceInfo = deviceInfo;
+                            return sensor;
+                        }
+                        case BluetoothType.Classic:
+                        {
+                            var sensor = new Ddim2Sensor(
+                                AppContainer.Container.Resolve<IBluetoothClassicAdapter>
+                                    (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
+                                new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
+                            sensor.ScannedDeviceInfo = deviceInfo;
+                            return sensor;
+                        }
+                        case BluetoothType.UsbCustom5:
+                        {
+                            var sensor = new Ddim2Sensor(
+                                AppContainer.Container.Resolve<IBluetooth5CustomAdapter>
+                                    (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
+                                new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
+                            sensor.ScannedDeviceInfo = deviceInfo;
+                            return sensor;
+                        }
                     }
                 }
                 else if (deviceInfo.Name.Contains("SIDDOSA3M"))
                 {
-                    if (deviceInfo.BluetoothType == BluetoothType.Le)
+                    switch (deviceInfo.BluetoothType)
                     {
-                        var sensor = new SiddosA3MSensor(
-                            AppContainer.Container.Resolve<IBluetoothLeAdapter>
-                            (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                            new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
-                        sensor.ScannedDeviceInfo = deviceInfo;
-                        return sensor;
+                        case BluetoothType.Le:
+                        {
+                            var sensor = new SiddosA3MSensor(
+                                AppContainer.Container.Resolve<IBluetoothLeAdapter>
+                                    (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
+                                new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
+                            sensor.ScannedDeviceInfo = deviceInfo;
+                            return sensor;
+                        }
                     }
                 }
                 else if (deviceInfo.Name.Contains("DU"))
                 {
-                    if (deviceInfo.BluetoothType == BluetoothType.Le)
+                    switch (deviceInfo.BluetoothType)
                     {
-                        var sensor = new DuSensor(
-                            AppContainer.Container.Resolve<IBluetoothLeAdapter>
-                            (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                            new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, ""));
-                        sensor.ScannedDeviceInfo = deviceInfo;
-                        return sensor;
-                    }
-                    else if (deviceInfo.BluetoothType == BluetoothType.Classic)
-                    {
-                        var sensor = new DuSensor(
-                           AppContainer.Container.Resolve<IBluetoothClassicAdapter>
-                           (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                           new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, ""));
-                        sensor.ScannedDeviceInfo = deviceInfo;
-                        return sensor;
+                        case BluetoothType.Le:
+                        {
+                            var sensor = new DuSensor(
+                                AppContainer.Container.Resolve<IBluetoothLeAdapter>
+                                    (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
+                                new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, ""));
+                            sensor.ScannedDeviceInfo = deviceInfo;
+                            return sensor;
+                        }
+                        case BluetoothType.Classic:
+                        {
+                            var sensor = new DuSensor(
+                                AppContainer.Container.Resolve<IBluetoothClassicAdapter>
+                                    (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
+                                new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, ""));
+                            sensor.ScannedDeviceInfo = deviceInfo;
+                            return sensor;
+                        }
                     }
                 }
                 else if (deviceInfo.Name.Contains("UMT"))
