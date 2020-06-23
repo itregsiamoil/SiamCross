@@ -158,6 +158,15 @@ namespace SiamCross {
                 return ResourceManager.GetString("Attached", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Atm.
+        /// </summary>
+        public static string AtmosphereUnits {
+            get {
+                return ResourceManager.GetString("AtmosphereUnits", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Attention.
@@ -799,6 +808,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Interval.
+        /// </summary>
+        public static string Interval {
+            get {
+                return ResourceManager.GetString("Interval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to kgs/cm2.
         /// </summary>
         public static string KGFCMUnits {
@@ -1087,6 +1105,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pressure gauge.
+        /// </summary>
+        public static string PressureGauge {
+            get {
+                return ResourceManager.GetString("PressureGauge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to at.
         /// </summary>
         public static string PressureUnits {
@@ -1155,6 +1182,15 @@ namespace SiamCross {
         public static string SearchTitle {
             get {
                 return ResourceManager.GetString("SearchTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to sec.
+        /// </summary>
+        public static string SecondUnits {
+            get {
+                return ResourceManager.GetString("SecondUnits", resourceCulture);
             }
         }
         
@@ -1344,6 +1380,15 @@ namespace SiamCross {
         public static string Temperature {
             get {
                 return ResourceManager.GetString("Temperature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temperature measurement.
+        /// </summary>
+        public static string TemperatureMeasurement {
+            get {
+                return ResourceManager.GetString("TemperatureMeasurement", resourceCulture);
             }
         }
         

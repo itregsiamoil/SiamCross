@@ -562,6 +562,12 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="ConnectedStatus" xml:space="preserve">
     <value>Connected</value>
   </data>
+  <data name="PressureGauge" xml:space="preserve">
+    <value>Pressure gauge</value>
+  </data>
+  <data name="AtmosphereUnits" xml:space="preserve">
+    <value>Atm</value>
+  </data>
   <data name="Bluetooth5" xml:space="preserve">
     <value>Bluetooth 5</value>
   </data>
@@ -597,5 +603,14 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   </data>
   <data name="Detached" xml:space="preserve">
     <value>Detached</value>
+  </data>
+  <data name="Interval" xml:space="preserve">
+    <value>Interval</value>
+  </data>
+  <data name="SecondUnits" xml:space="preserve">
+    <value>sec</value>
+  </data>
+  <data name="TemperatureMeasurement" xml:space="preserve">
+    <value>Temperature measurement</value>
   </data>
 </root>

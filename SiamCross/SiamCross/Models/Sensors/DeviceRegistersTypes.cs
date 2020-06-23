@@ -11,6 +11,12 @@
         Program,
         Report,
         Graph,
-        DataLost
+        InvalidBloks,
+        Time,
+        DateTime,
+        ResearchHeader,
+        Page,
+        DataLost,
+        CurrentParFrame
     }
 }

@@ -83,15 +83,42 @@
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout   >
-                            <Label Text="{local1:Translate Bush}"/>
-                            <Entry Text="{Binding Bush}" 
+                        <StackLayout>
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{local1:Translate Interval}"/>
+                                        <Span Text=", "/>
+                                        <Span Text="{local1:Translate SecondUnits}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <Entry Text="{Binding Interval}" 
                                Keyboard="Numeric">
                                 <Entry.Behaviors>
                                     <local:IntegerNumberValidationBehavior/>
                                 </Entry.Behaviors>
                             </Entry>
                         </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <CheckBox CheckedChanged="TemperatureMeasurementCheckboxChanged" 
+                                      Grid.Column="0"
+                                      Grid.Row="0"/>
+                            <Label Text="{local1:Translate TemperatureMeasurement}" 
+                                      Grid.Column="1"
+                                      Grid.Row="0"/>
+                        </Grid>
                     </ViewCell>
                 </TableSection>
             </TableRoot>

@@ -7,6 +7,7 @@ using SiamCross.Models.Sensors.Ddin2;
 using SiamCross.Models.Sensors.Du;
 using SiamCross.Models.Sensors.Dynamographs.Ddim2;
 using SiamCross.Models.Sensors.Dynamographs.SiddosA3M;
+using SiamCross.Models.Sensors.Umt;
 using System;
 
 namespace SiamCross.Services
@@ -99,6 +100,26 @@ namespace SiamCross.Services
                             sensor.ScannedDeviceInfo = deviceInfo;
                             return sensor;
                         }
+                    }
+                }
+                else if (deviceInfo.Name.Contains("UMT"))
+                {
+                    switch(deviceInfo.BluetoothType)
+                    {
+                        case BluetoothType.Le:
+                            var leBtSensor = new UmtSensor(
+                            AppContainer.Container.Resolve<IBluetoothLeAdapter>
+                            (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
+                            new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.PressureGauge, ""));
+                            leBtSensor.ScannedDeviceInfo = deviceInfo;
+                            return leBtSensor;
+                        case BluetoothType.Classic:
+                            var classicBtSensor = new UmtSensor(
+                           AppContainer.Container.Resolve<IBluetoothClassicAdapter>
+                           (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
+                           new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.PressureGauge, ""));
+                            classicBtSensor.ScannedDeviceInfo = deviceInfo;
+                            return classicBtSensor;
                     }
                 }
 

@@ -91,6 +91,17 @@ namespace SiamCross.Views.MenuItems
                             }
                         }
                     }
+                    else if (sensorData.Name.Contains("UMT") )
+                    {
+                        if (CanOpenMeasurement(sensorData))
+                        {
+                            if (CanOpenPage(typeof(DuMeasurementPage)))
+                            {
+                                App.NavigationPage.Navigation.PushAsync(
+                                    new DuMeasurementPage(sensorData));
+                            }
+                        }
+                    }
                 }
             }
         }

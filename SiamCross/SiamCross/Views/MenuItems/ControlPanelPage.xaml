@@ -39,16 +39,7 @@
                                         </StackLayout>
                                         
                                         <Label HorizontalOptions="StartAndExpand" Text="{Binding Status}" Grid.Row="2" Grid.Column="0"/>
-                                        <!--<Button HorizontalOptions="EndAndExpand" 
-                                                Command="{Binding Path=BindingContext.DeleteSensorCommand, 
-                                            Source={x:Reference ControlPanel}}"
-                                                CommandParameter="{Binding Id}" 
-                                                BackgroundColor="Transparent"
-                                                VerticalOptions="FillAndExpand"  
-                                                HeightRequest="20"
-                                                WidthRequest="40"
-                                                Grid.Row="2" Grid.Column="1"
-                                                ImageSource="trashcan.png"></Button>-->
+
                                         <Image HorizontalOptions="EndAndExpand"
                                                BackgroundColor="Transparent"
                                                 VerticalOptions="FillAndExpand"  

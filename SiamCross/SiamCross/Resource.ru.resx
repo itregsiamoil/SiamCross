@@ -571,6 +571,12 @@
   <data name="ConnectedStatus" xml:space="preserve">
     <value>Соединен</value>
   </data>
+  <data name="PressureGauge" xml:space="preserve">
+    <value>Манометр</value>
+  </data>
+  <data name="AtmosphereUnits" xml:space="preserve">
+    <value>атм</value>
+  </data>
   <data name="Bluetooth5" xml:space="preserve">
     <value>Bluetooth 5</value>
   </data>
@@ -606,5 +612,14 @@
   </data>
   <data name="Detached" xml:space="preserve">
     <value>Отсоединено</value>
+  </data>
+  <data name="Interval" xml:space="preserve">
+    <value>Интервал</value>
+  </data>
+  <data name="SecondUnits" xml:space="preserve">
+    <value>сек</value>
+  </data>
+  <data name="TemperatureMeasurement" xml:space="preserve">
+    <value>Замер температуры</value>
   </data>
 </root>
