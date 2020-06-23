@@ -14,6 +14,7 @@ using SiamCross.Models;
 using SiamCross.Droid.Models;
 using System.Threading;
 using System.Threading.Tasks;
+using SiamCross.Models.USB;
 
 namespace SiamCross.ViewModels
 {
@@ -31,8 +32,20 @@ namespace SiamCross.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public string UsbState { get; set; }
+
         public ScannerViewModel(IBluetoothScanner scanner)
         {
+            MessagingCenter.Subscribe<ScannerViewModel>(
+                this,
+                "UsbAttached",
+                (sender) => { UsbState = Resource.Attached; });
+
+            MessagingCenter.Subscribe<ScannerViewModel>(
+                this,
+                "UsbDetached",
+                (sender) => { UsbState = Resource.Detached; });
+
             _scanner = scanner;
             ScannedDevices = new ObservableCollection<ScannedDeviceInfo>();
             ClassicDevices = new ObservableCollection<ScannedDeviceInfo>();

@@ -8,6 +8,8 @@ using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Droid.Models;
 using SiamCross.Models.Scanners;
+using SiamCross.ViewModels;
+using Xamarin.Forms;
 
 namespace SiamCross.Models.USB
 {
@@ -31,6 +33,9 @@ namespace SiamCross.Models.USB
             set
             {
                 _isUsbConnected = value;
+                string message = _isUsbConnected ? "UsbAttached" : "UsbDetached";
+
+                MessagingCenter.Send<USBService>(this, message);
             }
         }
 

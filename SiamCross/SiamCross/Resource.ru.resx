@@ -598,4 +598,13 @@
   <data name="StaticPressureSingle" xml:space="preserve">
     <value>Стат. давление(одиночный)</value>
   </data>
+  <data name="USBState" xml:space="preserve">
+    <value>Статус USB:</value>
+  </data>
+  <data name="Attached" xml:space="preserve">
+    <value>Соединено</value>
+  </data>
+  <data name="Detached" xml:space="preserve">
+    <value>Отсоединено</value>
+  </data>
 </root>

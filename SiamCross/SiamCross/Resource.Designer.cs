@@ -151,6 +151,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attached.
+        /// </summary>
+        public static string Attached {
+            get {
+                return ResourceManager.GetString("Attached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attention.
         /// </summary>
         public static string Attention {
@@ -417,6 +426,15 @@ namespace SiamCross {
         public static string DeleteQuestion {
             get {
                 return ResourceManager.GetString("DeleteQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Detached.
+        /// </summary>
+        public static string Detached {
+            get {
+                return ResourceManager.GetString("Detached", resourceCulture);
             }
         }
         
@@ -1354,6 +1372,15 @@ namespace SiamCross {
         public static string UpperRodWeight {
             get {
                 return ResourceManager.GetString("UpperRodWeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to USB state:.
+        /// </summary>
+        public static string USBState {
+            get {
+                return ResourceManager.GetString("USBState", resourceCulture);
             }
         }
         

@@ -589,4 +589,13 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="StaticPressureSingle" xml:space="preserve">
     <value>Static pressure (single)</value>
   </data>
+  <data name="USBState" xml:space="preserve">
+    <value>USB state:</value>
+  </data>
+  <data name="Attached" xml:space="preserve">
+    <value>Attached</value>
+  </data>
+  <data name="Detached" xml:space="preserve">
+    <value>Detached</value>
+  </data>
 </root>
