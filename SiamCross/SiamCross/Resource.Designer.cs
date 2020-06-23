@@ -790,6 +790,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Interval.
+        /// </summary>
+        public static string Interval {
+            get {
+                return ResourceManager.GetString("Interval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to kgs/cm2.
         /// </summary>
         public static string KGFCMUnits {
@@ -1159,6 +1168,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to sec.
+        /// </summary>
+        public static string SecondUnits {
+            get {
+                return ResourceManager.GetString("SecondUnits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select.
         /// </summary>
         public static string Select {
@@ -1344,6 +1362,15 @@ namespace SiamCross {
         public static string Temperature {
             get {
                 return ResourceManager.GetString("Temperature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temperature measurement.
+        /// </summary>
+        public static string TemperatureMeasurement {
+            get {
+                return ResourceManager.GetString("TemperatureMeasurement", resourceCulture);
             }
         }
         

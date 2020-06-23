@@ -571,7 +571,7 @@
   <data name="ConnectedStatus" xml:space="preserve">
     <value>Соединен</value>
   </data>
-   <data name="PressureGauge" xml:space="preserve">
+  <data name="PressureGauge" xml:space="preserve">
     <value>Манометр</value>
   </data>
   <data name="AtmosphereUnits" xml:space="preserve">
@@ -603,5 +603,14 @@
   </data>
   <data name="StaticPressureSingle" xml:space="preserve">
     <value>Стат. давление(одиночный)</value>
+  </data>
+  <data name="Interval" xml:space="preserve">
+    <value>Интервал</value>
+  </data>
+  <data name="SecondUnits" xml:space="preserve">
+    <value>сек</value>
+  </data>
+  <data name="TemperatureMeasurement" xml:space="preserve">
+    <value>Замер температуры</value>
   </data>
 </root>

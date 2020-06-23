@@ -595,4 +595,13 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="StaticPressureSingle" xml:space="preserve">
     <value>Static pressure (single)</value>
   </data>
+  <data name="Interval" xml:space="preserve">
+    <value>Interval</value>
+  </data>
+  <data name="SecondUnits" xml:space="preserve">
+    <value>sec</value>
+  </data>
+  <data name="TemperatureMeasurement" xml:space="preserve">
+    <value>Temperature measurement</value>
+  </data>
 </root>
