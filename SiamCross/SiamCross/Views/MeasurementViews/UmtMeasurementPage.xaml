@@ -116,9 +116,7 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
-                            <CheckBox CheckedChanged="TemperatureMeasurementCheckboxChanged" 
-                                      Grid.Column="0"
-                                      Grid.Row="0"/>
+
                             <Label Text="{local1:Translate TemperatureMeasurement}" 
                                       Grid.Column="1"
                                       Grid.Row="0"/>

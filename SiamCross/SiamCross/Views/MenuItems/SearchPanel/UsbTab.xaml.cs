@@ -22,8 +22,10 @@ namespace SiamCross.Views.MenuItems.SearchPanel
         {
             InitializeComponent();
             var vm = new ViewModelWrap<ScannerViewModel>();
+            
             _viewModel = vm.ViewModel;
             _viewModel.ScanTimeoutElapsed += () => ScanAnimation.IsRunning = false;
+            _viewModel.UsbStateChanged += OnUsbStateChanged;
             this.BindingContext = _viewModel;
             usbDevicesList.RefreshCommand = new Command(() =>
             {
@@ -59,6 +61,11 @@ namespace SiamCross.Views.MenuItems.SearchPanel
             {
                 _logger.Error(ex, "ItemSelected, creating sensor" + "\n");
             }
+        }
+
+        private void OnUsbStateChanged(bool state)
+        {
+            usbStateLabel.TextColor = state ? Color.Green : Color.Red;
         }
     }
 }

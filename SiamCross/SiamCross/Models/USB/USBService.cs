@@ -8,6 +8,8 @@ using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Droid.Models;
 using SiamCross.Models.Scanners;
+using SiamCross.ViewModels;
+using Xamarin.Forms;
 
 namespace SiamCross.Models.USB
 {
@@ -31,6 +33,9 @@ namespace SiamCross.Models.USB
             set
             {
                 _isUsbConnected = value;
+                string message = _isUsbConnected ? "UsbAttached" : "UsbDetached";
+
+                MessagingCenter.Send<USBService>(this, message);
             }
         }
 
@@ -67,7 +72,7 @@ namespace SiamCross.Models.USB
             var isConnect = await _serialUsbManager.Initialize();
             if (isConnect)
             {
-                _isUsbConnected = true;
+                IsUsbConnected = true;
                 await _serialUsbManager.Write("10*1*4*");
                 await StartScanQuery();
             }
@@ -248,7 +253,6 @@ namespace SiamCross.Models.USB
         public async void OnUsbAttached()
         {
             await Initialize();
-            _isUsbConnected = true;
         }
 
         public void OnUsbDetached()
@@ -260,9 +264,9 @@ namespace SiamCross.Models.USB
             }
 
             _hardwareDevicesTable.Clear();
-            _isUsbConnected = false;
+            IsUsbConnected = false;
         }
 
-        public event Action<ScannedDeviceInfo> DeviceFounded;
+        public Action<ScannedDeviceInfo> DeviceFounded;
     }
 }
