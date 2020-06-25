@@ -72,7 +72,7 @@ namespace SiamCross.Models.USB
             var isConnect = await _serialUsbManager.Initialize();
             if (isConnect)
             {
-                _isUsbConnected = true;
+                IsUsbConnected = true;
                 await _serialUsbManager.Write("10*1*4*");
                 await StartScanQuery();
             }
@@ -253,7 +253,6 @@ namespace SiamCross.Models.USB
         public async void OnUsbAttached()
         {
             await Initialize();
-            _isUsbConnected = true;
         }
 
         public void OnUsbDetached()
@@ -261,13 +260,13 @@ namespace SiamCross.Models.USB
             var devicesAddresses = _hardwareDevicesTable.GetAllAddresses();
             foreach(var address in devicesAddresses)
             {
-                _dataSubject.GetObserverByAddress(address).OnDisconnected();
+                _dataSubject.GetObserverByAddress(address)?.OnDisconnected();
             }
 
             _hardwareDevicesTable.Clear();
-            _isUsbConnected = false;
+            IsUsbConnected = false;
         }
 
-        public event Action<ScannedDeviceInfo> DeviceFounded;
+        public Action<ScannedDeviceInfo> DeviceFounded;
     }
 }

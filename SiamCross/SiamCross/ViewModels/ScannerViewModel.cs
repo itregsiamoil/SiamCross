@@ -32,19 +32,43 @@ namespace SiamCross.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public string UsbState { get; set; }
+        public string USBState { get; set; }
+
+        private void OnUsbAttached()
+        {
+            USBState = Resource.Attached;
+            UsbStateChanged?.Invoke(true);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(USBState)));
+        }
+
+        private void OnUsbDetached()
+        {
+            USBState = Resource.Detached;
+            UsbStateChanged?.Invoke(false);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(USBState)));
+        }
 
         public ScannerViewModel(IBluetoothScanner scanner)
         {
-            MessagingCenter.Subscribe<ScannerViewModel>(
+            if(USBService.Instance.IsUsbConnected)
+            {
+                OnUsbAttached();              
+            }
+            else
+            {
+                OnUsbDetached();              
+            }
+
+            MessagingCenter.Subscribe<USBService>(
                 this,
                 "UsbAttached",
-                (sender) => { UsbState = Resource.Attached; });
+                (sender) => 
+                { OnUsbAttached(); });
 
-            MessagingCenter.Subscribe<ScannerViewModel>(
+            MessagingCenter.Subscribe<USBService>(
                 this,
                 "UsbDetached",
-                (sender) => { UsbState = Resource.Detached; });
+                (sender) => { OnUsbDetached(); });
 
             _scanner = scanner;
             ScannedDevices = new ObservableCollection<ScannedDeviceInfo>();
@@ -112,5 +136,7 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
+
+        public event Action<bool> UsbStateChanged;
     }
 }

@@ -7,15 +7,15 @@
 
     <ContentPage.Content>
         <StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="{local:Translate USBState}"/>
+                <Label Text="{Binding USBState}" x:Name="usbStateLabel"/>
+            </StackLayout>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="{local:Translate USBState}"/>
-                    <Label Text="{Binding USBState}"/>
-                </StackLayout>
                 <Label Text="{local:Translate FoundDevices}" 
                        FontSize="Medium" 
                        Grid.Column="0"/>
