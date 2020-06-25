@@ -1,10 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SiamCross.Views.MeasurementViews.UmtMeasurementPage"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:local="clr-namespace:SiamCross.Views"
              xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
-             xmlns:local="clr-namespace:SiamCross.Views">
-             
+             xmlns:local2="clr-namespace:SiamCross.Views.ValidationBehavior"
+             x:Class="SiamCross.Views.MeasurementViews.UmtMeasurementPage"
+             Title ="UMT">     
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{local1:Translate ZeroingSensor}" Order="Secondary" Command="{Binding ZeroingCommand}"/>
@@ -119,6 +123,27 @@
                                       Grid.Column="1"
                                       Grid.Row="0"/>
                         </Grid>
+                    </ViewCell>
+                <ViewCell>
+                        <StackLayout>
+                            <Button 
+                            Text="{local1:Translate StartMeasurement}"
+                            Command="{Binding StartMeasurementCommand}"
+                            Margin="20"
+                            HorizontalOptions="CenterAndExpand"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell x:Name="Empty">
+                        <StackLayout>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                            <Label/>
+                        </StackLayout>
                     </ViewCell>
                 </TableSection>
             </TableRoot>

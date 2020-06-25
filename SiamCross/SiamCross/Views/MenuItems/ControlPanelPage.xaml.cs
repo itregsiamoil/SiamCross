@@ -11,6 +11,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using System.Threading.Tasks;
 using System.Threading;
+using SiamCross.Views.MeasurementViews;
 
 namespace SiamCross.Views.MenuItems
 {
@@ -95,10 +96,10 @@ namespace SiamCross.Views.MenuItems
                     {
                         if (CanOpenMeasurement(sensorData))
                         {
-                            if (CanOpenPage(typeof(DuMeasurementPage)))
+                            if (CanOpenPage(typeof(UmtMeasurementPage)))
                             {
                                 App.NavigationPage.Navigation.PushAsync(
-                                    new DuMeasurementPage(sensorData));
+                                    new UmtMeasurementPage(sensorData));
                             }
                         }
                     }

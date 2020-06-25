@@ -613,4 +613,13 @@
   <data name="TemperatureMeasurement" xml:space="preserve">
     <value>Замер температуры</value>
   </data>
+  <data name="IntervalChoiceText" xml:space="preserve">
+    <value>Enter the intehval!</value>
+  </data>
+  <data name="SelectedMeasurementTypeChoiceText" xml:space="preserve">
+    <value>Choose a type of research!</value>
+  </data>
+  <data name="IntervalErrorTextUmt" xml:space="preserve">
+    <value>Интервал должен быть между 1 и 82800 сек!</value>
+  </data>
 </root>

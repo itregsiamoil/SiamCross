@@ -119,15 +119,15 @@ namespace SiamCross.Models.Sensors.Umt
             {
                 if (IsAlive)
                 {
-                    //if (SensorData.Firmware == "")
-                    //{
-                    //    await _firmwareQualifier.Qualify();
-                    //}
-                    //if (!IsMeasurement)
-                    //{
+                    if (SensorData.Firmware == "")
+                    {
+                        await _firmwareQualifier.Qualify();
+                    }
+                    if (!IsMeasurement)
+                    {
                         await QuickReport();
                         await Task.Delay(1000);
-                    //}
+                    }
                 }
                 else
                 {

@@ -3,6 +3,7 @@ using SiamCross.Models;
 using SiamCross.Models.Adapters;
 using SiamCross.Services;
 using SiamCross.ViewModels;
+using SiamCross.ViewModels.MeasurementViewModels;
 
 namespace SiamCross.AppObjects
 {
@@ -38,6 +39,7 @@ namespace SiamCross.AppObjects
             cb.RegisterType<DuMeasurementViewModel>().AsSelf();
             cb.RegisterType<SoundSpeedViewModel>().AsSelf();
             cb.RegisterType<SoundSpeedViewViewModel>().AsSelf();
+            cb.RegisterType<UmtMeasurementViewModel>().AsSelf();
         }
     }
 }

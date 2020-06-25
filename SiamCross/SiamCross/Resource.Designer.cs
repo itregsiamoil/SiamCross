@@ -799,6 +799,24 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Введите интервал!.
+        /// </summary>
+        public static string IntervalChoiceText {
+            get {
+                return ResourceManager.GetString("IntervalChoiceText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interval must be between 1 and 82800,s!.
+        /// </summary>
+        public static string IntervalErrorTextUmt {
+            get {
+                return ResourceManager.GetString("IntervalErrorTextUmt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to kgs/cm2.
         /// </summary>
         public static string KGFCMUnits {
@@ -1200,6 +1218,15 @@ namespace SiamCross {
         public static string SelectedMeasurements {
             get {
                 return ResourceManager.GetString("SelectedMeasurements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Выберите тип исследования.
+        /// </summary>
+        public static string SelectedMeasurementTypeChoiceText {
+            get {
+                return ResourceManager.GetString("SelectedMeasurementTypeChoiceText", resourceCulture);
             }
         }
         

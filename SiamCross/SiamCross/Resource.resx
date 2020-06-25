@@ -604,4 +604,13 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="TemperatureMeasurement" xml:space="preserve">
     <value>Temperature measurement</value>
   </data>
+  <data name="IntervalChoiceText" xml:space="preserve">
+    <value>Введите интервал!</value>
+  </data>
+  <data name="SelectedMeasurementTypeChoiceText" xml:space="preserve">
+    <value>Выберите тип исследования</value>
+  </data>
+  <data name="IntervalErrorTextUmt" xml:space="preserve">
+    <value>Interval must be between 1 and 82800,s!</value>
+  </data>
 </root>

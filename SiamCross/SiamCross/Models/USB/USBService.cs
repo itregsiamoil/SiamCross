@@ -256,7 +256,7 @@ namespace SiamCross.Models.USB
             var devicesAddresses = _hardwareDevicesTable.GetAllAddresses();
             foreach(var address in devicesAddresses)
             {
-                _dataSubject.GetObserverByAddress(address).OnDisconnected();
+                _dataSubject.GetObserverByAddress(address)?.OnDisconnected();
             }
 
             _hardwareDevicesTable.Clear();
