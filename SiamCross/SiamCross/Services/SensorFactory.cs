@@ -102,7 +102,7 @@ namespace SiamCross.Services
                         }
                     }
                 }
-                else if (deviceInfo.Name.Contains("UMT"))
+                else if (deviceInfo.Name.Contains("UMT") || deviceInfo.Name.Contains("DMT"))
                 {
                     switch(deviceInfo.BluetoothType)
                     {
@@ -120,6 +120,15 @@ namespace SiamCross.Services
                            new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.PressureGauge, ""));
                             classicBtSensor.ScannedDeviceInfo = deviceInfo;
                             return classicBtSensor;
+                        case BluetoothType.UsbCustom5:
+                            {
+                                var sensor = new UmtSensor(
+                                    AppContainer.Container.Resolve<IBluetooth5CustomAdapter>
+                                        (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
+                                    new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.PressureGauge, ""));
+                                sensor.ScannedDeviceInfo = deviceInfo;
+                                return sensor;
+                            }
                     }
                 }
 
