@@ -119,19 +119,27 @@ namespace SiamCross.Models.USB
 
         private void ParceConnectionMessage(string message)
         {
+            string stringNumberInTable = null;
             if (message.Contains("for dev"))
             {
-                var numberInTableStr = 
+                stringNumberInTable = 
                     
                     GetMessageBlocks(
                         GetMessageBlocks(
                             GetMessageBlocks(message, '*')
                                 [1], '№')
                             [1], ' ')[0];
+            }
+            if(message.Contains("Connection already exist"))
+            {
+                stringNumberInTable = GetMessageBlocks(message, ' ').Last();
+            }
 
+            if(stringNumberInTable != null)
+            {
                 int numberInTable;
 
-                if (int.TryParse(numberInTableStr, out numberInTable))
+                if (int.TryParse(stringNumberInTable, out numberInTable))
                 {
                     DeviceConnected?.Invoke(numberInTable);
                 }

@@ -12,7 +12,17 @@ namespace SiamCross.Models.Sensors.Umt
     {
         private CancellationTokenSource _cancelSource;
         public IBluetoothAdapter BluetoothAdapter { get; }
-        public bool IsAlive { get; private set; }
+        private bool _isAlive;
+        public bool IsAlive {
+            get
+            {
+                return _isAlive;
+            }
+            private set
+            {
+                _isAlive = value;
+            }
+        }
         public SensorData SensorData { get; }
         public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
 
