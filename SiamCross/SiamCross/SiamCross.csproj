@@ -38,7 +38,7 @@
     <PackageReference Include="SkiaSharp.Views.Forms" Version="1.68.1.1" />
     <PackageReference Include="Xamarin.Forms" Version="4.4.0.991477" />
     <PackageReference Include="Xamarin.Forms" Version="4.4.0.991537" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.3.3" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.3.4" />
     <PackageReference Include="Xamarin.Forms.DebugRainbows" Version="1.0.16" />
   </ItemGroup>
 
