@@ -26,6 +26,7 @@ using SiamCross.AppObjects;
 using SiamCross.Services.Logging;
 using Plugin.BLE.Abstractions;
 using Android.Bluetooth;
+using ScanMode = Plugin.BLE.Abstractions.Contracts.ScanMode;
 
 [assembly: Dependency(typeof(BluetoothLeAdapterAndroid))]
 namespace SiamCross.Droid.Models
@@ -45,6 +46,8 @@ namespace SiamCross.Droid.Models
         private ScannedDeviceInfo _deviceInfo;
 
         private List<string> _connectQueue;
+
+        private bool _isFirstConnectionTry = true;
 
         public BluetoothLeAdapterAndroid(ScannedDeviceInfo deviceInfo)
         {
@@ -86,13 +89,22 @@ namespace SiamCross.Droid.Models
 
             try
             {
-                await _adapter.ConnectToKnownDeviceAsync(_deviceGuid);
+                if (_isFirstConnectionTry)
+                {
+                    await _adapter.ConnectToKnownDeviceAsync(_deviceGuid);
+                }
+                else
+                {
+                    IDevice dev = await CreateIDevice(_deviceGuid);
+                    await _adapter.ConnectToDeviceAsync(dev);
+                }
             }
             catch (AggregateException e)
             {
                 System.Diagnostics.Debug.WriteLine("Истек таймаут подключения "
                     + _deviceInfo.Name + ": " + e.Message);
                 await Disconnect();
+                _isFirstConnectionTry = false;
                 _connectQueue.Remove(_deviceInfo.Name);
                 return;
             }
@@ -101,6 +113,7 @@ namespace SiamCross.Droid.Models
                 System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения по Guid "
                     + _deviceInfo.Name + ": " + e.Message);
                 await Disconnect();
+                _isFirstConnectionTry = false;
                 _connectQueue.Remove(_deviceInfo.Name);
                 return;
             }
@@ -116,6 +129,7 @@ namespace SiamCross.Droid.Models
                     " _adapter == null. Будет произведена переинициализация адаптера");
                 _adapter = CrossBluetoothLE.Current.Adapter;
                 await Disconnect();
+                _isFirstConnectionTry = false;
                 _connectQueue.Remove(_deviceInfo.Name);
                 return;
             }
@@ -126,6 +140,7 @@ namespace SiamCross.Droid.Models
                     + _deviceInfo.Name + "ошибка соединения BLE - _device был null");
                 ConnectFailed();
                 await Disconnect();
+                _isFirstConnectionTry = false;
                 _connectQueue.Remove(_deviceInfo.Name);
                 return;
             }
@@ -153,6 +168,7 @@ namespace SiamCross.Droid.Models
                 };
 
                 await _readCharacteristic.StartUpdatesAsync();
+                _isFirstConnectionTry = true;
                 ConnectSucceed();
                 _connectQueue.Remove(_deviceInfo.Name);
             }
@@ -161,6 +177,7 @@ namespace SiamCross.Droid.Models
                 System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect "
                     + _deviceInfo.Name + " ошибка инициализации: " + e.Message);
                 await Disconnect();
+                _isFirstConnectionTry = false;
                 _connectQueue.Remove(_deviceInfo.Name);
             }
         }
@@ -181,24 +198,24 @@ namespace SiamCross.Droid.Models
                     + " " + sendingEx.Message + " " 
                     + sendingEx.GetType() + " " 
                     + sendingEx.StackTrace + "\n");
-                for (int i = 1; i < 11; i++)
+                for (int i = 1; i < 4; i++)
                 {
                     try
                     {
                         await Task.Delay(500);
                         await _writeCharacteristic.WriteAsync(data);
                         System.Diagnostics.Debug.WriteLine(
-                            $"Повторная попытка отправки номер {i}/10 прошла успешно!" + "\n");
+                            $"Повторная попытка отправки номер {i}/3 прошла успешно!" + "\n");
                         return;
                     }
                     catch (Exception resendingEx)
                     {
                         System.Diagnostics.Debug.WriteLine(
-                            $"Ошибка повторной попытки отправки номер {i}/10 сообщения BLE: " + "\n");
+                            $"Ошибка повторной попытки отправки номер {i}/3 сообщения BLE: " + "\n");
                     }
                 }
                 // Возможно нужно сделать дисконект
-                ConnectFailed();
+                ConnectFailed?.Invoke();
             }
         }
 
@@ -217,6 +234,38 @@ namespace SiamCross.Droid.Models
                 _device = null;
                 _targetService = null;
             }
+        }
+
+        private async Task<IDevice> CreateIDevice(Guid bluetoothGuid)
+        {
+            TaskCompletionSource<IDevice> idevice = new TaskCompletionSource<IDevice>();
+            _adapter.ScanTimeout = 5000;
+            _adapter.ScanMode = ScanMode.Balanced;
+            _adapter.ScanTimeoutElapsed += (s, e) => { try { idevice.SetResult(null); } catch { }; };
+            _adapter.DeviceDiscovered += (obj, a) =>
+            {
+                try
+                {
+                    if (obj == null || a == null || a.Device == null || a.Device.Name == null)
+                    {
+                        return;
+                    }
+
+                    if (a.Device.Id.Equals(bluetoothGuid))
+                    {
+                        _adapter.StopScanningForDevicesAsync();
+                        idevice.SetResult(a.Device);
+                    }
+                    System.Diagnostics.Debug.WriteLine("Finded device" + a.Device.Name);
+                }
+                catch (Exception e)
+                {
+                }
+            };
+
+            await _adapter.StartScanningForDevicesAsync();
+
+            return await idevice.Task;
         }
 
         public event Action<byte[]> DataReceived;
