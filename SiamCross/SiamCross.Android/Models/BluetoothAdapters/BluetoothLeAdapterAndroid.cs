@@ -186,10 +186,16 @@ namespace SiamCross.Droid.Models
 
         public async Task SendData(byte[] data)
         {
+            if (!BluetoothAdapter.DefaultAdapter.IsEnabled)
+            {
+                ConnectFailed?.Invoke();
+                return;
+            }
             System.Diagnostics.Debug.WriteLine("Send: " + BitConverter.ToString(data) + "\n");
             try
             {
-                await _writeCharacteristic.WriteAsync(data);
+                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(1000);
+                await _writeCharacteristic.WriteAsync(data, cancellationTokenSource.Token);
             }
             catch (Exception sendingEx)
             {
@@ -203,7 +209,8 @@ namespace SiamCross.Droid.Models
                     try
                     {
                         await Task.Delay(500);
-                        await _writeCharacteristic.WriteAsync(data);
+                        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(500);
+                        await _writeCharacteristic.WriteAsync(data, cancellationTokenSource.Token);
                         System.Diagnostics.Debug.WriteLine(
                             $"Повторная попытка отправки номер {i}/3 прошла успешно!" + "\n");
                         return;
