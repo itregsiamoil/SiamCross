@@ -8,10 +8,9 @@ using SiamCross.Services.Logging;
 using SiamCross.ViewModels;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xamarin.Essentials;
+
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -23,15 +22,15 @@ namespace SiamCross.Views
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 
         private double[,] _points;
-        private ViewModelWrap<Ddim2MeasurementDoneViewModel> _vm;
+
         private Ddim2Measurement _measurement;
         public Ddim2MeasurementDonePage(Ddim2Measurement measurement)
         {
             try
             {
                 _measurement = measurement;
-                _vm = new ViewModelWrap<Ddim2MeasurementDoneViewModel>(measurement);
-                this.BindingContext = _vm.ViewModel;
+                var vm = new ViewModelWrap<Ddim2MeasurementDoneViewModel>(measurement);
+                this.BindingContext = vm.ViewModel;
                 InitializeComponent();
 
                 _points = DgmConverter.GetXYs(_measurement.DynGraph.ToList(),
@@ -158,54 +157,5 @@ namespace SiamCross.Views
                 throw;
             }
         }
-
-        private async void ToolbarItem_Clicked(object sender, System.EventArgs e)
-        {
-            //_vm.ViewModel.ShareCommandHandler();
-            System.Diagnostics.Debug.WriteLine("1");
-            try
-            {
-                var xmlCreator = new XmlCreator();
-                System.Diagnostics.Debug.WriteLine("2");
-                var xmlSaver = DependencyService.Get<IXmlSaver>();
-                System.Diagnostics.Debug.WriteLine("3");
-                var name = CreateName(_measurement.Name, _measurement.DateTime);
-                System.Diagnostics.Debug.WriteLine("4");
-                xmlSaver.SaveXml(name, xmlCreator.CreateDdim2Xml(_measurement));
-                System.Diagnostics.Debug.WriteLine("5");
-                string filepath = xmlSaver.GetFilepath(name);
-                System.Diagnostics.Debug.WriteLine("6");
-                var title = Resource.ShareMeasurement;
-                System.Diagnostics.Debug.WriteLine("7");
-
-                var file = new ShareFile(filepath);
-                System.Diagnostics.Debug.WriteLine("8");
-
-                var request = new ShareFileRequest();
-                //var request = new ShareFileRequest
-                //{
-                //    Title = title,
-                //    File = file
-                //};
-
-                System.Diagnostics.Debug.WriteLine("9");
-                //await Share.RequestAsync(request);
-                System.Diagnostics.Debug.WriteLine("810");
-            }
-            catch (Exception ex)
-            {
-               _logger.Error(ex, "ShareCommandHandler" + "\n");
-                throw;
-            }
-
-        }
-
-        private string CreateName(string deviceName, DateTime date)
-        {
-            return $"{deviceName}_{_timeConverter.DateTimeToString(date)}.xml"
-                .Replace(':', '-');
-        }
-
-        private DateTimeConverter _timeConverter = new DateTimeConverter();
     }
 }

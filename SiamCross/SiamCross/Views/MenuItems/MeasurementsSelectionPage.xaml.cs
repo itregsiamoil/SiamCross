@@ -27,6 +27,5 @@ namespace SiamCross.Views.MenuItems
         {
             _vm.ViewModel.SaveMeasurements(sender);
         }
-
     }
 }
