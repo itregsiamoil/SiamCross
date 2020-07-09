@@ -132,7 +132,7 @@ namespace SiamCross.ViewModels
 
         private DateTimeConverter _timeConverter = new DateTimeConverter();
 
-        private async void ShareCommandHandler()
+        public async void ShareCommandHandler()
         {
             try
             {
