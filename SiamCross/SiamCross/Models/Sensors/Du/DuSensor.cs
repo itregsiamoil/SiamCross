@@ -62,6 +62,10 @@ namespace SiamCross.Models.Sensors.Du
             if (_measurementManager != null)
             {
                 _measurementManager.MeasurementRecieveHandler(arg1, arg2);
+                if (arg1 != DuCommandsEnum.Pressure)
+                {
+                    SensorData.Status = _statusAdapter.CreateProgressStatus(_measurementManager.Progress);
+                }
             }
         }
 

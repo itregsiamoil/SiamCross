@@ -39,5 +39,10 @@ namespace SiamCross.Models.Sensors.Du.Measurement
 
             return Resource.FreeStatus; //stub
         }
+
+        public string CreateProgressStatus(int progress)
+        {
+            return Resource.SavingStatus + $" {progress}%";
+        }
     }
 }

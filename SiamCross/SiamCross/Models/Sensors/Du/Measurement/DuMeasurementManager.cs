@@ -198,6 +198,15 @@ namespace SiamCross.Models.Sensors.Du.Measurement
         private short _numberOfReflections = 0;
         private float _pressure;
 
+        private float _progress = 0;
+        public int Progress
+        {
+            get
+            {
+                return (int)_progress;
+            }
+        }
+
         public void MeasurementRecieveHandler(DuCommandsEnum commandName, byte[] data)
         {
             switch (commandName)
@@ -217,6 +226,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                     break;
                 case DuCommandsEnum.EchogramData:
                     _currentEchogram.Add(data);
+                    _progress += 0.666f;
                     break;
                 case DuCommandsEnum.Pressure:
                     Debug.WriteLine("ANNULAR PRESSURE: " + BitConverter.ToString(data));
