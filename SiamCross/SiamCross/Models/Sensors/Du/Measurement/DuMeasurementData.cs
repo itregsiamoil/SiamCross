@@ -8,7 +8,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
     {
         public DuMeasurementSecondaryParameters SecondaryParameters {get;set;}
         public List<byte> Echogram { get; }
-        public int FluidLevel { get; }
+        public int FluidLevel { get; set; }
         public float AnnularPressure { get; }
         public int NumberOfReflections { get; }
         public DateTime Date { get; }

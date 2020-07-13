@@ -37,9 +37,9 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             Debug.WriteLine("SENDING PARAMETERS");
             await SendParameters();
             await Task.Delay(300);
-            await Start();
-            await Task.Delay(300);
             await _bluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure]);
+            await Task.Delay(300);
+            await Start();
             await Task.Delay(300);
             await IsMeasurementDone();
             await Task.Delay(300);
@@ -85,6 +85,9 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                 data.SecondaryParameters.SoundSpeed = 
                     correctionTable.GetApproximatedSpeedFromTable(data.AnnularPressure).ToString();
             }
+
+            data.FluidLevel = (int)(data.FluidLevel *
+                float.Parse(data.SecondaryParameters.SoundSpeed) / 341.333f);
 
             return data;
         }
