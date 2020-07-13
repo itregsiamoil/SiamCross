@@ -60,7 +60,7 @@ namespace SiamCross.Droid.Models.BluetoothAdapters
 
         public async Task Disconnect()
         {
-            _usbService.DisconnecDeviceQuery(Address);
+            await _usbService.DisconnecDeviceQuery(Address);
         }
 
         public async Task SendData(byte[] data)

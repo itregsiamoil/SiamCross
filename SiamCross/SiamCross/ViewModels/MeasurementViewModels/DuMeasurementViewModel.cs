@@ -102,6 +102,16 @@ namespace SiamCross.ViewModels
 
                 StartMeasurementCommand = new Command(() => { });
 
+                if(_selectedSoundSpeedCorrection == null)
+                {
+                    _selectedSoundSpeedCorrection = "";
+                }
+
+                if(_soundSpeed == null)
+                {
+                    _soundSpeed = "";
+                }
+
                 var secondaryParameters = new DuMeasurementSecondaryParameters(
                     _sensorData.Name,
                     SelectedResearchType,
@@ -112,8 +122,8 @@ namespace SiamCross.ViewModels
                     BufferPressure,
                     Comments,
                     SelectedResearchType,
-                    SelectedSoundSpeedCorrection.ToString(),
-                    SoundSpeed);
+                    _selectedSoundSpeedCorrection,
+                    _soundSpeed);
 
                 var measurementParams = new DuMeasurementStartParameters(Amplification,
                     Inlet,

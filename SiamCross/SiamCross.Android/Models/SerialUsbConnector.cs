@@ -11,6 +11,7 @@ using Hoho.Android.UsbSerial.Util;
 using Xamarin.Forms;
 
 using Hoho.Android.UsbSerial.Extensions;
+using Android.OS;
 
 namespace SiamCross.Droid.Models
 {
@@ -94,6 +95,7 @@ namespace SiamCross.Droid.Models
         public async Task Write(string message)
         {
             //var writeCompletion = new TaskCompletionSource<object>();
+            System.Diagnostics.Debug.WriteLine($"Writen: {message} \r");
             WriteData(message + "\r\n");
             await Task.Delay(20);
            // writeCompletion.SetResult(null);
