@@ -190,6 +190,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             if(_measurementManager != null)
             {
                 _measurementManager.MemoryRecieveHandler(address, data);
+                SensorData.Status = _statusAdapter.CreateProgressStatus(_measurementManager.Progress);
             }
         }
 
