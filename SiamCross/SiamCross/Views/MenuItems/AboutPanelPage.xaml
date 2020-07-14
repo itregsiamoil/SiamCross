@@ -26,7 +26,7 @@
                         <ViewCell>
                             <StackLayout Orientation="Horizontal">
                                 <Label Text="{local:Translate AppVersion} "/>
-                                <Label Text="1.3.7"/>
+                                <Label Text="1.3.8"/>
                             </StackLayout>
                         </ViewCell>
                     </TableSection>

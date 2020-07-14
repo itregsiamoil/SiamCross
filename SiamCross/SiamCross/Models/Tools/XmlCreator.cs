@@ -529,6 +529,14 @@ namespace SiamCross.Models.Tools
                 measurementType = 2;
             }
 
+            var numberOfCorrectionTable = "0";
+
+            var stringFragments = dbDuModel.SoundSpeedCorrection.Split(' ');
+            if(stringFragments.Length == 2)
+            {
+                numberOfCorrectionTable = stringFragments[1];
+            }
+
             #endregion
 
             XDocument document =
@@ -554,10 +562,10 @@ namespace SiamCross.Models.Tools
 
                                     new XElement("Value_List",
                                     new XElement("Value",
-                                            new XAttribute("MSVINTEGER", dbDuModel.SoundSpeedCorrection.Split(' ')[1]),
+                                            new XAttribute("MSVINTEGER", numberOfCorrectionTable),
                                             new XAttribute("MSVDICTIONARYID", "sudcorrectiontype")),
                                     new XElement("Value",
-                                            new XAttribute("MSVINTEGER", dbDuModel.SoundSpeedCorrection.Split(' ')[1]),
+                                            new XAttribute("MSVINTEGER", numberOfCorrectionTable),
                                             new XAttribute("MSVDICTIONARYID", "sudcorrectiontypeud")),
                                     new XElement("Value",
                                             new XAttribute("MSVINTEGER", measurementType),
