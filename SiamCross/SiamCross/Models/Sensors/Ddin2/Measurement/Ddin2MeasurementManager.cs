@@ -21,6 +21,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
 
         private List<byte[]> _currentDynGraph;
         private List<byte[]> _currentAccelerationGraph;
+        private int _enableTimeOffFlag = 1;
 
         public Ddin2MeasurementManager(IBluetoothAdapter bluetoothAdapter, SensorData sensorData,
              Ddin2MeasurementStartParameters measurementParameters)
@@ -36,12 +37,31 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
 
         public async Task<object> RunMeasurement()
         {
-            //await Task.Delay(1000);
+            //do
+            //{
+                await SetupMeasurement();
+                await Task.Delay(5000);
+            //}
+            //while (_enableTimeOffFlag == 1);
+            
+            return await CollectData();
+        }
+
+        private async Task SetupMeasurement()
+        {
             Console.WriteLine("SENDING PARAMETERS");
+            await _bluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["EnableTimeOff"]);
+
             await SendParameters();
             Console.WriteLine("PARAMETERS HAS BEEN SENT");
             await Start();
             Console.WriteLine("MEASUREMENT STARTED");
+            await Task.Delay(1000);
+            await _bluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["EnableTimeOff"]);
+        }
+
+        private async Task<Ddin2MeasurementData> CollectData()
+        {
             await IsMeasurementDone();
             Console.WriteLine("MEASUREMENT IS DONE");
             bool gotError = false;
@@ -105,7 +125,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
             await _bluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["InitializeMeasurement"]);
             //await Task.Delay(300);
             LogMessage("StartMeasurement", Ddin2Commands.FullCommandDictionary["StartMeasurement"]);
-            await _bluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["StartMeasurement"]);
+            await _bluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["EnableTimeOff"]);
             //await Task.Delay(2500);
         }
         
@@ -263,6 +283,10 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
                     break;
                 case "ReadMeasurementErrorCode":
                     ErrorCode = data;
+                    break;
+                case "EnableTimeOff":
+                    _enableTimeOffFlag = BitConverter.ToInt16(data, 0);
+                    System.Diagnostics.Debug.WriteLine($"FLAG = {_enableTimeOffFlag}\n");
                     break;
                 case "DgmPart1":
                     Console.WriteLine($"Added {data.Length} bytes");

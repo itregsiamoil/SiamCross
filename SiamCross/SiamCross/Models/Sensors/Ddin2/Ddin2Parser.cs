@@ -98,6 +98,9 @@ namespace SiamCross.Models.Sensors.Ddin2
                         ExportByteData(commandName, message);
                         Console.WriteLine("Read Measurement Report");
                         break;
+                    case "EnableTimeOff":
+                        ExportByteData(commandName, message);
+                        break;
                     case "ReadMeasurementErrorCode":
                         ExportByteData(commandName, message);
                         break;
