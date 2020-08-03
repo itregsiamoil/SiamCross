@@ -86,28 +86,14 @@ namespace SiamCross.Models.Tools
         private static double[,] GetPoints2(List<byte> data, short stepDiscr, short weightDiscr)
         {
             short[] words = TransformRawBytes(data);
-            //short step = (short)(stepDiscr / 10);
             short step = stepDiscr;
             int count = words.Count();
             double[,] points = new double[count, 2];
 
             for (int i = 0; i < count; i++)
             {
-                //string binary = Convert.ToString(words[i], 2);
-                //binary = AddZerosToBinary16Bits(binary);
-                //string ySubstring = binary.Substring(5);
-                //string xSubstring = binary.Substring(1, 5);
-                //xSubstring = AddZerosToBinary(xSubstring);
-                //long y = Convert.ToInt64(ySubstring);
-                //long x = Convert.ToSByte(xSubstring);
-                //if (binary[0] == '1')
-                //{
-                //    x *= -1;
-                //}
                 int x = ExtractTravel(words[i]);
                 int y = ExtractWeight(words[i]);
-
-                //Console.WriteLine($"Дискреты x: {x} y: {y}");
 
                 if (i == 0)
                 {
@@ -123,7 +109,6 @@ namespace SiamCross.Models.Tools
                     points[i, 0] = ((x * step) / 1000f) + points[i - 1, 0];
                 }
                 points[i, 1] = Math.Abs((y * weightDiscr));
-                //Console.WriteLine($"Точка {i}  x: {points[i, 0]} y: {points[i, 1]}");
             }
 
             double min = Double.MaxValue;
