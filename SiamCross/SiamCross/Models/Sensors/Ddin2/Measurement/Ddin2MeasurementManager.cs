@@ -63,6 +63,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
             //await Task.Delay(300);
             Console.WriteLine("SetDynPeriod: " + BitConverter.ToString(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod)));
             await _bluetoothAdapter.SendData(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod));
+            await _bluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["DynPeriod"]);
             //await Task.Delay(300);
             Console.WriteLine("SetApertNumber: " + BitConverter.ToString(_configGenerator.SetApertNumber(_measurementParameters.ApertNumber)));
             await _bluetoothAdapter.SendData(_configGenerator.SetApertNumber(_measurementParameters.ApertNumber));

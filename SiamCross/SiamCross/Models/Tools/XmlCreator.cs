@@ -102,11 +102,11 @@ namespace SiamCross.Models.Tools
 
                                         new XElement("Value",
                                             new XAttribute("MSVDICTIONARYID", "dynmovement"),
-                                            new XAttribute("MSVDATA", BinaryToBase64(movement.ToArray(), 1000f))),                                    //!
+                                            new XAttribute("MSVDATA", BinaryToBase64(movement.ToArray(), dbDdimModel.Period))),                                    //!
 
                                         new XElement("Value",
                                             new XAttribute("MSVDICTIONARYID", "dynburden"),
-                                            new XAttribute("MSVDATA", BinaryToBase64(weight.ToArray(), 1000f))),                                    //!
+                                            new XAttribute("MSVDATA", BinaryToBase64(weight.ToArray(), dbDdimModel.Period))),                                    //!
 
                                         new XElement("Value",
                                             new XAttribute("MSVINTEGER", "2"),                                      //Межтраверсный
@@ -251,11 +251,11 @@ namespace SiamCross.Models.Tools
 
                                         new XElement("Value",
                                             new XAttribute("MSVDICTIONARYID", "dynmovement"),
-                                            new XAttribute("MSVDATA", BinaryToBase64(movement.ToArray(), 1000f))),                                    //!
+                                            new XAttribute("MSVDATA", BinaryToBase64(movement.ToArray(), dbDdinModel.Period))),                                    //!
 
                                         new XElement("Value",
                                             new XAttribute("MSVDICTIONARYID", "dynburden"),
-                                            new XAttribute("MSVDATA", BinaryToBase64(weight.ToArray(), 1000f))),                                    //!
+                                            new XAttribute("MSVDATA", BinaryToBase64(weight.ToArray(), dbDdinModel.Period))),                                    //!
 
                                         new XElement("Value",
                                             new XAttribute("MSVINTEGER", "1"),                                      //Накладной
@@ -404,11 +404,11 @@ namespace SiamCross.Models.Tools
 
                                         new XElement("Value",
                                             new XAttribute("MSVDICTIONARYID", "dynmovement"),
-                                            new XAttribute("MSVDATA", BinaryToBase64(movement.ToArray(), 1000f))),                                    //!
+                                            new XAttribute("MSVDATA", BinaryToBase64(movement.ToArray(), dbSiddosA3MModel.Period))),                                    //!
 
                                         new XElement("Value",
                                             new XAttribute("MSVDICTIONARYID", "dynburden"),
-                                            new XAttribute("MSVDATA", BinaryToBase64(weight.ToArray(), 1000f))),                                    //!
+                                            new XAttribute("MSVDATA", BinaryToBase64(weight.ToArray(), dbSiddosA3MModel.Period))),                                    //!
 
                                         new XElement("Value",
                                             new XAttribute("MSVINTEGER", "0"),                                      //Домкрат
@@ -598,10 +598,25 @@ namespace SiamCross.Models.Tools
             return document;
         }
 
-        private String BinaryToBase64(double[] array, float divider)
-        {          
+        private const float arrayDivider = 10;
+
+        private String BinaryToBase64(double[] array, short period) //!
+        {
+            if (array != null)
+            {
+                if (array.Count() > 0)
+                {
+                    var trimedZerosList = new List<double>();
+                    for (int i = 0; i < period; i++)
+                    {
+                        trimedZerosList.Add(array[i]);
+                    }
+                    array = trimedZerosList.ToArray();
+                }
+            }
+
             return Convert.ToBase64String(array.SelectMany(n => {
-                return BitConverter.GetBytes(n / divider);
+                return BitConverter.GetBytes(n / arrayDivider);
             }).ToArray(), 
             Base64FormattingOptions.None);
         }
