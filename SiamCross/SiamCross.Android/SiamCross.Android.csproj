@@ -140,6 +140,7 @@
     <Compile Include="MainActivity.cs" />
     <Compile Include="Models\BluetoothAdapters\BluetoothClassicAdapterAndroid.cs" />
     <Compile Include="Models\BluetoothAdapters\BluetoothLeAdapterAndroid.cs" />
+    <Compile Include="Models\BluetoothAdapters\LockDeque.cs" />
     <Compile Include="Models\BluetoothAdapters\CustomBluetooth5Adapter.cs" />
     <Compile Include="Models\BluetoothScannerAndroid.cs" />
     <Compile Include="Models\DatabaseCreatorAndroid.cs" />

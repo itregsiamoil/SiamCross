@@ -27,12 +27,14 @@ using SiamCross.Services.Logging;
 using Plugin.BLE.Abstractions;
 using Android.Bluetooth;
 using ScanMode = Plugin.BLE.Abstractions.Contracts.ScanMode;
+using SiamCross.Droid.Models.BluetoothAdapters;
 
 [assembly: Dependency(typeof(BluetoothLeAdapterAndroid))]
 namespace SiamCross.Droid.Models
 {
     public class BluetoothLeAdapterAndroid : IBluetoothLeAdapter
     {
+        private DequeExecute mExecDq = new DequeExecute();
         private IAdapter _adapter;
         private IDevice _device;
         private Guid _deviceGuid;
@@ -163,12 +165,15 @@ namespace SiamCross.Droid.Models
                 _readCharacteristic = await _targetService.GetCharacteristicAsync(Guid.Parse(_readCharacteristicGuid));
                 _readCharacteristic.ValueUpdated += (o, args) =>
                 {
+                    mExecDq.OnResponse(args.Characteristic.Value);
                     DataReceived?.Invoke(args.Characteristic.Value);
                     System.Diagnostics.Debug.WriteLine("Recieved: " + BitConverter.ToString(args.Characteristic.Value) + "\n");
                 };
 
                 await _readCharacteristic.StartUpdatesAsync();
                 _isFirstConnectionTry = true;
+                mExecDq.Sender = _writeCharacteristic;
+
                 ConnectSucceed();
                 _connectQueue.Remove(_deviceInfo.Name);
             }
@@ -195,7 +200,8 @@ namespace SiamCross.Droid.Models
             try
             {
                 CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(1000);
-                await _writeCharacteristic.WriteAsync(data, cancellationTokenSource.Token);
+                mExecDq.mLockDeque.Push(data);
+                //await _writeCharacteristic.WriteAsync(data, cancellationTokenSource.Token);
             }
             catch (Exception sendingEx)
             {
@@ -210,7 +216,8 @@ namespace SiamCross.Droid.Models
                     {
                         await Task.Delay(500);
                         CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(500);
-                        await _writeCharacteristic.WriteAsync(data, cancellationTokenSource.Token);
+                        mExecDq.mLockDeque.Push(data);
+                        //await _writeCharacteristic.WriteAsync(data, cancellationTokenSource.Token);
                         System.Diagnostics.Debug.WriteLine(
                             $"Повторная попытка отправки номер {i}/3 прошла успешно!" + "\n");
                         return;

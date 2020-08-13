@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+
 namespace SiamCross.Models
 {
     public interface IBluetoothAdapter
