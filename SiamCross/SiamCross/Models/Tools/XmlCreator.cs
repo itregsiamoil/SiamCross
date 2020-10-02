@@ -138,7 +138,7 @@ namespace SiamCross.Models.Tools
                                             new XAttribute("MSVDICTIONARYID", "holeindex")),
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", dbDdimModel.TravelLength),
+                                            new XAttribute("MSVDOUBLE", dbDdimModel.TravelLength.ToString("N3")),
                                             new XAttribute("MSVDICTIONARYID", "dynbosstravellength")),
 
                                         new XElement("Value",
@@ -150,7 +150,7 @@ namespace SiamCross.Models.Tools
                                             new XAttribute("MSVDICTIONARYID", "dynminbossburden")),
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", dbDdimModel.SwingCount),
+                                            new XAttribute("MSVDOUBLE", dbDdimModel.SwingCount.ToString("N3")),
                                             new XAttribute("MSVDICTIONARYID", "dynswingcount")),
 
                                         new XElement("Value",
