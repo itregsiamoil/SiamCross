@@ -233,7 +233,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                     break;
                 case DuCommandsEnum.Pressure:
                     Debug.WriteLine("ANNULAR PRESSURE: " + BitConverter.ToString(data));
-                    _pressure = BitConverter.ToSingle(new byte[] { data[0], data[1], 0x00, 0x00 }, 0);
+                    _pressure = BitConverter.ToInt16(new byte[] { data[0], data[1] }, 0) / 10.0f;
                     break;
                 default:
                     break;
