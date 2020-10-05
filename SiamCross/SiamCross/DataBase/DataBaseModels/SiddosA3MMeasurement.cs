@@ -50,11 +50,11 @@ namespace SiamCross.DataBase.DataBaseModels
         public SiddosA3MMeasurement() { }
         public SiddosA3MMeasurement(SiddosA3MMeasurementData siddosA3MMeasurementData)
         {
-            TravelLength = siddosA3MMeasurementData.Report.Travel 
+            TravelLength = (double)siddosA3MMeasurementData.Report.Travel 
                 * siddosA3MMeasurementData.Report.Step / 10000;
 
             SwingCount = Math.Round((60 / 0.001) / (siddosA3MMeasurementData.Report.Period 
-                * siddosA3MMeasurementData.Report.TimeDiscr), 0);
+                * siddosA3MMeasurementData.Report.TimeDiscr), 5);
 
             MaxWeight = siddosA3MMeasurementData.Report.WeightDiscr *
                 siddosA3MMeasurementData.Report.MaxWeight / 1000f;
