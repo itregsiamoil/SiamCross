@@ -53,11 +53,11 @@ namespace SiamCross.DataBase.DataBaseModels
         public Ddin2Measurement() { }
         public Ddin2Measurement(Ddin2MeasurementData ddin2MeasurementData)
         {
-            TravelLength = ddin2MeasurementData.Report.Travel *
+            TravelLength = (double)ddin2MeasurementData.Report.Travel *
                 ddin2MeasurementData.Report.Step / 10000;
 
             SwingCount = Math.Round((60 / 0.001) / (ddin2MeasurementData.Report.Period *
-                ddin2MeasurementData.Report.TimeDiscr), 0);
+                ddin2MeasurementData.Report.TimeDiscr), 5);
 
             MaxWeight = ddin2MeasurementData.Report.WeightDiscr *
                 ddin2MeasurementData.Report.MaxWeight / 1000f;
