@@ -109,6 +109,9 @@ namespace SiamCross.ViewModels
             MaxGraphY = Math.Round(GetMaximumY(), 0).ToString();
             MinGraphX = Math.Round(GetMinimumX(), 0).ToString();
             MinGraphY = Math.Round(GetMinimumY(), 0).ToString();
+
+            GraphPressure = AnnularPressure;
+            GraphLevel = FluidLevel;
         }
 
         private DateTimeConverter _timeConverter = new DateTimeConverter();
@@ -149,6 +152,9 @@ namespace SiamCross.ViewModels
         public string MinGraphY { get; set; }
         public string MaxGraphX { get; set; }
         public string MinGraphX { get; set; }
+
+        public string GraphPressure { get; set; }
+        public string GraphLevel { get; set; }
 
         public double GetMaximumX()
         {

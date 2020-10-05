@@ -38,11 +38,6 @@
         </Grid.RowDefinitions>
 
         <Label Text="{Binding MaxGraphY}" Grid.Column="0" Grid.Row="0"/>
-        <StackLayout Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
-                <Label Text=", "/>
-                <Label Text="{local1:Translate KGFCMUnits}"/>
-                <Label Text="^0.5/0.35"/>
-            </StackLayout>
         <Label Text="{Binding MinGraphY}" Grid.Column="0" Grid.Row="1" VerticalOptions="End"/>
         <skia:SKCanvasView x:Name="CanvasView"
                            PaintSurface="CanvasView_PaintSurface"
@@ -59,7 +54,13 @@
             <Label Text="M"/>
         </StackLayout>
         </Grid>
-
+        <StackLayout Orientation="Horizontal" Grid.Column="0" Grid.Row="3" HorizontalOptions="Start">
+            <Label Text="давление="/>
+            <Label Text="{Binding GraphPressure}"/>
+            <Label Text="кг/см^2; уровень="/>
+            <Label Text="{Binding GraphLevel}"/>
+            <Label Text="м"/>
+        </StackLayout>
         <TableView Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand"
