@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using Xamarin.Forms.Internals;
+using System.Globalization;
 
 namespace SiamCross.Models.Tools
 {
@@ -13,6 +14,7 @@ namespace SiamCross.Models.Tools
     {
         public XDocument CreateDdim2Xml(Ddim2Measurement dbDdimModel)
         {
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             #region Setup
 
             string name = "";
@@ -162,6 +164,7 @@ namespace SiamCross.Models.Tools
 
         public XDocument CreateDdin2Xml(Ddin2Measurement dbDdinModel)
         {
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             #region Setup
 
             string name = "";
@@ -315,6 +318,7 @@ namespace SiamCross.Models.Tools
 
         public XDocument CreateSiddosA3MXml(SiddosA3MMeasurement dbSiddosA3MModel)
         {
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             #region Setup
 
             string name = "";
@@ -464,6 +468,7 @@ namespace SiamCross.Models.Tools
 
         public XDocument CreateDuXml(DuMeasurement dbDuModel)
         {
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             #region Setup
 
             string name = "";
