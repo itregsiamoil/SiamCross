@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.MenuItems.SearchPanel.ScanningTab"
              xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
-             Title="Low Energy">
+             Title="Bluetooth 4LE">
     <ContentPage.Content>
         <StackLayout>
             <Grid>
