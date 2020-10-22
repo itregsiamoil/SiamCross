@@ -115,10 +115,10 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <Label Text="{local1:Translate DynPeriod}"
+                            <Label Text="{local1:Translate PumpRate}"
                                    Grid.Column="0" Grid.Row="0"/>
-                            <local2:CustomEntry x:Name="DynPeriodEntry" 
-                                   Text="{Binding DynPeriod}" 
+                            <local2:CustomEntry x:Name="PumpRateEntry" 
+                                   Text="{Binding PumpRate}" 
                                    Keyboard="Numeric"
                                    Grid.Column="0" Grid.Row="1">
                             </local2:CustomEntry>

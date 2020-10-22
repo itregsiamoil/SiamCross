@@ -197,7 +197,8 @@
     <value>Enter the swing period!</value>
   </data>
   <data name="DynPeriodErrorTextDdimSiddos" xml:space="preserve">
-    <value>The swing period must be between 4 and 300,s!</value>
+    <value>The swing period must be between 4 and 300,s!
+Pump rate is 60sec/300sec=0.2swg to 60sec/4sec=15swg!</value>
   </data>
   <data name="EmailSettings" xml:space="preserve">
     <value>E-mail settings</value>

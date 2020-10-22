@@ -100,9 +100,10 @@ namespace SiamCross.ViewModels
             }
         }
 
-        protected bool IsNumberInRange(int from, int to, int number)
+        protected static bool IsNumberInRange<TDATA>(TDATA from, TDATA to, TDATA number)
+            where TDATA : System.IComparable<TDATA>
         {
-            return number >= from && number <= to;
+            return 0 <= number.CompareTo(from) && 0 >= number.CompareTo(to);
         }
 
         protected void InitParametersWithDefaultValues()

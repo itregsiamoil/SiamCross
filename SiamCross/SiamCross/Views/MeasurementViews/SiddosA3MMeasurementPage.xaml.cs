@@ -35,8 +35,8 @@ namespace SiamCross.Views
                 Xamarin.Forms.Device.StartTimer(TimeSpan.FromMilliseconds(100),
                     () =>
                     {
-                        DynPeriodEntry.Text = _stopwatch.Elapsed.TotalSeconds.ToString(
-                            "0.000", CultureInfo.InvariantCulture);
+                        double pump_rate = 60.0 / _stopwatch.Elapsed.TotalSeconds;
+                        PumpRateEntry.Text = pump_rate.ToString("N3", CultureInfo.InvariantCulture);
 
                         if (!_stopwatch.IsRunning)
                             return false;

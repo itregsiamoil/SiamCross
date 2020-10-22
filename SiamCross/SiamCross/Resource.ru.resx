@@ -156,7 +156,8 @@
     <value>Введите период качания!</value>
   </data>
   <data name="DynPeriodErrorTextDdimSiddos" xml:space="preserve">
-    <value>Период качания должен быть в пределе от 4 до 300,с!</value>
+    <value>Период качания должен быть в пределе от 4 сек до 300 сек.
+Темп качания соответственно 60сек/300сек=0.2кач до 60сек/4сек=15кач!</value>
   </data>
   <data name="ExportStatus" xml:space="preserve">
     <value>Экспорт</value>

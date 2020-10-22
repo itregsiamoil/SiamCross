@@ -24,6 +24,8 @@ namespace SiamCross
 
         public const int DefaultDynPeriod = 10;
 
+        public const double DefaultPumpRate = 60.0 / DefaultDynPeriod;
+
         public const float DefaultImtravel = 4;
 
         public const int DefaultApertNumber = 5;

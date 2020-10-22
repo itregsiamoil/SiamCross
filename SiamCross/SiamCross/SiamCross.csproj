@@ -57,7 +57,7 @@
     <Compile Update="Views\MenuItems\HandbookPanel\SoundSpeedPage.xaml.cs">
       <DependentUpon>SoundSpeedPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\SiddosA3MMeasurementPage.xaml.cs">
+    <Compile Update="Views\MeasurementViews\SiddosA3MMeasurementPage.xaml.cs">
       <DependentUpon>SiddosA3MMeasurementPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\MeasurementViews\Ddim2MeasurementPage.xaml.cs">
