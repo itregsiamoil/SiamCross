@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Globalization;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -101,10 +102,10 @@ namespace SiamCross.ViewModels
                 DeviceName = _measurement.Name;
                 MeasurementType = Resource.Dynamogram;
                 ApertNumber = _measurement.ApertNumber.ToString();
-                MaxLoad = _measurement.MaxWeight.ToString();
-                MinLoad = _measurement.MinWeight.ToString();
-                Imtravel = _measurement.TravelLength.ToString("N3");    //
-                PumpRate = _measurement.SwingCount.ToString("N3");      //
+                MaxLoad = _measurement.MaxWeight.ToString("N3", CultureInfo.InvariantCulture);
+                MinLoad = _measurement.MinWeight.ToString("N3", CultureInfo.InvariantCulture);
+                Imtravel = _measurement.TravelLength.ToString("N3", CultureInfo.InvariantCulture);
+                PumpRate = _measurement.SwingCount.ToString("N3", CultureInfo.InvariantCulture);
                 UpperRodWeight = "0";
                 LowerRodWeight = "0";
                 switch (_measurement.ModelPump)

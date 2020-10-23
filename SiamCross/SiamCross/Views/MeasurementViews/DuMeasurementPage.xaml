@@ -8,7 +8,7 @@
              xmlns:local2="clr-namespace:SiamCross.Views.ValidationBehavior"
              mc:Ignorable="d"
              x:Class="SiamCross.Views.DuMeasurementPage"
-             Title="DU">
+             Title="{Binding SensorName}">
     
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{local1:Translate ValveTest}" Order="Secondary" Command="{Binding ValveTestCommand}"/>

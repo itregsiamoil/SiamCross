@@ -8,7 +8,7 @@
              xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
              xmlns:local2="clr-namespace:SiamCross.Views.ValidationBehavior"
              x:Class="SiamCross.Views.Ddim2MeasurementPage"
-             Title="DDIM2">
+             Title="{Binding SensorName}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{local1:Translate ValveTest}" Order="Secondary" Command="{Binding ValveTestCommand}"/>
@@ -115,10 +115,10 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <Label Text="{local1:Translate DynPeriod}"
+                            <Label Text="{local1:Translate PumpRate}"
                                    Grid.Column="0" Grid.Row="0"/>
-                            <local2:CustomEntry x:Name="DynPeriodEntry" 
-                                   Text="{Binding DynPeriod}" 
+                            <local2:CustomEntry x:Name="PumpRateEntry" 
+                                   Text="{Binding PumpRate}" 
                                    Keyboard="Numeric"
                                    Grid.Column="0" Grid.Row="1">
                             </local2:CustomEntry>

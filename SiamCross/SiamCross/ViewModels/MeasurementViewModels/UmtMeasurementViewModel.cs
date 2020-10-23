@@ -66,8 +66,6 @@ namespace SiamCross.ViewModels.MeasurementViewModels
 
         protected override bool ValidateMeasurementParameters(UmtMeasurementStartParameters measurementParameters)
         {
-            bool result = true;
-
             if (!IsNumberInRange(1, 82800, measurementParameters.Interval))
             {
                 _errorList.Add(Resource.IntervalErrorTextUmt);

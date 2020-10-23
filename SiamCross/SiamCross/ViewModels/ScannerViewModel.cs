@@ -10,8 +10,6 @@ using SiamCross.AppObjects;
 using Autofac;
 using NLog;
 using System;
-using SiamCross.Models;
-using SiamCross.Droid.Models;
 using System.Threading;
 using System.Threading.Tasks;
 using SiamCross.Models.USB;

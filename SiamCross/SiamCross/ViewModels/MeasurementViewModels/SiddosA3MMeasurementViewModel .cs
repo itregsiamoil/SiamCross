@@ -7,11 +7,11 @@ using SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows.Input;
 using Xamarin.Forms;
+using System.Collections.Generic;
 using SiamCross.DataBase.DataBaseModels;
 using System.Linq;
 

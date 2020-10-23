@@ -6,6 +6,7 @@ using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -88,7 +89,7 @@ namespace SiamCross.ViewModels
 
             FluidLevel = _measurement.FluidLevel.ToString();
             NumberOfReflections = _measurement.NumberOfReflections.ToString();
-            AnnularPressure = _measurement.AnnularPressure.ToString();
+            AnnularPressure = _measurement.AnnularPressure.ToString("N3", CultureInfo.InvariantCulture);
             SelectedSoundSpeedCorrection = _measurement.SoundSpeedCorrection;
             SoundSpeed = _measurement.SoundSpeed;
             SelectedField = _measurement.Field;

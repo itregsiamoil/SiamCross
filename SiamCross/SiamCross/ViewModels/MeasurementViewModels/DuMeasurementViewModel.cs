@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Xamarin.Forms;
 using System.Collections.Generic;
+using SiamCross.DataBase.DataBaseModels;
 
 namespace SiamCross.ViewModels
 {
@@ -61,6 +62,12 @@ namespace SiamCross.ViewModels
                 _soundSpeed = value;
                 NotifyPropertyChanged(nameof(SoundSpeed));
             }
+        }
+
+        public string SensorName
+        {
+            get;
+            set;
         }
 
         public DuMeasurementViewModel(SensorData sensorData) : base(sensorData)
@@ -145,6 +152,26 @@ namespace SiamCross.ViewModels
             SoundSpeed = "";
             SelectedSoundSpeedCorrection = "";
             SelectedResearchType = "";
+            SensorName = _sensorData.Name;
+
+            IEnumerable<DuMeasurement> mes
+                = DataRepository.Instance.GetDuMeasurements().
+                Where(m => m.Name == SensorName).Select(m => m);
+
+            if (mes.Any())
+            {
+                DuMeasurement _measurement;
+                _measurement = mes.Last();
+                SelectedField = _measurement.Field;
+                Well = _measurement.Well;
+                Bush = _measurement.Bush;
+                Shop = _measurement.Shop;
+                BufferPressure = _measurement.BufferPressure;
+                Comments = _measurement.Comment;
+                SelectedResearchType = _measurement.MeasurementType;
+                SelectedSoundSpeedCorrection = _measurement.SoundSpeedCorrection;
+                SoundSpeed = _measurement.SoundSpeed;
+            }
         }
 
         protected override bool ValidateForEmptinessEveryParameter()

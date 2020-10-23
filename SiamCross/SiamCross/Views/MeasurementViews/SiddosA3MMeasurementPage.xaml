@@ -8,7 +8,7 @@
              xmlns:local2="clr-namespace:SiamCross.Views.ValidationBehavior"
              xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
              x:Class="SiamCross.Views.SiddosA3MMeasurementPage"
-             Title="SIDDOSA3M">
+             Title="{Binding SensorName}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{local1:Translate ValveTest}" Order="Secondary" Command="{Binding ValveTestCommand}"/>

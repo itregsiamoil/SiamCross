@@ -7,11 +7,13 @@ using SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows.Input;
 using Xamarin.Forms;
+using System.Collections.Generic;
+using SiamCross.DataBase.DataBaseModels;
+using System.Linq;
 
 namespace SiamCross.ViewModels
 {
@@ -19,7 +21,7 @@ namespace SiamCross.ViewModels
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 
-        public string DynPeriod { get; set; }
+        public string PumpRate { get; set; }
         public string ApertNumber { get; set; }
         public string Imtravel { get; set; }
         public ObservableCollection<string> ModelPump { get; set; }
@@ -58,10 +60,44 @@ namespace SiamCross.ViewModels
 
         protected override void InitMeasurementStartParameters()
         {
-            DynPeriod = Constants.DefaultDynPeriod.ToString();
+            PumpRate = Constants.DefaultPumpRate.ToString();
             ApertNumber = Constants.DefaultApertNumber.ToString();
             Imtravel = Constants.DefaultImtravel.ToString();
             SelectedModelPump = Resource.BalancedModelPump;
+            SensorName = _sensorData.Name;
+
+            IEnumerable<Ddim2Measurement> mes
+                = DataRepository.Instance.GetDdim2Measurements().
+                Where(m => m.Name == SensorName).Select(m => m);
+
+            if (mes.Any())
+            {
+                Ddim2Measurement _measurement;
+                _measurement = mes.Last();
+                SelectedField = _measurement.Field;
+                Well = _measurement.Well;
+                Bush = _measurement.Bush;
+                Shop = _measurement.Shop;
+                BufferPressure = _measurement.BufferPressure;
+                Comments = _measurement.Comment;
+                ApertNumber = _measurement.ApertNumber.ToString();
+                Imtravel = _measurement.TravelLength.ToString("N3", CultureInfo.InvariantCulture);
+                PumpRate = _measurement.SwingCount.ToString("N3", CultureInfo.InvariantCulture);
+                switch (_measurement.ModelPump)
+                {
+                    case 0:
+                        SelectedModelPump = Resource.BalancedModelPump;
+                        break;
+                    case 1:
+                        SelectedModelPump = Resource.ChainModelPump;
+                        break;
+                    case 2:
+                        SelectedModelPump = Resource.HydraulicModelPump;
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         private async void StartMeasurementHandler()
@@ -85,7 +121,7 @@ namespace SiamCross.ViewModels
                     Comments);
 
                 var measurementParams = new Ddim2MeasurementStartParameters(
-                    float.Parse(DynPeriod, CultureInfo.InvariantCulture),
+                    (float)60.0 / float.Parse(PumpRate, CultureInfo.InvariantCulture),
                     int.Parse(ApertNumber),
                     float.Parse(Imtravel, CultureInfo.InvariantCulture),
                     GetModelPump(),
@@ -161,7 +197,7 @@ namespace SiamCross.ViewModels
             ValidateParameterForEmtpiness(Shop, Resource.ShopChoiceText);
             ValidateParameterForEmtpiness(BufferPressure, Resource.BufferPressureChoiceText);
             ValidateParameterForEmtpiness(Comments, Resource.CommentsChoiceText);
-            ValidateParameterForEmtpiness(DynPeriod, Resource.DynPeriodChoiceText);
+            ValidateParameterForEmtpiness(PumpRate, Resource.DynPeriodChoiceText);
             ValidateParameterForEmtpiness(ApertNumber, Resource.ApertNumberChoiceText);
             ValidateParameterForEmtpiness(Imtravel, Resource.ImtravelChoiceText);
             ValidateParameterForEmtpiness(SelectedModelPump, Resource.SelectedModelPumpChoiceText);
