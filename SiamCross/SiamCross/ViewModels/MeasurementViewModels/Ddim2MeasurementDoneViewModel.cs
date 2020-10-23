@@ -106,8 +106,8 @@ namespace SiamCross.ViewModels
                 MinLoad = _measurement.MinWeight.ToString("N3", CultureInfo.InvariantCulture);
                 Imtravel = _measurement.TravelLength.ToString("N3", CultureInfo.InvariantCulture);
                 PumpRate = _measurement.SwingCount.ToString("N3", CultureInfo.InvariantCulture);
-                UpperRodWeight = "0";
-                LowerRodWeight = "0";
+                UpperRodWeight = "0.000";
+                LowerRodWeight = "0.000";
                 switch (_measurement.ModelPump)
                 {
                     case 0:
