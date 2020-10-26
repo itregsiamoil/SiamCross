@@ -410,6 +410,9 @@
   <data name="Username" xml:space="preserve">
     <value>Имя пользователя</value>
   </data>
+  <data name="LocationInfo" xml:space="preserve">
+    <value>Местоположение</value>
+  </data>
   <data name="Well" xml:space="preserve">
     <value>Скважина</value>
   </data>
