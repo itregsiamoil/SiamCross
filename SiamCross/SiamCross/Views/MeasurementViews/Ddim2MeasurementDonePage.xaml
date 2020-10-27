@@ -189,6 +189,33 @@
                         </StackLayout>
                     </ViewCell>
                 </TableSection>
+                <TableSection Title="{local1:Translate Device}" >
+                    <ViewCell>
+                        <Grid Margin="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50*" />
+                                <ColumnDefinition Width="50*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+                            <Label Text="{local1:Translate Device}"         Grid.Column="0" Grid.Row="0" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding DeviceName}"              Grid.Column="1" Grid.Row="0" Font="Bold" TextColor="Black" />
+                            <Label Text="{local1:Translate Temperature}"    Grid.Column="0" Grid.Row="1" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding Temperature}"             Grid.Column="1" Grid.Row="1" Font="Bold" TextColor="Black" />
+                            <Label Text="{local1:Translate Voltage}"        Grid.Column="0" Grid.Row="2" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding BatteryVolt}"             Grid.Column="1" Grid.Row="2" Font="Bold" TextColor="Black" />
+                            <Label Text="{local1:Translate Firmware}"       Grid.Column="0" Grid.Row="3" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding MainFirmware}"            Grid.Column="1" Grid.Row="3" Font="Bold" TextColor="Black" />
+                            <Label Text="{local1:Translate RadioFirmware}"  Grid.Column="0" Grid.Row="4" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding RadioFirmware}"           Grid.Column="1" Grid.Row="4" Font="Bold" TextColor="Black" />
+                        </Grid>
+                    </ViewCell>
+                </TableSection>
             </TableRoot>
         </TableView>                    
     </StackLayout>

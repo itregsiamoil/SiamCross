@@ -32,6 +32,10 @@ namespace SiamCross.DataBase.DataBaseModels
         public string BufferPressure { get; set; }
         public string Comment { get; set; }
         public string Name { get; set; }
+        public string BatteryVolt { get; set; }
+        public string Temperature { get; set; }
+        public string MainFirmware { get; set; }
+        public string RadioFirmware { get; set; }
 
         /*/ ----- /*/
 
@@ -88,6 +92,12 @@ namespace SiamCross.DataBase.DataBaseModels
             BufferPressure = ddin2MeasurementData.SecondaryParameters.BufferPressure;
             Comment = ddin2MeasurementData.SecondaryParameters.Comment;
             Name = ddin2MeasurementData.SecondaryParameters.DeviceName;
+
+            var secondaryParams = ddin2MeasurementData.SecondaryParameters;
+            BatteryVolt = secondaryParams.BatteryVolt;
+            MainFirmware = secondaryParams.MainFirmware;
+            Temperature = secondaryParams.Temperature;
+            RadioFirmware = secondaryParams.RadioFirmware;
 
             Rod = ddin2MeasurementData.Rod / 10;
 

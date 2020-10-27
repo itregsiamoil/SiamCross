@@ -58,6 +58,10 @@ namespace SiamCross.ViewModels
         }
 
         public string DeviceName { get; }
+        public string BatteryVolt { get;}
+        public string Temperature { get;}
+        public string MainFirmware { get;}
+        public string RadioFirmware { get;}
 
         public string MeasurementType { get; }
 
@@ -100,6 +104,10 @@ namespace SiamCross.ViewModels
             BufferPressure = _measurement.BufferPressure;
             Comments = _measurement.Comment;
             DeviceName = _measurement.Name;
+            BatteryVolt = _measurement.BatteryVolt;
+            MainFirmware = _measurement.MainFirmware;
+            Temperature = _measurement.Temperature;
+            RadioFirmware = _measurement.RadioFirmware;
             MeasurementType = _measurement.MeasurementType;
 
             ShareCommand = new Command(ShareCommandHandler);

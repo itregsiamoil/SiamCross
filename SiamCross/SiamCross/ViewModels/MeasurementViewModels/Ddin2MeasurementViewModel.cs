@@ -113,7 +113,11 @@ namespace SiamCross.ViewModels
                     Bush,
                     Shop,
                     BufferPressure,
-                    Comments);
+                    Comments,
+                    _sensorData.Battery,
+                    _sensorData.Temperature,
+                    _sensorData.Firmware,
+                    _sensorData.RadioFirmware);
 
                 var measurementParams = new Ddin2MeasurementStartParameters(
                     float.Parse(Rod, CultureInfo.InvariantCulture),

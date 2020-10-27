@@ -32,6 +32,10 @@ namespace SiamCross.DataBase.DataBaseModels
         public string Comment { get; set; }
 
         public string Name { get; set; }
+        public string BatteryVolt { get; set; }
+        public string Temperature { get; set; }
+        public string MainFirmware { get; set; }
+        public string RadioFirmware { get; set; }
         /*/ ----- /*/
 
         /*/ Other /*/
@@ -86,6 +90,12 @@ namespace SiamCross.DataBase.DataBaseModels
             BufferPressure = siddosA3MMeasurementData.SecondaryParameters.BufferPressure;
             Comment = siddosA3MMeasurementData.SecondaryParameters.Comment;
             Name = siddosA3MMeasurementData.SecondaryParameters.DeviceName;
+
+            var secondaryParams = siddosA3MMeasurementData.SecondaryParameters;
+            BatteryVolt = secondaryParams.BatteryVolt;
+            MainFirmware = secondaryParams.MainFirmware;
+            Temperature = secondaryParams.Temperature;
+            RadioFirmware = secondaryParams.RadioFirmware;
 
             MaxBarbellWeight = 0;
             MinBarbellWeight = 0;

@@ -32,6 +32,10 @@ namespace SiamCross.DataBase.DataBaseModels
         public string Comment { get; set; }
 
         public string Name { get; set; }
+        public string BatteryVolt { get; set; }
+        public string Temperature { get; set; }
+        public string MainFirmware { get; set; }
+        public string RadioFirmware { get; set; }
         /*/ ----- /*/
 
         /*/ Other /*/
@@ -85,6 +89,11 @@ namespace SiamCross.DataBase.DataBaseModels
             BufferPressure = ddim2MeasurementData.SecondaryParameters.BufferPressure;
             Comment = ddim2MeasurementData.SecondaryParameters.Comment;
             Name = ddim2MeasurementData.SecondaryParameters.DeviceName;
+            var secondaryParams = ddim2MeasurementData.SecondaryParameters;
+            BatteryVolt = secondaryParams.BatteryVolt;
+            MainFirmware = secondaryParams.MainFirmware;
+            Temperature = secondaryParams.Temperature;
+            RadioFirmware = secondaryParams.RadioFirmware;
 
             MaxBarbellWeight = 0;
             MinBarbellWeight = 0;

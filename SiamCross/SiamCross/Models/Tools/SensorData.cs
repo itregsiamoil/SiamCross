@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using Xamarin.Essentials;
 
 namespace SiamCross.Models
 {
@@ -19,6 +20,36 @@ namespace SiamCross.Models
             }
         }
 
+        public string Battery
+        {
+            get => _battery;
+            set
+            {
+                _battery = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Battery)));
+            }
+        }
+
+        public string Temperature
+        {
+            get => _temperature;
+            set
+            {
+                _temperature = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Temperature)));
+            }
+        }
+
+        public string RadioFirmware
+        {
+            get => _radiofirmware;
+            set
+            {
+                _radiofirmware = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RadioFirmware)));
+            }
+        }
+
         public string Status
         {
             get => _status;
@@ -29,7 +60,11 @@ namespace SiamCross.Models
             }
         }
 
-        private string _firmware;
+        private string _firmware="0";
+        private string _battery="0";
+        private string _temperature="0";
+        private string _radiofirmware="0.0.0";
+        
 
         private string _status;
 

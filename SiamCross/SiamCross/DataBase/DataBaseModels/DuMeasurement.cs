@@ -23,6 +23,10 @@ namespace SiamCross.DataBase.DataBaseModels
         public string BufferPressure { get; set; }
         public string Comment { get; set; }
         public string Name { get; set; }
+        public string BatteryVolt { get; set; }
+        public string Temperature { get; set; }
+        public string MainFirmware { get; set; }
+        public string RadioFirmware { get; set; }
         public DateTime DateTime { get; set; }
 
         public DuMeasurement() { }
@@ -46,6 +50,11 @@ namespace SiamCross.DataBase.DataBaseModels
             BufferPressure = secondaryParams.BufferPressure;
             Comment = secondaryParams.Comment;
             Name = secondaryParams.DeviceName;
+            BatteryVolt = secondaryParams.BatteryVolt;
+            MainFirmware = secondaryParams.MainFirmware;
+            Temperature = secondaryParams.Temperature;
+            RadioFirmware = secondaryParams.RadioFirmware;
+
         }
     }
 }

@@ -90,9 +90,11 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
                     return;
                 case "BatteryVoltage":
                     _reportBuilder.BatteryVoltage = dataValue;
+                    SensorData.Battery = dataValue;
                     break;
                 case "Тemperature":
                     _reportBuilder.Temperature = dataValue;
+                    SensorData.Temperature = dataValue;
                     break;
                 case "LoadChanel":
                     _reportBuilder.Load = dataValue;

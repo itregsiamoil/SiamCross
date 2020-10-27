@@ -18,34 +18,42 @@
                         <ViewCell>
                             <ViewCell.View>
                                 <StackLayout VerticalOptions="FillAndExpand" HeightRequest="130">
-                                    <Grid VerticalOptions="FillAndExpand"
+                                    <Grid VerticalOptions="FillAndExpand" Margin="0"
                                           rainbows:DebugRainbow.IsDebug="False">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"></RowDefinition>
                                             <RowDefinition Height="Auto" ></RowDefinition>
+                                            <RowDefinition Height="Auto" ></RowDefinition>
                                             <RowDefinition Height="*"></RowDefinition>
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="6*"></ColumnDefinition>
                                             <ColumnDefinition Width="3*"></ColumnDefinition>
-                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
-                                        <Label HorizontalOptions="StartAndExpand" Text="{Binding Name}" FontSize="18" 
-                                               Grid.Row="0" Grid.Column="0"/>
-                                        <Label HorizontalOptions="Start" Text="{Binding Type}" Grid.Row="1" Grid.Column="0" />
+                                        <Label HorizontalOptions="StartAndExpand" Text="{Binding Name}" FontSize="18" TextColor="Black"
+                                                                                                Grid.Row="0" Grid.Column="0"/>
+                                        <Label HorizontalOptions="Start" Text="{Binding Type}"  Grid.Row="1" Grid.Column="0" />
 
-                                        <StackLayout Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalOptions="End">
-                                            <Label HorizontalOptions="Start" Text="{local:Translate Firmware}" FontSize ="Micro"/>
+                                        <StackLayout Orientation="Vertical" Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" >
                                             <Label HorizontalOptions="Start" Text="{Binding Firmware}" FontSize ="Micro"/>
+                                            <Label HorizontalOptions="Start" Text="{Binding RadioFirmware}" FontSize ="Micro"/>
                                         </StackLayout>
-                                        
-                                        <Label HorizontalOptions="StartAndExpand" Text="{Binding Status}" Grid.Row="2" Grid.Column="0"/>
+
+                                        <StackLayout Orientation="Vertical" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" >
+                                            <Label HorizontalOptions="Start" Text="{local:Translate Firmware}" FontSize ="Micro"/>
+                                            <Label HorizontalOptions="Start" Text="{local:Translate RadioFirmware}" FontSize ="Micro"/>
+                                        </StackLayout>
+
+                                        <Label HorizontalOptions="StartAndExpand" Text="{Binding Status}" Grid.Row="3" Grid.Column="0"  
+                                               Grid.ColumnSpan="2"/>
 
                                         <Image HorizontalOptions="EndAndExpand"
                                                BackgroundColor="Transparent"
                                                 VerticalOptions="FillAndExpand"  
                                                 HeightRequest="20"
                                                 WidthRequest="40"
-                                                Grid.Row="2" Grid.Column="1"
+                                                Grid.Row="3" Grid.Column="2"
                                                 Source="trashcan.png"
                                                >
                                             <Image.GestureRecognizers>

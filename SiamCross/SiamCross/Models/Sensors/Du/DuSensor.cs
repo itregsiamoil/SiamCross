@@ -102,6 +102,7 @@ namespace SiamCross.Models.Sensors.Du
                     return;
                 case DuCommandsEnum.Voltage:
                     _reportBuilder.BatteryVoltage = dataValue;
+                    SensorData.Battery = dataValue;
                     break;
                 case DuCommandsEnum.Pressure:
                     _reportBuilder.Pressure = dataValue;

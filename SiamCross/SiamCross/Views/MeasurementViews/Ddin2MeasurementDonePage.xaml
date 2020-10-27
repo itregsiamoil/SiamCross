@@ -9,6 +9,12 @@
              x:Class="SiamCross.Views.Ddin2MeasurementDonePage"
              xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
              Title="DDIN2">
+    <NavigationPage.TitleView >
+        <StackLayout>
+            <Label Text="{Binding DeviceName}" Font="Bold" TextColor="Black" />
+            <Label Text="{Binding Date, Mode=OneWay }" Font="Bold" TextColor="Black" />
+        </StackLayout>
+    </NavigationPage.TitleView>
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="share.png" Text="Share" Command="{Binding ShareCommand}"/>
     </ContentPage.ToolbarItems>
@@ -20,8 +26,12 @@
                 <Setter Property="TextColor" Value="Black" />
             </Style>
         </ResourceDictionary>
+        <!--Style TargetType="{x:Type Label}" ApplyToDerivedTypes="True">
+            <Setter Property="TextColor" Value="Black" />
+        </> -->
     </ContentPage.Resources>
-    <!--1. График
+    <!--
+    1. График
     2. Месторождение
     3. Скважина
     4. Куст
@@ -39,200 +49,173 @@
     16. Вес штанг в верхнем положении, т
     17. Вес штанг в нижнем положении, т
     18. Тип привод-->
-    <StackLayout x:Name="outerStack">
-        <!--<forms:ChartView x:Name="Chart1" HeightRequest="200"/>-->
-        <!--<skia:SKCanvasView x:Name="CanvasView"
-                           PaintSurface="CanvasView_PaintSurface"
-                           HorizontalOptions="FillAndExpand"
-                           Margin="5"
-                           VerticalOptions="FillAndExpand"
-                           IgnorePixelScaling="True"
-                           HeightRequest="200"
-                           />-->
-        <Grid x:Name="graphGrid" Margin="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Label Text="{Binding MaxGraphY}" Grid.Column="0" Grid.Row="0"/>
-            <skia:SKCanvasView x:Name="CanvasView"
-                           PaintSurface="CanvasView_PaintSurface"
-                           HorizontalOptions="FillAndExpand"
-                           Margin="5"
-                           VerticalOptions="FillAndExpand"
-                           IgnorePixelScaling="True"
-                           HeightRequest="200"
-                           Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"/>
-            <Label Text=", Т" VerticalOptions="Start" Grid.Column="1" Grid.Row="0"/>
-            <Label Text="0"  Grid.Column="0" Grid.Row="2"/>
-            <Label Text=", М" HorizontalOptions="Center" Grid.Column="2" Grid.Row="2"/>
-            <Label Text="{Binding MaxGraphX}" HorizontalOptions="End" Grid.Column="1" Grid.Row="2"/>
-        </Grid>
+    <StackLayout x:Name="outerStack" Orientation="Vertical">
         <TableView Intent="Data" 
                HasUnevenRows="True" 
-               HorizontalOptions="CenterAndExpand"
-               Margin="5">
-            <TableRoot >
-                <TableSection>
-                    <!--<ViewCell>
-                    <StackLayout Orientation="Horizontal">
-                        <Label Text="Max X: "/>
-                        <Label Text="{Binding MaxGraphX}"/>
-                    </StackLayout>
-                    </ViewCell>
+               HorizontalOptions="FillAndExpand"
+               VerticalOptions="FillAndExpand"
+               Margin="4" >
+            <TableRoot>
+                <TableSection Title="{local1:Translate MeasurementData}">
                     <ViewCell>
-                        <StackLayout Orientation="Horizontal">
-                            <Label Text="Max Y: "/>
-                            <Label Text="{Binding MaxGraphY}"/>
-                        </StackLayout>
-                    </ViewCell>-->
-                    <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local1:Translate Field}"/>
-                            <Picker ItemsSource="{Binding Fields}"
-                                SelectedItem="{Binding SelectedField}"/>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local1:Translate Well}"/>
-                            <Entry Text="{Binding Well}" 
-                               Keyboard="Numeric">
-                                <Entry.Behaviors>
-                                    <local:IntegerNumberValidationBehavior/>
-                                </Entry.Behaviors>
-                            </Entry>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local1:Translate Bush}"/>
-                            <Entry Text="{Binding Bush}" 
-                               Keyboard="Numeric">
-                                <Entry.Behaviors>
-                                    <local:IntegerNumberValidationBehavior/>
-                                </Entry.Behaviors>
-                            </Entry>
+                        <StackLayout  Margin="0" Orientation="Vertical" BackgroundColor="White">
+                            <!--<forms:ChartView x:Name="Chart1" HeightRequest="200"/>-->
+                            <Grid x:Name="graphGrid" Margin="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Label Text="{Binding MaxGraphY}" Grid.Column="0" Grid.Row="0"/>
+                                <skia:SKCanvasView x:Name="CanvasView"
+                                                   PaintSurface="CanvasView_PaintSurface"
+                                                   HorizontalOptions="FillAndExpand"
+                                                   Margin="4"
+                                                   VerticalOptions="FillAndExpand"
+                                                   IgnorePixelScaling="True"
+                                                   HeightRequest="110"
+                                                   Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"/>
+                                <Label Text=", Т" VerticalOptions="Start" Grid.Column="1" Grid.Row="0" />
+                                <Label Text="0"  Grid.Column="0" Grid.Row="2"/>
+                                <Label Text=", М" HorizontalOptions="Center" Grid.Column="2" Grid.Row="2"/>
+                                <Label Text="{Binding MaxGraphX}" HorizontalOptions="End" Grid.Column="1" Grid.Row="2"/>
+                            </Grid>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local1:Translate Shop}"/>
-                            <Entry Text="{Binding Shop}" 
-                               Keyboard="Numeric">
-                                <Entry.Behaviors>
-                                    <local:IntegerNumberValidationBehavior/>
-                                </Entry.Behaviors>
-                            </Entry>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local1:Translate Date}"/>
-                            <Label Text="{Binding Date, Mode=OneWay}" 
-                                   Style="{StaticResource labelStyle}"/>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local1:Translate BufferPressure}"/>
-                            <Entry Text="{Binding BufferPressure}">
-                                <Entry.Behaviors>
-                                    <local:FloatNumberValidationBehavior/>
-                                </Entry.Behaviors>
-                            </Entry>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local1:Translate Comments}"/>
-                            <Editor Text="{Binding Comments, Mode=TwoWay}"
-                                    AutoSize="TextChanges"/>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local1:Translate Device}"/>
-                            <Label Text="{Binding DeviceName, Mode=OneWay}"
-                                   Style="{StaticResource labelStyle}"/>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local1:Translate MeasurementType}"/>
-                            <Label Text="{Binding MeasurementType, Mode=OneWay}"
-                                   Style="{StaticResource labelStyle}"/>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local1:Translate ApertNumber}"/>
-                            <Entry Text="{Binding ApertNumber}" 
-                               Keyboard="Numeric">
-                                <Entry.Behaviors>
-                                    <local:IntegerNumberValidationBehavior/>
-                                </Entry.Behaviors>
-                            </Entry>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local1:Translate MaxLoad}"/>
-                            <Label Text="{Binding MaxLoad, Mode=OneWay}"
-                                   Style="{StaticResource labelStyle}"/>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local1:Translate MinLoad}"/>
-                            <Label Text="{Binding MinLoad, Mode=OneWay}"
-                                   Style="{StaticResource labelStyle}"/>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local1:Translate Imtravel}"/>
-                            <Label Text="{Binding Imtravel, Mode=OneWay}"
-                                   Style="{StaticResource labelStyle}"/>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local1:Translate PumpRate}"/>
-                            <Label Text="{Binding PumpRate, Mode=OneWay}"
-                                   Style="{StaticResource labelStyle}"/>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local1:Translate UpperRodWeight}"/>
-                            <Label Text="{Binding UpperRodWeight, Mode=OneWay}"
-                                   Style="{StaticResource labelStyle}"/>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local1:Translate LowerRodWeight}"/>
-                            <Label Text="{Binding LowerRodWeight, Mode=OneWay}"
-                                   Style="{StaticResource labelStyle}"/>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout >
-                            <Label Text="{local1:Translate ModelPump}"/>
-                            <Label Text="{Binding SelectedModelPump, Mode=OneWay}"
-                                   Style="{StaticResource labelStyle}"/>
+                        <StackLayout  Margin="0" Orientation="Vertical" BackgroundColor="White" >
+                            <Grid Margin="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="76*" />
+                                    <ColumnDefinition Width="24*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+                                <!-- Default mode for Text is Mode=OneWay>-->
+                                <Label Text="{local1:Translate Imtravel}"       Grid.Column="0" Grid.Row="0" LineBreakMode="WordWrap"/>
+                                <Label Text="{Binding Imtravel}"                Grid.Column="1" Grid.Row="0" Font="Bold" TextColor="Black" />
+                                <Label Text="{local1:Translate PumpRate}"       Grid.Column="0" Grid.Row="1" LineBreakMode="WordWrap" />
+                                <Label Text="{Binding PumpRate}"                Grid.Column="1" Grid.Row="1" Font="Bold" TextColor="Black"    />
+                                <Label Text="{local1:Translate MaxLoad}"        Grid.Column="0" Grid.Row="2" LineBreakMode="WordWrap" />
+                                <Label Text="{Binding MaxLoad}"                 Grid.Column="1" Grid.Row="2" Font="Bold" TextColor="Black" />
+                                <Label Text="{local1:Translate MinLoad}"        Grid.Column="0" Grid.Row="3" LineBreakMode="WordWrap" />
+                                <Label Text="{Binding MinLoad}"                 Grid.Column="1" Grid.Row="3" Font="Bold" TextColor="Black"    />
+                                <Label Text="{local1:Translate UpperRodWeight}" Grid.Column="0" Grid.Row="4" LineBreakMode="WordWrap" />
+                                <Label Text="{Binding UpperRodWeight}"          Grid.Column="1" Grid.Row="4" Font="Bold" TextColor="Black" />
+                                <Label Text="{local1:Translate LowerRodWeight}" Grid.Column="0" Grid.Row="5" LineBreakMode="WordWrap"/>
+                                <Label Text="{Binding LowerRodWeight}"          Grid.Column="1" Grid.Row="5" Font="Bold" TextColor="Black" />
+                                <Label Text="{local1:Translate ApertNumber}"    Grid.Column="0" Grid.Row="6" LineBreakMode="WordWrap"/>
+                                <Label Text="{Binding ApertNumber}"             Grid.Column="1" Grid.Row="6" Font="Bold" TextColor="Black" />
+                                <Label Text="{local1:Translate BufferPressure}" Grid.Column="0" Grid.Row="7" LineBreakMode="WordWrap"/>
+                                <Label Text="{Binding BufferPressure}"          Grid.Column="1" Grid.Row="7" Font="Bold" TextColor="Black" />
+                            </Grid>
+                            <Grid Margin="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="55*" />
+                                    <ColumnDefinition Width="45*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+                                <Label Text="{local1:Translate MeasurementType}" Grid.Column="0" Grid.Row="0" LineBreakMode="WordWrap"/>
+                                <Label Text="{Binding MeasurementType}"          Grid.Column="1" Grid.Row="0" Font="Bold" TextColor="Black" />
+                                <Label Text="{local1:Translate ModelPump}"      Grid.Column="0" Grid.Row="1" LineBreakMode="WordWrap"/>
+                                <Label Text="{Binding SelectedModelPump}"       Grid.Column="1" Grid.Row="1" Font="Bold" TextColor="Black" />
+                            </Grid>
                         </StackLayout>
                     </ViewCell>
                 </TableSection>
+                <TableSection Title="{local1:Translate LocationInfo}" >
+                    <!--TextColor="#FF1E96FF" 
+                    BackgroundColor="#FF5EBFFF"-->
+
+                    <!--TextCell 
+                        Text="{local1:Translate Field}" TextColor="Gray"
+                        Detail="{Binding SelectedField}" DetailColor="Black" />
+                     -->
+                    <ViewCell>
+                        <StackLayout  Margin="4" Orientation="Vertical" >
+                            <Label LineBreakMode="WordWrap" >
+                                <Label.FormattedText Margin="0">
+                                    <FormattedString >
+                                        <Span Text="{local1:Translate Field}" />
+                                        <Span Text=" " />
+                                        <Span Text="{Binding SelectedField, Mode=OneWay }" Font="Bold" TextColor="Black"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <Label LineBreakMode="WordWrap" >
+                                <Label.FormattedText Margin="0">
+                                    <FormattedString >
+                                        <Span Text="{local1:Translate Well} " />
+                                        <Span Text=" " />
+                                        <Span Text="{Binding Well}" Font="Bold" TextColor="Black"/>
+                                        <Span Text=" " />
+                                        <Span Text="{local1:Translate Bush}" />
+                                        <Span Text=" " />
+                                        <Span Text="{Binding Bush}" Font="Bold" TextColor="Black"/>
+                                        <Span Text=" " />
+                                        <Span Text="{local1:Translate Shop}" />
+                                        <Span Text=" " />
+                                        <Span Text="{Binding Shop}" Font="Bold" TextColor="Black"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label LineBreakMode="WordWrap" >
+                                <Label.FormattedText Margin="0">
+                                    <FormattedString >
+                                        <Span Text="{local1:Translate Comments}" />
+                                        <Span Text=" " />
+                                        <Span Text="{Binding Comments, Mode=OneWay }" Font="Bold" TextColor="Black"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </StackLayout>
+                    </ViewCell>
+                </TableSection>
+                <TableSection Title="{local1:Translate Device}" >
+                    <ViewCell>
+                        <Grid Margin="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50*" />
+                                <ColumnDefinition Width="50*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+                            <Label Text="{local1:Translate Device}"         Grid.Column="0" Grid.Row="0" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding DeviceName}"              Grid.Column="1" Grid.Row="0" Font="Bold" TextColor="Black" />
+                            <Label Text="{local1:Translate Temperature}"    Grid.Column="0" Grid.Row="1" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding Temperature}"             Grid.Column="1" Grid.Row="1" Font="Bold" TextColor="Black" />
+                            <Label Text="{local1:Translate Voltage}"        Grid.Column="0" Grid.Row="2" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding BatteryVolt}"             Grid.Column="1" Grid.Row="2" Font="Bold" TextColor="Black" />
+                            <Label Text="{local1:Translate Firmware}"       Grid.Column="0" Grid.Row="3" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding MainFirmware}"            Grid.Column="1" Grid.Row="3" Font="Bold" TextColor="Black" />
+                            <Label Text="{local1:Translate RadioFirmware}"  Grid.Column="0" Grid.Row="4" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding RadioFirmware}"           Grid.Column="1" Grid.Row="4" Font="Bold" TextColor="Black" />
+                        </Grid>
+                    </ViewCell>
+                </TableSection>            
             </TableRoot>
         </TableView>
     </StackLayout>
-
 </ContentPage>

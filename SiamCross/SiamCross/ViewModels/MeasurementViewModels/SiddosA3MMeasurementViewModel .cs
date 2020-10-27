@@ -118,7 +118,12 @@ namespace SiamCross.ViewModels
                     Bush,
                     Shop,
                     BufferPressure,
-                    Comments);
+                    Comments,
+                    _sensorData.Battery,
+                    _sensorData.Temperature,
+                    _sensorData.Firmware,
+                    _sensorData.RadioFirmware);
+
 
                 var measurementParams = new SiddosA3MMeasurementStartParameters(
                     (float)60.0 / float.Parse(PumpRate, CultureInfo.InvariantCulture),

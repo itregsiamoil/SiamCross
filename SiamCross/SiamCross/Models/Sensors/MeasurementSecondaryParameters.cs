@@ -14,7 +14,12 @@ namespace SiamCross.Models.Sensors
             string bush,
             string shop,
             string bufferPressure,
-            string comment)
+            string comment,
+            string battery = "0.0",
+            string temperature = "0.0",
+            string mainfirmware="0.0.0",
+            string radiofirmware = "0.0.0"
+            )
         {
             DeviceName = name;
             MeasurementType = measurementType;
@@ -24,6 +29,10 @@ namespace SiamCross.Models.Sensors
             Shop = shop;
             BufferPressure = bufferPressure;
             Comment = comment;
+            BatteryVolt = battery;
+            Temperature = temperature;
+            MainFirmware = mainfirmware;
+            RadioFirmware = radiofirmware;
         }
 
         public string DeviceName { get; }
@@ -34,6 +43,11 @@ namespace SiamCross.Models.Sensors
         public string Shop { get; }
         public string BufferPressure { get; }
         public string Comment { get; }
+        public string BatteryVolt { get; set; }
+        public string Temperature { get; set; }
+        public string MainFirmware { get; set; }
+        public string RadioFirmware { get; set; }
+        
 
     }
 }

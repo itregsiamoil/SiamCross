@@ -9,6 +9,11 @@
              xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
              x:Class="SiamCross.Views.SiddosA3MMeasurementPage"
              Title="{Binding SensorName}">
+    <ContentPage.Resources>
+        <Style TargetType="{x:Type Entry}" ApplyToDerivedTypes="True">
+            <Setter Property="TextColor" Value="Black" />
+        </Style>
+    </ContentPage.Resources >
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{local1:Translate ValveTest}" Order="Secondary" Command="{Binding ValveTestCommand}"/>
@@ -18,83 +23,11 @@
         <TableView x:Name="TableView"
                Intent="Data" 
                HasUnevenRows="True" 
-               HorizontalOptions="CenterAndExpand">
+               Margin="4"
+               HorizontalOptions="FillAndExpand"
+               VerticalOptions="FillAndExpand" >
             <TableRoot>
                 <TableSection Title="{local1:Translate MeasurementData}">
-                    <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local1:Translate Field}"></Label>
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="50"></RowDefinition>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                    <ColumnDefinition Width="0.2*"></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
-                                <Picker ItemsSource="{Binding Fields}" SelectedItem="{Binding SelectedField}"
-                                        Grid.Row="0" Grid.Column="0"/>
-                                <Image Source="plus.png" Grid.Row="0" Grid.Column="1">
-                                    <Image.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Command="{Binding AddField}"
-                                            CommandParameter="Image1" />
-                                    </Image.GestureRecognizers>
-                                </Image>
-                            </Grid>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout  >
-                            <Label Text="{local1:Translate Well}"></Label>
-                            <Entry Text="{Binding Well}" 
-                               Keyboard="Numeric">
-                                <Entry.Behaviors>
-                                    <local:IntegerNumberValidationBehavior/>
-                                </Entry.Behaviors>
-                            </Entry>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout   >
-                            <Label Text="{local1:Translate Bush}"></Label>
-                            <Entry Text="{Binding Bush}" 
-                               Keyboard="Numeric">
-                                <Entry.Behaviors>
-                                    <local:IntegerNumberValidationBehavior/>
-                                </Entry.Behaviors>
-                            </Entry>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout  >
-                            <Label Text="{local1:Translate Shop}"></Label>
-                            <Entry Text="{Binding Shop}" 
-                               Keyboard="Numeric">
-                                <Entry.Behaviors>
-                                    <local:IntegerNumberValidationBehavior/>
-                                </Entry.Behaviors>
-                            </Entry>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout  >
-                            <Label Text="{local1:Translate BufferPressure}"></Label>
-                            <Entry Text="{Binding BufferPressure}" 
-                               Keyboard="Numeric">
-                                <Entry.Behaviors>
-                                    <local:FloatNumberValidationBehavior/>
-                                </Entry.Behaviors>
-                            </Entry>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout  >
-                            <Label Text="{local1:Translate Comments}"></Label>
-                            <Editor Text="{Binding Comments}"
-                                    AutoSize="TextChanges"></Editor>
-                        </StackLayout>
-                    </ViewCell>
                     <ViewCell>
                         <StackLayout  >
                             <Label Text="{local1:Translate Imtravel}"/>
@@ -144,23 +77,91 @@
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
+                        <StackLayout  >
+                            <Label Text="{local1:Translate BufferPressure}"></Label>
+                            <Entry Text="{Binding BufferPressure}" 
+                               Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:FloatNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </ViewCell>
+                </TableSection>
+                <TableSection Title="{local1:Translate LocationInfo}" >
+                    <ViewCell >
+                        <Grid >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="0.2*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Text="{local1:Translate Field}" Grid.Row="0" Grid.Column="0" />
+                            <Picker ItemsSource="{Binding Fields}" SelectedItem="{Binding SelectedField}"
+                                    Grid.Row="1" Grid.Column="0" />
+                            <Image Source="plus.png" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding AddField}"
+                                        CommandParameter="Image1" />
+                                </Image.GestureRecognizers>
+                            </Image>
+                        </Grid>
+                    </ViewCell>
+                    <ViewCell>
+                        <Grid >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Text="{local1:Translate Well}" Grid.Row="0" Grid.Column="0" />
+                            <Label Text="{local1:Translate Bush}" Grid.Row="0" Grid.Column="1" />
+                            <Label Text="{local1:Translate Shop}" Grid.Row="0" Grid.Column="2" />
+
+                            <Entry Text="{Binding Well}" Grid.Row="1" Grid.Column="0"
+                            Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                            <Entry Text="{Binding Bush}" Grid.Row="1" Grid.Column="1"
+                            Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                            <Entry Text="{Binding Shop}" Grid.Row="1" Grid.Column="2"
+                            Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <local:IntegerNumberValidationBehavior/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </Grid>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout  >
+                            <Label Text="{local1:Translate Comments}"></Label>
+                            <Editor Text="{Binding Comments}"
+                                    AutoSize="TextChanges"></Editor>
+                        </StackLayout>
+                    </ViewCell>
+                </TableSection>
+                <TableSection Title="Control" >
+                    <ViewCell>
                         <StackLayout>
                             <Button 
                             Text="{local1:Translate StartMeasurement}"
                             Command="{Binding StartMeasurementCommand}"
                             Margin="20"
                             HorizontalOptions="CenterAndExpand"></Button>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell x:Name="Empty">
-                        <StackLayout>
-                            <Label/>
-                            <Label/>
-                            <Label/>
-                            <Label/>
-                            <Label/>
-                            <Label/>
-                            <Label/>
                             <Label/>
                         </StackLayout>
                     </ViewCell>

@@ -411,7 +411,10 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
     <value>No comment</value>
   </data>
   <data name="Firmware" xml:space="preserve">
-    <value>FW:</value>
+    <value>Firmware:</value>
+  </data>
+  <data name="RadioFirmware" xml:space="preserve">
+    <value>RadioFirmware:</value>
   </data>
   <data name="BluetoothIsDisable" xml:space="preserve">
     <value>Bluetooth is disable</value>

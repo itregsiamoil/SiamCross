@@ -110,8 +110,11 @@ namespace SiamCross.Services
                 [MaxBarbellWeight] REAL NOT NULL,
                 [MinBarbellWeight] REAL NOT NULL,
                 [TravelLength] REAL NOT NULL,
-                [SwingCount] REAL NOT NULL
-            )");
+                [SwingCount] REAL NOT NULL,
+                [BatteryVolt] NVARCHAR(128) NOT NULL,
+                [Temperature] NVARCHAR(128) NOT NULL,
+                [MainFirmware] NVARCHAR(128) NOT NULL,
+                [RadioFirmware] NVARCHAR(128) NOT NULL)");
         }
 
         private void CreateSiddosA3MTable()
@@ -144,8 +147,11 @@ namespace SiamCross.Services
                 [MaxBarbellWeight] REAL NOT NULL,
                 [MinBarbellWeight] REAL NOT NULL,
                 [TravelLength] REAL NOT NULL,
-                [SwingCount] REAL NOT NULL
-            )");
+                [SwingCount] REAL NOT NULL,
+                [BatteryVolt] NVARCHAR(128) NOT NULL,
+                [Temperature] NVARCHAR(128) NOT NULL,
+                [MainFirmware] NVARCHAR(128) NOT NULL,
+                [RadioFirmware] NVARCHAR(128) NOT NULL)");
         }
 
         private void CreateDdin2Table()
@@ -179,8 +185,11 @@ namespace SiamCross.Services
                 [MaxBarbellWeight] REAL NOT NULL,
                 [MinBarbellWeight] REAL NOT NULL,
                 [TravelLength] REAL NOT NULL,
-                [SwingCount] REAL NOT NULL
-            )");
+                [SwingCount] REAL NOT NULL,
+                [BatteryVolt] NVARCHAR(128) NOT NULL,
+                [Temperature] NVARCHAR(128) NOT NULL,
+                [MainFirmware] NVARCHAR(128) NOT NULL,
+                [RadioFirmware] NVARCHAR(128) NOT NULL)");
         }
 
         private void CreateDuTable()
@@ -204,7 +213,11 @@ namespace SiamCross.Services
                 [Shop] NVARCHAR(128) NOT NULL,
                 [BufferPressure] NVARCHAR(128) NOT NULL,
                 [Comment] NVARCHAR(128) NOT NULL,
-                [Name] NVARCHAR(128) NOT NULL)");
+                [Name] NVARCHAR(128) NOT NULL,
+                [BatteryVolt] NVARCHAR(128) NOT NULL,
+                [Temperature] NVARCHAR(128) NOT NULL,
+                [MainFirmware] NVARCHAR(128) NOT NULL,
+                [RadioFirmware] NVARCHAR(128) NOT NULL)");
         }
 
         #endregion 
@@ -245,9 +258,10 @@ namespace SiamCross.Services
                         "SoundSpeed, " +
                         "MeasurementType, " +
                         "SoundSpeedCorrection, " +
-                        "DateTime, Field, Well, Bush, Shop, BufferPressure, Comment, Name)" +
-                        "Values " +
-                        "(@FluidLevel, " +
+                        "DateTime, Field, Well, Bush, Shop, BufferPressure, Comment, Name" +
+                        ", BatteryVolt, Temperature, MainFirmware, RadioFirmware "+
+                        ") Values (" +
+                        "@FluidLevel, " +
                         "@NumberOfReflections, " +
                         "@AnnularPressure, " +
                         "@Echogram, " +
@@ -255,7 +269,8 @@ namespace SiamCross.Services
                         "@MeasurementType, " +
                         "@SoundSpeedCorrection, " +
                         "@DateTime,  @Field, @Well, @Bush, @Shop, " +
-                        "@BufferPressure, @Comment, @Name);";
+                        "@BufferPressure, @Comment, @Name "+
+                        ", @BatteryVolt, @Temperature, @MainFirmware, @RadioFirmware  );";
                 var affectedRows = _database.Execute(sql, new
                 {
                     duMeasurement.FluidLevel,
@@ -272,7 +287,11 @@ namespace SiamCross.Services
                     duMeasurement.Shop,
                     duMeasurement.BufferPressure,
                     duMeasurement.Comment,
-                    duMeasurement.Name
+                    duMeasurement.Name,
+                    duMeasurement.BatteryVolt,
+                    duMeasurement.Temperature,
+                    duMeasurement.MainFirmware,
+                    duMeasurement.RadioFirmware
                 });
             }
             catch (Exception ex)
@@ -294,7 +313,10 @@ namespace SiamCross.Services
                     "MeasurementType = @MeasurementType, SoundSpeedCorrection = @SoundSpeedCorrection, " +
                     "DateTime = @DateTime," +
                     " Field = @Field, Well = @Well, Bush = @Bush, Shop = @Shop, BufferPressure = @BufferPressure," +
-                    " Comment = @Comment, Name = @Name WHERE Id = @Id;";
+                    " Comment = @Comment, Name = @Name "+
+                    " BatteryVolt=@BatteryVolt Temperature=@Temperature "+
+                    " MainFirmware=@MainFirmware RadioFirmware=@RadioFirmware "+
+                    " WHERE Id = @Id;";
                 var affectedRows = _database.Execute(sql, new
                 {
                     duMeasurement.FluidLevel,
@@ -312,6 +334,10 @@ namespace SiamCross.Services
                     duMeasurement.BufferPressure,
                     duMeasurement.Comment,
                     duMeasurement.Name,
+                    duMeasurement.BatteryVolt,
+                    duMeasurement.Temperature,
+                    duMeasurement.MainFirmware,
+                    duMeasurement.RadioFirmware,
                     duMeasurement.Id
                 });
             }
@@ -369,13 +395,15 @@ namespace SiamCross.Services
                         "(MaxWeight, MinWeight, Travel, Period, Step, WeightDiscr, TimeDiscr, DynGraph," +
                         " AccelerationGraph, Field, Well, Bush, Shop, BufferPressure, Comment, " +
                         "Name, DateTime, ErrorCode, ApertNumber, ModelPump, MaxBarbellWeight," +
-                        " MinBarbellWeight, TravelLength, SwingCount) Values (@MaxWeight, @MinWeight," +
+                        " MinBarbellWeight, TravelLength, SwingCount" +
+                        ", BatteryVolt, Temperature, MainFirmware, RadioFirmware "+
+                        ") Values (@MaxWeight, @MinWeight," +
                         " @Travel, @Period, @Step, @WeightDiscr, @TimeDiscr, @DynGraph," +
                         " @AccelerationGraph, @Field, @Well, @Bush, @Shop, @BufferPressure, @Comment, " +
                         "@Name, @DateTime, @ErrorCode, @ApertNumber, @ModelPump, @MaxBarbellWeight," +
-                        " @MinBarbellWeight, @TravelLength, @SwingCount);";
+                        " @MinBarbellWeight, @TravelLength, @SwingCount "+
+                        ", @BatteryVolt, @Temperature, @MainFirmware, @RadioFirmware  );";
 
-                
 
                 var affectedRows = _database.Execute(sql, new
                 {
@@ -402,7 +430,11 @@ namespace SiamCross.Services
                     MaxBarbellWeight = ddim2Measurement.MaxBarbellWeight,
                     MinBarbellWeight = ddim2Measurement.MinBarbellWeight,
                     TravelLength = ddim2Measurement.TravelLength,
-                    SwingCount = ddim2Measurement.SwingCount
+                    SwingCount = ddim2Measurement.SwingCount,
+                    BatteryVolt = ddim2Measurement.BatteryVolt,
+                    Temperature = ddim2Measurement.Temperature,
+                    MainFirmware = ddim2Measurement.MainFirmware,
+                    RadioFirmware = ddim2Measurement.RadioFirmware
                 });
             }
             catch(Exception e)
@@ -429,6 +461,8 @@ namespace SiamCross.Services
                     " ErrorCode = @ErrorCode, ApertNumber = @ApertNumber," +
                     " ModelPump = @ModelPump, MaxBarbellWeight = @MaxBarbellWeight," +
                     " MinBarbellWeight = @MinBarbellWeight, TravelLength = @TravelLength, SwingCount = @SwingCount" +
+                    " BatteryVolt=@BatteryVolt Temperature=@Temperature " +
+                    " MainFirmware=@MainFirmware RadioFirmware=@RadioFirmware " +
                     " WHERE Id = @Id;";
 
                 var affectedRows = _database.Execute(sql, new
@@ -457,6 +491,10 @@ namespace SiamCross.Services
                     MinBarbellWeight = ddim2Measurement.MinBarbellWeight,
                     TravelLength = ddim2Measurement.TravelLength,
                     SwingCount = ddim2Measurement.SwingCount,
+                    BatteryVolt = ddim2Measurement.BatteryVolt,
+                    Temperature = ddim2Measurement.Temperature,
+                    MainFirmware = ddim2Measurement.MainFirmware,
+                    RadioFirmware = ddim2Measurement.RadioFirmware,
                     Id = ddim2Measurement.Id
                 });
             }
@@ -580,11 +618,15 @@ namespace SiamCross.Services
                         "(MaxWeight, MinWeight, Travel, Period, Step, WeightDiscr, TimeDiscr, DynGraph," +
                         " AccelerationGraph, Field, Well, Bush, Shop, BufferPressure, Comment, " +
                         "Name, DateTime, ErrorCode, ApertNumber, ModelPump, Rod, MaxBarbellWeight," +
-                        " MinBarbellWeight, TravelLength, SwingCount) Values (@MaxWeight, @MinWeight," +
+                        " MinBarbellWeight, TravelLength, SwingCount" +
+                        ", BatteryVolt, Temperature, MainFirmware, RadioFirmware " +
+                        ") Values (" +
+                        "@MaxWeight, @MinWeight," +
                         " @Travel, @Period, @Step, @WeightDiscr, @TimeDiscr, @DynGraph," +
                         " @AccelerationGraph, @Field, @Well, @Bush, @Shop, @BufferPressure, @Comment, " +
                         "@Name, @DateTime, @ErrorCode, @ApertNumber, @ModelPump, @Rod, @MaxBarbellWeight," +
-                        " @MinBarbellWeight, @TravelLength, @SwingCount);";
+                        " @MinBarbellWeight, @TravelLength, @SwingCount "+
+                        ", @BatteryVolt, @Temperature, @MainFirmware, @RadioFirmware  );";
 
                 var affectedRows = _database.Execute(sql, new
                 {
@@ -612,7 +654,11 @@ namespace SiamCross.Services
                     MaxBarbellWeight = ddin2Measurement.MaxBarbellWeight,
                     MinBarbellWeight = ddin2Measurement.MinBarbellWeight,
                     TravelLength = ddin2Measurement.TravelLength,
-                    SwingCount = ddin2Measurement.SwingCount
+                    SwingCount = ddin2Measurement.SwingCount,
+                    BatteryVolt = ddin2Measurement.BatteryVolt,
+                    Temperature = ddin2Measurement.Temperature,
+                    MainFirmware = ddin2Measurement.MainFirmware,
+                    RadioFirmware = ddin2Measurement.RadioFirmware
                 });
             }
             catch(Exception e)
@@ -638,6 +684,8 @@ namespace SiamCross.Services
                      " ErrorCode = @ErrorCode, ApertNumber = @ApertNumber," +
                      " ModelPump = @ModelPump, Rod = @Rod, MaxBarbellWeight = @MaxBarbellWeight," +
                      " MinBarbellWeight = @MinBarbellWeight, TravelLength = @TravelLength, SwingCount = @SwingCount" +
+                     " BatteryVolt=@BatteryVolt Temperature=@Temperature " +
+                     " MainFirmware=@MainFirmware RadioFirmware=@RadioFirmware " +
                      " WHERE Id = @Id;";
 
                 var affectedRows = _database.Execute(sql, new
@@ -667,6 +715,10 @@ namespace SiamCross.Services
                     MinBarbellWeight = ddin2Measurement.MinBarbellWeight,
                     TravelLength = ddin2Measurement.TravelLength,
                     SwingCount = ddin2Measurement.SwingCount,
+                    BatteryVolt = ddin2Measurement.BatteryVolt,
+                    Temperature = ddin2Measurement.Temperature,
+                    MainFirmware = ddin2Measurement.MainFirmware,
+                    RadioFirmware = ddin2Measurement.RadioFirmware,
                     Id = ddin2Measurement.Id
                 });
             }
@@ -759,11 +811,15 @@ namespace SiamCross.Services
                         "(MaxWeight, MinWeight, Travel, Period, Step, WeightDiscr, TimeDiscr, DynGraph," +
                         " AccelerationGraph, Field, Well, Bush, Shop, BufferPressure, Comment, " +
                         "Name, DateTime, ErrorCode, ApertNumber, ModelPump, MaxBarbellWeight," +
-                        " MinBarbellWeight, TravelLength, SwingCount) Values (@MaxWeight, @MinWeight," +
+                        " MinBarbellWeight, TravelLength, SwingCount" +
+                        ", BatteryVolt, Temperature, MainFirmware, RadioFirmware " +
+                        ") Values (" +
+                        "@MaxWeight, @MinWeight," +
                         " @Travel, @Period, @Step, @WeightDiscr, @TimeDiscr, @DynGraph," +
                         " @AccelerationGraph, @Field, @Well, @Bush, @Shop, @BufferPressure, @Comment, " +
                         "@Name, @DateTime, @ErrorCode, @ApertNumber, @ModelPump, @MaxBarbellWeight," +
-                        " @MinBarbellWeight, @TravelLength, @SwingCount)";
+                        " @MinBarbellWeight, @TravelLength, @SwingCount "+
+                        ", @BatteryVolt, @Temperature, @MainFirmware, @RadioFirmware  );";
 
                 var affectedRows = _database.Execute(sql, new
                 {
@@ -790,7 +846,11 @@ namespace SiamCross.Services
                     MaxBarbellWeight = siddosA3MMeasurement.MaxBarbellWeight,
                     MinBarbellWeight = siddosA3MMeasurement.MinBarbellWeight,
                     TravelLength = siddosA3MMeasurement.TravelLength,
-                    SwingCount = siddosA3MMeasurement.SwingCount
+                    SwingCount = siddosA3MMeasurement.SwingCount,
+                    BatteryVolt = siddosA3MMeasurement.BatteryVolt,
+                    Temperature = siddosA3MMeasurement.Temperature,
+                    MainFirmware = siddosA3MMeasurement.MainFirmware,
+                    RadioFirmware = siddosA3MMeasurement.RadioFirmware
                 });
             }
             catch(Exception e)
@@ -816,6 +876,8 @@ namespace SiamCross.Services
                     " ErrorCode = @ErrorCode, ApertNumber = @ApertNumber," +
                     " ModelPump = @ModelPump, MaxBarbellWeight = @MaxBarbellWeight," +
                     " MinBarbellWeight = @MinBarbellWeight, TravelLength = @TravelLength, SwingCount = @SwingCount" +
+                    " BatteryVolt=@BatteryVolt Temperature=@Temperature " +
+                    " MainFirmware=@MainFirmware RadioFirmware=@RadioFirmware " +
                     " WHERE Id = @Id;";
 
                 var affectedRows = _database.Execute(sql, new
@@ -844,6 +906,10 @@ namespace SiamCross.Services
                     MinBarbellWeight = siddosA3MMeasurement.MinBarbellWeight,
                     TravelLength = siddosA3MMeasurement.TravelLength,
                     SwingCount = siddosA3MMeasurement.SwingCount,
+                    BatteryVolt = siddosA3MMeasurement.BatteryVolt,
+                    Temperature = siddosA3MMeasurement.Temperature,
+                    MainFirmware = siddosA3MMeasurement.MainFirmware,
+                    RadioFirmware = siddosA3MMeasurement.RadioFirmware,
                     Id = siddosA3MMeasurement.Id
                 });
             }

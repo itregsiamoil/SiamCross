@@ -56,6 +56,10 @@ namespace SiamCross.ViewModels
         }
 
         public string DeviceName { get; }
+        public string BatteryVolt { get; }
+        public string Temperature { get; }
+        public string MainFirmware { get; }
+        public string RadioFirmware { get; }
 
         public string MeasurementType { get; }
         public string ApertNumber
@@ -99,6 +103,10 @@ namespace SiamCross.ViewModels
                 BufferPressure = _measurement.BufferPressure;
                 Comments = _measurement.Comment;
                 DeviceName = _measurement.Name;
+                BatteryVolt = _measurement.BatteryVolt;
+                MainFirmware = _measurement.MainFirmware;
+                Temperature = _measurement.Temperature;
+                RadioFirmware = _measurement.RadioFirmware;
                 MeasurementType = Resource.Dynamogram;
                 ApertNumber = _measurement.ApertNumber.ToString();
                 MaxLoad = _measurement.MaxWeight.ToString("N3", CultureInfo.InvariantCulture);

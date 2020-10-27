@@ -128,6 +128,10 @@ namespace SiamCross.ViewModels
                     Shop,
                     BufferPressure,
                     Comments,
+                    _sensorData.Battery,
+                    _sensorData.Temperature,
+                    _sensorData.Firmware,
+                    _sensorData.RadioFirmware,
                     SelectedResearchType,
                     _selectedSoundSpeedCorrection,
                     _soundSpeed);
