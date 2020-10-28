@@ -19,11 +19,15 @@
   <ItemGroup>
     <None Remove="DefaultSoundSpeedResources\langepas" />
     <None Remove="DefaultSoundSpeedResources\tataria" />
+    <None Remove="images\battery.png" />
+    <None Remove="images\thermometer.png" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="DefaultSoundSpeedResources\langepas" />
     <EmbeddedResource Include="DefaultSoundSpeedResources\tataria" />
+    <EmbeddedResource Include="images\battery.png" />
+    <EmbeddedResource Include="images\thermometer.png" />
   </ItemGroup>
 
   <ItemGroup>

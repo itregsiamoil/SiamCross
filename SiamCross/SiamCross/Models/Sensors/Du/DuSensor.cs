@@ -101,7 +101,7 @@ namespace SiamCross.Models.Sensors.Du
                     SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
                     return;
                 case DuCommandsEnum.Voltage:
-                    _reportBuilder.BatteryVoltage = dataValue;
+                    //_reportBuilder.BatteryVoltage = dataValue;
                     SensorData.Battery = dataValue;
                     break;
                 case DuCommandsEnum.Pressure:

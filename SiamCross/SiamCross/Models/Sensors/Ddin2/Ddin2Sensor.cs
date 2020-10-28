@@ -158,11 +158,11 @@ namespace SiamCross.Models.Sensors.Ddin2
                     SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
                     return;
                 case "BatteryVoltage":
-                    _reportBuilder.BatteryVoltage = dataValue;
+                    //_reportBuilder.BatteryVoltage = dataValue;
                     SensorData.Battery = dataValue;
                     break;
                 case "Тemperature":
-                    _reportBuilder.Temperature = dataValue;
+                    //_reportBuilder.Temperature = dataValue;
                     SensorData.Temperature = dataValue;
                     break;
                 case "LoadChanel":

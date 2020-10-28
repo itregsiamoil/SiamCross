@@ -314,8 +314,8 @@ namespace SiamCross.Services
                     "DateTime = @DateTime," +
                     " Field = @Field, Well = @Well, Bush = @Bush, Shop = @Shop, BufferPressure = @BufferPressure," +
                     " Comment = @Comment, Name = @Name "+
-                    " BatteryVolt=@BatteryVolt Temperature=@Temperature "+
-                    " MainFirmware=@MainFirmware RadioFirmware=@RadioFirmware "+
+                    " ,BatteryVolt=@BatteryVolt, Temperature=@Temperature "+
+                    " ,MainFirmware=@MainFirmware, RadioFirmware=@RadioFirmware "+
                     " WHERE Id = @Id;";
                 var affectedRows = _database.Execute(sql, new
                 {
@@ -461,8 +461,8 @@ namespace SiamCross.Services
                     " ErrorCode = @ErrorCode, ApertNumber = @ApertNumber," +
                     " ModelPump = @ModelPump, MaxBarbellWeight = @MaxBarbellWeight," +
                     " MinBarbellWeight = @MinBarbellWeight, TravelLength = @TravelLength, SwingCount = @SwingCount" +
-                    " BatteryVolt=@BatteryVolt Temperature=@Temperature " +
-                    " MainFirmware=@MainFirmware RadioFirmware=@RadioFirmware " +
+                    " ,BatteryVolt=@BatteryVolt, Temperature=@Temperature " +
+                    " ,MainFirmware=@MainFirmware, RadioFirmware=@RadioFirmware " +
                     " WHERE Id = @Id;";
 
                 var affectedRows = _database.Execute(sql, new
@@ -684,8 +684,8 @@ namespace SiamCross.Services
                      " ErrorCode = @ErrorCode, ApertNumber = @ApertNumber," +
                      " ModelPump = @ModelPump, Rod = @Rod, MaxBarbellWeight = @MaxBarbellWeight," +
                      " MinBarbellWeight = @MinBarbellWeight, TravelLength = @TravelLength, SwingCount = @SwingCount" +
-                     " BatteryVolt=@BatteryVolt Temperature=@Temperature " +
-                     " MainFirmware=@MainFirmware RadioFirmware=@RadioFirmware " +
+                     " ,BatteryVolt=@BatteryVolt, Temperature=@Temperature " +
+                     " ,MainFirmware=@MainFirmware, RadioFirmware=@RadioFirmware " +
                      " WHERE Id = @Id;";
 
                 var affectedRows = _database.Execute(sql, new
@@ -876,8 +876,8 @@ namespace SiamCross.Services
                     " ErrorCode = @ErrorCode, ApertNumber = @ApertNumber," +
                     " ModelPump = @ModelPump, MaxBarbellWeight = @MaxBarbellWeight," +
                     " MinBarbellWeight = @MinBarbellWeight, TravelLength = @TravelLength, SwingCount = @SwingCount" +
-                    " BatteryVolt=@BatteryVolt Temperature=@Temperature " +
-                    " MainFirmware=@MainFirmware RadioFirmware=@RadioFirmware " +
+                    " ,BatteryVolt=@BatteryVolt, Temperature=@Temperature " +
+                    " ,MainFirmware=@MainFirmware, RadioFirmware=@RadioFirmware " +
                     " WHERE Id = @Id;";
 
                 var affectedRows = _database.Execute(sql, new

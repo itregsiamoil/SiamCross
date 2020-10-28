@@ -10,44 +10,32 @@
         <StackLayout>
             <ListView x:Name="sensorList"
                 HasUnevenRows="True"
-                Margin="5"
+                Margin="4"
                 ItemsSource="{Binding SensorsData}"                                    
                 ItemTapped="sensorList_ItemTapped">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <ViewCell.View>
-                                <StackLayout VerticalOptions="FillAndExpand" HeightRequest="130">
-                                    <Grid VerticalOptions="FillAndExpand" Margin="0"
-                                          rainbows:DebugRainbow.IsDebug="False">
+                            <ViewCell.View >
+                                <StackLayout VerticalOptions="FillAndExpand">
+                                    <Grid VerticalOptions="FillAndExpand" Margin="0">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto" ></RowDefinition>
-                                            <RowDefinition Height="Auto" ></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
                                             <RowDefinition Height="*"></RowDefinition>
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="6*"></ColumnDefinition>
-                                            <ColumnDefinition Width="3*"></ColumnDefinition>
-                                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                                            <ColumnDefinition Width="2*"></ColumnDefinition>
+                                            <ColumnDefinition Width="2*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
-                                        <Label HorizontalOptions="StartAndExpand" Text="{Binding Name}" FontSize="18" TextColor="Black"
-                                                                                                Grid.Row="0" Grid.Column="0"/>
-                                        <Label HorizontalOptions="Start" Text="{Binding Type}"  Grid.Row="1" Grid.Column="0" />
-
-                                        <StackLayout Orientation="Vertical" Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" >
-                                            <Label HorizontalOptions="Start" Text="{Binding Firmware}" FontSize ="Micro"/>
-                                            <Label HorizontalOptions="Start" Text="{Binding RadioFirmware}" FontSize ="Micro"/>
-                                        </StackLayout>
-
-                                        <StackLayout Orientation="Vertical" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" >
-                                            <Label HorizontalOptions="Start" Text="{local:Translate Firmware}" FontSize ="Micro"/>
-                                            <Label HorizontalOptions="Start" Text="{local:Translate RadioFirmware}" FontSize ="Micro"/>
-                                        </StackLayout>
-
-                                        <Label HorizontalOptions="StartAndExpand" Text="{Binding Status}" Grid.Row="3" Grid.Column="0"  
-                                               Grid.ColumnSpan="2"/>
-
+                                        
+                                        <Label  x:Name="NameLabel"  
+                                                Text="{Binding Name}" 
+                                                HorizontalOptions="FillAndExpand" 
+                                                FontSize="Medium" TextColor="Black"
+                                                Grid.Row="0" Grid.Column="0"/>
                                         <Image HorizontalOptions="EndAndExpand"
                                                BackgroundColor="Transparent"
                                                 VerticalOptions="FillAndExpand"  
@@ -63,6 +51,37 @@
                                                 CommandParameter="{Binding Id}" />
                                             </Image.GestureRecognizers>
                                         </Image>
+                                        <Label Text="{Binding Type}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"/>
+
+                                        <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                                            <Image x:Name="Img1" 
+                                               Source="{local:ImageResource SiamCross.images.thermometer.png}"
+                                               BindingContext="{x:Reference NameLabel}"
+                                               HeightRequest ="{Binding FontSize, Mode=OneWay}">
+                                            </Image>
+                                            <Label Text="{Binding Temperature}" VerticalOptions ="Center" >
+                                            </Label>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="2">
+                                            <Image x:Name="Img2"
+                                               Source="{local:ImageResource SiamCross.images.battery.png}"
+                                               BindingContext="{x:Reference NameLabel}"
+                                               HeightRequest ="{Binding FontSize, Mode=OneWay}" >
+                                            </Image>
+                                            <Label Text="{Binding Battery}" VerticalOptions ="Center"/>
+                                        </StackLayout>
+                                        
+                                        <StackLayout Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
+                                            <Label Text="{local:Translate Firmware}" FontSize ="Micro"/>
+                                            <Label Text="{Binding Firmware}" FontSize ="Micro"/>
+                                            <!--
+                                            <Label Text="{local:Translate RadioFirmware}" FontSize ="Micro"/>
+                                            <Label Text="{Binding RadioFirmware}" FontSize ="Micro"/>
+                                             -->
+                                        </StackLayout>
+
+                                        <Label HorizontalOptions="StartAndExpand" Text="{Binding Status}" Grid.Row="3" Grid.Column="0"  
+                                               Grid.ColumnSpan="3"/>
                                     </Grid>
                                 </StackLayout>
                             </ViewCell.View>
