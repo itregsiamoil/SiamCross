@@ -26,12 +26,15 @@ namespace SiamCross.Droid.Models.BluetoothAdapters
 
             _usbService.RegisterUsbObserver(this as IUsbDataObserver);
         }
-
-        public async Task Connect()
+        public Task<byte[]> Exchange(byte[] req)
+        {
+            return null;
+        }
+        public async Task<bool> Connect()
         {
             try
             {
-                _usbService.ConnectQuery(Address);
+                await _usbService.ConnectQuery(Address);
             }
             catch (NotSupportedException exception)
             {
@@ -40,12 +43,13 @@ namespace SiamCross.Droid.Models.BluetoothAdapters
                 if (_forceScanCounter % 15 == 1)
                 {
                     Console.WriteLine($@"{Address} adapter forced scan!");
-                    _usbService.StartScanQuery();
-                    return;
+                    await _usbService.StartScanQuery();
+                    return false;
                 }
             }
 
             await Task.Delay(5000);
+            return true;
 
             //if (_isConnected)
             //{

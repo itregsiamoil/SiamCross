@@ -13,8 +13,22 @@ namespace SiamCross.Models.Sensors.Du
 {
     public class DuSensor : ISensor
     {
-        private CancellationTokenSource _cancelSource;
+        private CancellationTokenSource _cancellToken;
         public IBluetoothAdapter BluetoothAdapter { get; }
+        
+        private bool _activated = false;
+        public bool Activeted
+        {
+            get => _activated;
+            set
+            {
+                _activated = value;
+                if (_activated)
+                    _liveTask.Start();
+                else
+                    _cancellToken.Cancel();
+            }
+        }
         public bool IsAlive { get; private set; }
         public SensorData SensorData { get; }
         public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
@@ -52,9 +66,9 @@ namespace SiamCross.Models.Sensors.Du
             BluetoothAdapter.ConnectSucceed += ConnectHandler;
             BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
 
-            _cancelSource = new CancellationTokenSource();
-            _liveTask = new Task(async () => await LiveWhile(_cancelSource.Token));
-            _liveTask.Start();
+            _cancellToken = new CancellationTokenSource();
+            _liveTask = new Task(async () => await LiveWhile(_cancellToken.Token));
+            //_liveTask.Start();
         }
 
         private void MeasurementBytesReceiveHandler(DuCommandsEnum arg1, byte[] arg2)
@@ -146,7 +160,7 @@ namespace SiamCross.Models.Sensors.Du
 
         public void Dispose()
         {
-            _cancelSource.Cancel();
+            _cancellToken.Cancel();
             BluetoothAdapter.Disconnect();
         }
 

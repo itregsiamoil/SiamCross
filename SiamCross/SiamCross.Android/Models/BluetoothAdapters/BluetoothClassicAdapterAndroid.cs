@@ -44,14 +44,18 @@ namespace SiamCross.Droid.Models
         }
 
         private BluetoothAdapter _bluetoothAdapter;
-
-        public async Task Connect()
+        public Task<byte[]> Exchange(byte[] req)
+        {
+            return null;
+        }
+        public async Task<bool> Connect()
         {
             if (_scannedDeviceInfo.BluetoothArgs is string address)
             {
                 _bluetoothDevice = _bluetoothAdapter.GetRemoteDevice(address);
                             }
-            if (_bluetoothDevice == null) return;
+            if (_bluetoothDevice == null) 
+                return false;
             try
             {               
                 _socket = _bluetoothDevice.CreateRfcommSocketToServiceRecord(UUID.FromString(_uuid));
@@ -60,7 +64,7 @@ namespace SiamCross.Droid.Models
                 {
                     System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile.Connect " 
                         + _scannedDeviceInfo.Name + ": _socket was null!");
-                    return;
+                    return false;
                 }
 
                 if (!_socket.IsConnected)
@@ -82,6 +86,7 @@ namespace SiamCross.Droid.Models
                 _readTask.Start();
 
                 ConnectSucceed?.Invoke();
+                return true;
             }
             catch(Java.IO.IOException e)
             {
@@ -101,6 +106,7 @@ namespace SiamCross.Droid.Models
                     + _scannedDeviceInfo.Name + ": " + e.Message);
                 await Disconnect();
             }
+            return false;
         }
 
         public async Task Disconnect()

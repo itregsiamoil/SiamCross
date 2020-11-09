@@ -1,12 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.4.0" package="com.siam" android:installLocation="preferExternal">
 	<uses-sdk android:targetSdkVersion="27" />
-	<application android:label="SIAM SERVICE 2.0" android:icon="@mipmap/main_icon" android:roundIcon="@mipmap/main_icon">
+	<application android:label="SIAM SERVICE 2.0" 
+               android:icon="@mipmap/main_icon" 
+               android:roundIcon="@mipmap/main_icon" 
+							 android:theme="@style/MainTheme"
+               android:noHistory="true"
+               android:finishOnTaskLaunch="true">
 		<provider android:name="android.support.v4.content.FileProvider" android:authorities="com.companyname.fileprovider" android:exported="false" android:grantUriPermissions="true">
 			<meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"></meta-data>
 		</provider>
 	</application>
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.BLUETOOTH" />
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />

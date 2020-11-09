@@ -14,6 +14,20 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         private CancellationTokenSource _cancellToken;
         public IBluetoothAdapter BluetoothAdapter { get; }
         public bool IsAlive { get; private set; }
+
+        private bool _activated=false;
+        public bool Activeted
+        {
+            get => _activated;
+            set
+            {
+                _activated = value;
+                if(_activated)
+                    _liveTask.Start();
+                else
+                    _cancellToken.Cancel();
+            }
+        }
         public SensorData SensorData { get; }
         public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
 
@@ -52,7 +66,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 
             _cancellToken = new CancellationTokenSource();
             _liveTask = new Task(async () => await ExecuteAsync(_cancellToken.Token));
-            _liveTask.Start();
+            //_liveTask.Start();
         }
 
         private void ConnectFailedHandler()

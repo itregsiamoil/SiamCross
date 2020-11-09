@@ -11,12 +11,13 @@ namespace SiamCross.Models.Tools
         /// </summary>
         /// <param name="buf"></param>
         /// <returns>Результат в виде реверсированного массива 2 байтов</returns>
-        public byte[] ModbusCrc(byte[] buf)
+        public byte[] ModbusCrc(byte[] buf, int start=0, int len= -1)
         {
-            var len = buf.Length;
+            if(-1== len)
+                len = buf.Length;
             UInt16 crc = 0xFFFF;
 
-            for (int pos = 0; pos < len; pos++)
+            for (int pos = start; pos < start+len; pos++)
             {
                 crc ^= (UInt16)buf[pos];          // XOR byte into least sig. byte of crc
 

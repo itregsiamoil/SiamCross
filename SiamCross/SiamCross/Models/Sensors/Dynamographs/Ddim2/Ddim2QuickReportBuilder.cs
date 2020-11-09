@@ -99,7 +99,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 
         public string GetReport()
         {
-            return BatteryVoltage + Temperature + Load + Acceleration;
+            return /*BatteryVoltage + Temperature*/ Load + Acceleration;
         }
     }
 }

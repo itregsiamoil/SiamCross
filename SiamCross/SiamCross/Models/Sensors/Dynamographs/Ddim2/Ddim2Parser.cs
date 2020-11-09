@@ -51,6 +51,13 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         /// </summary>
         private FirmWaveQualifier _deviceFirmWaveQualifier;
 
+        public Ddim2Parser()
+        {
+            _deviceFirmWaveQualifier = null;
+            _byteBuffer = new ByteBuffer(false);
+
+        }
+
         public Ddim2Parser(FirmWaveQualifier deviceFirmWaveQualifier, 
             bool isResponseCheck)
         {
@@ -66,7 +73,8 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         {
             try
             {
-                var message = _byteBuffer.AddBytes(inputBytes);
+                //var message = _byteBuffer.AddBytes(inputBytes);
+                var message = inputBytes;
                 if (message.Length == 0)
                 {
                     return;
@@ -420,6 +428,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
                        key[3] == commandBytes[3])
                     {
                         commandName = _commandDictionary[key];
+                        return commandName;
                     }
                 }
             }

@@ -10,6 +10,7 @@ namespace SiamCross.Models
     public interface ISensor : IDisposable
     {
         IBluetoothAdapter BluetoothAdapter { get; }
+        bool Activeted { get; set; }
         bool IsAlive { get; }
         bool IsMeasurement { get; }
         Task QuickReport();

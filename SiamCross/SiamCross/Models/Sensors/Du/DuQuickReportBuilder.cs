@@ -46,7 +46,7 @@ namespace SiamCross.Models.Sensors.Du
 
         public string GetReport()
         {
-            return BatteryVoltage + Pressure;
+            return /*BatteryVoltage + */ Pressure;
         }
     }
 }

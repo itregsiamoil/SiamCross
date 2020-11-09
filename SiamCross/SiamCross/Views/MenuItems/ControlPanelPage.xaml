@@ -6,84 +6,136 @@
              xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
              x:Name="ControlPanel"
              Title="{local:Translate ControlPanelTitle}">
+    
     <ContentPage.Content>
+
         <StackLayout>
-            <ListView x:Name="sensorList"
+            <ListView x:Name="sensorList" 
                 HasUnevenRows="True"
-                Margin="4"
+                Margin="0"
                 ItemsSource="{Binding SensorsData}"                                    
                 ItemTapped="sensorList_ItemTapped">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View >
-                                <StackLayout VerticalOptions="FillAndExpand">
-                                    <Grid VerticalOptions="FillAndExpand" Margin="0">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="*"></RowDefinition>
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="6*"></ColumnDefinition>
-                                            <ColumnDefinition Width="2*"></ColumnDefinition>
-                                            <ColumnDefinition Width="2*"></ColumnDefinition>
-                                        </Grid.ColumnDefinitions>
-                                        
-                                        <Label  x:Name="NameLabel"  
+                                <Frame BorderColor="{x:DynamicResource colorControlNormal}" CornerRadius="5" 
+                                       Padding="4,0,4,0" Margin="2" 
+                                       HasShadow="True"  
+                                       >
+                                    <StackLayout VerticalOptions="FillAndExpand">
+                                        <Grid VerticalOptions="FillAndExpand" Margin="0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"></RowDefinition>
+                                                <RowDefinition Height="Auto"></RowDefinition>
+                                                <RowDefinition Height="Auto"></RowDefinition>
+                                                <RowDefinition Height="*"></RowDefinition>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="6*"></ColumnDefinition>
+                                                <ColumnDefinition Width="2*"></ColumnDefinition>
+                                                <ColumnDefinition Width="2*"></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label  x:Name="NameLabel"  
                                                 Text="{Binding Name}" 
                                                 HorizontalOptions="FillAndExpand" 
                                                 FontSize="Medium" TextColor="Black"
                                                 Grid.Row="0" Grid.Column="0"/>
-                                        <Image HorizontalOptions="EndAndExpand"
+                                            <Image HorizontalOptions="EndAndExpand"
                                                BackgroundColor="Transparent"
                                                 VerticalOptions="FillAndExpand"  
                                                 HeightRequest="20"
                                                 WidthRequest="40"
-                                                Grid.Row="3" Grid.Column="2"
+                                                Grid.Row="1" Grid.Column="2" Grid.RowSpan="2"
                                                 Source="trashcan.png"
                                                >
-                                            <Image.GestureRecognizers>
-                                                <TapGestureRecognizer
+                                                <Image.GestureRecognizers>
+                                                    <TapGestureRecognizer
                                             Command="{Binding Path=BindingContext.DeleteSensorCommand, 
                                             Source={x:Reference ControlPanel}}"
                                                 CommandParameter="{Binding Id}" />
-                                            </Image.GestureRecognizers>
-                                        </Image>
-                                        <Label Text="{Binding Type}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"/>
+                                                </Image.GestureRecognizers>
+                                            </Image>
+                                            <Label Text="{Binding Type}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"/>
 
-                                        <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
-                                            <Image x:Name="Img1" 
+                                            <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                                                <Image x:Name="Img1" 
                                                Source="{local:ImageResource SiamCross.images.thermometer.png}"
                                                BindingContext="{x:Reference NameLabel}"
                                                HeightRequest ="{Binding FontSize, Mode=OneWay}">
-                                            </Image>
-                                            <Label Text="{Binding Temperature}" VerticalOptions ="Center" >
-                                            </Label>
-                                        </StackLayout>
-                                        <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="2">
-                                            <Image x:Name="Img2"
+                                                </Image>
+                                                <Label Text="{Binding Temperature}" VerticalOptions ="Center" >
+                                                </Label>
+                                            </StackLayout>
+                                            <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="2">
+                                                <Image x:Name="Img2"
                                                Source="{local:ImageResource SiamCross.images.battery.png}"
                                                BindingContext="{x:Reference NameLabel}"
                                                HeightRequest ="{Binding FontSize, Mode=OneWay}" >
-                                            </Image>
-                                            <Label Text="{Binding Battery}" VerticalOptions ="Center"/>
-                                        </StackLayout>
-                                        
-                                        <StackLayout Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
-                                            <Label Text="{local:Translate Firmware}" FontSize ="Micro"/>
-                                            <Label Text="{Binding Firmware}" FontSize ="Micro"/>
-                                            <!--
+                                                </Image>
+                                                <Label Text="{Binding Battery}" VerticalOptions ="Center"/>
+                                            </StackLayout>
+
+                                            <StackLayout Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
+                                                <Label Text="{local:Translate Firmware}" FontSize ="Micro"/>
+                                                <Label Text="{Binding Firmware}" FontSize ="Micro"/>
+                                                <!--
                                             <Label Text="{local:Translate RadioFirmware}" FontSize ="Micro"/>
                                             <Label Text="{Binding RadioFirmware}" FontSize ="Micro"/>
                                              -->
-                                        </StackLayout>
+                                            </StackLayout>
 
-                                        <Label HorizontalOptions="StartAndExpand" Text="{Binding Status}" Grid.Row="3" Grid.Column="0"  
+                                            <Label HorizontalOptions="StartAndExpand" Text="{Binding Status}" Grid.Row="3" Grid.Column="0"  
                                                Grid.ColumnSpan="3"/>
-                                    </Grid>
-                                </StackLayout>
+                                        </Grid>
+                                        <Grid 
+                                        VerticalOptions="FillAndExpand" 
+                                        HorizontalOptions="FillAndExpand"
+                                        Margin="0" 
+                                        HeightRequest="40" >
+                                            <!--
+                                            <Separator Height="4" />
+                                            -->
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"></RowDefinition>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="1*"></ColumnDefinition>
+                                                <ColumnDefinition Width="1*"></ColumnDefinition>
+                                                <ColumnDefinition Width="1*"></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <ImageButton Source="trashcan.png" Grid.Column="0" Grid.Row="0" 
+                                                    BorderWidth="0" BorderColor="LightGray" CornerRadius="5" BackgroundColor="Transparent"
+                                                     Margin="0" Padding="0"
+                                                    HorizontalOptions="Fill" VerticalOptions="CenterAndExpand"
+                                                    Command="{Binding Path=BindingContext.DeleteSensorCommand, 
+                                                    Source={x:Reference ControlPanel}}"
+                                                    CommandParameter="{Binding Id}"
+                                                    >
+                                            </ImageButton>
+                                            <ImageButton Source="{local:ImageResource SiamCross.images.recent.png}" Grid.Column="1" Grid.Row="0"
+                                                    BorderWidth="0" BorderColor="LightGray" CornerRadius="5" BackgroundColor="Transparent"
+                                                     Margin="0" Padding="0"
+                                                    HorizontalOptions="Fill" VerticalOptions="CenterAndExpand"
+                                                    Command="{Binding Path=BindingContext.RecentMeasurementCommand, 
+                                                    Source={x:Reference ControlPanel}}"
+                                                    CommandParameter="{Binding Id}"
+                                                    >
+                                            </ImageButton>
+
+                                            <ImageButton Source="{local:ImageResource SiamCross.images.start.png}" Grid.Column="2" Grid.Row="0"
+                                                    BorderWidth="0" BorderColor="LightGray" CornerRadius="5" BackgroundColor="Transparent"
+                                                    HorizontalOptions="Fill" VerticalOptions="CenterAndExpand"
+                                                    Command="{Binding Path=BindingContext.GotoMeasurementPageCommand, 
+                                                    Source={x:Reference ControlPanel}}"
+                                                    CommandParameter="{Binding Id}"
+                                                    >
+                                            </ImageButton>
+
+                                        </Grid>
+                                    </StackLayout>
+                                </Frame>
                             </ViewCell.View>
                         </ViewCell>
                     </DataTemplate>

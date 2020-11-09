@@ -10,9 +10,22 @@ namespace SiamCross.Models.Sensors.Umt
 {
     public class UmtSensor: ISensor
     {
-        private CancellationTokenSource _cancelSource;
+        private CancellationTokenSource _cancellToken;
         public IBluetoothAdapter BluetoothAdapter { get; }
         private bool _isAlive;
+        private bool _activated = false;
+        public bool Activeted
+        {
+            get => _activated;
+            set
+            {
+                _activated = value;
+                if (_activated)
+                    _liveTask.Start();
+                else
+                    _cancellToken.Cancel();
+            }
+        }
         public bool IsAlive {
             get
             {
@@ -59,9 +72,9 @@ namespace SiamCross.Models.Sensors.Umt
             BluetoothAdapter.ConnectSucceed += ConnectHandler;
             BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
 
-            _cancelSource = new CancellationTokenSource();
-            _liveTask = new Task(async () => await LiveWhile(_cancelSource.Token));
-            _liveTask.Start();
+            _cancellToken = new CancellationTokenSource();
+            _liveTask = new Task(async () => await LiveWhile(_cancellToken.Token));
+            //_liveTask.Start();
         }
 
         private void MeasurementBytesReceiveHandler(UmtCommandsEnum arg1, byte[] arg2)
@@ -151,7 +164,7 @@ namespace SiamCross.Models.Sensors.Umt
 
         public void Dispose()
         {
-            _cancelSource.Cancel();
+            _cancellToken.Cancel();
             BluetoothAdapter.Disconnect();
         }
 

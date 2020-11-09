@@ -20,7 +20,20 @@ namespace SiamCross.Models.Sensors.Ddin2
         public IBluetoothAdapter BluetoothAdapter { get; }
 
         public SensorData SensorData { get; }
-
+        
+        private bool _activated = false;
+        public bool Activeted
+        {
+            get => _activated;
+            set
+            {
+                _activated = value;
+                if (_activated)
+                    _liveTask.Start();
+                else
+                    _cancellToken.Cancel();
+            }
+        }
         public bool IsAlive { get; private set; }
         public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
 
@@ -54,7 +67,7 @@ namespace SiamCross.Models.Sensors.Ddin2
 
             _cancellToken = new CancellationTokenSource();
             _liveTask = new Task(async () => await LiveWhileAsync(_cancellToken.Token));
-            _liveTask.Start();
+            //_liveTask.Start();
         }
 
         /*/ Для замера /*/
