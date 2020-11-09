@@ -349,7 +349,7 @@ namespace SiamCross.Droid.Models
             var curr_task = GetCurrent();
             if (null != curr_task)
             {
-                DebugLog.WriteLine("WARNING another tas running");
+                DebugLog.WriteLine("WARNING another task running 1");
                 await curr_task;
                 //await cur_task;
             }
@@ -381,12 +381,26 @@ namespace SiamCross.Droid.Models
             }
         }
 
-        public async Task SendData(byte[] data)
+        public async Task SendData(byte[] req)
         {
-            var res = await Exchange(data);
+            var curr_task = GetCurrent();
+            if (null != curr_task)
+            {
+                DebugLog.WriteLine("WARNING another task running 2");
+                await curr_task;
+                //await cur_task;
+            }
 
-            if (null != res && 0 < res.Length)
-                DataReceived?.Invoke(res);
+
+            var task = ExchangeData(req);
+            SetCurrent(task);
+            byte[] ret = await task;
+            task.Dispose();
+            task = null;
+            SetCurrent(task);
+
+            if (null != ret && 0 < ret.Length)
+                DataReceived?.Invoke(ret);
         }
 
 

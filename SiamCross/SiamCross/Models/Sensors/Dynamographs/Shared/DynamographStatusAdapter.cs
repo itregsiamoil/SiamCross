@@ -4,9 +4,9 @@ using System.Text;
 
 namespace SiamCross.Models.Sensors.Dynamographs.Shared
 {
-    public class DynamographStatusAdapter
+    static public class DynamographStatusAdapter
     {
-        public DynamographMeasurementStatus StringStatusToEnum(string stringStatus)
+        static public DynamographMeasurementStatus StringStatusToEnum(string stringStatus)
         {
             if (!string.IsNullOrEmpty(stringStatus))
             {
@@ -23,7 +23,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
             return DynamographMeasurementStatus.Empty; //stub
         }
 
-        public string StringStatusToReport(string stringStatus)
+        static public string StringStatusToReport(string stringStatus)
         {
             if (!string.IsNullOrEmpty(stringStatus))
             {
@@ -40,7 +40,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
             return Resource.FreeStatus; //stub
         }
 
-        public string CreateProgressStatus(int progress)
+        static public string CreateProgressStatus(int progress)
         {
             return Resource.SavingStatus + $" {progress}%";
         }

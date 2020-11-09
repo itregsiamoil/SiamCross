@@ -36,7 +36,6 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         public bool IsMeasurement { get; private set; } 
 
         private Ddim2QuickReportBuilder _reportBuilder;
-        private DynamographStatusAdapter _statusAdapter;
         private Ddim2Parser _parser;
         private FirmWaveQualifier _firmwareQualifier;
 
@@ -54,7 +53,6 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             );
             _parser = new Ddim2Parser(_firmwareQualifier, true);
             _reportBuilder = new Ddim2QuickReportBuilder();
-            _statusAdapter = new DynamographStatusAdapter();
 
             BluetoothAdapter.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += ReceiveHandler;
@@ -97,9 +95,9 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
                     /*/ Для замера /*/
                     if (_measurementManager != null)
                     {
-                        _measurementManager.MeasurementStatus = _statusAdapter.StringStatusToEnum(dataValue);
+                        _measurementManager.MeasurementStatus = DynamographStatusAdapter.StringStatusToEnum(dataValue);
                     }
-                    SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
+                    SensorData.Status = DynamographStatusAdapter.StringStatusToReport(dataValue);
                     return;
                 case "BatteryVoltage":
                     //_reportBuilder.BatteryVoltage = dataValue;
@@ -204,7 +202,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             if (_measurementManager != null)
             {
                 _measurementManager.MemoryRecieveHandler(address, data);
-                SensorData.Status = _statusAdapter.CreateProgressStatus(_measurementManager.Progress);             
+                SensorData.Status = DynamographStatusAdapter.CreateProgressStatus(_measurementManager.Progress);             
             }
         }
 

@@ -38,10 +38,14 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
 
         public async Task<object> RunMeasurement()
         {
-            await Task.Delay(300);
-            await SendParameters();
-            await Start();
-            await IsMeasurementDone();
+            //Task.Delay(Constants.LongDelay);
+            if (!await SendParameters())
+                return null;
+            if(!await Start())
+                return null;
+            
+            if (!await IsMeasurementDone())
+                return null;
 
             bool gotError = false;
 
@@ -55,27 +59,70 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
             return fullReport;
         }
 
-        private async Task SendParameters()
+        protected void UpdateProgress(int pos, string text)
         {
-            await Task.Delay(Constants.LongDelay);
-            await _bluetoothAdapter.SendData(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod));
-            await Task.Delay(Constants.LongDelay);
-            await _bluetoothAdapter.SendData(_configGenerator.SetApertNumber(_measurementParameters.ApertNumber));
-            await Task.Delay(Constants.LongDelay);
-            await _bluetoothAdapter.SendData(_configGenerator.SetImtravel(_measurementParameters.Imtravel));
-            await Task.Delay(Constants.LongDelay);
-            await _bluetoothAdapter.SendData(_configGenerator.SetModelPump(_measurementParameters.ModelPump));
-            await Task.Delay(Constants.LongDelay);
+            _progress = pos;
+            SensorData.Status = "measure ["+ pos.ToString() + "%] - "+ text;
+        }
+
+
+        private async Task<bool> SendParameters()
+        {
+            UpdateProgress(1, "Send Parameters");
+            byte[] resp = { };
+            //await Task.Delay(Constants.LongDelay);
+            resp = await _bluetoothAdapter.Exchange(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod));
+            if (0 == resp.Length)
+                return false;
+            //await Task.Delay(Constants.LongDelay);
+            resp = await _bluetoothAdapter.Exchange(_configGenerator.SetApertNumber(_measurementParameters.ApertNumber));
+            if (0 == resp.Length)
+                return false;
+            //await Task.Delay(Constants.LongDelay);
+            resp = await _bluetoothAdapter.Exchange(_configGenerator.SetImtravel(_measurementParameters.Imtravel));
+            if (0 == resp.Length)
+                return false;
+            //await Task.Delay(Constants.LongDelay);
+            resp = await _bluetoothAdapter.Exchange(_configGenerator.SetModelPump(_measurementParameters.ModelPump));
+            if (0 == resp.Length)
+                return false;
+            //await Task.Delay(Constants.LongDelay);
+            return true;
+        }
+
+        private async Task<bool> Start()
+        {
+            UpdateProgress(2, "Send Init and Start");
+            byte[] resp = { };
+            resp = await _bluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["InitializeMeasurement"]);
+            if (0 == resp.Length)
+                return false;
+            //await Task.Delay(Constants.LongDelay);
+            resp = await _bluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["StartMeasurement"]);
+            if (0 == resp.Length)
+                return false;
+            //await Task.Delay(Constants.LongDelay);
+            return true;
         }
 
         private async Task<bool> IsMeasurementDone()
         {
-            bool isDone = false;
-            while (!isDone)
-            {
-                await Task.Delay(Constants.LongDelay);
+            byte[] resp = { };
+            string dataValue;
+            Ddim2.Ddim2Parser pp = new Ddim2.Ddim2Parser();
 
-                await _bluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["ReadDeviceStatus"]);
+            bool isDone = false;
+            for (int i = 0; i < 50 && !isDone; i++)
+            {
+                await Task.Delay(Constants.SecondDelay);
+                resp = await _bluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["ReadDeviceStatus"]); ;
+                if (0 == resp.Length)
+                    return false;
+
+                dataValue = pp.ConvertToStringPayload(resp);
+                MeasurementStatus = DynamographStatusAdapter.StringStatusToEnum(dataValue);
+                UpdateProgress(3 + i, "measure "+ MeasurementStatus);
+
 
                 if (MeasurementStatus == DynamographMeasurementStatus.Ready
                    || MeasurementStatus == DynamographMeasurementStatus.Error)
@@ -87,18 +134,17 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
             return isDone;
         }
 
-        private async Task Start()
-        {
-            await _bluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["InitializeMeasurement"]);
-            await Task.Delay(Constants.LongDelay);
-            await _bluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["StartMeasurement"]);
-            await Task.Delay(Constants.LongDelay);
-        }
 
-        public async Task ReadErrorCode()
+
+        public async Task<bool> ReadErrorCode()
         {
-            await _bluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["ReadMeasurementErrorCode"]);
-            await Task.Delay(Constants.LongDelay);
+            byte[] resp = { };
+            resp = await _bluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["ReadMeasurementErrorCode"]);
+            if (0 == resp.Length)
+                return false;
+            ErrorCode = resp.AsSpan().Slice(12, 4).ToArray();
+            return true;
+            //await Task.Delay(Constants.LongDelay);
         }
 
         public async Task ReadMeasurementHeader()

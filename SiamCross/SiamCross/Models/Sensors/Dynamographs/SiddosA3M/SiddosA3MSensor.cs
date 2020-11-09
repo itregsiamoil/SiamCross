@@ -97,7 +97,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
         public bool IsMeasurement { get; private set; }
 
         private SiddosA3MQuickReportBuilder _reportBuilder;
-        private DynamographStatusAdapter _statusAdapter;
+        
         private SiddosA3MParser _parser;
         private FirmWaveQualifier _firmwareQualifier;
 
@@ -115,7 +115,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             );
             _parser = new SiddosA3MParser(_firmwareQualifier, true);
             _reportBuilder = new SiddosA3MQuickReportBuilder();
-            _statusAdapter = new DynamographStatusAdapter();
+
 
             BluetoothAdapter.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += ReceiveHandler;
@@ -165,9 +165,9 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
                     /*/ Для замера /*/
                     if (_measurementManager != null)
                     {
-                        _measurementManager.MeasurementStatus = _statusAdapter.StringStatusToEnum(dataValue);
+                        _measurementManager.MeasurementStatus = DynamographStatusAdapter.StringStatusToEnum(dataValue);
                     }
-                    SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
+                    SensorData.Status = DynamographStatusAdapter.StringStatusToReport(dataValue);
                     return;
                 case "BatteryVoltage":
                     //_reportBuilder.BatteryVoltage = dataValue;
@@ -307,7 +307,6 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 
         public async Task<bool> CheckStatus()
         {
-            /*
             byte[] resp = { };
             Ddim2.Ddim2Parser pp = new Ddim2.Ddim2Parser();
             string cmd;
@@ -319,13 +318,12 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 
             cmd = pp.DefineCommand(resp);
             dataValue = pp.ConvertToStringPayload(resp);
-            _measurementManager.MeasurementStatus = _statusAdapter.StringStatusToEnum(dataValue);
-            SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
+            _measurementManager.MeasurementStatus = DynamographStatusAdapter.StringStatusToEnum(dataValue);
+            SensorData.Status = DynamographStatusAdapter.StringStatusToReport(dataValue);
 
             return true;
-            */
-            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["ReadDeviceStatus"]);
-            return true;
+            //await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["ReadDeviceStatus"]);
+            //return true;
         }
 
         private async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -341,10 +339,10 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
                         if (!IsMeasurement)
                         {
                             await QuickReport();
-                            await Task.Delay(1000, cancellationToken);
                         }
                         else
                         {
+                            await Task.Delay(1000, cancellationToken);
                             //await CheckStatus();
                         }
                         await Task.Delay(1000, cancellationToken);
@@ -378,15 +376,25 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 
         public async Task StartMeasurement(object measurementParameters)
         {
+            SensorData.Status = "measure [0%] - started";
             IsMeasurement = true;
-            _parser.MessageReceived -= ReceiveHandler;
+            //_parser.MessageReceived -= ReceiveHandler;
             SiddosA3MMeasurementStartParameters specificMeasurementParameters =
                 (SiddosA3MMeasurementStartParameters)measurementParameters;
             _measurementManager = new SiddosA3MMeasurementManager(BluetoothAdapter, SensorData,
                 specificMeasurementParameters);
             //_parser.ExportMemoryFragment += _measurementManager.MemoryRecieveHandler;
             var report = await _measurementManager.RunMeasurement();
-            SensorService.Instance.MeasurementHandler(report);
+            if(null!= report)
+            {
+                SensorService.Instance.MeasurementHandler(report);
+                SensorData.Status = "measure [100%] - end";
+            }
+            else 
+            {
+                SensorData.Status = "measure [---%] - ERROR";
+            }
+            await Task.Delay(2000);
             IsMeasurement = false;
         }
 
@@ -401,7 +409,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             if(_measurementManager != null)
             {
                 _measurementManager.MemoryRecieveHandler(address, data);
-                SensorData.Status = _statusAdapter.CreateProgressStatus(_measurementManager.Progress);
+                SensorData.Status = DynamographStatusAdapter.CreateProgressStatus(_measurementManager.Progress);
             }
         }
 
