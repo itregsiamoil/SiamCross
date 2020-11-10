@@ -20,6 +20,7 @@ using SiamCross.Droid.Services;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
+using SiamCross.Models;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using SiamCross.Services.UserOutput;
@@ -31,7 +32,6 @@ namespace SiamCross.Droid
         protected override void RegisterDependencies(ContainerBuilder cb)
         {
             cb.RegisterType<BluetoothScannerAndroid>().As<IBluetoothScanner>();
-            base.RegisterDependencies(cb);
 
             cb.RegisterType<BluetoothClassicAdapterAndroid>().As<IBluetoothClassicAdapter>();
             cb.RegisterType<BluetoothLeAdapterAndroid>().As<IBluetoothLeAdapter>();
@@ -49,6 +49,7 @@ namespace SiamCross.Droid
             cb.RegisterType<FileOpenDialogAndroid>().As<IFileOpenDialog>();
             //cb.RegisterType<SerialUsbManagerAndroid>().As<ISerialUsbManager>();
             cb.RegisterType<SerialUsbConnector>().As<ISerialUsbManager>();
+            base.RegisterDependencies(cb);
         }
     }    
 }

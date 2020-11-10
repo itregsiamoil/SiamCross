@@ -42,6 +42,7 @@
                                                 HorizontalOptions="FillAndExpand" 
                                                 FontSize="Medium" TextColor="Black"
                                                 Grid.Row="0" Grid.Column="0"/>
+                                            <!--
                                             <Image HorizontalOptions="EndAndExpand"
                                                BackgroundColor="Transparent"
                                                 VerticalOptions="FillAndExpand"  
@@ -57,6 +58,7 @@
                                                 CommandParameter="{Binding Id}" />
                                                 </Image.GestureRecognizers>
                                             </Image>
+                                            -->
                                             <Label Text="{Binding Type}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"/>
 
                                             <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="1">

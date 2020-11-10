@@ -16,7 +16,7 @@
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v8.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
     <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
     <NuGetPackageImportStamp>
@@ -30,15 +30,14 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AndroidLinkMode>None</AndroidLinkMode>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
     <AotAssemblies>false</AotAssemblies>
     <EnableLLVM>false</EnableLLVM>
     <BundleAssemblies>false</BundleAssemblies>
     <MandroidI18n>CJK;Mideast;Rare;West;Other</MandroidI18n>
     <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
     <AndroidUseSharedRuntime>true</AndroidUseSharedRuntime>
-    <AndroidSupportedAbis>
-    </AndroidSupportedAbis>
+    <AndroidSupportedAbis>armeabi-v7a;arm64-v8a</AndroidSupportedAbis>
     <AndroidLinkSkip>
     </AndroidLinkSkip>
     <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
@@ -57,7 +56,7 @@
     <AotAssemblies>false</AotAssemblies>
     <EnableLLVM>false</EnableLLVM>
     <BundleAssemblies>false</BundleAssemblies>
-    <AndroidLinkMode>None</AndroidLinkMode>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
     <MandroidI18n>CJK;Mideast;Rare;West;Other</MandroidI18n>
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
     <AndroidSupportedAbis>
@@ -66,9 +65,18 @@
     </JavaMaximumHeapSize>
     <DefineConstants>DEBUG</DefineConstants>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <AndroidLinkSkip>
+    </AndroidLinkSkip>
+    <AndroidEnableMultiDex>true</AndroidEnableMultiDex>
+    <AndroidLinkTool>r8</AndroidLinkTool>
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <AndroidCreatePackagePerAbi>true</AndroidCreatePackagePerAbi>
   </PropertyGroup>
   <PropertyGroup>
     <AndroidEnableAssemblyCompression>false</AndroidEnableAssemblyCompression>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AndroidLinkSkip>MvvmCross.Plugin.BLE</AndroidLinkSkip>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
@@ -83,10 +91,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac">
-      <Version>4.9.4</Version>
+      <Version>6.0.0</Version>
     </PackageReference>
     <PackageReference Include="Dapper">
-      <Version>2.0.30</Version>
+      <Version>2.0.35</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CSharp">
       <Version>4.7.0</Version>
@@ -94,29 +102,29 @@
     <PackageReference Include="Mono.Data.Sqlite.Portable">
       <Version>1.0.3.5</Version>
     </PackageReference>
-    <PackageReference Include="MvvmCross.Plugin.BLE">
-      <Version>2.2.0-pre2</Version>
-    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
     <PackageReference Include="NLog">
-      <Version>4.6.8</Version>
+      <Version>4.7.5</Version>
     </PackageReference>
     <PackageReference Include="NLog.Config">
-      <Version>4.6.8</Version>
+      <Version>4.7.5</Version>
     </PackageReference>
     <PackageReference Include="NLog.Schema">
-      <Version>4.6.8</Version>
+      <Version>4.7.5</Version>
+    </PackageReference>
+    <PackageReference Include="Plugin.BLE">
+      <Version>2.1.1</Version>
     </PackageReference>
     <PackageReference Include="SkiaSharp">
-      <Version>1.68.1.1</Version>
+      <Version>2.80.2</Version>
     </PackageReference>
     <PackageReference Include="SkiaSharp.Views.Forms">
-      <Version>1.68.1.1</Version>
+      <Version>2.80.2</Version>
     </PackageReference>
     <PackageReference Include="System.Data.SqlClient">
-      <Version>4.8.0</Version>
+      <Version>4.8.2</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.SerialPort">
       <Version>1.0.0.3</Version>
@@ -129,10 +137,10 @@
     <PackageReference Include="Xamarin.Android.Support.Core.Utils" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Android.Support.CustomTabs" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Forms">
-      <Version>4.4.0.991537</Version>
+      <Version>4.8.0.1560</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms.DebugRainbows">
-      <Version>1.0.16</Version>
+      <Version>1.1.4</Version>
     </PackageReference>
     <PackageReference Include="XamarinFileChooser">
       <Version>1.2.0</Version>

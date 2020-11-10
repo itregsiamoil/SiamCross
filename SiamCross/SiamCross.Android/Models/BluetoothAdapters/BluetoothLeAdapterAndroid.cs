@@ -17,6 +17,8 @@ using Android.Views;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.Exceptions;
+using Plugin.BLE.Abstractions;
+using ScanMode = Plugin.BLE.Abstractions.Contracts.ScanMode;
 using SiamCross.Droid.Models;
 using SiamCross.Models;
 using SiamCross.Models.Scanners;
@@ -27,9 +29,7 @@ using Plugin.BLE.Abstractions.EventArgs;
 using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Services.Logging;
-using Plugin.BLE.Abstractions;
 using Android.Bluetooth;
-using ScanMode = Plugin.BLE.Abstractions.Contracts.ScanMode;
 using Debug = System.Diagnostics.Debug;
 using OperationCanceledException = System.OperationCanceledException;
 
@@ -344,60 +344,26 @@ namespace SiamCross.Droid.Models
             return res;
         }
 
+        private TaskCompletionSource<bool> mExecTcs;
         public async Task<byte[]> Exchange(byte[] req)
         {
-            var curr_task = GetCurrent();
-            if (null != curr_task)
+            if (null != mExecTcs)
             {
                 DebugLog.WriteLine("WARNING another task running 1");
-                await curr_task;
-                //await cur_task;
+                bool result = await mExecTcs.Task;
             }
-                
-
+            mExecTcs = new TaskCompletionSource<bool>();
             var task = ExchangeData(req);
-            SetCurrent(task);
             byte[] ret = await task;
             task.Dispose();
             task = null;
-            SetCurrent(task);
+            mExecTcs.TrySetResult(true);
             return ret;
-        }
-
-        private Object mLock = new Object();
-        private Task mCurrenTask;
-        public Task GetCurrent()
-        {
-            lock(mLock)
-            {
-                return mCurrenTask;
-            }
-        }
-        public void SetCurrent(Task task)
-        {
-            lock (mLock)
-            {
-                mCurrenTask=task;
-            }
         }
 
         public async Task SendData(byte[] req)
         {
-            var curr_task = GetCurrent();
-            if (null != curr_task)
-            {
-                DebugLog.WriteLine("WARNING another task running 2");
-                await curr_task;
-                //await cur_task;
-            }
-
-
-            var task = ExchangeData(req);
-            SetCurrent(task);
-            byte[] ret = await task;
-            task.Dispose();
-            task = null;
-            SetCurrent(task);
+            byte[] ret = await Exchange(req);
 
             if (null != ret && 0 < ret.Length)
                 DataReceived?.Invoke(ret);

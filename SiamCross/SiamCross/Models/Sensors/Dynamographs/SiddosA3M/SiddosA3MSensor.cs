@@ -200,7 +200,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 
         public async Task<bool> UpdateFirmware()
         {
-            byte[] resp= { };
+            byte[] resp;
             byte[] fw_address = new byte[4];
             byte[] fw_size = new byte[2];
 
@@ -222,9 +222,9 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
                 return false;
 
             var pp = new Ddim2.Ddim2Parser();
-            string cmd;
+            //string cmd;
             string dataValue;
-            cmd = pp.DefineCommand(resp);
+            //cmd = pp.DefineCommand(resp);
             dataValue = pp.ConvertToStringPayload(resp);
             if(null == dataValue || 0==dataValue.Length)
                 return false;
@@ -235,15 +235,15 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 
         public async Task QuickReport()
         {
-            byte[] bat_rs = { };
+            byte[] bat_rs;
             Ddim2.Ddim2Parser pp=new Ddim2.Ddim2Parser();
-            string cmd;
+            //string cmd;
             string dataValue;
 
             bat_rs = await BluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["BatteryVoltage"]); ;
             if(0!=bat_rs.Length)
             {
-                cmd = pp.DefineCommand(bat_rs);
+                //cmd = pp.DefineCommand(bat_rs);
                 dataValue = pp.ConvertToStringPayload(bat_rs);
                 SensorData.Battery = dataValue;
                 //_reportBuilder.BatteryVoltage = dataValue;
@@ -251,7 +251,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             bat_rs = await BluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["Тemperature"]); ;
             if (0 != bat_rs.Length)
             {
-                cmd = pp.DefineCommand(bat_rs);
+                //cmd = pp.DefineCommand(bat_rs);
                 dataValue = pp.ConvertToStringPayload(bat_rs);
                 SensorData.Temperature = dataValue;
                 //_reportBuilder.Temperature = dataValue;
@@ -259,14 +259,14 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             bat_rs = await BluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["LoadChanel"]); ;
             if (0 != bat_rs.Length)
             {
-                cmd = pp.DefineCommand(bat_rs);
+                //cmd = pp.DefineCommand(bat_rs);
                 dataValue = pp.ConvertToStringPayload(bat_rs);
                 _reportBuilder.Load = dataValue;
             }
             bat_rs = await BluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["AccelerationChanel"]); ;
             if (0 != bat_rs.Length)
             {
-                cmd = pp.DefineCommand(bat_rs);
+                //cmd = pp.DefineCommand(bat_rs);
                 dataValue = pp.ConvertToStringPayload(bat_rs);
                 _reportBuilder.Acceleration = dataValue;
             }
@@ -281,22 +281,22 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 
         public async Task<bool> KillosParametersQuery()
         {
-            byte[] resp = { };
+            byte[] resp;
             Ddim2.Ddim2Parser pp = new Ddim2.Ddim2Parser();
-            string cmd;
+            //string cmd;
             string dataValue;
 
             resp = await BluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["SensorLoadRKP"]); ;
             if (0 == resp.Length)
                 return false;
-            cmd = pp.DefineCommand(resp);
+            //cmd = pp.DefineCommand(resp);
             dataValue = pp.ConvertToStringPayload(resp);
             _reportBuilder.SensitivityLoad = dataValue;
 
             resp = await BluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["SensorLoadNKP"]); ;
             if (0 == resp.Length)
                 return false;
-            cmd = pp.DefineCommand(resp);
+            //cmd = pp.DefineCommand(resp);
             dataValue = pp.ConvertToStringPayload(resp);
             _reportBuilder.ZeroOffsetLoad = dataValue;
             return true;
@@ -307,16 +307,16 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 
         public async Task<bool> CheckStatus()
         {
-            byte[] resp = { };
+            byte[] resp ;
             Ddim2.Ddim2Parser pp = new Ddim2.Ddim2Parser();
-            string cmd;
+            //string cmd;
             string dataValue;
 
             resp = await BluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["ReadDeviceStatus"]); ;
             if (0 == resp.Length)
                 return false;
 
-            cmd = pp.DefineCommand(resp);
+            //cmd = pp.DefineCommand(resp);
             dataValue = pp.ConvertToStringPayload(resp);
             _measurementManager.MeasurementStatus = DynamographStatusAdapter.StringStatusToEnum(dataValue);
             SensorData.Status = DynamographStatusAdapter.StringStatusToReport(dataValue);
@@ -415,8 +415,8 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 
         public void Dispose()
         {
-            _cancellToken.Cancel();
-            BluetoothAdapter.Disconnect();
+            _cancellToken?.Cancel();
+            BluetoothAdapter?.Disconnect();
         }
     }
 }

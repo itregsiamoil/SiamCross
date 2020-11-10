@@ -5,18 +5,19 @@ using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.Exceptions;
 using ScanMode = Plugin.BLE.Abstractions.Contracts.ScanMode;
+using Plugin.BLE.Abstractions;
 using SiamCross.Models;
 using Xamarin.Forms;
 using SiamCross.Droid.Models;
 using SiamCross.Models.Scanners;
 using System.Threading.Tasks;
 using System.Threading;
-using Plugin.BLE.Abstractions;
 using SiamCross.Models.USB;
 
 [assembly: Dependency(typeof(BluetoothScannerAndroid))]
 namespace SiamCross.Droid.Models
 {
+    [Android.Runtime.Preserve(AllMembers = true)]
     public class BluetoothScannerAndroid : IBluetoothScanner
     {
         private IAdapter _adapter;

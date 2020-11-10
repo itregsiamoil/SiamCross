@@ -18,9 +18,9 @@ namespace SiamCross.AppObjects
 
         protected virtual void RegisterDependencies(ContainerBuilder cb)
         {
-            cb.RegisterType<IBluetoothClassicAdapter>().As<IBluetoothAdapter>();
-            cb.RegisterType<IBluetoothLeAdapter>().As<IBluetoothAdapter>();
-            cb.RegisterType<IBluetooth5CustomAdapter>().As<IBluetoothAdapter>();
+            //cb.RegisterType<IBluetoothClassicAdapter>().As<IBluetoothAdapter>();
+            //cb.RegisterType<IBluetoothLeAdapter>().As<IBluetoothAdapter>();
+            //cb.RegisterType<IBluetooth5CustomAdapter>().As<IBluetoothAdapter>();
 
             cb.RegisterType<ScannerViewModel>().SingleInstance();
             cb.RegisterType<ControlPanelPageViewModel>().SingleInstance();
