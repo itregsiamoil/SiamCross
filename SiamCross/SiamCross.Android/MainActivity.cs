@@ -15,6 +15,7 @@ using Android.Hardware.Usb;
 using Hoho.Android.UsbSerial.Extensions;
 using Hoho.Android.UsbSerial.Driver;
 using SiamCross.Models.USB;
+using System.Threading.Tasks;
 
 [assembly: UsesFeature("android.hardware.usb.host")]
 [assembly: UsesFeature("android.hardware.usb.accessory")]
@@ -26,40 +27,48 @@ namespace SiamCross.Droid
     [MetaData(UsbManager.ActionUsbDeviceAttached, Resource = "@xml/device_filter")]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-        protected override void OnCreate(Bundle savedInstanceState)
+        protected override async void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
-
-            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            var locationPermissions = new[]
-{
-                Manifest.Permission.AccessCoarseLocation,
-                Manifest.Permission.AccessFineLocation,
-                Manifest.Permission.WriteExternalStorage
-            };
-
-            // check if the app has permission to access coarse location
-            var coarseLocationPermissionGranted =
-                ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessCoarseLocation);
-
-            // check if the app has permission to access fine location
-            var fineLocationPermissionGranted =
-                ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation);
-
-            var externalFilesPermissionGranted =
-                ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage);
-
-            // if either is denied permission, request permission from the user
-            const int locationPermissionsRequestCode = 1000;
-            if (coarseLocationPermissionGranted == Permission.Denied ||
-                fineLocationPermissionGranted == Permission.Denied || 
-                externalFilesPermissionGranted == Permission.Denied)
+            bool all_granted = false;
+            while (!all_granted)
             {
-                ActivityCompat.RequestPermissions(this, locationPermissions, locationPermissionsRequestCode);
+                Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+                global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+                var locationPermissions = new[]
+                {
+                    Manifest.Permission.AccessCoarseLocation,
+                    Manifest.Permission.AccessFineLocation,
+                    Manifest.Permission.WriteExternalStorage
+                };
+
+                // check if the app has permission to access coarse location
+                var coarseLocationPermissionGranted =
+                    ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessCoarseLocation);
+
+                // check if the app has permission to access fine location
+                var fineLocationPermissionGranted =
+                    ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation);
+
+                var externalFilesPermissionGranted =
+                    ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage);
+
+                // if either is denied permission, request permission from the user
+                const int locationPermissionsRequestCode = 1000;
+                if (coarseLocationPermissionGranted == Permission.Denied ||
+                    fineLocationPermissionGranted == Permission.Denied ||
+                    externalFilesPermissionGranted == Permission.Denied)
+                {
+                    ActivityCompat.RequestPermissions(this, locationPermissions, locationPermissionsRequestCode);
+                    mAllPermOkExecTcs = new TaskCompletionSource<bool>();
+                    all_granted = await mAllPermOkExecTcs.Task;
+                    await Task.Delay(1000);
+                }
+                else
+                    all_granted = true;
             }
 
             // Set it in the constructor
@@ -76,11 +85,27 @@ namespace SiamCross.Droid
 
         public static Activity CurrentActivity;
 
+        private TaskCompletionSource<bool> mAllPermOkExecTcs;
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+
+            System.Diagnostics.Debug.WriteLine( $"OnRequestPermissionsResult(requestCode={requestCode} " +
+                $"- Permissions Count={permissions.Length} - GrantResults Count={grantResults.Length})");
+
+            bool all_granted = true;
+            foreach(var g  in grantResults)
+            {
+                if(g!= Permission.Granted)
+                {
+                    all_granted = false;
+                    Toast.MakeText(this, "You must approve all permissions", ToastLength.Long).Show();
+                    break;
+                }
+            }
+            mAllPermOkExecTcs?.TrySetResult(all_granted);
         }
 
         #region UsbDeviceDetachedReceiver implementation

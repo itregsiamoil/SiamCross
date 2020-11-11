@@ -20,7 +20,7 @@ namespace SiamCross.Droid.Services
 {
     public class NLogManagerAndroid : ILogManager
     {
-        public NLogManagerAndroid()
+        static NLogManagerAndroid()
         {
             var config = new LoggingConfiguration();
 
@@ -32,9 +32,16 @@ namespace SiamCross.Droid.Services
 
             var fileTarget = new FileTarget();
 
+            string directory = @"/storage/emulated/0/" + (Path.DirectorySeparatorChar + "SiamService2Log");
+            try 
+            {
+                directory = Directory.CreateDirectory(directory).FullName;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("The process failed: {0}", e.ToString());
+            }
 
-            string directory = Directory.CreateDirectory(
-                @"/storage/emulated/0/" + (Path.DirectorySeparatorChar + "SiamService2Log")).FullName;
 
             if (Directory.Exists(directory))
             {
