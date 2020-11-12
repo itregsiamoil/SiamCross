@@ -12,6 +12,12 @@ namespace SiamCross.Droid.Models.BluetoothAdapters
 {
     public class CustomBluetooth5Adapter : IBluetooth5CustomAdapter, IUsbDataObserver
     {
+        readonly IPhyInterface mInterface;
+        public IPhyInterface PhyInterface
+        {
+            get => mInterface;
+        }
+
         public string Address { get; private set; }
         private bool _isConnected;
         private USBService _usbService;

@@ -10,8 +10,11 @@ namespace SiamCross.Models.Sensors.Umt
 {
     public class UmtSensor: ISensor
     {
+        protected IConnection mConnection;
+        public IConnection Connection => mConnection;
+
         private CancellationTokenSource _cancellToken;
-        public IBluetoothAdapter BluetoothAdapter { get; }
+
         private bool _isAlive;
         private bool _activated = false;
         public bool Activeted
@@ -49,13 +52,13 @@ namespace SiamCross.Models.Sensors.Umt
         private FirmWaveQualifier _firmwareQualifier;
         private Task _liveTask;
 
-        public UmtSensor(IBluetoothAdapter adapter,
+        public UmtSensor(IConnection adapter,
                         SensorData sensorData)
         {
             IsMeasurement = false;
             IsAlive = false;
             SensorData = sensorData;
-            BluetoothAdapter = adapter;
+            mConnection = adapter;
             _firmwareQualifier = new FirmWaveQualifier(
                 adapter.SendData,
                 UmtCommands.FullCommandDictionary[UmtCommandsEnum.ProgrammVersionAddress],
@@ -65,12 +68,12 @@ namespace SiamCross.Models.Sensors.Umt
             _reportBuilder = new UmtQuickReportBuilder();
             _statusAdapter = new UmtStatusAdapter();
 
-            BluetoothAdapter.DataReceived += _parser.ByteProcess;
+            mConnection.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += ReceiveHandler;
             _parser.ByteMessageReceived += MeasurementBytesReceiveHandler;
 
-            BluetoothAdapter.ConnectSucceed += ConnectHandler;
-            BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
+            mConnection.ConnectSucceed += ConnectHandler;
+            mConnection.ConnectFailed += ConnectFailedHandler;
 
             _cancellToken = new CancellationTokenSource();
             _liveTask = new Task(async () => await LiveWhile(_cancellToken.Token));
@@ -93,7 +96,7 @@ namespace SiamCross.Models.Sensors.Umt
         private void ConnectHandler()
         {
             _firmwareQualifier = new FirmWaveQualifier(
-                BluetoothAdapter.SendData,
+                mConnection.SendData,
                 UmtCommands.FullCommandDictionary[UmtCommandsEnum.ProgrammVersionAddress],
                 UmtCommands.FullCommandDictionary[UmtCommandsEnum.ProgrammVersionSize]
             );
@@ -156,7 +159,7 @@ namespace SiamCross.Models.Sensors.Umt
                 {
                     SensorData.Status = Resource.NoConnection;
 
-                    await BluetoothAdapter.Connect();
+                    await mConnection.Connect();
                     await Task.Delay(4000);
                 }
             }
@@ -165,7 +168,7 @@ namespace SiamCross.Models.Sensors.Umt
         public void Dispose()
         {
             _cancellToken.Cancel();
-            BluetoothAdapter.Disconnect();
+            mConnection.Disconnect();
         }
 
         public async Task QuickReport()
@@ -175,7 +178,7 @@ namespace SiamCross.Models.Sensors.Umt
             //await BluetoothAdapter.SendData(UmtCommands.FullCommandDictionary[UmtCommandsEnum.Temp]);
             //await Task.Delay(1000);
             //await BluetoothAdapter.SendData(UmtCommands.FullCommandDictionary[UmtCommandsEnum.Dav]);
-            await BluetoothAdapter.SendData(UmtCommands.FullCommandDictionary
+            await mConnection.SendData(UmtCommands.FullCommandDictionary
                 [UmtCommandsEnum.CurrentParametersFrame]);
             await Task.Delay(500);
         }

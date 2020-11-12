@@ -34,12 +34,30 @@ using Debug = System.Diagnostics.Debug;
 using OperationCanceledException = System.OperationCanceledException;
 
 
-[assembly: Dependency(typeof(BluetoothLeAdapterAndroid))]
+//[assembly: Dependency(typeof(BluetoothLeAdapterAndroid))]
 namespace SiamCross.Droid.Models
 {
-    public class BluetoothLeAdapterAndroid : IBluetoothLeAdapter
+    public class BluetoothLeAdapterAndroid : IConnectionBtLe
     {
-        private IAdapter _adapter;
+        readonly IPhyInterface mInterface;
+        public IPhyInterface PhyInterface 
+        {
+            get => mInterface;
+        }
+
+        public IAdapter _adapter
+        {
+            get 
+            {
+                if (null == mInterface)
+                    return null;
+                var ble_ifc = mInterface as BtLeInterface;
+                //if (null == ble_ifc)
+                //    return null;
+                return ble_ifc?.mAdapter;
+            }
+        }
+
         private IDevice _device;
         private Guid _deviceGuid;
         private IService _targetService;
@@ -51,44 +69,53 @@ namespace SiamCross.Droid.Models
         private static string _serviceGuid = "569a1101-b87f-490c-92cb-11ba5ea5167c";
         private ScannedDeviceInfo _deviceInfo;
 
-        private List<string> _connectQueue;
+        private List<string> _connectQueue = new List<string>();
 
         private bool _isFirstConnectionTry = true;
 
-        public BluetoothLeAdapterAndroid(ScannedDeviceInfo deviceInfo)
+        public BluetoothLeAdapterAndroid(IPhyInterface ifc)
         {
-            _adapter = CrossBluetoothLE.Current.Adapter;
-            _deviceInfo = deviceInfo;
-            _deviceGuid = (Guid)deviceInfo.BluetoothArgs;
-            
+            if (null == ifc)
+                mInterface = BtLeInterface.Factory.GetCurent();
+            else
+                mInterface = ifc;
+        }
 
-            if (_connectQueue == null)
-            {
-                _connectQueue = new List<string>();
-            }
+
+        public BluetoothLeAdapterAndroid(ScannedDeviceInfo deviceInfo, IPhyInterface ifc = null)
+            : this(ifc)
+        {
+            SetDeviceInfo(deviceInfo);
+        }
+
+        public void SetDeviceInfo(ScannedDeviceInfo deviceInfo)
+        {
+           _deviceInfo = deviceInfo;
+           _deviceGuid = (Guid)deviceInfo.BluetoothArgs;
         }
 
         public async Task<bool> Connect()
         {
-            bool connected = false;
-            if(!BluetoothAdapter.DefaultAdapter.IsEnabled)
-                return connected;
-            if (_connectQueue.Contains(_deviceInfo.Name))
-                return connected;
-            else
-            {
-                _connectQueue.Add(_deviceInfo.Name);
-            }
+            if (null == mInterface)
+                return false;
+            if (!mInterface.IsEnbaled)
+                mInterface.Enable();
 
             if (_adapter == null)
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения" +
                     " _adapter == null. Будет произведена переинициализация адаптера");
                 await Disconnect();
-                _adapter = CrossBluetoothLE.Current.Adapter;
                 _connectQueue.Remove(_deviceInfo.Name);
-                return connected;
+                return false;
             }
+
+            if (_connectQueue.Contains(_deviceInfo.Name))
+                return true;
+            else
+                _connectQueue.Add(_deviceInfo.Name);
+
+
 
             try
             {
@@ -109,7 +136,7 @@ namespace SiamCross.Droid.Models
                 await Disconnect();
                 _isFirstConnectionTry = false;
                 _connectQueue.Remove(_deviceInfo.Name);
-                return connected;
+                return false;
             }
             catch (Exception e)
             {
@@ -118,7 +145,7 @@ namespace SiamCross.Droid.Models
                 await Disconnect();
                 _isFirstConnectionTry = false;
                 _connectQueue.Remove(_deviceInfo.Name);
-                return connected;
+                return false;
             }
 
             if (_adapter != null)
@@ -130,11 +157,10 @@ namespace SiamCross.Droid.Models
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения" +
                     " _adapter == null. Будет произведена переинициализация адаптера");
-                _adapter = CrossBluetoothLE.Current.Adapter;
                 await Disconnect();
                 _isFirstConnectionTry = false;
                 _connectQueue.Remove(_deviceInfo.Name);
-                return connected;
+                return false;
             }
 
             if (_device == null)
@@ -145,7 +171,7 @@ namespace SiamCross.Droid.Models
                 await Disconnect();
                 _isFirstConnectionTry = false;
                 _connectQueue.Remove(_deviceInfo.Name);
-                return connected;
+                return false;
             }
             return await Initialize();
         }
@@ -347,17 +373,33 @@ namespace SiamCross.Droid.Models
         private TaskCompletionSource<bool> mExecTcs;
         public async Task<byte[]> Exchange(byte[] req)
         {
-            if (null != mExecTcs)
+            Task<byte[]> task=null;
+            byte[] ret={ };
+            try
             {
-                DebugLog.WriteLine("WARNING another task running 1");
-                bool result = await mExecTcs.Task;
+                if (null != mExecTcs)
+                {
+                    DebugLog.WriteLine("WARNING another task running");
+                    bool result = await mExecTcs.Task;
+                }
+                mExecTcs = new TaskCompletionSource<bool>();
+                task = ExchangeData(req);
+                ret = await task;
             }
-            mExecTcs = new TaskCompletionSource<bool>();
-            var task = ExchangeData(req);
-            byte[] ret = await task;
-            task.Dispose();
-            task = null;
-            mExecTcs.TrySetResult(true);
+            catch (Exception sendingEx)
+            {
+                DebugLog.WriteLine("WARNING Exchange"
+                + " " + sendingEx.Message + " "
+                + sendingEx.GetType() + " "
+                + sendingEx.StackTrace + "\n");
+            }
+            finally
+            {
+                mExecTcs?.TrySetResult(true);
+                task?.Dispose();
+                task = null;
+                mExecTcs = null;
+            }
             return ret;
         }
 
@@ -418,7 +460,7 @@ namespace SiamCross.Droid.Models
             {
                 _writeCharacteristic = null;
                 _readCharacteristic = null;
-                _adapter = null;
+                mInterface?.Disable();
 
                 _device?.Dispose();
 

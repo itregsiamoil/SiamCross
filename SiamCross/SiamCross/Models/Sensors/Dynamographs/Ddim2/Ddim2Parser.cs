@@ -153,7 +153,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        private byte[] GetPayload(byte[] message)
+        static public byte[] GetPayload(byte[] message)
         {
             int payloadSize = message[8] + message[9] * 10;                // 9ый байт указывает на размер данных
             var payloadBytes = new byte[payloadSize];
@@ -174,7 +174,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public string ConvertToStringPayload(byte[] message)
+        static public string ConvertToStringPayload(byte[] message)
         {
             var payloadBytes = GetPayload(message);
 
@@ -243,7 +243,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         /// </summary>
         /// <param name="deviceCode"></param>
         /// <returns></returns>
-        public string DefineDeviceType(string deviceCode)
+        static public string DefineDeviceType(string deviceCode)
         {
             switch (deviceCode)
             {
@@ -261,7 +261,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public string DefineDataType(byte[] message)
+        static public string DefineDataType(byte[] message)
         {
             if (message[7] == 0xFF)
             {
@@ -373,7 +373,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public string DefineCommand(byte[] message)
+        static public string DefineCommand(byte[] message)
         {
             if (message[3] == 0x02 && message[7] == 0xFF)
             {
@@ -439,7 +439,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         /// <summary>
         /// Словарь соответствия адрессов командам
         /// </summary>
-        private Dictionary<byte[], string> _commandDictionary = new Dictionary<byte[], string>()
+        static private Dictionary<byte[], string> _commandDictionary = new Dictionary<byte[], string>()
         {
             { new byte[]{ 0x00, 0x00, 0x00, 0x00}, "DeviceType" },
             { new byte[]{ 0x02, 0x00, 0x00, 0x00}, "MemoryModelVersion" },

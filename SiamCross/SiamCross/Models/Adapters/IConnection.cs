@@ -1,10 +1,13 @@
-﻿using System;
+﻿using SiamCross.Models.Adapters;
+using System;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models
 {
-    public interface IBluetoothAdapter
+    public interface IConnection
     {
+        IPhyInterface PhyInterface { get; }
+
         Task<bool> Connect();
         Task Disconnect();
         Task SendData(byte[] data);

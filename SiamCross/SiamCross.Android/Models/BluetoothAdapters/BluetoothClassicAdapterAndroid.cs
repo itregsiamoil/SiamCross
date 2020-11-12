@@ -23,6 +23,13 @@ namespace SiamCross.Droid.Models
 {
     public class BluetoothClassicAdapterAndroid : BroadcastReceiver, IBluetoothClassicAdapter
     {
+
+        readonly IPhyInterface mInterface;
+        public IPhyInterface PhyInterface
+        {
+            get => mInterface;
+        }
+
         private BluetoothDevice _bluetoothDevice;
         private BluetoothSocket _socket;
         private BufferedReader _reader;

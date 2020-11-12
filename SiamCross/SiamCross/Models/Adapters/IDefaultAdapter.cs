@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using SiamCross.Models.Adapters;
 
 namespace SiamCross.Models.Adapters
 {
-    public interface IDefaultAdapter
+    public interface IDefaultAdapter : IPhyInterface
     {
-            void Disable();
-            void Enable();
-
-            bool IsEnbaled { get; }
+  
     }
 }

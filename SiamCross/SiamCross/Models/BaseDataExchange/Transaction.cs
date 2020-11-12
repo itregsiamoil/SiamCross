@@ -50,17 +50,17 @@ namespace SiamCross.Models.Tools
             DvcError = 20,
         }
 
-        protected IBluetoothAdapter mTransport;
+        protected IConnection mTransport;
         protected Timeouts mTtimeout;
 
-        public Transaction(IBluetoothAdapter transport, Timeouts to)
+        public Transaction(IConnection transport, Timeouts to)
         {
             mTransport = transport;
             mTtimeout = to;
         }
 
 
-        public Transaction(IBluetoothAdapter transport)
+        public Transaction(IConnection transport)
         {
             mTransport = transport;
             mTtimeout = new Timeouts(   new IORestriction(3000,byte.MaxValue)

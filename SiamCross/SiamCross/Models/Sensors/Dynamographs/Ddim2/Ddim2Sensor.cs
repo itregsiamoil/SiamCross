@@ -11,8 +11,10 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 {
     public class Ddim2Sensor : ISensor
     {
+        protected IConnection mConnection;
+        public IConnection Connection => mConnection;
+
         private CancellationTokenSource _cancellToken;
-        public IBluetoothAdapter BluetoothAdapter { get; }
         public bool IsAlive { get; private set; }
 
         private bool _activated=false;
@@ -40,12 +42,12 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         private FirmWaveQualifier _firmwareQualifier;
 
         private Task _liveTask;
-        public Ddim2Sensor(IBluetoothAdapter adapter, SensorData sensorData)
+        public Ddim2Sensor(IConnection adapter, SensorData sensorData)
         {
             IsMeasurement = false;
             IsAlive = false;
             SensorData = sensorData;
-            BluetoothAdapter = adapter;
+            mConnection = adapter;
             _firmwareQualifier = new FirmWaveQualifier(
                 adapter.SendData,
                 DynamographCommands.FullCommandDictionary["ProgrammVersionAddress"],
@@ -54,13 +56,13 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             _parser = new Ddim2Parser(_firmwareQualifier, true);
             _reportBuilder = new Ddim2QuickReportBuilder();
 
-            BluetoothAdapter.DataReceived += _parser.ByteProcess;
+            mConnection.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += ReceiveHandler;
             _parser.ByteMessageReceived += MeasurementRecieveHandler;
             _parser.ExportMemoryFragment += MemoryRecieveHandler;
 
-            BluetoothAdapter.ConnectSucceed += ConnectHandler;
-            BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
+            mConnection.ConnectSucceed += ConnectHandler;
+            mConnection.ConnectFailed += ConnectFailedHandler;
 
             _cancellToken = new CancellationTokenSource();
             _liveTask = new Task(async () => await ExecuteAsync(_cancellToken.Token));
@@ -75,7 +77,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         private void ConnectHandler()
         {
             _firmwareQualifier = new FirmWaveQualifier(
-                BluetoothAdapter.SendData,
+                mConnection.SendData,
                 DynamographCommands.FullCommandDictionary["ProgrammVersionAddress"],
                 DynamographCommands.FullCommandDictionary["ProgrammVersionSize"]
             );
@@ -130,21 +132,21 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 
         public async Task QuickReport()
         {
-            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["BatteryVoltage"]);
-            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["Тemperature"]);
-            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["LoadChanel"]);
-            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["AccelerationChanel"]);
+            await mConnection.SendData(DynamographCommands.FullCommandDictionary["BatteryVoltage"]);
+            await mConnection.SendData(DynamographCommands.FullCommandDictionary["Тemperature"]);
+            await mConnection.SendData(DynamographCommands.FullCommandDictionary["LoadChanel"]);
+            await mConnection.SendData(DynamographCommands.FullCommandDictionary["AccelerationChanel"]);
         }
 
         public async Task KillosParametersQuery()
         {
-            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["SensorLoadRKP"]);
-            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["SensorLoadNKP"]);
+            await mConnection.SendData(DynamographCommands.FullCommandDictionary["SensorLoadRKP"]);
+            await mConnection.SendData(DynamographCommands.FullCommandDictionary["SensorLoadNKP"]);
         }
 
         public async Task CheckStatus()
         {
-            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["ReadDeviceStatus"]);
+            await mConnection.SendData(DynamographCommands.FullCommandDictionary["ReadDeviceStatus"]);
         }
 
         private async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -172,7 +174,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
                 {
                     SensorData.Status = Resource.NoConnection;
 
-                    await BluetoothAdapter.Connect();
+                    await mConnection.Connect();
                     await Task.Delay(1000);
                 }
             }
@@ -184,7 +186,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             _parser.MessageReceived -= ReceiveHandler;
             Ddim2MeasurementStartParameters specificMeasurementParameters = 
                 (Ddim2MeasurementStartParameters)measurementParameters;
-            _measurementManager = new Ddim2MeasurementManager(BluetoothAdapter, SensorData, 
+            _measurementManager = new Ddim2MeasurementManager(mConnection, SensorData, 
                 specificMeasurementParameters);
             var report = await _measurementManager.RunMeasurement();
             SensorService.Instance.MeasurementHandler(report);
@@ -209,7 +211,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         public void Dispose()
         {
             _cancellToken.Cancel();
-            BluetoothAdapter.Disconnect();
+            mConnection.Disconnect();
         }
     }
 }

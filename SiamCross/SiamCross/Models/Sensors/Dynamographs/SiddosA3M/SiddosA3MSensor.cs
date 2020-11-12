@@ -16,136 +16,61 @@ using SiamCross.Models.Tools;
 
 namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 {
-    public class SiddosA3MSensor : ISensor
+    public class SiddosA3MSensor : BaseSensor
     {
-        
-        public IBluetoothAdapter BluetoothAdapter { get; }
-
-        public async Task PollAsync()
-        {
-            await ExecuteAsync(_cancellToken.Token);
-        }
-
-        private void ClearStatus() 
-        { 
-                IsAlive = false;
-                SensorData.Temperature = "";
-                SensorData.Battery = "";
-                SensorData.Firmware = "";
-                SensorData.RadioFirmware = "";
-                SensorData.Status = Resource.NoConnection;        
-        }
-        
-        TaskScheduler _uiScheduler;
-        async void AsyncActivate()
-        {
-            //_activated = await AsyncPoll2();
-            _cancellToken = new CancellationTokenSource();
-            _liveTask = Task.Run(async () =>
-            {
-                await PollAsync();
-                return false;
-            }, _cancellToken.Token);
-            _activated = true;
-            try
-            {
-                _activated = await _liveTask;
-            }
-            catch (OperationCanceledException)
-            {
-                SensorData.Status = "close connection";
-                Debug.WriteLine($"Cancel liveupdate");
-            }
-            finally
-            {
-                _liveTask.Dispose();
-                _cancellToken.Dispose();
-                _liveTask = null;
-                _cancellToken = null;
-                _activated = false;
-                await BluetoothAdapter.Disconnect();
-                ClearStatus();
-            }
-        }
-        private CancellationTokenSource _cancellToken;
-        private Task<bool> _liveTask;
-        private bool _activated = false;
-        public bool Activeted
-        {
-            get => _activated;
-            set
-            {
-                //_activated = value;
-                if (value && !_activated && null==_liveTask)
-                {
-                    AsyncActivate();
-                }
-                else
-                {
-                    if(null != _cancellToken)
-                        _cancellToken.Cancel();
-                }
-                    
-            }
-        }
-        public bool IsAlive { get; private set; }
-        public SensorData SensorData { get; }
-        public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
-
         SiddosA3MMeasurementManager _measurementManager;
 
-        public bool IsMeasurement { get; private set; }
-
         private SiddosA3MQuickReportBuilder _reportBuilder;
-        
-        private SiddosA3MParser _parser;
-        private FirmWaveQualifier _firmwareQualifier;
 
-        
-        public SiddosA3MSensor(IBluetoothAdapter adapter, SensorData sensorData)
+        private SiddosA3MParser _parser = new SiddosA3MParser();
+        //private FirmWaveQualifier _firmwareQualifier;
+
+
+        public SiddosA3MSensor(IConnection conn, SensorData sensorData)
+            : base(conn, sensorData)
         {
-            IsMeasurement = false;
-            IsAlive = false;
-            SensorData = sensorData;
-            BluetoothAdapter = adapter;
-            _firmwareQualifier = new FirmWaveQualifier(
-                BluetoothAdapter.SendData,
-                DynamographCommands.FullCommandDictionary["ProgrammVersionAddress"],
-                DynamographCommands.FullCommandDictionary["ProgrammVersionSize"]
-            );
-            _parser = new SiddosA3MParser(_firmwareQualifier, true);
+
+            //IsMeasurement = false;
+            //IsAlive = false;
+            //SensorData = sensorData;
+            //_firmwareQualifier = new FirmWaveQualifier(
+            //    BluetoothAdapter.SendData,
+            //    DynamographCommands.FullCommandDictionary["ProgrammVersionAddress"],
+            //    DynamographCommands.FullCommandDictionary["ProgrammVersionSize"]
+            //);
+            //_parser = new SiddosA3MParser(_firmwareQualifier, true);
             _reportBuilder = new SiddosA3MQuickReportBuilder();
 
 
-            BluetoothAdapter.DataReceived += _parser.ByteProcess;
-            _parser.MessageReceived += ReceiveHandler;
+
+            Connection.DataReceived += _parser.ByteProcess;
+            //_parser.MessageReceived += ReceiveHandler;
             _parser.ByteMessageReceived += MeasurementRecieveHandler;
             _parser.ExportMemoryFragment += MemoryRecieveHandler;
 
             //BluetoothAdapter.ConnectSucceed += ConnectHandler;
             //BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
 
-            // Получение планировщика UI для потока, который создал форму:
-            _uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
         }
 
-    private void ConnectFailedHandler()
+
+
+        private void ConnectFailedHandler()
         {
             IsAlive = false;
         }
 
         private void ConnectHandler()
         {
-            
-            _firmwareQualifier = new FirmWaveQualifier(
-                BluetoothAdapter.SendData,
-                DynamographCommands.FullCommandDictionary["ProgrammVersionAddress"],
-                DynamographCommands.FullCommandDictionary["ProgrammVersionSize"]
-            );
-            _parser = new SiddosA3MParser(_firmwareQualifier, true);
-            _parser.MessageReceived += ReceiveHandler;
-            
+            //_firmwareQualifier = new FirmWaveQualifier(
+            //    BluetoothAdapter.SendData,
+            //    DynamographCommands.FullCommandDictionary["ProgrammVersionAddress"],
+            //    DynamographCommands.FullCommandDictionary["ProgrammVersionSize"]
+            //);
+            //_parser = new SiddosA3MParser(_firmwareQualifier, true);
+            //_parser.MessageReceived += ReceiveHandler;
+
             IsAlive = true;
             System.Diagnostics.Debug.WriteLine("СиддосА3М успешно подключен!");
             SensorData.Status = Resource.ConnectedStatus;
@@ -153,7 +78,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 
         private void ReceiveHandler(string commandName, string dataValue)
         {
-            if(!_activated)
+            if (!Activeted)
             {
                 ClearStatus();
                 return;
@@ -206,70 +131,45 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 
 
 
-            resp = await BluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["ProgrammVersionAddress"]); ;
+            resp = await Connection.Exchange(DynamographCommands.FullCommandDictionary["ProgrammVersionAddress"]); ;
             if (0 == resp.Length)
                 return false;
             resp.AsSpan().Slice(12, 4).CopyTo(fw_address);
 
-            resp = await BluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["ProgrammVersionSize"]); ;
+            resp = await Connection.Exchange(DynamographCommands.FullCommandDictionary["ProgrammVersionSize"]); ;
             if (0 == resp.Length)
                 return false;
             resp.AsSpan().Slice(12, 2).CopyTo(fw_size);
 
             var req = new MessageCreator().CreateReadMessage(fw_address, fw_size);
-            resp = await BluetoothAdapter.Exchange(req); ;
+            resp = await Connection.Exchange(req); ;
             if (0 == resp.Length)
                 return false;
 
-            var pp = new Ddim2.Ddim2Parser();
-            //string cmd;
             string dataValue;
-            //cmd = pp.DefineCommand(resp);
-            dataValue = pp.ConvertToStringPayload(resp);
-            if(null == dataValue || 0==dataValue.Length)
+            dataValue = Ddim2.Ddim2Parser.ConvertToStringPayload(resp);
+            if (null == dataValue || 0 == dataValue.Length)
                 return false;
             SensorData.Firmware = dataValue;
             return true;
         }
 
 
-        public async Task QuickReport()
+        public override async Task QuickReport()
         {
-            byte[] bat_rs;
-            Ddim2.Ddim2Parser pp=new Ddim2.Ddim2Parser();
-            //string cmd;
-            string dataValue;
+            //"BatteryVoltage" + "Тemperature"+"LoadChanel"+"AccelerationChanel"
+            byte[] req = new byte[] { 0x0D, 0x0A, 0x01, 0x01,
+                0x00, 0x84, 0x00, 0x00,    0x0C, 0x00,    0x64, 0x19 };
+            byte[] resp = await Connection.Exchange(req);
+            if (0 == resp.Length)
+                return;
 
-            bat_rs = await BluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["BatteryVoltage"]); ;
-            if(0!=bat_rs.Length)
-            {
-                //cmd = pp.DefineCommand(bat_rs);
-                dataValue = pp.ConvertToStringPayload(bat_rs);
-                SensorData.Battery = dataValue;
-                //_reportBuilder.BatteryVoltage = dataValue;
-            }
-            bat_rs = await BluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["Тemperature"]); ;
-            if (0 != bat_rs.Length)
-            {
-                //cmd = pp.DefineCommand(bat_rs);
-                dataValue = pp.ConvertToStringPayload(bat_rs);
-                SensorData.Temperature = dataValue;
-                //_reportBuilder.Temperature = dataValue;
-            }
-            bat_rs = await BluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["LoadChanel"]); ;
-            if (0 != bat_rs.Length)
-            {
-                //cmd = pp.DefineCommand(bat_rs);
-                dataValue = pp.ConvertToStringPayload(bat_rs);
-                _reportBuilder.Load = dataValue;
-            }
-            bat_rs = await BluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["AccelerationChanel"]); ;
-            if (0 != bat_rs.Length)
-            {
-                //cmd = pp.DefineCommand(bat_rs);
-                dataValue = pp.ConvertToStringPayload(bat_rs);
-                _reportBuilder.Acceleration = dataValue;
-            }
+            SensorData.Battery = (((float)BitConverter.ToInt16(resp, 12)) / 10).ToString();
+            SensorData.Temperature = (((float)BitConverter.ToInt16(resp, 12 + 2)) / 10).ToString();
+            _reportBuilder.Load = BitConverter.ToSingle(resp, 12 + 4).ToString();
+            _reportBuilder.Acceleration = BitConverter.ToSingle(resp, 12 + 8).ToString();
+
+
             SensorData.Status = _reportBuilder.GetReport();
             /*
             await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["BatteryVoltage"]);
@@ -282,22 +182,22 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
         public async Task<bool> KillosParametersQuery()
         {
             byte[] resp;
-            Ddim2.Ddim2Parser pp = new Ddim2.Ddim2Parser();
+            //Ddim2.Ddim2Parser pp = new Ddim2.Ddim2Parser();
             //string cmd;
             string dataValue;
 
-            resp = await BluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["SensorLoadRKP"]); ;
+            resp = await Connection.Exchange(DynamographCommands.FullCommandDictionary["SensorLoadRKP"]); ;
             if (0 == resp.Length)
                 return false;
             //cmd = pp.DefineCommand(resp);
-            dataValue = pp.ConvertToStringPayload(resp);
+            dataValue = Ddim2.Ddim2Parser.ConvertToStringPayload(resp);
             _reportBuilder.SensitivityLoad = dataValue;
 
-            resp = await BluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["SensorLoadNKP"]); ;
+            resp = await Connection.Exchange(DynamographCommands.FullCommandDictionary["SensorLoadNKP"]); ;
             if (0 == resp.Length)
                 return false;
             //cmd = pp.DefineCommand(resp);
-            dataValue = pp.ConvertToStringPayload(resp);
+            dataValue = Ddim2.Ddim2Parser.ConvertToStringPayload(resp);
             _reportBuilder.ZeroOffsetLoad = dataValue;
             return true;
 
@@ -307,17 +207,17 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 
         public async Task<bool> CheckStatus()
         {
-            byte[] resp ;
-            Ddim2.Ddim2Parser pp = new Ddim2.Ddim2Parser();
+            byte[] resp;
+            //Ddim2.Ddim2Parser pp = new Ddim2.Ddim2Parser();
             //string cmd;
             string dataValue;
 
-            resp = await BluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["ReadDeviceStatus"]); ;
+            resp = await Connection.Exchange(DynamographCommands.FullCommandDictionary["ReadDeviceStatus"]); ;
             if (0 == resp.Length)
                 return false;
 
             //cmd = pp.DefineCommand(resp);
-            dataValue = pp.ConvertToStringPayload(resp);
+            dataValue = Ddim2.Ddim2Parser.ConvertToStringPayload(resp);
             _measurementManager.MeasurementStatus = DynamographStatusAdapter.StringStatusToEnum(dataValue);
             SensorData.Status = DynamographStatusAdapter.StringStatusToReport(dataValue);
 
@@ -326,62 +226,19 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             //return true;
         }
 
-        private async Task ExecuteAsync(CancellationToken cancellationToken)
+        public override async Task<bool> PostConnectInit()
         {
-            //await Task.Delay(1000);
-            try
-            {
-                while (!cancellationToken.IsCancellationRequested)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    if (IsAlive)
-                    {
-                        if (!IsMeasurement)
-                        {
-                            await QuickReport();
-                        }
-                        else
-                        {
-                            await Task.Delay(1000, cancellationToken);
-                            //await CheckStatus();
-                        }
-                        await Task.Delay(1000, cancellationToken);
-                    }
-                    else
-                    {
-                        SensorData.Status = "starting BT...";
-                        bool connected = await BluetoothAdapter.Connect();
-                        if(!connected)
-                            await Task.Delay(2000, cancellationToken);
-                        else
-                        {
-                            if (await UpdateFirmware() && await KillosParametersQuery())
-                            {
-                                IsAlive = true;
-                                SensorData.Status = Resource.ConnectedStatus;
-                            }
-                                
-                        }
-                            
-                    }
-                }
-            }
-            catch (OperationCanceledException ex)
-            {
-                //Console.WriteLine("{0}: {1}", ex.GetType().Name, ex.Message);
-                //Thread.Sleep(5000);
-                cancellationToken.ThrowIfCancellationRequested();
-            }
+            return (await UpdateFirmware() && await KillosParametersQuery());
         }
 
-        public async Task StartMeasurement(object measurementParameters)
+        public override async Task StartMeasurement(object measurementParameters)
         {
             SensorData.Status = "measure [0%] - started";
             IsMeasurement = true;
             //_parser.MessageReceived -= ReceiveHandler;
             SiddosA3MMeasurementStartParameters specificMeasurementParameters =
                 (SiddosA3MMeasurementStartParameters)measurementParameters;
-            _measurementManager = new SiddosA3MMeasurementManager(BluetoothAdapter, SensorData,
+            _measurementManager = new SiddosA3MMeasurementManager(Connection, SensorData,
                 specificMeasurementParameters);
             //_parser.ExportMemoryFragment += _measurementManager.MemoryRecieveHandler;
             var report = await _measurementManager.RunMeasurement();
@@ -413,10 +270,5 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             }
         }
 
-        public void Dispose()
-        {
-            _cancellToken?.Cancel();
-            BluetoothAdapter?.Disconnect();
-        }
     }
 }

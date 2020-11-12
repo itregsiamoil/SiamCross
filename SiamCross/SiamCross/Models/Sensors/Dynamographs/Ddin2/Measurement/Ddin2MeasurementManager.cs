@@ -11,7 +11,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
 {
     public class Ddin2MeasurementManager
     {
-        private IBluetoothAdapter _bluetoothAdapter;
+        private IConnection _bluetoothAdapter;
         private CommandGenerator _configGenerator;
         private Ddin2MeasurementStartParameters _measurementParameters;
         private Ddin2MeasurementReport _report;
@@ -22,7 +22,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
         private List<byte[]> _currentDynGraph;
         private List<byte[]> _currentAccelerationGraph;
 
-        public Ddin2MeasurementManager(IBluetoothAdapter bluetoothAdapter, SensorData sensorData,
+        public Ddin2MeasurementManager(IConnection bluetoothAdapter, SensorData sensorData,
              Ddin2MeasurementStartParameters measurementParameters)
         {
             _bluetoothAdapter = bluetoothAdapter;

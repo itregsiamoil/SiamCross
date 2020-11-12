@@ -13,8 +13,10 @@ namespace SiamCross.Models.Sensors.Du
 {
     public class DuSensor : ISensor
     {
+        protected IConnection mConnection;
+        public IConnection Connection => mConnection;
+
         private CancellationTokenSource _cancellToken;
-        public IBluetoothAdapter BluetoothAdapter { get; }
         
         private bool _activated = false;
         public bool Activeted
@@ -43,13 +45,13 @@ namespace SiamCross.Models.Sensors.Du
         private FirmWaveQualifier _firmwareQualifier;
         private Task _liveTask;
 
-        public DuSensor(IBluetoothAdapter adapter, 
+        public DuSensor(IConnection adapter, 
                         SensorData sensorData)
         {
             IsMeasurement = false;
             IsAlive = false;
             SensorData = sensorData;
-            BluetoothAdapter = adapter;
+            mConnection = adapter;
             _firmwareQualifier = new FirmWaveQualifier(
                 adapter.SendData,
                 DuCommands.FullCommandDictionary[DuCommandsEnum.ProgrammVersionAddress],
@@ -59,12 +61,12 @@ namespace SiamCross.Models.Sensors.Du
             _reportBuilder = new DuQuickReportBuilder();
             _statusAdapter = new DuStatusAdapter();
 
-            BluetoothAdapter.DataReceived += _parser.ByteProcess;
+            mConnection.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += ReceiveHandler;
             _parser.ByteMessageReceived += MeasurementBytesReceiveHandler;
 
-            BluetoothAdapter.ConnectSucceed += ConnectHandler;
-            BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
+            mConnection.ConnectSucceed += ConnectHandler;
+            mConnection.ConnectFailed += ConnectFailedHandler;
 
             _cancellToken = new CancellationTokenSource();
             _liveTask = new Task(async () => await LiveWhile(_cancellToken.Token));
@@ -91,7 +93,7 @@ namespace SiamCross.Models.Sensors.Du
         private void ConnectHandler()
         {
             _firmwareQualifier = new FirmWaveQualifier(
-                BluetoothAdapter.SendData,
+                mConnection.SendData,
                 DuCommands.FullCommandDictionary[DuCommandsEnum.ProgrammVersionAddress],
                 DuCommands.FullCommandDictionary[DuCommandsEnum.ProgrammVersionSize]
             );
@@ -152,7 +154,7 @@ namespace SiamCross.Models.Sensors.Du
                 {
                     SensorData.Status = Resource.NoConnection;
 
-                    await BluetoothAdapter.Connect();
+                    await mConnection.Connect();
                     await Task.Delay(4000);
                 }
             }
@@ -161,21 +163,21 @@ namespace SiamCross.Models.Sensors.Du
         public void Dispose()
         {
             _cancellToken.Cancel();
-            BluetoothAdapter.Disconnect();
+            mConnection.Disconnect();
         }
 
         public async Task QuickReport()
         {
-            await BluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Voltage]);
+            await mConnection.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Voltage]);
             await Task.Delay(300);
-            await BluetoothAdapter.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure]);
+            await mConnection.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure]);
         }
 
         public async Task StartMeasurement(object measurementParameters)
         {
             IsMeasurement = true;
             var startParams = (DuMeasurementStartParameters)measurementParameters;
-            _measurementManager = new DuMeasurementManager(BluetoothAdapter, SensorData,
+            _measurementManager = new DuMeasurementManager(mConnection, SensorData,
                 startParams);
             var result = await _measurementManager.RunMeasurement();
             SensorService.Instance.MeasurementHandler(result);

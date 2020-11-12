@@ -37,7 +37,7 @@ namespace SiamCross.Services
                         case BluetoothType.Le:
                         {
                             var sensor = new Ddim2Sensor(
-                                AppContainer.Container.Resolve<IBluetoothLeAdapter>
+                                AppContainer.Container.Resolve<IConnectionBtLe>
                                     (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                                 new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
                             sensor.ScannedDeviceInfo = deviceInfo;
@@ -69,10 +69,10 @@ namespace SiamCross.Services
                     {
                         case BluetoothType.Le:
                         {
-                            var sensor = new SiddosA3MSensor(
-                                AppContainer.Container.Resolve<IBluetoothLeAdapter>
-                                    (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                                new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
+                            var sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
+                            var phy_interface = BtLeInterface.Factory.GetCurent();
+                            var connection = phy_interface.MakeConnection(deviceInfo);
+                            var sensor = new SiddosA3MSensor(connection, sens_data);
                             sensor.ScannedDeviceInfo = deviceInfo;
                             return sensor;
                         }
@@ -85,7 +85,7 @@ namespace SiamCross.Services
                         case BluetoothType.Le:
                         {
                             var sensor = new DuSensor(
-                                AppContainer.Container.Resolve<IBluetoothLeAdapter>
+                                AppContainer.Container.Resolve<IConnectionBtLe>
                                     (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                                 new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, ""));
                             sensor.ScannedDeviceInfo = deviceInfo;
@@ -108,7 +108,7 @@ namespace SiamCross.Services
                     {
                         case BluetoothType.Le:
                             var leBtSensor = new UmtSensor(
-                            AppContainer.Container.Resolve<IBluetoothLeAdapter>
+                            AppContainer.Container.Resolve<IConnectionBtLe>
                             (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                             new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.PressureGauge, ""));
                             leBtSensor.ScannedDeviceInfo = deviceInfo;
