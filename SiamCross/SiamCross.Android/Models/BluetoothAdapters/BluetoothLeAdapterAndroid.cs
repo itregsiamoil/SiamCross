@@ -221,24 +221,69 @@ namespace SiamCross.Droid.Models
             return inited;
         }
 
-        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static void LockLog(string msg)
+        {
+            string ret;
+            Thread thread = Thread.CurrentThread;
+            {
+                ret = msg
+                    + String.Format("   Thread ID: {0} ", thread.ManagedThreadId
+                    //+ String.Format("   Background: {0} ", thread.IsBackground)
+                    //+ String.Format("   Thread Pool: {0} ", thread.IsThreadPoolThread)
+                    );
+            }
+            DebugLog.WriteLine(ret);
+        }
+        //private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+        //private Object lockObj = new Object();
+        private SemaphoreSlim semaphore = new SemaphoreSlim(1);
+        //using (await semaphore.UseWaitAsync())
+        //{
+        //    Assert.Equal(0, semaphore.CurrentCount);
+        //}
 
-        public const int mExchangeTimeout = 3000;
+
+
+        #if DEBUG
+            public const int mExchangeTimeout = 5000;
+            public const int mResponseRetry = 10;
+        #else
+            public const int mExchangeTimeout = 3000;
+            public const int mResponseRetry = 256;
+        #endif
         public const int mExchangeRetry = 3;
         public const int mRequestRetry = 3;
-        public const int mResponseRetry = 256;
+        
 
-        private TaskCompletionSource<byte[]> tcs;// = new TaskCompletionSource<byte[]>();
+        private TaskCompletionSource<bool> tcs;// = new TaskCompletionSource<byte[]>();
         DataBuffer mBuf = new DataBuffer();
 
-        private void DoByteProcess(byte[] inputBytes)
+        private async void DoByteProcess(byte[] inputBytes)
         {
             //Debug.WriteLine("Received " + inputBytes.Length.ToString() +
             //    ": [" + BitConverter.ToString(inputBytes) + "]\n");
-            mBuf.Append(inputBytes);
-            if (null != tcs)
-                tcs.TrySetResult(inputBytes);
+            TaskCompletionSource<bool> ref_tsc = null;
+            LockLog("Add - TryLock");
+            using (await semaphore.UseWaitAsync()) //lock (lockObj)
+            {
+                LockLog("Add - Locked");
+                mBuf.Append(inputBytes);
+                ref_tsc = tcs;
+                LockLog("Add - Unlock");
+            }
+            LockLog("Add - SetResult");
+            ref_tsc?.SetResult(true);
+            LockLog("Add - exit");
         }
+
+        private async void TimeoutWaitResponse()
+        {
+            TaskCompletionSource<bool> ref_tsc = null;
+            using (await semaphore.UseWaitAsync())
+                ref_tsc = tcs;
+            ref_tsc?.SetResult(false);        
+        }
+
         private async Task<bool> RequestAsync(byte[] data, CancellationToken ct)
         {
             bool sent = false;
@@ -267,28 +312,56 @@ namespace SiamCross.Droid.Models
         private async Task<byte[]> ResponseAsync(byte[] req, CancellationToken ct)
         {
             byte[] pkg = { };
-            byte[] res = { };
-            
+            UInt32 len_before = 0;
+            UInt32 len_after = 0;
+            ct.Register(() => TimeoutWaitResponse());
+
             for (int i = 0; i < mResponseRetry && 0 == pkg.Length; ++i)
             {
                 try
                 {
                     //res = await _readCharacteristic.ReadAsync(ct);
                     ct.ThrowIfCancellationRequested();
-                    var len = mBuf.Length;
-                    pkg = mBuf.Extract();
-                    if(0==pkg.Length)
+                    LockLog("Try RespExtr");
+                    using (await semaphore.UseWaitAsync())
                     {
-                        tcs = new TaskCompletionSource<byte[]>();
-                        using (ct.Register(() =>
+                        LockLog("Lock RespExtr");
+                        pkg = mBuf.Extract();
+                        len_before = len_after = mBuf.Length;
+                        LockLog("UNLock RespExtr");
+                    }
+                    
+                    if (0==pkg.Length)
+                    {
+                        LockLog("Try RespCreate");
+                        using (await semaphore.UseWaitAsync())
                         {
-                            // this callback will be executed when token is cancelled
-                            tcs.TrySetCanceled();
-                        })) 
+                            LockLog("Lock RespCreate");
+                            tcs = new TaskCompletionSource<bool>();
+                            len_after = mBuf.Length;
+                            LockLog("UNLock RespCreate");
+                        }
 
-                        if (mBuf.Length == len)
-                            await tcs.Task;
-                        tcs = null;
+                        if (len_before == len_after)
+                        {
+                            LockLog("Start await tcs.Task.Status = "+ tcs.Task.Status.ToString());
+                            bool result = await tcs.Task;
+                            LockLog(" End await tcs.Task = " + result.ToString());
+                            if (!result)
+                                ct.ThrowIfCancellationRequested();
+                            //Task delay_task = Task.Delay(mExchangeTimeout, ct);
+                            //await Task.WhenAny(tcs.Task, delay_task);
+                            //bool result = tmp_tcs.Task.Result;
+                            
+                        }
+
+                        LockLog("Try RespClear");
+                        using (await semaphore.UseWaitAsync())
+                        { 
+                            LockLog("Lock RespClear");
+                            tcs = null;
+                            LockLog("UNLock RespClear");
+                        }
                     }
                     else
                     {
@@ -308,17 +381,21 @@ namespace SiamCross.Droid.Models
                 }
                 catch (OperationCanceledException ex)
                 {
+                    DebugLog.WriteLine("Response timeout {0}: {1}", ex.GetType().Name, ex.Message);
                     throw ex;
                 }
                 catch (Exception sendingEx)
                 {
                     DebugLog.WriteLine("try " + i.ToString() + " - Ошибка получения BLE : "
-                    + BitConverter.ToString(res)
+                    + BitConverter.ToString(pkg)
                     + " " + sendingEx.Message + " "
                     + sendingEx.GetType() + " "
                     + sendingEx.StackTrace + "\n");
                 }
-
+                finally
+                {
+                    tcs = null;
+                }
             }
             //if (0 == res.Length)
             //    ConnectFailed?.Invoke();
@@ -341,7 +418,7 @@ namespace SiamCross.Droid.Models
             }
             catch (OperationCanceledException ex)
             {
-                DebugLog.WriteLine("Eaxchange canceled by timeout {0}: {1}", ex.GetType().Name, ex.Message);
+                DebugLog.WriteLine("Exchange canceled by timeout {0}: {1}", ex.GetType().Name, ex.Message);
             }
             catch (AggregateException e)
             {

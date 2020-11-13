@@ -22,9 +22,14 @@ namespace SiamCross.Models.Tools
                 return mBuffLength;
             }
         }
-
         public UInt32 Length { get => DoGetLength(); }
 
+        public bool Append(byte[] src, int len)
+        {
+            lock (mLock)
+                DoAppend(src.AsSpan().Slice(0, len));
+            return true;
+        }
         public bool Append(byte[] src)
         {
             lock (mLock)
@@ -98,6 +103,10 @@ namespace SiamCross.Models.Tools
         }
         private void DoAppend(byte[] src)
         {
+            DoAppend(src.AsSpan());
+        }
+        private void DoAppend(Span<byte> src)
+        {
             UInt32 before = mBuffLength;
 
             int src_len = src.Length;
@@ -119,11 +128,14 @@ namespace SiamCross.Models.Tools
                 DebugLog.WriteLine($"Buffer overrun: add" +
                     $" {src_len.ToString()}  length is {mBuffLength.ToString()}");
             }
-            Array.Copy(src, 0, mBuff, mBuffLength, src.Length);
-            mBuffLength += (UInt32)src.Length;
+            //Array.Copy(src, 0, mBuff, mBuffLength, src.Length);
+            Span<byte> src_buf = src.Slice(0, src_len);
+            Span<byte> dst_buf = mBuff.AsSpan().Slice((int)mBuffLength, (int)mBuff.Length - (int)mBuffLength);
+            src_buf.CopyTo(dst_buf);
+            mBuffLength += (UInt32)src_len;
 
             DebugLog.WriteLine($"Appending " + src.Length.ToString() +" bytes "
-                 +$": [ {BitConverter.ToString(src)} ] "
+                 +$": [ {BitConverter.ToString(src.ToArray())} ] "
                  + $"BuffLength {before.ToString()} -> {mBuffLength.ToString()}");
         }
         private byte[] TryGetPackage()
