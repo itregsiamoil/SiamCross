@@ -9,8 +9,8 @@ namespace SiamCross.Models.Sensors.Ddin2
 {
     public class Ddin2Sensor : ISensor
     {
-        protected IConnection mConnection;
-        public IConnection Connection => mConnection;
+        protected IProtocolConnection mConnection;
+        public IProtocolConnection Connection => mConnection;
 
         private Ddin2Parser _parser;
         private Ddin2QuickReportBuiler _reportBuilder;
@@ -45,7 +45,7 @@ namespace SiamCross.Models.Sensors.Ddin2
 
         private Ddin2StatusAdapter _statusAdapter;
 
-        public Ddin2Sensor(IConnection bluetoothAdapter, SensorData sensorData)
+        public Ddin2Sensor(IProtocolConnection bluetoothAdapter, SensorData sensorData)
         {
             IsMeasurement = false;
             IsAlive = false;
@@ -115,15 +115,15 @@ namespace SiamCross.Models.Sensors.Ddin2
                     if (!IsMeasurement)
                     {
                         await QuickReport();
-                        await Task.Delay(1500);
+                        await Task.Delay(1000);
                     }
                 }
                 else
                 {
-                    SensorData.Status = Resource.NoConnection;
-
-                    await mConnection.Connect();
-                    await Task.Delay(4000);
+                    SensorData.Status = "starting BT...";
+                    bool connected = await mConnection.Connect();
+                    if (!connected)
+                        await Task.Delay(2000, cancellationToken);
                 }
             }
         }

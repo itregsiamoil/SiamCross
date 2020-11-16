@@ -11,7 +11,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
 {
     public class Ddin2MeasurementManager
     {
-        private IConnection _bluetoothAdapter;
+        private IProtocolConnection _bluetoothAdapter;
         private CommandGenerator _configGenerator;
         private Ddin2MeasurementStartParameters _measurementParameters;
         private Ddin2MeasurementReport _report;
@@ -22,7 +22,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
         private List<byte[]> _currentDynGraph;
         private List<byte[]> _currentAccelerationGraph;
 
-        public Ddin2MeasurementManager(IConnection bluetoothAdapter, SensorData sensorData,
+        public Ddin2MeasurementManager(IProtocolConnection bluetoothAdapter, SensorData sensorData,
              Ddin2MeasurementStartParameters measurementParameters)
         {
             _bluetoothAdapter = bluetoothAdapter;
@@ -60,20 +60,20 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
         {
             Console.WriteLine("SetRod: " + BitConverter.ToString(_configGenerator.SetRod(_measurementParameters.Rod)));
             await _bluetoothAdapter.SendData(_configGenerator.SetRod(_measurementParameters.Rod));
-            await Task.Delay(100);
+            //await Task.Delay(100);
             Console.WriteLine("SetDynPeriod: " + BitConverter.ToString(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod)));
             await _bluetoothAdapter.SendData(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod));
             await _bluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["DynPeriod"]);
-            await Task.Delay(100);
+            //await Task.Delay(100);
             Console.WriteLine("SetApertNumber: " + BitConverter.ToString(_configGenerator.SetApertNumber(_measurementParameters.ApertNumber)));
             await _bluetoothAdapter.SendData(_configGenerator.SetApertNumber(_measurementParameters.ApertNumber));
-            await Task.Delay(100);
+            //await Task.Delay(100);
             LogMessage("SetImtravel", _configGenerator.SetImtravel(_measurementParameters.Imtravel));
             await _bluetoothAdapter.SendData(_configGenerator.SetImtravel(_measurementParameters.Imtravel));
-            await Task.Delay(100);
+            //await Task.Delay(100);
             LogMessage("SetModelPump", _configGenerator.SetModelPump(_measurementParameters.ModelPump));
             await _bluetoothAdapter.SendData(_configGenerator.SetModelPump(_measurementParameters.ModelPump));
-            await Task.Delay(300);
+            //await Task.Delay(300);
         }
 
         private void LogMessage(string text, byte[] message)
@@ -86,7 +86,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
             bool isDone = false;
             while (!isDone)
             {
-                await Task.Delay(300);
+                await Task.Delay(1000);
                 LogMessage("ReadDeviceStatus", Ddin2Commands.FullCommandDictionary["ReadDeviceStatus"]);
                 await _bluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["ReadDeviceStatus"]);
 
@@ -104,10 +104,10 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
         {
             LogMessage("InitializeMeasurement", Ddin2Commands.FullCommandDictionary["InitializeMeasurement"]);
             //await _bluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["InitializeMeasurement"]);
-            await Task.Delay(100);
+            //await Task.Delay(100);
             LogMessage("StartMeasurement", Ddin2Commands.FullCommandDictionary["StartMeasurement"]);
             await _bluetoothAdapter.SendData(Ddin2Commands.FullCommandDictionary["StartMeasurement"]);
-            await Task.Delay(100);
+            //await Task.Delay(100);
         }
         
         public async Task ReadErrorCode()
@@ -134,7 +134,7 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
 
             await GetDgm4kB();
 
-            await Task.Delay(Constants.ShortDelay);
+            //await Task.Delay(Constants.ShortDelay);
 
             var dynRawBytes = new List<byte>();
             foreach (var bytes in _currentDynGraph)

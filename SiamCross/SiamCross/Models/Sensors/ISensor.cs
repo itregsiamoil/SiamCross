@@ -9,7 +9,7 @@ namespace SiamCross.Models
 {
     public interface ISensor : IDisposable
     {
-        IConnection Connection { get; }
+        IProtocolConnection Connection { get; }
         bool Activeted { get; set; }
         bool IsAlive { get; }
         bool IsMeasurement { get; }

@@ -17,7 +17,7 @@ namespace SiamCross.Models.Adapters
 {
     public class BtLeInterface: IPhyInterface
     {
-        public IConnection MakeConnection(ScannedDeviceInfo deviceInfo)
+        public IProtocolConnection MakeConnection(ScannedDeviceInfo deviceInfo)
         {
             var t_dvc_inf = new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo);
             var t_phy_ifc = new TypedParameter(typeof(IPhyInterface), this);

@@ -122,6 +122,20 @@ namespace SiamCross.Droid.Models.BluetoothAdapters
             }
         }
 
+        public void DoActionDataReceived(byte[] data)
+        {
+            DataReceived?.Invoke(data);
+        }
+        public void DoActionConnectSucceed()
+        {
+            ConnectSucceed?.Invoke();
+        }
+        public void DoActionConnectFailed()
+        {
+            ConnectFailed?.Invoke();
+        }
+
+
         public event Action<byte[]> DataReceived;
         public event Action ConnectSucceed;
         public event Action ConnectFailed;

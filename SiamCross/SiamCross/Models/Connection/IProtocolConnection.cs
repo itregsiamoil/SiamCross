@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models
 {
-    public interface IConnection
+    public interface IProtocolConnection
     {
         IPhyInterface PhyInterface { get; }
 
@@ -16,5 +16,11 @@ namespace SiamCross.Models
         event Action ConnectFailed;
 
         Task<byte[]> Exchange(byte[] req);
+
+        void DoActionDataReceived(byte[] data);
+        void DoActionConnectSucceed();
+        void DoActionConnectFailed();
     }
+
+
 }

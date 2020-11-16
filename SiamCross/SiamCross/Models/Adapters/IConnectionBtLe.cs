@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models.Adapters
 {
-    public interface IConnectionBtLe : IConnection
+    public interface IConnectionBtLe : IProtocolConnection
     {
     }
 }

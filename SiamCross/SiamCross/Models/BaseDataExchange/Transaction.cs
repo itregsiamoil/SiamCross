@@ -50,25 +50,25 @@ namespace SiamCross.Models.Tools
             DvcError = 20,
         }
 
-        protected IConnection mTransport;
+        protected IProtocolConnection mTransport;
         protected Timeouts mTtimeout;
 
-        public Transaction(IConnection transport, Timeouts to)
+        public Transaction(IProtocolConnection transport, Timeouts to)
         {
             mTransport = transport;
             mTtimeout = to;
         }
 
 
-        public Transaction(IConnection transport)
+        public Transaction(IProtocolConnection transport)
         {
             mTransport = transport;
             mTtimeout = new Timeouts(   new IORestriction(3000,byte.MaxValue)
                                       , new IORestriction(2000, 3));
         }
 
-        private Memory<byte> mReq;
-        private Memory<byte> mRes;
+        //private Memory<byte> mReq;
+        //private Memory<byte> mRes;
 
     }
 }

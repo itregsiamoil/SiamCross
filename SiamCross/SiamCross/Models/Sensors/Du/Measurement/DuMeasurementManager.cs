@@ -11,7 +11,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
 {
     public class DuMeasurementManager
     {
-        private IConnection _bluetoothAdapter;
+        private IProtocolConnection _bluetoothAdapter;
         private DuMeasurementStartParameters _measurementParameters;
         private CommandGenerator _commandGenerator;
 
@@ -21,7 +21,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
 
         private List<byte[]> _currentEchogram;
 
-        public DuMeasurementManager(IConnection bluetoothAdapter, SensorData sensorData,
+        public DuMeasurementManager(IProtocolConnection bluetoothAdapter, SensorData sensorData,
             DuMeasurementStartParameters measurementParameters)
         {
             _bluetoothAdapter = bluetoothAdapter;

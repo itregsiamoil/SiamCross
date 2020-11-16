@@ -10,8 +10,8 @@ namespace SiamCross.Models.Sensors.Umt
 {
     public class UmtSensor: ISensor
     {
-        protected IConnection mConnection;
-        public IConnection Connection => mConnection;
+        protected IProtocolConnection mConnection;
+        public IProtocolConnection Connection => mConnection;
 
         private CancellationTokenSource _cancellToken;
 
@@ -52,7 +52,7 @@ namespace SiamCross.Models.Sensors.Umt
         private FirmWaveQualifier _firmwareQualifier;
         private Task _liveTask;
 
-        public UmtSensor(IConnection adapter,
+        public UmtSensor(IProtocolConnection adapter,
                         SensorData sensorData)
         {
             IsMeasurement = false;

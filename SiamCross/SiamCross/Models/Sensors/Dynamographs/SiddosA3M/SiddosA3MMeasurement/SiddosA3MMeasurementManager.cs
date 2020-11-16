@@ -11,7 +11,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
 {
     public class SiddosA3MMeasurementManager
     {
-        private IConnection _bluetoothAdapter;
+        private IProtocolConnection _bluetoothAdapter;
         private SiddosA3MConfigCommandsGenerator _configGenerator;
         private SiddosA3MMeasurementStartParameters _measurementParameters;
         private SiddosA3MMeasurementReport _report;
@@ -23,7 +23,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
         private List<byte[]> _currentDynGraph;
         private List<byte[]> _currentAccelerationGraph;
 
-        public SiddosA3MMeasurementManager(IConnection bluetoothAdapter, SensorData sensorData,
+        public SiddosA3MMeasurementManager(IProtocolConnection bluetoothAdapter, SensorData sensorData,
                 SiddosA3MMeasurementStartParameters measurementParameters)
         {
             _bluetoothAdapter = bluetoothAdapter;

@@ -11,8 +11,8 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 {
     public class Ddim2Sensor : ISensor
     {
-        protected IConnection mConnection;
-        public IConnection Connection => mConnection;
+        protected IProtocolConnection mConnection;
+        public IProtocolConnection Connection => mConnection;
 
         private CancellationTokenSource _cancellToken;
         public bool IsAlive { get; private set; }
@@ -42,7 +42,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         private FirmWaveQualifier _firmwareQualifier;
 
         private Task _liveTask;
-        public Ddim2Sensor(IConnection adapter, SensorData sensorData)
+        public Ddim2Sensor(IProtocolConnection adapter, SensorData sensorData)
         {
             IsMeasurement = false;
             IsAlive = false;

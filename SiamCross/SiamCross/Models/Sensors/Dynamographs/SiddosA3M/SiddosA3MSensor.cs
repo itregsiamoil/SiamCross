@@ -26,7 +26,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
         //private FirmWaveQualifier _firmwareQualifier;
 
 
-        public SiddosA3MSensor(IConnection conn, SensorData sensorData)
+        public SiddosA3MSensor(IProtocolConnection conn, SensorData sensorData)
             : base(conn, sensorData)
         {
 

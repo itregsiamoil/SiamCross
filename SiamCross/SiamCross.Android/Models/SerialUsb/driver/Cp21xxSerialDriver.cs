@@ -175,6 +175,9 @@ namespace Hoho.Android.UsbSerial.Driver
                         catch (IOException e)
                         {
                             // Ignore IOExceptions during close()
+                            System.Diagnostics.Debug.WriteLine("UNKNOWN exception in "
+                            + System.Reflection.MethodBase.GetCurrentMethod().Name
+                            + " : " + e.Message);
                         }
                     }
                 }

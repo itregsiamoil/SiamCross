@@ -128,6 +128,9 @@ namespace SiamCross.Droid.Models
                 catch (Exception ex)
                 {
                     premissionGranted = false;
+                    System.Diagnostics.Debug.WriteLine("UNKNOWN exception in "
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + " : " + ex.Message);
                 }
             }
             else
@@ -152,7 +155,10 @@ namespace SiamCross.Droid.Models
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Write data error!");
+                //System.Diagnostics.Debug.WriteLine("Write data error!");
+                System.Diagnostics.Debug.WriteLine("UNKNOWN exception in "
+                + System.Reflection.MethodBase.GetCurrentMethod().Name
+                + " : " + ex.Message);
             }
         }
 
@@ -167,7 +173,11 @@ namespace SiamCross.Droid.Models
                         _serialIoManager.Close();
                     }
                     catch (InvalidOperationException e)
-                    { }
+                    {
+                        System.Diagnostics.Debug.WriteLine("UNKNOWN exception in "
+                        + System.Reflection.MethodBase.GetCurrentMethod().Name
+                        + " : " + e.Message);
+                    }
                 }
                 
                 _serialIoManager.Dispose();

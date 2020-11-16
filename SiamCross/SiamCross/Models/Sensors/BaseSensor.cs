@@ -13,7 +13,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
         #endregion
         #region Constructors & Destructors
         TaskScheduler _uiScheduler;
-        protected BaseSensor(IConnection conn, SensorData sensorData)
+        protected BaseSensor(IProtocolConnection conn, SensorData sensorData)
         {
             mConnection = conn;
             IsAlive = false;
@@ -31,11 +31,11 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
         #endregion
         #region basic implementation
         #region Variables
-        private IConnection mConnection;
+        private IProtocolConnection mConnection;
         #endregion
 
 
-        public IConnection Connection => mConnection;
+        public IProtocolConnection Connection => mConnection;
         public bool IsAlive { get; protected set; }
         public bool IsMeasurement { get; protected set; }
         public SensorData SensorData { get; }

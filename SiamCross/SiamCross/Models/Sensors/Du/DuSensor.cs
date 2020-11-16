@@ -13,8 +13,8 @@ namespace SiamCross.Models.Sensors.Du
 {
     public class DuSensor : ISensor
     {
-        protected IConnection mConnection;
-        public IConnection Connection => mConnection;
+        protected IProtocolConnection mConnection;
+        public IProtocolConnection Connection => mConnection;
 
         private CancellationTokenSource _cancellToken;
         
@@ -45,7 +45,7 @@ namespace SiamCross.Models.Sensors.Du
         private FirmWaveQualifier _firmwareQualifier;
         private Task _liveTask;
 
-        public DuSensor(IConnection adapter, 
+        public DuSensor(IProtocolConnection adapter, 
                         SensorData sensorData)
         {
             IsMeasurement = false;

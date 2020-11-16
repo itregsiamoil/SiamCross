@@ -32,12 +32,14 @@ using SiamCross.Services.Logging;
 using Android.Bluetooth;
 using Debug = System.Diagnostics.Debug;
 using OperationCanceledException = System.OperationCanceledException;
+using System.IO;
+using Java.IO;
 
 
 //[assembly: Dependency(typeof(BluetoothLeAdapterAndroid))]
 namespace SiamCross.Droid.Models
 {
-    public class BluetoothLeAdapterAndroid : IConnectionBtLe
+    public class BaseBluetoothLeAdapterAndroid : IConnection
     {
         readonly IPhyInterface mInterface;
         public IPhyInterface PhyInterface 
@@ -58,6 +60,8 @@ namespace SiamCross.Droid.Models
             }
         }
 
+        protected Stream MRxStream { get => mRxStream; set => mRxStream = value; }
+
         private IDevice _device;
         private Guid _deviceGuid;
         private IService _targetService;
@@ -73,7 +77,7 @@ namespace SiamCross.Droid.Models
 
         private bool _isFirstConnectionTry = true;
 
-        public BluetoothLeAdapterAndroid(IPhyInterface ifc)
+        public BaseBluetoothLeAdapterAndroid(IPhyInterface ifc)
         {
             if (null == ifc)
                 mInterface = BtLeInterface.Factory.GetCurent();
@@ -82,7 +86,7 @@ namespace SiamCross.Droid.Models
         }
 
 
-        public BluetoothLeAdapterAndroid(ScannedDeviceInfo deviceInfo, IPhyInterface ifc = null)
+        public BaseBluetoothLeAdapterAndroid(ScannedDeviceInfo deviceInfo, IPhyInterface ifc = null)
             : this(ifc)
         {
             SetDeviceInfo(deviceInfo);
@@ -232,7 +236,7 @@ namespace SiamCross.Droid.Models
                     //+ String.Format("   Thread Pool: {0} ", thread.IsThreadPoolThread)
                     );
             }
-            DebugLog.WriteLine(ret);
+            //DebugLog.WriteLine(ret);
         }
         //private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
         //private Object lockObj = new Object();
@@ -258,7 +262,12 @@ namespace SiamCross.Droid.Models
         private TaskCompletionSource<bool> tcs;// = new TaskCompletionSource<byte[]>();
         DataBuffer mBuf = new DataBuffer();
 
-        private async void DoByteProcess(byte[] inputBytes)
+        //Memory<byte> mRxBuf = new byte[512];
+        private Stream mRxStream = new MemoryStream(512);
+
+
+
+        private async void DoByteProcessOld(byte[] inputBytes)
         {
             //Debug.WriteLine("Received " + inputBytes.Length.ToString() +
             //    ": [" + BitConverter.ToString(inputBytes) + "]\n");
@@ -520,10 +529,12 @@ namespace SiamCross.Droid.Models
                             $"Повторная попытка отправки номер {i}/3 прошла успешно!" + "\n");
                         return;
                     }
-                    catch (Exception resendingEx)
+                    catch (Exception e)
                     {
-                        System.Diagnostics.Debug.WriteLine(
-                            $"Ошибка повторной попытки отправки номер {i}/3 сообщения BLE: " + "\n");
+                        Debug.WriteLine("UNKNOWN exception in "
+                        + $"Ошибка повторной попытки отправки номер {i}/3 сообщения BLE: " + "\n"
+                        + System.Reflection.MethodBase.GetCurrentMethod().Name
+                        + " : " + e.Message );
                     }
                 }
                 // Возможно нужно сделать дисконект
@@ -572,6 +583,9 @@ namespace SiamCross.Droid.Models
                 }
                 catch (Exception e)
                 {
+                    Debug.WriteLine("UNKNOWN exception in "
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + " : " + e.Message);
                 }
             };
 
@@ -583,5 +597,132 @@ namespace SiamCross.Droid.Models
         public event Action<byte[]> DataReceived;
         public event Action ConnectSucceed;
         public event Action ConnectFailed;///////////////////////////////!!!!!!!!!!!!!!!!!!!!!!!!
+        public async void ClearRx()
+        {
+            using (await semaphore.UseWaitAsync())
+            {
+                mRxStream.Flush();
+                mRxStream.Position = 0;
+                mRxStream.SetLength(0);
+            }
+        }
+        public void ClearTx()
+        {
+        }
+        private async void DoByteProcess(byte[] inputBytes)
+        {
+            TaskCompletionSource<bool> ref_tsc = null;
+            LockLog("Add - Try");
+            using (await semaphore.UseWaitAsync()) //lock (lockObj)
+            {
+                LockLog("Add - Lock");
+                await mRxStream.WriteAsync(inputBytes);
+                ref_tsc = tcs;
+            }
+            LockLog("Add - SetResult");
+            ref_tsc?.SetResult(true);
+        }
+
+        private async Task<int> DoReadAsync(byte[] buffer, int offset, int count, CancellationToken ct)
+        {
+            int readed = 0;
+            ct.Register(() => TimeoutWaitResponse());
+            while (0 == readed)
+            {
+                ct.ThrowIfCancellationRequested();
+                LockLog("Read - Try Create");
+                using (await semaphore.UseWaitAsync())
+                {
+                    LockLog("Read - Lock Create");
+                    mRxStream.Position = 0;
+                    readed = await mRxStream.ReadAsync(buffer, offset, count, ct);
+                    mRxStream.SetLength(0);
+
+                    if (0 == readed)
+                        tcs = new TaskCompletionSource<bool>();
+                }
+
+                if (null != tcs)
+                {
+                    LockLog("Read - Begin Wait TSC");
+                    bool result = await tcs.Task;
+                    LockLog("Read - End Wait TSC");
+                    if (!result)
+                        ct.ThrowIfCancellationRequested();
+                    LockLog("Read - Begin Clear");
+                    using (await semaphore.UseWaitAsync())
+                        tcs = null;
+                    LockLog("Read - End Clear");
+                }
+
+            }
+            return readed;
+        }
+
+        public async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken ct)
+        {
+            int readed = 0;
+            try
+            {
+                readed  = await DoReadAsync(buffer, offset, count, ct);
+            }
+            catch (OperationCanceledException ex)
+            {
+                DebugLog.WriteLine("ReadAsync canceled by timeout {0}: {1}"
+                    , ex.GetType().Name, ex.Message);
+                throw ex;
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("UNKNOWN exception in "
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + " : " + e.Message);
+            }
+            finally
+            {
+                using (await semaphore.UseWaitAsync())
+                {
+                    tcs = null;
+                    ClearRx();
+                }
+            }
+            return readed;
+        }
+        public async Task<int> WriteAsync(byte[] buffer, int offset, int count, CancellationToken ct)
+        {
+            bool sent = await _writeCharacteristic
+                .WriteAsync(buffer.AsSpan().Slice(offset, count).ToArray(), ct);
+            if(!sent)
+                return 0;
+            return count;
+        }
+    }
+
+    public class BluetoothLeAdapterAndroid : SiamProtocolConnection, IConnectionBtLe
+    {
+        public BluetoothLeAdapterAndroid(ScannedDeviceInfo deviceInfo, IPhyInterface ifc = null)
+            : base(new BaseBluetoothLeAdapterAndroid(deviceInfo, ifc))
+        {
+        }
+        public BluetoothLeAdapterAndroid(ScannedDeviceInfo deviceInfo)
+         : base(new BaseBluetoothLeAdapterAndroid(deviceInfo))
+        {
+        }
+        public override void DoActionDataReceived(byte[] data)
+        {
+            DataReceived?.Invoke(data);
+        }
+        public override void DoActionConnectSucceed()
+        {
+            ConnectSucceed?.Invoke();
+        }
+        public override void DoActionConnectFailed()
+        {
+            ConnectFailed?.Invoke();
+        }
+
+        public override event Action<byte[]> DataReceived;
+        public override event Action ConnectSucceed;
+        public override event Action ConnectFailed;
     }
 }

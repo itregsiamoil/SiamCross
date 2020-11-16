@@ -180,7 +180,9 @@ namespace SiamCross.Models.USB
             catch (Exception e)
             {
                 Console.WriteLine("UsbDataRecieve parce error\n");
-                Console.WriteLine($"Message = {message}\n");
+                System.Diagnostics.Debug.WriteLine("UNKNOWN exception in "
+                + System.Reflection.MethodBase.GetCurrentMethod().Name
+                + " : " + e.Message);
             }
             
         }
