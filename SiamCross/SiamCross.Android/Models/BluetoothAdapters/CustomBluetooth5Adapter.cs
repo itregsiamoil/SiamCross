@@ -17,7 +17,8 @@ namespace SiamCross.Droid.Models.BluetoothAdapters
         {
             get => mInterface;
         }
-
+        protected int mState = 0;
+        public int State => mState;
         public string Address { get; private set; }
         private bool _isConnected;
         private USBService _usbService;

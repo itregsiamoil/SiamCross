@@ -10,17 +10,26 @@ namespace SiamCross.Models
     abstract public class SiamProtocolConnection : IProtocolConnection
     {
         protected IConnection mBaseConn;
+        protected int mState=0;
         public SiamProtocolConnection(IConnection base_conn)
         {
             mBaseConn = base_conn;
         }
         public IPhyInterface PhyInterface => mBaseConn.PhyInterface;
-        public virtual Task<bool> Connect()
+        public int State => mState;
+        public virtual async Task<bool> Connect()
         {
-            return mBaseConn.Connect();
+            mState = 1;
+            bool result = await mBaseConn.Connect();
+            if(result)
+                mState = 2;
+            else
+                mState = 0;
+            return result;
         }
         public virtual Task Disconnect()
         {
+            mState = 0;
             return mBaseConn.Disconnect();
         }
 
@@ -172,8 +181,9 @@ namespace SiamCross.Models
         }
         public async Task<byte[]> Exchange(byte[] req)
         {
-            Task<byte[]> task = null;
             byte[] ret = { };
+            if (mState != 2)
+                return ret;
             try
             {
                 if (null != mExecTcs)
@@ -182,8 +192,7 @@ namespace SiamCross.Models
                     bool result = await mExecTcs.Task;
                 }
                 mExecTcs = new TaskCompletionSource<bool>();
-                task = ExchangeData(req);
-                ret = await task;
+                ret = await ExchangeData(req);
             }
             catch (Exception sendingEx)
             {
@@ -195,8 +204,6 @@ namespace SiamCross.Models
             finally
             {
                 mExecTcs?.TrySetResult(true);
-                task?.Dispose();
-                task = null;
                 mExecTcs = null;
             }
             return ret;
@@ -210,7 +217,6 @@ namespace SiamCross.Models
                 DoActionDataReceived(ret);
                 //DataReceived?.Invoke(ret);
             }
-
         }
 
         public abstract event Action<byte[]> DataReceived;

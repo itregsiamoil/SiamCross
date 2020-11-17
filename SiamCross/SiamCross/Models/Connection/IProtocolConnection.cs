@@ -6,6 +6,7 @@ namespace SiamCross.Models
 {
     public interface IProtocolConnection
     {
+        int State { get; }
         IPhyInterface PhyInterface { get; }
 
         Task<bool> Connect();

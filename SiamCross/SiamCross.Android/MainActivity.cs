@@ -33,6 +33,7 @@ namespace SiamCross.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
+            Xamarin.Forms.Forms.SetFlags("Expander_Experimental");
             bool all_granted = false;
             while (!all_granted)
             {
