@@ -16,6 +16,7 @@ using Hoho.Android.UsbSerial.Extensions;
 using Hoho.Android.UsbSerial.Driver;
 using SiamCross.Models.USB;
 using System.Threading.Tasks;
+using Xamarin.Forms.Platform.Android;
 
 [assembly: UsesFeature("android.hardware.usb.host")]
 [assembly: UsesFeature("android.hardware.usb.accessory")]
@@ -25,12 +26,13 @@ namespace SiamCross.Droid
     [Activity(Label = "SIAM SERVICE 2.0", Icon = "@mipmap/main_icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     [IntentFilter(new[] { UsbManager.ActionUsbDeviceAttached })]
     [MetaData(UsbManager.ActionUsbDeviceAttached, Resource = "@xml/device_filter")]
-    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
+    public class MainActivity : FormsAppCompatActivity
     {
         protected override async void OnCreate(Bundle savedInstanceState)
         {
-            TabLayoutResource = Resource.Layout.Tabbar;
-            ToolbarResource = Resource.Layout.Toolbar;
+            // set the layout resources first
+            FormsAppCompatActivity.ToolbarResource = Resource.Layout.Toolbar;
+            FormsAppCompatActivity.TabLayoutResource = Resource.Layout.Tabbar;
 
             base.OnCreate(savedInstanceState);
             Xamarin.Forms.Forms.SetFlags("Expander_Experimental");

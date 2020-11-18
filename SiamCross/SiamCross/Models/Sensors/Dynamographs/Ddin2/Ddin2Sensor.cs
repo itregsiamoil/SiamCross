@@ -24,7 +24,7 @@ namespace SiamCross.Models.Sensors.Ddin2
         public SensorData SensorData { get; }
         
         private bool _activated = false;
-        public bool Activeted
+        public bool Activate
         {
             get => _activated;
             set

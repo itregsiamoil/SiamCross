@@ -168,6 +168,7 @@
     <Compile Include="Models\BluetoothAdapters\BluetoothLeAdapterAndroid.cs" />
     <Compile Include="Models\BluetoothAdapters\CustomBluetooth5Adapter.cs" />
     <Compile Include="Models\BluetoothScannerAndroid.cs" />
+    <Compile Include="Models\VersionAndBuild_Android.cs" />
     <Compile Include="Models\DatabaseCreatorAndroid.cs" />
     <Compile Include="Models\DefaultAdapterAndroid.cs" />
     <Compile Include="Models\EmailSenderAndroid.cs" />
@@ -221,7 +222,7 @@
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Tabbar.axml" />
     <AndroidResource Include="Resources\layout\Toolbar.axml" />
-    <AndroidResource Include="Resources\values\styles.xml" />
+    <AndroidResource Include="Resources\values\style.xml" />
     <AndroidResource Include="Resources\values\colors.xml" />
     <AndroidResource Include="Resources\mipmap-anydpi-v26\icon.xml" />
     <AndroidResource Include="Resources\mipmap-anydpi-v26\icon_round.xml" />
@@ -375,6 +376,9 @@
     <AndroidResource Include="Resources\xml\device_filter.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
     </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values-v21\style.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.MenuItems.AboutPanelPage"
              xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
+             x:Name="AboutPanel"
              Title="{local:Translate AboutTitle}">
     <ContentPage.Content>
         <StackLayout>
@@ -23,12 +24,24 @@
                             <Label Text="{local:Translate TextAboutCompany}"/>
                         </StackLayout>
                         </ViewCell>
+                        <TextCell Text="{Binding Version}"
+                                  Detail="{local:Translate AppVersion}"  />
+                        <TextCell Text="{Binding Build}"
+                                  Detail="Build number"  />
+                        <!--
+                        <TextCell x:Name="lblVersionNumber"
+                                  Detail="{local:Translate AppVersion}"  />
+                        <TextCell x:Name="lblBuildNumber"
+                                  Detail="Build number"  />
                         <ViewCell>
                             <StackLayout Orientation="Horizontal">
                                 <Label Text="{local:Translate AppVersion} "/>
-                                <Label Text="1.4.0"/>
+                                <Label Text="{Binding Version}" FontAttributes="Bold"/>
+                                <Label Text="&#10; build: " />
+                                <Label Text="{Binding Build}"/>
                             </StackLayout>
                         </ViewCell>
+                        -->
                     </TableSection>
                 </TableRoot>
             </TableView>

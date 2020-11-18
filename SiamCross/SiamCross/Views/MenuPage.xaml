@@ -3,18 +3,27 @@
          xmlns="http://xamarin.com/schemas/2014/forms" 
          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
          xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
+         xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
          x:Class="SiamCross.Views.MenuPage">
 
     <ContentPage.Content>
-        <StackLayout BackgroundColor="White" 
+        <StackLayout Margin="5"
                      rainbows:DebugRainbow.IsDebug="False"
                      >
             <!--Padding ="10 , 30 , 10, 10"-->
             <Label Text="SIAM SERVICE 2.0" 
-                   FontSize="Large"
-                   
-                   TextColor="CornflowerBlue" 
-                   Margin="5"/>
+                   FontSize="Title"
+                   FontAttributes ="Bold"
+                   TextColor="{StaticResource colorPrimaryDark}"/>
+            <Label TextColor="{StaticResource colorPrimaryDark}">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="{local:Translate AppVersion}"  />
+                        <Span Text=" "  />
+                        <Span Text="{Binding Version}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
             <ListView ItemsSource="{Binding MenuItems}"
                       x:Name="menuListView"
                       ItemTapped="menuListView_ItemTapped"

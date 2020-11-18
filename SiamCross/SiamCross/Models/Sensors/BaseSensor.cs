@@ -87,7 +87,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
                 ClearStatus();
             }
         }
-        public bool Activeted
+        public bool Activate
         {
             get => _activated;
             set

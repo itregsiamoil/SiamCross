@@ -12,6 +12,7 @@ using Autofac;
 using NLog;
 using SiamCross.Views.MenuItems.SearchPanel;
 using SiamCross.Views.MenuItems.HandbookPanel;
+using SiamCross.Models.Tools;
 
 namespace SiamCross.ViewModels
 {
@@ -159,6 +160,14 @@ namespace SiamCross.ViewModels
             {
                 App.NavigationPage.Navigation.PushAsync(new AboutPanelPage());
                 App.MenuIsPresented = false;
+            }
+        }
+
+        public string Version
+        {
+            get
+            {
+                return DependencyService.Get<IAppVersionAndBuild>().GetVersionNumber();
             }
         }
     }

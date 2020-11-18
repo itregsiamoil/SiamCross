@@ -78,7 +78,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
 
         private void ReceiveHandler(string commandName, string dataValue)
         {
-            if (!Activeted)
+            if (!Activate)
             {
                 ClearStatus();
                 return;

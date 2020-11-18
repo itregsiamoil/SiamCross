@@ -19,7 +19,7 @@ namespace SiamCross.Models.Sensors.Du
         private CancellationTokenSource _cancellToken;
         
         private bool _activated = false;
-        public bool Activeted
+        public bool Activate
         {
             get => _activated;
             set

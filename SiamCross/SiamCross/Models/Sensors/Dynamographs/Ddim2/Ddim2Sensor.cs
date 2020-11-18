@@ -18,7 +18,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         public bool IsAlive { get; private set; }
 
         private bool _activated=false;
-        public bool Activeted
+        public bool Activate
         {
             get => _activated;
             set

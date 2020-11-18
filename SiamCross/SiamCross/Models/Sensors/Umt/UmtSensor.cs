@@ -17,7 +17,7 @@ namespace SiamCross.Models.Sensors.Umt
 
         private bool _isAlive;
         private bool _activated = false;
-        public bool Activeted
+        public bool Activate
         {
             get => _activated;
             set
