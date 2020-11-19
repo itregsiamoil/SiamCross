@@ -2,6 +2,7 @@
 using SiamCross.AppObjects;
 using SiamCross.Models;
 using SiamCross.Models.Adapters;
+using SiamCross.Models.Adapters.PhyInterface;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Ddin2;
 using SiamCross.Models.Sensors.Du;
@@ -18,20 +19,48 @@ namespace SiamCross.Services
 
         public static ISensor CreateSensor(ScannedDeviceInfo deviceInfo)
         {
+            IPhyInterface phy_interface = null;
+
+            switch (deviceInfo.BluetoothType)
+            {
+                default: break;
+                case BluetoothType.Le:
+                    phy_interface = BtLeInterface.Factory.GetCurent(); break;
+                case BluetoothType.Classic:
+                    phy_interface = Bt2Interface.Factory.GetCurent(); break;
+            }
+            if (null == phy_interface)
+                return null;
+            var connection = phy_interface.MakeConnection(deviceInfo);
+            if (null == connection)
+                return null;
+
+
+
             lock (_locker)
             {
                 if (deviceInfo.Name.Contains("DDIN"))
                 {
+                    var sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
+                    var sensor = new Ddin2Sensor(connection, sens_data);
+                    sensor.ScannedDeviceInfo = deviceInfo;
+                    return sensor;
+                    /*
                     var ddin2 = new Ddin2Sensor(
-                        AppContainer.Container.Resolve<IBluetoothClassicAdapter>
+                        AppContainer.Container.Resolve<IConnectionBt2>
                         (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                         new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
                     ddin2.ScannedDeviceInfo = deviceInfo;
-
                     return ddin2;
+                    */
                 }
                 else if (deviceInfo.Name.Contains("DDIM"))
                 {
+                    var sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
+                    var sensor = new Ddim2Sensor(connection, sens_data);
+                    sensor.ScannedDeviceInfo = deviceInfo;
+                    return sensor;
+                    /*
                     switch (deviceInfo.BluetoothType)
                     {
                         case BluetoothType.Le:
@@ -46,7 +75,7 @@ namespace SiamCross.Services
                         case BluetoothType.Classic:
                         {
                             var sensor = new Ddim2Sensor(
-                                AppContainer.Container.Resolve<IBluetoothClassicAdapter>
+                                AppContainer.Container.Resolve<IConnectionBt2>
                                     (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                                 new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
                             sensor.ScannedDeviceInfo = deviceInfo;
@@ -62,21 +91,14 @@ namespace SiamCross.Services
                             return sensor;
                         }
                     }
+                    */
                 }
                 else if (deviceInfo.Name.Contains("SIDDOSA3M"))
                 {
-                    switch (deviceInfo.BluetoothType)
-                    {
-                        case BluetoothType.Le:
-                        {
-                            var sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
-                            var phy_interface = BtLeInterface.Factory.GetCurent();
-                            var connection = phy_interface.MakeConnection(deviceInfo);
-                            var sensor = new SiddosA3MSensor(connection, sens_data);
-                            sensor.ScannedDeviceInfo = deviceInfo;
-                            return sensor;
-                        }
-                    }
+                    var sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
+                    var sensor = new SiddosA3MSensor(connection, sens_data);
+                    sensor.ScannedDeviceInfo = deviceInfo;
+                    return sensor;
                 }
                 else if (deviceInfo.Name.Contains("DU"))
                 {
@@ -94,7 +116,7 @@ namespace SiamCross.Services
                         case BluetoothType.Classic:
                         {
                             var sensor = new DuSensor(
-                                AppContainer.Container.Resolve<IBluetoothClassicAdapter>
+                                AppContainer.Container.Resolve<IConnectionBt2>
                                     (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                                 new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, ""));
                             sensor.ScannedDeviceInfo = deviceInfo;
@@ -115,7 +137,7 @@ namespace SiamCross.Services
                             return leBtSensor;
                         case BluetoothType.Classic:
                             var classicBtSensor = new UmtSensor(
-                           AppContainer.Container.Resolve<IBluetoothClassicAdapter>
+                           AppContainer.Container.Resolve<IConnectionBt2>
                            (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
                            new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.PressureGauge, ""));
                             classicBtSensor.ScannedDeviceInfo = deviceInfo;

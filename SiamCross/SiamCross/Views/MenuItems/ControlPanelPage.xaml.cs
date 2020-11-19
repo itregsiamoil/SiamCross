@@ -46,14 +46,15 @@ namespace SiamCross.Views.MenuItems
         {
             if (e.Item != null)
             {
-                if (e.Item is SensorData sensorData)
+                if (e.Item is ISensor dvc)
                 {
-                    var sensor = SensorService.Instance.Sensors.SingleOrDefault(
-                               s => s.SensorData.Id == sensorData.Id);
-                    if (sensor != null)
-                    {
-                        sensor.Activeted = !sensor.Activeted;
-                    }
+                    dvc.Activate = !dvc.Activate;
+                    //var sensor = SensorService.Instance.Sensors.SingleOrDefault(
+                    //           s => s.SensorData.Id == dvc.SensorData.Id);
+                    //if (sensor != null)
+                    //{
+                    //    sensor.Activeted = !sensor.Activeted;
+                    //}
                 }
             }
         }

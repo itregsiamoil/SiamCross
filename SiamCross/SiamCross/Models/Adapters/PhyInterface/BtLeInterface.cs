@@ -12,11 +12,14 @@ using SiamCross.Droid.Models;
 using Autofac;
 using SiamCross.AppObjects;
 using SiamCross.Models.Scanners;
+using System.ComponentModel;
 
 namespace SiamCross.Models.Adapters
 {
-    public class BtLeInterface: IPhyInterface
+    public class BtLeInterface: IPhyInterface, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public string Name { get => "BT4LE"; }
         public IProtocolConnection MakeConnection(ScannedDeviceInfo deviceInfo)
         {
             var t_dvc_inf = new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo);

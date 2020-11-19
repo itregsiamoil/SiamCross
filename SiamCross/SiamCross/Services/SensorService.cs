@@ -51,7 +51,7 @@ namespace SiamCross.Services
 
         public IEnumerable<ISensor> Sensors => _sensors;
 
-        public event Action<SensorData> SensorAdded;
+        public event Action<ISensor> SensorAdded;
 
         public void Initinalize()
         {
@@ -74,7 +74,7 @@ namespace SiamCross.Services
                             {
                                 _sensors.Add(addebleSensor);
 
-                                SensorAdded?.Invoke(addebleSensor.SensorData);
+                                SensorAdded?.Invoke(addebleSensor);
                             }
 
                             break;
@@ -96,7 +96,7 @@ namespace SiamCross.Services
                                 {
                                     _sensors.Add(addebleSensor);
 
-                                    SensorAdded?.Invoke(addebleSensor.SensorData);
+                                    SensorAdded?.Invoke(addebleSensor);
                                 }
 
                                 break;
@@ -128,7 +128,7 @@ namespace SiamCross.Services
 
                 _sensors.Add(addebleSensor);
 
-                SensorAdded?.Invoke(addebleSensor.SensorData);
+                SensorAdded?.Invoke(addebleSensor);
 
                 MessagingCenter.Send(this, "Refresh saved sensors",
                     _sensors.Select(s => s.ScannedDeviceInfo));

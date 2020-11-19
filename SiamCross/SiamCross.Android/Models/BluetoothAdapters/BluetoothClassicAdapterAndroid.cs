@@ -22,6 +22,7 @@ using SiamCross.Models.Scanners;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Tools;
 using OperationCanceledException = System.OperationCanceledException;
+using SiamCross.Models.Adapters.PhyInterface;
 
 namespace SiamCross.Droid.Models
 {
@@ -47,14 +48,39 @@ namespace SiamCross.Droid.Models
 
         private const string _uuid = "00001101-0000-1000-8000-00805f9b34fb";
 
-        public BaseBluetoothClassicAdapterAndroid(ScannedDeviceInfo deviceInfo)
+        private BluetoothAdapter _bluetoothAdapter
+        {
+            get
+            {
+                if (null == mInterface)
+                    return null;
+                var bt2_ifc = mInterface as Bt2Interface;
+                //if (null == ble_ifc)
+                //    return null;
+                return bt2_ifc?.mAdapter;
+            }
+        }
+
+        public BaseBluetoothClassicAdapterAndroid(IPhyInterface ifc)
+        {
+            if (null == ifc)
+                mInterface = Bt2Interface.Factory.GetCurent();
+            else
+                mInterface = ifc;
+        }
+        public BaseBluetoothClassicAdapterAndroid(ScannedDeviceInfo deviceInfo, IPhyInterface ifc = null)
+            : this(ifc)
+        {
+            SetDeviceInfo(deviceInfo);
+        }
+
+        private void SetDeviceInfo(ScannedDeviceInfo deviceInfo)
         {
             _scannedDeviceInfo = deviceInfo;
             _reader = null;
-            _bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
         }
 
-        private BluetoothAdapter _bluetoothAdapter;
+
         virtual public Task<byte[]> Exchange(byte[] req)
         {
             return null;
@@ -90,11 +116,11 @@ namespace SiamCross.Droid.Models
                 _inputStreamReader = new InputStreamReader(_inStream);
                 _reader = new BufferedReader(_inputStreamReader);
 
-                await Task.Delay(2000);
+                //await Task.Delay(2000);
 
                 _cancellToken = new CancellationTokenSource();
-                _readTask = new Task(() => BackgroundRead(_cancellToken));
-                _readTask.Start();
+                //_readTask = new Task(() => BackgroundRead(_cancellToken));
+                //_readTask.Start();
 
                 DoActionConnectSucceed();
                 return true;
@@ -122,11 +148,8 @@ namespace SiamCross.Droid.Models
 
         public async Task Disconnect()
         {
-            if(_cancellToken != null)
-            {
-                _cancellToken.Cancel();
-            }
-            
+            _cancellToken?.Cancel();
+
             Close(_socket);
             Close(_inStream);
             Close(_inputStreamReader);
@@ -230,7 +253,7 @@ namespace SiamCross.Droid.Models
 
     }
 
-    public class BluetoothClassicAdapterAndroid : SiamProtocolConnection, IBluetoothClassicAdapter
+    public class BluetoothClassicAdapterAndroid : SiamProtocolConnection, IConnectionBt2
     {
         public BluetoothClassicAdapterAndroid(ScannedDeviceInfo deviceInfo)
          :base(new BaseBluetoothClassicAdapterAndroid(deviceInfo))
@@ -244,7 +267,8 @@ namespace SiamCross.Droid.Models
             {
                 bool res = await base.Connect();
                 buggly_conn._cancellToken?.Cancel();
-                await buggly_conn._readTask;
+                if(null!=buggly_conn._readTask)
+                    await buggly_conn._readTask;
                 //buggly_conn._inStream.ReadTimeout = mExchangeTimeout;
                 DoActionConnectSucceed();
                 return res;

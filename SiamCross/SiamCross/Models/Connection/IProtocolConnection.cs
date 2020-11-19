@@ -4,9 +4,16 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models
 {
+    public enum ConnectionState
+    {
+        Disconnected = 0,
+        PendingConnect = 1,
+        Connected = 2,
+        PendingDisconnect = 3
+    }
     public interface IProtocolConnection
     {
-        int State { get; }
+        ConnectionState State { get; }
         IPhyInterface PhyInterface { get; }
 
         Task<bool> Connect();

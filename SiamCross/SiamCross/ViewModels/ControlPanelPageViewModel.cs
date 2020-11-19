@@ -20,17 +20,14 @@ namespace SiamCross.ViewModels
     public class ControlPanelPageViewModel : BaseViewModel, IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
-
-        public ObservableCollection<SensorData> SensorsData { get; }
-
+        public ObservableCollection<ISensor> Sensor { get; }
         public ControlPanelPageViewModel()
         {
-            SensorsData = new ObservableCollection<SensorData>();
+            Sensor = new ObservableCollection<ISensor>();
 
             SensorService.Instance.SensorAdded += SensorAdded;
             SensorService.Instance.Initinalize();
         }
-
         private bool CanOpenPage(Type type)
         {
             try
@@ -71,13 +68,10 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
-
-
         public ICommand DeleteSensorCommand
         {
             get => new Command<Guid>(DeleteSensorHandler);
         }
-
         private void DeleteSensorHandler(Guid id)
         {
             try
@@ -88,11 +82,7 @@ namespace SiamCross.ViewModels
                 {
                     if (!sensor.IsMeasurement)
                     {
-                        var sensorData = SensorsData.FirstOrDefault(s => s.Id == id);
-                        if (sensorData != null)
-                        {
-                            SensorsData.Remove(sensorData);
-                        }
+                        Sensor.Remove(sensor);
                         SensorService.Instance.DeleteSensor(id);
                     }
                 }
@@ -103,17 +93,15 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
-
-        private void SensorAdded(SensorData sensorData)
+        private void SensorAdded(ISensor sensor)
         {
 
             Debug.WriteLine("SensorAdded in view");
-            if (!SensorsData.Contains(sensorData))
+            if (!Sensor.Contains(sensor))
             {
-                SensorsData.Add(sensorData);
+                Sensor.Add(sensor);
             }
         }
-
         public ICommand GotoMeasurementPageCommand
         {
             get => new Command<Guid>(GotoMeasurementPage);

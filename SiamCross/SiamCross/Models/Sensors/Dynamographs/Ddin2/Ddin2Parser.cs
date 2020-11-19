@@ -40,6 +40,11 @@ namespace SiamCross.Models.Sensors.Ddin2
         /// </summary>
         private FirmWaveQualifier _deviceFirmWaveQualifier;
 
+        public Ddin2Parser()
+        {
+            _deviceFirmWaveQualifier = null;
+            _byteBuffer = new ByteBuffer(false);
+        }
         public Ddin2Parser(FirmWaveQualifier deviceFirmWaveQualifier,
             bool isResponseCheck)
         {

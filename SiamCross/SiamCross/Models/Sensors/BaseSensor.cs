@@ -1,13 +1,14 @@
 ﻿using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dynamographs.Shared
 {
-    abstract public class BaseSensor : ISensor
+    abstract public class BaseSensor : ISensor, INotifyPropertyChanged
     {
         #region TmpVariables
         #endregion
@@ -46,6 +47,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
         #endregion
         #region Activate implementation
         #region Variables
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
         private CancellationTokenSource _cancellToken= null;
         private bool _activated = false;
         #endregion
@@ -61,7 +63,9 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
                     return false;
                 }, _cancellToken.Token);
                 _activated = true;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
                 _activated = await _liveTask;
+                //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
             }
             catch (OperationCanceledException)
             {
@@ -84,6 +88,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
                 _cancellToken = null;
                 await mConnection?.Disconnect();
                 _activated = false;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
                 ClearStatus();
             }
         }
@@ -127,7 +132,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
                     }
                     else
                     {
-                        SensorData.Status = "starting BT...";
+                        //SensorData.Status = "starting BT...";
                         bool connected = await mConnection.Connect();
                         if (!connected)
                             await Task.Delay(2000, cancellationToken);

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SiamCross.Models.Adapters
 {
-    public interface IBluetoothClassicAdapter : IProtocolConnection
+    public interface IConnectionBt2 : IProtocolConnection
     {
     }
 }

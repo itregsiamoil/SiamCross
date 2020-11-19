@@ -5,9 +5,9 @@ using System.Text;
 
 namespace SiamCross.Models.Sensors.Ddin2
 {
-    public class Ddin2StatusAdapter
+    public static class Ddin2StatusAdapter
     {
-        public Ddin2MeasurementStatus StringStatusToEnum(string stringStatus)
+        public static  Ddin2MeasurementStatus StringStatusToEnum(string stringStatus)
         {
             if (!string.IsNullOrEmpty(stringStatus))
             {
@@ -24,7 +24,7 @@ namespace SiamCross.Models.Sensors.Ddin2
             return Ddin2MeasurementStatus.Empty; //stub
         }
 
-        public string StringStatusToReport(string stringStatus)
+        public static string StringStatusToReport(string stringStatus)
         {
             if (!string.IsNullOrEmpty(stringStatus))
             {

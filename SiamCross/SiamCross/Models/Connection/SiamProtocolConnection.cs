@@ -2,35 +2,48 @@
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Tools;
 using System;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models
 {
-    abstract public class SiamProtocolConnection : IProtocolConnection
+    abstract public class SiamProtocolConnection : IProtocolConnection , INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
         protected IConnection mBaseConn;
-        protected int mState=0;
+        protected ConnectionState mState = ConnectionState.Disconnected;
         public SiamProtocolConnection(IConnection base_conn)
         {
             mBaseConn = base_conn;
         }
         public IPhyInterface PhyInterface => mBaseConn.PhyInterface;
-        public int State => mState;
+        public ConnectionState State
+        {
+            get { return mState; }
+            private set 
+            {
+                mState = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("State"));
+            }
+        }
+        
         public virtual async Task<bool> Connect()
         {
-            mState = 1;
+            State = ConnectionState.PendingConnect;
             bool result = await mBaseConn.Connect();
             if(result)
-                mState = 2;
+                State = ConnectionState.Connected;
             else
-                mState = 0;
+                State = ConnectionState.Disconnected;
             return result;
         }
-        public virtual Task Disconnect()
+        public virtual async Task Disconnect()
         {
-            mState = 0;
-            return mBaseConn.Disconnect();
+            State = ConnectionState.PendingDisconnect;
+            await mBaseConn.Disconnect();
+            State = ConnectionState.Disconnected;
         }
 
         private TaskCompletionSource<bool> mExecTcs;
@@ -182,7 +195,7 @@ namespace SiamCross.Models
         public async Task<byte[]> Exchange(byte[] req)
         {
             byte[] ret = { };
-            if (mState != 2)
+            if (State != ConnectionState.Connected)
                 return ret;
             try
             {

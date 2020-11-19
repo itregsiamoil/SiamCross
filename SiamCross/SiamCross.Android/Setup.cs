@@ -33,7 +33,7 @@ namespace SiamCross.Droid
         {
             cb.RegisterType<BluetoothScannerAndroid>().As<IBluetoothScanner>();
 
-            cb.RegisterType<BluetoothClassicAdapterAndroid>().As<IBluetoothClassicAdapter>();
+            cb.RegisterType<BluetoothClassicAdapterAndroid>().As<IConnectionBt2>();
             cb.RegisterType<BluetoothLeAdapterAndroid>().As<IConnectionBtLe>();
             cb.RegisterType<CustomBluetooth5Adapter>().As<IBluetooth5CustomAdapter>();
             cb.RegisterType<SaveDevicesServiceAndroid>().As<ISaveDevicesService>();

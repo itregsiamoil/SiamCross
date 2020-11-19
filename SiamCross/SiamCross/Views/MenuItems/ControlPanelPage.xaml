@@ -7,20 +7,31 @@
              x:Name="ControlPanel"
              Title="{local:Translate ControlPanelTitle}">
     
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="colorTest">Black</Color>
+        </ResourceDictionary>
+        <!--Style TargetType="{x:Type Label}" ApplyToDerivedTypes="True">
+        <Setter Property="TextColor" Value="Black" />
+    </> -->
+    </ContentPage.Resources>
     <ContentPage.Content>
 
         <StackLayout>
             <ListView x:Name="sensorList" 
+                      ItemsSource="{Binding Sensor}"
                 SeparatorVisibility="None"
                 HasUnevenRows="True"
-                Margin="0"
-                ItemsSource="{Binding SensorsData}"                                    
+                Margin="0">
+                <!--
+                ItemsSource="{Binding SensorsData}"  
                 ItemTapped="sensorList_ItemTapped">
+                -->
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View >
-                                <Frame BorderColor="{StaticResource colorSwitchThumbNormal}"
+                                <Frame BorderColor="{StaticResource colorCtrlInactive}"
                                        Padding="0" Margin="4"  CornerRadius="4" 
                                        HasShadow="True"  
                                        >
@@ -28,7 +39,7 @@
                                         <Expander IsExpanded="True">
                                             <Expander.Header x:Name ="ExpanderHeader"  >
                                                 <Grid x:Name="MyGrid" VerticalOptions="StartAndExpand" 
-                                                      BackgroundColor="{StaticResource colorSwitchThumbNormal}"
+                                                      BackgroundColor="{StaticResource colorCtrlInactive}" 
                                                       Margin="0" Padding="0" RowSpacing="0" >
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition Height="Auto"></RowDefinition>
@@ -40,21 +51,7 @@
                                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                                                     </Grid.ColumnDefinitions>
-                                                    <!--
-                                                    <Button Text="&#x25BC;" FontSize="Large" x:Name="colapser"
-                                                            Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
-                                                            BorderWidth="1" BorderColor="LightGray" CornerRadius="10" BackgroundColor="Transparent"
-                                                            HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
-                                                            WidthRequest ="{Binding Height, Mode=OneWay}" >
-                                                        <Button.Triggers>
-                                                            <DataTrigger TargetType="Button"
-                                                                            Binding="{Binding Source={RelativeSource AncestorType={x:Type Expander}}, Path=IsExpanded}" 
-                                                                            Value="True">
-                                                                <Setter Property="Text" Value="&#x25B2;" />
-                                                            </DataTrigger>
-                                                        </Button.Triggers>
-                                                    </Button>
-                                                    -->
+
                                                     <Label Text="&#x25BC;" FontSize="Large" x:Name="btnColapse"
                                                             Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" 
                                                             HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
@@ -68,20 +65,20 @@
                                                                 </DataTrigger>
                                                         </Label.Triggers>
                                                     </Label>
-                                                    <Label Text="{Binding Name}" x:Name="NameLabel"  
+                                                    <Label Text="{Binding SensorData.Name}" x:Name="NameLabel"  
                                                         Grid.Row="0" Grid.Column="1"
                                                         HorizontalOptions="FillAndExpand" 
                                                         FontSize="Medium" FontAttributes="Bold" />
-                                                    <Label Text="{Binding Type}" 
+                                                    <Label Text="{Binding SensorData.Type}" 
                                                             Grid.Row="1" Grid.Column="1" 
                                                             FontSize="Small" />
-                                                    <Button Text="&#x2716;" FontSize="Medium" x:Name="btnRemove"
+                                                    <Button Text="&#x2716;" FontSize="Medium" x:Name="btnRemove" TextColor="#70FF0000"
                                                             Grid.Row="0" Grid.Column="2" Grid.RowSpan="3"
-                                                            BorderWidth="0" BorderColor="LightGray" CornerRadius="0" BackgroundColor="LightPink"
+                                                            BorderWidth="0" BorderColor="LightGray" CornerRadius="0" BackgroundColor="#30FF0000"
                                                             HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
                                                             Command="{Binding Path=BindingContext.DeleteSensorCommand, 
                                                             Source={x:Reference ControlPanel}}"
-                                                            CommandParameter="{Binding Id}"
+                                                            CommandParameter="{Binding SensorData.Id}"
                                                             WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
                                                             <!-- BindingContext="{x:Reference btnColapse}" WidthRequest ="{Binding Height, Mode=OneWay}"> -->
                                                         </Button>
@@ -108,28 +105,45 @@
                                                             <ColumnDefinition Width="2*"></ColumnDefinition>
                                                         </Grid.ColumnDefinitions>
 
-                                                        <Label Text="&#x1F5B4;" FontSize="Medium" TextColor="Black"
+                                                        <!--#region FIRMWARE -->
+                                                        <Label Text="&#x1F522;" FontSize="Medium" TextColor="Black"
                                                            Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" 
                                                            VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
-                                                        <Label Text="{Binding Firmware}" FontAttributes="Bold" 
-                                                           Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" />
+                                                        <Label Text="{Binding SensorData.Firmware}" FontAttributes="Bold" 
+                                                           Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" >
+                                                            <Label.FormattedText>
+                                                                <FormattedString >
+                                                                    <Span Text="{Binding SensorData.Firmware}" />
+                                                                    <Span Text=" / " />
+                                                                    <Span Text="{Binding SensorData.RadioFirmware}" />
+                                                                </FormattedString>
+                                                            </Label.FormattedText>
+                                                        </Label>
                                                         <Label Text="{local:Translate Firmware}" FontSize="Micro" 
                                                            Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" />
-
                                                         <!--
-                                            <Label Text="{local:Translate RadioFirmware}" FontSize ="Micro"/>
-                                            <Label Text="{Binding RadioFirmware}" FontSize ="Micro"/>
-                                             -->
-
-                                                        <Label Text="&#x1F47E;" FontSize="Medium" TextColor="Black"
+                                                        <Label Text="{local:Translate RadioFirmware}" FontSize ="Micro"/>
+                                                        <Label Text="{Binding RadioFirmware}" FontSize ="Micro"/>
+                                                         -->
+                                                        <!--#region CONNECTION -->
+                                                        <Label Text="&#x1F4F6;" FontSize="Medium" TextColor="Black"
                                                            Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" 
                                                            VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
-                                                        <Label Text="Connection" FontAttributes="Bold"
-                                                           Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" />
-                                                        <Switch IsToggled="{Binding Activated}" 
+                                                        <Label Text="{Binding Connection.State}" FontAttributes="Bold"
+                                                            Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" >
+                                                        </Label>
+                                                        <Switch IsToggled="{Binding Activate}" 
                                                            Grid.Row="2" Grid.Column="2" Grid.RowSpan="2" />
-                                                        <Label Text="Connection info" FontSize="Micro" 
-                                                           Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" />
+                                                        <Label Text="Connection" FontSize="Micro" 
+                                                           Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" >
+                                                            <Label.FormattedText Margin="0">
+                                                                <FormattedString >
+                                                                    <Span Text="{Binding Connection.PhyInterface.Name}" />
+                                                                    <Span Text=" " />
+                                                                    <Span Text="Connection"/>
+                                                                </FormattedString>
+                                                            </Label.FormattedText>
+                                                        </Label>
 
                                                         <Label Text="&#x1F321;" FontSize="Medium" TextColor="Black"
                                                            Grid.Row="4" Grid.Column="0" Grid.RowSpan="2" 
@@ -138,7 +152,7 @@
                                                            Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2">
                                                             <Label.Text>
                                                                 <MultiBinding StringFormat="{}{0} {1}">
-                                                                    <Binding Path="Temperature" />
+                                                                    <Binding Path="SensorData.Temperature" />
                                                                     <Binding Source="{local:Translate DegCentigradeUnits}" />
                                                                 </MultiBinding>
                                                             </Label.Text>
@@ -154,7 +168,7 @@
                                                         Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2">
                                                             <Label.Text>
                                                                 <MultiBinding StringFormat="{}{0} {1}">
-                                                                    <Binding Path="Battery" />
+                                                                    <Binding Path="SensorData.Battery" />
                                                                     <Binding Source="{local:Translate VoltsUnits}" />
                                                                 </MultiBinding>
                                                             </Label.Text>
@@ -165,18 +179,21 @@
                                                         <Label Text="&#x1F4C8;" FontSize="Medium" TextColor="Black"
                                                            Grid.Row="8" Grid.Column="0" Grid.RowSpan="2" 
                                                            VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
-                                                        <Label HorizontalOptions="StartAndExpand" Text="{Binding Status}" 
+                                                        <Label HorizontalOptions="StartAndExpand" Text="{Binding SensorData.Status}" 
                                                            Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="1" />
+                                                        <ProgressBar Margin="10" Progress="0.5"
+                                                            Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="3" 
+                                                            />
 
                                                     </Grid>
                                                     <Button Text="{local:Translate MeasurementsTitle}" FontSize="Large" x:Name="StartMeasure"
-                                                            BorderWidth="0" BorderColor="{StaticResource colorSwitchThumbNormal}"
-                                                            CornerRadius="0" BackgroundColor="PaleGreen"
+                                                            BorderWidth="0" BorderColor="{StaticResource colorCtrlInactive}"
+                                                            CornerRadius="0" BackgroundColor="{StaticResource colorCtrlNormal}"
                                                             HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
                                                             HeightRequest="{Binding Source={RelativeSource Self}, Path=Height}"
                                                             Command="{Binding Path=BindingContext.GotoMeasurementPageCommand, 
                                                             Source={x:Reference ControlPanel}}"
-                                                            CommandParameter="{Binding Id}">
+                                                            CommandParameter="{Binding SensorData.Id}">
                                                     </Button>
                                                     <!--
                                                     <Grid HeightRequest="40"
