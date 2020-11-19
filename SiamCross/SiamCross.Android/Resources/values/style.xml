@@ -17,20 +17,20 @@
     <!-- colorAccent is used as the default value for colorControlActivated
          which is used to tint widgets -->
     <item name="colorAccent">@color/accent</item>
-    <item name="colorControlActivated">@color/ctrlActivated</item>
     <item name="colorControlHighlight">@color/ctrlHighlight</item>
 
     <item name="android:windowBackground">@color/window_background</item>
-    <item name="android:colorFocusedHighlight">#FF0000</item>
-    <item name="android:colorPressedHighlight">#00FF00</item>
-    <item name="android:colorLongPressedHighlight">#0000FF</item>
-    <item name="android:colorFocusedHighlight">#00FFFF</item>
     <item name="android:colorActivatedHighlight">#FFFF00</item>
 
     <!-- You can also set colorControlNormal, colorControlActivated
          colorControlHighlight and colorSwitchThumbNormal. 
     <item name="colorSwitchThumbNormal">#009dA0</item>
-    <item name="colorControlNormal">#90D0EF</item>
+    <item name="colorControlActivated">@color/ctrlActivated</item>
+    <item name="colorControlNormal">@color/ctrlNormal</item>
+    <item name="android:colorFocusedHighlight">@color/ctrlHighlight</item>
+    <item name="android:colorPressedHighlight">@color/ctrlHighlight</item>
+    <item name="android:colorLongPressedHighlight">@color/ctrlHighlight</item>
+    <item name="android:colorFocusedHighlight">@color/ctrlHighlight</item>
     -->
     <item name="windowActionModeOverlay">true</item>
     <!--

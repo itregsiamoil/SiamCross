@@ -11,7 +11,7 @@
                      rainbows:DebugRainbow.IsDebug="False"
                      >
             <!--Padding ="10 , 30 , 10, 10"-->
-            <Label Text="SIAM SERVICE 2.0" 
+            <Label Text="SIAM SERVICE" 
                    FontSize="Title"
                    FontAttributes ="Bold"
                    TextColor="{StaticResource colorPrimaryDark}"/>

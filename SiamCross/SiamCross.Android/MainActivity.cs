@@ -23,7 +23,7 @@ using Xamarin.Forms.Platform.Android;
 
 namespace SiamCross.Droid
 {
-    [Activity(Label = "SIAM SERVICE 2.0", Icon = "@mipmap/main_icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "SIAM SERVICE", Icon = "@mipmap/main_icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     [IntentFilter(new[] { UsbManager.ActionUsbDeviceAttached })]
     [MetaData(UsbManager.ActionUsbDeviceAttached, Resource = "@xml/device_filter")]
     public class MainActivity : FormsAppCompatActivity
