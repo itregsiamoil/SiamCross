@@ -11,6 +11,8 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
 {
     public class Ddim2Sensor : ISensor
     {
+        public float MeasureProgress { get; set; }
+
         protected IProtocolConnection mConnection;
         public IProtocolConnection Connection => mConnection;
 

@@ -13,7 +13,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
         #region TmpVariables
         #endregion
         #region Constructors & Destructors
-        TaskScheduler _uiScheduler;
+        //TaskScheduler _uiScheduler;
         protected BaseSensor(IProtocolConnection conn, SensorData sensorData)
         {
             mConnection = conn;
@@ -21,7 +21,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
             SensorData = sensorData;
             IsMeasurement = false;
             // Получение планировщика UI для потока, который создал форму:
-            _uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            //_uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
         }
         public void Dispose()
@@ -35,7 +35,16 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
         private IProtocolConnection mConnection;
         #endregion
 
-
+        float mMeasureProgress = 0;
+        public float MeasureProgress 
+        {
+            get => mMeasureProgress;
+            set
+            {
+                mMeasureProgress = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("MeasureProgress"));
+            }
+        }
         public IProtocolConnection Connection => mConnection;
         public bool IsAlive { get; protected set; }
         public bool IsMeasurement { get; protected set; }

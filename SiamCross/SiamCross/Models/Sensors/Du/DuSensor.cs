@@ -13,6 +13,8 @@ namespace SiamCross.Models.Sensors.Du
 {
     public class DuSensor : ISensor
     {
+        public float MeasureProgress { get; set; }
+
         protected IProtocolConnection mConnection;
         public IProtocolConnection Connection => mConnection;
 

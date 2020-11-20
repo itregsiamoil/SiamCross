@@ -10,6 +10,8 @@ namespace SiamCross.Models.Sensors.Umt
 {
     public class UmtSensor: ISensor
     {
+        public float MeasureProgress { get; set; }
+
         protected IProtocolConnection mConnection;
         public IProtocolConnection Connection => mConnection;
 

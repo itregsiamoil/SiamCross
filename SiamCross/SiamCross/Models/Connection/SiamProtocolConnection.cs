@@ -90,7 +90,7 @@ namespace SiamCross.Models
                 }
                 catch (Exception sendingEx)
                 {
-                    DebugLog.WriteLine("try " + i.ToString() + " - Ошибка отправки BLE : "
+                    DebugLog.WriteLine("try " + i.ToString() + " - Ошибка отправки: "
                    + BitConverter.ToString(data)
                    + " " + sendingEx.Message + " "
                    + sendingEx.GetType() + " "
@@ -199,13 +199,26 @@ namespace SiamCross.Models
                 return ret;
             try
             {
-                if (null != mExecTcs)
+                for (int i = 0; i < mExchangeRetry && 0 == ret.Length; ++i)
                 {
-                    DebugLog.WriteLine("WARNING another task running");
-                    bool result = await mExecTcs.Task;
+                    if (null != mExecTcs)
+                    {
+                        DebugLog.WriteLine("WARNING another task running");
+                        bool result = await mExecTcs.Task;
+                    }
+                    if (State == ConnectionState.Connected)
+                    {
+                        mExecTcs = new TaskCompletionSource<bool>();
+                        ret = await ExchangeData(req);
+                        //mExecTcs = null;
+                    }
+                    if(0 == ret.Length)
+                    {
+                        await Disconnect();
+                        await Connect();
+                    }
                 }
-                mExecTcs = new TaskCompletionSource<bool>();
-                ret = await ExchangeData(req);
+
             }
             catch (Exception sendingEx)
             {

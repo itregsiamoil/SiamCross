@@ -11,7 +11,7 @@
             <Color x:Key="colorCtrlNormal">#C0E0F0</Color>
             <Color x:Key="colorCtrlActivated">#60A0D0</Color>
             <Color x:Key="colorCtrlHighlight">#00A0FF</Color>
-            <Color x:Key="colorCtrlInactive">#D0D0D0</Color>
+            <Color x:Key="colorCtrlInactive">#E0E0E0</Color>
             <Color x:Key="colorCtrlBg">#F0F0F0</Color>
         </ResourceDictionary>
     </Application.Resources>

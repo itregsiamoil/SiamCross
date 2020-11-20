@@ -198,7 +198,7 @@ namespace SiamCross.Models.Sensors.Ddin2
             IsMeasurement = true;
             Ddin2MeasurementStartParameters specificMeasurementParameters =
                 (Ddin2MeasurementStartParameters)measurementParameters;
-            _measurementManager = new Ddin2MeasurementManager(Connection, SensorData,
+            _measurementManager = new Ddin2MeasurementManager(Connection, this,
                  specificMeasurementParameters);
             var report = await _measurementManager.RunMeasurement();
             if (null != report)

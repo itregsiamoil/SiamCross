@@ -59,7 +59,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
             return fullReport;
         }
 
-        private void UpdateProgress(int pos, string text)
+        private void UpdateProgress(float pos, string text)
         {
             _progress = pos;
             SensorData.Status = "measure ["+ pos.ToString() + "%] - "+ text;
@@ -117,7 +117,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
             Ddim2.Ddim2Parser pp = new Ddim2.Ddim2Parser();
 
             bool isDone = false;
-            for (int i = 0; i < 50 && !isDone; i++)
+            for (int i = 0; i < 100 && !isDone; i++)
             {
                 await Task.Delay(Constants.SecondDelay);
                 resp = await _bluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["ReadDeviceStatus"]); ;
@@ -151,6 +151,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
 
         public async Task<bool> ReadMeasurementHeader()
         {
+            UpdateProgress(_progress, "Read Measurement Header");
             int retry = 3;
             bool is_ok = false;
             for(int r=0; r < retry && !is_ok; r++)
@@ -177,6 +178,8 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
 
         public async Task<SiddosA3MMeasurementData> DownloadMeasurement(bool isError)
         {
+            UpdateProgress(_progress, "Download measurement");
+
             var _currentReport = new List<byte>();
 
             _currentDynGraph.Add(new byte[2] { 0, 0 });
@@ -184,7 +187,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
 
             await ReadMeasurementHeader();
 
-            await GetDgm4kB_2();
+            await GetDgm4kB();
 
             //await Task.Delay(500);
 
@@ -229,6 +232,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
         private async Task GetDgm4kB()
         {
 
+            UpdateProgress(_progress, "Read GetDgm4kB");
             _dynContainer = new DynStructuredContainer();
             var addresses = _dynContainer.GetEmptyAddresses();
             while (addresses.Count != 0)
@@ -289,6 +293,9 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
             byte[] message = { };
             _dynContainer = new DynStructuredContainer();
             var addresses = _dynContainer.GetEmptyAddresses();
+
+            float sep_cost = (100f - _progress) / addresses.Count;
+
             while (addresses.Count != 0)
             {
                 System.Diagnostics.Debug.WriteLine($"Empty addresses = {addresses.Count}");
@@ -312,7 +319,9 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
                     MeasurementRecieveHandler(commandName, message);
                     byte[] address = new byte[] { message[4], message[5], message[6], message[7] };
                     byte[] data = Ddim2.Ddim2Parser.GetPayload(message);
-                    MemoryRecieveHandler(address, data);
+                    _progress += sep_cost;
+                    UpdateProgress(_progress, "Read GetDgm4kB");
+
                 }
 
                 //await Task.Delay(Constants.LongDelay);
@@ -332,7 +341,9 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
                         MeasurementRecieveHandler(commandName, message);
                         byte[] address = new byte[] { message[4], message[5], message[6], message[7] };
                         byte[] data = Ddim2.Ddim2Parser.GetPayload(message);
-                        MemoryRecieveHandler(address, data);
+                        _progress += sep_cost;
+                        UpdateProgress(_progress, "Read GetDgm4kB");
+
                     }
 
                     RemoveCrc();
