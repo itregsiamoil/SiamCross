@@ -249,7 +249,7 @@
                                                                 </FormattedString>
                                                             </Label.FormattedText>
                                                         </Label>
-                                                        <Label Text="{Binding MeasureProgress}" FontSize="Micro"
+                                                        <Label Text="{Binding MeasureProgressP}" FontSize="Micro"
                                                                Grid.Row="2" Grid.Column="0"
                                                                VerticalOptions="FillAndExpand"
                                                                VerticalTextAlignment="Center" HorizontalTextAlignment="End" />

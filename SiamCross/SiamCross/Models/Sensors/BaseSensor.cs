@@ -1,4 +1,5 @@
-﻿using SiamCross.Models.Scanners;
+﻿#define DEBUG_UNIT
+using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
 using System;
 using System.ComponentModel;
@@ -34,6 +35,16 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
         #region Variables
         private IProtocolConnection mConnection;
         #endregion
+
+        public int MeasureProgressP
+        {
+            get => (int)(mMeasureProgress*100);
+            set
+            {
+                MeasureProgress = value/100;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("MeasureProgressP"));
+            }
+        }
 
         float mMeasureProgress = 0;
         public float MeasureProgress 
@@ -101,15 +112,19 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
                 ClearStatus();
             }
         }
+
+        Object locker=new Object();
         public bool Activate
         {
             get => _activated;
             set
             {
+                DebugLog.WriteLine("try activate");
                 //_activated = value;
                 if (value && !_activated && null == _cancellToken)
                 {
                     AsyncActivate();
+                    DebugLog.WriteLine("try activate = true");
                 }
                 else
                 {
@@ -162,6 +177,14 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
             {
                 DebugLog.WriteLine("{0}: {1}", ex.GetType().Name, ex.Message);
                 cancellationToken.ThrowIfCancellationRequested();
+            }
+            catch (Exception ex)
+            {
+                DebugLog.WriteLine("WARNING exception in"
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
             }
         }
         public abstract Task<bool> PostConnectInit();

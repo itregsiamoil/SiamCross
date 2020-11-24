@@ -225,279 +225,6 @@ namespace SiamCross.Droid.Models
             return inited;
         }
 
-        private static void LockLog(string msg)
-        {
-            string ret;
-            Thread thread = Thread.CurrentThread;
-            {
-                ret = msg
-                    + String.Format("   Thread ID: {0} ", thread.ManagedThreadId
-                    //+ String.Format("   Background: {0} ", thread.IsBackground)
-                    //+ String.Format("   Thread Pool: {0} ", thread.IsThreadPoolThread)
-                    );
-            }
-            //DebugLog.WriteLine(ret);
-        }
-        //private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
-        //private Object lockObj = new Object();
-        private SemaphoreSlim semaphore = new SemaphoreSlim(1);
-        //using (await semaphore.UseWaitAsync())
-        //{
-        //    Assert.Equal(0, semaphore.CurrentCount);
-        //}
-
-
-
-        #if DEBUG
-            public const int mExchangeTimeout = 5000;
-            public const int mResponseRetry = 10;
-        #else
-            public const int mExchangeTimeout = 3000;
-            public const int mResponseRetry = 256;
-        #endif
-        public const int mExchangeRetry = 3;
-        public const int mRequestRetry = 3;
-        
-
-        private TaskCompletionSource<bool> tcs;// = new TaskCompletionSource<byte[]>();
-        DataBuffer mBuf = new DataBuffer();
-
-        //Memory<byte> mRxBuf = new byte[512];
-        private Stream mRxStream = new MemoryStream(512);
-
-
-
-        private async void DoByteProcessOld(byte[] inputBytes)
-        {
-            //Debug.WriteLine("Received " + inputBytes.Length.ToString() +
-            //    ": [" + BitConverter.ToString(inputBytes) + "]\n");
-            TaskCompletionSource<bool> ref_tsc = null;
-            LockLog("Add - TryLock");
-            using (await semaphore.UseWaitAsync()) //lock (lockObj)
-            {
-                LockLog("Add - Locked");
-                mBuf.Append(inputBytes);
-                ref_tsc = tcs;
-                LockLog("Add - Unlock");
-            }
-            LockLog("Add - SetResult");
-            ref_tsc?.SetResult(true);
-            LockLog("Add - exit");
-        }
-
-        private async void TimeoutWaitResponse()
-        {
-            TaskCompletionSource<bool> ref_tsc = null;
-            using (await semaphore.UseWaitAsync())
-                ref_tsc = tcs;
-            ref_tsc?.SetResult(false);        
-        }
-
-        private async Task<bool> RequestAsync(byte[] data, CancellationToken ct)
-        {
-            bool sent = false;
-            for (int i = 0; i < mRequestRetry && !sent; ++i)
-            {
-                try 
-                {
-                    ct.ThrowIfCancellationRequested();
-                    sent = await _writeCharacteristic.WriteAsync(data, ct);
-                    DebugLog.WriteLine("Sent " + data.Length.ToString() +
-                        ": [" + BitConverter.ToString(data) + "]\n");
-                }
-                catch (Exception sendingEx)
-                {
-                    DebugLog.WriteLine("try " + i.ToString()+" - Ошибка отправки BLE : "
-                   + BitConverter.ToString(data)
-                   + " " + sendingEx.Message + " "
-                   + sendingEx.GetType() + " "
-                   + sendingEx.StackTrace + "\n");
-                }
-            }
-            if (!sent)
-                ConnectFailed?.Invoke();
-            return sent;
-        }
-        private async Task<byte[]> ResponseAsync(byte[] req, CancellationToken ct)
-        {
-            byte[] pkg = { };
-            UInt32 len_before = 0;
-            UInt32 len_after = 0;
-            ct.Register(() => TimeoutWaitResponse());
-
-            for (int i = 0; i < mResponseRetry && 0 == pkg.Length; ++i)
-            {
-                try
-                {
-                    //res = await _readCharacteristic.ReadAsync(ct);
-                    ct.ThrowIfCancellationRequested();
-                    LockLog("Try RespExtr");
-                    using (await semaphore.UseWaitAsync())
-                    {
-                        LockLog("Lock RespExtr");
-                        pkg = mBuf.Extract();
-                        len_before = len_after = mBuf.Length;
-                        LockLog("UNLock RespExtr");
-                    }
-                    
-                    if (0==pkg.Length)
-                    {
-                        LockLog("Try RespCreate");
-                        using (await semaphore.UseWaitAsync())
-                        {
-                            LockLog("Lock RespCreate");
-                            tcs = new TaskCompletionSource<bool>();
-                            len_after = mBuf.Length;
-                            LockLog("UNLock RespCreate");
-                        }
-
-                        if (len_before == len_after)
-                        {
-                            LockLog("Start await tcs.Task.Status = "+ tcs.Task.Status.ToString());
-                            bool result = await tcs.Task;
-                            LockLog(" End await tcs.Task = " + result.ToString());
-                            if (!result)
-                                ct.ThrowIfCancellationRequested();
-                            //Task delay_task = Task.Delay(mExchangeTimeout, ct);
-                            //await Task.WhenAny(tcs.Task, delay_task);
-                            //bool result = tmp_tcs.Task.Result;
-                            
-                        }
-
-                        LockLog("Try RespClear");
-                        using (await semaphore.UseWaitAsync())
-                        { 
-                            LockLog("Lock RespClear");
-                            tcs = null;
-                            LockLog("UNLock RespClear");
-                        }
-                    }
-                    else
-                    {
-                        int cmp = req.AsSpan().Slice(0, 12).SequenceCompareTo(pkg.AsSpan().Slice(0, 12));
-                        if(0!=cmp)
-                        {
-                            DebugLog.WriteLine("WRONG response" +
-                                ": [" + BitConverter.ToString(pkg) + "]\n");
-                            pkg = new byte[] { };
-                        }
-                        else
-                        {
-                            DebugLog.WriteLine("OK response" +
-                                ": [" + BitConverter.ToString(pkg) + "]\n");
-                        }
-                    }
-                }
-                catch (OperationCanceledException ex)
-                {
-                    DebugLog.WriteLine("Response timeout {0}: {1}", ex.GetType().Name, ex.Message);
-                    throw ex;
-                }
-                catch (Exception sendingEx)
-                {
-                    DebugLog.WriteLine("try " + i.ToString() + " - Ошибка получения BLE : "
-                    + BitConverter.ToString(pkg)
-                    + " " + sendingEx.Message + " "
-                    + sendingEx.GetType() + " "
-                    + sendingEx.StackTrace + "\n");
-                }
-                finally
-                {
-                    tcs = null;
-                }
-            }
-            //if (0 == res.Length)
-            //    ConnectFailed?.Invoke();
-            return pkg;
-        }
-        public async Task<byte[]> SingleExchangeAsync(byte[] req)
-        {
-            
-            byte[] res = { };
-            CancellationTokenSource ctSrc = new CancellationTokenSource(mExchangeTimeout);
-            try
-            {
-                mBuf.Clear();
-                bool sent = await RequestAsync(req, ctSrc.Token);
-                if(sent)
-                {
-                    //Debug.WriteLine("start wait response");
-                    res = await ResponseAsync(req, ctSrc.Token);
-                }
-            }
-            catch (OperationCanceledException ex)
-            {
-                DebugLog.WriteLine("Exchange canceled by timeout {0}: {1}", ex.GetType().Name, ex.Message);
-            }
-            catch (AggregateException e)
-            {
-                System.Diagnostics.Debug.WriteLine("Истек таймаут подключения "
-                    + _deviceInfo.Name + ": " + e.Message);
-                await Disconnect();
-                _isFirstConnectionTry = false;
-                _connectQueue.Remove(_deviceInfo.Name);
-            }
-            finally
-            {
-                ctSrc.Dispose();
-            }
-            return res;
-        }
-
-        public async Task<byte[]> ExchangeData(byte[] req)
-        {
-            byte[] res = { };
-            for (int i = 0; i<mExchangeRetry && 0==res.Length; ++i)
-            {
-                DebugLog.WriteLine("START transaction, try "+i.ToString());
-                res = await SingleExchangeAsync(req);
-                DebugLog.WriteLine("END transaction, try " + i.ToString());
-            }
-            return res;
-        }
-
-        private TaskCompletionSource<bool> mExecTcs;
-        public async Task<byte[]> Exchange(byte[] req)
-        {
-            Task<byte[]> task=null;
-            byte[] ret={ };
-            try
-            {
-                if (null != mExecTcs)
-                {
-                    DebugLog.WriteLine("WARNING another task running");
-                    bool result = await mExecTcs.Task;
-                }
-                mExecTcs = new TaskCompletionSource<bool>();
-                task = ExchangeData(req);
-                ret = await task;
-            }
-            catch (Exception sendingEx)
-            {
-                DebugLog.WriteLine("WARNING Exchange"
-                + " " + sendingEx.Message + " "
-                + sendingEx.GetType() + " "
-                + sendingEx.StackTrace + "\n");
-            }
-            finally
-            {
-                mExecTcs?.TrySetResult(true);
-                task?.Dispose();
-                task = null;
-                mExecTcs = null;
-            }
-            return ret;
-        }
-
-        public async Task SendData(byte[] req)
-        {
-            byte[] ret = await Exchange(req);
-
-            if (null != ret && 0 < ret.Length)
-                DataReceived?.Invoke(ret);
-        }
-
-
         public async Task SendData_Old(byte[] data)
         {
             if (!BluetoothAdapter.DefaultAdapter.IsEnabled)
@@ -597,6 +324,38 @@ namespace SiamCross.Droid.Models
         public event Action<byte[]> DataReceived;
         public event Action ConnectSucceed;
         public event Action ConnectFailed;///////////////////////////////!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
+
+
+        private static void LockLog(string msg)
+        {
+            string ret;
+            Thread thread = Thread.CurrentThread;
+            {
+                ret = msg
+                    + String.Format("   Thread ID: {0} ", thread.ManagedThreadId
+                    //+ String.Format("   Background: {0} ", thread.IsBackground)
+                    //+ String.Format("   Thread Pool: {0} ", thread.IsThreadPoolThread)
+                    );
+            }
+            //DebugLog.WriteLine(ret);
+        }
+
+        private SemaphoreSlim semaphore = new SemaphoreSlim(1);
+        private TaskCompletionSource<bool> tcs;// = new TaskCompletionSource<byte[]>();
+        private Stream mRxStream = new MemoryStream(512);
+
+
+        private void TimeoutWaitResponse(TaskCompletionSource<bool> ref_tsc)
+        {
+            //TaskCompletionSource<bool> ref_tsc = null;
+            //using (await semaphore.UseWaitAsync())
+            //    ref_tsc = tcs;
+            ref_tsc?.SetResult(false);
+        }
         public async void ClearRx()
         {
             using (await semaphore.UseWaitAsync())
@@ -611,49 +370,71 @@ namespace SiamCross.Droid.Models
         }
         private async void DoByteProcess(byte[] inputBytes)
         {
-            TaskCompletionSource<bool> ref_tsc = null;
             LockLog("Add - Try");
             using (await semaphore.UseWaitAsync()) //lock (lockObj)
             {
                 LockLog("Add - Lock");
                 await mRxStream.WriteAsync(inputBytes);
-                ref_tsc = tcs;
+                LockLog("Add - SetResult");
+                tcs?.TrySetResult(true);
             }
-            LockLog("Add - SetResult");
-            ref_tsc?.SetResult(true);
         }
-
         private async Task<int> DoReadAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
             int readed = 0;
-            ct.Register(() => TimeoutWaitResponse());
-            while (0 == readed)
+            tcs = new TaskCompletionSource<bool>();
+            ct.Register(() =>
             {
-                ct.ThrowIfCancellationRequested();
-                LockLog("Read - Try Create");
-                using (await semaphore.UseWaitAsync())
+                tcs?.TrySetResult(false);
+            });
+            EventHandler<CharacteristicUpdatedEventArgs> fn = (o, a) => 
+            { 
+                tcs?.TrySetResult(true); 
+            };
+            try
+            {
+                while (0 == readed)
                 {
-                    LockLog("Read - Lock Create");
-                    mRxStream.Position = 0;
-                    readed = await mRxStream.ReadAsync(buffer, offset, count, ct);
-                    mRxStream.SetLength(0);
+                    ct.ThrowIfCancellationRequested();
+                    LockLog("Read - Try Create");
+                    using (await semaphore.UseWaitAsync())
+                    {
+                        LockLog("Read - Lock Create");
+                        mRxStream.Position = 0;
+                        readed = await mRxStream.ReadAsync(buffer, offset, count, ct);
+                        mRxStream.SetLength(0);
 
+                        if (0 == readed)
+                        {
+                            
+                            //_readCharacteristic.ValueUpdated += fn;
+                        }
+                    }
                     if (0 == readed)
-                        tcs = new TaskCompletionSource<bool>();
-                }
+                    {
+                        LockLog("Read - Begin Wait TSC");
+                        bool result = await tcs?.Task;
+                        //_readCharacteristic.ValueUpdated -= fn;
 
+                        if (!result)
+                            ct.ThrowIfCancellationRequested();
+                    }
+
+                }//while (0 == readed)
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                //_readCharacteristic.ValueUpdated -= fn;
                 if (null != tcs)
                 {
-                    LockLog("Read - Begin Wait TSC");
-                    bool result = await tcs.Task;
-                    LockLog("Read - End Wait TSC");
-                    if (!result)
-                        ct.ThrowIfCancellationRequested();
-                    LockLog("Read - Begin Clear");
                     using (await semaphore.UseWaitAsync())
                         tcs = null;
-                    LockLog("Read - End Clear");
                 }
+                ClearRx();
 
             }
             return readed;
@@ -664,27 +445,26 @@ namespace SiamCross.Droid.Models
             int readed = 0;
             try
             {
-                readed  = await DoReadAsync(buffer, offset, count, ct);
+                readed = await DoReadAsync(buffer, offset, count, ct);
             }
             catch (OperationCanceledException ex)
             {
-                DebugLog.WriteLine("ReadAsync canceled by timeout {0}: {1}"
-                    , ex.GetType().Name, ex.Message);
+                //DebugLog.WriteLine("ReadAsync canceled by timeout {0}: {1}"
+                //    , ex.GetType().Name, ex.Message);
                 throw ex;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("UNKNOWN exception in "
+                DebugLog.WriteLine("UNKNOWN exception in "
                     + System.Reflection.MethodBase.GetCurrentMethod().Name
-                    + " : " + e.Message);
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
+                throw ex;
             }
             finally
             {
-                using (await semaphore.UseWaitAsync())
-                {
-                    tcs = null;
-                    ClearRx();
-                }
+
             }
             return readed;
         }

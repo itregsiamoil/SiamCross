@@ -1,8 +1,13 @@
 ﻿#define DEBUG_UNIT
+using Autofac;
+using NLog;
+using SiamCross.AppObjects;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Tools;
+using SiamCross.Services.Logging;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,6 +15,8 @@ namespace SiamCross.Models
 {
     abstract public class SiamProtocolConnection : IProtocolConnection , INotifyPropertyChanged
     {
+        private static Logger mLogger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
         protected IConnection mBaseConn;
@@ -26,40 +33,122 @@ namespace SiamCross.Models
             {
                 mState = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("State"));
+                DebugLog.WriteLine("Connect State="+ mState.ToString());
             }
         }
         
         public virtual async Task<bool> Connect()
         {
             State = ConnectionState.PendingConnect;
-            bool result = await mBaseConn.Connect();
-            if(result)
-                State = ConnectionState.Connected;
-            else
-                State = ConnectionState.Disconnected;
+
+            bool result = false;
+            try
+            {
+                using (await semaphore.UseWaitAsync()) //lock (lockObj)
+                {
+                    result = await mBaseConn.Connect();
+                }
+            }
+            catch (Exception ex)
+            {
+                DebugLog.WriteLine("Exception in: "
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType() 
+                    + "\n stack=" + ex.StackTrace + "\n");
+                result = false;
+                await Disconnect();
+            }
+            finally
+            {
+                if(result)
+                {
+                    if(ConnectionState.Connected != State)
+                        State = ConnectionState.Connected;
+                }
+                else
+                {
+                    if (ConnectionState.Disconnected != State)
+                        State = ConnectionState.Disconnected;
+                }
+                    
+            }
             return result;
         }
         public virtual async Task Disconnect()
         {
             State = ConnectionState.PendingDisconnect;
-            await mBaseConn.Disconnect();
-            State = ConnectionState.Disconnected;
+            try
+            {
+                using (await semaphore.UseWaitAsync()) //lock (lockObj)
+                {
+                    await mBaseConn.Disconnect();
+                }
+            }
+            catch (Exception ex)
+            {
+                DebugLog.WriteLine("Exception in: "
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
+            }
+            finally
+            {
+                State = ConnectionState.Disconnected;
+            }
         }
 
         private TaskCompletionSource<bool> mExecTcs;
+        private SemaphoreSlim semaphore = new SemaphoreSlim(1);
         private byte[] mRxBuf = new byte[512];
         private DataBuffer mBuf = new DataBuffer();
         
         public const int mExchangeRetry = 3;
         public const int mRequestRetry = 3;
         #if DEBUG
-        public const int mExchangeTimeout = 10000;
-        public const int mResponseRetry = 10;
+        public const int mResponseRetry = 100;
         #else
-        public const int mExchangeTimeout = 3000;
         public const int mResponseRetry = 256;
         #endif
 
+        private const int mMinSpeed = 1200; ///bit per second
+        private static int GetTime(int bytes)
+        {
+            // 1000000usec
+            // mMinSpeed/(8+1+1) - byte per second
+            //one byte = 1000000 / (9600 / (8 + 1 + 1)) / 1000 = 1,04166msec
+            //int timeout = 1000000 / (mMinSpeed / (8 + 1 + 1)) * bytes / 1000;
+            const float multipler = 1000.0f / (mMinSpeed / (8 + 1 + 1)) ;
+            int timeout = (int)(bytes* multipler + 500);
+            if (1 > timeout)
+                timeout = 1;
+            return timeout;
+        }
+
+        public static int GetRequestTimeout(byte[] rq)
+        {
+            if (null == rq)
+                return 0;
+            return GetTime(rq.Length);
+        }
+
+        public static int GetResponseTimeout(byte[] rq)
+        {
+            if (null == rq)
+                return 0;
+
+            switch (rq[3])
+            {
+                default: break;
+                case 0x01:
+                    UInt16 data_len = BitConverter.ToUInt16(rq, 8);
+                    return GetTime(rq.Length + data_len);
+                case 0x02:
+                    return GetTime(rq.Length);
+            }
+            return 0;
+        }
 
         private static void LockLog(string msg)
         {
@@ -74,76 +163,94 @@ namespace SiamCross.Models
             }
             DebugLog.WriteLine(ret);
         }
-        private async Task<bool> RequestAsync(byte[] data, CancellationToken ct)
+        private async Task<bool> RequestAsync(byte[] data)
         {
+            int write_timeout = GetRequestTimeout(data);
+            CancellationTokenSource ctSrc = new CancellationTokenSource(write_timeout);
             bool sent_ok = false;
             for (int i = 0; i < mRequestRetry && !sent_ok; ++i)
             {
                 try
                 {
-                    ct.ThrowIfCancellationRequested();
-                    int sent = await mBaseConn.WriteAsync(data, 0, data.Length, ct);
+                    ctSrc.Token.ThrowIfCancellationRequested();
+                    int sent = await mBaseConn.WriteAsync(data, 0, data.Length, ctSrc.Token);
                     if(data.Length == sent)
                         sent_ok = true;
                     DebugLog.WriteLine("Sent " + data.Length.ToString() +
                         ": [" + BitConverter.ToString(data) + "]\n");
                 }
-                catch (Exception sendingEx)
+                catch (OperationCanceledException ex)
                 {
-                    DebugLog.WriteLine("try " + i.ToString() + " - Ошибка отправки: "
-                   + BitConverter.ToString(data)
-                   + " " + sendingEx.Message + " "
-                   + sendingEx.GetType() + " "
-                   + sendingEx.StackTrace + "\n");
+                    DebugLog.WriteLine("Request timeout: rq=" + BitConverter.ToString(data));
+                    throw ex;
+                }
+                catch (Exception ex)
+                {
+                    DebugLog.WriteLine("try " + i.ToString() + " - Request ERROR - "
+                    + BitConverter.ToString(data));
+                    throw ex;
                 }
             }
             //if (!sent)
             //    ConnectFailed?.Invoke();
             return sent_ok;
         }
-        private async Task<byte[]> ResponseAsync(byte[] req, CancellationToken ct)
+        private async Task<byte[]> ResponseAsync(byte[] req)
         {
+            int read_timeout = GetResponseTimeout(req);
+            Stopwatch perf_counter = new Stopwatch();
+            perf_counter.Start();
+            
+            CancellationTokenSource ctSrc = new CancellationTokenSource(read_timeout);
             byte[] pkg = { };
             for (int i = 0; i < mResponseRetry && 0 == pkg.Length; ++i)
             {
                 try
                 {
-                    ct.ThrowIfCancellationRequested();
+                    ctSrc.Token.ThrowIfCancellationRequested();
                     pkg = mBuf.Extract();
                     if (0 == pkg.Length)
                     {
-                        int readed = await mBaseConn.ReadAsync(mRxBuf, 0, mRxBuf.Length, ct);
+                        int readed = await mBaseConn.ReadAsync(mRxBuf, 0, mRxBuf.Length, ctSrc.Token);
                         if(0 < readed)
                             mBuf.Append(mRxBuf, readed);
+                        DebugLog.WriteLine("Appended bytes="+ readed.ToString()
+                            +" elapsed=" + perf_counter.ElapsedMilliseconds.ToString()
+                            + " / " + read_timeout.ToString()
+                            + ": [" + BitConverter.ToString(mRxBuf, 0, readed) + "]\n");
                     }
                     else
                     {
                         int cmp = req.AsSpan().Slice(0, 12).SequenceCompareTo(pkg.AsSpan().Slice(0, 12));
                         if (0 != cmp)
                         {
-                            DebugLog.WriteLine("WRONG response" +
-                                ": [" + BitConverter.ToString(pkg) + "]\n");
+                            DebugLog.WriteLine("WRONG response"
+                                + " elapsed=" + perf_counter.ElapsedMilliseconds.ToString()
+                                + " / " + read_timeout.ToString()
+                                + ": [" + BitConverter.ToString(pkg) + "]\n");
                             pkg = new byte[] { };
                         }
                         else
                         {
-                            DebugLog.WriteLine("OK response" +
-                                ": [" + BitConverter.ToString(pkg) + "]\n");
+                            DebugLog.WriteLine("OK response"
+                                + " elapsed=" + perf_counter.ElapsedMilliseconds.ToString()
+                                + " / " + read_timeout.ToString()
+                                + ": [" + BitConverter.ToString(pkg) + "]\n");
                         }
                     }
                 }
                 catch (OperationCanceledException ex)
                 {
-                    DebugLog.WriteLine("Response timeout {0}: {1}", ex.GetType().Name, ex.Message);
+                    DebugLog.WriteLine("Response timeout "
+                        + " elapsed=" + perf_counter.ElapsedMilliseconds.ToString()
+                        + " / " + read_timeout.ToString()
+                        + ": [" + BitConverter.ToString(pkg) + "]\n");
                     throw ex;
                 }
                 catch (Exception ex)
                 {
-                    DebugLog.WriteLine("try " + i.ToString() + " - Ошибка получения BLE : "
-                    + BitConverter.ToString(pkg)
-                    + " " + ex.Message + " "
-                    + ex.GetType() + " "
-                    + ex.StackTrace + "\n");
+                    DebugLog.WriteLine("try " + i.ToString() + " - Response ERROR ");
+                    throw ex;
                 }
             }
             return pkg;
@@ -152,80 +259,87 @@ namespace SiamCross.Models
         {
 
             byte[] res = { };
-            CancellationTokenSource ctSrc = new CancellationTokenSource(mExchangeTimeout);
             try
             {
                 mBuf.Clear();
                 mBaseConn.ClearRx();
                 mBaseConn.ClearTx();
-                bool sent = await RequestAsync(req, ctSrc.Token);
+                bool sent = await RequestAsync(req);
                 if (sent)
                 {
                     //Debug.WriteLine("start wait response");
-                    res = await ResponseAsync(req, ctSrc.Token);
+                    res = await ResponseAsync(req);
                 }
             }
             catch (OperationCanceledException ex)
             {
-                DebugLog.WriteLine("Exchange canceled by timeout {0}: {1}", ex.GetType().Name, ex.Message);
+                DebugLog.WriteLine("Exchange canceled by timeout ");
+                // dont rethrow 
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("UNKNOWN exception in "
+                /*
+                DebugLog.WriteLine("Exception in "
                     + System.Reflection.MethodBase.GetCurrentMethod().Name
-                    + " : " + e.Message);
-            }
-            finally
-            {
-                ctSrc.Dispose();
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
+                */
+                throw ex;
             }
             return res;
         }
         private async Task<byte[]> ExchangeData(byte[] req)
         {
             byte[] res = { };
+            if (State != ConnectionState.Connected)
+                return res;
             for (int i = 0; i < mExchangeRetry && 0 == res.Length; ++i)
             {
-                DebugLog.WriteLine("START transaction, try " + i.ToString());
-                res = await SingleExchangeAsync(req);
-                DebugLog.WriteLine("END transaction, try " + i.ToString());
+                try
+                {
+                    DebugLog.WriteLine("START transaction, try " + i.ToString());
+                    res = await SingleExchangeAsync(req);
+                    DebugLog.WriteLine("END transaction, try " + i.ToString());
+                }
+                catch (Exception ex)
+                {
+                    DebugLog.WriteLine("ExchangeData ERROR"
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
+
+                    await Disconnect();
+                    await Connect();
+                }
             }
             return res;
         }
         public async Task<byte[]> Exchange(byte[] req)
         {
             byte[] ret = { };
-            if (State != ConnectionState.Connected)
-                return ret;
             try
             {
-                for (int i = 0; i < mExchangeRetry && 0 == ret.Length; ++i)
+                using (await semaphore.UseWaitAsync()) //lock (lockObj)
                 {
                     if (null != mExecTcs)
                     {
                         DebugLog.WriteLine("WARNING another task running");
                         bool result = await mExecTcs.Task;
                     }
-                    if (State == ConnectionState.Connected)
-                    {
-                        mExecTcs = new TaskCompletionSource<bool>();
-                        ret = await ExchangeData(req);
-                        //mExecTcs = null;
-                    }
-                    if(0 == ret.Length)
-                    {
-                        await Disconnect();
-                        await Connect();
-                    }
+                    mExecTcs = new TaskCompletionSource<bool>();
+                    ret = await ExchangeData(req);
                 }
 
             }
-            catch (Exception sendingEx)
+            catch (Exception ex)
             {
-                DebugLog.WriteLine("WARNING Exchange"
-                + " " + sendingEx.Message + " "
-                + sendingEx.GetType() + " "
-                + sendingEx.StackTrace + "\n");
+                DebugLog.WriteLine("Exchange ERROR"
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
             }
             finally
             {

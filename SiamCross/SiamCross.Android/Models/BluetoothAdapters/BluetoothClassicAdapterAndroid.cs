@@ -270,8 +270,11 @@ namespace SiamCross.Droid.Models
                 if(null!=buggly_conn._readTask)
                     await buggly_conn._readTask;
                 //buggly_conn._inStream.ReadTimeout = mExchangeTimeout;
-                DoActionConnectSucceed();
-                return res;
+                if(res)
+                {
+                    DoActionConnectSucceed();
+                    return res;
+                }
             }
             DoActionConnectFailed();
             return false;
