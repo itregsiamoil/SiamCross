@@ -48,14 +48,13 @@
                     <ViewCell>
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-
                             <Label Text="{local1:Translate PumpRate}"
                                    Grid.Column="0" Grid.Row="0"/>
                             <local2:CustomEntry x:Name="PumpRateEntry" 
@@ -64,8 +63,7 @@
                                    Grid.Column="0" Grid.Row="1">
                             </local2:CustomEntry>
                             <Button ImageSource="stopwatch.png"
-                                    Grid.Column="1" Grid.RowSpan="2"
-                                    Margin="10"
+                                    Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
                                     Clicked="StopwatchButton_Clicked"/>
                         </Grid>
                     </ViewCell>
@@ -105,18 +103,15 @@
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="0.2*"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <Label Text="{local1:Translate Field}" Grid.Row="0" Grid.Column="0" />
                             <Picker ItemsSource="{Binding Fields}" SelectedItem="{Binding SelectedField}"
                                     Grid.Row="1" Grid.Column="0" />
-                            <Image Source="plus.png" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
-                                <Image.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        Command="{Binding AddField}"
-                                        CommandParameter="Image1" />
-                                </Image.GestureRecognizers>
-                            </Image>
+                            <Button ImageSource="plus.png"
+                                    Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+                                    Command="{Binding Path=AddField}" 
+                                    CommandParameter="Image1" />
                         </Grid>
                     </ViewCell>
                     <ViewCell>
