@@ -395,11 +395,11 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
                     _currentAccelerationGraph.Add(data.Reverse().ToArray());
                     break;
                 case "ReadMeasurementReport":
-                    var report = new List<short>();
+                    var report = new List<UInt16>();
                     for (int i = 0; i + 1 < data.Count(); i += 2)
                     {
                         var array = new byte[] { data[i], data[i + 1] };
-                        short value = BitConverter.ToInt16(array, 0);
+                        UInt16 value = BitConverter.ToUInt16(array, 0);
                         report.Add(value);
                     }
                     _report = new SiddosA3MMeasurementReport(

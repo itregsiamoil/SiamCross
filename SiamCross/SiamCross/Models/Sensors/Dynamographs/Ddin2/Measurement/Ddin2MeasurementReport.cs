@@ -6,21 +6,21 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
 {
     public class Ddin2MeasurementReport
     {
-        public short MaxWeight { get; }
-        public short MinWeight { get; }
-        public short Travel { get; }
-        public short Period { get; }
-        public short Step { get; }
-        public short WeightDiscr { get; }
-        public short TimeDiscr { get; }
+        public UInt16 MaxWeight { get; }
+        public UInt16 MinWeight { get; }
+        public UInt16 Travel { get; }
+        public UInt16 Period { get; }
+        public UInt16 Step { get; }
+        public UInt16 WeightDiscr { get; }
+        public UInt16 TimeDiscr { get; }
 
-        public Ddin2MeasurementReport(short maxWeight,
-            short minWeight,
-            short travel,
-            short period,
-            short step,
-            short weightDiscr,
-            short timeDiscr)
+        public Ddin2MeasurementReport(UInt16 maxWeight,
+            UInt16 minWeight,
+            UInt16 travel,
+            UInt16 period,
+            UInt16 step,
+            UInt16 weightDiscr,
+            UInt16 timeDiscr)
         {
             MaxWeight = maxWeight;
             MinWeight = minWeight;
@@ -29,6 +29,17 @@ namespace SiamCross.Models.Sensors.Ddin2.Measurement
             Step = step;
             WeightDiscr = weightDiscr;
             TimeDiscr = timeDiscr;
+
+            System.Diagnostics.Debug.WriteLine("Ddin2 Measurement HEADER: "
+                + " MaxWeight = " + MaxWeight.ToString()
+                + " MinWeight = " + MinWeight.ToString()
+                + " Travel = " + Travel.ToString()
+                + " Period = " + Period.ToString()
+                + " Step = " + Step.ToString()
+                + " WeightDiscr = " + WeightDiscr.ToString()
+                + " TimeDiscr = " + TimeDiscr.ToString()
+                ); ;
+            
         }
     }
 }

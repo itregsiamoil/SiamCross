@@ -77,16 +77,16 @@ namespace SiamCross.Models.Tools
         }
 
         public static double[,] GetXYs(List<byte> data,
-                                     short stepDiscr,
-                                     short weightDiscr)
+                                     UInt16 stepDiscr,
+                                     UInt16 weightDiscr)
         {
             return GetPoints2(data, stepDiscr, weightDiscr);
         }
 
-        private static double[,] GetPoints2(List<byte> data, short stepDiscr, short weightDiscr)
+        private static double[,] GetPoints2(List<byte> data, UInt16 stepDiscr, UInt16 weightDiscr)
         {
             short[] words = TransformRawBytes(data);
-            short step = stepDiscr;
+            UInt16 step = stepDiscr;
             int count = words.Count();
             double[,] points = new double[count, 2];
 

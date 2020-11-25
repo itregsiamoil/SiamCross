@@ -171,7 +171,7 @@ namespace SiamCross.ViewModels
             return $"{deviceName}_{_timeConverter.DateTimeToString(date)}.xml"
                 .Replace(':', '-');
         }
-        private void InitMaxMixGraphValue(List<byte> graph, short step, short weightDiscret)
+        private void InitMaxMixGraphValue(List<byte> graph, UInt16 step, UInt16 weightDiscret)
         {
             List<double> movement = new List<double>();
             List<double> weight = new List<double>();

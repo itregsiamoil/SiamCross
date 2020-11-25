@@ -11,11 +11,11 @@ namespace SiamCross.DataBase.DataBaseModels
         /*/ Report /*/
         public float MaxWeight { get; set; }
         public float MinWeight { get; set; }
-        public short Travel { get; set; }
-        public short Period { get; set; }
-        public short Step { get; set; }
-        public short WeightDiscr { get; set; }
-        public short TimeDiscr { get; set; }
+        public UInt16 Travel { get; set; }
+        public UInt16 Period { get; set; }
+        public UInt16 Step { get; set; }
+        public UInt16 WeightDiscr { get; set; }
+        public UInt16 TimeDiscr { get; set; }
         /*/ ----- /*/
 
         /*/ Graphs /*/
