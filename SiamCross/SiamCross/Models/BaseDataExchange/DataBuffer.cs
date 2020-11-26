@@ -12,7 +12,6 @@ namespace SiamCross.Models.Tools
     public class DataBuffer
     {
         private Object mLock = new Object();
-        private CrcModbusCalculator _crcCalulator = new CrcModbusCalculator();
         private byte[] mBuff = new byte[512];
         private UInt32 mBuffLength = 0;
         private UInt32 DoGetLength()
@@ -208,7 +207,7 @@ namespace SiamCross.Models.Tools
             UInt16 data_len = BitConverter.ToUInt16(mBuff, (int)pkg_start + 8);
             //ReadOnlySpan<byte> rq_crc_arr = buf.Slice((int)pkg_start + 10, 2);
             UInt16 rq_crc = BitConverter.ToUInt16(mBuff, (int)pkg_start + 10);
-            byte[] rq_calc_crc_arr = _crcCalulator.ModbusCrc(mBuff, (int)pkg_start + 2, 12 - 2 - 2);
+            byte[] rq_calc_crc_arr = CrcModbusCalculator.ModbusCrc(mBuff, (int)pkg_start + 2, 12 - 2 - 2);
             UInt16 rq_calc_crc = BitConverter.ToUInt16(rq_calc_crc_arr, 0);
 
             if (rq_calc_crc != rq_crc)
@@ -234,7 +233,7 @@ namespace SiamCross.Models.Tools
 
                 ReadOnlySpan<byte> rs_crc_arr = buf.Slice((int)pkg_start + 12 + data_len, 2);
                 UInt16 rs_crc = BitConverter.ToUInt16(mBuff, (int)pkg_start + 12 + data_len);
-                byte[] rs_calc_crc_arr = _crcCalulator.ModbusCrc(mBuff, (int)pkg_start + 12, data_len);
+                byte[] rs_calc_crc_arr = CrcModbusCalculator.ModbusCrc(mBuff, (int)pkg_start + 12, data_len);
                 UInt16 rs_calc_crc = BitConverter.ToUInt16(rs_calc_crc_arr, 0);
 
 

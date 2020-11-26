@@ -7,12 +7,6 @@ namespace SiamCross.Models.Tools
     public class MessageCreator
     {
         /// <summary>
-        /// Калькулятор контрольной суммы
-        /// </summary>
-        private CrcModbusCalculator _crcModbusCalculator =
-            new CrcModbusCalculator();
-
-        /// <summary>
         /// Создать сообщение чтения
         /// </summary>
         /// <param name="address"></param>
@@ -29,7 +23,7 @@ namespace SiamCross.Models.Tools
 
             bufList.AddRange(dataSize);
 
-            var crc = _crcModbusCalculator.ModbusCrc(bufList.ToArray());
+            var crc = CrcModbusCalculator.ModbusCrc(bufList.ToArray());
 
             List<byte> result = new List<byte>() { 0x0D, 0x0A };
             result.AddRange(bufList);
@@ -56,8 +50,8 @@ namespace SiamCross.Models.Tools
 
             addressAndSizeList.AddRange(dataSize);
 
-            var crcAS = _crcModbusCalculator.ModbusCrc(addressAndSizeList.ToArray());
-            var crcData = _crcModbusCalculator.ModbusCrc(data);
+            var crcAS = CrcModbusCalculator.ModbusCrc(addressAndSizeList.ToArray());
+            var crcData = CrcModbusCalculator.ModbusCrc(data);
 
             List<byte> result = new List<byte>() { 0x0D, 0x0A };
             result.AddRange(addressAndSizeList);
@@ -79,8 +73,8 @@ namespace SiamCross.Models.Tools
             var addressAndSizeList = new List<byte>() { 0x01, 0x02 };
             addressAndSizeList.AddRange(deviceNameAddressAndSize);
 
-            var crcAS = _crcModbusCalculator.ModbusCrc(addressAndSizeList.ToArray());
-            var crcData = _crcModbusCalculator.ModbusCrc(data);
+            var crcAS = CrcModbusCalculator.ModbusCrc(addressAndSizeList.ToArray());
+            var crcData = CrcModbusCalculator.ModbusCrc(data);
 
             List<byte> result = new List<byte>() { 0x0D, 0x0A };
             result.AddRange(addressAndSizeList);

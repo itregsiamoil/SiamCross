@@ -1412,6 +1412,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Save error.
+        /// </summary>
+        public static string StatusSaveError {
+            get {
+                return ResourceManager.GetString("StatusSaveError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Tataria.
         /// </summary>
         public static string Tataria {

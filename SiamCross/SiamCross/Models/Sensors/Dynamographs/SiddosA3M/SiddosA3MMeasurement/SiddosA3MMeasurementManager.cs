@@ -272,8 +272,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
                 #region AddRemoveCRC
                 void AddCrc()
                 {
-                    var crcCalculator = new CrcModbusCalculator();
-                    byte[] crc = crcCalculator.ModbusCrc(command.GetRange(2, 8).ToArray());
+                    byte[] crc = CrcModbusCalculator.ModbusCrc(command.GetRange(2, 8).ToArray());
                     command.Add(crc[0]);
                     command.Add(crc[1]);
                 }
@@ -353,8 +352,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
                 #region AddRemoveCRC
                 void AddCrc()
                 {
-                    var crcCalculator = new CrcModbusCalculator();
-                    byte[] crc = crcCalculator.ModbusCrc(command.GetRange(2, 8).ToArray());
+                    byte[] crc = CrcModbusCalculator.ModbusCrc(command.GetRange(2, 8).ToArray());
                     command.Add(crc[0]);
                     command.Add(crc[1]);
                 }

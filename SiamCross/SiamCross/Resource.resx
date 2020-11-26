@@ -629,4 +629,7 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="IntervalErrorTextUmt" xml:space="preserve">
     <value>Interval must be between 1 and 82800,s!</value>
   </data>
+  <data name="StatusSaveError" xml:space="preserve">
+    <value>Save error</value>
+  </data>
 </root>

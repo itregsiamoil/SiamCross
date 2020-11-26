@@ -137,7 +137,7 @@ namespace SiamCross.Models.Sensors.Ddin2
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        static private byte[] GetPayload(byte[] message)
+        static public byte[] GetPayload(byte[] message)
         {
             //Console.WriteLine("GetPayload READ:" + BitConverter.ToString(message));
             int payloadSize = message[8] + message[9] * 16;                // 9ый байт указывает на размер данных

@@ -12,7 +12,6 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
         /// <summary>
         /// Калькулятор контрольной суммы
         /// </summary>
-        private CrcModbusCalculator _crcCalculator = new CrcModbusCalculator();
 
         /// <summary>
         /// Преобразовать команду чтения в команду записи
@@ -30,7 +29,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             bufList.RemoveAt(bufList.Count - 1);
             bufList[1] = 0x02;
 
-            var crc = _crcCalculator.ModbusCrc(bufList.ToArray());
+            var crc = CrcModbusCalculator.ModbusCrc(bufList.ToArray());
 
             var result = new List<byte>() { 0x0D, 0x0A };
             result.AddRange(bufList);
@@ -44,7 +43,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             }
 
             result.AddRange(dataList);
-            result.AddRange(_crcCalculator.ModbusCrc(dataList.ToArray()));
+            result.AddRange(CrcModbusCalculator.ModbusCrc(dataList.ToArray()));
 
             return result.ToArray();
         }

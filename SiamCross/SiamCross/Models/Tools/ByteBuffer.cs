@@ -29,7 +29,6 @@ namespace SiamCross.Models.Tools
         /// </summary>
         private List<byte> _byffer = new List<byte>();
 
-        private CrcModbusCalculator _crcCalulator = new CrcModbusCalculator();
 
         public List<byte> Buffer { get => _byffer; }
 
@@ -144,7 +143,7 @@ namespace SiamCross.Models.Tools
             switch (_expectedLength)
             {
                 case 12:
-                    calcedCrc = _crcCalulator.ModbusCrc(
+                    calcedCrc = CrcModbusCalculator.ModbusCrc(
                         new byte[]
                         {
                                 _byffer[2],
@@ -162,7 +161,7 @@ namespace SiamCross.Models.Tools
                     }
                     break;
                 case 14:
-                    calcedCrc = _crcCalulator.ModbusCrc(
+                    calcedCrc = CrcModbusCalculator.ModbusCrc(
                         new byte[]
                         {
                                 _byffer[2],
@@ -182,7 +181,7 @@ namespace SiamCross.Models.Tools
                     }
                     break;
                 default:
-                    calcedCrc = _crcCalulator.ModbusCrc(
+                    calcedCrc = CrcModbusCalculator.ModbusCrc(
                        new byte[]
                        {
                                 _byffer[2],
@@ -204,7 +203,7 @@ namespace SiamCross.Models.Tools
                     {
                         payloadDataList.Add(_byffer[i]);
                     }
-                    calcedCrc = _crcCalulator.ModbusCrc(payloadDataList.ToArray());
+                    calcedCrc = CrcModbusCalculator.ModbusCrc(payloadDataList.ToArray());
                     if (!calcedCrc.SequenceEqual(new byte[] { _byffer[_expectedLength - 2],
                             _byffer[_expectedLength - 1] }))
                     {
