@@ -130,7 +130,7 @@
                                                                 <FormattedString >
                                                                     <Span Text="{local:Translate Firmware}" />
                                                                     <Span Text="{Binding SensorData.Firmware}" />
-                                                                    <Span Text=" " />
+                                                                    <Span Text="    " />
                                                                     <Span Text="{local:Translate RadioFirmware}" />
                                                                     <Span Text="{Binding SensorData.RadioFirmware}" />
                                                                 </FormattedString>
@@ -237,7 +237,6 @@
                                                         <Label Text="&#x1F4C8;" FontSize="Large" TextColor="Black"
                                                            Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" 
                                                            VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
-
                                                         <Label 
                                                             Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
                                                             VerticalTextAlignment="Start" HorizontalTextAlignment="Start"
@@ -249,15 +248,39 @@
                                                                 </FormattedString>
                                                             </Label.FormattedText>
                                                         </Label>
-                                                        <Label Text="{Binding MeasureProgressP}" FontSize="Micro"
-                                                               Grid.Row="2" Grid.Column="0"
-                                                               VerticalOptions="FillAndExpand"
-                                                               VerticalTextAlignment="Center" HorizontalTextAlignment="End" />
-                                                        <ProgressBar Progress="{Binding MeasureProgress}" 
-                                                                     
+                                                        <Grid x:Name="ProgressGrid" HorizontalOptions="FillAndExpand" 
+                                                              Grid.Row="1" Grid.Column="1" >
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="*"></RowDefinition>
+                                                            </Grid.RowDefinitions>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="30"></ColumnDefinition>
+                                                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                                            </Grid.ColumnDefinitions>
+                                                            <Label FontSize="Micro"
+                                                               Grid.Row="0" Grid.Column="0"
+                                                               VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                                                               VerticalTextAlignment="Center" HorizontalTextAlignment="End" >
+                                                                <Label.Text>
+                                                                    <MultiBinding StringFormat="{}{0}%">
+                                                                        <Binding Path="MeasureProgressP" />
+                                                                    </MultiBinding>
+                                                                </Label.Text>
+                                                            </Label>
+                                                            <ProgressBar Progress="{Binding MeasureProgress}" 
                                                             Margin="2" HorizontalOptions ="FillAndExpand" IsVisible="true"
-                                                            Grid.Row="2" Grid.Column="1" />
+                                                            Grid.Row="0" Grid.Column="1" />
+                                                            <Grid.Triggers>
+                                                                <DataTrigger TargetType="Grid" Binding="{Binding IsMeasurement}" Value="false" >
+                                                                    <Setter Property="IsVisible" Value="false"  />
+                                                                </DataTrigger>
+                                                            </Grid.Triggers>
+                                                        </Grid>
+
                                                     </Grid>
+
+
+
                                                     <Button x:Name="BtnStartMeasure" Text="{local:Translate MeasurementsTitle}" FontSize="Medium" 
                                                             BorderWidth="0" BorderColor="{StaticResource colorCtrlInactive}"
                                                             CornerRadius="0" BackgroundColor="{StaticResource colorCtrlNormal}"

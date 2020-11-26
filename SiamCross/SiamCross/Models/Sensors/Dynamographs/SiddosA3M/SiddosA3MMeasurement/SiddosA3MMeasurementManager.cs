@@ -15,22 +15,23 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
         private SiddosA3MConfigCommandsGenerator _configGenerator;
         private SiddosA3MMeasurementStartParameters _measurementParameters;
         private SiddosA3MMeasurementReport _report;
+        private ISensor mSensor;
         private DynStructuredContainer _dynContainer;
-        public SensorData SensorData { get; private set; }
+        public SensorData SensorData { get => mSensor.SensorData; }
+        public ISensor Sensor { get => mSensor; }
         public byte[] ErrorCode { get; private set; }
         public DynamographMeasurementStatus MeasurementStatus { get; set; }
 
         private List<byte[]> _currentDynGraph;
         private List<byte[]> _currentAccelerationGraph;
 
-        public SiddosA3MMeasurementManager(IProtocolConnection bluetoothAdapter, SensorData sensorData,
+        public SiddosA3MMeasurementManager(IProtocolConnection bluetoothAdapter, ISensor sensor,
                 SiddosA3MMeasurementStartParameters measurementParameters)
         {
             _bluetoothAdapter = bluetoothAdapter;
             _measurementParameters = measurementParameters;
             _configGenerator = new SiddosA3MConfigCommandsGenerator();
-
-            SensorData = sensorData;
+            mSensor = sensor;
 
             _currentDynGraph = new List<byte[]>();
             _currentAccelerationGraph = new List<byte[]>();
@@ -62,7 +63,8 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
         private void UpdateProgress(float pos, string text)
         {
             _progress = pos;
-            SensorData.Status = "measure ["+ pos.ToString() + "%] - "+ text;
+            SensorData.Status = "measure: "+ text;
+            Sensor.MeasureProgress = _progress / 100;
         }
         private float _progress = 0;
         public int Progress
@@ -76,6 +78,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
         private async Task<bool> SendParameters()
         {
             UpdateProgress(1, "Send Parameters");
+            Console.WriteLine("SENDING PARAMETERS");
             byte[] resp = { };
             //await Task.Delay(Constants.LongDelay);
             resp = await _bluetoothAdapter.Exchange(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod));
@@ -94,20 +97,22 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
             if (0 == resp.Length)
                 return false;
             //await Task.Delay(Constants.LongDelay);
+            Console.WriteLine("PARAMETERS HAS BEEN SENT");
             return true;
         }
         private async Task<bool> Start()
         {
             UpdateProgress(2, "Send Init and Start");
             byte[] resp = { };
-            resp = await _bluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["InitializeMeasurement"]);
-            if (0 == resp.Length)
-                return false;
+            //resp = await _bluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["InitializeMeasurement"]);
+            //if (0 == resp.Length)
+            //    return false;
             //await Task.Delay(Constants.LongDelay);
             resp = await _bluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["StartMeasurement"]);
             if (0 == resp.Length)
                 return false;
             //await Task.Delay(Constants.LongDelay);
+            Console.WriteLine("MEASUREMENT STARTED");
             return true;
         }
         private async Task<bool> IsMeasurementDone()
@@ -116,8 +121,11 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
             string dataValue;
             Ddim2.Ddim2Parser pp = new Ddim2.Ddim2Parser();
 
+            int measure_time_sec = _measurementParameters.DynPeriod * 2 / 1000;
+            float sep_cost = 50 / measure_time_sec;
+
             bool isDone = false;
-            for (int i = 0; i < 100 && !isDone; i++)
+            for (int i = 0; i < measure_time_sec && !isDone; i++)
             {
                 await Task.Delay(Constants.SecondDelay);
                 resp = await _bluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["ReadDeviceStatus"]); ;
@@ -126,8 +134,8 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
 
                 dataValue = Ddim2.Ddim2Parser.ConvertToStringPayload(resp);
                 MeasurementStatus = DynamographStatusAdapter.StringStatusToEnum(dataValue);
-                UpdateProgress(3 + i, MeasurementStatus.ToString());
-
+                _progress += sep_cost;
+                UpdateProgress(_progress, MeasurementStatus.ToString());
 
                 if (MeasurementStatus == DynamographMeasurementStatus.Ready
                    || MeasurementStatus == DynamographMeasurementStatus.Error)
@@ -161,11 +169,11 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
                     continue;
 
                 var data = Ddim2.Ddim2Parser.GetPayload(message);
-                var report = new List<short>();
+                var report = new List<UInt16>();
                 for (int i = 0; i + 1 < data.Count(); i += 2)
                 {
                     var array = new byte[] { data[i], data[i + 1] };
-                    short value = BitConverter.ToInt16(array, 0);
+                    UInt16 value = BitConverter.ToUInt16(array, 0);
                     report.Add(value);
                 }
                 _report = new SiddosA3MMeasurementReport(
@@ -187,7 +195,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
 
             await ReadMeasurementHeader();
 
-            await GetDgm4kB();
+            await GetDgm4kB_2();
 
             //await Task.Delay(500);
 
@@ -318,6 +326,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
                     MeasurementRecieveHandler(commandName, message);
                     byte[] address = new byte[] { message[4], message[5], message[6], message[7] };
                     byte[] data = Ddim2.Ddim2Parser.GetPayload(message);
+                    _dynContainer.AddData(address, data);
                     _progress += sep_cost;
                     UpdateProgress(_progress, "Read GetDgm4kB");
 
@@ -340,6 +349,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
                         MeasurementRecieveHandler(commandName, message);
                         byte[] address = new byte[] { message[4], message[5], message[6], message[7] };
                         byte[] data = Ddim2.Ddim2Parser.GetPayload(message);
+                        _dynContainer.AddData(address, data);
                         _progress += sep_cost;
                         UpdateProgress(_progress, "Read GetDgm4kB");
 
@@ -372,7 +382,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement
         {
             if (_dynContainer.AddData(address, data))
             {
-                _progress += 0.5f;
+                //_progress += 0.5f;
             }
         }
 
