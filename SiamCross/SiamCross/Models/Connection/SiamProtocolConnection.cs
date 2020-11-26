@@ -44,10 +44,7 @@ namespace SiamCross.Models
             bool result = false;
             try
             {
-                using (await semaphore.UseWaitAsync()) //lock (lockObj)
-                {
-                    result = await mBaseConn.Connect();
-                }
+                result = await mBaseConn.Connect();
             }
             catch (Exception ex)
             {
@@ -80,10 +77,7 @@ namespace SiamCross.Models
             State = ConnectionState.PendingDisconnect;
             try
             {
-                using (await semaphore.UseWaitAsync()) //lock (lockObj)
-                {
-                    await mBaseConn.Disconnect();
-                }
+                mBaseConn.Disconnect();
             }
             catch (Exception ex)
             {
@@ -113,14 +107,15 @@ namespace SiamCross.Models
         #endif
 
         private const int mMinSpeed = 1200; ///bit per second
+        private const float multipler = 1000.0f / (mMinSpeed / (8 + 1 + 1)) ;
         private static int GetTime(int bytes)
         {
             // 1000000usec
             // mMinSpeed/(8+1+1) - byte per second
             //one byte = 1000000 / (9600 / (8 + 1 + 1)) / 1000 = 1,04166msec
             //int timeout = 1000000 / (mMinSpeed / (8 + 1 + 1)) * bytes / 1000;
-            const float multipler = 1000.0f / (mMinSpeed / (8 + 1 + 1)) ;
-            int timeout = (int)(bytes* multipler + 500);
+            
+            int timeout = (int)(bytes* multipler + 100);
             if (1 > timeout)
                 timeout = 1;
             return timeout;
@@ -249,7 +244,9 @@ namespace SiamCross.Models
                 }
                 catch (Exception ex)
                 {
-                    DebugLog.WriteLine("try " + i.ToString() + " - Response ERROR ");
+                    DebugLog.WriteLine("try " + i.ToString() + " - Response ERROR "
+                        + " elapsed=" + perf_counter.ElapsedMilliseconds.ToString()
+                        + " / " + read_timeout.ToString());
                     throw ex;
                 }
             }
@@ -257,7 +254,8 @@ namespace SiamCross.Models
         }
         private async Task<byte[]> SingleExchangeAsync(byte[] req)
         {
-
+            if (State != ConnectionState.Connected)
+                throw new Exception("No connection exception");
             byte[] res = { };
             try
             {
@@ -294,25 +292,27 @@ namespace SiamCross.Models
             byte[] res = { };
             if (State != ConnectionState.Connected)
                 return res;
-            for (int i = 0; i < mExchangeRetry && 0 == res.Length; ++i)
+
+            try
             {
-                try
+                for (int i = 0; i < mExchangeRetry && 0 == res.Length; ++i) 
                 {
                     DebugLog.WriteLine("START transaction, try " + i.ToString());
                     res = await SingleExchangeAsync(req);
                     DebugLog.WriteLine("END transaction, try " + i.ToString());
                 }
-                catch (Exception ex)
-                {
-                    DebugLog.WriteLine("ExchangeData ERROR"
-                    + System.Reflection.MethodBase.GetCurrentMethod().Name
-                    + "\n msg=" + ex.Message
-                    + "\n type=" + ex.GetType()
-                    + "\n stack=" + ex.StackTrace + "\n");
-
-                    await Disconnect();
-                    await Connect();
-                }
+            }
+            catch (Exception ex)
+            {
+                DebugLog.WriteLine("ExchangeData ERROR "
+                + System.Reflection.MethodBase.GetCurrentMethod().Name
+                + "\n msg=" + ex.Message
+                + "\n type=" + ex.GetType()
+                + "\n stack=" + ex.StackTrace + "\n");
+                
+                DebugLog.WriteLine("ExchangeData Do disconnect ");
+                await Disconnect();
+                //await Connect();
             }
             return res;
         }

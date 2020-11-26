@@ -168,11 +168,12 @@ namespace SiamCross.Models.Sensors.Du
             mConnection.Disconnect();
         }
 
-        public async Task QuickReport()
+        public async Task<bool> QuickReport()
         {
             await mConnection.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Voltage]);
             await Task.Delay(300);
             await mConnection.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure]);
+            return true;
         }
 
         public async Task StartMeasurement(object measurementParameters)

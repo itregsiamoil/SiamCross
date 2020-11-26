@@ -26,6 +26,14 @@ using SiamCross.Models.Adapters.PhyInterface;
 
 namespace SiamCross.Droid.Models
 {
+    [BroadcastReceiver(Enabled = true, Exported = true)]
+    [IntentFilter(new[] { BluetoothAdapter.ActionStateChanged
+        //, BluetoothAdapter.ExtraState
+        //, BluetoothDevice.ActionAclConnected
+        , BluetoothDevice.ActionAclDisconnected
+        , BluetoothDevice.ActionAclDisconnectRequested
+        , BluetoothDevice.ActionBondStateChanged
+    })]
     public class BaseBluetoothClassicAdapterAndroid : BroadcastReceiver, IConnection
     {
 
@@ -37,14 +45,11 @@ namespace SiamCross.Droid.Models
 
         private BluetoothDevice _bluetoothDevice;
         private BluetoothSocket _socket;
-        private BufferedReader _reader;
-        private InputStreamReader _inputStreamReader;
         protected ScannedDeviceInfo _scannedDeviceInfo;
 
         protected Stream _outStream;
         public Stream _inStream;
 
-        public Task _readTask;
 
         private const string _uuid = "00001101-0000-1000-8000-00805f9b34fb";
 
@@ -60,7 +65,9 @@ namespace SiamCross.Droid.Models
                 return bt2_ifc?.mAdapter;
             }
         }
-
+        public BaseBluetoothClassicAdapterAndroid()
+            :this(null)
+        { }
         public BaseBluetoothClassicAdapterAndroid(IPhyInterface ifc)
         {
             if (null == ifc)
@@ -77,7 +84,6 @@ namespace SiamCross.Droid.Models
         private void SetDeviceInfo(ScannedDeviceInfo deviceInfo)
         {
             _scannedDeviceInfo = deviceInfo;
-            _reader = null;
         }
 
 
@@ -90,11 +96,12 @@ namespace SiamCross.Droid.Models
             if (_scannedDeviceInfo.BluetoothArgs is string address)
             {
                 _bluetoothDevice = _bluetoothAdapter.GetRemoteDevice(address);
-                            }
+            }
             if (_bluetoothDevice == null) 
                 return false;
+
             try
-            {               
+            {
                 _socket = _bluetoothDevice.CreateRfcommSocketToServiceRecord(UUID.FromString(_uuid));
 
                 if (_socket == null)
@@ -103,22 +110,17 @@ namespace SiamCross.Droid.Models
                         + _scannedDeviceInfo.Name + ": _socket was null!");
                     return false;
                 }
-
                 if (!_socket.IsConnected)
                 {
-                    
                     await _socket.ConnectAsync();
                 }
 
                 _outStream = _socket.OutputStream;
                 _inStream = _socket.InputStream;
 
-                _inputStreamReader = new InputStreamReader(_inStream);
-                _reader = new BufferedReader(_inputStreamReader);
 
                 //await Task.Delay(2000);
 
-                _cancellToken = new CancellationTokenSource();
                 //_readTask = new Task(() => BackgroundRead(_cancellToken));
                 //_readTask.Start();
 
@@ -129,30 +131,30 @@ namespace SiamCross.Droid.Models
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile.Connect " 
                     + _scannedDeviceInfo.Name + ": "  + e.Message);
-                await Disconnect();
+                Disconnect();
             }
             catch(ObjectDisposedException e)
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile.Connect "
                     + _scannedDeviceInfo.Name + ": " + e.Message);
-                await Disconnect();
+                Disconnect();
             }
             catch (Java.Lang.NullPointerException e)
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile.Connect "
                     + _scannedDeviceInfo.Name + ": " + e.Message);
-                await Disconnect();
+                Disconnect();
             }
             return false;
         }
 
-        public async Task Disconnect()
+        public void Disconnect()
         {
-            _cancellToken?.Cancel();
+            //_cancellToken?.Cancel();
 
             Close(_socket);
             Close(_inStream);
-            Close(_inputStreamReader);
+            //Close(_inputStreamReader);
             Close(_outStream);
         }
 
@@ -175,7 +177,6 @@ namespace SiamCross.Droid.Models
             connectedObject = null;
         }
 
-        public CancellationTokenSource _cancellToken;
 
         virtual protected async Task BackgroundRead(CancellationTokenSource _cancellToken)
         {
@@ -209,7 +210,12 @@ namespace SiamCross.Droid.Models
 
         public override void OnReceive(Context context, Intent intent)
         {
-            throw new NotImplementedException();
+            String action = intent.Action;
+            //if (BluetoothDevice.ActionAclDisconnected.Equals(action))
+            {
+                Disconnect();
+            }
+            //throw new NotImplementedException();
         }
 
         //public event Action<byte[]> DataReceived;
@@ -266,9 +272,6 @@ namespace SiamCross.Droid.Models
             if(null!= buggly_conn)
             {
                 bool res = await base.Connect();
-                buggly_conn._cancellToken?.Cancel();
-                if(null!=buggly_conn._readTask)
-                    await buggly_conn._readTask;
                 //buggly_conn._inStream.ReadTimeout = mExchangeTimeout;
                 if(res)
                 {

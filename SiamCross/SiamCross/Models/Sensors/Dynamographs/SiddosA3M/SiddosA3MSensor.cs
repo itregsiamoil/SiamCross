@@ -46,7 +46,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             Connection.DataReceived += _parser.ByteProcess;
             //_parser.MessageReceived += ReceiveHandler;
             _parser.ByteMessageReceived += MeasurementRecieveHandler;
-            _parser.ExportMemoryFragment += MemoryRecieveHandler;
+            //_parser.ExportMemoryFragment += MemoryRecieveHandler;
 
             //BluetoothAdapter.ConnectSucceed += ConnectHandler;
             //BluetoothAdapter.ConnectFailed += ConnectFailedHandler;
@@ -153,24 +153,24 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             SensorData.Firmware = dataValue;
             return true;
         }
-
-
-        public override async Task QuickReport()
+        public override async Task<bool> QuickReport()
         {
             //"BatteryVoltage" + "Тemperature"+"LoadChanel"+"AccelerationChanel"
             byte[] req = new byte[] { 0x0D, 0x0A, 0x01, 0x01,
                 0x00, 0x84, 0x00, 0x00,    0x0C, 0x00,    0x64, 0x19 };
             byte[] resp = await Connection.Exchange(req);
             if (0 == resp.Length)
-                return;
+            {
+                return false;
+            }
 
             SensorData.Battery = (((float)BitConverter.ToInt16(resp, 12)) / 10).ToString();
             SensorData.Temperature = (((float)BitConverter.ToInt16(resp, 12 + 2)) / 10).ToString();
             _reportBuilder.Load = BitConverter.ToSingle(resp, 12 + 4).ToString();
             _reportBuilder.Acceleration = BitConverter.ToSingle(resp, 12 + 8).ToString();
 
-
             SensorData.Status = _reportBuilder.GetReport();
+            return true;
             /*
             await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["BatteryVoltage"]);
             await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["Тemperature"]);
@@ -178,7 +178,6 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["AccelerationChanel"]);
             */
         }
-
         public async Task<bool> KillosParametersQuery()
         {
             byte[] resp;
@@ -238,7 +237,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             //_parser.MessageReceived -= ReceiveHandler;
             SiddosA3MMeasurementStartParameters specificMeasurementParameters =
                 (SiddosA3MMeasurementStartParameters)measurementParameters;
-            _measurementManager = new SiddosA3MMeasurementManager(Connection, SensorData,
+            _measurementManager = new SiddosA3MMeasurementManager(Connection, this,
                 specificMeasurementParameters);
             //_parser.ExportMemoryFragment += _measurementManager.MemoryRecieveHandler;
             var report = await _measurementManager.RunMeasurement();
@@ -253,6 +252,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
             }
             await Task.Delay(2000);
             IsMeasurement = false;
+            //_parser.ExportMemoryFragment -= _measurementManager.MemoryRecieveHandler;
         }
 
         /*/ Для замера /*/
@@ -265,7 +265,7 @@ namespace SiamCross.Models.Sensors.Dynamographs.SiddosA3M
         {
             if(_measurementManager != null)
             {
-                //_measurementManager.MemoryRecieveHandler(address, data);
+                _measurementManager.MemoryRecieveHandler(address, data);
                 //SensorData.Status = DynamographStatusAdapter.CreateProgressStatus(_measurementManager.Progress);
             }
         }

@@ -39,11 +39,6 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
         public int MeasureProgressP
         {
             get => (int)(mMeasureProgress*100);
-            set
-            {
-                MeasureProgress = value/100;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("MeasureProgressP"));
-            }
         }
 
         float mMeasureProgress = 0;
@@ -54,14 +49,25 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
             {
                 mMeasureProgress = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("MeasureProgress"));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("MeasureProgressP"));
             }
         }
         public IProtocolConnection Connection => mConnection;
         public bool IsAlive { get; protected set; }
-        public bool IsMeasurement { get; protected set; }
+
+        bool mIsMeasurement = false;
+        public bool IsMeasurement 
+        {
+            get => mIsMeasurement;
+            protected set
+            {
+                mIsMeasurement = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsMeasurement"));
+            }
+        }
         public SensorData SensorData { get; }
         public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
-        public abstract Task QuickReport();
+        public abstract Task<bool> QuickReport();
         public abstract Task StartMeasurement(object measurementParameters);
 
         #endregion
@@ -85,7 +91,6 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
                 _activated = true;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
                 _activated = await _liveTask;
-                //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
             }
             catch (OperationCanceledException)
             {
@@ -101,35 +106,63 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
             }
             finally
             {
+                Deactivate();
+                _liveTask?.Dispose();//_liveTask = null;
+                
+            }
+        }
+
+        void Deactivate()
+        {
+            try
+            {
+                mConnection?.Disconnect();
+            }
+            catch (Exception ex)
+            {
+                DebugLog.WriteLine("WARNING exception "
+                + ex.Message + " "
+                + ex.GetType() + " "
+                + ex.StackTrace + "\n");
+            }
+            finally
+            {
                 _cancellToken?.Cancel();
-                _liveTask?.Dispose();
                 _cancellToken?.Dispose();
-                _liveTask = null;
                 _cancellToken = null;
-                await mConnection?.Disconnect();
                 _activated = false;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
                 ClearStatus();
             }
         }
 
-        Object locker=new Object();
         public bool Activate
         {
             get => _activated;
             set
             {
                 DebugLog.WriteLine("try activate");
-                //_activated = value;
-                if (value && !_activated && null == _cancellToken)
+                if (value)
                 {
-                    AsyncActivate();
-                    DebugLog.WriteLine("try activate = true");
+                    //using (await semaphore.UseWaitAsync())
+                    {
+                        if (!_activated )
+                        {
+                            DebugLog.WriteLine("try activate = true");
+                            AsyncActivate();
+                        }
+                    }
                 }
                 else
                 {
-                    if (null != _cancellToken)
-                        _cancellToken.Cancel();
+                    //using (await semaphore.UseWaitAsync())
+                    {
+                        DebugLog.WriteLine("try activate = false");
+                        if (null != _cancellToken && !_cancellToken.IsCancellationRequested)
+                            _cancellToken.Cancel();
+                        else
+                            Deactivate();
+                    }
                 }
             }
         }
@@ -143,9 +176,14 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
                     cancellationToken.ThrowIfCancellationRequested();
                     if (IsAlive)
                     {
-                        if (!IsMeasurement)
+                        if (false == IsMeasurement)
                         {
-                            await QuickReport();
+                            if (false == await QuickReport())
+                            {
+                                IsAlive = (ConnectionState.Connected == mConnection.State);
+                                continue;
+                            }
+                                
                         }
                         else
                         {
@@ -156,7 +194,8 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
                     }
                     else
                     {
-                        //SensorData.Status = "starting BT...";
+                        ClearStatus();
+                        cancellationToken.ThrowIfCancellationRequested();
                         bool connected = await mConnection.Connect();
                         if (!connected)
                             await Task.Delay(2000, cancellationToken);
@@ -192,12 +231,12 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
 
         protected void ClearStatus()
         {
-            IsAlive = false;
+            //IsAlive = false;
             SensorData.Temperature = "";
             SensorData.Battery = "";
             SensorData.Firmware = "";
             SensorData.RadioFirmware = "";
-            SensorData.Status = Resource.NoConnection;
+            SensorData.Status = "";
         }
         
 

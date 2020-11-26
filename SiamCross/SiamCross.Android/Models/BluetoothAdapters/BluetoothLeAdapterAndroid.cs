@@ -109,7 +109,7 @@ namespace SiamCross.Droid.Models
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения" +
                     " _adapter == null. Будет произведена переинициализация адаптера");
-                await Disconnect();
+                Disconnect();
                 _connectQueue.Remove(_deviceInfo.Name);
                 return false;
             }
@@ -137,7 +137,7 @@ namespace SiamCross.Droid.Models
             {
                 System.Diagnostics.Debug.WriteLine("Истек таймаут подключения "
                     + _deviceInfo.Name + ": " + e.Message);
-                await Disconnect();
+                Disconnect();
                 _isFirstConnectionTry = false;
                 _connectQueue.Remove(_deviceInfo.Name);
                 return false;
@@ -146,7 +146,7 @@ namespace SiamCross.Droid.Models
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения по Guid "
                     + _deviceInfo.Name + ": " + e.Message);
-                await Disconnect();
+                Disconnect();
                 _isFirstConnectionTry = false;
                 _connectQueue.Remove(_deviceInfo.Name);
                 return false;
@@ -161,7 +161,7 @@ namespace SiamCross.Droid.Models
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения" +
                     " _adapter == null. Будет произведена переинициализация адаптера");
-                await Disconnect();
+                Disconnect();
                 _isFirstConnectionTry = false;
                 _connectQueue.Remove(_deviceInfo.Name);
                 return false;
@@ -172,7 +172,7 @@ namespace SiamCross.Droid.Models
                 System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect"
                     + _deviceInfo.Name + "ошибка соединения BLE - _device был null");
                 ConnectFailed();
-                await Disconnect();
+                Disconnect();
                 _isFirstConnectionTry = false;
                 _connectQueue.Remove(_deviceInfo.Name);
                 return false;
@@ -210,6 +210,17 @@ namespace SiamCross.Droid.Models
 
                 await _readCharacteristic.StartUpdatesAsync();
                 _isFirstConnectionTry = true;
+
+                _adapter.DeviceConnectionLost += (o, args) =>
+                {
+                    if (args.Device  == _device)
+                    {
+                        Debug.WriteLine("DeviceConnectionLost " + args.ErrorMessage);
+                        Disconnect();
+                    }
+                };
+
+
                 ConnectSucceed?.Invoke();
                 _connectQueue.Remove(_deviceInfo.Name);
                 inited = true;
@@ -218,7 +229,7 @@ namespace SiamCross.Droid.Models
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect "
                     + _deviceInfo.Name + " ошибка инициализации: " + e.Message);
-                await Disconnect();
+                Disconnect();
                 _isFirstConnectionTry = false;
                 _connectQueue.Remove(_deviceInfo.Name);
             }
@@ -269,7 +280,7 @@ namespace SiamCross.Droid.Models
             }
         }
 
-        public async Task Disconnect()
+        public void Disconnect()
         {
             if (_deviceGuid != null)
             {

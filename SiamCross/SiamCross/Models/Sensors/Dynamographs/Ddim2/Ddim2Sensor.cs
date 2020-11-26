@@ -132,12 +132,13 @@ namespace SiamCross.Models.Sensors.Dynamographs.Ddim2
             SensorData.Status = _reportBuilder.GetReport();
         }
 
-        public async Task QuickReport()
+        public async Task<bool> QuickReport()
         {
             await mConnection.SendData(DynamographCommands.FullCommandDictionary["BatteryVoltage"]);
             await mConnection.SendData(DynamographCommands.FullCommandDictionary["Тemperature"]);
             await mConnection.SendData(DynamographCommands.FullCommandDictionary["LoadChanel"]);
             await mConnection.SendData(DynamographCommands.FullCommandDictionary["AccelerationChanel"]);
+            return true;
         }
 
         public async Task KillosParametersQuery()

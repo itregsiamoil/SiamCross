@@ -8,7 +8,7 @@ namespace SiamCross.Models
     {
         IPhyInterface PhyInterface { get; }
         Task<bool> Connect();
-        Task Disconnect();
+        void Disconnect();
         void ClearRx();
         void ClearTx();
         Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken);
