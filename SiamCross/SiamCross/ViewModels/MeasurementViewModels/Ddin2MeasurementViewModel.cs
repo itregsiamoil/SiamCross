@@ -22,14 +22,63 @@ namespace SiamCross.ViewModels
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 
         public string Rod { get; set; }
-        public string PumpRate { get; set; }
+
+        private string mStrDynPeriod = Constants.DefaultDynPeriod.ToString("N3", CultureInfo.InvariantCulture);
+        private string mStrPumpRate = (60.0f / Constants.DefaultDynPeriod).ToString("N3", CultureInfo.InvariantCulture);
+        public float GetPeriodFloatVal(string str)
+        {
+            float tmp_value = 999999;
+            try
+            {
+                tmp_value = float.Parse(str, CultureInfo.InvariantCulture);
+                tmp_value = 60.0f / tmp_value;
+            }
+            catch (Exception ex) { }
+            if (999999 == tmp_value)
+            {
+                try
+                {
+                    tmp_value = float.Parse(str, CultureInfo.CurrentCulture);
+                    tmp_value = 60.0f / tmp_value;
+                }
+                catch (Exception ex) { }
+            }
+            return tmp_value;
+        }
+        public string DynPeriod 
+        {
+            get { return mStrDynPeriod; }
+            set 
+            {
+                if (mStrDynPeriod == value)
+                    return;
+                float tmp_value = GetPeriodFloatVal(value);
+                mStrDynPeriod = value;
+                mStrPumpRate = tmp_value.ToString("N3", CultureInfo.InvariantCulture);
+                NotifyPropertyChanged("PumpRate");
+            }
+        }
+        public string PumpRate 
+        {
+            get => mStrPumpRate;
+            set 
+            {
+                if (mStrPumpRate == value)
+                    return;
+                float tmp_value = GetPeriodFloatVal(value);
+                mStrPumpRate = value;
+                mStrDynPeriod = tmp_value.ToString("N3", CultureInfo.InvariantCulture);
+                NotifyPropertyChanged("DynPeriod");
+            }
+        }
         public string ApertNumber { get; set; }
         public string Imtravel { get; set; }
         public ObservableCollection<string> ModelPump { get; set; }
         public string SelectedModelPump { get; set; }
         public ICommand StartMeasurementCommand { get; set; }
         public ICommand ValveTestCommand { get; set; }
-        public Ddin2MeasurementViewModel(SensorData sensorData) : base(sensorData)
+        public Ddin2MeasurementViewModel(SensorData sensorData) 
+            : base(sensorData)
         {
             try
             {
@@ -54,7 +103,7 @@ namespace SiamCross.ViewModels
         protected override void InitMeasurementStartParameters()
         {
             Rod = Constants.DefaultRod.ToString();
-            PumpRate = Constants.DefaultPumpRate.ToString();
+            //DynPeriod = Constants.DefaultDynPeriod.ToString();
             ApertNumber = Constants.DefaultApertNumber.ToString();
             Imtravel = Constants.DefaultImtravel.ToString();
             SelectedModelPump = Resource.BalancedModelPump;
@@ -77,7 +126,7 @@ namespace SiamCross.ViewModels
                 Rod = _measurement.Rod.ToString("N3", CultureInfo.InvariantCulture);
                 ApertNumber = _measurement.ApertNumber.ToString();
                 Imtravel = _measurement.TravelLength.ToString("N3", CultureInfo.InvariantCulture);
-                PumpRate = _measurement.SwingCount.ToString("N3", CultureInfo.InvariantCulture);
+                DynPeriod = (60.0f / _measurement.SwingCount).ToString("N3", CultureInfo.InvariantCulture);
                 switch (_measurement.ModelPump)
                 {
                     case 0:
@@ -121,7 +170,7 @@ namespace SiamCross.ViewModels
 
                 var measurementParams = new Ddin2MeasurementStartParameters(
                     float.Parse(Rod, CultureInfo.InvariantCulture),
-                    (float)60.0 / float.Parse(PumpRate, CultureInfo.InvariantCulture),
+                    float.Parse(DynPeriod, CultureInfo.InvariantCulture),
                     int.Parse(ApertNumber),
                     float.Parse(Imtravel, CultureInfo.InvariantCulture),
                     GetModelPump(),
@@ -200,6 +249,7 @@ namespace SiamCross.ViewModels
             ValidateParameterForEmtpiness(Shop, Resource.ShopChoiceText);
             ValidateParameterForEmtpiness(BufferPressure, Resource.BufferPressureChoiceText);
             ValidateParameterForEmtpiness(Comments, Resource.CommentsChoiceText);
+            ValidateParameterForEmtpiness(DynPeriod, Resource.DynPeriodChoiceText);
             ValidateParameterForEmtpiness(PumpRate, Resource.DynPeriodChoiceText);
             ValidateParameterForEmtpiness(ApertNumber, Resource.ApertNumberChoiceText);
             ValidateParameterForEmtpiness(Imtravel, Resource.ImtravelChoiceText);

@@ -53,17 +53,25 @@
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <Label Text="{local1:Translate PumpRate}"
+                            <Label Text="{local1:Translate DynPeriod}"
                                    Grid.Column="0" Grid.Row="0"/>
-                            <local2:CustomEntry x:Name="PumpRateEntry" 
-                                   Text="{Binding PumpRate}" 
+                            <Entry x:Name="txtDynPeriod" 
+                                   Text="{Binding DynPeriod , Mode=TwoWay}" 
                                    Keyboard="Numeric"
                                    Grid.Column="0" Grid.Row="1">
-                            </local2:CustomEntry>
+                            </Entry>
+                            <Label Text="{local1:Translate PumpRate}"
+                                   Grid.Column="1" Grid.Row="0"/>
+                            <Entry x:Name="txtPumpRate" 
+                                   Text="{Binding PumpRate, Mode=TwoWay }" 
+                                   Keyboard="Numeric"
+                                   Grid.Column="1" Grid.Row="1">
+                            </Entry>
                             <Button ImageSource="stopwatch.png"
-                                    Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
+                                    Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"
                                     Clicked="StopwatchButton_Clicked"/>
                         </Grid>
                     </ViewCell>
