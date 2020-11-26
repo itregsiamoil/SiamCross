@@ -33,12 +33,26 @@ namespace SiamCross.Models.Sensors.Dynamographs.Shared
                     case "1": return Resource.MeasurementStatus;
                     case "2": return Resource.CalculationStatus;
                     case "4": return Resource.SavingStatus;
-                    case "5": return Resource.SavingStatus;
+                    case "5": return Resource.StatusSaveError;
                 }
             }
 
             return Resource.FreeStatus; //stub
         }
+
+        static public string StatusToReport(DynamographMeasurementStatus status)
+        {
+            switch (status)
+            {
+                case DynamographMeasurementStatus.Empty: return Resource.FreeStatus;
+                case DynamographMeasurementStatus.Busy: return Resource.MeasurementStatus;
+                case DynamographMeasurementStatus.Calc: return Resource.CalculationStatus;
+                case DynamographMeasurementStatus.Ready: return Resource.SavingStatus;
+                default:
+                case DynamographMeasurementStatus.Error: return Resource.StatusSaveError;
+            }
+        }
+
 
         static public string CreateProgressStatus(int progress)
         {
