@@ -1,10 +1,7 @@
-﻿using SiamCross.Models.Sensors.Dmg;
-using SiamCross.Models.Tools;
-using SiamCross.Services;
+﻿using SiamCross.Models.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dmg.Ddim2.Measurement
@@ -14,7 +11,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddim2.Measurement
         private IProtocolConnection _bluetoothAdapter;
         private CommandGenerator _configGenerator;
         private Ddim2MeasurementStartParameters _measurementParameters;
-        private Ddim2MeasurementReport _report;
+        private DmgBaseMeasureReport _report;
         private DynStructuredContainer _dynContainer;
         public SensorData SensorData { get; private set; }
         public byte[] ErrorCode { get; private set; }
@@ -260,7 +257,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddim2.Measurement
                         UInt16 value = BitConverter.ToUInt16(array, 0);
                         report.Add(value);
                     }
-                    _report = new Ddim2MeasurementReport(
+                    _report = new DmgBaseMeasureReport(
                         report[0],
                         report[1],
                         report[2],

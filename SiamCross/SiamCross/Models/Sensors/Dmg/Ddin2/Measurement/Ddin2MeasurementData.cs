@@ -6,7 +6,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 {
     public class Ddin2MeasurementData
     {
-        public Ddin2MeasurementReport Report { get; }
+        public DmgBaseMeasureReport Report { get; }
         public IReadOnlyList<byte> DynGraph { get; }
         public IReadOnlyList<byte> AccelerationGraph { get; }
 
@@ -30,7 +30,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
         private readonly DateTime _date;
         private readonly byte[] _errorCode;
 
-        public Ddin2MeasurementData(Ddin2MeasurementReport report,
+        public Ddin2MeasurementData(DmgBaseMeasureReport report,
                            short apertNumber,
                            short modelPump,
                            short rod,

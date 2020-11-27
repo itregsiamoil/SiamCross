@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SiamCross.Models.Sensors.Dmg.Ddim2
+namespace SiamCross.Models.Sensors.Dmg
 {
     public class CommandGenerator
     {

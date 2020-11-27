@@ -1,9 +1,15 @@
-﻿namespace SiamCross.Models.Sensors.Dmg.SiddosA3M.SiddosA3MMeasurement
+﻿using SiamCross.Models.Sensors.Dmg;
+
+namespace SiamCross.Models.Sensors.Dmg.SiddosA3M.Measurement
 {
-    public class SiddosA3MMeasurementStartParameters : Ddim2.Measurement.Ddim2MeasurementStartParameters
+    public class SiddosA3MMeasurementStartParameters : DmgBaseMeasureParameters
     {
-        public SiddosA3MMeasurementStartParameters(float dynPeriod, int apertNumber,
-            float imtravel, int modelPump, MeasurementSecondaryParameters secondaryParameters) 
+        public SiddosA3MMeasurementStartParameters(
+                                 float dynPeriod,
+                                 int apertNumber,
+                                 float imtravel,
+                                 int modelPump,
+                                 MeasurementSecondaryParameters secondaryParameters)
             : base(dynPeriod, apertNumber, imtravel, modelPump, secondaryParameters)
         {
         }

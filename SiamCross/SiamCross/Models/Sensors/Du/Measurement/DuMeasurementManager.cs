@@ -1,4 +1,4 @@
-using SiamCross.Models.Sensors.Dmg.Ddim2;
+using SiamCross.Models.Sensors.Dmg;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using System;

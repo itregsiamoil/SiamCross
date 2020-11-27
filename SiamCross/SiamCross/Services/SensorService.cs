@@ -3,7 +3,7 @@ using SiamCross.Models;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Dmg.Ddim2.Measurement;
 using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
-using SiamCross.Models.Sensors.Dmg.SiddosA3M.SiddosA3MMeasurement;
+using SiamCross.Models.Sensors.Dmg.SiddosA3M.Measurement;
 using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Models.Tools;
 using SiamCross.Views;

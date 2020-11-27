@@ -1,10 +1,8 @@
-﻿using SiamCross.Models.Scanners;
-using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
-using SiamCross.Models.Sensors.Dmg;
+﻿using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using System;
-using System.Threading;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dmg.Ddin2
@@ -12,17 +10,19 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
     public class Ddin2Sensor : BaseSensor
     {
         private Ddin2MeasurementManager _measurementManager;
-
-        private Ddin2QuickReportBuiler _reportBuilder = new Ddin2QuickReportBuiler();
-
-        //private Ddin2Parser _parser = new Ddin2Parser();
-
+        private DmgBaseQuickReportBuiler _reportBuilder = new DmgBaseQuickReportBuiler();
 
         public Ddin2Sensor(IProtocolConnection conn, SensorData sensorData)
             : base(conn, sensorData)
         {
         }
-
+        public string GetStringPayload(byte[] pkg)
+        {
+            Span<byte> payload = pkg.AsSpan(12, pkg.Length - 12 - 2);
+            if (payload.Length > 20)
+                return  Encoding.UTF8.GetString(payload.ToArray());
+            return Encoding.GetEncoding(1251).GetString(payload.ToArray());
+        }
         public async Task<bool> UpdateFirmware()
         {
             byte[] resp;
@@ -45,7 +45,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
                 return false;
 
             string dataValue;
-            dataValue = Ddin2Parser.ConvertToStringPayload(resp);
+            dataValue = GetStringPayload(resp);
             if (null == dataValue || 0 == dataValue.Length)
                 return false;
             SensorData.Firmware = dataValue;
@@ -87,14 +87,14 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
             if (0 == resp.Length)
                 return false;
             //cmd = pp.DefineCommand(resp);
-            dataValue = Ddin2Parser.ConvertToStringPayload(resp);
+            dataValue = BitConverter.ToSingle(resp,12).ToString();
             _reportBuilder.SensitivityLoad = dataValue;
 
             resp = await Connection.Exchange(DmgCmd.Get("SensorLoadNKP")); ;
             if (0 == resp.Length)
                 return false;
             //cmd = pp.DefineCommand(resp);
-            dataValue = Ddin2Parser.ConvertToStringPayload(resp);
+            dataValue = BitConverter.ToSingle(resp, 12).ToString();
             _reportBuilder.ZeroOffsetLoad = dataValue;
             return true;
 
@@ -127,7 +127,6 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
             await Task.Delay(2000);
             IsMeasurement = false;
         }
-
 
     }
 }

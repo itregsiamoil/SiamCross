@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SiamCross.Models.Sensors.Dmg.Ddim2
-{
-    public class Ddim2QuickReportBuilder
+
+namespace SiamCross.Models.Sensors.Dmg
+{ 
+    public class DmgBaseQuickReportBuiler
     {
         private string _batteryVoltage;
         private string _temperatute;
@@ -14,7 +15,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddim2
         public string ZeroOffsetLoad { get; set; }
         public string SensitivityLoad { get; set; }
 
-        public Ddim2QuickReportBuilder()
+        public DmgBaseQuickReportBuiler()
         {
             ZeroOffsetLoad = null;
             SensitivityLoad = null;
@@ -99,7 +100,15 @@ namespace SiamCross.Models.Sensors.Dmg.Ddim2
 
         public string GetReport()
         {
-            return /*BatteryVoltage + Temperature*/ Load + Acceleration;
+            return BatteryVoltage + Temperature + Load + Acceleration;
+        }
+
+        public void Clear()
+        {
+            BatteryVoltage = "";
+            Temperature = "";
+            Load = "";
+            Acceleration = "";
         }
     }
 }

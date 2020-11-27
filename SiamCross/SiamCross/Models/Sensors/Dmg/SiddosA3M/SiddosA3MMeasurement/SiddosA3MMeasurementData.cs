@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SiamCross.Models.Sensors.Dmg.SiddosA3M.SiddosA3MMeasurement
+namespace SiamCross.Models.Sensors.Dmg.SiddosA3M.Measurement
 {
     public class SiddosA3MMeasurementData
     {
-        public SiddosA3MMeasurementReport Report { get; }
+        public DmgBaseMeasureReport Report { get; }
         public IReadOnlyList<byte> DynGraph { get; }
         public IReadOnlyList<byte> AccelerationGraph { get; }
 
@@ -28,7 +28,7 @@ namespace SiamCross.Models.Sensors.Dmg.SiddosA3M.SiddosA3MMeasurement
 
         private readonly byte[] _errorCode;
 
-        public SiddosA3MMeasurementData(SiddosA3MMeasurementReport report,
+        public SiddosA3MMeasurementData(DmgBaseMeasureReport report,
                            short apertNumber,
                            short modelPump,
                            List<byte> dynGraph,

@@ -1,11 +1,8 @@
 ﻿using SiamCross.Models.Sensors.Dmg.Ddim2;
-using SiamCross.Models.Sensors.Dmg;
 using SiamCross.Models.Tools;
-using SiamCross.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
@@ -14,7 +11,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
     {
         private CommandGenerator _configGenerator;
         private Ddin2MeasurementStartParameters _measurementParameters;
-        private Ddin2MeasurementReport _report;
+        private DmgBaseMeasureReport _report;
         private ISensor mSensor;
 
         public SensorData SensorData { get => mSensor.SensorData; }
@@ -183,7 +180,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                     UInt16 value = BitConverter.ToUInt16(array, 0);
                     report.Add(value);
                 }
-                _report = new Ddin2MeasurementReport(
+                _report = new DmgBaseMeasureReport(
                     report[0], report[1], report[2], report[3],
                     report[4], report[5], report[6]);
                 is_ok = true;

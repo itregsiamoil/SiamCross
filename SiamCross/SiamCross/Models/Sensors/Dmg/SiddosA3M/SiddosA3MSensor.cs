@@ -1,6 +1,6 @@
 ﻿using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Dmg;
-using SiamCross.Models.Sensors.Dmg.SiddosA3M.SiddosA3MMeasurement;
+using SiamCross.Models.Sensors.Dmg.SiddosA3M.Measurement;
 using SiamCross.Models.Adapters;
 using SiamCross.Services;
 using System;
@@ -20,7 +20,7 @@ namespace SiamCross.Models.Sensors.Dmg.SiddosA3M
     {
         SiddosA3MMeasurementManager _measurementManager;
 
-        private SiddosA3MQuickReportBuilder _reportBuilder;
+        private DmgBaseQuickReportBuiler _reportBuilder = new DmgBaseQuickReportBuiler();
 
         private SiddosA3MParser _parser = new SiddosA3MParser();
         //private FirmWaveQualifier _firmwareQualifier;
@@ -39,7 +39,6 @@ namespace SiamCross.Models.Sensors.Dmg.SiddosA3M
             //    DynamographCommands.FullCommandDictionary["ProgrammVersionSize"]
             //);
             //_parser = new SiddosA3MParser(_firmwareQualifier, true);
-            _reportBuilder = new SiddosA3MQuickReportBuilder();
 
 
 

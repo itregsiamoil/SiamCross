@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SiamCross.Models.Sensors.Dmg.SiddosA3M.SiddosA3MMeasurement
+namespace SiamCross.Models.Sensors.Dmg.SiddosA3M.Measurement
 {
     public class SiddosA3MMeasurementManager
     {
         private IProtocolConnection _bluetoothAdapter;
         private SiddosA3MConfigCommandsGenerator _configGenerator;
         private SiddosA3MMeasurementStartParameters _measurementParameters;
-        private SiddosA3MMeasurementReport _report;
+        private DmgBaseMeasureReport _report;
         private ISensor mSensor;
         private DynStructuredContainer _dynContainer;
         public SensorData SensorData { get => mSensor.SensorData; }
@@ -173,7 +173,7 @@ namespace SiamCross.Models.Sensors.Dmg.SiddosA3M.SiddosA3MMeasurement
                     UInt16 value = BitConverter.ToUInt16(array, 0);
                     report.Add(value);
                 }
-                _report = new SiddosA3MMeasurementReport(
+                _report = new DmgBaseMeasureReport(
                     report[0], report[1], report[2], report[3],
                     report[4], report[5], report[6]);
                 is_ok = true;
@@ -407,7 +407,7 @@ namespace SiamCross.Models.Sensors.Dmg.SiddosA3M.SiddosA3MMeasurement
                         UInt16 value = BitConverter.ToUInt16(array, 0);
                         report.Add(value);
                     }
-                    _report = new SiddosA3MMeasurementReport(
+                    _report = new DmgBaseMeasureReport(
                         report[0],
                         report[1],
                         report[2],

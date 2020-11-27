@@ -39,7 +39,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddim2
 
         public bool IsMeasurement { get; private set; } 
 
-        private Ddim2QuickReportBuilder _reportBuilder;
+        private DmgBaseQuickReportBuiler _reportBuilder = new DmgBaseQuickReportBuiler();
         private Ddim2Parser _parser;
         private FirmWaveQualifier _firmwareQualifier;
 
@@ -56,7 +56,6 @@ namespace SiamCross.Models.Sensors.Dmg.Ddim2
                 DmgCmd.Get("ProgrammVersionSize")
             );
             _parser = new Ddim2Parser(_firmwareQualifier, true);
-            _reportBuilder = new Ddim2QuickReportBuilder();
 
             mConnection.DataReceived += _parser.ByteProcess;
             _parser.MessageReceived += ReceiveHandler;
