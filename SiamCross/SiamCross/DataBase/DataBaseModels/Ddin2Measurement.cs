@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using SiamCross.Models.Sensors.Ddin2.Measurement;
+using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
 
 
 namespace SiamCross.DataBase.DataBaseModels

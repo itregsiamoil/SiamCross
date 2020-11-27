@@ -1,6 +1,5 @@
 ﻿using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Du.Measurement;
-using SiamCross.Models.Sensors.Dynamographs.Ddim2;
 using SiamCross.Services;
 using System;
 using System.Collections.Generic;

@@ -3,7 +3,7 @@ using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Models;
 using SiamCross.Models.Sensors;
-using SiamCross.Models.Sensors.Ddin2.Measurement;
+using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using System;

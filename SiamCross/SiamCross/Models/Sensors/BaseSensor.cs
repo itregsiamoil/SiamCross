@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SiamCross.Models.Sensors.Dynamographs.Shared
+namespace SiamCross.Models.Sensors.Dmg
 {
     abstract public class BaseSensor : ISensor, INotifyPropertyChanged
     {

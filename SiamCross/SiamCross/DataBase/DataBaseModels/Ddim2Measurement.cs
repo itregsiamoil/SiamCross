@@ -1,4 +1,4 @@
-﻿using SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement;
+﻿using SiamCross.Models.Sensors.Dmg.Ddim2.Measurement;
 using System;
 using System.Collections.Generic;
 using System.Text;

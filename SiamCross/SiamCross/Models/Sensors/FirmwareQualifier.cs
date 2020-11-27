@@ -1,4 +1,4 @@
-﻿using SiamCross.Models.Sensors.Dynamographs.Shared;
+﻿using SiamCross.Models.Sensors.Dmg;
 using SiamCross.Models.Tools;
 using System;
 using System.Collections.Generic;

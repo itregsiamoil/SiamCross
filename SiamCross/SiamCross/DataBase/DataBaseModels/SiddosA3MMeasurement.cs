@@ -1,4 +1,4 @@
-﻿using SiamCross.Models.Sensors.Dynamographs.SiddosA3M.SiddosA3MMeasurement;
+﻿using SiamCross.Models.Sensors.Dmg.SiddosA3M.SiddosA3MMeasurement;
 using System;
 using System.Collections.Generic;
 

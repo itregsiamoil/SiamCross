@@ -1,19 +1,19 @@
 ﻿using Autofac;
 using NLog;
 using SiamCross.AppObjects;
+using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
 using SiamCross.Models.Sensors;
-using SiamCross.Models.Sensors.Dynamographs.Ddim2.Measurement;
+using SiamCross.Models.Sensors.Dmg.Ddim2.Measurement;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
-using System.Collections.Generic;
-using SiamCross.DataBase.DataBaseModels;
-using System.Linq;
 
 namespace SiamCross.ViewModels
 {

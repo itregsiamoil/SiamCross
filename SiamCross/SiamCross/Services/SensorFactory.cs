@@ -4,10 +4,10 @@ using SiamCross.Models;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Adapters.PhyInterface;
 using SiamCross.Models.Scanners;
-using SiamCross.Models.Sensors.Ddin2;
+using SiamCross.Models.Sensors.Dmg.Ddim2;
+using SiamCross.Models.Sensors.Dmg.Ddin2;
+using SiamCross.Models.Sensors.Dmg.SiddosA3M;
 using SiamCross.Models.Sensors.Du;
-using SiamCross.Models.Sensors.Dynamographs.Ddim2;
-using SiamCross.Models.Sensors.Dynamographs.SiddosA3M;
 using SiamCross.Models.Sensors.Umt;
 using System;
 
