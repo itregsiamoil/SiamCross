@@ -115,7 +115,7 @@ namespace SiamCross.Models
             //one byte = 1000000 / (9600 / (8 + 1 + 1)) / 1000 = 1,04166msec
             //int timeout = 1000000 / (mMinSpeed / (8 + 1 + 1)) * bytes / 1000;
             
-            int timeout = (int)(bytes* multipler + 100);
+            int timeout = (int)(bytes* multipler + 200);
             if (1 > timeout)
                 timeout = 1;
             return timeout;

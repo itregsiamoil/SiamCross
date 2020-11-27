@@ -3,65 +3,65 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SiamCross.Models.Sensors.Dmg.SiddosA3M;
 
 namespace SiamCross.Models.Sensors.Dmg.SiddosA3M.Measurement
 {
     public class SiddosA3MMeasurementManager
     {
-        private IProtocolConnection _bluetoothAdapter;
-        private SiddosA3MConfigCommandsGenerator _configGenerator;
+        private CommandGenerator _configGenerator;
         private SiddosA3MMeasurementStartParameters _measurementParameters;
         private DmgBaseMeasureReport _report;
         private ISensor mSensor;
-        private DynStructuredContainer _dynContainer;
+
         public SensorData SensorData { get => mSensor.SensorData; }
         public ISensor Sensor { get => mSensor; }
         public byte[] ErrorCode { get; private set; }
         public DmgMeasureStatus MeasurementStatus { get; set; }
 
-        private List<byte[]> _currentDynGraph;
-        private List<byte[]> _currentAccelerationGraph;
+        byte[] _currentDynGraph = new byte[1000 * 2];
+        byte[] _currentAccelerationGraph = new byte[1000 * 2];
 
-        public SiddosA3MMeasurementManager(IProtocolConnection bluetoothAdapter, ISensor sensor,
-                SiddosA3MMeasurementStartParameters measurementParameters)
+        public SiddosA3MMeasurementManager(ISensor sensor,
+             SiddosA3MMeasurementStartParameters measurementParameters)
         {
-            _bluetoothAdapter = bluetoothAdapter;
             _measurementParameters = measurementParameters;
-            _configGenerator = new SiddosA3MConfigCommandsGenerator();
+            _configGenerator = new CommandGenerator();
             mSensor = sensor;
 
-            _currentDynGraph = new List<byte[]>();
-            _currentAccelerationGraph = new List<byte[]>();
+            //_currentDynGraph = new List<byte[]>();
+            //_currentAccelerationGraph = new List<byte[]>();
         }
 
         public async Task<object> RunMeasurement()
         {
-            //Task.Delay(Constants.LongDelay);
             if (!await SendParameters())
                 return null;
-            if(!await Start())
-                return null;
-            
-            if (!await IsMeasurementDone())
+            if (!await Start())
                 return null;
 
+            MeasurementStatus = await IsMeasurementDone();
             bool gotError = false;
-
-            if (MeasurementStatus == DmgMeasureStatus.Error)
+            if (DmgMeasureStatus.Error == MeasurementStatus)
             {
                 gotError = true;
-                await ReadErrorCode();
+                ErrorCode = await ReadErrorCode();
             }
 
             var fullReport = await DownloadMeasurement(gotError);
             return fullReport;
         }
 
-        private void UpdateProgress(float pos, string text)
+        private void UpdateProgress(float pos)
         {
             _progress = pos;
-            SensorData.Status = "measure: "+ text;
             Sensor.MeasureProgress = _progress / 100;
+        }
+
+        private void UpdateProgress(float pos, string text)
+        {
+            SensorData.Status = "measure: " + text;
+            UpdateProgress(pos);
         }
         private float _progress = 0;
         public int Progress
@@ -77,81 +77,88 @@ namespace SiamCross.Models.Sensors.Dmg.SiddosA3M.Measurement
             UpdateProgress(1, "Send Parameters");
             Console.WriteLine("SENDING PARAMETERS");
             byte[] resp = { };
-            //await Task.Delay(Constants.LongDelay);
-            resp = await _bluetoothAdapter.Exchange(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod));
+            //Console.WriteLine("SetDynPeriod: " + BitConverter.ToString(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod)));
+            resp = await Sensor.Connection.Exchange(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod));
             if (0 == resp.Length)
                 return false;
-            //await Task.Delay(Constants.LongDelay);
-            resp = await _bluetoothAdapter.Exchange(_configGenerator.SetApertNumber(_measurementParameters.ApertNumber));
+            //Console.WriteLine("SetApertNumber: " + BitConverter.ToString(_configGenerator.SetApertNumber(_measurementParameters.ApertNumber)));
+            resp = await Sensor.Connection.Exchange(_configGenerator.SetApertNumber(_measurementParameters.ApertNumber));
             if (0 == resp.Length)
                 return false;
-            //await Task.Delay(Constants.LongDelay);
-            resp = await _bluetoothAdapter.Exchange(_configGenerator.SetImtravel(_measurementParameters.Imtravel));
+            //Console.WriteLine("SetImtravel", _configGenerator.SetImtravel(_measurementParameters.Imtravel));
+            resp = await Sensor.Connection.Exchange(_configGenerator.SetImtravel(_measurementParameters.Imtravel));
             if (0 == resp.Length)
                 return false;
-            //await Task.Delay(Constants.LongDelay);
-            resp = await _bluetoothAdapter.Exchange(_configGenerator.SetModelPump(_measurementParameters.ModelPump));
+            //Console.WriteLine("SetModelPump", _configGenerator.SetModelPump(_measurementParameters.ModelPump));
+            resp = await Sensor.Connection.Exchange(_configGenerator.SetModelPump(_measurementParameters.ModelPump));
             if (0 == resp.Length)
                 return false;
-            //await Task.Delay(Constants.LongDelay);
+            //Console.WriteLine("SetRod: " + BitConverter.ToString(_configGenerator.SetRod(_measurementParameters.Rod)));
+            //resp = await Sensor.Connection.Exchange(_configGenerator.SetRod(_measurementParameters.Rod));
+            if (0 == resp.Length)
+                return false;
             Console.WriteLine("PARAMETERS HAS BEEN SENT");
             return true;
         }
+
+        private async Task<DmgMeasureStatus> IsMeasurementDone()
+        {
+            DmgMeasureStatus status = DmgMeasureStatus.Empty;
+            byte[] resp = { };
+
+            resp = await Sensor.Connection.Exchange(DmgCmd.Get("DynPeriod"));
+            if (0 == resp.Length)
+                return DmgMeasureStatus.Error;
+            UInt32 dyn_period = BitConverter.ToUInt32(resp, 12);
+
+            const UInt32 calc_time_sec = 10;
+            UInt32 measure_time_sec = dyn_period * 5 / 1000 + calc_time_sec;
+            float sep_cost = 50f / measure_time_sec;
+
+            bool isDone = false;
+            for (UInt32 i = 0; i < measure_time_sec && !isDone; i++)
+            {
+                await Task.Delay(Constants.SecondDelay);
+                Console.WriteLine("ReadDeviceStatus", DmgCmd.Get("ReadDeviceStatus"));
+
+                resp = await Sensor.Connection.Exchange(DmgCmd.Get("ReadDeviceStatus")); ;
+                if (0 != resp.Length)
+                {
+                    status = (DmgMeasureStatus)BitConverter.ToUInt16(resp, 12);
+                    _progress += sep_cost;
+                    UpdateProgress(_progress, DmgMeasureStatusAdapter.StatusToReport(status));
+
+                    if (status == DmgMeasureStatus.Ready
+                       || status == DmgMeasureStatus.Error)
+                    {
+                        isDone = true;
+                    }
+                }
+            }
+            return status;
+        }
+
         private async Task<bool> Start()
         {
             UpdateProgress(2, "Send Init and Start");
             byte[] resp = { };
-            //resp = await _bluetoothAdapter.Exchange(DynamographCommands.FullCommandDictionary["InitializeMeasurement"]);
-            //if (0 == resp.Length)
-            //    return false;
-            //await Task.Delay(Constants.LongDelay);
-            resp = await _bluetoothAdapter.Exchange(DmgCmd.Get("StartMeasurement"));
+            resp = await Sensor.Connection.Exchange(DmgCmd.Get("StartMeasurement"));
             if (0 == resp.Length)
                 return false;
-            //await Task.Delay(Constants.LongDelay);
             Console.WriteLine("MEASUREMENT STARTED");
             return true;
         }
-        private async Task<bool> IsMeasurementDone()
+
+        public async Task<byte[]> ReadErrorCode()
         {
             byte[] resp = { };
-            string dataValue;
-            Ddim2.Ddim2Parser pp = new Ddim2.Ddim2Parser();
-
-            int measure_time_sec = _measurementParameters.DynPeriod * 2 / 1000;
-            float sep_cost = 50 / measure_time_sec;
-
-            bool isDone = false;
-            for (int i = 0; i < measure_time_sec && !isDone; i++)
-            {
-                await Task.Delay(Constants.SecondDelay);
-                resp = await _bluetoothAdapter.Exchange(DmgCmd.Get("ReadDeviceStatus")); ;
-                if (0 == resp.Length)
-                    return false;
-
-                dataValue = Ddim2.Ddim2Parser.ConvertToStringPayload(resp);
-                MeasurementStatus = DmgMeasureStatusAdapter.StringStatusToEnum(dataValue);
-                _progress += sep_cost;
-                UpdateProgress(_progress, MeasurementStatus.ToString());
-
-                if (MeasurementStatus == DmgMeasureStatus.Ready
-                   || MeasurementStatus == DmgMeasureStatus.Error)
-                {
-                    isDone = true;
-                }
-            }
-
-            return isDone;
-        }
-        public async Task<bool> ReadErrorCode()
-        {
-            byte[] resp = { };
-            resp = await _bluetoothAdapter.Exchange(DmgCmd.Get("ReadMeasurementErrorCode"));
+            resp = await Sensor.Connection.Exchange(DmgCmd.Get("ReadMeasurementErrorCode"));
             if (0 == resp.Length)
-                return false;
-            ErrorCode = resp.AsSpan().Slice(12, 4).ToArray();
-            return true;
-            //await Task.Delay(Constants.LongDelay);
+            {
+                Console.WriteLine("Can`t read error code");
+                return new byte[] { };
+            }
+            return resp.AsSpan().Slice(12, 4).ToArray();
         }
 
         public async Task<bool> ReadMeasurementHeader()
@@ -159,13 +166,13 @@ namespace SiamCross.Models.Sensors.Dmg.SiddosA3M.Measurement
             UpdateProgress(_progress, "Read Measurement Header");
             int retry = 3;
             bool is_ok = false;
-            for(int r=0; r < retry && !is_ok; r++)
+            for (int r = 0; r < retry && !is_ok; r++)
             {
-                byte[] message = await _bluetoothAdapter.Exchange(DmgCmd.Get("ReadMeasurementReport"));
+                byte[] message = await Sensor.Connection.Exchange(DmgCmd.Get("ReadMeasurementReport"));
                 if (null == message || 0 == message.Length)
                     continue;
 
-                var data = Ddim2.Ddim2Parser.GetPayload(message);
+                var data = SiddosA3MParser.GetPayload(message);
                 var report = new List<UInt16>();
                 for (int i = 0; i + 1 < data.Count(); i += 2)
                 {
@@ -184,244 +191,100 @@ namespace SiamCross.Models.Sensors.Dmg.SiddosA3M.Measurement
         public async Task<SiddosA3MMeasurementData> DownloadMeasurement(bool isError)
         {
             UpdateProgress(_progress, "Download measurement");
-
-            var _currentReport = new List<byte>();
-
-            _currentDynGraph.Add(new byte[2] { 0, 0 });
-            var _currentAccelerationGraph = new List<byte[]>();
-
+            Console.WriteLine("READING MEASUREMENT REPORT");
             await ReadMeasurementHeader();
+            await GetDgm4kB();
+            List<byte> dynRawBytes = _currentDynGraph.ToList();
 
-            await GetDgm4kB_2();
-
-            //await Task.Delay(500);
-
-            var dynRawBytes = new List<byte>();
-            foreach (var bytes in _dynContainer.GetDynData())
-            {
-                foreach (var b in bytes)
-                {
-                    dynRawBytes.Add(b);
-                }
-            }
-
-            SiddosA3MMeasurementData measurement = isError ?
-                new SiddosA3MMeasurementData(_report,
-                    (short)_measurementParameters.ApertNumber,
-                    (short)_measurementParameters.ModelPump,
-                    dynRawBytes,
-                    DateTime.Now,
-                    _measurementParameters.SecondaryParameters,
-                    null,
-                    ErrorCode) :
+            SiddosA3MMeasurementData measurement =
                 new SiddosA3MMeasurementData(
                     _report,
                     (short)_measurementParameters.ApertNumber,
                     (short)_measurementParameters.ModelPump,
-                    dynRawBytes,
+                    _currentDynGraph.ToList(),
                     DateTime.Now,
                     _measurementParameters.SecondaryParameters,
                     null,
-                    null);
+                    isError ? ErrorCode : null);
 
             var dynGraphPoints = DgmConverter.GetXYs(measurement.DynGraph.ToList(),
                     measurement.Report.Step, measurement.Report.WeightDiscr);
 
             measurement.DynGraphPoints = dynGraphPoints;
 
-            await _bluetoothAdapter.SendData(DmgCmd.Get("InitializeMeasurement"));
-            //await Task.Delay(Constants.LongDelay);
+            byte[] message = await Sensor.Connection.Exchange(DmgCmd.Get("InitializeMeasurement"));
+            if (null == message || 0 == message.Length)
+                Console.WriteLine("DownloadMeasurement - cant send InitializeMeasurement");
             return measurement;
         }
 
+        static private async Task<bool> ReadMemory(IProtocolConnection conn, byte[] dst, int start
+            , UInt32 start_addr, UInt32 mem_size, UInt16 step_size
+            , Action<float> DoStepProgress, float progress_size)
+        {
+            if (null == dst || dst.Length < (int)mem_size)
+                throw new Exception("dst is too short");
+
+            //const UInt32 start_addr = 0x81000000;
+            //const UInt32 mem_size = 1000*2;
+            //const UInt32 step_size = 20;
+            UInt32 step_count = mem_size / step_size;
+
+            float sep_cost = (progress_size) / step_count;
+
+            byte[] cmd = new byte[]
+            {
+                0x0D, 0x0A, //header
+                0x01, 0x01, // device // command
+                0x00, 0x00, 0x00, 0x81, // address
+                0x00, 0x00, // length
+                0xFF, 0xFF, // crc
+
+            };
+            byte[] resp = { };
+            UInt32 curr_addr = 0;
+
+            while (mem_size > curr_addr)
+            {
+                UInt32 addr = curr_addr + start_addr;
+                BitConverter.GetBytes(addr).CopyTo(cmd.AsSpan(4, 4)); //addr
+                BitConverter.GetBytes(step_size).CopyTo(cmd.AsSpan(8, 2)); //len
+                byte[] crc = CrcModbusCalculator.ModbusCrc(cmd, 2, cmd.Length - 4);
+                crc.CopyTo(cmd.AsSpan(10, 2)); //crc
+
+                resp = await conn.Exchange(cmd);
+                if (0 == resp.Length)
+                    return false;
+
+                resp.AsSpan(12, (int)step_size).CopyTo(dst.AsSpan((int)curr_addr, (int)step_size));
+                DoStepProgress(sep_cost);
+
+                UInt32 next_curr_addr = curr_addr + step_size;
+                if (mem_size > next_curr_addr)
+                    curr_addr = next_curr_addr;
+                else
+                    curr_addr += mem_size - curr_addr;
+            }
+
+            return true;
+        }
         private async Task GetDgm4kB()
         {
+            float progress_size = (100f - _progress) / 2;
 
-            UpdateProgress(_progress, "Read GetDgm4kB");
-            _dynContainer = new DynStructuredContainer();
-            var addresses = _dynContainer.GetEmptyAddresses();
-            while (addresses.Count != 0)
+            UpdateProgress(_progress, "Read dgm");
+            Action<float> StepProgress = (float sep_cost) =>
             {
-                System.Diagnostics.Debug.WriteLine($"Empty addresses = {addresses.Count}");
-
-                byte[] length = BitConverter.GetBytes(20);
-                var command = new List<byte>
-                    {
-                        0x0D, 0x0A,
-                        0x01, 0x01,
-                    };
-                command.AddRange(addresses[0]);
-                command.Add(length[0]);
-                command.Add(length[1]);
-
-                AddCrc();
-
-                await _bluetoothAdapter.SendData(command.ToArray());
-                //await Task.Delay(Constants.LongDelay);
-
-                RemoveCrc();
-
-                for (int i = 1; i < addresses.Count; i++)
-                {
-                    command[4] = addresses[i][0];
-                    command[5] = addresses[i][1];
-
-                    AddCrc();
-                    await _bluetoothAdapter.SendData(command.ToArray());
-                    //await Task.Delay(Constants.LongDelay);
-
-                    RemoveCrc();
-                }
-                //await Task.Delay(1000);
-                addresses = _dynContainer.GetEmptyAddresses();
-                #region AddRemoveCRC
-                void AddCrc()
-                {
-                    byte[] crc = CrcModbusCalculator.ModbusCrc(command.GetRange(2, 8).ToArray());
-                    command.Add(crc[0]);
-                    command.Add(crc[1]);
-                }
-
-                void RemoveCrc()
-                {
-                    command.RemoveAt(command.Count - 1);
-                    command.RemoveAt(command.Count - 1);
-                }
-                #endregion
-            }
+                _progress += sep_cost;
+                UpdateProgress(_progress);
+            };
+            await ReadMemory(Sensor.Connection, _currentDynGraph
+                , 0, 0x81000000, 1000 * 2, 50, StepProgress, progress_size);
+            UpdateProgress(_progress, "Read axgm");
+            await ReadMemory(Sensor.Connection, _currentAccelerationGraph
+                , 0, 0x83000000, 1000 * 2, 50, StepProgress, progress_size);
 
         }
 
-        private async Task GetDgm4kB_2()
-        {
-            byte[] message = { };
-            _dynContainer = new DynStructuredContainer();
-            var addresses = _dynContainer.GetEmptyAddresses();
-
-            float sep_cost = (100f - _progress) / addresses.Count;
-
-            while (addresses.Count != 0)
-            {
-                System.Diagnostics.Debug.WriteLine($"Empty addresses = {addresses.Count}");
-
-                byte[] length = BitConverter.GetBytes(20);
-                var command = new List<byte>
-                    {
-                        0x0D, 0x0A,
-                        0x01, 0x01,
-                    };
-                command.AddRange(addresses[0]);
-                command.Add(length[0]);
-                command.Add(length[1]);
-
-                AddCrc();
-
-                message = await _bluetoothAdapter.Exchange(command.ToArray());
-                if(0!= message.Length)
-                {
-                    var commandName = Ddim2.Ddim2Parser.DefineCommand(message);
-                    MeasurementRecieveHandler(commandName, message);
-                    byte[] address = new byte[] { message[4], message[5], message[6], message[7] };
-                    byte[] data = Ddim2.Ddim2Parser.GetPayload(message);
-                    _dynContainer.AddData(address, data);
-                    _progress += sep_cost;
-                    UpdateProgress(_progress, "Read GetDgm4kB");
-
-                }
-
-                //await Task.Delay(Constants.LongDelay);
-
-                RemoveCrc();
-
-                for (int i = 1; i < addresses.Count; i++)
-                {
-                    command[4] = addresses[i][0];
-                    command[5] = addresses[i][1];
-
-                    AddCrc();
-                    message = await _bluetoothAdapter.Exchange(command.ToArray());
-                    if (0 != message.Length)
-                    {
-                        var commandName = Ddim2.Ddim2Parser.DefineCommand(message);
-                        MeasurementRecieveHandler(commandName, message);
-                        byte[] address = new byte[] { message[4], message[5], message[6], message[7] };
-                        byte[] data = Ddim2.Ddim2Parser.GetPayload(message);
-                        _dynContainer.AddData(address, data);
-                        _progress += sep_cost;
-                        UpdateProgress(_progress, "Read GetDgm4kB");
-
-                    }
-
-                    RemoveCrc();
-                }
-                //await Task.Delay(1000);
-                addresses = _dynContainer.GetEmptyAddresses();
-                #region AddRemoveCRC
-                void AddCrc()
-                {
-                    byte[] crc = CrcModbusCalculator.ModbusCrc(command.GetRange(2, 8).ToArray());
-                    command.Add(crc[0]);
-                    command.Add(crc[1]);
-                }
-
-                void RemoveCrc()
-                {
-                    command.RemoveAt(command.Count - 1);
-                    command.RemoveAt(command.Count - 1);
-                }
-                #endregion
-            }
-        }
-
-
-
-        public void MemoryRecieveHandler(byte[] address, byte[] data)
-        {
-            if (_dynContainer.AddData(address, data))
-            {
-                //_progress += 0.5f;
-            }
-        }
-
-        public void MeasurementRecieveHandler(string commandName, byte[] data)
-        {
-            if (data == null)
-            {
-                return;
-            }
-
-            switch (commandName)
-            {
-                case "ExportDynGraph":
-                    Console.WriteLine(BitConverter.ToString(data));
-                    _currentDynGraph.Add(data);
-                    break;
-                case "ExportAccelerationGraph":
-                    _currentAccelerationGraph.Add(data.Reverse().ToArray());
-                    break;
-                case "ReadMeasurementReport":
-                    var report = new List<UInt16>();
-                    for (int i = 0; i + 1 < data.Count(); i += 2)
-                    {
-                        var array = new byte[] { data[i], data[i + 1] };
-                        UInt16 value = BitConverter.ToUInt16(array, 0);
-                        report.Add(value);
-                    }
-                    _report = new DmgBaseMeasureReport(
-                        report[0],
-                        report[1],
-                        report[2],
-                        report[3],
-                        report[4],
-                        report[5],
-                        report[6]);
-                    break;
-                case "ReadMeasurementErrorCode":
-                    ErrorCode = data;
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 }
