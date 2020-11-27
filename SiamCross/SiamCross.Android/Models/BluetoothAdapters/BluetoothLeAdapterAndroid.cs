@@ -60,8 +60,6 @@ namespace SiamCross.Droid.Models
             }
         }
 
-        protected Stream MRxStream { get => mRxStream; set => mRxStream = value; }
-
         private IDevice _device;
         private Guid _deviceGuid;
         private IService _targetService;

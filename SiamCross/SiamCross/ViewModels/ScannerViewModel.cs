@@ -94,6 +94,9 @@ namespace SiamCross.ViewModels
                 return;
             }
 
+            if (!IsSiamSensor(dev))
+                return;
+
             switch (dev.BluetoothType)
             {
                 case BluetoothType.Classic:
@@ -118,6 +121,16 @@ namespace SiamCross.ViewModels
                     break;
             }
         }
+
+        public bool IsSiamSensor(ScannedDeviceInfo dev)
+        {
+            return dev.Name.Contains("DDIN")
+                   || dev.Name.Contains("DDIM")
+                   || dev.Name.Contains("SIDDOSA3M")
+                   || dev.Name.Contains("DU")
+                   || dev.Name.Contains("UMT") ;
+        }
+
 
         public void StartScan()
         {

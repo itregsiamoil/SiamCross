@@ -35,7 +35,8 @@
                                        HasShadow="True"  
                                        >
                                     <StackLayout VerticalOptions="FillAndExpand">
-                                        <Expander IsExpanded="True">
+                                        <Expander >
+                                            <!-- IsExpanded="True" -->
                                             <Expander.Header x:Name ="ExpanderHeader"  >
                                                 <Grid x:Name="MyGrid" VerticalOptions="StartAndExpand" 
                                                       BackgroundColor="{StaticResource colorCtrlInactive}" 
@@ -222,12 +223,12 @@
                                                         <Switch IsToggled="{Binding Activate}" HorizontalOptions="End"
                                                                     Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" />
                                                     </Grid>
-                                                    <Grid x:Name="MeasureBox"
-                                                          VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" 
+                                                    <Grid x:Name="MeasureBox" 
+                                                        HeightRequest ="{Binding Source={RelativeSource AncestorType={x:Type Expander}}
+                                                        , Path=Header.Height}"
                                                           RowSpacing="0" >
                                                         <Grid.RowDefinitions>
-                                                            <RowDefinition Height="Auto"></RowDefinition>
-                                                            <RowDefinition Height="Auto"></RowDefinition>
+                                                            <RowDefinition Height="*"></RowDefinition>
                                                             <RowDefinition Height="Auto"></RowDefinition>
                                                         </Grid.RowDefinitions>
                                                         <Grid.ColumnDefinitions>
@@ -240,53 +241,62 @@
                                                         <Label 
                                                             Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
                                                             VerticalTextAlignment="Start" HorizontalTextAlignment="Start"
-                                                            HorizontalOptions ="StartAndExpand" VerticalOptions ="StartAndExpand">
+                                                            HorizontalOptions ="Start" VerticalOptions ="Start">
                                                             <Label.FormattedText Margin="0">
                                                                 <FormattedString >
                                                                     <Span Text="{Binding SensorData.Status}" />
-                                                                    
                                                                 </FormattedString>
                                                             </Label.FormattedText>
                                                         </Label>
-                                                        <Grid x:Name="ProgressGrid" HorizontalOptions="FillAndExpand" 
-                                                              Grid.Row="1" Grid.Column="1" >
-                                                            <Grid.RowDefinitions>
-                                                                <RowDefinition Height="*"></RowDefinition>
-                                                            </Grid.RowDefinitions>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="30"></ColumnDefinition>
-                                                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                                            </Grid.ColumnDefinitions>
-                                                            <Label FontSize="Micro"
-                                                               Grid.Row="0" Grid.Column="0"
-                                                               VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
-                                                               VerticalTextAlignment="Center" HorizontalTextAlignment="End" >
-                                                                <Label.Text>
-                                                                    <MultiBinding StringFormat="{}{0}%">
-                                                                        <Binding Path="MeasureProgressP" />
-                                                                    </MultiBinding>
-                                                                </Label.Text>
-                                                            </Label>
-                                                            <ProgressBar Progress="{Binding MeasureProgress}" 
-                                                            Margin="2" HorizontalOptions ="FillAndExpand" IsVisible="true"
-                                                            Grid.Row="0" Grid.Column="1" />
-                                                            <Grid.Triggers>
-                                                                <DataTrigger TargetType="Grid" Binding="{Binding IsMeasurement}" Value="false" >
-                                                                    <Setter Property="IsVisible" Value="false"  />
-                                                                </DataTrigger>
-                                                            </Grid.Triggers>
-                                                        </Grid>
-
                                                     </Grid>
 
+                                                    <Grid x:Name="ProgressGrid" BackgroundColor="{StaticResource colorCtrlInactive}" 
+                                                          HeightRequest ="{Binding Source={RelativeSource AncestorType={x:Type Expander}}
+                                                        , Path=Header.Height}"
+                                                          RowSpacing="0" >
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="*"></RowDefinition>
+                                                            <RowDefinition Height="Auto"></RowDefinition>
+                                                        </Grid.RowDefinitions>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Label Text="&#x1F4D0;" FontSize="Large" TextColor="Black"
+                                                           Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
+                                                           VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
+                                                        <Label 
+                                                               Grid.Row="1" Grid.Column="1"
+                                                               VerticalTextAlignment="Start" HorizontalTextAlignment="Start" >
+                                                            <Label.Text>
+                                                                <MultiBinding StringFormat="{}{0}%">
+                                                                    <Binding Path="MeasureProgressP" />
+                                                                </MultiBinding>
+                                                            </Label.Text>
+                                                        </Label>
+                                                        <ProgressBar Progress="{Binding MeasureProgress}" Margin="4" 
+                                                            HorizontalOptions ="Fill" VerticalOptions="End" IsVisible="true"
+                                                            Grid.Row="0" Grid.Column="1"  />
+                                                        <Grid.Triggers>
+                                                            <DataTrigger TargetType="Grid" Binding="{Binding IsMeasurement}" Value="false" >
+                                                                <Setter Property="IsVisible" Value="false"  />
+                                                            </DataTrigger>
+                                                        </Grid.Triggers>
+                                                    </Grid>
 
-
-                                                    <Button x:Name="BtnStartMeasure" Text="{local:Translate MeasurementsTitle}" FontSize="Medium" 
+                                                    <Button x:Name="BtnStartMeasure" Text="{local:Translate MeasurementsTitle}"
+                                                            HeightRequest = "{Binding Source={RelativeSource AncestorType={x:Type Expander}}
+                                                                , Path=Header.Height}"
                                                             BorderWidth="0" BorderColor="{StaticResource colorCtrlInactive}"
                                                             CornerRadius="0" BackgroundColor="{StaticResource colorCtrlNormal}"
                                                             Command="{Binding Path=BindingContext.GotoMeasurementPageCommand, 
                                                             Source={x:Reference ControlPanel}}"
                                                             CommandParameter="{Binding SensorData.Id}">
+                                                        <Button.Triggers>
+                                                            <DataTrigger TargetType="Button" Binding="{Binding IsMeasurement}" Value="true" >
+                                                                <Setter Property="IsVisible" Value="false"  />
+                                                            </DataTrigger>
+                                                        </Button.Triggers>
                                                     </Button>
                                                     <!--
                                                     <Span Text="&#10;" />
