@@ -85,12 +85,12 @@
                                                     <Button Text="&#x2716;" FontSize="Medium" x:Name="btnRemove" TextColor="#40FF0000"
                                                             Grid.Row="0" Grid.Column="2" Grid.RowSpan="3"
                                                             BorderWidth="0" BorderColor="LightGray" CornerRadius="0" BackgroundColor="#10FF0000"
-                                                            HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
                                                             Command="{Binding Path=BindingContext.DeleteSensorCommand, 
                                                             Source={x:Reference ControlPanel}}"
                                                             CommandParameter="{Binding SensorData.Id}"
-                                                            WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}">
-                                                            <!-- BindingContext="{x:Reference btnColapse}" WidthRequest ="{Binding Height, Mode=OneWay}"> -->
+                                                            WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
+                                                            >
+                                                        <!-- BindingContext="{x:Reference btnColapse}" WidthRequest ="{Binding Height, Mode=OneWay}"> -->
                                                         </Button>
                                                     </Grid>
                                             </Expander.Header>
@@ -217,6 +217,8 @@
                                                                     <Span Text="{Binding Connection.PhyInterface.Name}" />
                                                                     <Span Text=" " />
                                                                     <Span Text="Connection"/>
+                                                                    <Span Text=" " />
+                                                                    <Span Text="{Binding Connection.Rssi}" />
                                                                 </FormattedString>
                                                             </Label.FormattedText>
                                                         </Label>

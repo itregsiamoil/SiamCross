@@ -1,39 +1,21 @@
 ﻿#define DEBUG_UNIT
 
+using Autofac;
+using Plugin.BLE.Abstractions.Contracts;
+using Plugin.BLE.Abstractions.EventArgs;
+using SiamCross.Models;
+using SiamCross.Models.Adapters;
+using SiamCross.Models.Scanners;
+using SiamCross.Models.Tools;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Autofac;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-
-using Plugin.BLE;
-using Plugin.BLE.Abstractions.Contracts;
-using Plugin.BLE.Abstractions.Exceptions;
-using Plugin.BLE.Abstractions;
-using ScanMode = Plugin.BLE.Abstractions.Contracts.ScanMode;
-using SiamCross.Droid.Models;
-using SiamCross.Models;
-using SiamCross.Models.Scanners;
-using SiamCross.Models.Adapters;
-using SiamCross.Models.Tools;
-using Xamarin.Forms;
-using Plugin.BLE.Abstractions.EventArgs;
-using NLog;
-using SiamCross.AppObjects;
-using SiamCross.Services.Logging;
-using Android.Bluetooth;
 using Debug = System.Diagnostics.Debug;
 using OperationCanceledException = System.OperationCanceledException;
-using System.IO;
-using Java.IO;
+using ScanMode = Plugin.BLE.Abstractions.Contracts.ScanMode;
 
 
 //[assembly: Dependency(typeof(BluetoothLeAdapterAndroid))]
@@ -45,6 +27,16 @@ namespace SiamCross.Droid.Models
         public IPhyInterface PhyInterface 
         {
             get => mInterface;
+        }
+
+        public int Rssi 
+        {
+            get
+            {
+                if (null == _device)
+                    return 0;
+                return _device.Rssi;
+            }
         }
 
         public IAdapter _adapter
@@ -231,12 +223,14 @@ namespace SiamCross.Droid.Models
                 _isFirstConnectionTry = false;
                 _connectQueue.Remove(_deviceInfo.Name);
             }
+
+            bool succ = await _device.UpdateRssiAsync();
             return inited;
         }
 
         public async Task SendData_Old(byte[] data)
         {
-            if (!BluetoothAdapter.DefaultAdapter.IsEnabled)
+            if (!mInterface.IsEnbaled)
             {
                 ConnectFailed?.Invoke();
                 return;

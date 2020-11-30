@@ -12,11 +12,10 @@ namespace SiamCross.Droid.Models.BluetoothAdapters
 {
     public class CustomBluetooth5Adapter : IBluetooth5CustomAdapter, IUsbDataObserver
     {
+        static int mRssi = 0;
         readonly IPhyInterface mInterface;
-        public IPhyInterface PhyInterface
-        {
-            get => mInterface;
-        }
+        public IPhyInterface PhyInterface => mInterface;
+        public int Rssi => mRssi;
         protected ConnectionState mState = ConnectionState.Disconnected;
         public ConnectionState State => mState;
         public string Address { get; private set; }

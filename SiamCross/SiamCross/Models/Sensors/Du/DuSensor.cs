@@ -147,7 +147,7 @@ namespace SiamCross.Models.Sensors.Du
                     }
                     if (!IsMeasurement)
                     {
-                        await QuickReport();
+                        await QuickReport(token);
                         await Task.Delay(1000);
                     }
                 }
@@ -167,7 +167,7 @@ namespace SiamCross.Models.Sensors.Du
             mConnection.Disconnect();
         }
 
-        public async Task<bool> QuickReport()
+        public async Task<bool> QuickReport(CancellationToken cancelToken)
         {
             await mConnection.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Voltage]);
             await Task.Delay(300);

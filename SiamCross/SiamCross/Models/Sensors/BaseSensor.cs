@@ -67,7 +67,7 @@ namespace SiamCross.Models.Sensors.Dmg
         }
         public SensorData SensorData { get; }
         public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
-        public abstract Task<bool> QuickReport();
+        public abstract Task<bool> QuickReport(CancellationToken cancellationToken);
         public abstract Task StartMeasurement(object measurementParameters);
 
         #endregion
@@ -75,21 +75,28 @@ namespace SiamCross.Models.Sensors.Dmg
         #region Variables
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         private CancellationTokenSource _cancellToken= null;
+        //TaskCompletionSource<bool> mLiveTaskCompleated=null;
+        Task<bool> _liveTask = null;
         private bool _activated = false;
+        private SemaphoreSlim semaphore = new SemaphoreSlim(1);
         #endregion
         async void AsyncActivate()
         {
-            Task<bool> _liveTask = null; ;
             try
             {
-                _cancellToken = new CancellationTokenSource();
+                CancellationTokenSource ct = new CancellationTokenSource();
                 _liveTask = Task.Run(async () =>
                 {
-                    await ExecuteAsync(_cancellToken.Token);
+                    using (await semaphore.UseWaitAsync())
+                    {
+                        //mLiveTaskCompleated = new TaskCompletionSource<bool>();
+                        _cancellToken = ct;
+                        _activated = true;
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
+                        await ExecuteAsync(_cancellToken.Token);
+                    }
                     return false;
-                }, _cancellToken.Token);
-                _activated = true;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
+                }, ct.Token);
                 _activated = await _liveTask;
             }
             catch (OperationCanceledException)
@@ -106,17 +113,47 @@ namespace SiamCross.Models.Sensors.Dmg
             }
             finally
             {
-                Deactivate();
-                _liveTask?.Dispose();//_liveTask = null;
-                
-            }
+                using (await semaphore.UseWaitAsync())
+                {
+                    switch(_liveTask.Status)
+                    {
+                        case TaskStatus.RanToCompletion:
+                        case TaskStatus.Canceled:
+                            _liveTask?.Dispose();
+                            break;
+                        default:break;
+                    }
+                    //_liveTask = null;
+                    _cancellToken?.Cancel();
+                    _cancellToken?.Dispose();
+                    _cancellToken = null;
+                    _activated = false;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
+                    ClearStatus();
+                    //mLiveTaskCompleated.TrySetResult(true);
+                }
+            }//finally
         }
 
-        void Deactivate()
+        async void Deactivate()
         {
             try
             {
-                mConnection?.Disconnect();
+                if (null != _cancellToken && !_cancellToken.IsCancellationRequested)
+                {
+                    _cancellToken.Cancel();
+                    //await mLiveTaskCompleated.Task;
+                }                
+                using (await semaphore.UseWaitAsync())
+                {
+                    mConnection?.Disconnect();
+                    if (_activated)
+                    {
+                        _activated = false;
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
+                        ClearStatus();
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -127,15 +164,8 @@ namespace SiamCross.Models.Sensors.Dmg
             }
             finally
             {
-                _cancellToken?.Cancel();
-                _cancellToken?.Dispose();
-                _cancellToken = null;
-                _activated = false;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
-                ClearStatus();
             }
         }
-
         public bool Activate
         {
             get => _activated;
@@ -144,64 +174,57 @@ namespace SiamCross.Models.Sensors.Dmg
                 DebugLog.WriteLine("try activate");
                 if (value)
                 {
-                    //using (await semaphore.UseWaitAsync())
+                    if (!_activated )
                     {
-                        if (!_activated )
-                        {
-                            DebugLog.WriteLine("try activate = true");
-                            AsyncActivate();
-                        }
+                        DebugLog.WriteLine("try activate = true");
+                        AsyncActivate();
                     }
                 }
                 else
                 {
-                    //using (await semaphore.UseWaitAsync())
-                    {
-                        DebugLog.WriteLine("try activate = false");
-                        if (null != _cancellToken && !_cancellToken.IsCancellationRequested)
-                            _cancellToken.Cancel();
-                        else
-                            Deactivate();
-                    }
+                //using (await semaphore.UseWaitAsync())
+                    DebugLog.WriteLine("try activate = false");
+                    Deactivate();
                 }
             }
         }
-        private async Task ExecuteAsync(CancellationToken cancellationToken)
+        private async Task ExecuteAsync(CancellationToken cancelToken)
         {
             //await Task.Delay(1000);
             try
             {
-                while (!cancellationToken.IsCancellationRequested)
+                while (!cancelToken.IsCancellationRequested)
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
+                    cancelToken.ThrowIfCancellationRequested();
                     if (IsAlive)
                     {
                         if (false == IsMeasurement)
                         {
-                            if (false == await QuickReport())
+                            if (false == await QuickReport(cancelToken))
                             {
                                 IsAlive = (ConnectionState.Connected == mConnection.State);
+                                await mConnection.Disconnect();
                                 continue;
                             }
                                 
                         }
                         else
                         {
-                            await Task.Delay(1000, cancellationToken);
+                            await Task.Delay(1000, cancelToken);
                             //await CheckStatus();
                         }
-                        await Task.Delay(1000, cancellationToken);
+                        await Task.Delay(1000, cancelToken);
                     }
                     else
                     {
                         ClearStatus();
-                        cancellationToken.ThrowIfCancellationRequested();
+                        cancelToken.ThrowIfCancellationRequested();
                         bool connected = await mConnection.Connect();
                         if (!connected)
-                            await Task.Delay(2000, cancellationToken);
+                            await Task.Delay(2000, cancelToken);
                         else
                         {
-                            if (await PostConnectInit())
+                            if (await PostConnectInit(cancelToken))
                             {
                                 IsAlive = true;
                                 SensorData.Status = Resource.ConnectedStatus;
@@ -215,7 +238,7 @@ namespace SiamCross.Models.Sensors.Dmg
             catch (OperationCanceledException ex)
             {
                 DebugLog.WriteLine("{0}: {1}", ex.GetType().Name, ex.Message);
-                cancellationToken.ThrowIfCancellationRequested();
+                cancelToken.ThrowIfCancellationRequested();
             }
             catch (Exception ex)
             {
@@ -226,7 +249,7 @@ namespace SiamCross.Models.Sensors.Dmg
                     + "\n stack=" + ex.StackTrace + "\n");
             }
         }
-        public abstract Task<bool> PostConnectInit();
+        public abstract Task<bool> PostConnectInit(CancellationToken cancellationToken);
         #endregion
 
         protected void ClearStatus()

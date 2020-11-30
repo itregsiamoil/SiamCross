@@ -1,35 +1,53 @@
 ﻿#define DEBUG_UNIT
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.Bluetooth;
 using Android.App;
+using Android.Bluetooth;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Java.IO;
 using Java.Util;
+using SiamCross.Models;
+using SiamCross.Models.Adapters;
+using SiamCross.Models.Adapters.PhyInterface;
+using SiamCross.Models.Scanners;
+using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using System.IO;
-using SiamCross.Models;
-using SiamCross.Models.Scanners;
-using SiamCross.Models.Adapters;
-using SiamCross.Models.Tools;
-using OperationCanceledException = System.OperationCanceledException;
-using SiamCross.Models.Adapters.PhyInterface;
 
 namespace SiamCross.Droid.Models
 {
+    /*
+    class BluetoothGattCallbackExt : BluetoothGattCallback
+    {
+        BaseBluetoothClassicAdapterAndroid mBt2Adapter = null;
+        public BluetoothGattCallbackExt(BaseBluetoothClassicAdapterAndroid bt2adapter)
+            :base()
+        {
+            mBt2Adapter = bt2adapter;
+        }
+        override public void OnConnectionStateChange(BluetoothGatt gatt, GattStatus status, ProfileState newState)
+        {
+            Debug.WriteLine("OnConnectionStateChange ");
+            //super.onConnectionStateChange(gatt, status, newState);
+        }
+        override public void OnReadRemoteRssi(BluetoothGatt gatt, int rssi, GattStatus status)
+        {
+            Debug.WriteLine("OnReadRemoteRssi ");
+            
+            if (status == GattStatus.Success)
+            {
+                mBt2Adapter.Rssi = rssi;
+                //Log.d("BluetoothRssi", String.format("BluetoothGat ReadRssi[%d]", rssi));
+            }
+                 
+        }
+    };
+    */
     [BroadcastReceiver(Enabled = true, Exported = true)]
     [IntentFilter(new[] { BluetoothAdapter.ActionStateChanged
-        //, BluetoothAdapter.ExtraState
-        //, BluetoothDevice.ActionAclConnected
+        , BluetoothAdapter.ExtraState
+        , BluetoothDevice.ActionFound
+        , BluetoothDevice.ExtraRssi
+        , BluetoothDevice.ActionAclConnected
         , BluetoothDevice.ActionAclDisconnected
         , BluetoothDevice.ActionAclDisconnectRequested
         , BluetoothDevice.ActionBondStateChanged
@@ -42,6 +60,9 @@ namespace SiamCross.Droid.Models
         {
             get => mInterface;
         }
+
+        private int mRssi=0;
+        public int Rssi { get => mRssi; set => mRssi=value; }
 
         private BluetoothDevice _bluetoothDevice;
         private BluetoothSocket _socket;
@@ -85,12 +106,6 @@ namespace SiamCross.Droid.Models
         {
             _scannedDeviceInfo = deviceInfo;
         }
-
-
-        virtual public Task<byte[]> Exchange(byte[] req)
-        {
-            return null;
-        }
         virtual public async Task<bool> Connect()
         {
             if (_scannedDeviceInfo.BluetoothArgs is string address)
@@ -117,14 +132,13 @@ namespace SiamCross.Droid.Models
 
                 _outStream = _socket.OutputStream;
                 _inStream = _socket.InputStream;
-
-
                 //await Task.Delay(2000);
-
                 //_readTask = new Task(() => BackgroundRead(_cancellToken));
                 //_readTask.Start();
-
                 DoActionConnectSucceed();
+                //Context ctx = Android.App.Application.Context;
+                //var callback = new BluetoothGattCallbackExt(this);
+                //_bluetoothDevice.ConnectGatt(ctx, true, callback);
                 return true;
             }
             catch(Java.IO.IOException e)
@@ -147,17 +161,13 @@ namespace SiamCross.Droid.Models
             }
             return false;
         }
-
         public void Disconnect()
         {
             //_cancellToken?.Cancel();
-
-            Close(_socket);
             Close(_inStream);
-            //Close(_inputStreamReader);
             Close(_outStream);
+            Close(_socket);
         }
-
         private void Close(IDisposable connectedObject)
         {
             if (connectedObject == null)
@@ -176,8 +186,6 @@ namespace SiamCross.Droid.Models
 
             connectedObject = null;
         }
-
-
         virtual protected async Task BackgroundRead(CancellationTokenSource _cancellToken)
         {
             while (!_cancellToken.IsCancellationRequested)
@@ -211,9 +219,23 @@ namespace SiamCross.Droid.Models
         public override void OnReceive(Context context, Intent intent)
         {
             String action = intent.Action;
-            //if (BluetoothDevice.ActionAclDisconnected.Equals(action))
+            BluetoothDevice device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice);
+            string device_name = device.Name;
+
+            if (BluetoothDevice.ActionAclConnected.Equals(action))
             {
-                Disconnect();
+                return;
+            }
+            //if (   BluetoothDevice.ExtraRssi.Equals(action) || BluetoothDevice.ActionFound.Equals(action) )
+            {
+                mRssi = intent.GetShortExtra(BluetoothDevice.ExtraRssi, short.MinValue);
+            }
+
+
+            if (BluetoothDevice.ActionAclDisconnected.Equals(action))
+            {
+                if(null!= this._bluetoothDevice && _bluetoothDevice.Equals(device))
+                    Disconnect();
             }
             //throw new NotImplementedException();
         }

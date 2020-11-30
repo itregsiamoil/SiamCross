@@ -6,6 +6,7 @@ namespace SiamCross.Models
 {
     public interface IConnection
     {
+        int Rssi { get; }
         IPhyInterface PhyInterface { get; }
         Task<bool> Connect();
         void Disconnect();

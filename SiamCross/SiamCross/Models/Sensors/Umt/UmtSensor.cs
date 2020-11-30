@@ -153,7 +153,7 @@ namespace SiamCross.Models.Sensors.Umt
                     }
                     if (!IsMeasurement)
                     {
-                        await QuickReport();
+                        await QuickReport(token);
                         await Task.Delay(1000);
                     }
                 }
@@ -173,7 +173,7 @@ namespace SiamCross.Models.Sensors.Umt
             mConnection.Disconnect();
         }
 
-        public async Task<bool> QuickReport()
+        public async Task<bool> QuickReport(CancellationToken cancelToken)
         {
             //await BluetoothAdapter.SendData(UmtCommands.FullCommandDictionary[UmtCommandsEnum.Acc]);
             //await Task.Delay(1000);

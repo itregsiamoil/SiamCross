@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
@@ -14,7 +15,7 @@ namespace SiamCross.Models
         bool IsAlive { get; }
         bool IsMeasurement { get; }
         float MeasureProgress { get; set; }
-        Task<bool> QuickReport();
+        Task<bool> QuickReport(CancellationToken cancelToken);
         Task StartMeasurement(object measurementParameters);
         SensorData SensorData { get; }
         ScannedDeviceInfo ScannedDeviceInfo { get; set; }

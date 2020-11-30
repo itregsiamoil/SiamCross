@@ -19,13 +19,22 @@ namespace SiamCross.Models
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
-        protected IConnection mBaseConn;
+        protected IConnection mBaseConn=null;
         protected ConnectionState mState = ConnectionState.Disconnected;
         public SiamProtocolConnection(IConnection base_conn)
         {
             mBaseConn = base_conn;
         }
         public IPhyInterface PhyInterface => mBaseConn.PhyInterface;
+        public int Rssi
+        {
+            get
+            {
+                if (null == mBaseConn)
+                    return 0;
+                return mBaseConn.Rssi;
+            }
+        }
         public ConnectionState State
         {
             get { return mState; }
@@ -311,7 +320,7 @@ namespace SiamCross.Models
                 + "\n stack=" + ex.StackTrace + "\n");
                 
                 DebugLog.WriteLine("ExchangeData Do disconnect ");
-                await Disconnect();
+                //await Disconnect();
                 //await Connect();
             }
             return res;
