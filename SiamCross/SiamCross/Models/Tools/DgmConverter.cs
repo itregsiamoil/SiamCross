@@ -76,13 +76,52 @@ namespace SiamCross.Models.Tools
             return result;
         }
 
+        public static double[,] GetXYs(List<byte> data
+            , UInt16 stepDiscr
+            , UInt16 weightDiscr
+            , UInt16 qty
+            , out float min_x, out float max_x
+            ,out float min_y, out float max_y)
+        {
+            min_x = float.MaxValue;
+            min_y = float.MaxValue;
+            max_x = float.MinValue;
+            max_y = float.MinValue;
+
+            short[] words = TransformRawBytes(data);
+            UInt16 step = stepDiscr;
+            int count = words.Count();
+            double[,] points = new double[count, 2];
+
+            //double min = Double.MaxValue;
+
+            for (int i = 0; i < qty; i++)
+            {
+                int x = ExtractTravel(words[i]);
+                int y = ExtractWeight(words[i]);
+
+                double prev_val = (0 == i) ? 0 : points[i - 1, 0];
+                points[i, 0] = ((x * step) / 1000f) + prev_val;
+                points[i, 1] = Math.Abs((y * weightDiscr));
+
+                if (points[i, 0] < min_x)
+                    min_x = (float)points[i, 0];
+                if (points[i, 1] < min_y)
+                    min_y = (float)points[i, 1];
+                if (points[i, 0] > max_x)
+                    max_x = (float)points[i, 0];
+                if (points[i, 1] > max_y)
+                    max_y = (float)points[i, 1];
+
+            }
+            return points;
+        }
         public static double[,] GetXYs(List<byte> data,
-                                     UInt16 stepDiscr,
-                                     UInt16 weightDiscr)
+                             UInt16 stepDiscr,
+                             UInt16 weightDiscr)
         {
             return GetPoints2(data, stepDiscr, weightDiscr);
         }
-
         private static double[,] GetPoints2(List<byte> data, UInt16 stepDiscr, UInt16 weightDiscr)
         {
             short[] words = TransformRawBytes(data);
@@ -90,11 +129,13 @@ namespace SiamCross.Models.Tools
             int count = words.Count();
             double[,] points = new double[count, 2];
 
+            double min = Double.MaxValue;
+
             for (int i = 0; i < count; i++)
             {
                 int x = ExtractTravel(words[i]);
                 int y = ExtractWeight(words[i]);
-
+                /*
                 if (i == 0)
                 {
                     points[i, 0] = 0;
@@ -105,19 +146,15 @@ namespace SiamCross.Models.Tools
                     points[i, 0] = (x * step) / 1000f;
                 }
                 else
+                */
                 {
-                    points[i, 0] = ((x * step) / 1000f) + points[i - 1, 0];
+                    double prev_val = (0 == i) ? 0 : points[i - 1, 0];
+                    points[i, 0] = ((x * step) / 1000f) + prev_val;
                 }
                 points[i, 1] = Math.Abs((y * weightDiscr));
-            }
 
-            double min = Double.MaxValue;
-            for (int i = 0; i < count; i++)
-            {
-                if (min > points[i, 0])
-                {
+                if (points[i, 0] < min )
                     min = points[i, 0];
-                }
             }
 
             for (int i = 0; i < count; i++)
@@ -127,8 +164,6 @@ namespace SiamCross.Models.Tools
 
             return points;
         }
-
-
         private static double[,] GetPoints(List<byte> data, short stepDiscr, short weightDiscr)
         {
             short[] words = TransformRawBytes(data);

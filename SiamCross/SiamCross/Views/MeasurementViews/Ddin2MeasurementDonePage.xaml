@@ -11,8 +11,8 @@
              Title="DDIN2">
     <NavigationPage.TitleView >
         <StackLayout>
-            <Label Text="{Binding DeviceName}" Font="Bold" TextColor="Black" />
-            <Label Text="{Binding Date, Mode=OneWay }" Font="Bold" TextColor="Black" />
+            <Label Text="{Binding DeviceName}" Font="Bold" TextColor="White" />
+            <Label Text="{Binding Date, Mode=OneWay }" Font="Bold" TextColor="White" />
         </StackLayout>
     </NavigationPage.TitleView>
     <ContentPage.ToolbarItems>
@@ -60,30 +60,53 @@
                     <ViewCell>
                         <StackLayout  Margin="0" Orientation="Vertical" BackgroundColor="White">
                             <!--<forms:ChartView x:Name="Chart1" HeightRequest="200"/>-->
-                            <Grid x:Name="graphGrid" Margin="0">
+                            <Grid x:Name="graphGrid" Margin="0" RowSpacing="0" ColumnSpacing="0" 
+                                  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <Label Text="{Binding MaxGraphY}" Grid.Column="0" Grid.Row="0"/>
-                                <skia:SKCanvasView x:Name="CanvasView"
-                                                   PaintSurface="CanvasView_PaintSurface"
-                                                   HorizontalOptions="FillAndExpand"
-                                                   Margin="4"
-                                                   VerticalOptions="FillAndExpand"
-                                                   IgnorePixelScaling="True"
-                                                   HeightRequest="110"
-                                                   Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"/>
-                                <Label Text=", Т" VerticalOptions="Start" Grid.Column="1" Grid.Row="0" />
-                                <Label Text="0"  Grid.Column="0" Grid.Row="2"/>
-                                <Label Text=", М" HorizontalOptions="Center" Grid.Column="2" Grid.Row="2"/>
-                                <Label Text="{Binding MaxGraphX}" HorizontalOptions="End" Grid.Column="1" Grid.Row="2"/>
+
+                                <skia:SKCanvasView x:Name="CanvasView" PaintSurface="CanvasView_PaintSurface"
+                                                   Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2"
+                                                   HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+                                                   IgnorePixelScaling="false"
+                                                   HeightRequest="150"
+                                                   WidthRequest="300"
+                                                   />
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       HorizontalOptions="Start" VerticalOptions="Start"
+                                       Rotation="0">
+                                    <Label.FormattedText>
+                                        <FormattedString >
+                                            <Span Text="{Binding MaxGraphY}" />
+                                            <Span Text="T" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label Grid.Row="1" Grid.Column="0"
+                                       HorizontalOptions="Start" VerticalOptions="End" 
+                                       Rotation ="0" >
+                                    <Label.FormattedText>
+                                        <FormattedString >
+                                            <Span Text="{Binding MinGraphY}" />
+                                            <Span Text="T" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label Grid.Row="1" Grid.Column="1"
+                                       HorizontalOptions="End" VerticalOptions="End" >
+                                    <Label.FormattedText>
+                                        <FormattedString >
+                                            <Span Text="{Binding MaxGraphX}"  />
+                                            <Span Text="M" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
                             </Grid>
                         </StackLayout>
                     </ViewCell>

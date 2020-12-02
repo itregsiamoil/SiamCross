@@ -24,10 +24,13 @@ namespace SiamCross.Views
     public partial class Ddin2MeasurementDonePage : ContentPage
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
-
         private double[,] _points;
-
         private Ddin2Measurement _measurement;
+
+        public float MinX { get; set; }
+        public float MinY { get; set; }
+        public float MaxX { get; set; }
+        public float MaxY { get; set; }
         public Ddin2MeasurementDonePage(Ddin2Measurement measurement)
         {
             try
@@ -36,10 +39,20 @@ namespace SiamCross.Views
                 var vm = new ViewModelWrap<Ddin2MeasurementDoneViewModel>(measurement);
                 this.BindingContext = vm.ViewModel;
                 InitializeComponent();
+                float minX;
+                float minY;
+                float maxX;
+                float maxY;
+                _points = DgmConverter.GetXYs(_measurement.DynGraph.ToList()
+                    , _measurement.Step
+                    , _measurement.WeightDiscr
+                    , _measurement.Period
+                    , out minX, out maxX, out minY, out maxY);
 
-                _points = DgmConverter.GetXYs(_measurement.DynGraph.ToList(),
-                    _measurement.Step,
-                    _measurement.WeightDiscr);
+                MinX = minX;
+                MinY = minY;
+                MaxX = maxX;
+                MaxY = maxY;
             }
             catch (Exception ex)
             {
@@ -47,11 +60,10 @@ namespace SiamCross.Views
                 throw;
             }
         }
-
         protected override void OnSizeAllocated(double width, double height)
         {
             base.OnSizeAllocated(width, height);
-
+            /*
             if (width > height)
             {
                 outerStack.Orientation = StackOrientation.Horizontal;
@@ -68,8 +80,8 @@ namespace SiamCross.Views
                 graphGrid.WidthRequest = -1;
                 graphGrid.MinimumWidthRequest = -1;
             }
+            */
         }
-
         private void CanvasView_PaintSurface(object sender, SkiaSharp.Views.Forms.SKPaintSurfaceEventArgs args)
         {
             try
@@ -80,41 +92,85 @@ namespace SiamCross.Views
 
                 canvas.Clear();
 
-                SKPaint paint = new SKPaint
+                SKPaint paintFill = new SKPaint
                 {
                     Style = SKPaintStyle.Fill,
-                    Color = Color.Blue.ToSKColor(),
-                    StrokeWidth = 2,
+                    Color = Color.Accent.ToSKColor().WithAlpha(40),
+                };
+
+                SKPaint paint = new SKPaint
+                {
+                    Style = SKPaintStyle.Stroke,
+                    Color = Color.Accent.ToSKColor(),
+                    StrokeWidth = 0,
+                    LcdRenderText = true,
                     IsAntialias = true
                 };
                 SKPaint paintAxies = new SKPaint
                 {
-                    Style = SKPaintStyle.Fill,
-                    Color = Color.Black.ToSKColor(),
-                    StrokeWidth = 1
+                    Style = SKPaintStyle.Stroke,
+                    Color = Color.DarkGray.ToSKColor(),
+                    StrokeWidth = 2
                 };
-                //canvas.DrawLine(0, 0, 0, (float)CanvasView.Height, paintAxies);
-                //canvas.DrawLine(0, (float)CanvasView.Height, 
-                //    (float)CanvasView.Width, (float)CanvasView.Height, paintAxies);
-                //canvas.DrawCircle(info.Width / 2, info.Height / 2, 100, paint);
-
-                double maxX = GetMaximumX();
-                double maxY = GetMaximumY();
-                double dx = (CanvasView.Width) / maxX;
-                double dy = (CanvasView.Height) / maxY;
-
-                var skPoints = new List<SKPoint>();
-                for (int i = 0; i < _points.GetUpperBound(0); i++)
+                SKPaint paintText = new SKPaint
                 {
-                    float y = (float)CanvasView.Height - (float)(_points[i, 1] * dy);
-                    float x = (float)(_points[i, 0] * dx);
-                    skPoints.Add(new SKPoint(x, y));
-                }
+                    Style = SKPaintStyle.Fill,
+                    Color = Color.DarkGray.ToSKColor(),
+                    StrokeWidth = 1,
+                    LcdRenderText = true,
+                    IsAntialias = true
+                };
 
-                canvas.DrawPoints(SKPointMode.Polygon, skPoints.ToArray(), paint);
-                canvas.DrawLine(1, 1, 1, (float)CanvasView.Height - 1, paintAxies);
-                canvas.DrawLine(1, (float)CanvasView.Height - 1,
-                    (float)CanvasView.Width - 1, (float)CanvasView.Height - 1, paintAxies);
+                //float canvHeight1 = (float)CanvasView.Height;
+                //float canvWidth1 = (float)CanvasView.Width;
+                float canvHeight = args.Info.Height;
+                float canvWidth = args.Info.Width;
+                //canvas.DrawRect(0, 0, canvWidth, canvHeight, paintAxies);
+                //canvas.DrawLine(0, 0, 0, canvHeight, paintAxies);
+                //canvas.DrawLine(0, canvHeight, canvWidth, canvHeight, paintAxies);
+
+                //float textWidth = paintText.MeasureText("0.00");
+                //float textHeight = paintText.TextSize;
+                //paintText.TextSize = 1.0f * info.Width * paintText.TextSize / textWidth;
+                //canvas.DrawText(_measurement.MaxWeight.ToString("N2"), new SKPoint(0, textHeight), paintText);
+                //canvas.DrawText(_measurement.MinWeight.ToString("N2"), new SKPoint(0, canvHeight- textHeight), paintText);
+
+                float dgm_w = (float)(MaxX - MinX);
+                float dgm_h = (float)(MaxY - MinY);
+
+                float scale_x = (float)((canvWidth) / (MaxX - MinX));
+                float scale_y = (float)((canvHeight) / (MaxY - MinY));
+                float offset_x = (float)MinX;
+                float offset_y = (float)MinY;
+
+                int maxpoints = (_measurement.Period > _points.GetLength(0)) ? 
+                    _points.GetLength(0) : _measurement.Period;
+
+
+
+                var skPoints = new SKPoint[maxpoints];
+                for (int i = 0; i < maxpoints; i++)
+                {
+                    //skPoints[i].Y = (float)(CanvasView.Height - (_points[i, 1]  - offset_y)* scale_y);
+                    //skPoints[i].X = (float)((_points[i, 0]  - offset_x)* scale_x);
+                    skPoints[i].Y = (float)(_points[i, 1]);
+                    skPoints[i].X = (float)(_points[i, 0]);
+
+                }
+                //canvas.DrawPoints(SKPointMode.Polygon, skPoints, paint);
+                var path2 = new SKPath { FillType = SKPathFillType.Winding };
+                path2.AddPoly(skPoints, true);
+
+                float sx = (float)scale_x;
+                float sy = (float)scale_y;
+                float px = 0;
+                float py = 0;
+                canvas.Scale(sx, sy, px, py);
+                canvas.Scale(1.0f, -1.0f, dgm_w / 2, dgm_h/2);
+                canvas.Translate(-offset_x, -offset_y);
+                canvas.DrawPath(path2, paintFill);
+                canvas.DrawPath(path2, paint);
+
             }
             catch (Exception ex)
             {
@@ -122,33 +178,6 @@ namespace SiamCross.Views
                 throw;
             }
         }
-
-        private double GetMaximumX()
-        {
-            double max = -43;
-            for (int i = 0; i < _points.GetUpperBound(0); i++)
-            {
-                if (_points[i, 0] > max)
-                {
-                    max = _points[i, 0];
-                }
-            }
-            return max;
-        }
-
-        private double GetMaximumY()
-        {
-            double max = -43;
-            for (int i = 0; i < _points.GetUpperBound(0); i++)
-            {
-                if (_points[i, 1] > max)
-                {
-                    max = _points[i, 1];
-                }
-            }
-            return max;
-        }
-
         protected override void OnDisappearing()
         {
             try

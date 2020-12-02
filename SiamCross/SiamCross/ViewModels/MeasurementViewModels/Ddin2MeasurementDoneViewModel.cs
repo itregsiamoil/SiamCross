@@ -83,6 +83,8 @@ namespace SiamCross.ViewModels
 
         public string MaxGraphX { get; private set; }
         public string MaxGraphY { get; private set; }
+        public string MinGraphX { get; private set; }
+        public string MinGraphY { get; private set; }
         public ICommand ShareCommand { get; set; }
 
         public Ddin2MeasurementDoneViewModel(Ddin2Measurement measurement)
@@ -174,6 +176,7 @@ namespace SiamCross.ViewModels
 
         private void InitMaxMixGraphValue(List<byte> graph, UInt16 step, UInt16 weightDiscret)
         {
+            /*
             List<double> movement = new List<double>();
             List<double> weight = new List<double>();
             var discrets = DgmConverter.GetXYs(graph, step, weightDiscret);
@@ -182,9 +185,13 @@ namespace SiamCross.ViewModels
                 movement.Add(discrets[i, 0]);
                 weight.Add(discrets[i, 1]);
             }
-
             MaxGraphX = Math.Round(movement.Max() / 10, 0).ToString();
             MaxGraphY = CutOffNumbers(Math.Round(weight.Max() / 1000, 3));
+            */
+            MinGraphX = (0).ToString();
+            MaxGraphX = _measurement.TravelLength.ToString("N2");
+            MinGraphY = _measurement.MinWeight.ToString("N2");
+            MaxGraphY = _measurement.MaxWeight.ToString("N2");
         }
 
         private string CutOffNumbers(double number)
