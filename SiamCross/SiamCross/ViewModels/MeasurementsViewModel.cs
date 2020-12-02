@@ -21,21 +21,10 @@ namespace SiamCross.ViewModels
         {
             try
             {
-                if (selectedMeasurement.Name.Contains("DDIM"))
-                {
-                    var measurement = _ddim2Measurements?
-                        .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
-                    if (measurement != null)
-                    {
-                        if (CanOpenPage(typeof(Ddim2MeasurementDonePage)))
-                        {
-                            App.NavigationPage.Navigation
-                            .PushAsync(
-                            new Ddim2MeasurementDonePage(measurement), true);
-                        }
-                    }
-                }
-                else if (selectedMeasurement.Name.Contains("DDIN"))
+                if (   selectedMeasurement.Name.Contains("DDIM")
+                    || selectedMeasurement.Name.Contains("DDIN")
+                    || selectedMeasurement.Name.Contains("SIDDOSA3M")
+                    )
                 {
                     var measurement = _ddin2Measurements?
                         .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
@@ -46,20 +35,6 @@ namespace SiamCross.ViewModels
                             App.NavigationPage.Navigation
                             .PushAsync(
                             new Ddin2MeasurementDonePage(measurement), true);
-                        }
-                    }
-                }
-                else if (selectedMeasurement.Name.Contains("SIDDOSA3M"))
-                {
-                    var measurement = _siddosA3MMeasurements?
-                        .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
-                    if (measurement != null)
-                    {
-                        if (CanOpenPage(typeof(SiddosA3MMeasurementDonePage)))
-                        {
-                            App.NavigationPage.Navigation
-                            .PushAsync(
-                            new SiddosA3MMeasurementDonePage(measurement), true);
                         }
                     }
                 }

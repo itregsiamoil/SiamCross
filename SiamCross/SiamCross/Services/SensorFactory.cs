@@ -15,7 +15,7 @@ namespace SiamCross.Services
 {
     public static class SensorFactory
     {
-        private static readonly object _locker = new object();
+        //private static readonly object _locker = new object();
 
         public static ISensor CreateSensor(ScannedDeviceInfo deviceInfo)
         {
@@ -34,10 +34,7 @@ namespace SiamCross.Services
             var connection = phy_interface.MakeConnection(deviceInfo);
             if (null == connection)
                 return null;
-
-
-
-            lock (_locker)
+            //lock (_locker)
             {
                 if (deviceInfo.Name.Contains("DDIN"))
                 {
@@ -45,58 +42,18 @@ namespace SiamCross.Services
                     var sensor = new Ddin2Sensor(connection, sens_data);
                     sensor.ScannedDeviceInfo = deviceInfo;
                     return sensor;
-                    /*
-                    var ddin2 = new Ddin2Sensor(
-                        AppContainer.Container.Resolve<IConnectionBt2>
-                        (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                        new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
-                    ddin2.ScannedDeviceInfo = deviceInfo;
-                    return ddin2;
-                    */
                 }
                 else if (deviceInfo.Name.Contains("DDIM"))
                 {
                     var sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
-                    var sensor = new Ddim2Sensor(connection, sens_data);
+                    var sensor = new Ddin2Sensor(connection, sens_data);
                     sensor.ScannedDeviceInfo = deviceInfo;
                     return sensor;
-                    /*
-                    switch (deviceInfo.BluetoothType)
-                    {
-                        case BluetoothType.Le:
-                        {
-                            var sensor = new Ddim2Sensor(
-                                AppContainer.Container.Resolve<IConnectionBtLe>
-                                    (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                                new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
-                            sensor.ScannedDeviceInfo = deviceInfo;
-                            return sensor;
-                        }
-                        case BluetoothType.Classic:
-                        {
-                            var sensor = new Ddim2Sensor(
-                                AppContainer.Container.Resolve<IConnectionBt2>
-                                    (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                                new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
-                            sensor.ScannedDeviceInfo = deviceInfo;
-                            return sensor;
-                        }
-                        case BluetoothType.UsbCustom5:
-                        {
-                            var sensor = new Ddim2Sensor(
-                                AppContainer.Container.Resolve<IBluetooth5CustomAdapter>
-                                    (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                                new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, ""));
-                            sensor.ScannedDeviceInfo = deviceInfo;
-                            return sensor;
-                        }
-                    }
-                    */
                 }
                 else if (deviceInfo.Name.Contains("SIDDOSA3M"))
                 {
                     var sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
-                    var sensor = new SiddosA3MSensor(connection, sens_data);
+                    var sensor = new Ddin2Sensor(connection, sens_data);
                     sensor.ScannedDeviceInfo = deviceInfo;
                     return sensor;
                 }

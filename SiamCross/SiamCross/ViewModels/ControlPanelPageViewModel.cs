@@ -110,68 +110,50 @@ namespace SiamCross.ViewModels
         {
             var sensor = SensorService.Instance.Sensors
                 .SingleOrDefault(s => s.SensorData.Id == id);
-            
-            if (sensor != null)
+            if (sensor == null)
+                return;
+            SensorData sensorData = sensor.SensorData as SensorData;
+            if (sensorData == null)
+                return;
+
+
+            if (   sensorData.Name.Contains("DDIM")
+                || sensorData.Name.Contains("DDIN")
+                || sensorData.Name.Contains("SIDDOSA3M")
+                )
             {
-                if (sensor.SensorData is SensorData sensorData)
+                if (CanOpenMeasurement(sensorData))
                 {
-                    if (sensorData.Name.Contains("DDIM"))
+                    if (CanOpenPage(typeof(Ddin2MeasurementPage)))
                     {
-                        if (CanOpenMeasurement(sensorData))
-                        {
-                            if (CanOpenPage(typeof(Ddim2MeasurementPage)))
-                            {
-                                App.NavigationPage.Navigation.PushAsync(
-                                    new Ddim2MeasurementPage(sensorData));
-                            }
-                        }
-                    }
-                    else if (sensorData.Name.Contains("DDIN"))
-                    {
-                        if (CanOpenMeasurement(sensorData))
-                        {
-                            if (CanOpenPage(typeof(Ddin2MeasurementPage)))
-                            {
-                                App.NavigationPage.Navigation.PushAsync(
-                                    new Ddin2MeasurementPage(sensorData));
-                            }
-                        }
-                    }
-                    else if (sensorData.Name.Contains("SIDDOSA3M"))
-                    {
-                        if (CanOpenMeasurement(sensorData))
-                        {
-                            if (CanOpenPage(typeof(SiddosA3MMeasurementPage)))
-                            {
-                                App.NavigationPage.Navigation.PushAsync(
-                                    new SiddosA3MMeasurementPage(sensorData));
-                            }
-                        }
-                    }
-                    else if (sensorData.Name.Contains("DU"))
-                    {
-                        if (CanOpenMeasurement(sensorData))
-                        {
-                            if (CanOpenPage(typeof(DuMeasurementPage)))
-                            {
-                                App.NavigationPage.Navigation.PushAsync(
-                                    new DuMeasurementPage(sensorData));
-                            }
-                        }
-                    }
-                    else if (sensorData.Name.Contains("UMT"))
-                    {
-                        if (CanOpenMeasurement(sensorData))
-                        {
-                            if (CanOpenPage(typeof(UmtMeasurementPage)))
-                            {
-                                App.NavigationPage.Navigation.PushAsync(
-                                    new UmtMeasurementPage(sensorData));
-                            }
-                        }
+                        App.NavigationPage.Navigation.PushAsync(
+                            new Ddin2MeasurementPage(sensorData));
                     }
                 }
             }
+            else if (sensorData.Name.Contains("DU"))
+            {
+                if (CanOpenMeasurement(sensorData))
+                {
+                    if (CanOpenPage(typeof(DuMeasurementPage)))
+                    {
+                        App.NavigationPage.Navigation.PushAsync(
+                            new DuMeasurementPage(sensorData));
+                    }
+                }
+            }
+            else if (sensorData.Name.Contains("UMT"))
+            {
+                if (CanOpenMeasurement(sensorData))
+                {
+                    if (CanOpenPage(typeof(UmtMeasurementPage)))
+                    {
+                        App.NavigationPage.Navigation.PushAsync(
+                            new UmtMeasurementPage(sensorData));
+                    }
+                }
+            }
+            
         }
         private bool CanOpenMeasurement(SensorData sensorData)
         {

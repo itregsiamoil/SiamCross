@@ -58,48 +58,14 @@ namespace SiamCross.Services
 
                 if (savedSensors == null) return;
 
-                foreach (var sensor in savedSensors)
+                foreach (var sensor_info in savedSensors)
                 {
-                    switch (sensor.BluetoothType)
-                    {
-                        case BluetoothType.Le:
-                        {
-                            var addebleSensor = SensorFactory.CreateSensor(sensor);
-                            if (addebleSensor != null)
-                            {
-                                _sensors.Add(addebleSensor);
-
-                                SensorAdded?.Invoke(addebleSensor);
-                            }
-
-                            break;
-                        }
-                    }
+                    var sensor = SensorFactory.CreateSensor(sensor_info);
+                    if (sensor == null)
+                        continue;
+                    _sensors.Add(sensor);
+                    SensorAdded?.Invoke(sensor);
                 }
-
-                Thread initBt2 = new Thread(() =>
-                {
-                    Thread.Sleep(2500);
-                    foreach (var sensor in savedSensors)
-                    {
-                        switch (sensor.BluetoothType)
-                        {
-                            case BluetoothType.Classic:
-                            {
-                                var addebleSensor = SensorFactory.CreateSensor(sensor);
-                                if (addebleSensor != null)
-                                {
-                                    _sensors.Add(addebleSensor);
-
-                                    SensorAdded?.Invoke(addebleSensor);
-                                }
-
-                                break;
-                            }
-                        }
-                    }
-                });
-                initBt2.Start();
             }
         }
 
