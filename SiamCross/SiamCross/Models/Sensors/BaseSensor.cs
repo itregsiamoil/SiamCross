@@ -4,10 +4,11 @@ using SiamCross.Models.Tools;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SiamCross.Models.Sensors.Dmg
+namespace SiamCross.Models.Sensors
 {
     abstract public class BaseSensor : ISensor, INotifyPropertyChanged
     {
@@ -68,6 +69,7 @@ namespace SiamCross.Models.Sensors.Dmg
         public SensorData SensorData { get; }
         public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
         public abstract Task<bool> QuickReport(CancellationToken cancellationToken);
+        //public virtual Task<bool> UpdateRssi(CancellationToken cancellationToken);
         public abstract Task StartMeasurement(object measurementParameters);
 
         #endregion
@@ -190,6 +192,8 @@ namespace SiamCross.Models.Sensors.Dmg
         }
         private async Task ExecuteAsync(CancellationToken cancelToken)
         {
+            const int rssi_update_period = 2;
+            int rssi_update_curr = 0;
             //await Task.Delay(1000);
             try
             {
@@ -206,7 +210,11 @@ namespace SiamCross.Models.Sensors.Dmg
                                 await mConnection.Disconnect();
                                 continue;
                             }
-                                
+                            if(rssi_update_period > rssi_update_curr++ )
+                            {
+                                rssi_update_curr = 0;
+                                Connection.UpdateRssi();
+                            }
                         }
                         else
                         {
@@ -261,7 +269,14 @@ namespace SiamCross.Models.Sensors.Dmg
             SensorData.RadioFirmware = "";
             SensorData.Status = "";
         }
-        
+        public string GetStringPayload(byte[] pkg)
+        {
+            Span<byte> payload = pkg.AsSpan(12, pkg.Length - 12 - 2);
+            if (payload.Length > 20)
+                return Encoding.UTF8.GetString(payload.ToArray());
+            return Encoding.GetEncoding(1251).GetString(payload.ToArray());
+        }
+
 
     }
 }

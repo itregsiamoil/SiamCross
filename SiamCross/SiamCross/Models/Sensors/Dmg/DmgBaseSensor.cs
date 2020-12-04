@@ -15,13 +15,6 @@ namespace SiamCross.Models.Sensors.Dmg
             : base(conn, sensorData)
         {
         }
-        public string GetStringPayload(byte[] pkg)
-        {
-            Span<byte> payload = pkg.AsSpan(12, pkg.Length - 12 - 2);
-            if (payload.Length > 20)
-                return Encoding.UTF8.GetString(payload.ToArray());
-            return Encoding.GetEncoding(1251).GetString(payload.ToArray());
-        }
         public async Task<bool> UpdateFirmware(CancellationToken cancelToken)
         {
             byte[] resp;

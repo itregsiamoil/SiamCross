@@ -24,21 +24,15 @@ namespace SiamCross.Droid.Models
     public class BaseBluetoothLeAdapterAndroid : IConnection
     {
         readonly IPhyInterface mInterface;
-        public IPhyInterface PhyInterface 
+        public IPhyInterface PhyInterface
         {
             get => mInterface;
         }
-
-        public int Rssi 
+        public async void UpdateRssi()
         {
-            get
-            {
-                if (null == _device)
-                    return 0;
-                return _device.Rssi;
-            }
+            bool succ = await _device?.UpdateRssiAsync();
         }
-
+        public int Rssi { get => (null == _device) ? 0 : _device.Rssi; }
         public IAdapter _adapter
         {
             get 
@@ -224,7 +218,6 @@ namespace SiamCross.Droid.Models
                 _connectQueue.Remove(_deviceInfo.Name);
             }
 
-            bool succ = await _device.UpdateRssiAsync();
             return inited;
         }
 

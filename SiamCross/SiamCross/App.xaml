@@ -8,7 +8,7 @@
             <Color x:Key="colorPrimary">#0060A0</Color>
             <Color x:Key="colorPrimaryDark">#003771</Color>
             <Color x:Key="colorAccent">#e03010</Color>
-            <Color x:Key="colorCtrlNormal">#C0E0F0</Color>
+            <Color x:Key="colorCtrlNormal">#D0E9F0</Color>
             <Color x:Key="colorCtrlActivated">#60A0D0</Color>
             <Color x:Key="colorCtrlHighlight">#00A0FF</Color>
             <Color x:Key="colorCtrlInactive">#E0E0E0</Color>

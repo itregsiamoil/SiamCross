@@ -19,9 +19,8 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
         {
             SensorData.Status = "measure [0%] - started";
             IsMeasurement = true;
-            Ddin2MeasurementStartParameters specificMeasurementParameters =
-                (Ddin2MeasurementStartParameters)measurementParameters;
-            _measurementManager = new Ddin2MeasurementManager(this, specificMeasurementParameters);
+            var startParams = (Ddin2MeasurementStartParameters)measurementParameters;
+            _measurementManager = new Ddin2MeasurementManager(this, startParams);
             var report = await _measurementManager.RunMeasurement();
             if (null != report)
             {

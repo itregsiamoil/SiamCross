@@ -26,6 +26,14 @@ namespace SiamCross.Models
             mBaseConn = base_conn;
         }
         public IPhyInterface PhyInterface => mBaseConn.PhyInterface;
+
+        public void UpdateRssi()
+        {
+            if (null == mBaseConn)
+                return;
+            mBaseConn.UpdateRssi();
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Rssi"));
+        }
         public int Rssi
         {
             get

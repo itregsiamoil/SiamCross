@@ -61,6 +61,10 @@ namespace SiamCross.Droid.Models
             get => mInterface;
         }
 
+        public async void UpdateRssi()
+        {
+            
+        }
         private int mRssi=0;
         public int Rssi { get => mRssi; set => mRssi=value; }
 

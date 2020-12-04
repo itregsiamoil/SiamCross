@@ -13,6 +13,7 @@ namespace SiamCross.Models
     }
     public interface IProtocolConnection
     {
+        void UpdateRssi();
         int Rssi { get; }
         ConnectionState State { get; }
         IPhyInterface PhyInterface { get; }
