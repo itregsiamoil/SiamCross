@@ -54,7 +54,16 @@ namespace SiamCross.Models.Sensors
             }
         }
         public IProtocolConnection Connection => mConnection;
-        public bool IsAlive { get; protected set; }
+        bool mIsAlive = false;
+        public bool IsAlive 
+        {
+            get => mIsAlive;
+            protected set
+            {
+                mIsAlive = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsAlive"));
+            }
+        }
 
         bool mIsMeasurement = false;
         public bool IsMeasurement 
@@ -268,6 +277,7 @@ namespace SiamCross.Models.Sensors
             SensorData.Firmware = "";
             SensorData.RadioFirmware = "";
             SensorData.Status = "";
+            IsAlive = false;
         }
         public string GetStringPayload(byte[] pkg)
         {

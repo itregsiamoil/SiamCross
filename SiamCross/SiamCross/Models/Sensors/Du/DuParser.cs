@@ -45,6 +45,11 @@ namespace SiamCross.Models.Sensors.Du
         /// </summary>
         private FirmWaveQualifier _deviceFirmWaveQualifier;
 
+        public DuParser(bool isResponseCheck=false)
+        {
+            _byteBuffer = new ByteBuffer(isResponseCheck);
+        }
+
         public DuParser(FirmWaveQualifier deviceFirmWaveQualifier,
             bool isResponseCheck)
         {

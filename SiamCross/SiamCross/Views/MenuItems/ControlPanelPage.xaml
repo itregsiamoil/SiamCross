@@ -55,7 +55,7 @@
                                                      BackgroundColor="{StaticResource colorCtrlBg}"
                                                      Padding="0,0,0,0" Margin="0" Spacing="0" >
                                             <StackLayout.Triggers>
-                                                <DataTrigger TargetType="StackLayout" Binding="{Binding Activate}" Value="true" >
+                                                <DataTrigger TargetType="StackLayout" Binding="{Binding IsAlive}" Value="true" >
                                                     <Setter Property="BackgroundColor" Value="{StaticResource colorCtrlNormal}"   />
                                                 </DataTrigger>
                                             </StackLayout.Triggers>
@@ -143,7 +143,7 @@
                                                         <Label.FormattedText>
                                                             <FormattedString >
                                                                 <Span Text="&#x2756;" FontSize="Large" />
-                                                                <Span Text="{Binding SensorData.Firmware}" />
+                                                                <Span Text="{Binding SensorData.Firmware}" FontSize="Micro" />
                                                                 <!--Span Text="&#13;&#10;" />
                                                                 <Span Text="&#x2756;"  />
                                                                 <Span Text=" "  />
@@ -242,7 +242,7 @@
                                                         HeightRequest ="{Binding Source={RelativeSource AncestorType={x:Type Grid}}
                                                             , Path=Height}"
                                                         WidthRequest="{Binding Source={RelativeSource Self}, Path=Height}"
-                                                        BackgroundColor="{StaticResource colorCtrlNormal}"
+                                                        BackgroundColor="Transparent"
                                                         Command="{Binding Path=BindingContext.GotoMeasurementPageCommand, 
                                                             Source={x:Reference ControlPanel}}"
                                                         CommandParameter="{Binding SensorData.Id}">

@@ -54,6 +54,10 @@ namespace SiamCross.Views
                 SKSurface surface = args.Surface;
                 SKCanvas canvas = surface.Canvas;
 
+                float canvHeight = args.Info.Height;
+                float canvWidth = args.Info.Width;
+
+
                 canvas.Clear();
 
                 SKPaint paint = new SKPaint
@@ -77,14 +81,14 @@ namespace SiamCross.Views
                 double maxY = vm.GetMaximumY();
                 double minX = vm.GetMinimumX();
                 double minY = vm.GetMinimumY();
-                double dx = (CanvasView.Width) / (maxX - minX);
-                double dy = (CanvasView.Height - yReserve) / (maxY - minY);
+                double dx = (canvWidth) / (maxX - minX);
+                double dy = (canvHeight - yReserve) / (maxY - minY);
                 double yOffset = minY;               
 
                 var skPoints = new List<SKPoint>();
                 for (int i = 0; i < _points.GetUpperBound(0); i++)
                 {
-                    float y = (float)CanvasView.Height - 
+                    float y = (float)canvHeight - 
                         (float)(_points[i, 1] * dy + Math.Abs(yOffset) * dy + yReserve / 2);
                     float x = (float)(_points[i, 0] * dx);
 
@@ -95,15 +99,15 @@ namespace SiamCross.Views
                 for (int i = 0; i < skPoints.Count - 1; i++)
                 {
                     canvas.DrawLine(skPoints[i], skPoints[i + 1], paint);
-                    if(skPoints[i].Y > CanvasView.Height)
+                    if(skPoints[i].Y > canvHeight)
                     {
                         pList.Add(skPoints[i].Y);
                     }
                 }
 
-                canvas.DrawLine(1, 1, 1, (float)CanvasView.Height - 1, paintAxies);
-                canvas.DrawLine(1, (float)CanvasView.Height - 1,
-                    (float)CanvasView.Width - 1, (float)CanvasView.Height - 1, paintAxies);
+                canvas.DrawLine(1, 1, 1, (float)canvHeight - 1, paintAxies);
+                canvas.DrawLine(1, (float)canvHeight - 1,
+                    (float)canvHeight - 1, (float)canvHeight - 1, paintAxies);
             }
             catch (Exception ex)
             {

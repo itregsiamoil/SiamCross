@@ -1,5 +1,7 @@
 ﻿using SiamCross.Models.Scanners;
+using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Du.Measurement;
+using SiamCross.Models.Tools;
 using SiamCross.Services;
 using System;
 using System.Collections.Generic;
@@ -10,180 +12,108 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Du
 {
-    public class DuSensor : ISensor
+    public class DuSensor : BaseSensor
     {
-        public float MeasureProgress { get; set; }
-
-        protected IProtocolConnection mConnection;
-        public IProtocolConnection Connection => mConnection;
-
-        private CancellationTokenSource _cancellToken;
-        
-        private bool _activated = false;
-        public bool Activate
-        {
-            get => _activated;
-            set
-            {
-                _activated = value;
-                if (_activated)
-                    _liveTask.Start();
-                else
-                    _cancellToken.Cancel();
-            }
-        }
-        public bool IsAlive { get; private set; }
-        public SensorData SensorData { get; }
-        public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
-
         DuMeasurementManager _measurementManager;
+        private DuQuickReportBuilder _reportBuilder=new DuQuickReportBuilder();
 
-        public bool IsMeasurement { get; private set; }
-
-        private DuQuickReportBuilder _reportBuilder;
-        private DuStatusAdapter _statusAdapter;
-        private DuParser _parser;
-        private FirmWaveQualifier _firmwareQualifier;
-        private Task _liveTask;
-
-        public DuSensor(IProtocolConnection adapter, 
-                        SensorData sensorData)
+        public DuSensor(IProtocolConnection conn, SensorData sensorData)
+            : base(conn, sensorData)
         {
-            IsMeasurement = false;
-            IsAlive = false;
-            SensorData = sensorData;
-            mConnection = adapter;
-            _firmwareQualifier = new FirmWaveQualifier(
-                adapter.SendData,
-                DuCommands.FullCommandDictionary[DuCommandsEnum.ProgrammVersionAddress],
-                DuCommands.FullCommandDictionary[DuCommandsEnum.ProgrammVersionSize]
-            );
-            _parser = new DuParser(_firmwareQualifier, false);
-            _reportBuilder = new DuQuickReportBuilder();
-            _statusAdapter = new DuStatusAdapter();
-
-            mConnection.DataReceived += _parser.ByteProcess;
-            _parser.MessageReceived += ReceiveHandler;
-            _parser.ByteMessageReceived += MeasurementBytesReceiveHandler;
-
-            mConnection.ConnectSucceed += ConnectHandler;
-            mConnection.ConnectFailed += ConnectFailedHandler;
-
-            _cancellToken = new CancellationTokenSource();
-            _liveTask = new Task(async () => await LiveWhile(_cancellToken.Token));
-            //_liveTask.Start();
         }
-
-        private void MeasurementBytesReceiveHandler(DuCommandsEnum arg1, byte[] arg2)
+        public async Task<bool> UpdateFirmware(CancellationToken cancelToken)
         {
-            if (_measurementManager != null)
-            {
-                _measurementManager.MeasurementRecieveHandler(arg1, arg2);
-                if (arg1 != DuCommandsEnum.Pressure)
-                {
-                    SensorData.Status = _statusAdapter.CreateProgressStatus(_measurementManager.Progress);
-                }
-            }
-        }
+            byte[] resp;
+            byte[] fw_address = new byte[4];
+            byte[] fw_size = new byte[2];
+            
 
-        private void ConnectFailedHandler()
-        {
-            IsAlive = false;
-        }
+            cancelToken.ThrowIfCancellationRequested();
+            resp = await Connection.Exchange
+                (DuCommands.FullCommandDictionary[DuCommandsEnum.ProgrammVersionAddress]);
+            if (0 == resp.Length)
+                return false;
+            resp.AsSpan().Slice(12, 4).CopyTo(fw_address);
 
-        private void ConnectHandler()
-        {
-            _firmwareQualifier = new FirmWaveQualifier(
-                mConnection.SendData,
-                DuCommands.FullCommandDictionary[DuCommandsEnum.ProgrammVersionAddress],
-                DuCommands.FullCommandDictionary[DuCommandsEnum.ProgrammVersionSize]
-            );
-            _parser = new DuParser(_firmwareQualifier, false);
-            _parser.MessageReceived += ReceiveHandler;
+            cancelToken.ThrowIfCancellationRequested();
+            resp = await Connection.Exchange
+                (DuCommands.FullCommandDictionary[DuCommandsEnum.ProgrammVersionSize]);
+            if (0 == resp.Length)
+                return false;
+            resp.AsSpan().Slice(12, 2).CopyTo(fw_size);
 
-            IsAlive = true;
-            System.Diagnostics.Debug.WriteLine("ДУ успешно подключен!");
-            SensorData.Status = Resource.ConnectedStatus;
-        }
+            cancelToken.ThrowIfCancellationRequested();
+            var req = new MessageCreator().CreateReadMessage(fw_address, fw_size);
+            resp = await Connection.Exchange(req); ;
+            if (0 == resp.Length)
+                return false;
 
-        private void ReceiveHandler(DuCommandsEnum dataName, string dataValue)
-        {
-            switch(dataName)
-            {
-                case DuCommandsEnum.SensorState:
-                    if(_measurementManager != null)
-                    {
-                        _measurementManager.MeasurementStatus = _statusAdapter.StringStatusToEnum(dataValue);
-                    }
-                    SensorData.Status = _statusAdapter.StringStatusToReport(dataValue);
-                    return;
-                case DuCommandsEnum.Voltage:
-                    //_reportBuilder.BatteryVoltage = dataValue;
-                    SensorData.Battery = dataValue;
-                    break;
-                case DuCommandsEnum.Pressure:
-                    _reportBuilder.Pressure = dataValue;
-                    break;
-                case DuCommandsEnum.DeviceProgrammVersion:
-                    SensorData.Firmware = dataValue;
-                    break;
-                default:
-                    return;
-            }
-
-            SensorData.Status = _reportBuilder.GetReport();
-        }
-
-        private async Task LiveWhile(CancellationToken token)
-        { 
-            await Task.Delay(2000);
-            while (!token.IsCancellationRequested)
-            {
-                if (IsAlive)
-                {
-                    if (SensorData.Firmware == "")
-                    {
-                        await _firmwareQualifier.Qualify();
-                    }
-                    if (!IsMeasurement)
-                    {
-                        await QuickReport(token);
-                        await Task.Delay(1000);
-                    }
-                }
-                else
-                {
-                    SensorData.Status = Resource.NoConnection;
-
-                    await mConnection.Connect();
-                    await Task.Delay(4000);
-                }
-            }
-        }
-
-        public void Dispose()
-        {
-            _cancellToken.Cancel();
-            mConnection.Disconnect();
-        }
-
-        public async Task<bool> QuickReport(CancellationToken cancelToken)
-        {
-            await mConnection.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Voltage]);
-            await Task.Delay(300);
-            await mConnection.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure]);
+            string dataValue;
+            dataValue = GetStringPayload(resp);
+            if (null == dataValue || 0 == dataValue.Length)
+                return false;
+            SensorData.Firmware = dataValue;
             return true;
         }
-
-        public async Task StartMeasurement(object measurementParameters)
+        public override async Task<bool> QuickReport(CancellationToken cancelToken)
         {
+            //"BatteryVoltage" + "Pressure"
+
+            cancelToken.ThrowIfCancellationRequested();
+            byte[] req = DuCommands.FullCommandDictionary[DuCommandsEnum.Voltage];
+            byte[] resp = await Connection.Exchange(req);
+            if (14 > resp.Length)
+                return false;
+            SensorData.Battery = (((float)BitConverter.ToInt16(resp, 12)) / 10).ToString();
+
+            cancelToken.ThrowIfCancellationRequested();
+            req = DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure];
+            resp = await Connection.Exchange(req);
+            if (14 > resp.Length)
+                return false;
+            _reportBuilder.Pressure = (((float)BitConverter.ToInt16(resp, 12)) / 10).ToString();
+            
+            /*
+            byte[] req = new byte[] { 0x0D, 0x0A, 0x01, 0x01,
+                0x00, 0x84, 0x00, 0x00,    0x04, 0x00,    0x5C, 0x1C };
+            byte[] resp = await Connection.Exchange(req);
+            if (16 > resp.Length)
+            {
+                return false;
+            }
+            SensorData.Battery = (((float)BitConverter.ToInt16(resp, 12)) / 10).ToString();
+            _reportBuilder.Pressure = (((float)BitConverter.ToInt16(resp, 12+2)) / 10).ToString();
+            */
+            //await mConnection.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Voltage]);
+            //await mConnection.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure]);
+            SensorData.Status = _reportBuilder.GetReport();
+            return true;
+
+        }
+        public override async Task<bool> PostConnectInit(CancellationToken cancelToken)
+        {
+            SensorData.Status = Resource.ConnectedStatus;
+            return (await UpdateFirmware(cancelToken));
+        }
+        public override async Task StartMeasurement(object measurementParameters)
+        {
+            SensorData.Status = "measure [0%] - started";
             IsMeasurement = true;
             var startParams = (DuMeasurementStartParameters)measurementParameters;
-            _measurementManager = new DuMeasurementManager(mConnection, SensorData,
-                startParams);
-            var result = await _measurementManager.RunMeasurement();
-            SensorService.Instance.MeasurementHandler(result);
+            _measurementManager = new DuMeasurementManager(this, startParams);
+            var report = await _measurementManager.RunMeasurement();
+            if (null != report)
+            {
+                SensorService.Instance.MeasurementHandler(report);
+                SensorData.Status = "measure [100%] - end";
+            }
+            else
+            {
+                SensorData.Status = "measure [---%] - ERROR";
+            }
+            await Task.Delay(2000);
             IsMeasurement = false;
-        }   
+
+        }
     }
 }

@@ -12,8 +12,8 @@
              Title="DU">
     <NavigationPage.TitleView >
         <StackLayout>
-            <Label Text="{Binding DeviceName}" Font="Bold" TextColor="Black" />
-            <Label Text="{Binding Date, Mode=OneWay }" Font="Bold" TextColor="Black" />
+            <Label Text="{Binding DeviceName}" Font="Bold" TextColor="White" />
+            <Label Text="{Binding Date, Mode=OneWay }" Font="Bold" TextColor="White" />
         </StackLayout>
     </NavigationPage.TitleView>
     <ContentPage.ToolbarItems>
@@ -53,13 +53,11 @@
                             <Label Text="{Binding MaxGraphY}" Grid.Column="0" Grid.Row="0"/>
                             <Label Text="{Binding MinGraphY}" Grid.Column="0" Grid.Row="1" VerticalOptions="End"/>
                             <skia:SKCanvasView x:Name="CanvasView"
-                           PaintSurface="CanvasView_PaintSurface"
-                           HorizontalOptions="FillAndExpand"
-                           Margin="5"
-                           VerticalOptions="FillAndExpand"
-                           IgnorePixelScaling="True"
-                           HeightRequest="110"
-                           Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"/>
+                                               Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"
+                                               PaintSurface="CanvasView_PaintSurface"
+                                               IgnorePixelScaling="false"
+                                               HeightRequest="100"
+                                               />
                             <Label Text="{Binding MinGraphX}" Grid.Column="1" Grid.Row="2" HorizontalOptions="Start"/>
                             <StackLayout Orientation="Horizontal" Grid.Column="2" Grid.Row="2" HorizontalOptions="End">
                                 <Label Text="{Binding MaxGraphX}"/>
@@ -69,37 +67,84 @@
                         </Grid>
                     </ViewCell>
                     <ViewCell>
-                        <Grid Margin="4">
+                        <Grid Margin="4" BackgroundColor="LightGreen" Padding="0"  >
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="55*" />
                                 <ColumnDefinition Width="45*" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Label Text="{local1:Translate MeasurementType}" LineBreakMode="WordWrap"
+                                   Grid.Column="0" Grid.Row="0"/>
+                            <Label Text="{Binding MeasurementType}" LineBreakMode="WordWrap"
+                                   Grid.Column="1" Grid.Row="0" Font="Bold" TextColor="Black" />
+                            <Label Text="{local1:Translate FluidLevel}" LineBreakMode="WordWrap"
+                                   Grid.Column="0" Grid.Row="1" />
+                            <Label Text="{Binding FluidLevel}" LineBreakMode="WordWrap"
+                                   Grid.Column="1" Grid.Row="1" Font="Bold" TextColor="Black"    />
+                            <Label 
+                                   Grid.Column="0" Grid.Row="2" >
+                                <Label.FormattedText>
+                                    <FormattedString >
+                                        <Span Text="{local1:Translate AnnularPressure}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+
+                            </Label>
+                        </Grid>
+
+                    </ViewCell>
+                    <ViewCell>
+                        <Grid Margin="4" BackgroundColor="LightGreen" RowSpacing="0" ColumnSpacing="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="55*" />
+                                <ColumnDefinition Width="45*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <!-- Default mode for Text is Mode=OneWay>-->
-                            <Label Text="{local1:Translate MeasurementType}"       Grid.Column="0" Grid.Row="0" LineBreakMode="WordWrap"/>
-                            <Label Text="{Binding MeasurementType}"                Grid.Column="1" Grid.Row="0" Font="Bold" TextColor="Black" />
-                            <Label Text="{local1:Translate FluidLevel}"       Grid.Column="0" Grid.Row="1" LineBreakMode="WordWrap" />
-                            <Label Text="{Binding FluidLevel}"                Grid.Column="1" Grid.Row="1" Font="Bold" TextColor="Black"    />
-                            <Label Text="{local1:Translate AnnularPressure}"        Grid.Column="0" Grid.Row="2" LineBreakMode="WordWrap" />
-                            <Label Text="{Binding AnnularPressure}"                 Grid.Column="1" Grid.Row="2" Font="Bold" TextColor="Black" />
-                            <Label Text="{local1:Translate NumberOfReflections}"        Grid.Column="0" Grid.Row="3" LineBreakMode="WordWrap" />
-                            <Label Text="{Binding NumberOfReflections}"                 Grid.Column="1" Grid.Row="3" Font="Bold" TextColor="Black"    />
-                            <Label Text="{local1:Translate SoundSpeedCorrection}" Grid.Column="0" Grid.Row="4" LineBreakMode="WordWrap" />
-                            <Label Text="{Binding SelectedSoundSpeedCorrection}"          Grid.Column="1" Grid.Row="4" Font="Bold" TextColor="Black" />
-                            <Label Text="{local1:Translate SoundSpeed}" Grid.Column="0" Grid.Row="5" LineBreakMode="WordWrap"/>
-                            <Label Text="{Binding SoundSpeed}"          Grid.Column="1" Grid.Row="5" Font="Bold" TextColor="Black" />
-                            <Label Text="{local1:Translate BufferPressure}" Grid.Column="0" Grid.Row="7" LineBreakMode="WordWrap"/>
-                            <Label Text="{Binding BufferPressure}"          Grid.Column="1" Grid.Row="7" Font="Bold" TextColor="Black" />
+                            <!--
+                            <Label Text="{local1:Translate MeasurementType}"
+                                   Grid.Column="0" Grid.Row="0" />
+                            <Label Text="{Binding MeasurementType}" 
+                                   Grid.Column="1" Grid.Row="0" Font="Bold" TextColor="Black" />
+                            <Label Text="{local1:Translate FluidLevel}"
+                                   Grid.Column="0" Grid.Row="1" />
+                            <Label Text="{Binding FluidLevel}"
+                                   Grid.Column="1" Grid.Row="1" Font="Bold" TextColor="Black"    />
+                            <Label Text="{local1:Translate AnnularPressure}"
+                                   Grid.Column="0" Grid.Row="2" />
+                            <Label Text="{Binding AnnularPressure}"
+                                   Grid.Column="1" Grid.Row="2" Font="Bold" TextColor="Black" />
+                            <Label Text="{local1:Translate NumberOfReflections}"
+                                   Grid.Column="0" Grid.Row="3" />
+                            <Label Text="{Binding NumberOfReflections}"
+                                   Grid.Column="1" Grid.Row="3" Font="Bold" TextColor="Black"    />
+                            <Label Text="{local1:Translate SoundSpeedCorrection}"
+                                   Grid.Column="0" Grid.Row="4" />
+                            <Label Text="{Binding SelectedSoundSpeedCorrection}"
+                                   Grid.Column="1" Grid.Row="4" Font="Bold" TextColor="Black" />
+                            <Label Text="{local1:Translate SoundSpeed}"
+                                   Grid.Column="0" Grid.Row="5" />
+                            <Label Text="{Binding SoundSpeed}"
+                                   Grid.Column="1" Grid.Row="5" Font="Bold" TextColor="Black" />
+                            <Label Text="{local1:Translate BufferPressure}"
+                                   Grid.Column="0" Grid.Row="6" />
+                            <Label Text="{Binding BufferPressure}" 
+                                   Grid.Column="1" Grid.Row="6" Font="Bold" TextColor="Black" />
+                            -->
                         </Grid>
+                        
                     </ViewCell>
                 </TableSection>
                 <TableSection Title="{local1:Translate LocationInfo}" >

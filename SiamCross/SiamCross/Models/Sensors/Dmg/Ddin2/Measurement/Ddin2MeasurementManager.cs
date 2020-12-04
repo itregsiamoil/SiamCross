@@ -125,15 +125,14 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                 if (0 != resp.Length)
                 {
                     status = (DmgMeasureStatus)BitConverter.ToUInt16(resp, 12);
-                    _progress += sep_cost;
-                    UpdateProgress(_progress, DmgMeasureStatusAdapter.StatusToReport(status));
-
                     if (status == DmgMeasureStatus.Ready
                        || status == DmgMeasureStatus.Error)
                     {
                         isDone = true;
                     }
                 }
+                _progress += sep_cost;
+                UpdateProgress(_progress, DmgMeasureStatusAdapter.StatusToReport(status));
             }
             return status;
         }
