@@ -63,14 +63,14 @@ namespace SiamCross.Views
                 SKPaint paint = new SKPaint
                 {
                     Style = SKPaintStyle.Stroke,
-                    Color = Color.Blue.ToSKColor(),
+                    Color = Color.Accent.ToSKColor(),
                     StrokeWidth = 1
                 };
                 SKPaint paintAxies = new SKPaint
                 {
                     Style = SKPaintStyle.Fill,
-                    Color = Color.Black.ToSKColor(),
-                    StrokeWidth = 1
+                    Color = Color.DarkGray.ToSKColor(),
+                    StrokeWidth = 2
                 };
 
                 DuMeasurementDoneViewModel vm =
@@ -105,9 +105,8 @@ namespace SiamCross.Views
                     }
                 }
 
-                canvas.DrawLine(1, 1, 1, (float)canvHeight - 1, paintAxies);
-                canvas.DrawLine(1, (float)canvHeight - 1,
-                    (float)canvHeight - 1, (float)canvHeight - 1, paintAxies);
+                canvas.DrawLine(0, 0, 0, canvHeight, paintAxies);
+                canvas.DrawLine(0, canvHeight, canvWidth, canvHeight, paintAxies);
             }
             catch (Exception ex)
             {

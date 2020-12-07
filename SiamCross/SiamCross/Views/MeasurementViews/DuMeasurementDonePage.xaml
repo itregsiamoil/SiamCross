@@ -67,41 +67,10 @@
                         </Grid>
                     </ViewCell>
                     <ViewCell>
-                        <Grid Margin="4" BackgroundColor="LightGreen" Padding="0"  >
+                        <Grid Margin="4" RowSpacing="2" ColumnSpacing="4">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="55*" />
-                                <ColumnDefinition Width="45*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Label Text="{local1:Translate MeasurementType}" LineBreakMode="WordWrap"
-                                   Grid.Column="0" Grid.Row="0"/>
-                            <Label Text="{Binding MeasurementType}" LineBreakMode="WordWrap"
-                                   Grid.Column="1" Grid.Row="0" Font="Bold" TextColor="Black" />
-                            <Label Text="{local1:Translate FluidLevel}" LineBreakMode="WordWrap"
-                                   Grid.Column="0" Grid.Row="1" />
-                            <Label Text="{Binding FluidLevel}" LineBreakMode="WordWrap"
-                                   Grid.Column="1" Grid.Row="1" Font="Bold" TextColor="Black"    />
-                            <Label 
-                                   Grid.Column="0" Grid.Row="2" >
-                                <Label.FormattedText>
-                                    <FormattedString >
-                                        <Span Text="{local1:Translate AnnularPressure}" />
-                                    </FormattedString>
-                                </Label.FormattedText>
-
-                            </Label>
-                        </Grid>
-
-                    </ViewCell>
-                    <ViewCell>
-                        <Grid Margin="4" BackgroundColor="LightGreen" RowSpacing="0" ColumnSpacing="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="55*" />
-                                <ColumnDefinition Width="45*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -113,7 +82,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <!-- Default mode for Text is Mode=OneWay>-->
-                            <!--
+                            
                             <Label Text="{local1:Translate MeasurementType}"
                                    Grid.Column="0" Grid.Row="0" />
                             <Label Text="{Binding MeasurementType}" 
@@ -142,7 +111,7 @@
                                    Grid.Column="0" Grid.Row="6" />
                             <Label Text="{Binding BufferPressure}" 
                                    Grid.Column="1" Grid.Row="6" Font="Bold" TextColor="Black" />
-                            -->
+                            
                         </Grid>
                         
                     </ViewCell>
