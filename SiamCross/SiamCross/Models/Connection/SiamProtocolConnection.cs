@@ -233,7 +233,7 @@ namespace SiamCross.Models
                     }
                     else
                     {
-                        int cmp = req.AsSpan().Slice(0, 12).SequenceCompareTo(pkg.AsSpan().Slice(0, 12));
+                        int cmp = req.AsSpan().Slice(0, 10).SequenceCompareTo(pkg.AsSpan().Slice(0, 10));
                         if (0 != cmp)
                         {
                             DebugLog.WriteLine("WRONG response"

@@ -209,13 +209,13 @@ namespace SiamCross.Models.Tools
             UInt16 rq_crc = BitConverter.ToUInt16(mBuff, (int)pkg_start + 10);
             byte[] rq_calc_crc_arr = CrcModbusCalculator.ModbusCrc(mBuff, (int)pkg_start + 2, 12 - 2 - 2);
             UInt16 rq_calc_crc = BitConverter.ToUInt16(rq_calc_crc_arr, 0);
-
-            if (rq_calc_crc != rq_crc)
-            {
-                DebugLog.WriteLine($"Request CRC mismatch: {BitConverter.ToString(buf.ToArray())}");
-                DoReduce(pkg_start + 2);
-                return new byte[] { };
-            }
+            
+            //if (rq_calc_crc != rq_crc)
+            //{
+            //    DebugLog.WriteLine($"Request CRC mismatch: {BitConverter.ToString(buf.ToArray())}");
+            //    DoReduce(pkg_start + 2);
+            //    return new byte[] { };
+            //}
 
 
 
