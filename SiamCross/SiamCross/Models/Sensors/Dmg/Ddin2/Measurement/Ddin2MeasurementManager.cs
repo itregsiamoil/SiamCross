@@ -204,7 +204,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                     _currentDynGraph.ToList(),
                     DateTime.Now,
                     _measurementParameters.SecondaryParameters,
-                    null,
+                    _currentAccelerationGraph.ToList(),
                     isError ? ErrorCode : null);   
 
             var dynGraphPoints = DgmConverter.GetXYs(measurement.DynGraph.ToList(),
@@ -270,7 +270,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
         }
         private async Task GetDgm4kB()
         {
-            float progress_size = (100f - _progress) / 2;
+            float progress_size = (100f - _progress) ;
 
             UpdateProgress(_progress, "Read dgm");
             Action<float> StepProgress = (float sep_cost) => 
@@ -280,10 +280,12 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
             };
             await ReadMemory(Sensor.Connection, _currentDynGraph
                 , 0, 0x81000000, 1000 * 2, 50, StepProgress, progress_size);
+            
+            /*
             UpdateProgress(_progress, "Read axgm");
             await ReadMemory(Sensor.Connection, _currentAccelerationGraph
                 , 0, 0x83000000, 1000 * 2, 50, StepProgress, progress_size);
-
+            */
         }
         
     }
