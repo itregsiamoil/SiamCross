@@ -25,12 +25,12 @@ namespace SiamCross.Views
 
         private void AmplificationCheckboxChanged(object sender, CheckedChangedEventArgs e)
         {
-            _vm.Amplification = e.Value;
+            //_vm.Amplification = e.Value;
         }
         
         private void InletCheckboxChanged(object sender, CheckedChangedEventArgs e)
         {
-            _vm.Inlet = e.Value;
+            //_vm.Inlet = e.Value;
         }
     }
 }

@@ -6,11 +6,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Specialized;
+using System.Collections;
+using SiamCross.AppObjects;
+using Autofac;
+using SiamCross.Services.Logging;
+using NLog;
 
 namespace SiamCross.Models.Sensors.Du.Measurement
 {
     public class DuMeasurementManager
     {
+        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
         private DuMeasurementStartParameters _measurementParameters;
         private CommandGenerator _commandGenerator;
         private ISensor mSensor;
@@ -32,9 +39,9 @@ namespace SiamCross.Models.Sensors.Du.Measurement
 
             _commandGenerator = new CommandGenerator();
 
-            sensor.Connection.DataReceived += _parser.ByteProcess;
+            //sensor.Connection.DataReceived += _parser.ByteProcess;
             //_parser.MessageReceived += ReceiveHandler;
-            _parser.ByteMessageReceived += MeasurementRecieveHandler;
+            //_parser.ByteMessageReceived += MeasurementRecieveHandler;
         }
 
         public async Task<object> RunMeasurement()
@@ -71,13 +78,23 @@ namespace SiamCross.Models.Sensors.Du.Measurement
 
         private async Task<bool> DownloadHeader()
         {
+            UpdateProgress(_progress, "Read header");
             byte[] resp = { };
             resp = await Sensor.Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.ResearchHeader]);
             if (16 > resp.Length)
                 return false;
                 
-            _fluidLevel = BitConverter.ToInt16(resp, 12);
-            _numberOfReflections = BitConverter.ToInt16(resp, 14);
+            _fluidLevel = BitConverter.ToUInt16(resp, 12);
+            if(_measurementParameters.Depth6000)
+            {
+                BitVector32 myBV = new BitVector32(_fluidLevel);
+                int bit0 = BitVector32.CreateMask(00000000);
+                myBV[0x4000] = false;
+                _fluidLevel = (ushort)(myBV.Data);
+            }
+
+
+            _numberOfReflections = BitConverter.ToUInt16(resp, 14);
 
             return true;
         }
@@ -87,23 +104,27 @@ namespace SiamCross.Models.Sensors.Du.Measurement
         {
             await DownloadEchogram();
             //await Task.Delay(300);
-            await Sensor.Connection.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.StateZeroing]);
+            _logger.Trace("set StateZeroing");
+            await Sensor.Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.StateZeroing]);
             //await Task.Delay(300);
 
+            _logger.Trace("set raw to list");
             List<byte> echogramRawBytes = _currentEchogram.ToList();
 
+            _logger.Trace("begin create report");
             var data = new DuMeasurementData(echogramRawBytes,
                 _fluidLevel, (float)Math.Round(_pressure, 1), 
                 _numberOfReflections, DateTime.Now, _measurementParameters.SecondaryParameters);
 
-            if(string.IsNullOrEmpty(data.SecondaryParameters.SoundSpeed))
+            _logger.Trace("end create report");
+            if (string.IsNullOrEmpty(data.SecondaryParameters.SoundSpeed))
             {
                 var correctionTable = HandbookData.Instance.GetSoundSpeedList().Find(
                     x => x.ToString() == data.SecondaryParameters.SoundSpeedCorrection);
                 data.SecondaryParameters.SoundSpeed = 
                     correctionTable.GetApproximatedSpeedFromTable(data.AnnularPressure).ToString();
             }
-
+            _logger.Trace("recalc fluid level");
             data.FluidLevel = (int)(data.FluidLevel *
                 float.Parse(data.SecondaryParameters.SoundSpeed) / 341.333f);
 
@@ -163,7 +184,8 @@ namespace SiamCross.Models.Sensors.Du.Measurement
         }
         private async Task DownloadEchogram()
         {
-            float progress_size = (100f - _progress) / 2;
+            _logger.Trace("begin read echogramm");
+            float progress_size = (100f - _progress) ;
 
             UpdateProgress(_progress, "Read echogramm");
             Action<float> StepProgress = (float sep_cost) =>
@@ -174,79 +196,30 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             await ReadMemory(Sensor.Connection, _currentEchogram
                 , 0, 0x81000000, (uint)_currentEchogram.Length , 50, StepProgress, progress_size);
 
-        }
-        
-/*
-        private async Task DownloadEchogram2()
-        {
-            byte[] length = BitConverter.GetBytes(20);
-            var command = new List<byte>
-            {
-                0x0D, 0x0A,
-                0x01, 0x01,
-                0x00, 0x00, 0x00, 0x81,
-            };
-            command.Add(length[0]);
-            command.Add(length[1]);
-
-            AddCrc();
-
-            //Read first 500 bytes
-
-            await Sensor.Connection.SendData(command.ToArray());
-            await Task.Delay(300);
-
-            RemoveCrc();
-
-            //Read rest
-            for (int i = 0; i < 149; i++)
-            {
-                short newAdress = (short)(BitConverter.ToInt16(new byte[] { command[4], command[5] }, 0) + 20);
-                byte[] newAdressBytes = BitConverter.GetBytes(newAdress);
-                command[4] = newAdressBytes[0];
-                command[5] = newAdressBytes[1];
-
-                AddCrc();
-                await Sensor.Connection.SendData(command.ToArray());
-                await Task.Delay(150);
-
-                RemoveCrc();
-            }
-
-            void AddCrc()
-            {
-                byte[] crc = CrcModbusCalculator.ModbusCrc(command.GetRange(2, 8).ToArray());
-                command.Add(crc[0]);
-                command.Add(crc[1]);
-            }
-
-            void RemoveCrc()
-            {
-                command.RemoveAt(command.Count - 1);
-                command.RemoveAt(command.Count - 1);
-            }
-        }
-        */
-
-        private async Task Start()
-        {
-            System.Diagnostics.Debug.WriteLine("Execute start measure");
-            await Sensor.Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.StartMeasurement]);
+            _logger.Trace("end read echogramm");
         }
 
         private async Task SendParameters()
         {
-            string firstByte = _measurementParameters.Inlet ? "00000001" : "00000000";
-            string secondByte = _measurementParameters.Amplification ? "00000001" : "00000000";
+            BitVector32 myBV = new BitVector32(0);
+            int bit0 = BitVector32.CreateMask();
+            int bit1 = BitVector32.CreateMask(bit0);
+            int bit2 = BitVector32.CreateMask(bit1);
+            int bit3 = BitVector32.CreateMask(bit2);
+            int bit4 = BitVector32.CreateMask(bit3);
+            int bit5 = BitVector32.CreateMask(bit4);
+            int bit6 = BitVector32.CreateMask(bit5);
+            int bit7 = BitVector32.CreateMask(bit6);
+            int bit8 = BitVector32.CreateMask(bit7);
+            int bit9 = BitVector32.CreateMask(bit8);
 
-            byte[] data = new byte[] 
-            { 
-                Convert.ToByte(firstByte, 2), 
-                Convert.ToByte(secondByte, 2) 
-            };
+            myBV[bit0] = _measurementParameters.Inlet;
+            myBV[bit6] = _measurementParameters.Depth6000;
+            myBV[bit9] = _measurementParameters.Amplification;
+            byte[] my_data = BitConverter.GetBytes(myBV.Data).AsSpan(0,2).ToArray();
 
             byte[] command = _commandGenerator.GenerateWriteCommand(
-                DuCommands.FullCommandDictionary[DuCommandsEnum.Revbit], data);
+                DuCommands.FullCommandDictionary[DuCommandsEnum.Revbit], my_data);
 
            // _writeLog(command);
            await Sensor.Connection.Exchange(command);
@@ -263,14 +236,43 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             System.Diagnostics.Debug.WriteLine("DU status="+ status.ToString());
             return status;
         }
+
+        private async Task<bool> Start()
+        {
+            System.Diagnostics.Debug.WriteLine("Execute start measure");
+            await Sensor.Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.StartMeasurement]);
+            UInt32 time_sec = 100;
+            float sep_cost = 10f / time_sec;
+            bool isDone = false;
+            for (UInt32 i = 0; i < time_sec && !isDone; i++)
+            {
+                await Task.Delay(Constants.SecondDelay);
+                DuMeasurementStatus status = await GetStatus();
+                switch (status)
+                {
+                    case DuMeasurementStatus.WaitingForClick:
+                        isDone = true;
+                        break;
+                    default:
+                    case DuMeasurementStatus.EсhoMeasurement:
+                    case DuMeasurementStatus.Empty:
+                    case DuMeasurementStatus.NoiseMeasurement:
+                    case DuMeasurementStatus.Сompleted:
+                        break;
+                }
+                _progress += sep_cost;
+                UpdateProgress(_progress, status.ToString());
+            }
+            return isDone;
+
+        }
         private async Task<DuMeasurementStatus> IsMeasurementDone()
         {
-            await Start();
-
-
+            bool started = await Start();
+            
             DuMeasurementStatus status = DuMeasurementStatus.Empty;
             byte[] resp = { };
-            UInt32 measure_time_sec = 1000;
+            UInt32 measure_time_sec = 40;//18/36
             float sep_cost = 50f / measure_time_sec;
             bool isDone = false;
             for (UInt32 i = 0; i < measure_time_sec && !isDone; i++)
@@ -279,16 +281,14 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                 status = await GetStatus();
                 switch(status)
                 {
+                    case DuMeasurementStatus.Сompleted:
+                        isDone = true;
+                        break;
                     default:
                     case DuMeasurementStatus.EсhoMeasurement:
                     case DuMeasurementStatus.WaitingForClick:
                     case DuMeasurementStatus.Empty: 
-                        break;
                     case DuMeasurementStatus.NoiseMeasurement:
-                        //await Start();
-                        break;
-                    case DuMeasurementStatus.Сompleted:
-                        isDone = true;
                         break;
                 }
 
@@ -298,8 +298,8 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             return status;
         }
 
-        private short _fluidLevel = 0;
-        private short _numberOfReflections = 0;
+        private UInt16 _fluidLevel = 0;
+        private UInt16 _numberOfReflections = 0;
         private float _pressure;
 
         private void UpdateProgress(float pos)
@@ -321,31 +321,6 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                 return (int)_progress;
             }
         }
-
-        public void MeasurementRecieveHandler(DuCommandsEnum commandName, byte[] data)
-        {
-            switch (commandName)
-            {
-                case DuCommandsEnum.ResearchHeader:
-                    if (data.Length == 4)
-                    {
-                        _fluidLevel = 
-                            BitConverter.ToInt16(new byte[] { data[0], data[1]}, 0);
-                        _numberOfReflections = 
-                            BitConverter.ToInt16(new byte[] { data[2], data[3]}, 0);
-                    }
-                    break;
-                case DuCommandsEnum.EchogramData:
-                    //_currentEchogram.Add(data);
-                    _progress += 0.666f;
-                    break;
-                case DuCommandsEnum.Pressure:
-                    Debug.WriteLine("ANNULAR PRESSURE: " + BitConverter.ToString(data));
-                    _pressure = BitConverter.ToInt16(new byte[] { data[0], data[1] }, 0) / 10.0f;
-                    break;
-                default:
-                    break;
-            }
-        }
+  
     }
 }

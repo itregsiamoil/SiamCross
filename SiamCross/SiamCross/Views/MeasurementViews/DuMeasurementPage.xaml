@@ -11,7 +11,9 @@
              Title="{Binding SensorName}">
     
     <ContentPage.ToolbarItems>
+        <!--
         <ToolbarItem Text="{local1:Translate ValveTest}" Order="Secondary" Command="{Binding ValveTestCommand}"/>
+        -->
     </ContentPage.ToolbarItems>
 
     <ScrollView x:Name="ScrollView">
@@ -45,31 +47,11 @@
                             </local2:CustomEntry>
                         </StackLayout>
                     </ViewCell>
-                    <ViewCell>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
+                   
+                    <SwitchCell Text="{local1:Translate Amplification}" On="{Binding Amplification}" />
+                    <SwitchCell Text="{local1:Translate Inlet}" On="{Binding Inlet}" />
+                    <SwitchCell Text="Maximum depth 6000" On="{Binding Depth6000}" />
 
-                            <CheckBox CheckedChanged="AmplificationCheckboxChanged" 
-                                      Grid.Column="0"
-                                      Grid.Row="0"/>
-                            <Label Text="{local1:Translate Amplification}" 
-                                      Grid.Column="1"
-                                      Grid.Row="0"/>
-                            <CheckBox CheckedChanged="InletCheckboxChanged" 
-                                      Grid.Column="0"
-                                      Grid.Row="1"/>
-                            <Label Text="{local1:Translate Inlet}" 
-                                      Grid.Column="1"
-                                      Grid.Row="1"/>
-                        </Grid>
-                    </ViewCell>
                     <ViewCell>
                         <StackLayout  >
                             <Label Text="{local1:Translate BufferPressure}"></Label>

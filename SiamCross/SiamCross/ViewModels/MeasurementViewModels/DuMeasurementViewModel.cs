@@ -23,8 +23,39 @@ namespace SiamCross.ViewModels
         public ObservableCollection<string> ResearchTypes { get; set; }
         public string SelectedResearchType { get; set; }
         public ObservableCollection<string> SoundSpeedCorrections { get; set; }
-        public bool Amplification { get; set; }
-        public bool Inlet { get; set; } //Впуск
+
+        bool mAmplification = false;
+        public bool Amplification 
+        { 
+            get => mAmplification; 
+            set
+            {
+                mAmplification = value;
+                NotifyPropertyChanged(nameof(Amplification));
+            }
+        }
+        bool mInlet = false;
+        public bool Inlet //Впуск
+        {
+            get => mInlet;
+            set
+            {
+                mInlet = value;
+                NotifyPropertyChanged(nameof(Inlet));
+            }
+        }
+
+        bool mDepth6000 = false;
+        public bool Depth6000 //Впуск
+        {
+            get => mDepth6000;
+            set
+            {
+                mDepth6000 = value;
+                NotifyPropertyChanged(nameof(Depth6000));
+            }
+        }
+
         public ICommand StartMeasurementCommand { get; set; }
         public ICommand ValveTestCommand { get; set; }
         private string _selectedSoundSpeedCorrection;
@@ -137,8 +168,7 @@ namespace SiamCross.ViewModels
                     _soundSpeed);
 
                 var measurementParams = new DuMeasurementStartParameters(Amplification,
-                    Inlet,
-                    secondaryParameters);
+                    Inlet, Depth6000, secondaryParameters);
 
                 await App.Navigation.PopAsync();
                 await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);
