@@ -223,7 +223,7 @@ namespace SiamCross.Models.Tools
             {
                 if (12 + data_len + 2 > (buf_qty - pkg_start))
                 {
-                    DebugLog.WriteLine($"Data required data_len=: "
+                    DebugLog.WriteLine($"Data required data_len= "
                         + data_len.ToString()+ " buflen="+(buf_qty - pkg_start).ToString());
                     return new byte[] { };
                 }

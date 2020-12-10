@@ -4,6 +4,31 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models
 {
+    public class IOEx_Timeout : Exception
+    {
+        public IOEx_Timeout() { }
+        public IOEx_Timeout(string message) : base(message) { }
+        public IOEx_Timeout(string message, Exception inner) : base(message, inner) { }
+    }
+    public class IOEx_WriteTimeout : IOEx_Timeout
+    {
+        public IOEx_WriteTimeout() { }
+        public IOEx_WriteTimeout(string message) : base(message) {}
+        public IOEx_WriteTimeout(string message, Exception inner): base(message, inner){}
+    }
+    public class IOEx_ReadTimeout : IOEx_Timeout
+    {
+        public IOEx_ReadTimeout() { }
+        public IOEx_ReadTimeout(string message) : base(message) { }
+        public IOEx_ReadTimeout(string message, Exception inner) : base(message, inner) { }
+    }
+    public class IOEx_ErrorResponse : Exception
+    {
+        public IOEx_ErrorResponse() { }
+        public IOEx_ErrorResponse(string message) : base(message) { }
+        public IOEx_ErrorResponse(string message, Exception inner) : base(message, inner) { }
+    }
+
     public enum ConnectionState
     {
         Disconnected = 0,

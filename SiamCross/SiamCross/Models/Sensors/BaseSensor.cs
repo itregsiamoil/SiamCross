@@ -203,12 +203,10 @@ namespace SiamCross.Models.Sensors
         {
             const int rssi_update_period = 2;
             int rssi_update_curr = 0;
-            //await Task.Delay(1000);
-            try
+            while (true)
             {
-                while (!cancelToken.IsCancellationRequested)
+                try
                 {
-                    cancelToken.ThrowIfCancellationRequested();
                     if (IsAlive)
                     {
                         if (false == IsMeasurement)
@@ -219,7 +217,7 @@ namespace SiamCross.Models.Sensors
                                 await mConnection.Disconnect();
                                 continue;
                             }
-                            if(rssi_update_period > rssi_update_curr++ )
+                            if (rssi_update_period > rssi_update_curr++)
                             {
                                 rssi_update_curr = 0;
                                 Connection.UpdateRssi();
@@ -234,38 +232,38 @@ namespace SiamCross.Models.Sensors
                     }
                     else
                     {
-                        ClearStatus();
-                        cancelToken.ThrowIfCancellationRequested();
-                        bool connected = await mConnection.Connect();
-                        if (!connected)
+                        IsAlive = await StartAlive(cancelToken);
+                        if (!IsAlive)
                             await Task.Delay(2000, cancelToken);
-                        else
-                        {
-                            if (await PostConnectInit(cancelToken))
-                            {
-                                IsAlive = true;
-                                SensorData.Status = Resource.ConnectedStatus;
-                            }
-
-                        }
-
                     }
                 }
-            }
-            catch (OperationCanceledException ex)
-            {
-                DebugLog.WriteLine("{0}: {1}", ex.GetType().Name, ex.Message);
-                cancelToken.ThrowIfCancellationRequested();
-            }
-            catch (Exception ex)
-            {
-                DebugLog.WriteLine("WARNING exception in"
-                    + System.Reflection.MethodBase.GetCurrentMethod().Name
-                    + "\n msg=" + ex.Message
-                    + "\n type=" + ex.GetType()
-                    + "\n stack=" + ex.StackTrace + "\n");
-            }
+                catch (IOEx_Timeout)
+                {
+                    IsAlive = false;
+                    SensorData.Status = "IOEx_Timeout";
+                }
+                catch (IOEx_ErrorResponse)
+                {
+                    IsAlive = false;
+                    SensorData.Status = "IOEx_ErrorResponse";
+                }
+            }// while (true)
+        }// ExecuteAsync(CancellationToken cancelToken)
+
+        private async Task<bool> StartAlive(CancellationToken cancelToken)
+        {
+            ClearStatus();
+            cancelToken.ThrowIfCancellationRequested();
+            bool connected = await mConnection.Connect();
+            if (!connected)
+                return false;
+            if (!await PostConnectInit(cancelToken))
+                return false;
+            SensorData.Status = Resource.ConnectedStatus;
+            return true;
         }
+
+
         public abstract Task<bool> PostConnectInit(CancellationToken cancellationToken);
         #endregion
 

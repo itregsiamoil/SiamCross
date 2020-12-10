@@ -115,7 +115,6 @@ namespace SiamCross.Models
         private byte[] mRxBuf = new byte[512];
         private DataBuffer mBuf = new DataBuffer();
         
-        public const int mExchangeRetry = 3;
         public const int mRequestRetry = 3;
         #if DEBUG
         public const int mResponseRetry = 100;
@@ -182,26 +181,12 @@ namespace SiamCross.Models
             bool sent_ok = false;
             for (int i = 0; i < mRequestRetry && !sent_ok; ++i)
             {
-                try
-                {
-                    ctSrc.Token.ThrowIfCancellationRequested();
-                    int sent = await mBaseConn.WriteAsync(data, 0, data.Length, ctSrc.Token);
-                    if(data.Length == sent)
-                        sent_ok = true;
-                    DebugLog.WriteLine("Sent " + data.Length.ToString() +
-                        ": [" + BitConverter.ToString(data) + "]\n");
-                }
-                catch (OperationCanceledException ex)
-                {
-                    DebugLog.WriteLine("Request timeout: rq=" + BitConverter.ToString(data));
-                    throw ex;
-                }
-                catch (Exception ex)
-                {
-                    DebugLog.WriteLine("try " + i.ToString() + " - Request ERROR - "
-                    + BitConverter.ToString(data));
-                    throw ex;
-                }
+                ctSrc.Token.ThrowIfCancellationRequested();
+                int sent = await mBaseConn.WriteAsync(data, 0, data.Length, ctSrc.Token);
+                if(data.Length == sent)
+                    sent_ok = true;
+                DebugLog.WriteLine("Sent " + data.Length.ToString() +
+                    ": [" + BitConverter.ToString(data) + "]\n");
             }
             //if (!sent)
             //    ConnectFailed?.Invoke();
@@ -215,21 +200,23 @@ namespace SiamCross.Models
             
             CancellationTokenSource ctSrc = new CancellationTokenSource(read_timeout);
             byte[] pkg = { };
-            for (int i = 0; i < mResponseRetry && 0 == pkg.Length; ++i)
+            try
             {
-                try
+                for (int i = 0; i < mResponseRetry && 0 == pkg.Length; ++i)
                 {
                     ctSrc.Token.ThrowIfCancellationRequested();
                     pkg = mBuf.Extract();
                     if (0 == pkg.Length)
                     {
+                        //DebugLog.WriteLine("Begin ReadAsync");
                         int readed = await mBaseConn.ReadAsync(mRxBuf, 0, mRxBuf.Length, ctSrc.Token);
-                        if(0 < readed)
+                        //DebugLog.WriteLine($"End ReadAsync readed={readed}");
+                        if (0 < readed)
                             mBuf.Append(mRxBuf, readed);
-                        DebugLog.WriteLine("Appended bytes="+ readed.ToString()
-                            +" elapsed=" + perf_counter.ElapsedMilliseconds.ToString()
-                            + " / " + read_timeout.ToString()
-                            + ": [" + BitConverter.ToString(mRxBuf, 0, readed) + "]\n");
+                        //DebugLog.WriteLine("Appended bytes="+ readed.ToString()
+                        //    +" elapsed=" + perf_counter.ElapsedMilliseconds.ToString()
+                        //    + " / " + read_timeout.ToString()
+                        //    + ": [" + BitConverter.ToString(mRxBuf, 0, readed) + "]\n");
                     }
                     else
                     {
@@ -250,22 +237,19 @@ namespace SiamCross.Models
                                 + ": [" + BitConverter.ToString(pkg) + "]\n");
                         }
                     }
-                }
-                catch (OperationCanceledException ex)
-                {
-                    DebugLog.WriteLine("Response timeout "
-                        + " elapsed=" + perf_counter.ElapsedMilliseconds.ToString()
-                        + " / " + read_timeout.ToString()
-                        + ": [" + BitConverter.ToString(pkg) + "]\n");
-                    throw ex;
-                }
-                catch (Exception ex)
-                {
-                    DebugLog.WriteLine("try " + i.ToString() + " - Response ERROR "
-                        + " elapsed=" + perf_counter.ElapsedMilliseconds.ToString()
-                        + " / " + read_timeout.ToString());
-                    throw ex;
-                }
+                }//for (int i = 0; i < mResponseRetry && 0 == pkg.Length; ++i)
+            }
+            catch (Exception ex)
+            {
+                DebugLog.WriteLine("EXCEPTION response"
+                    + " elapsed=" + perf_counter.ElapsedMilliseconds.ToString()
+                    + " / " + read_timeout.ToString()
+                    + ": [" + BitConverter.ToString(pkg) + "]\n");
+                throw ex;
+            }
+            finally
+            {
+                ctSrc.Dispose();
             }
             return pkg;
         }
@@ -288,23 +272,11 @@ namespace SiamCross.Models
             }
             catch (OperationCanceledException ex)
             {
-                DebugLog.WriteLine("Exchange canceled by timeout ");
-                // dont rethrow 
-            }
-            catch (Exception ex)
-            {
-                /*
-                DebugLog.WriteLine("Exception in "
-                    + System.Reflection.MethodBase.GetCurrentMethod().Name
-                    + "\n msg=" + ex.Message
-                    + "\n type=" + ex.GetType()
-                    + "\n stack=" + ex.StackTrace + "\n");
-                */
                 throw ex;
             }
             return res;
         }
-        private async Task<byte[]> ExchangeData(byte[] req)
+        private async Task<byte[]> ExchangeData(byte[] req, int retry)
         {
             byte[] res = { };
             if (State != ConnectionState.Connected)
@@ -312,12 +284,23 @@ namespace SiamCross.Models
 
             try
             {
-                for (int i = 0; i < mExchangeRetry && 0 == res.Length; ++i) 
+                for (int i = 0; i < retry && 0 == res.Length; ++i)
                 {
-                    DebugLog.WriteLine("START transaction, try " + i.ToString());
-                    res = await SingleExchangeAsync(req);
-                    DebugLog.WriteLine("END transaction, try " + i.ToString());
+                    try
+                    {
+                        DebugLog.WriteLine("START transaction, try " + i.ToString());
+                        res = await SingleExchangeAsync(req);
+                        DebugLog.WriteLine("END transaction, try " + i.ToString());
+                    }
+                    catch (OperationCanceledException ex)
+                    {
+                        DebugLog.WriteLine("Exchange canceled by timeout disconnect");
+                        await Disconnect();
+                        if (1 < retry)
+                            await Connect();
+                    }
                 }
+
             }
             catch (Exception ex)
             {
@@ -326,14 +309,15 @@ namespace SiamCross.Models
                 + "\n msg=" + ex.Message
                 + "\n type=" + ex.GetType()
                 + "\n stack=" + ex.StackTrace + "\n");
-                
-                DebugLog.WriteLine("ExchangeData Do disconnect ");
-                //await Disconnect();
-                //await Connect();
             }
             return res;
         }
+
         public async Task<byte[]> Exchange(byte[] req)
+        {
+            return await Exchange(req, 1);
+        }
+        public async Task<byte[]> Exchange(byte[] req, int retry)
         {
             byte[] ret = { };
             try
@@ -346,7 +330,7 @@ namespace SiamCross.Models
                         bool result = await mExecTcs.Task;
                     }
                     mExecTcs = new TaskCompletionSource<bool>();
-                    ret = await ExchangeData(req);
+                    ret = await ExchangeData(req, retry);
                 }
 
             }

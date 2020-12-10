@@ -90,9 +90,57 @@ namespace SiamCross.Models.Sensors.Du
             return true;
 
         }
+
+
+
+        private async Task<DuMeasurementStatus> GetStatus(CancellationToken cancelToken)
+        {
+            cancelToken.ThrowIfCancellationRequested();
+            DuMeasurementStatus status = DuMeasurementStatus.Empty;
+            byte[] resp = { };
+            resp = await Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.SensorState]);
+            if(null== resp || 12 > resp.Length)
+                throw new IOEx_Timeout("GetStatus timeout");
+            if (0x01 != resp[3])
+                throw new IOEx_ErrorResponse("GetStatus response error");
+            if (16 != resp.Length)
+                throw new IOEx_ErrorResponse("GetStatus response length error");
+            status = (DuMeasurementStatus)BitConverter.ToUInt16(resp, 12);
+            System.Diagnostics.Debug.WriteLine("DU status=" + status.ToString());
+            return status;
+        }
+        private async Task SetStatusEmpty(CancellationToken cancelToken)
+        {
+            cancelToken.ThrowIfCancellationRequested();
+            byte[] resp = { };
+            resp = await Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.StateZeroing]);
+            if (null == resp || 12 != resp.Length)
+                throw new IOEx_Timeout("SetStatus wrong len or timeout");
+            if(0x02 != resp[3])
+                throw new IOEx_ErrorResponse("SetStatus response error");
+        }
         public override async Task<bool> PostConnectInit(CancellationToken cancelToken)
         {
-            SensorData.Status = Resource.ConnectedStatus;
+            // датчик в режиме измерения отвечает ТОЛЬКО на опрос состояния 
+            // и не отвечает на другие команды следовательно, 
+            // чтоб подключиться к нему:
+            // 1 опрашиваем статус
+            DuMeasurementStatus status = await GetStatus(cancelToken);
+            // 2 делаем сброс если занят
+            cancelToken.ThrowIfCancellationRequested();
+            switch (status)
+            {
+                case DuMeasurementStatus.Empty:
+                    break;
+                default:
+                case DuMeasurementStatus.WaitingForClick:
+                case DuMeasurementStatus.EсhoMeasurement:
+                case DuMeasurementStatus.NoiseMeasurement:
+                case DuMeasurementStatus.Сompleted:
+                    await SetStatusEmpty(cancelToken);
+                    break;
+            }
+            // 3 проверяем прошивку
             return (await UpdateFirmware(cancelToken));
         }
         public override async Task StartMeasurement(object measurementParameters)

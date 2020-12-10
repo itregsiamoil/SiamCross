@@ -9,13 +9,14 @@ using SiamCross.Models.Adapters;
 using SiamCross.Models.Adapters.PhyInterface;
 using SiamCross.Models.Scanners;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SiamCross.Droid.Models
 {
-    /*
+    
     class BluetoothGattCallbackExt : BluetoothGattCallback
     {
         BaseBluetoothClassicAdapterAndroid mBt2Adapter = null;
@@ -26,7 +27,7 @@ namespace SiamCross.Droid.Models
         }
         override public void OnConnectionStateChange(BluetoothGatt gatt, GattStatus status, ProfileState newState)
         {
-            Debug.WriteLine("OnConnectionStateChange ");
+            Debug.WriteLine($"OnConnectionStateChange state={newState}");
             //super.onConnectionStateChange(gatt, status, newState);
         }
         override public void OnReadRemoteRssi(BluetoothGatt gatt, int rssi, GattStatus status)
@@ -41,9 +42,10 @@ namespace SiamCross.Droid.Models
                  
         }
     };
-    */
+    
     [BroadcastReceiver(Enabled = true, Exported = true)]
-    [IntentFilter(new[] { BluetoothAdapter.ActionStateChanged
+    [IntentFilter(new[] { 
+          BluetoothAdapter.ActionStateChanged
         , BluetoothAdapter.ExtraState
         , BluetoothDevice.ActionFound
         , BluetoothDevice.ExtraRssi
@@ -51,6 +53,7 @@ namespace SiamCross.Droid.Models
         , BluetoothDevice.ActionAclDisconnected
         , BluetoothDevice.ActionAclDisconnectRequested
         , BluetoothDevice.ActionBondStateChanged
+        , BluetoothDevice.ActionNameChanged
     })]
     public class BaseBluetoothClassicAdapterAndroid : BroadcastReceiver, IConnection
     {
@@ -115,13 +118,23 @@ namespace SiamCross.Droid.Models
             if (_scannedDeviceInfo.BluetoothArgs is string address)
             {
                 _bluetoothDevice = _bluetoothAdapter.GetRemoteDevice(address);
+                if (_bluetoothDevice.Name != _scannedDeviceInfo.Name)
+                {
+                    _bluetoothDevice.Dispose();
+                    _bluetoothDevice = null;
+                }
             }
             if (_bluetoothDevice == null) 
                 return false;
-
             try
             {
-                _socket = _bluetoothDevice.CreateRfcommSocketToServiceRecord(UUID.FromString(_uuid));
+                //Context ctx = Android.App.Application.Context;
+                //var callback = new BluetoothGattCallbackExt(this);
+                //_bluetoothDevice.ConnectGatt(ctx, true, callback);
+
+
+                //_socket = _bluetoothDevice.CreateRfcommSocketToServiceRecord(UUID.FromString(_uuid));
+                _socket = _bluetoothDevice.CreateInsecureRfcommSocketToServiceRecord(UUID.FromString(_uuid));
 
                 if (_socket == null)
                 {
@@ -136,13 +149,7 @@ namespace SiamCross.Droid.Models
 
                 _outStream = _socket.OutputStream;
                 _inStream = _socket.InputStream;
-                //await Task.Delay(2000);
-                //_readTask = new Task(() => BackgroundRead(_cancellToken));
-                //_readTask.Start();
                 DoActionConnectSucceed();
-                //Context ctx = Android.App.Application.Context;
-                //var callback = new BluetoothGattCallbackExt(this);
-                //_bluetoothDevice.ConnectGatt(ctx, true, callback);
                 return true;
             }
             catch(Java.IO.IOException e)
@@ -167,42 +174,23 @@ namespace SiamCross.Droid.Models
         }
         public void Disconnect()
         {
-            //_cancellToken?.Cancel();
-            Close(_inStream);
-            Close(_outStream);
-            Close(_socket);
-        }
-        private void Close(IDisposable connectedObject)
-        {
-            if (connectedObject == null)
-            {
-                return;
-            }
             try
             {
-                connectedObject?.Dispose();
+                _inStream?.Close();
+                _outStream?.Close();
+                _socket?.Close();
+                _bluetoothDevice?.Dispose();
             }
             catch (Exception)
             {
-                Disconnect();
-                throw;
+                Console.WriteLine("ERROR unknown in Disconnect");
             }
-
-            connectedObject = null;
-        }
-        virtual protected async Task BackgroundRead(CancellationTokenSource _cancellToken)
-        {
-            while (!_cancellToken.IsCancellationRequested)
+            finally
             {
-                //_cancellToken.Token.ThrowIfCancellationRequested();
-                if (!_inStream.CanRead || !_inStream.IsDataAvailable())
-                {                  
-                    continue;
-                }
-                byte[] inBuf = new byte[1];
-
-                int readLen = _inStream.Read(inBuf, 0, inBuf.Length);
-                DoActionDataReceived(inBuf);
+                _inStream = null;
+                _outStream = null;
+                _socket = null;
+                _bluetoothDevice = null;
             }
         }
 
@@ -225,7 +213,9 @@ namespace SiamCross.Droid.Models
             String action = intent.Action;
             BluetoothDevice device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice);
             string device_name = device.Name;
+            System.Diagnostics.Debug.WriteLine($"OnReceive action={action}");
 
+            /*
             if (BluetoothDevice.ActionAclConnected.Equals(action))
             {
                 return;
@@ -241,6 +231,7 @@ namespace SiamCross.Droid.Models
                 if(null!= this._bluetoothDevice && _bluetoothDevice.Equals(device))
                     Disconnect();
             }
+            */
             //throw new NotImplementedException();
         }
 
@@ -263,22 +254,90 @@ namespace SiamCross.Droid.Models
 
         public void ClearRx()
         {
+            ThrowIfNoConnection();
             _inStream.Flush();
             //_inStream.Position = 0;
             //_inStream.SetLength(0);
         }
         public void ClearTx()
         {
+            ThrowIfNoConnection();
             _outStream.Flush();
             //_outStream.Position = 0;
             //_inStream.SetLength(0);
         }
+        void StreamDisconnect()
+        {
+            try
+            {
+                _inStream?.Close();
+                _outStream?.Close();
+                _socket?.Close();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("StreamDisconnect ERROR unknown");
+            }
+            finally
+            {
+                _inStream = null;
+                _outStream = null;
+                _socket = null;
+            }
+        }
+        void ThrowIfNoConnection()
+        {
+            if (null != _inStream && null != _outStream && null != _socket && _socket.IsConnected)
+                return;
+            throw new OperationCanceledException();
+        }
+
         public async  Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
-            return await _inStream.ReadAsync(buffer, offset, count, ct);
+            //https://github.com/dotnet/runtime/issues/23736
+            //https://github.com/dotnet/runtime/issues/24093
+            //https://github.com/dotnet/runtime/issues/19867
+            // тут какая-то бага в фреймфорке поток никак не реагирует на CancellationToken
+            // будем убивать поток и заново его открывать
+            ct.ThrowIfCancellationRequested();
+            bool soc_closed = false;
+            try
+            {
+                ct.ThrowIfCancellationRequested();
+                ThrowIfNoConnection();
+
+                ct.Register(() =>
+                {
+                    Debug.WriteLine("ReadAsync cancel by timeout");
+                    if (ct.IsCancellationRequested)
+                    {
+                        soc_closed = true;
+                        StreamDisconnect();
+                    }
+
+                });
+                return await _inStream.ReadAsync(buffer, offset, count, ct);
+            }
+            catch (Exception ex)
+            {
+                if (!soc_closed)
+                {
+                    Debug.WriteLine("ReadAsync unknown err - rethrow "
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType());
+                    throw ex;
+                }
+            }
+            return 0;
         }
+
+
+
         public async Task<int> WriteAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
+            ct.ThrowIfCancellationRequested();
+            ThrowIfNoConnection();
             await _outStream.WriteAsync(buffer, offset, count, ct);
             return count;
         }
