@@ -123,7 +123,7 @@ namespace SiamCross.Models
         #endif
 
         private const int mAdditioonTime = 500;
-        private const int mMinSpeed = 1200; ///bit per second
+        private const int mMinSpeed = 9600; ///bit per second
         private const float multipler = 1000.0f / (mMinSpeed / (8 + 1 + 1)) ;
         private static int GetTime(int bytes)
         {
@@ -150,13 +150,13 @@ namespace SiamCross.Models
                 default: break;
                 case 0x01:
                     UInt16 data_len = BitConverter.ToUInt16(rq, 8);
-                    timeout = GetTime(rq.Length + data_len);
+                    timeout = GetTime(rq.Length + data_len + 2);
                     break;
                 case 0x02:
                     timeout = GetTime(rq.Length);
                     break;
             }
-            return timeout + mAdditioonTime;
+            return timeout;
         }
 
         private static void LockLog(string msg)
@@ -194,11 +194,11 @@ namespace SiamCross.Models
         {
             Stopwatch perf_counter = new Stopwatch();
             perf_counter.Start();
-            int read_timeout = GetResponseTimeout(req);
+            int pf_delay = GetResponseTimeout(req);
+            int read_timeout = GetResponseTimeout(req)+ mAdditioonTime;
             CancellationTokenSource ctSrc = new CancellationTokenSource(read_timeout);
             // делаем минимальную задержку чтоб принять как минимум заоловок пакета
             // без ожидания
-            int pf_delay = GetTime(req.Length);
             DebugLog.WriteLine($"Prefetch delay = {pf_delay}");
             await Task.Delay(pf_delay, ctSrc.Token);
 
