@@ -493,8 +493,14 @@ namespace SiamCross.Models.Tools
 
 
             List<double> discretsY = new List<double>();
-            var convertedEhogram = EchogramConverter.GetPoints(dbDuModel);
-            for (int i = 0; i < convertedEhogram.GetUpperBound(0); i++)
+            float minX;
+            float minY;
+            float maxX;
+            float maxY;
+
+            var convertedEhogram = EchogramConverter.GetPoints(dbDuModel
+                , out minX, out maxX, out minY, out maxY);
+            for (int i = 0; i < convertedEhogram.GetLength(0); i++)
             {
                 discretsY.Add(convertedEhogram[i, 1]);
             }
@@ -580,10 +586,10 @@ namespace SiamCross.Models.Tools
                                             new XAttribute("MSVDOUBLE", dbDuModel.AnnularPressure),
                                             new XAttribute("MSVDICTIONARYID", "sudpressure")),
                                     new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", dbDuModel.FluidLevel),
+                                            new XAttribute("MSVINTEGER", dbDuModel.SrcFluidLevel),
                                             new XAttribute("MSVDICTIONARYID", "lglevel")),
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", dbDuModel.FluidLevel),
+                                            new XAttribute("MSVINTEGER", dbDuModel.SrcFluidLevel),
                                             new XAttribute("MSVDICTIONARYID", "lglevelud")),
                                         new XElement("Value",
                                             new XAttribute("MSVDOUBLE", dbDuModel.SoundSpeed),
@@ -592,7 +598,7 @@ namespace SiamCross.Models.Tools
                                             new XAttribute("MSVDOUBLE", dbDuModel.SoundSpeed),
                                             new XAttribute("MSVDICTIONARYID", "lgsoundspeedud")),
                                         new XElement("Value",
-                                            new XAttribute("MSVINTEGER", dbDuModel.NumberOfReflections),
+                                            new XAttribute("MSVINTEGER", dbDuModel.SrcReflectionsCount),
                                             new XAttribute("MSVDICTIONARYID", "lgreflectioncount")),
                                         new XElement("Value",
                                             new XAttribute("MSVDICTIONARYID", "lgtimediscrete"),

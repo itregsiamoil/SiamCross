@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using System.Collections.Specialized;
 
 namespace SiamCross.ViewModels
 {
@@ -25,61 +26,26 @@ namespace SiamCross.ViewModels
         private DuMeasurement _measurement;
 
         public ObservableCollection<string> Fields { get; set; }
-        public string SelectedField
-        {
-            get => _measurement.Field;
-            set => _measurement.Field = value;
-        }
-        public string Well
-        {
-            get => _measurement.Well;
-            set => _measurement.Well = value;
-        }
-        public string Bush
-        {
-            get => _measurement.Bush;
-            set => _measurement.Bush = value;
-        }
-        public string Shop
-        {
-            get => _measurement.Shop;
-            set => _measurement.Shop = value;
-        }
-        public string Date { get; }
-        public string BufferPressure
-        {
-            get => _measurement.BufferPressure;
-            set => _measurement.BufferPressure = value;
-        }
-        public string Comments
-        {
-            get => _measurement.Comment;
-            set => _measurement.Comment = value;
-        }
-
-        public string DeviceName { get; }
-        public string BatteryVolt { get;}
-        public string Temperature { get;}
-        public string MainFirmware { get;}
-        public string RadioFirmware { get;}
-
-        public string MeasurementType { get; }
-
-        public string FluidLevel { get; }
-
-        public string AnnularPressure { get; }
-
-        public string NumberOfReflections { get; }
-
+        public string SelectedField => _measurement.Field;
+        public string Well => _measurement.Well;
+        public string Bush => _measurement.Bush;
+        public string Shop => _measurement.Shop;
+        public string Date => _measurement.DateTime.ToString();
+        public string BufferPressure => _measurement.BufferPressure;
+        public string Comments => _measurement.Comment;
+        public string DeviceName => _measurement.Name;
+        public string BatteryVolt => _measurement.BatteryVolt;
+        public string Temperature => _measurement.Temperature;
+        public string MainFirmware => _measurement.MainFirmware;
+        public string RadioFirmware => _measurement.RadioFirmware;
+        public string MeasurementType => _measurement.MeasurementType;
+        public string FluidLevel => _measurement.FluidLevel.ToString("N3", CultureInfo.InvariantCulture);
+        public string AnnularPressure => _measurement.AnnularPressure.ToString("N3", CultureInfo.InvariantCulture);
+        public string NumberOfReflections => _measurement.NumberOfReflections.ToString("N3", CultureInfo.InvariantCulture);
         public ObservableCollection<string> SoundSpeedCorrections { get; }
-
-        public string SelectedSoundSpeedCorrection { get; set; }
-
-        public string SoundSpeed { get; set; }
-
+        public string SelectedSoundSpeedCorrection => _measurement.SoundSpeedCorrection;
+        public string SoundSpeed => _measurement.SoundSpeed;
         public ICommand ShareCommand { get; set; }
-
-        private double[,] _points;
 
         public DuMeasurementDoneViewModel(DuMeasurement measurement)
         {
@@ -91,34 +57,22 @@ namespace SiamCross.ViewModels
                 SoundSpeedCorrections.Add(elem.ToString());
             }
 
-            FluidLevel = _measurement.FluidLevel.ToString();
-            NumberOfReflections = _measurement.NumberOfReflections.ToString();
-            AnnularPressure = _measurement.AnnularPressure.ToString("N3", CultureInfo.InvariantCulture);
-            SelectedSoundSpeedCorrection = _measurement.SoundSpeedCorrection;
-            SoundSpeed = _measurement.SoundSpeed;
-            SelectedField = _measurement.Field;
-            Well = _measurement.Well;
-            Bush = _measurement.Bush;
-            Shop = _measurement.Shop;
-            Date = _measurement.DateTime.ToString();
-            BufferPressure = _measurement.BufferPressure;
-            Comments = _measurement.Comment;
-            DeviceName = _measurement.Name;
-            BatteryVolt = _measurement.BatteryVolt;
-            MainFirmware = _measurement.MainFirmware;
-            Temperature = _measurement.Temperature;
-            RadioFirmware = _measurement.RadioFirmware;
-            MeasurementType = _measurement.MeasurementType;
-
             ShareCommand = new Command(ShareCommandHandler);
 
-             _points = EchogramConverter.GetPoints(measurement);
 
-            MaxGraphX = Math.Round(GetMaximumX(), 0).ToString();
-            MaxGraphY = Math.Round(GetMaximumY(), 0).ToString();
-            MinGraphX = Math.Round(GetMinimumX(), 0).ToString();
-            MinGraphY = Math.Round(GetMinimumY(), 0).ToString();
+        }
 
+        public void SetAxisLimits(in float min_x, in float max_x, in float min_y, in float max_y)
+        {
+            MinGraphX = min_x.ToString("N0");
+            MaxGraphX = (_measurement.MeasData.FluidLevelMultipler* max_x ).ToString("N0");
+
+            MinGraphY = ((0 > min_y) ? 
+                Math.Pow(Math.Abs(min_y), 0.5f / 0.35) * (-1) 
+                : Math.Pow(min_y, 0.5f / 0.35)).ToString("N0");
+            MaxGraphY = ((0 > max_y) ?
+                Math.Pow(Math.Abs(max_y), 0.5f / 0.35) * (-1)
+                : Math.Pow(max_y, 0.5f / 0.35)).ToString("N0");
         }
 
         private DateTimeConverter _timeConverter = new DateTimeConverter();
@@ -155,61 +109,11 @@ namespace SiamCross.ViewModels
                 .Replace(':', '-');
         }
 
-        public string MaxGraphY { get; set; }
-        public string MinGraphY { get; set; }
-        public string MaxGraphX { get; set; }
-        public string MinGraphX { get; set; }
+        public string MaxGraphY { get; private set;  }
+        public string MinGraphY { get; private set; }
+        public string MaxGraphX { get; private set; }
+        public string MinGraphX { get; private set; }
 
-        public double GetMaximumX()
-        {
-            double max = _points[0, 0];
-            for (int i = 0; i < _points.GetUpperBound(0); i++)
-            {
-                if (_points[i, 0] > max)
-                {
-                    max = _points[i, 0];
-                }
-            }
-            return max;
-        }
 
-        public double GetMinimumX()
-        {
-            double min = _points[0, 0];
-            for (int i = 0; i < _points.GetUpperBound(0); i++)
-            {
-                if (_points[i, 0] < min)
-                {
-                    min = _points[i, 0];
-                }
-            }
-            return min;
-        }
-
-        public double GetMaximumY()
-        {
-            double max = _points[1, 0];
-            for (int i = 0; i < _points.GetUpperBound(0); i++)
-            {
-                if (_points[i, 1] > max)
-                {
-                    max = _points[i, 1];
-                }
-            }
-            return max;
-        }
-
-        public double GetMinimumY()
-        {
-            double min = _points[1, 0];
-            for (int i = 0; i < _points.GetUpperBound(0); i++)
-            {
-                if (_points[i, 1] < min)
-                {
-                    min = _points[i, 1];
-                }
-            }
-            return min;
-        }
     }
 }

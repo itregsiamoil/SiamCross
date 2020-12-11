@@ -2,9 +2,17 @@
 {
     public class DuMeasurementSecondaryParameters : MeasurementSecondaryParameters
     {
-        public string ResearchType { get; }
-        public string SoundSpeedCorrection { get; }
+        public string ResearchType { get; set; }
+        public string SoundSpeedCorrection { get; set; }
         public string SoundSpeed { get; set; }
+
+        public DuMeasurementSecondaryParameters()
+            :base()
+        {
+            //ResearchType = "";
+            //SoundSpeedCorrection = "";
+            //SoundSpeed = "";
+        }
 
         public DuMeasurementSecondaryParameters(
             string name, string measurementType, 

@@ -7,14 +7,14 @@ namespace SiamCross.Models.Sensors
     public class MeasurementSecondaryParameters
     {
         public MeasurementSecondaryParameters(
-            string name,
-            string measurementType,
-            string field,
-            string well,
-            string bush,
-            string shop,
-            string bufferPressure,
-            string comment,
+            string name="",
+            string measurementType="",
+            string field="",
+            string well="",
+            string bush="",
+            string shop="",
+            string bufferPressure="",
+            string comment="",
             string battery = "0.0",
             string temperature = "0.0",
             string mainfirmware="0.0.0",
@@ -35,14 +35,14 @@ namespace SiamCross.Models.Sensors
             RadioFirmware = radiofirmware;
         }
 
-        public string DeviceName { get; }
-        public string MeasurementType { get; }
-        public string Field { get; }
-        public string Well { get; }
-        public string Bush { get; }
-        public string Shop { get; }
-        public string BufferPressure { get; }
-        public string Comment { get; }
+        public string DeviceName { get; set; }
+        public string MeasurementType { get; set;  }
+        public string Field { get; set;  }
+        public string Well { get; set; }
+        public string Bush { get; set; }
+        public string Shop { get; set; }
+        public string BufferPressure { get; set; }
+        public string Comment { get; set; }
         public string BatteryVolt { get; set; }
         public string Temperature { get; set; }
         public string MainFirmware { get; set; }

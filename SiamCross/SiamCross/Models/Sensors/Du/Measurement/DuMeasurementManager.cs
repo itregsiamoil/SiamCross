@@ -12,6 +12,7 @@ using SiamCross.AppObjects;
 using Autofac;
 using SiamCross.Services.Logging;
 using NLog;
+using System.Globalization;
 
 namespace SiamCross.Models.Sensors.Du.Measurement
 {
@@ -27,7 +28,10 @@ namespace SiamCross.Models.Sensors.Du.Measurement
 
         public DuMeasurementStatus MeasurementStatus { get; set; }
 
-        byte[] _currentEchogram = new byte[3000]; 
+        byte[] _currentEchogram = new byte[3000];
+        private UInt16 mSrcFluidLevel = 0;
+        private UInt16 mSrcReflectionsCount = 0;
+        private float _pressure;
 
         private DuParser _parser = new DuParser();
 
@@ -43,39 +47,111 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             //_parser.MessageReceived += ReceiveHandler;
             //_parser.ByteMessageReceived += MeasurementRecieveHandler;
         }
-
         public async Task<object> RunMeasurement()
         {
-            Debug.WriteLine("SENDING PARAMETERS");
-            await SendParameters();
-            //await Task.Delay(300);
-            await GetPressure();
-            //await Task.Delay(300);
-            MeasurementStatus = await IsMeasurementDone();
-            //await Task.Delay(300);
-            //await Sensor.Connection.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.SensorState]);
-            //await Task.Delay(300);
-            await DownloadHeader();
-            //await Task.Delay(300);
-            var result = await GetMeasurementData();
-            //await Task.Delay(2000);
-            return result;
+            MeasureState error = MeasureState.Ok;
+            DuMeasurementData report = null;
+            try 
+            {
+                await GetPressure();
+                await SendParameters();
+                MeasurementStatus = await ExecuteMeasurement();
+                if (DuMeasurementStatus.Сompleted == MeasurementStatus)
+                {
+                    await DownloadHeader();
+                    await DownloadEchogram();
+                }
+                await SetStatusEmpty();
+                
+            }
+            catch(IOEx_Timeout)
+            {
+                error = MeasureState.IOError;
+            }
+            catch (IOEx_ErrorResponse)
+            {
+                error = MeasureState.LogicError;
+            }
+            catch (Exception)
+            {
+                error = MeasureState.UnknownError;
+            }
+            finally
+            {
+                report = MakeReport(error);
+            }
+            return report;
         }
-
         private async Task<bool> GetPressure()
         {
             byte[] resp = { };
             resp = await Sensor.Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure]);
             if (14 > resp.Length)
                 return false;
-            _pressure = (float)BitConverter.ToInt16(resp, 12)/10.0f;
+            _pressure = (float)BitConverter.ToInt16(resp, 12) / 10.0f;
             Debug.WriteLine("ANNULAR PRESSURE: " + _pressure.ToString());
             return true;
         }
+        private async Task SendParameters()
+        {
+            Debug.WriteLine("SENDING PARAMETERS");
+            BitVector32 myBV = new BitVector32(0);
+            int bit0 = BitVector32.CreateMask();
+            int bit1 = BitVector32.CreateMask(bit0);
+            int bit2 = BitVector32.CreateMask(bit1);
+            int bit3 = BitVector32.CreateMask(bit2);
+            int bit4 = BitVector32.CreateMask(bit3);
+            int bit5 = BitVector32.CreateMask(bit4);
+            int bit6 = BitVector32.CreateMask(bit5);
+            int bit7 = BitVector32.CreateMask(bit6);
+            int bit8 = BitVector32.CreateMask(bit7);
+            int bit9 = BitVector32.CreateMask(bit8);
 
+            myBV[bit0] = _measurementParameters.Inlet;
+            myBV[bit6] = _measurementParameters.Depth6000;
+            myBV[bit9] = _measurementParameters.Amplification;
+            byte[] my_data = BitConverter.GetBytes(myBV.Data).AsSpan(0, 2).ToArray();
 
+            byte[] command = _commandGenerator.GenerateWriteCommand(
+                DuCommands.FullCommandDictionary[DuCommandsEnum.Revbit], my_data);
 
+            byte[] resp = await Sensor.Connection.Exchange(command);
+            if (null == resp || 12 != resp.Length)
+                throw new IOEx_Timeout("SetStatus wrong len or timeout");
+            if (0x02 != resp[3])
+                throw new IOEx_ErrorResponse("SetStatus response error");
+        }
+        private async Task<DuMeasurementStatus> ExecuteMeasurement()
+        {
+            bool started = await Start();
 
+            DuMeasurementStatus status = DuMeasurementStatus.Empty;
+            byte[] resp = { };
+            UInt32 measure_time_sec = 40;//18/36
+            float sep_cost = 50f / measure_time_sec;
+            bool isDone = false;
+            for (UInt32 i = 0; i < measure_time_sec && !isDone; i++)
+            {
+                await Task.Delay(Constants.SecondDelay);
+                status = await GetStatus();
+                switch (status)
+                {
+                    case DuMeasurementStatus.Сompleted:
+                        isDone = true;
+                        break;
+                    default:
+                    case DuMeasurementStatus.EсhoMeasurement:
+                    case DuMeasurementStatus.WaitingForClick:
+                    case DuMeasurementStatus.Empty:
+                    case DuMeasurementStatus.NoiseMeasurement:
+                        break;
+                }
+
+                _progress += sep_cost;
+                UpdateProgress(_progress, status.ToString());
+            }
+            return status;
+        }
         private async Task<bool> DownloadHeader()
         {
             UpdateProgress(_progress, "Read header");
@@ -84,54 +160,27 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             if (16 > resp.Length)
                 return false;
                 
-            _fluidLevel = BitConverter.ToUInt16(resp, 12);
-            if(_measurementParameters.Depth6000)
-            {
-                BitVector32 myBV = new BitVector32(_fluidLevel);
-                int bit0 = BitVector32.CreateMask(00000000);
-                myBV[0x4000] = false;
-                _fluidLevel = (ushort)(myBV.Data);
-            }
-
-
-            _numberOfReflections = BitConverter.ToUInt16(resp, 14);
-
+            mSrcFluidLevel = BitConverter.ToUInt16(resp, 12);
+            // ахтунг! параметр передаётся в двоично десятичном виде :-(
+            mSrcReflectionsCount = BitConverter.ToUInt16(resp, 14);
             return true;
         }
-
-        
-        private async Task<DuMeasurementData> GetMeasurementData()
+        private DuMeasurementData MakeReport(MeasureState state)
         {
-            await DownloadEchogram();
-            //await Task.Delay(300);
-            _logger.Trace("set StateZeroing");
-            await Sensor.Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.StateZeroing]);
-            //await Task.Delay(300);
-
-            _logger.Trace("set raw to list");
-            List<byte> echogramRawBytes = _currentEchogram.ToList();
-
             _logger.Trace("begin create report");
-            var data = new DuMeasurementData(echogramRawBytes,
-                _fluidLevel, (float)Math.Round(_pressure, 1), 
-                _numberOfReflections, DateTime.Now, _measurementParameters.SecondaryParameters);
+
+            var data = new DuMeasurementData(DateTime.Now
+                , _measurementParameters
+                , _pressure
+                , mSrcFluidLevel
+                , mSrcReflectionsCount
+                , _currentEchogram
+                , state);
 
             _logger.Trace("end create report");
-            if (string.IsNullOrEmpty(data.SecondaryParameters.SoundSpeed))
-            {
-                var correctionTable = HandbookData.Instance.GetSoundSpeedList().Find(
-                    x => x.ToString() == data.SecondaryParameters.SoundSpeedCorrection);
-                data.SecondaryParameters.SoundSpeed = 
-                    correctionTable.GetApproximatedSpeedFromTable(data.AnnularPressure).ToString();
-            }
-            _logger.Trace("recalc fluid level");
-            data.FluidLevel = (int)(data.FluidLevel *
-                float.Parse(data.SecondaryParameters.SoundSpeed) / 341.333f);
 
             return data;
         }
-        
-
         static private async Task<bool> ReadMemory(IProtocolConnection conn, byte[] dst, int start
             , UInt32 start_addr, UInt32 mem_size, UInt16 step_size
             , Action<float> DoStepProgress, float progress_size)
@@ -198,45 +247,6 @@ namespace SiamCross.Models.Sensors.Du.Measurement
 
             _logger.Trace("end read echogramm");
         }
-
-        private async Task SendParameters()
-        {
-            BitVector32 myBV = new BitVector32(0);
-            int bit0 = BitVector32.CreateMask();
-            int bit1 = BitVector32.CreateMask(bit0);
-            int bit2 = BitVector32.CreateMask(bit1);
-            int bit3 = BitVector32.CreateMask(bit2);
-            int bit4 = BitVector32.CreateMask(bit3);
-            int bit5 = BitVector32.CreateMask(bit4);
-            int bit6 = BitVector32.CreateMask(bit5);
-            int bit7 = BitVector32.CreateMask(bit6);
-            int bit8 = BitVector32.CreateMask(bit7);
-            int bit9 = BitVector32.CreateMask(bit8);
-
-            myBV[bit0] = _measurementParameters.Inlet;
-            myBV[bit6] = _measurementParameters.Depth6000;
-            myBV[bit9] = _measurementParameters.Amplification;
-            byte[] my_data = BitConverter.GetBytes(myBV.Data).AsSpan(0,2).ToArray();
-
-            byte[] command = _commandGenerator.GenerateWriteCommand(
-                DuCommands.FullCommandDictionary[DuCommandsEnum.Revbit], my_data);
-
-           // _writeLog(command);
-           await Sensor.Connection.Exchange(command);
-            
-        }
-
-        private async Task<DuMeasurementStatus> GetStatus()
-        {
-            DuMeasurementStatus status = DuMeasurementStatus.Empty;
-            byte[] resp = { };
-            resp = await Sensor.Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.SensorState]);
-            if (0 != resp.Length)
-                status = (DuMeasurementStatus)BitConverter.ToUInt16(resp, 12);
-            System.Diagnostics.Debug.WriteLine("DU status="+ status.ToString());
-            return status;
-        }
-
         private async Task<bool> Start()
         {
             System.Diagnostics.Debug.WriteLine("Execute start measure");
@@ -266,48 +276,35 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             return isDone;
 
         }
-        private async Task<DuMeasurementStatus> IsMeasurementDone()
+        private async Task<DuMeasurementStatus> GetStatus()
         {
-            bool started = await Start();
-            
             DuMeasurementStatus status = DuMeasurementStatus.Empty;
             byte[] resp = { };
-            UInt32 measure_time_sec = 40;//18/36
-            float sep_cost = 50f / measure_time_sec;
-            bool isDone = false;
-            for (UInt32 i = 0; i < measure_time_sec && !isDone; i++)
-            {
-                await Task.Delay(Constants.SecondDelay);
-                status = await GetStatus();
-                switch(status)
-                {
-                    case DuMeasurementStatus.Сompleted:
-                        isDone = true;
-                        break;
-                    default:
-                    case DuMeasurementStatus.EсhoMeasurement:
-                    case DuMeasurementStatus.WaitingForClick:
-                    case DuMeasurementStatus.Empty: 
-                    case DuMeasurementStatus.NoiseMeasurement:
-                        break;
-                }
-
-                _progress += sep_cost;
-                UpdateProgress(_progress, status.ToString());
-            }
+            resp = await Sensor.Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.SensorState]);
+            if (null == resp || 12 > resp.Length)
+                throw new IOEx_Timeout("GetStatus timeout");
+            if (0x01 != resp[3])
+                throw new IOEx_ErrorResponse("GetStatus response error");
+            if (16 != resp.Length)
+                throw new IOEx_ErrorResponse("GetStatus response length error");
+            status = (DuMeasurementStatus)BitConverter.ToUInt16(resp, 12);
+            System.Diagnostics.Debug.WriteLine("DU status=" + status.ToString());
             return status;
         }
-
-        private UInt16 _fluidLevel = 0;
-        private UInt16 _numberOfReflections = 0;
-        private float _pressure;
-
+        private async Task SetStatusEmpty()
+        {
+            byte[] resp = { };
+            resp = await Sensor.Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.StateZeroing]);
+            if (null == resp || 12 != resp.Length)
+                throw new IOEx_Timeout("SetStatus wrong len or timeout");
+            if (0x02 != resp[3])
+                throw new IOEx_ErrorResponse("SetStatus response error");
+        }
         private void UpdateProgress(float pos)
         {
             _progress = pos;
             Sensor.MeasureProgress = _progress / 100;
         }
-
         private void UpdateProgress(float pos, string text)
         {
             SensorData.Status = "measure: " + text;

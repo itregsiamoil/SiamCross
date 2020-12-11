@@ -2,9 +2,9 @@
 {
     public class DuMeasurementStartParameters
     {
-        public bool Depth6000 { get; }
-        public bool Amplification { get; }
-        public bool Inlet { get; }
+        public bool Depth6000 { get; set; }
+        public bool Amplification { get; set; }
+        public bool Inlet { get; set; }
         public DuMeasurementSecondaryParameters SecondaryParameters { get; }
         public DuMeasurementStartParameters(bool amplification, bool inlet,bool depth6000,
             DuMeasurementSecondaryParameters secondaryParameters)

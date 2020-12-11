@@ -83,7 +83,6 @@ namespace SiamCross.Services
         private void CreateDdim2Table()
         {
             NonQueryCheck();
-
             _database.Execute(@"
             CREATE TABLE IF NOT EXISTS [Ddim2Measurement] (
                 [Id] INTEGER NOT NULL PRIMARY KEY,
@@ -195,18 +194,18 @@ namespace SiamCross.Services
         private void CreateDuTable()
         {
             NonQueryCheck();
-
+            //_database.Execute("DROP TABLE IF EXISTS [DuMeasurement] ");
             _database.Execute(@"
-            CREATE TABLE IF NOT EXISTS [DuMeasurement] (
+                CREATE TABLE IF NOT EXISTS [DuMeasurement] (
                 [Id] INTEGER NOT NULL PRIMARY KEY,
-                [FluidLevel] INTEGER NOT NULL,
-                [NumberOfReflections] INTEGER NOT NULL,
+                [SrcFluidLevel] INTEGER NOT NULL,
+                [SrcReflectionsCount] INTEGER NOT NULL,
                 [AnnularPressure] REAL NOT NULL,
                 [Echogram] BLOB,
                 [SoundSpeed] NVARCHAR(128) NOT NULL,
                 [MeasurementType] NVARCHAR(128) NOT NULL,
                 [SoundSpeedCorrection] NVARCHAR(128) NOT NULL,
-                [DateTime] TEXT NOT NULL,
+                [ReportTimestamp] TEXT NOT NULL,
                 [Field] NVARCHAR(128) NOT NULL,
                 [Well] NVARCHAR(128) NOT NULL,
                 [Bush] NVARCHAR(128) NOT NULL,
@@ -250,37 +249,30 @@ namespace SiamCross.Services
                     return duMeasurement.Id;
                 }
 
-                string sql = "INSERT INTO DuMeasurement " +
-                        "(FluidLevel, " +
-                        "NumberOfReflections, " +
-                        "AnnularPressure, " +
-                        "Echogram, " +
-                        "SoundSpeed, " +
-                        "MeasurementType, " +
-                        "SoundSpeedCorrection, " +
-                        "DateTime, Field, Well, Bush, Shop, BufferPressure, Comment, Name" +
-                        ", BatteryVolt, Temperature, MainFirmware, RadioFirmware "+
+                string sql = "INSERT INTO DuMeasurement ("+
+                        "  SrcFluidLevel, SrcReflectionsCount, AnnularPressure" +
+                        ", Echogram, SoundSpeed, MeasurementType"+
+                        ", SoundSpeedCorrection, ReportTimestamp, Field" +
+                        ", Well, Bush, Shop"+
+                        ", BufferPressure, Comment, Name" +
+                        ", BatteryVolt, Temperature, MainFirmware, RadioFirmware"+
                         ") Values (" +
-                        "@FluidLevel, " +
-                        "@NumberOfReflections, " +
-                        "@AnnularPressure, " +
-                        "@Echogram, " +
-                        "@SoundSpeed, " +
-                        "@MeasurementType, " +
-                        "@SoundSpeedCorrection, " +
-                        "@DateTime,  @Field, @Well, @Bush, @Shop, " +
-                        "@BufferPressure, @Comment, @Name "+
+                        "  @SrcFluidLevel, @SrcReflectionsCount, @AnnularPressure" +
+                        ", @Echogram, @SoundSpeed, @MeasurementType"+
+                        ", @SoundSpeedCorrection, @ReportTimestamp,  @Field" +
+                        ", @Well, @Bush, @Shop" +
+                        ", @BufferPressure, @Comment, @Name "+
                         ", @BatteryVolt, @Temperature, @MainFirmware, @RadioFirmware  );";
                 var affectedRows = _database.Execute(sql, new
                 {
-                    duMeasurement.FluidLevel,
-                    duMeasurement.NumberOfReflections,
+                    duMeasurement.SrcFluidLevel,
+                    duMeasurement.SrcReflectionsCount,
                     duMeasurement.AnnularPressure,
                     duMeasurement.Echogram,
                     duMeasurement.SoundSpeed,
                     duMeasurement.MeasurementType,
                     duMeasurement.SoundSpeedCorrection,
-                    duMeasurement.DateTime,
+                    duMeasurement.ReportTimestamp,
                     duMeasurement.Field,
                     duMeasurement.Well,
                     duMeasurement.Bush,
@@ -296,7 +288,11 @@ namespace SiamCross.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "SaveDuMeasurement" + "\n");
+                _logger.Error(ex, "SaveDuMeasurement "
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
                 throw;
             }
             return duMeasurement.Id;
@@ -308,10 +304,10 @@ namespace SiamCross.Services
             try
             {
                 string sql = "UPDATE DuMeasurement SET " +
-                    "FluidLevel = @FluidLevel, NumberOfReflections = @NumberOfReflections, " +
+                    "SrcFluidLevel = @SrcFluidLevel, SrcReflectionsCount = @SrcReflectionsCount, " +
                     "AnnularPressure = @AnnularPressure, Echogram = @Echogram, SoundSpeed = @SoundSpeed, " +
                     "MeasurementType = @MeasurementType, SoundSpeedCorrection = @SoundSpeedCorrection, " +
-                    "DateTime = @DateTime," +
+                    "ReportTimestamp = @ReportTimestamp," +
                     " Field = @Field, Well = @Well, Bush = @Bush, Shop = @Shop, BufferPressure = @BufferPressure," +
                     " Comment = @Comment, Name = @Name "+
                     " ,BatteryVolt=@BatteryVolt, Temperature=@Temperature "+
@@ -319,14 +315,14 @@ namespace SiamCross.Services
                     " WHERE Id = @Id;";
                 var affectedRows = _database.Execute(sql, new
                 {
-                    duMeasurement.FluidLevel,
-                    duMeasurement.NumberOfReflections,
+                    duMeasurement.SrcFluidLevel,
+                    duMeasurement.SrcReflectionsCount,
                     duMeasurement.AnnularPressure,
                     duMeasurement.Echogram,
                     duMeasurement.SoundSpeed,
                     duMeasurement.MeasurementType,
                     duMeasurement.SoundSpeedCorrection,
-                    duMeasurement.DateTime,
+                    duMeasurement.ReportTimestamp,
                     duMeasurement.Field,
                     duMeasurement.Well,
                     duMeasurement.Bush,
@@ -530,7 +526,10 @@ namespace SiamCross.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "GetDuMeasurements" + "\n");
+                _logger.Error(ex, "GetDuMeasurements " + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
                 throw;
             }
         }
@@ -562,7 +561,11 @@ namespace SiamCross.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "GetDuMeasurementById" + "\n");
+                _logger.Error(ex, "GetDuMeasurementById "
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
                 throw;
             }
         }

@@ -7,54 +7,66 @@ namespace SiamCross.DataBase.DataBaseModels
     public class DuMeasurement
     {
         public int Id { get; set; }
-        public int FluidLevel { get; set; }
-        public int NumberOfReflections { get; set; }
-        public float AnnularPressure { get; set; }
-        public byte[] Echogram { get; set; }
-
+        public int SrcFluidLevel
+        { get => MeasData.SrcFluidLevel; set => MeasData.SrcFluidLevel = (UInt16)value; }
+        public int SrcReflectionsCount
+        { get => MeasData.SrcReflectionsCount; set => MeasData.SrcReflectionsCount = (UInt16)value; }
+        public float AnnularPressure
+        { get => MeasData.AnnularPressure; set => MeasData.AnnularPressure = value; }
+        public byte[] Echogram
+        { get => MeasData.Echogram; set => MeasData.Echogram = value; }
         /*/ Secondary /*/
-        public string SoundSpeed { get; set; }
-        public string MeasurementType { get; set; }
-        public string SoundSpeedCorrection { get; set; }
-        public string Field { get; set; }
-        public string Well { get; set; }
-        public string Bush { get; set; }
-        public string Shop { get; set; }
-        public string BufferPressure { get; set; }
-        public string Comment { get; set; }
-        public string Name { get; set; }
-        public string BatteryVolt { get; set; }
-        public string Temperature { get; set; }
-        public string MainFirmware { get; set; }
-        public string RadioFirmware { get; set; }
-        public DateTime DateTime { get; set; }
+        public string SoundSpeed
+        { get => MeasData.SecondaryParameters.SoundSpeed; set => MeasData.SecondaryParameters.SoundSpeed = value; }
+        public string MeasurementType
+        { get => MeasData.SecondaryParameters.MeasurementType; set => MeasData.SecondaryParameters.MeasurementType = value; }
+        public string SoundSpeedCorrection
+        { get => MeasData.SecondaryParameters.SoundSpeedCorrection; set => MeasData.SecondaryParameters.SoundSpeedCorrection = value; }
+        public string Field
+        { get => MeasData.SecondaryParameters.Field; set => MeasData.SecondaryParameters.Field = value; }
+        public string Well
+        { get => MeasData.SecondaryParameters.Well; set => MeasData.SecondaryParameters.Well = value; }
+        public string Bush
+        { get => MeasData.SecondaryParameters.Bush; set => MeasData.SecondaryParameters.Bush = value; }
+        public string Shop
+        { get => MeasData.SecondaryParameters.Shop; set => MeasData.SecondaryParameters.Shop = value; }
+        public string BufferPressure
+        { get => MeasData.SecondaryParameters.BufferPressure; set => MeasData.SecondaryParameters.BufferPressure = value; }
+        public string Comment
+        { get => MeasData.SecondaryParameters.Comment; set => MeasData.SecondaryParameters.Comment = value; }
+        public string Name
+        { get => MeasData.SecondaryParameters.DeviceName; set => MeasData.SecondaryParameters.DeviceName = value; }
+        public string BatteryVolt
+        { get => MeasData.SecondaryParameters.BatteryVolt; set => MeasData.SecondaryParameters.BatteryVolt = value; }
+        public string Temperature
+        { get => MeasData.SecondaryParameters.Temperature; set => MeasData.SecondaryParameters.Temperature = value; }
+        public string MainFirmware
+        { get => MeasData.SecondaryParameters.MainFirmware; set => MeasData.SecondaryParameters.MainFirmware = value; }
+        public string RadioFirmware
+        { get => MeasData.SecondaryParameters.RadioFirmware; set => MeasData.SecondaryParameters.RadioFirmware = value; }
+        public string ReportTimestamp
+        { get => MeasData.Date.ToString(); set => MeasData.Date = DateTime.Parse(value); }
 
-        public DuMeasurement() { }
+        
+        public DuMeasurementData MeasData { get; set; }
+        public DateTime DateTime
+        { get => MeasData.Date; set => MeasData.Date = value; }
+        public UInt16 FluidLevel
+        { get => MeasData.FluidLevel; }
+        public UInt16 NumberOfReflections
+        { get => MeasData.NumberOfReflections; }
 
-        public DuMeasurement(DuMeasurementData measurementData)
+        public DuMeasurement() 
         {
-            FluidLevel = measurementData.FluidLevel;
-            NumberOfReflections = measurementData.NumberOfReflections;
-            Echogram = measurementData.Echogram.ToArray();
-            AnnularPressure = measurementData.AnnularPressure;
-
-            var secondaryParams = measurementData.SecondaryParameters;
-            SoundSpeed = secondaryParams.SoundSpeed;
-            MeasurementType = secondaryParams.MeasurementType;
-            SoundSpeedCorrection = secondaryParams.SoundSpeedCorrection;
-            DateTime = measurementData.Date;
-            Field = secondaryParams.Field;
-            Well = secondaryParams.Well;
-            Bush = secondaryParams.Bush;
-            Shop = secondaryParams.Shop;
-            BufferPressure = secondaryParams.BufferPressure;
-            Comment = secondaryParams.Comment;
-            Name = secondaryParams.DeviceName;
-            BatteryVolt = secondaryParams.BatteryVolt;
-            MainFirmware = secondaryParams.MainFirmware;
-            Temperature = secondaryParams.Temperature;
-            RadioFirmware = secondaryParams.RadioFirmware;
-
+            DuMeasurementSecondaryParameters sec_par = new DuMeasurementSecondaryParameters();
+            DuMeasurementStartParameters start_par= new DuMeasurementStartParameters(false,false,false, sec_par);
+            MeasData = new DuMeasurementData(new DateTime(0), start_par,  0, 0, 0, new byte[3000] );
+            MeasData.SecondaryParameters.ResearchType = "";
+        }
+        public DuMeasurement(DuMeasurementData meas_data)
+        {
+            MeasData = meas_data;
+            MeasData.SecondaryParameters.ResearchType = "";
         }
     }
 }

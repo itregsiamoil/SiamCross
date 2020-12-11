@@ -7,9 +7,16 @@ namespace SiamCross.Models.Tools
 {
     public static class EchogramConverter
     {
-        public static double[,] GetPoints(DuMeasurement duMeasurement)
+        public static double[,] GetPoints(DuMeasurement duMeasurement
+            , out float min_x, out float max_x
+            , out float min_y, out float max_y)
         {
-            double[,] result = new double[duMeasurement.Echogram.Length, 2];
+            min_x = float.MaxValue;
+            min_y = float.MaxValue;
+            max_x = float.MinValue;
+            max_y = float.MinValue;
+
+            double[,] points = new double[duMeasurement.Echogram.Length, 2];
             float tableSpeedCorrection = 0;
             float xDiscrete;
             if (duMeasurement.SoundSpeed == "")
@@ -27,17 +34,33 @@ namespace SiamCross.Models.Tools
             double xCoordinate = 0;
             for(int i = 0; i < duMeasurement.Echogram.Length; i++)
             {
-                double yCoordinate = duMeasurement.Echogram[i] > 127 ?
-                                  (duMeasurement.Echogram[i] - 128) * (-1) :
-                                  duMeasurement.Echogram[i];
-                //yCoordinate = yCoordinate < 0 ?
-                //              Math.Pow(yCoordinate, 0.5 / 0.35) * (-1) :           // после возведения в степень знак пропадает поэтому дополнительно домножаем на (-1)
-                //              Math.Pow(yCoordinate, 0.5 / 0.35);
+                double yCoordinate = 0d;
+                int multipler = 1;
+                if(duMeasurement.Echogram[i] > 127)
+                {
+                    multipler = -1;
+                    yCoordinate = duMeasurement.Echogram[i] - 127;
+                }
+                else
+                {
+                    yCoordinate = duMeasurement.Echogram[i];
+                }
+                //yCoordinate = Math.Pow(yCoordinate, 0.5f / 0.35)* multipler;
+                yCoordinate = yCoordinate*multipler;
 
-                result[i, 0] = xCoordinate;
-                result[i, 1] = yCoordinate;
+                points[i, 0] = xCoordinate;
+                points[i, 1] = yCoordinate;
 
                 xCoordinate += xDiscrete;
+
+                if (points[i, 0] < min_x)
+                    min_x = (float)points[i, 0];
+                if (points[i, 1] < min_y)
+                    min_y = (float)points[i, 1];
+                if (points[i, 0] > max_x)
+                    max_x = (float)points[i, 0];
+                if (points[i, 1] > max_y)
+                    max_y = (float)points[i, 1];
             }
 
             //double[,] testArray = new double[duMeasurement.Echogram.Length, 2];
@@ -74,7 +97,7 @@ namespace SiamCross.Models.Tools
 
             //}
 
-            return result;
+            return points;
         }
     }
 }

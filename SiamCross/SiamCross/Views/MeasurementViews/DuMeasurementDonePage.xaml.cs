@@ -26,6 +26,10 @@ namespace SiamCross.Views
             AppContainer.Container.Resolve<ILogManager>().GetLog();
 
         private double[,] _points;
+        float minX;
+        float minY;
+        float maxX;
+        float maxY;
 
         private readonly DuMeasurement _measurement;
 
@@ -35,9 +39,11 @@ namespace SiamCross.Views
             {
                 _measurement = measurement;
                 var vmWrap = new ViewModelWrap<DuMeasurementDoneViewModel>(measurement);
+                _points = EchogramConverter.GetPoints(measurement
+                    , out minX, out maxX, out minY, out maxY);
+                vmWrap.ViewModel.SetAxisLimits(minX, maxX, minY, maxY);
                 this.BindingContext = vmWrap.ViewModel;
                 InitializeComponent();
-                _points = EchogramConverter.GetPoints(measurement);
             }
             catch (Exception ex)
             {
@@ -77,16 +83,12 @@ namespace SiamCross.Views
                    (DuMeasurementDoneViewModel)BindingContext;
 
                 const float yReserve = 5;
-                double maxX = vm.GetMaximumX();
-                double maxY = vm.GetMaximumY();
-                double minX = vm.GetMinimumX();
-                double minY = vm.GetMinimumY();
                 double dx = (canvWidth) / (maxX - minX);
                 double dy = (canvHeight - yReserve) / (maxY - minY);
                 double yOffset = minY;               
 
                 var skPoints = new List<SKPoint>();
-                for (int i = 0; i < _points.GetUpperBound(0); i++)
+                for (int i = 0; i < _points.GetLength(0); i++)
                 {
                     float y = (float)canvHeight - 
                         (float)(_points[i, 1] * dy + Math.Abs(yOffset) * dy + yReserve / 2);
