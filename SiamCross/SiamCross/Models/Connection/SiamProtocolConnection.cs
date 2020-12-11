@@ -122,6 +122,7 @@ namespace SiamCross.Models
         public const int mResponseRetry = 256;
         #endif
 
+        private const int mAdditioonTime = 500;
         private const int mMinSpeed = 1200; ///bit per second
         private const float multipler = 1000.0f / (mMinSpeed / (8 + 1 + 1)) ;
         private static int GetTime(int bytes)
@@ -130,35 +131,32 @@ namespace SiamCross.Models
             // mMinSpeed/(8+1+1) - byte per second
             //one byte = 1000000 / (9600 / (8 + 1 + 1)) / 1000 = 1,04166msec
             //int timeout = 1000000 / (mMinSpeed / (8 + 1 + 1)) * bytes / 1000;
-            
-            int timeout = (int)(bytes* multipler + 200);
-            if (1 > timeout)
-                timeout = 1;
-            return timeout;
+            int timeout = (int)(bytes* multipler+0.5);
+            return (1 > timeout) ? 1 : timeout;
         }
-
         public static int GetRequestTimeout(byte[] rq)
         {
             if (null == rq)
                 return 0;
-            return GetTime(rq.Length);
+            return GetTime(rq.Length) + mAdditioonTime;
         }
-
         public static int GetResponseTimeout(byte[] rq)
         {
+            int timeout = 0;
             if (null == rq)
-                return 0;
-
+                return timeout;
             switch (rq[3])
             {
                 default: break;
                 case 0x01:
                     UInt16 data_len = BitConverter.ToUInt16(rq, 8);
-                    return GetTime(rq.Length + data_len);
+                    timeout = GetTime(rq.Length + data_len);
+                    break;
                 case 0x02:
-                    return GetTime(rq.Length);
+                    timeout = GetTime(rq.Length);
+                    break;
             }
-            return 0;
+            return timeout + mAdditioonTime;
         }
 
         private static void LockLog(string msg)
@@ -194,49 +192,53 @@ namespace SiamCross.Models
         }
         private async Task<byte[]> ResponseAsync(byte[] req)
         {
-            int read_timeout = GetResponseTimeout(req);
             Stopwatch perf_counter = new Stopwatch();
             perf_counter.Start();
-            
+            int read_timeout = GetResponseTimeout(req);
             CancellationTokenSource ctSrc = new CancellationTokenSource(read_timeout);
+            // делаем минимальную задержку чтоб принять как минимум заоловок пакета
+            // без ожидания
+            int pf_delay = GetTime(req.Length);
+            DebugLog.WriteLine($"Prefetch delay = {pf_delay}");
+            await Task.Delay(pf_delay, ctSrc.Token);
+
+            int single_read;
             byte[] pkg = { };
             try
             {
                 for (int i = 0; i < mResponseRetry && 0 == pkg.Length; ++i)
                 {
-                    ctSrc.Token.ThrowIfCancellationRequested();
-                    pkg = mBuf.Extract();
-                    if (0 == pkg.Length)
+                    //DebugLog.WriteLine("Begin ReadAsync");
+                    single_read = await mBaseConn.ReadAsync(mRxBuf, 0, mRxBuf.Length, ctSrc.Token);
+                    //DebugLog.WriteLine($"End ReadAsync readed={readed}");
+                    if (0 < single_read)
                     {
-                        //DebugLog.WriteLine("Begin ReadAsync");
-                        int readed = await mBaseConn.ReadAsync(mRxBuf, 0, mRxBuf.Length, ctSrc.Token);
-                        //DebugLog.WriteLine($"End ReadAsync readed={readed}");
-                        if (0 < readed)
-                            mBuf.Append(mRxBuf, readed);
-                        //DebugLog.WriteLine("Appended bytes="+ readed.ToString()
-                        //    +" elapsed=" + perf_counter.ElapsedMilliseconds.ToString()
-                        //    + " / " + read_timeout.ToString()
-                        //    + ": [" + BitConverter.ToString(mRxBuf, 0, readed) + "]\n");
-                    }
-                    else
-                    {
-                        int cmp = req.AsSpan().Slice(0, 10).SequenceCompareTo(pkg.AsSpan().Slice(0, 10));
-                        if (0 != cmp)
+                        mBuf.Append(mRxBuf, single_read);
+                        DebugLog.WriteLine("Appended bytes=" + single_read.ToString()
+                            + " elapsed=" + perf_counter.ElapsedMilliseconds.ToString()
+                            + " / " + read_timeout.ToString()
+                            + ": [" + BitConverter.ToString(mRxBuf, 0, single_read) + "]\n");
+                        pkg = mBuf.Extract();
+                        if (0 != pkg.Length)
                         {
-                            DebugLog.WriteLine("WRONG response"
-                                + " elapsed=" + perf_counter.ElapsedMilliseconds.ToString()
-                                + " / " + read_timeout.ToString()
-                                + ": [" + BitConverter.ToString(pkg) + "]\n");
-                            pkg = new byte[] { };
-                        }
-                        else
-                        {
-                            DebugLog.WriteLine("OK response"
-                                + " elapsed=" + perf_counter.ElapsedMilliseconds.ToString()
-                                + " / " + read_timeout.ToString()
-                                + ": [" + BitConverter.ToString(pkg) + "]\n");
-                        }
-                    }
+                            int cmp = req.AsSpan().Slice(0, 10).SequenceCompareTo(pkg.AsSpan().Slice(0, 10));
+                            if (0 != cmp)
+                            {
+                                DebugLog.WriteLine("WRONG response"
+                                    + " elapsed=" + perf_counter.ElapsedMilliseconds.ToString()
+                                    + " / " + read_timeout.ToString()
+                                    + ": [" + BitConverter.ToString(pkg) + "]\n");
+                                pkg = new byte[] { };
+                            }
+                            else
+                            {
+                                DebugLog.WriteLine("OK response"
+                                    + " elapsed=" + perf_counter.ElapsedMilliseconds.ToString()
+                                    + " / " + read_timeout.ToString()
+                                    + ": [" + BitConverter.ToString(pkg) + "]\n");
+                            }
+                        } // if (0 != pkg.Length)
+                    } // if (0 < single_read)
                 }//for (int i = 0; i < mResponseRetry && 0 == pkg.Length; ++i)
             }
             catch (Exception ex)
@@ -272,7 +274,7 @@ namespace SiamCross.Models
             }
             catch (OperationCanceledException ex)
             {
-                throw ex;
+                DebugLog.WriteLine("Exchange canceled by timeout disconnect");
             }
             return res;
         }
@@ -281,26 +283,14 @@ namespace SiamCross.Models
             byte[] res = { };
             if (State != ConnectionState.Connected)
                 return res;
-
             try
             {
                 for (int i = 0; i < retry && 0 == res.Length; ++i)
                 {
-                    try
-                    {
-                        DebugLog.WriteLine("START transaction, try " + i.ToString());
-                        res = await SingleExchangeAsync(req);
-                        DebugLog.WriteLine("END transaction, try " + i.ToString());
-                    }
-                    catch (OperationCanceledException ex)
-                    {
-                        DebugLog.WriteLine("Exchange canceled by timeout disconnect");
-                        await Disconnect();
-                        if (1 < retry)
-                            await Connect();
-                    }
+                    DebugLog.WriteLine("START transaction, try " + i.ToString());
+                    res = await SingleExchangeAsync(req);
+                    DebugLog.WriteLine("END transaction, try " + i.ToString());
                 }
-
             }
             catch (Exception ex)
             {
@@ -315,7 +305,7 @@ namespace SiamCross.Models
 
         public async Task<byte[]> Exchange(byte[] req)
         {
-            return await Exchange(req, 1);
+            return await Exchange(req, 3);
         }
         public async Task<byte[]> Exchange(byte[] req, int retry)
         {

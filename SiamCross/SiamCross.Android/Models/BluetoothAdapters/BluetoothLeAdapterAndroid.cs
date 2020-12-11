@@ -1,4 +1,4 @@
-﻿#define DEBUG_UNIT
+﻿//#define DEBUG_UNIT
 
 using Autofac;
 using Plugin.BLE.Abstractions.Contracts;
@@ -378,17 +378,13 @@ namespace SiamCross.Droid.Models
         private async Task<int> DoReadAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
             int readed = 0;
-            tcs = new TaskCompletionSource<bool>();
-            ct.Register(() =>
-            {
-                tcs?.TrySetResult(false);
-            });
-            EventHandler<CharacteristicUpdatedEventArgs> fn = (o, a) => 
-            { 
-                tcs?.TrySetResult(true); 
-            };
             try
             {
+                ct.Register(() =>
+                {
+                    tcs?.TrySetException(new OperationCanceledException());
+                    tcs?.TrySetResult(false);
+                });
                 while (0 == readed)
                 {
                     ct.ThrowIfCancellationRequested();
@@ -399,23 +395,15 @@ namespace SiamCross.Droid.Models
                         mRxStream.Position = 0;
                         readed = await mRxStream.ReadAsync(buffer, offset, count, ct);
                         mRxStream.SetLength(0);
-
-                        if (0 == readed)
-                        {
-                            
-                            //_readCharacteristic.ValueUpdated += fn;
-                        }
                     }
                     if (0 == readed)
                     {
                         LockLog("Read - Begin Wait TSC");
+                        tcs = new TaskCompletionSource<bool>();
                         bool result = await tcs?.Task;
-                        //_readCharacteristic.ValueUpdated -= fn;
-
                         if (!result)
                             ct.ThrowIfCancellationRequested();
                     }
-
                 }//while (0 == readed)
             }
             catch (Exception ex)
@@ -424,14 +412,13 @@ namespace SiamCross.Droid.Models
             }
             finally
             {
-                //_readCharacteristic.ValueUpdated -= fn;
+                /*
                 if (null != tcs)
                 {
                     using (await semaphore.UseWaitAsync())
                         tcs = null;
                 }
-                ClearRx();
-
+                */
             }
             return readed;
         }

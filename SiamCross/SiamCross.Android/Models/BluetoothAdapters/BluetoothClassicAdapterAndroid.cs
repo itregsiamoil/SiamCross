@@ -1,4 +1,4 @@
-﻿#define DEBUG_UNIT
+﻿//#define DEBUG_UNIT
 
 using Android.App;
 using Android.Bluetooth;
@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using SiamCross.Models.Tools;
 
 namespace SiamCross.Droid.Models
 {
@@ -76,7 +77,12 @@ namespace SiamCross.Droid.Models
         protected ScannedDeviceInfo _scannedDeviceInfo;
 
         protected Stream _outStream;
-        public Stream _inStream;
+
+        private Task mRxThread=null;
+        private SemaphoreSlim semaphore = new SemaphoreSlim(1);
+        private TaskCompletionSource<bool> mRxTsc = null;
+        public Stream mRxStream = new MemoryStream(512);
+        CancellationTokenSource CtRxSource = null;
 
 
         private const string _uuid = "00001101-0000-1000-8000-00805f9b34fb";
@@ -148,7 +154,12 @@ namespace SiamCross.Droid.Models
                 }
 
                 _outStream = _socket.OutputStream;
-                _inStream = _socket.InputStream;
+
+                CtRxSource = new CancellationTokenSource();
+                mRxThread = Task.Factory.StartNew(
+                    () => RxThreadFunction(_socket.InputStream, CtRxSource.Token)
+                    , CtRxSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+
                 DoActionConnectSucceed();
                 return true;
             }
@@ -176,22 +187,69 @@ namespace SiamCross.Droid.Models
         {
             try
             {
-                _inStream?.Close();
+                RxThreadCancel();
                 _outStream?.Close();
-                _socket?.Close();
                 _bluetoothDevice?.Dispose();
             }
             catch (Exception)
             {
-                Console.WriteLine("ERROR unknown in Disconnect");
+                Debug.WriteLine("ERROR unknown in Disconnect");
             }
             finally
             {
-                _inStream = null;
                 _outStream = null;
-                _socket = null;
                 _bluetoothDevice = null;
             }
+        }
+        void RxThreadCancel()
+        {
+            try
+            {
+                CtRxSource?.Cancel();
+                mRxTsc?.TrySetResult(false);
+                _socket?.Close();
+                //_socket.Dispose();
+                CtRxSource?.Dispose();
+            }
+            catch (Java.IO.IOException e)
+            {
+                Debug.WriteLine("close of connect socket failed");
+            }
+            finally
+            {
+                CtRxSource = null;
+                mRxTsc = null;
+                mRxThread = null;
+                _socket = null;
+            }
+        }
+        async Task RxThreadFunction(Stream rx_stream, CancellationToken ct)
+        {
+            Debug.WriteLine("RxTask start");
+            byte[] buffer = new byte[512];
+            int bytes;
+            // Keep listening to the InputStream while connected
+            while (!ct.IsCancellationRequested)
+            {
+                try
+                {
+                    bytes = await rx_stream.ReadAsync(buffer, 0, buffer.Length, ct);
+                    DebugLog.WriteLine($"RxThreadFunction readed={bytes}");
+                    using (await semaphore.UseWaitAsync()) //lock (lockObj)
+                    {
+                        //DebugLog.WriteLine($"RxThreadFunction begin write {bytes} to mRxStream");
+                        await mRxStream.WriteAsync(buffer, 0, bytes, ct);
+                        mRxTsc?.TrySetResult(true);
+                        //DebugLog.WriteLine($"RxThreadFunction end write {bytes} to mRxStream");
+                    }
+                }
+                catch (Java.IO.IOException e)
+                {
+                    Debug.WriteLine("RxTask canceled");
+                    break;
+                }
+            }
+            Debug.WriteLine("RxTask end");
         }
 
         virtual public async Task SendData(byte[] data)
@@ -252,46 +310,22 @@ namespace SiamCross.Droid.Models
             //ConnectFailed?.Invoke();
         }
 
-        public void ClearRx()
+        public async void ClearRx()
         {
-            ThrowIfNoConnection();
-            _inStream.Flush();
-            //_inStream.Position = 0;
-            //_inStream.SetLength(0);
+            using (await semaphore.UseWaitAsync())
+            {
+                mRxStream.Flush();
+                mRxStream.Position = 0;
+                mRxStream.SetLength(0);
+            }
+
         }
         public void ClearTx()
         {
-            ThrowIfNoConnection();
             _outStream.Flush();
             //_outStream.Position = 0;
             //_inStream.SetLength(0);
         }
-        void StreamDisconnect()
-        {
-            try
-            {
-                _inStream?.Close();
-                _outStream?.Close();
-                _socket?.Close();
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("StreamDisconnect ERROR unknown");
-            }
-            finally
-            {
-                _inStream = null;
-                _outStream = null;
-                _socket = null;
-            }
-        }
-        void ThrowIfNoConnection()
-        {
-            if (null != _inStream && null != _outStream && null != _socket && _socket.IsConnected)
-                return;
-            throw new OperationCanceledException();
-        }
-
         public async  Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
             //https://github.com/dotnet/runtime/issues/23736
@@ -299,45 +333,57 @@ namespace SiamCross.Droid.Models
             //https://github.com/dotnet/runtime/issues/19867
             // тут какая-то бага в фреймфорке поток никак не реагирует на CancellationToken
             // будем убивать поток и заново его открывать
-            ct.ThrowIfCancellationRequested();
-            bool soc_closed = false;
+            int readed = 0;
             try
             {
-                ct.ThrowIfCancellationRequested();
-                ThrowIfNoConnection();
-
                 ct.Register(() =>
                 {
-                    Debug.WriteLine("ReadAsync cancel by timeout");
-                    if (ct.IsCancellationRequested)
-                    {
-                        soc_closed = true;
-                        StreamDisconnect();
-                    }
-
+                    mRxTsc?.TrySetException(new OperationCanceledException());
+                    mRxTsc?.TrySetResult(false);
                 });
-                return await _inStream.ReadAsync(buffer, offset, count, ct);
+                while (0 == readed)
+                {
+                    ct.ThrowIfCancellationRequested();
+                    //DebugLog.WriteLine("ReadAsync - Try Create");
+                    using (await semaphore.UseWaitAsync())
+                    {
+                        //Debug.WriteLine("ReadAsync - Lock Create");
+                        mRxStream.Position = 0;
+                        readed = await mRxStream.ReadAsync(buffer, offset, count, ct);
+                        DebugLog.WriteLine($"ReadAsync - readed = {readed}");
+                        mRxStream.SetLength(0);
+                    }
+                    if (0 == readed)
+                    {
+                        DebugLog.WriteLine("ReadAsync - Begin Wait TSC");
+                        mRxTsc = new TaskCompletionSource<bool>();
+                        bool result = await mRxTsc?.Task;
+                        if (!result)
+                            ct.ThrowIfCancellationRequested();
+                    }
+                }//while (0 == readed)
             }
             catch (Exception ex)
             {
-                if (!soc_closed)
-                {
-                    Debug.WriteLine("ReadAsync unknown err - rethrow "
-                    + System.Reflection.MethodBase.GetCurrentMethod().Name
-                    + "\n msg=" + ex.Message
-                    + "\n type=" + ex.GetType());
-                    throw ex;
-                }
+                throw ex;
             }
-            return 0;
+            finally
+            {
+                /*
+                if (null != mRxTsc)
+                {
+                    using (await semaphore.UseWaitAsync())
+                        mRxTsc = null;
+                }
+                */
+            }
+            DebugLog.WriteLine($"ReadAsync - return {readed}");
+            return readed;
         }
-
-
 
         public async Task<int> WriteAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
             ct.ThrowIfCancellationRequested();
-            ThrowIfNoConnection();
             await _outStream.WriteAsync(buffer, offset, count, ct);
             return count;
         }
