@@ -20,7 +20,7 @@
     <item name="colorControlHighlight">@color/ctrlHighlight</item>
 
     <item name="android:windowBackground">@color/window_background</item>
-    <item name="android:colorActivatedHighlight">#FFFF00</item>
+    <item name="android:colorActivatedHighlight">#7000A0FF</item>
 
     <!-- You can also set colorControlNormal, colorControlActivated
          colorControlHighlight and colorSwitchThumbNormal. 

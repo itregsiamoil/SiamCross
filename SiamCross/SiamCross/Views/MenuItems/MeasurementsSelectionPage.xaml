@@ -10,34 +10,46 @@
     <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from
     <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>-->
     <ContentPage.ToolbarItems>
+        <!--
+            Waiting Essetional 1.6
+            ToolbarItem IconImageSource="share.png" Text="Share" Command="{Binding ShareCommand}"
+        -->
         <ToolbarItem IconImageSource="send.png" Command="{Binding SendCommand}"/>
         <ToolbarItem IconImageSource="save.png" Clicked="ToolbarItem_Clicked"/>
         <ToolbarItem IconImageSource="trashcan.png" Command="{Binding DeleteCommand}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
+            <Label Text="{Binding Title}" TextColor="White" 
+                   BackgroundColor="{StaticResource colorPrimary}"/>
+
             <CollectionView ItemsSource="{Binding Measurements}"
                             SelectedItems="{Binding SelectedMeasurements}"
                             SelectionMode="Multiple"
                             SelectionChangedCommand="{Binding SelectionChanged}"
-                            Margin ="5">
+                            Margin ="4" 
+                            
+                            >
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Label Grid.Row="0" Text="{Binding Field}"
+                        <Frame Padding="1,1,2,2" Margin="1"  CornerRadius="4" BackgroundColor="Transparent"
+                               HasShadow="true" BorderColor="{StaticResource colorCtrlBg}" >
+                            <Grid Margin="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Label Grid.Row="0" Text="{Binding Field}"
                                            FontAttributes="Bold"></Label>
-                            <Label Grid.Row="1" Text="{Binding Name}"/>
-                            <Label Grid.Row="2" Text="{Binding Date}"/>
-                            <Label Grid.Row="3" Text="{Binding MeasurementType}"/>
-                            <Label Grid.Row="4" Text="{Binding Comments}"/>
-                        </Grid>
+                                <Label Grid.Row="1" Text="{Binding Name}"/>
+                                <Label Grid.Row="2" Text="{Binding Date}"/>
+                                <Label Grid.Row="3" Text="{Binding MeasurementType}"/>
+                                <Label Grid.Row="4" Text="{Binding Comments}"/>
+                            </Grid>
+                        </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

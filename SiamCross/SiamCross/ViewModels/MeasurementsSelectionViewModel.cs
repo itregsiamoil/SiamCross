@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
@@ -30,6 +31,7 @@ namespace SiamCross.ViewModels
         }
         public ObservableCollection<MeasurementView> Measurements { get; set; }
         public ObservableCollection<object> SelectedMeasurements { get; set; }
+        public ICommand ShareCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
         public ICommand SelectionChanged { get; set; }
         public ICommand SendCommand { get; set; }
@@ -47,6 +49,7 @@ namespace SiamCross.ViewModels
             }
             _errorList = new List<string>();
             Title = $"{Resource.SelectedMeasurements}: {SelectedMeasurements.Count}";
+            SendCommand = new Command(ShareMeasurements);
             DeleteCommand = new Command(DeleteMeasurements);
             SelectionChanged = new Command(RefreshSelectedCount);
             SendCommand = new Command(SendMeasurements);
@@ -163,6 +166,32 @@ namespace SiamCross.ViewModels
                 SendCommand = new Command(SendMeasurements);
             }
             SendCommand = new Command(SendMeasurements);
+        }
+
+        private void ShareMeasurements(object obj)
+        {
+            try
+            {
+                /*
+                 Waiting Essentional 1.6
+                var paths = SaveXmlsReturnPaths();
+                ShareFile[] sf = new ShareFile[paths.Length];
+                for (int i = 0; i < paths.Length; ++i)
+                {
+                    sf[i] = new ShareFile(paths[i]);
+                }
+                await Share.RequestAsync(new ShareMultipleFilesRequest
+                {
+                    Title = Title,
+                    Files = sf
+                });
+                */
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "ShareCommandHandler" + "\n");
+                throw;
+            }
         }
 
         private DateTimeConverter _timeConverter = new DateTimeConverter();

@@ -12,27 +12,32 @@
         <StackLayout>
             <ListView HasUnevenRows="True"
                       ItemsSource="{Binding Measurements}"
+                      SeparatorVisibility="None"
                       rainbows:DebugRainbow.IsDebug="False"
-                      ItemTapped="ListView_ItemTapped">
+                      ItemTapped="ListView_ItemTapped"
+                      Margin ="4">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <Grid Margin="5" rainbows:DebugRainbow.IsDebug="False">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="*"></RowDefinition>
-                                    </Grid.RowDefinitions>
-                                    <Label Grid.Row="0" Text="{Binding Field}"
+                                <Frame Padding="1,1,2,2" Margin="1"  CornerRadius="4" 
+                                       HasShadow="True"  >
+                                    <Grid Margin="5" rainbows:DebugRainbow.IsDebug="False">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="*"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Row="0" Text="{Binding Field}"
                                            FontAttributes="Bold"></Label>
-                                    <Label Grid.Row="1" Text="{Binding Name}"/>
-                                    <Label Grid.Row="2" Text="{Binding Date}"></Label>
-                                    <Label Grid.Row="3" Text="{Binding MeasurementType}"></Label>
-                                    <Label Grid.Row="4" Text="{Binding Comments}"></Label>
-                                </Grid>
+                                        <Label Grid.Row="1" Text="{Binding Name}"/>
+                                        <Label Grid.Row="2" Text="{Binding Date}"></Label>
+                                        <Label Grid.Row="3" Text="{Binding MeasurementType}"></Label>
+                                        <Label Grid.Row="4" Text="{Binding Comments}"></Label>
+                                    </Grid>
+                                </Frame>
                             </ViewCell.View>
                         </ViewCell>
                     </DataTemplate>
