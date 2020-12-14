@@ -155,7 +155,7 @@ namespace SiamCross.Droid.Models
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect"
                     + _deviceInfo.Name + "ошибка соединения BLE - _device был null");
-                ConnectFailed();
+                //ConnectFailed();
                 Disconnect();
                 _isFirstConnectionTry = false;
                 _connectQueue.Remove(_deviceInfo.Name);
@@ -205,7 +205,7 @@ namespace SiamCross.Droid.Models
                 };
 
 
-                ConnectSucceed?.Invoke();
+                //ConnectSucceed?.Invoke();
                 _connectQueue.Remove(_deviceInfo.Name);
                 inited = true;
             }
@@ -225,7 +225,7 @@ namespace SiamCross.Droid.Models
         {
             if (!mInterface.IsEnbaled)
             {
-                ConnectFailed?.Invoke();
+                //ConnectFailed?.Invoke();
                 return;
             }
             System.Diagnostics.Debug.WriteLine("Send: " + BitConverter.ToString(data) + "\n");
@@ -261,7 +261,7 @@ namespace SiamCross.Droid.Models
                     }
                 }
                 // Возможно нужно сделать дисконект
-                ConnectFailed?.Invoke();
+                //ConnectFailed?.Invoke();
             }
         }
 
@@ -317,14 +317,9 @@ namespace SiamCross.Droid.Models
             return await idevice.Task;
         }
 
-        public event Action<byte[]> DataReceived;
-        public event Action ConnectSucceed;
-        public event Action ConnectFailed;///////////////////////////////!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-
-
-
+        //public event Action<byte[]> DataReceived;
+        //public event Action ConnectSucceed;
+        //public event Action ConnectFailed;
 
         private static void LockLog(string msg)
         {

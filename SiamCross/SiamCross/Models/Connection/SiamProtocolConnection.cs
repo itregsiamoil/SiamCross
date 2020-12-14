@@ -272,7 +272,7 @@ namespace SiamCross.Models
                     res = await ResponseAsync(req);
                 }
             }
-            catch (OperationCanceledException ex)
+            catch (OperationCanceledException )
             {
                 DebugLog.WriteLine("Exchange canceled by timeout disconnect");
             }

@@ -33,7 +33,7 @@ namespace SiamCross.ViewModels
                 tmp_value = float.Parse(str, CultureInfo.InvariantCulture);
                 tmp_value = 60.0f / tmp_value;
             }
-            catch (Exception ex) { }
+            catch (Exception) { }
             if (999999 == tmp_value)
             {
                 try
@@ -41,7 +41,7 @@ namespace SiamCross.ViewModels
                     tmp_value = float.Parse(str, CultureInfo.CurrentCulture);
                     tmp_value = 60.0f / tmp_value;
                 }
-                catch (Exception ex) { }
+                catch (Exception ) { }
             }
             return tmp_value;
         }

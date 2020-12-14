@@ -20,14 +20,13 @@ namespace SiamCross.Droid.Models.BluetoothAdapters
         protected ConnectionState mState = ConnectionState.Disconnected;
         public ConnectionState State => mState;
         public string Address { get; private set; }
-        private bool _isConnected;
+        private bool _isConnected=false;
         private USBService _usbService;
         private static int _forceScanCounter;
 
         public CustomBluetooth5Adapter(ScannedDeviceInfo deviceInfo)
         {
             Address = deviceInfo.BluetoothArgs as string;
-            _isConnected = false;
             _usbService = USBService.Instance;
             _forceScanCounter = 0;
 
@@ -78,9 +77,9 @@ namespace SiamCross.Droid.Models.BluetoothAdapters
         {
             try
             {
-                _usbService.SendDataQuery(data, Address);
+                await _usbService.SendDataQuery(data, Address);
             }
-            catch (NotSupportedException exception)
+            catch (NotSupportedException )
             {
                 ConnectFailed?.Invoke();
             }

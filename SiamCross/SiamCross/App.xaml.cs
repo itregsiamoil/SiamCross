@@ -45,7 +45,7 @@ namespace SiamCross
             InitializeComponent();
             AppContainer.Container = setup.CreateContainer();
             
-            if (Device.OS != TargetPlatform.WinPhone)
+            if (Device.RuntimePlatform == Device.Android)
             {
                 Resource.Culture = DependencyService.Get<ILocalize>()
                                     .GetCurrentCultureInfo();

@@ -213,7 +213,7 @@ namespace SiamCross.Droid.Models
             }
             catch (Java.IO.IOException e)
             {
-                Debug.WriteLine("close of connect socket failed");
+                Debug.WriteLine("close of connect socket failed "+e.Message);
             }
             finally
             {
@@ -245,7 +245,7 @@ namespace SiamCross.Droid.Models
                 }
                 catch (Java.IO.IOException e)
                 {
-                    Debug.WriteLine("RxTask canceled");
+                    Debug.WriteLine("RxTask canceled "+e.Message);
                     break;
                 }
             }

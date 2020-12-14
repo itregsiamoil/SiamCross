@@ -67,7 +67,8 @@ namespace SiamCross.Droid.Models
 
         public void Initialize()
         {
-            _usbManager = (UsbManager)Forms.Context.GetSystemService(Context.UsbService);
+            Context context = Android.App.Application.Context;
+            _usbManager = (UsbManager)context.GetSystemService(Context.UsbService);
             if (_usbManager.DeviceList.Count == 0)
             {
                 return;
@@ -89,7 +90,8 @@ namespace SiamCross.Droid.Models
             {
                 try
                 {
-                    PendingIntent pi = PendingIntent.GetBroadcast(Forms.Context, 0, new Intent(ACTION_USB_PERMISSION), 0);
+                    Context context = Android.App.Application.Context;
+                    PendingIntent pi = PendingIntent.GetBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION), 0);
                     _usbManager.RequestPermission(_usbDevice, pi);
                     throw new Exception("Перезапустить пресс");
                 }
@@ -128,7 +130,7 @@ namespace SiamCross.Droid.Models
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 // log or handle
             }

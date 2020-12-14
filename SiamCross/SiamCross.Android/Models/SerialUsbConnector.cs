@@ -123,7 +123,8 @@ namespace SiamCross.Droid.Models
             {
                 try
                 {
-                    premissionGranted = await _usbManager.RequestPermissionAsync(device, Forms.Context);
+                    Context context = Android.App.Application.Context;
+                    premissionGranted = await _usbManager.RequestPermissionAsync(device, context);
                 }
                 catch (Exception ex)
                 {
