@@ -31,6 +31,7 @@
     <None Remove="images\recent.png" />
     <None Remove="images\start.png" />
     <None Remove="images\thermometer.png" />
+    <None Remove="VersionChanges.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +41,7 @@
     <EmbeddedResource Include="images\recent.png" />
     <EmbeddedResource Include="images\start.png" />
     <EmbeddedResource Include="images\thermometer.png" />
+    <EmbeddedResource Include="VersionChanges.txt" />
   </ItemGroup>
 
   <ItemGroup>

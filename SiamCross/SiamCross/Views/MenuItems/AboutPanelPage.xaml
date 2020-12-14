@@ -43,6 +43,11 @@
                         </ViewCell>
                         -->
                     </TableSection>
+                    <TableSection Title="VersionChanges">
+                        <ViewCell>
+                            <Label Text="{Binding VersionChanges}"/>
+                        </ViewCell>
+                    </TableSection>
                 </TableRoot>
             </TableView>
         </StackLayout>
