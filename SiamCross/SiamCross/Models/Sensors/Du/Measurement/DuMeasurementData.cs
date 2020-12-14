@@ -20,19 +20,6 @@ namespace SiamCross.Models.Sensors.Du.Measurement
 
         public DuMeasurementSecondaryParameters SecondaryParameters => StartParam.SecondaryParameters;
         public byte[] Echogram { get; set; }
-
-        public UInt16 FluidLevelMultipler
-        {
-            get
-            {
-                UInt16 level_multipler = 1;
-                BitVector32 myBV = new BitVector32(SrcFluidLevel);
-                if (true == myBV[0x4000])
-                    level_multipler = 2;
-                return level_multipler;
-            }
-        }
-
         public UInt16 FluidLevel 
         {
             get
@@ -40,7 +27,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                 BitVector32 myBV = new BitVector32(SrcFluidLevel);
                 if(true == myBV[0x4000] )
                     myBV[0x4000] = false;
-                UInt16 fluid_level = (ushort)(myBV.Data* FluidLevelMultipler);
+                UInt16 fluid_level = (ushort)(myBV.Data);
 
                 if (string.IsNullOrEmpty(StartParam.SecondaryParameters.SoundSpeed))
                 {

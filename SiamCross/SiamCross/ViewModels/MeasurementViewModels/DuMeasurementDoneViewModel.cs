@@ -65,7 +65,7 @@ namespace SiamCross.ViewModels
         public void SetAxisLimits(in float min_x, in float max_x, in float min_y, in float max_y)
         {
             MinGraphX = min_x.ToString("N0");
-            MaxGraphX = (_measurement.MeasData.FluidLevelMultipler* max_x ).ToString("N0");
+            MaxGraphX = (max_x).ToString("N0");
 
             MinGraphY = ((0 > min_y) ? 
                 Math.Pow(Math.Abs(min_y), 0.5f / 0.35) * (-1) 

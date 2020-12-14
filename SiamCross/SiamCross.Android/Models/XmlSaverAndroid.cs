@@ -57,7 +57,7 @@ namespace SiamCross.Droid.Models
                 if (Directory.Exists(s))
                 {
                     var fullPath = s + (Path.DirectorySeparatorChar + filename);
-                    if (!File.Exists(fullPath))
+                    //if (!File.Exists(fullPath))
                     {
                         xml.Save(fullPath);
                         MediaScannerConnection.ScanFile(Android.App.Application.Context, new String[] { fullPath }, null, null);

@@ -53,7 +53,8 @@
                             <Label Text="{Binding MaxGraphY}" Grid.Column="0" Grid.Row="0"/>
                             <Label Text="{Binding MinGraphY}" Grid.Column="0" Grid.Row="1" VerticalOptions="End"/>
                             <skia:SKCanvasView x:Name="CanvasView"
-                                               Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"
+                                               Grid.Column="1" Grid.Row="0" 
+                                               Grid.ColumnSpan="2" Grid.RowSpan="2"
                                                PaintSurface="CanvasView_PaintSurface"
                                                IgnorePixelScaling="false"
                                                HeightRequest="100"
