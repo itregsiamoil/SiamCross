@@ -60,7 +60,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
         private void UpdateProgress(float pos, string text)
         {
-            SensorData.Status = "measure: " + text;
+            SensorData.Status = Resource.Survey + ": " + text;
             UpdateProgress(pos);
         }
         private float _progress = 0;
@@ -74,7 +74,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
         private async Task<bool> SendParameters()
         {
-            UpdateProgress(1, "Send Parameters");
+            UpdateProgress(1, Resource.Init);
             Console.WriteLine("SENDING PARAMETERS");
             byte[] resp = { };
             //Console.WriteLine("SetDynPeriod: " + BitConverter.ToString(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod)));
@@ -139,7 +139,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
         private async Task<bool> Start()
         {
-            UpdateProgress(2, "Send Init and Start");
+            UpdateProgress(2, Resource.start);
             byte[] resp = { };
             resp = await Sensor.Connection.Exchange(DmgCmd.Get("StartMeasurement"));
             if (0 == resp.Length)
@@ -162,7 +162,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
         public async Task<bool> ReadMeasurementHeader()
         {
-            UpdateProgress(_progress, "Read Measurement Header");
+            UpdateProgress(_progress, Resource.ReadingHeader);
             int retry = 3;
             bool is_ok = false;
             for (int r = 0; r < retry && !is_ok; r++)
@@ -189,7 +189,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
         public async Task<Ddin2MeasurementData> DownloadMeasurement(bool isError)
         {
-            UpdateProgress(_progress, "Download measurement");
+            UpdateProgress(_progress, Resource.SavingMeasurements);
             Console.WriteLine("READING MEASUREMENT REPORT");
             await ReadMeasurementHeader();
             await GetDgm4kB();
@@ -272,7 +272,6 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
         {
             float progress_size = (100f - _progress) ;
 
-            UpdateProgress(_progress, "Read dgm");
             Action<float> StepProgress = (float sep_cost) => 
             {
                 _progress += sep_cost;

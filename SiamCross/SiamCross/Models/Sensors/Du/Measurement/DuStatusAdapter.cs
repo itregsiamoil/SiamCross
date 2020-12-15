@@ -4,9 +4,9 @@ using System.Text;
 
 namespace SiamCross.Models.Sensors.Du.Measurement
 {
-    public class DuStatusAdapter
+    public static class DuStatusAdapter
     {
-        public DuMeasurementStatus StringStatusToEnum(string stringStatus)
+        public static DuMeasurementStatus StringStatusToEnum(string stringStatus)
         {
             if(!string.IsNullOrEmpty(stringStatus))
             {
@@ -23,26 +23,36 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             return DuMeasurementStatus.Empty;
         }
 
-        public string StringStatusToReport(string stringStatus)
+        public static string StringStatusToReport(string stringStatus)
         {
             if (!string.IsNullOrEmpty(stringStatus))
             {
                 switch (stringStatus)
                 {
-                    case "0": return Resource.FreeStatus;
-                    case "1": return Resource.NoiseStatus;
-                    case "2": return Resource.ClickStatus;
-                    case "3": return Resource.MeasurementStatus;
-                    case "4": return Resource.SavingStatus;
+                    case "0": return Resource.Stat_Free;
+                    case "1": return Resource.Stat_NoiseMeas;
+                    case "2": return Resource.Stat_ClickWait;
+                    case "3": return Resource.Stat_Meas;
+                    case "4": return Resource.Stat_Complete;
                 }
             }
 
-            return Resource.FreeStatus; //stub
+            return Resource.Stat_Free; //stub
         }
 
-        public string CreateProgressStatus(int progress)
+        public static string StatusToString(DuMeasurementStatus status)
         {
-            return Resource.SavingStatus + $" {progress}%";
+                switch (status)
+                {
+                default: break;
+                case DuMeasurementStatus.Empty: return Resource.Stat_Free;
+                case DuMeasurementStatus.NoiseMeasurement: return Resource.Stat_NoiseMeas;
+                case DuMeasurementStatus.WaitingForClick: return Resource.Stat_ClickWait;
+                case DuMeasurementStatus.EсhoMeasurement: return Resource.Stat_Meas;
+                case DuMeasurementStatus.Сompleted: return Resource.Stat_Complete;
+                }
+            return Resource.Stat_Free; //stub
         }
+
     }
 }

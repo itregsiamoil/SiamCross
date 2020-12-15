@@ -23,7 +23,7 @@
                    TextColor="White" >
                 <Label.FormattedText>
                     <FormattedString >
-                        <Span Text="Version 2.5.0 rc2 " />
+                        <Span Text="Version 2.5.0 rc3 " />
                         <Span Text="&#10;" />
                         <Span Text="for internal testing only"  />
                     </FormattedString>
@@ -66,7 +66,7 @@
                                         <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
                                                     BackgroundColor="{StaticResource colorCtrlBg}"
                                                     Padding="5" Margin="0" Spacing="0" >
-                                        <StackLayout.Triggers>
+                                            <StackLayout.Triggers>
                                                 <DataTrigger TargetType="StackLayout" Binding="{Binding IsAlive}" Value="true" >
                                                     <Setter Property="BackgroundColor" Value="{StaticResource colorContentBg}"   />
                                                 </DataTrigger>
@@ -98,7 +98,7 @@
                                                                 <Span Text=" " />
                                                                 <Span Text="{Binding Connection.PhyInterface.Name}" />
                                                                 <Span Text=" " />
-                                                                <Span Text="{Binding Connection.State}" />
+                                                                <Span Text="{Binding ConnStateStr}" />
                                                             </FormattedString>
                                                         </Label.FormattedText>
                                                         <!--
@@ -200,7 +200,7 @@
                                                 <Frame HeightRequest="1" Padding="0" Margin="5,0,5,0"  CornerRadius="2" 
                                                     BackgroundColor="{StaticResource colorCtrlInactive}" HasShadow="False"  />
                                                 <Grid x:Name="MeasureBox"
-                                                    RowSpacing="0" ColumnSpacing="5" Padding="2">
+                                                    RowSpacing="2" ColumnSpacing="2">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                                                         <ColumnDefinition Width="*"></ColumnDefinition>
@@ -211,7 +211,7 @@
                                                     </Grid.RowDefinitions>
                                                     <Label Text="&#x1F4C8;" FontSize="Large" TextColor="Black"
                                                     Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" 
-                                                    VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
+                                                    VerticalTextAlignment="Start" HorizontalTextAlignment="Center" />
                                                     <Label x:Name="lblStatus"
                                                     Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
                                                     VerticalTextAlignment="Start" HorizontalTextAlignment="Start"
@@ -222,13 +222,13 @@
                                                             </FormattedString>
                                                         </Label.FormattedText>
                                                     </Label>
-                                                    <Grid x:Name="ProgressGrid" 
-                                                        Grid.Row="1" Grid.Column="1" RowSpacing="0" >
+                                                    <Grid x:Name="ProgressGrid" VerticalOptions="End" RowSpacing="0" ColumnSpacing="0"
+                                                        Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                                                         <Grid.RowDefinitions>
                                                             <RowDefinition Height="Auto"></RowDefinition>
                                                         </Grid.RowDefinitions>
                                                         <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                                            <ColumnDefinition Width="30"></ColumnDefinition>
                                                             <ColumnDefinition Width="*"></ColumnDefinition>
                                                         </Grid.ColumnDefinitions>
                                                         <Label Grid.Row="0" Grid.Column="0">
@@ -238,7 +238,7 @@
                                                                 </MultiBinding>
                                                             </Label.Text>
                                                         </Label>
-                                                        <ProgressBar Progress="{Binding MeasureProgress}" Margin="4" 
+                                                        <ProgressBar Progress="{Binding MeasureProgress}" 
                                                     HorizontalOptions ="Fill" VerticalOptions="Center" IsVisible="true"
                                                     Grid.Row="0" Grid.Column="1"  />
                                                         <Grid.Triggers>

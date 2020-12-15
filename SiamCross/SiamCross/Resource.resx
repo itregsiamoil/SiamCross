@@ -159,8 +159,8 @@
   <data name="BushChoiceText" xml:space="preserve">
     <value>Enter the cluster number!</value>
   </data>
-  <data name="CalculationStatus" xml:space="preserve">
-    <value>Status - calculation</value>
+  <data name="Stat_Calc" xml:space="preserve">
+    <value>calculation</value>
   </data>
   <data name="ChainModelPump" xml:space="preserve">
     <value>Chain</value>
@@ -237,8 +237,8 @@ Pump rate is 60sec/300sec=0.2swg to 60sec/4sec=15swg!</value>
     <value>Discovered devices:</value>
     <comment>��������� ���� ��������� ���������</comment>
   </data>
-  <data name="FreeStatus" xml:space="preserve">
-    <value>Status - free</value>
+  <data name="Stat_Free" xml:space="preserve">
+    <value>free</value>
   </data>
   <data name="FromAddress" xml:space="preserve">
     <value>Sender address</value>
@@ -282,8 +282,8 @@ Pump rate is 60sec/300sec=0.2swg to 60sec/4sec=15swg!</value>
   <data name="MeasurementsSentSuccesfully" xml:space="preserve">
     <value>measurements were successfully sent</value>
   </data>
-  <data name="MeasurementStatus" xml:space="preserve">
-    <value>Status - measuring</value>
+  <data name="Stat_Meas" xml:space="preserve">
+    <value>measuring</value>
   </data>
   <data name="MeasurementsTitle" xml:space="preserve">
     <value>Measurements</value>
@@ -330,8 +330,8 @@ Pump rate is 60sec/300sec=0.2swg to 60sec/4sec=15swg!</value>
   <data name="SavingMeasurements" xml:space="preserve">
     <value>Saving measurements</value>
   </data>
-  <data name="SavingStatus" xml:space="preserve">
-    <value>Status - saving</value>
+  <data name="Stat_Complete" xml:space="preserve">
+    <value>complete</value>
   </data>
   <data name="SearchTitle" xml:space="preserve">
     <value>Search</value>
@@ -431,11 +431,11 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="FillInAllTheFields" xml:space="preserve">
     <value>Fill in all the fields!</value>
   </data>
-  <data name="ClickStatus" xml:space="preserve">
-    <value>Status - waiting for the valve to be pressed</value>
+  <data name="Stat_ClickWait" xml:space="preserve">
+    <value>waiting for the valve to be pressed</value>
   </data>
-  <data name="NoiseStatus" xml:space="preserve">
-    <value>Status - noise measuring</value>
+  <data name="Stat_NoiseMeas" xml:space="preserve">
+    <value>noise measuring</value>
   </data>
   <data name="Pressure" xml:space="preserve">
     <value>Pressure</value>
@@ -629,7 +629,34 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="IntervalErrorTextUmt" xml:space="preserve">
     <value>Interval must be between 1 and 82800,s!</value>
   </data>
-  <data name="StatusSaveError" xml:space="preserve">
-    <value>Save error</value>
+  <data name="Stat_Error" xml:space="preserve">
+    <value>error</value>
+  </data>
+  <data name="Survey" xml:space="preserve">
+    <value>Survey</value>
+  </data>
+  <data name="StatConn_Connected" xml:space="preserve">
+    <value>connected</value>
+  </data>
+  <data name="StatConn_Disconnected" xml:space="preserve">
+    <value>disconnected</value>
+  </data>
+  <data name="StatConn_PendingConnect" xml:space="preserve">
+    <value>connecting</value>
+  </data>
+  <data name="StatConn_PendingDisconnect" xml:space="preserve">
+    <value>disconnecting</value>
+  </data>
+  <data name="Init" xml:space="preserve">
+    <value>initialization</value>
+  </data>
+  <data name="ReadingEchogram" xml:space="preserve">
+    <value>reading echogram</value>
+  </data>
+  <data name="ReadingHeader" xml:space="preserve">
+    <value>reading header</value>
+  </data>
+  <data name="start" xml:space="preserve">
+    <value>start</value>
   </data>
 </root>

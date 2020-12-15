@@ -38,34 +38,34 @@ namespace SiamCross.Models.Sensors.Dmg
             {
                 switch (stringStatus)
                 {
-                    case "0": return Resource.FreeStatus;
-                    case "1": return Resource.MeasurementStatus;
-                    case "2": return Resource.CalculationStatus;
-                    case "4": return Resource.SavingStatus;
-                    case "5": return Resource.StatusSaveError;
+                    case "0": return Resource.Stat_Free;
+                    case "1": return Resource.Stat_Meas;
+                    case "2": return Resource.Stat_Calc;
+                    case "4": return Resource.Stat_Complete;
+                    case "5": return Resource.Stat_Error;
                 }
             }
 
-            return Resource.FreeStatus; //stub
+            return Resource.Stat_Free; //stub
         }
 
         static public string StatusToReport(DmgMeasureStatus status)
         {
             switch (status)
             {
-                case DmgMeasureStatus.Empty: return Resource.FreeStatus;
-                case DmgMeasureStatus.Busy: return Resource.MeasurementStatus;
-                case DmgMeasureStatus.Calc: return Resource.CalculationStatus;
-                case DmgMeasureStatus.Ready: return Resource.SavingStatus;
+                case DmgMeasureStatus.Empty: return Resource.Stat_Free;
+                case DmgMeasureStatus.Busy: return Resource.Stat_Meas;
+                case DmgMeasureStatus.Calc: return Resource.Stat_Calc;
+                case DmgMeasureStatus.Ready: return Resource.Stat_Complete;
                 default:
-                case DmgMeasureStatus.Error: return Resource.StatusSaveError;
+                case DmgMeasureStatus.Error: return Resource.Stat_Error;
             }
         }
 
 
         static public string CreateProgressStatus(int progress)
         {
-            return Resource.SavingStatus + $" {progress}%";
+            return Resource.Stat_Complete + $" {progress}%";
         }
     }
 }

@@ -61,6 +61,10 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                     await DownloadHeader();
                     await DownloadEchogram();
                 }
+                else
+                {
+                    error = MeasureState.LogicError;
+                }
                 await SetStatusEmpty();
                 
             }
@@ -84,6 +88,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
         }
         private async Task<bool> GetPressure()
         {
+            UpdateProgress(_progress, Resource.Init+" "+ Resource.Pressure);
             byte[] resp = { };
             resp = await Sensor.Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure]);
             if (14 > resp.Length)
@@ -94,6 +99,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
         }
         private async Task SendParameters()
         {
+            UpdateProgress(1, Resource.Init);
             Debug.WriteLine("SENDING PARAMETERS");
             BitVector32 myBV = new BitVector32(0);
             int bit0 = BitVector32.CreateMask();
@@ -124,6 +130,8 @@ namespace SiamCross.Models.Sensors.Du.Measurement
         private async Task<DuMeasurementStatus> ExecuteMeasurement()
         {
             bool started = await Start();
+            if (!started)
+                return await GetStatus();
 
             DuMeasurementStatus status = DuMeasurementStatus.Empty;
             byte[] resp = { };
@@ -148,13 +156,13 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                 }
 
                 _progress += sep_cost;
-                UpdateProgress(_progress, status.ToString());
+                UpdateProgress(_progress, DuStatusAdapter.StatusToString(status));
             }
             return status;
         }
         private async Task<bool> DownloadHeader()
         {
-            UpdateProgress(_progress, "Read header");
+            UpdateProgress(_progress, Resource.ReadingHeader);
             byte[] resp = { };
             resp = await Sensor.Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.ResearchHeader]);
             if (16 > resp.Length)
@@ -236,7 +244,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             _logger.Trace("begin read echogramm");
             float progress_size = (100f - _progress) ;
 
-            UpdateProgress(_progress, "Read echogramm");
+            UpdateProgress(_progress, Resource.ReadingEchogram);
             Action<float> StepProgress = (float sep_cost) =>
             {
                 _progress += sep_cost;
@@ -249,9 +257,11 @@ namespace SiamCross.Models.Sensors.Du.Measurement
         }
         private async Task<bool> Start()
         {
+            UpdateProgress(_progress, Resource.start);
             System.Diagnostics.Debug.WriteLine("Execute start measure");
             await Sensor.Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.StartMeasurement]);
-            UInt32 time_sec = 100;
+            await Task.Delay(Constants.SecondDelay);
+            UInt32 time_sec = 30;
             float sep_cost = 10f / time_sec;
             bool isDone = false;
             for (UInt32 i = 0; i < time_sec && !isDone; i++)
@@ -271,7 +281,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                         break;
                 }
                 _progress += sep_cost;
-                UpdateProgress(_progress, status.ToString());
+                UpdateProgress(_progress, DuStatusAdapter.StatusToString(status));
             }
             return isDone;
 
@@ -307,7 +317,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
         }
         private void UpdateProgress(float pos, string text)
         {
-            SensorData.Status = "measure: " + text;
+            SensorData.Status = Resource.Survey+": " + text;
             UpdateProgress(pos);
         }
         private float _progress = 0;

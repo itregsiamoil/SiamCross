@@ -24,7 +24,12 @@ namespace SiamCross.Models.Sensors
             IsMeasurement = false;
             // Получение планировщика UI для потока, который создал форму:
             //_uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-
+            Connection.PropertyChanged += (obj, a) =>
+            {
+                if("State" == a.PropertyName)
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ConnStateStr"));
+            };
+            //mConnection.PropertyChanged += PropertyChanged;
         }
         public void Dispose()
         {
@@ -36,7 +41,7 @@ namespace SiamCross.Models.Sensors
         #region Variables
         private IProtocolConnection mConnection;
         #endregion
-
+        public string ConnStateStr => ConnectionStateAdapter.ToString(Connection.State);
         public int MeasureProgressP
         {
             get => (int)(mMeasureProgress*100);

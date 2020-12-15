@@ -26,12 +26,12 @@ namespace SiamCross.Models.Sensors.Umt.Measurement
             {
                 switch (stringStatus)
                 {
-                    case "0": return Resource.FreeStatus;
-                    case "1": return Resource.MeasurementStatus;
+                    case "0": return Resource.Stat_Free;
+                    case "1": return Resource.Stat_Meas;
                 }
             }
 
-            return Resource.FreeStatus; //stub
+            return Resource.Stat_Free; //stub
         }
     }
 }

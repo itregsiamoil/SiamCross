@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace SiamCross.Droid.Models.BluetoothAdapters
 {
     public class CustomBluetooth5Adapter : IBluetooth5CustomAdapter, IUsbDataObserver
     {
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
         public void UpdateRssi() { }
         static int mRssi = 0;
         readonly IPhyInterface mInterface;

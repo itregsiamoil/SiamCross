@@ -11,6 +11,7 @@ namespace SiamCross.Models
     public interface ISensor : IDisposable
     {
         IProtocolConnection Connection { get; }
+        string ConnStateStr { get; }
         bool Activate { get; set; }
         bool IsAlive { get; }
         bool IsMeasurement { get; }

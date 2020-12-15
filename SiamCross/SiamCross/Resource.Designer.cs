@@ -259,15 +259,6 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Status - calculation.
-        /// </summary>
-        public static string CalculationStatus {
-            get {
-                return ResourceManager.GetString("CalculationStatus", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Cancel.
         /// </summary>
         public static string Cancel {
@@ -345,15 +336,6 @@ namespace SiamCross {
         public static string ClearMemory {
             get {
                 return ResourceManager.GetString("ClearMemory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Status - waiting for the valve to be pressed.
-        /// </summary>
-        public static string ClickStatus {
-            get {
-                return ResourceManager.GetString("ClickStatus", resourceCulture);
             }
         }
         
@@ -719,15 +701,6 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Status - free.
-        /// </summary>
-        public static string FreeStatus {
-            get {
-                return ResourceManager.GetString("FreeStatus", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Sender address.
         /// </summary>
         public static string FromAddress {
@@ -796,6 +769,15 @@ namespace SiamCross {
         public static string IncorrectDataEnteredErrorText {
             get {
                 return ResourceManager.GetString("IncorrectDataEnteredErrorText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на initialization.
+        /// </summary>
+        public static string Init {
+            get {
+                return ResourceManager.GetString("Init", resourceCulture);
             }
         }
         
@@ -944,15 +926,6 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Status - measuring.
-        /// </summary>
-        public static string MeasurementStatus {
-            get {
-                return ResourceManager.GetString("MeasurementStatus", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Measurements.
         /// </summary>
         public static string MeasurementsTitle {
@@ -1039,15 +1012,6 @@ namespace SiamCross {
         public static string NoConnection {
             get {
                 return ResourceManager.GetString("NoConnection", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Status - noise measuring.
-        /// </summary>
-        public static string NoiseStatus {
-            get {
-                return ResourceManager.GetString("NoiseStatus", resourceCulture);
             }
         }
         
@@ -1169,6 +1133,24 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на reading echogram.
+        /// </summary>
+        public static string ReadingEchogram {
+            get {
+                return ResourceManager.GetString("ReadingEchogram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на reading header.
+        /// </summary>
+        public static string ReadingHeader {
+            get {
+                return ResourceManager.GetString("ReadingHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Rod diameter, m.
         /// </summary>
         public static string Rod {
@@ -1201,15 +1183,6 @@ namespace SiamCross {
         public static string SavingMeasurements {
             get {
                 return ResourceManager.GetString("SavingMeasurements", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Status - saving.
-        /// </summary>
-        public static string SavingStatus {
-            get {
-                return ResourceManager.GetString("SavingStatus", resourceCulture);
             }
         }
         
@@ -1376,11 +1349,119 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на start.
+        /// </summary>
+        public static string start {
+            get {
+                return ResourceManager.GetString("start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Start measurement.
         /// </summary>
         public static string StartMeasurement {
             get {
                 return ResourceManager.GetString("StartMeasurement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на calculation.
+        /// </summary>
+        public static string Stat_Calc {
+            get {
+                return ResourceManager.GetString("Stat_Calc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на waiting for the valve to be pressed.
+        /// </summary>
+        public static string Stat_ClickWait {
+            get {
+                return ResourceManager.GetString("Stat_ClickWait", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на complete.
+        /// </summary>
+        public static string Stat_Complete {
+            get {
+                return ResourceManager.GetString("Stat_Complete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на error.
+        /// </summary>
+        public static string Stat_Error {
+            get {
+                return ResourceManager.GetString("Stat_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на free.
+        /// </summary>
+        public static string Stat_Free {
+            get {
+                return ResourceManager.GetString("Stat_Free", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на measuring.
+        /// </summary>
+        public static string Stat_Meas {
+            get {
+                return ResourceManager.GetString("Stat_Meas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на noise measuring.
+        /// </summary>
+        public static string Stat_NoiseMeas {
+            get {
+                return ResourceManager.GetString("Stat_NoiseMeas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на connected.
+        /// </summary>
+        public static string StatConn_Connected {
+            get {
+                return ResourceManager.GetString("StatConn_Connected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на disconnected.
+        /// </summary>
+        public static string StatConn_Disconnected {
+            get {
+                return ResourceManager.GetString("StatConn_Disconnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на connecting.
+        /// </summary>
+        public static string StatConn_PendingConnect {
+            get {
+                return ResourceManager.GetString("StatConn_PendingConnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на disconnecting.
+        /// </summary>
+        public static string StatConn_PendingDisconnect {
+            get {
+                return ResourceManager.GetString("StatConn_PendingDisconnect", resourceCulture);
             }
         }
         
@@ -1412,11 +1493,11 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Save error.
+        ///   Ищет локализованную строку, похожую на Survey.
         /// </summary>
-        public static string StatusSaveError {
+        public static string Survey {
             get {
-                return ResourceManager.GetString("StatusSaveError", resourceCulture);
+                return ResourceManager.GetString("Survey", resourceCulture);
             }
         }
         

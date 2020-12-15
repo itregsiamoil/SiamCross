@@ -14,7 +14,7 @@ namespace SiamCross.Models.Sensors.Umt
 
         protected IProtocolConnection mConnection;
         public IProtocolConnection Connection => mConnection;
-
+        public string ConnStateStr => ConnectionStateAdapter.ToString(Connection.State);
         private CancellationTokenSource _cancellToken;
 
         private bool _isAlive;

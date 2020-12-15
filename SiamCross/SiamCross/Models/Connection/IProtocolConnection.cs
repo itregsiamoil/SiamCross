@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models.Adapters;
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models
@@ -36,6 +37,21 @@ namespace SiamCross.Models
         Connected = 2,
         PendingDisconnect = 3
     }
+    static public class ConnectionStateAdapter
+    {
+        static public string ToString(ConnectionState conn)
+        {
+            switch (conn)
+            {
+                default:
+                case ConnectionState.Disconnected: return Resource.StatConn_Disconnected;
+                case ConnectionState.PendingConnect: return Resource.StatConn_PendingConnect;
+                case ConnectionState.Connected: return Resource.StatConn_Connected;
+                case ConnectionState.PendingDisconnect: return Resource.StatConn_PendingDisconnect;
+            }
+        }
+    }
+
     public interface IProtocolConnection
     {
         void UpdateRssi();
@@ -55,6 +71,8 @@ namespace SiamCross.Models
         void DoActionDataReceived(byte[] data);
         void DoActionConnectSucceed();
         void DoActionConnectFailed();
+
+        event PropertyChangedEventHandler PropertyChanged;
     }
 
 

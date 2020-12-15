@@ -132,8 +132,8 @@
   <data name="BushChoiceText" xml:space="preserve">
     <value>Введите номер куста!</value>
   </data>
-  <data name="CalculationStatus" xml:space="preserve">
-    <value>Статус - расчет</value>
+  <data name="Stat_Calc" xml:space="preserve">
+    <value>расчет</value>
   </data>
   <data name="ChainModelPump" xml:space="preserve">
     <value>Цепной</value>
@@ -166,8 +166,8 @@
     <value>Обнаруженные устройства:</value>
     <comment>Заголовок окна найденных устройств</comment>
   </data>
-  <data name="FreeStatus" xml:space="preserve">
-    <value>Статус - свободен</value>
+  <data name="Stat_Free" xml:space="preserve">
+    <value>свободен</value>
   </data>
   <data name="HydraulicModelPump" xml:space="preserve">
     <value>Гидравлический</value>
@@ -189,8 +189,8 @@
     <value>Нагрузка</value>
     <comment>Нагрузка в быстром замере</comment>
   </data>
-  <data name="MeasurementStatus" xml:space="preserve">
-    <value>Статус - измерение</value>
+  <data name="Stat_Meas" xml:space="preserve">
+    <value>измерение</value>
   </data>
   <data name="MilliVoltsUnits" xml:space="preserve">
     <value>мВ</value>
@@ -203,8 +203,8 @@
   <data name="PreparationStatus" xml:space="preserve">
     <value>Статус - подготовка</value>
   </data>
-  <data name="SavingStatus" xml:space="preserve">
-    <value>Статус - cохранение</value>
+  <data name="Stat_Complete" xml:space="preserve">
+    <value>завершено</value>
   </data>
   <data name="SelectedFieldChoiceText" xml:space="preserve">
     <value>Выберите месторождение!</value>
@@ -488,11 +488,11 @@
   <data name="StaticLevel" xml:space="preserve">
     <value>Статический уровень</value>
   </data>
-  <data name="ClickStatus" xml:space="preserve">
-    <value>Статус - ожидание нажатия на клапан</value>
+  <data name="Stat_ClickWait" xml:space="preserve">
+    <value>ожидание нажатия на клапан</value>
   </data>
-  <data name="NoiseStatus" xml:space="preserve">
-    <value>Статус - замер шумов</value>
+  <data name="Stat_NoiseMeas" xml:space="preserve">
+    <value>замер шумов</value>
   </data>
   <data name="Pressure" xml:space="preserve">
     <value>Давление</value>
@@ -638,7 +638,34 @@
   <data name="IntervalErrorTextUmt" xml:space="preserve">
     <value>Интервал должен быть между 1 и 82800 сек!</value>
   </data>
-  <data name="StatusSaveError" xml:space="preserve">
-    <value>Ошибка сохранения</value>
+  <data name="Stat_Error" xml:space="preserve">
+    <value>ошибка</value>
+  </data>
+  <data name="Init" xml:space="preserve">
+    <value>подготовка</value>
+  </data>
+  <data name="ReadingEchogram" xml:space="preserve">
+    <value>чтение эхограммы</value>
+  </data>
+  <data name="ReadingHeader" xml:space="preserve">
+    <value>чтение заголовка</value>
+  </data>
+  <data name="start" xml:space="preserve">
+    <value>старт</value>
+  </data>
+  <data name="StatConn_Connected" xml:space="preserve">
+    <value>подключен</value>
+  </data>
+  <data name="StatConn_Disconnected" xml:space="preserve">
+    <value>отключен</value>
+  </data>
+  <data name="StatConn_PendingConnect" xml:space="preserve">
+    <value>подключение</value>
+  </data>
+  <data name="StatConn_PendingDisconnect" xml:space="preserve">
+    <value>отключение</value>
+  </data>
+  <data name="Survey" xml:space="preserve">
+    <value>исследование</value>
   </data>
 </root>
