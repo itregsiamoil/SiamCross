@@ -57,8 +57,6 @@ namespace SiamCross.Droid.Models
         private static string _serviceGuid = "569a1101-b87f-490c-92cb-11ba5ea5167c";
         private ScannedDeviceInfo _deviceInfo;
 
-        private List<string> _connectQueue = new List<string>();
-
         private bool _isFirstConnectionTry = true;
 
         public BaseBluetoothLeAdapterAndroid(IPhyInterface ifc)
@@ -84,29 +82,18 @@ namespace SiamCross.Droid.Models
 
         public async Task<bool> Connect()
         {
-            if (null == mInterface)
-                return false;
-            if (!mInterface.IsEnbaled)
-                mInterface.Enable();
-
-            if (_adapter == null)
-            {
-                System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения" +
-                    " _adapter == null. Будет произведена переинициализация адаптера");
-                Disconnect();
-                _connectQueue.Remove(_deviceInfo.Name);
-                return false;
-            }
-
-            if (_connectQueue.Contains(_deviceInfo.Name))
-                return true;
-            else
-                _connectQueue.Add(_deviceInfo.Name);
-
-
-
             try
             {
+                if (null == mInterface)
+                    return false;
+                if (!mInterface.IsEnbaled)
+                    mInterface.Enable();
+                if (!mInterface.IsEnbaled)
+                    return false;
+
+                if (_adapter == null)
+                    return false;
+
                 if (_isFirstConnectionTry)
                 {
                     await _adapter.ConnectToKnownDeviceAsync(_deviceGuid);
@@ -123,7 +110,6 @@ namespace SiamCross.Droid.Models
                     + _deviceInfo.Name + ": " + e.Message);
                 Disconnect();
                 _isFirstConnectionTry = false;
-                _connectQueue.Remove(_deviceInfo.Name);
                 return false;
             }
             catch (Exception e)
@@ -132,7 +118,6 @@ namespace SiamCross.Droid.Models
                     + _deviceInfo.Name + ": " + e.Message);
                 Disconnect();
                 _isFirstConnectionTry = false;
-                _connectQueue.Remove(_deviceInfo.Name);
                 return false;
             }
 
@@ -147,7 +132,6 @@ namespace SiamCross.Droid.Models
                     " _adapter == null. Будет произведена переинициализация адаптера");
                 Disconnect();
                 _isFirstConnectionTry = false;
-                _connectQueue.Remove(_deviceInfo.Name);
                 return false;
             }
 
@@ -158,7 +142,6 @@ namespace SiamCross.Droid.Models
                 //ConnectFailed();
                 Disconnect();
                 _isFirstConnectionTry = false;
-                _connectQueue.Remove(_deviceInfo.Name);
                 return false;
             }
             return await Initialize();
@@ -206,7 +189,6 @@ namespace SiamCross.Droid.Models
 
 
                 //ConnectSucceed?.Invoke();
-                _connectQueue.Remove(_deviceInfo.Name);
                 inited = true;
             }
             catch (Exception e)
@@ -215,7 +197,6 @@ namespace SiamCross.Droid.Models
                     + _deviceInfo.Name + " ошибка инициализации: " + e.Message);
                 Disconnect();
                 _isFirstConnectionTry = false;
-                _connectQueue.Remove(_deviceInfo.Name);
             }
 
             return inited;

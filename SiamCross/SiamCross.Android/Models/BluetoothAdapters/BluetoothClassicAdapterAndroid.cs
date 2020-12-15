@@ -121,19 +121,27 @@ namespace SiamCross.Droid.Models
         }
         virtual public async Task<bool> Connect()
         {
-            if (_scannedDeviceInfo.BluetoothArgs is string address)
-            {
-                _bluetoothDevice = _bluetoothAdapter.GetRemoteDevice(address);
-                if (_bluetoothDevice.Name != _scannedDeviceInfo.Name)
-                {
-                    _bluetoothDevice.Dispose();
-                    _bluetoothDevice = null;
-                }
-            }
-            if (_bluetoothDevice == null) 
-                return false;
             try
             {
+                if (null == mInterface)
+                   return false;
+                if (!mInterface.IsEnbaled)
+                    mInterface.Enable();
+                if (!mInterface.IsEnbaled)
+                    return false;
+
+                if (_scannedDeviceInfo.BluetoothArgs is string address)
+                {
+                    _bluetoothDevice = _bluetoothAdapter.GetRemoteDevice(address);
+                    if (_bluetoothDevice.Name != _scannedDeviceInfo.Name)
+                    {
+                        _bluetoothDevice.Dispose();
+                        _bluetoothDevice = null;
+                    }
+                }
+                if (_bluetoothDevice == null) 
+                return false;
+
                 //Context ctx = Android.App.Application.Context;
                 //var callback = new BluetoothGattCallbackExt(this);
                 //_bluetoothDevice.ConnectGatt(ctx, true, callback);

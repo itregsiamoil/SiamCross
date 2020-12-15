@@ -48,7 +48,7 @@ namespace SiamCross.Models.Adapters.PhyInterface
             get
             {
                 return null != mBt2
-                    && Android.Bluetooth.State.On != mBt2.State;
+                    && Android.Bluetooth.State.On == mBt2.State;
             }
         }
 
