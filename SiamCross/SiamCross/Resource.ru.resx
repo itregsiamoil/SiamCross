@@ -644,8 +644,8 @@
   <data name="Init" xml:space="preserve">
     <value>подготовка</value>
   </data>
-  <data name="ReadingEchogram" xml:space="preserve">
-    <value>чтение эхограммы</value>
+  <data name="Downloading" xml:space="preserve">
+    <value>считывание</value>
   </data>
   <data name="ReadingHeader" xml:space="preserve">
     <value>чтение заголовка</value>

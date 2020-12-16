@@ -244,7 +244,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             _logger.Trace("begin read echogramm");
             float progress_size = (100f - _progress) ;
 
-            UpdateProgress(_progress, Resource.ReadingEchogram);
+            UpdateProgress(_progress, Resource.Downloading);
             Action<float> StepProgress = (float sep_cost) =>
             {
                 _progress += sep_cost;

@@ -439,6 +439,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на downloading.
+        /// </summary>
+        public static string Downloading {
+            get {
+                return ResourceManager.GetString("Downloading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Download measurements.
         /// </summary>
         public static string DownloadMeasurements {
@@ -1129,15 +1138,6 @@ namespace SiamCross {
         public static string RadioFirmware {
             get {
                 return ResourceManager.GetString("RadioFirmware", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на reading echogram.
-        /// </summary>
-        public static string ReadingEchogram {
-            get {
-                return ResourceManager.GetString("ReadingEchogram", resourceCulture);
             }
         }
         

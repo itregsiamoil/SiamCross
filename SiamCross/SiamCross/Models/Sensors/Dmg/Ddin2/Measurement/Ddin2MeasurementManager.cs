@@ -189,7 +189,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
         public async Task<Ddin2MeasurementData> DownloadMeasurement(bool isError)
         {
-            UpdateProgress(_progress, Resource.SavingMeasurements);
+            
             Console.WriteLine("READING MEASUREMENT REPORT");
             await ReadMeasurementHeader();
             await GetDgm4kB();
@@ -270,6 +270,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
         }
         private async Task GetDgm4kB()
         {
+            UpdateProgress(_progress, Resource.Downloading);
             float progress_size = (100f - _progress) ;
 
             Action<float> StepProgress = (float sep_cost) => 

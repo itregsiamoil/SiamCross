@@ -650,8 +650,8 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="Init" xml:space="preserve">
     <value>initialization</value>
   </data>
-  <data name="ReadingEchogram" xml:space="preserve">
-    <value>reading echogram</value>
+  <data name="Downloading" xml:space="preserve">
+    <value>downloading</value>
   </data>
   <data name="ReadingHeader" xml:space="preserve">
     <value>reading header</value>
