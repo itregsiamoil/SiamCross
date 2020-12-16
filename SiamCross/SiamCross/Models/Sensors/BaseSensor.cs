@@ -92,44 +92,42 @@ namespace SiamCross.Models.Sensors
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         private CancellationTokenSource _cancellToken= null;
         //TaskCompletionSource<bool> mLiveTaskCompleated=null;
-        Task<bool> _liveTask = null;
+        Task _liveTask = null;
         private bool _activated = false;
         private SemaphoreSlim semaphore = new SemaphoreSlim(1);
         #endregion
         async void AsyncActivate()
         {
-            try
+            using (await semaphore.UseWaitAsync())
             {
-                CancellationTokenSource ct = new CancellationTokenSource();
-                _liveTask = Task.Run(async () =>
+                CancellationTokenSource ct = null;
+                try
                 {
-                    using (await semaphore.UseWaitAsync())
+                    ct = new CancellationTokenSource();
+                    _liveTask = Task.Run(async () =>
                     {
-                        //mLiveTaskCompleated = new TaskCompletionSource<bool>();
-                        _cancellToken = ct;
-                        _activated = true;
-                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
-                        await ExecuteAsync(_cancellToken.Token);
-                    }
-                    return false;
-                }, ct.Token);
-                _activated = await _liveTask;
-            }
-            catch (OperationCanceledException)
-            {
-                SensorData.Status = "close connection";
-                Debug.WriteLine($"Cancel liveupdate");
-            }
-            catch (Exception ex)
-            {
-                DebugLog.WriteLine("WARNING exception "
-                + ex.Message + " "
-                + ex.GetType() + " "
-                + ex.StackTrace + "\n");
-            }
-            finally
-            {
-                using (await semaphore.UseWaitAsync())
+                    
+                            //mLiveTaskCompleated = new TaskCompletionSource<bool>();
+                            _cancellToken = ct;
+                            _activated = true;
+                            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
+                            await ExecuteAsync(_cancellToken.Token);
+                    }, ct.Token);
+                    await _liveTask;
+                }
+                catch (OperationCanceledException)
+                {
+                    SensorData.Status = "close connection";
+                    Debug.WriteLine($"Cancel liveupdate");
+                }
+                catch (Exception ex)
+                {
+                    DebugLog.WriteLine("WARNING exception "
+                    + ex.Message + " "
+                    + ex.GetType() + " "
+                    + ex.StackTrace + "\n");
+                }
+                finally
                 {
                     switch(_liveTask.Status)
                     {
@@ -140,15 +138,17 @@ namespace SiamCross.Models.Sensors
                         default:break;
                     }
                     //_liveTask = null;
-                    _cancellToken?.Cancel();
-                    _cancellToken?.Dispose();
+                    ct?.Cancel();
+                    ct?.Dispose();
+                    //_cancellToken?.Cancel();
+                    //_cancellToken?.Dispose();
                     _cancellToken = null;
                     _activated = false;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
                     ClearStatus();
                     //mLiveTaskCompleated.TrySetResult(true);
-                }
-            }//finally
+                }//finally
+            }
         }
 
         async void Deactivate()
@@ -162,7 +162,11 @@ namespace SiamCross.Models.Sensors
                 }                
                 using (await semaphore.UseWaitAsync())
                 {
-                    mConnection?.Disconnect();
+                    if(null != mConnection)
+                    {
+                        if (ConnectionState.Disconnected != mConnection.State)
+                            mConnection?.Disconnect();
+                    }
                     if (_activated)
                     {
                         _activated = false;
@@ -187,7 +191,6 @@ namespace SiamCross.Models.Sensors
             get => _activated;
             set
             {
-                DebugLog.WriteLine("try activate");
                 if (value)
                 {
                     if (!_activated )
@@ -198,7 +201,6 @@ namespace SiamCross.Models.Sensors
                 }
                 else
                 {
-                //using (await semaphore.UseWaitAsync())
                     DebugLog.WriteLine("try activate = false");
                     Deactivate();
                 }
