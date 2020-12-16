@@ -4,6 +4,13 @@ using System.Text;
 
 namespace SiamCross.Models.Sensors
 {
+    public enum MeasureState
+    {
+        Ok = 0
+        , IOError = 1
+        , LogicError = 2
+        , UnknownError = 10
+    }
     public class MeasurementSecondaryParameters
     {
         public MeasurementSecondaryParameters(

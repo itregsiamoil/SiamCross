@@ -1,18 +1,13 @@
+using Autofac;
+using NLog;
+using SiamCross.AppObjects;
 using SiamCross.Models.Sensors.Dmg;
 using SiamCross.Models.Tools;
-using SiamCross.Services;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Specialized;
-using System.Collections;
-using SiamCross.AppObjects;
-using Autofac;
 using SiamCross.Services.Logging;
-using NLog;
-using System.Globalization;
+using System;
+using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Du.Measurement
 {
@@ -56,15 +51,12 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                 await GetPressure();
                 await SendParameters();
                 MeasurementStatus = await ExecuteMeasurement();
-                if (DuMeasurementStatus.Сompleted == MeasurementStatus)
-                {
-                    await DownloadHeader();
-                    await DownloadEchogram();
-                }
-                else
+                if (DuMeasurementStatus.Сompleted != MeasurementStatus)
                 {
                     error = MeasureState.LogicError;
                 }
+                await DownloadHeader();
+                await DownloadMeasurement();
                 await SetStatusEmpty();
                 
             }
@@ -239,7 +231,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
 
             return true;
         }
-        private async Task DownloadEchogram()
+        private async Task DownloadMeasurement()
         {
             _logger.Trace("begin read echogramm");
             float progress_size = (100f - _progress) ;

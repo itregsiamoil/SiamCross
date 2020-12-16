@@ -145,23 +145,34 @@ namespace SiamCross.Models.Sensors.Du
         }
         public override async Task StartMeasurement(object measurementParameters)
         {
-            SensorData.Status = Resource.Survey;
-            IsMeasurement = true;
-            var startParams = (DuMeasurementStartParameters)measurementParameters;
-            _measurementManager = new DuMeasurementManager(this, startParams);
-            var report = await _measurementManager.RunMeasurement();
-            if (null != report)
+            object report = null;
+            try
             {
-                SensorService.Instance.MeasurementHandler(report);
-                SensorData.Status = Resource.Survey + ": complete";
-            }
-            else
-            {
-                SensorData.Status = Resource.Survey + ": " + Resource.Error;
-            }
-            await Task.Delay(2000);
-            IsMeasurement = false;
+                SensorData.Status = Resource.Survey;
+                IsMeasurement = true;
+                var startParams = (DuMeasurementStartParameters)measurementParameters;
+                _measurementManager = new DuMeasurementManager(this, startParams);
+                report = await _measurementManager.RunMeasurement();
 
+            }
+            catch (Exception)
+            {
+                report = null;
+            }
+            finally
+            {
+                if (null != report)
+                {
+                    SensorService.Instance.MeasurementHandler(report);
+                    SensorData.Status = Resource.Survey + ": complete";
+                }
+                else
+                {
+                    SensorData.Status = Resource.Survey + ": " + Resource.Error;
+                }
+                await Task.Delay(2000);
+                IsMeasurement = false;
+            }
         }
     }
 }

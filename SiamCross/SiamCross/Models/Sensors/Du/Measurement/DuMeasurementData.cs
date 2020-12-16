@@ -6,13 +6,6 @@ using System.Text;
 
 namespace SiamCross.Models.Sensors.Du.Measurement
 {
-    public enum MeasureState
-    {
-          Ok = 0
-        , IOError = 1
-        , LogicError = 2
-        , UnknownError = 10
-    }
     public class DuMeasurementData
     {
         public UInt16 SrcFluidLevel { get; set; }

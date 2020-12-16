@@ -1,5 +1,8 @@
-﻿using SiamCross.Models.Sensors.Dmg.Ddim2;
+﻿using Autofac;
+using NLog;
+using SiamCross.AppObjects;
 using SiamCross.Models.Tools;
+using SiamCross.Services.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +12,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 {
     public class Ddin2MeasurementManager
     {
+        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
         private CommandGenerator _configGenerator;
         private Ddin2MeasurementStartParameters _measurementParameters;
         private DmgBaseMeasureReport _report;
@@ -35,21 +39,39 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
         public async Task<object> RunMeasurement()
         {
-            if (!await SendParameters())
-                return null;
-            if (!await Start())
-                return null;
-
-            MeasurementStatus = await IsMeasurementDone();
-            bool gotError = false;
-            if (DmgMeasureStatus.Error == MeasurementStatus)
+            MeasureState error = MeasureState.Ok;
+            Ddin2MeasurementData report = null;
+            try
             {
-                gotError = true;
-                ErrorCode = await ReadErrorCode();
-            }
+                await SendParameters();
+                MeasurementStatus = await ExecuteMeasurement();
+                if (DmgMeasureStatus.Ready != MeasurementStatus)
+                {
+                    error = MeasureState.LogicError;
+                    ErrorCode = await ReadErrorCode();
+                }
+                await DownloadHeader();
+                await DownloadMeasurement();
+                await SetStatusEmpty();
 
-            var fullReport = await DownloadMeasurement(gotError);
-            return fullReport;
+            }
+            catch (IOEx_Timeout)
+            {
+                error = MeasureState.IOError;
+            }
+            catch (IOEx_ErrorResponse)
+            {
+                error = MeasureState.LogicError;
+            }
+            catch (Exception)
+            {
+                error = MeasureState.UnknownError;
+            }
+            finally
+            {
+                report = MakeReport(error);
+            }
+            return report;
         }
 
         private void UpdateProgress(float pos)
@@ -72,7 +94,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
             }
         }
 
-        private async Task<bool> SendParameters()
+        private async Task SendParameters()
         {
             UpdateProgress(1, Resource.Init);
             Console.WriteLine("SENDING PARAMETERS");
@@ -80,29 +102,33 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
             //Console.WriteLine("SetDynPeriod: " + BitConverter.ToString(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod)));
             resp = await Sensor.Connection.Exchange(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod));
             if (0 == resp.Length)
-                return false;
+                throw new IOEx_Timeout("SetStatus wrong len or timeout");
             //Console.WriteLine("SetApertNumber: " + BitConverter.ToString(_configGenerator.SetApertNumber(_measurementParameters.ApertNumber)));
             resp = await Sensor.Connection.Exchange(_configGenerator.SetApertNumber(_measurementParameters.ApertNumber));
             if (0 == resp.Length)
-                return false;
+                throw new IOEx_Timeout("SetStatus wrong len or timeout");
             //Console.WriteLine("SetImtravel", _configGenerator.SetImtravel(_measurementParameters.Imtravel));
             resp = await Sensor.Connection.Exchange(_configGenerator.SetImtravel(_measurementParameters.Imtravel));
             if (0 == resp.Length)
-                return false;
+                throw new IOEx_Timeout("SetStatus wrong len or timeout");
             //Console.WriteLine("SetModelPump", _configGenerator.SetModelPump(_measurementParameters.ModelPump));
             resp = await Sensor.Connection.Exchange(_configGenerator.SetModelPump(_measurementParameters.ModelPump));
             if (0 == resp.Length)
-                return false;
+                throw new IOEx_Timeout("SetStatus wrong len or timeout");
             //Console.WriteLine("SetRod: " + BitConverter.ToString(_configGenerator.SetRod(_measurementParameters.Rod)));
             resp = await Sensor.Connection.Exchange(_configGenerator.SetRod(_measurementParameters.Rod));
             if (0 == resp.Length)
-                return false;
+                throw new IOEx_Timeout("SetStatus wrong len or timeout");
             Console.WriteLine("PARAMETERS HAS BEEN SENT");
-            return true;
         }
 
-        private async Task<DmgMeasureStatus> IsMeasurementDone()
+        private async Task<DmgMeasureStatus> ExecuteMeasurement()
         {
+            bool started = await Start();
+            if (!started)
+                return await GetStatus();
+
+
             DmgMeasureStatus status = DmgMeasureStatus.Empty;
             byte[] resp = { };
 
@@ -121,15 +147,11 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                 await Task.Delay(Constants.SecondDelay);
                 Console.WriteLine("ReadDeviceStatus", DmgCmd.Get("ReadDeviceStatus"));
 
-                resp = await Sensor.Connection.Exchange(DmgCmd.Get("ReadDeviceStatus")); ;
-                if (0 != resp.Length)
+                status = await GetStatus();
+                if (status == DmgMeasureStatus.Ready
+                    || status == DmgMeasureStatus.Error)
                 {
-                    status = (DmgMeasureStatus)BitConverter.ToUInt16(resp, 12);
-                    if (status == DmgMeasureStatus.Ready
-                       || status == DmgMeasureStatus.Error)
-                    {
-                        isDone = true;
-                    }
+                    isDone = true;
                 }
                 _progress += sep_cost;
                 UpdateProgress(_progress, DmgMeasureStatusAdapter.StatusToReport(status));
@@ -157,10 +179,25 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                 Console.WriteLine("Can`t read error code");
                 return new byte[] { };
             }
-            return resp.AsSpan().Slice(12, 4).ToArray();
+            return resp.AsSpan().Slice(12, 2).ToArray();
+        }
+        private async Task<DmgMeasureStatus> GetStatus()
+        {
+            DmgMeasureStatus status = DmgMeasureStatus.Empty;
+            byte[] resp = { };
+            resp = await Sensor.Connection.Exchange(DmgCmd.Get("ReadDeviceStatus"));
+            if (null == resp || 12 > resp.Length)
+                throw new IOEx_Timeout("GetStatus timeout");
+            if (0x01 != resp[3])
+                throw new IOEx_ErrorResponse("GetStatus response error");
+            if (16 != resp.Length)
+                throw new IOEx_ErrorResponse("GetStatus response length error");
+            status = (DmgMeasureStatus)BitConverter.ToUInt16(resp, 12);
+            System.Diagnostics.Debug.WriteLine("status=" + status.ToString());
+            return status;
         }
 
-        public async Task<bool> ReadMeasurementHeader()
+        public async Task<bool> DownloadHeader()
         {
             UpdateProgress(_progress, Resource.ReadingHeader);
             int retry = 3;
@@ -187,12 +224,29 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
             return is_ok;
         }
 
-        public async Task<Ddin2MeasurementData> DownloadMeasurement(bool isError)
+        public async Task DownloadMeasurement()
         {
-            
-            Console.WriteLine("READING MEASUREMENT REPORT");
-            await ReadMeasurementHeader();
-            await GetDgm4kB();
+            UpdateProgress(_progress, Resource.Downloading);
+            float progress_size = (100f - _progress);
+
+            Action<float> StepProgress = (float sep_cost) =>
+            {
+                _progress += sep_cost;
+                UpdateProgress(_progress);
+            };
+            await ReadMemory(Sensor.Connection, _currentDynGraph
+                , 0, 0x81000000, 1000 * 2, 50, StepProgress, progress_size);
+
+            /*
+            UpdateProgress(_progress, "Read axgm");
+            await ReadMemory(Sensor.Connection, _currentAccelerationGraph
+                , 0, 0x83000000, 1000 * 2, 50, StepProgress, progress_size);
+            */
+        }
+
+        private Ddin2MeasurementData MakeReport(MeasureState state)
+        {
+            _logger.Trace("begin create report");
             List<byte> dynRawBytes = _currentDynGraph.ToList();
 
             Ddin2MeasurementData measurement =
@@ -205,16 +259,11 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                     DateTime.Now,
                     _measurementParameters.SecondaryParameters,
                     _currentAccelerationGraph.ToList(),
-                    isError ? ErrorCode : null);   
-
+                    ErrorCode);   
+            _logger.Trace("end create report");
             var dynGraphPoints = DgmConverter.GetXYs(measurement.DynGraph.ToList(),
-                    measurement.Report.Step, measurement.Report.WeightDiscr);
-
+                measurement.Report.Step, measurement.Report.WeightDiscr);
             measurement.DynGraphPoints = dynGraphPoints;
-
-            byte[] message = await Sensor.Connection.Exchange(DmgCmd.Get("InitializeMeasurement"));
-            if (null == message || 0 == message.Length)
-                Console.WriteLine("DownloadMeasurement - cant send InitializeMeasurement");
             return measurement;
         }
 
@@ -268,25 +317,15 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
             return true;
         }
-        private async Task GetDgm4kB()
+        private async Task SetStatusEmpty()
         {
-            UpdateProgress(_progress, Resource.Downloading);
-            float progress_size = (100f - _progress) ;
-
-            Action<float> StepProgress = (float sep_cost) => 
-            {
-                _progress += sep_cost;
-                UpdateProgress(_progress);
-            };
-            await ReadMemory(Sensor.Connection, _currentDynGraph
-                , 0, 0x81000000, 1000 * 2, 50, StepProgress, progress_size);
-            
-            /*
-            UpdateProgress(_progress, "Read axgm");
-            await ReadMemory(Sensor.Connection, _currentAccelerationGraph
-                , 0, 0x83000000, 1000 * 2, 50, StepProgress, progress_size);
-            */
+            byte[] resp = { };
+            resp = await Sensor.Connection.Exchange(DmgCmd.Get("InitializeMeasurement"));
+            if (null == resp || 12 != resp.Length)
+                throw new IOEx_Timeout("SetStatus wrong len or timeout");
+            if (0x02 != resp[3])
+                throw new IOEx_ErrorResponse("SetStatus response error");
         }
-        
+
     }
 }

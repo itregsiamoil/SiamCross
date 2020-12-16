@@ -23,7 +23,7 @@
                    TextColor="White" >
                 <Label.FormattedText>
                     <FormattedString >
-                        <Span Text="Version 2.5.0 rc3 " />
+                        <Span Text="Version 2.5.0 rc4 " />
                         <Span Text="&#10;" />
                         <Span Text="for internal testing only"  />
                     </FormattedString>

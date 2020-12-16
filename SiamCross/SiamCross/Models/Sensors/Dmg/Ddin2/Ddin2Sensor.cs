@@ -17,23 +17,33 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
         }
         public override async Task StartMeasurement(object measurementParameters)
         {
-            SensorData.Status = Resource.Survey;
-            IsMeasurement = true;
-            var startParams = (Ddin2MeasurementStartParameters)measurementParameters;
-            _measurementManager = new Ddin2MeasurementManager(this, startParams);
-            var report = await _measurementManager.RunMeasurement();
-            if (null != report)
+            object report = null;
+            try
             {
-                SensorService.Instance.MeasurementHandler(report);
-                SensorData.Status = Resource.Survey + ": complete";
+                SensorData.Status = Resource.Survey;
+                IsMeasurement = true;
+                var startParams = (Ddin2MeasurementStartParameters)measurementParameters;
+                _measurementManager = new Ddin2MeasurementManager(this, startParams);
+                report = await _measurementManager.RunMeasurement();
             }
-            else
+            catch (Exception)
             {
-                SensorData.Status = Resource.Survey + ": "+ Resource.Error;
+                report = null;
             }
-            await Task.Delay(2000);
-            IsMeasurement = false;
+            finally
+            {
+                if (null != report)
+                {
+                    SensorService.Instance.MeasurementHandler(report);
+                    SensorData.Status = Resource.Survey + ": complete";
+                }
+                else
+                {
+                    SensorData.Status = Resource.Survey + ": " + Resource.Error;
+                }
+                await Task.Delay(2000);
+                IsMeasurement = false;
+            }
         }
-
     }
 }
