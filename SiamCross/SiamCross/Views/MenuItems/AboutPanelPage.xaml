@@ -6,7 +6,7 @@
              x:Name="AboutPanel"
              Title="{local:Translate AboutTitle}">
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout Padding="5">
             <TableView Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand">

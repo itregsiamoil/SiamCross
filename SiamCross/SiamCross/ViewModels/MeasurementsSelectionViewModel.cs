@@ -210,28 +210,13 @@ namespace SiamCross.ViewModels
                 {
                     if (SelectedMeasurements[i] is MeasurementView mv)
                     {
-                        if (mv.Name.Contains("DDIM"))
-                        {
-                            var dmm = DataRepository.Instance.GetDdim2MeasurementById(mv.Id);
-                            var name = CreateName(dmm.Name, dmm.DateTime);
-                            xmlSaver.SaveXml(name, xmlCreator.CreateDdim2Xml(dmm));
-
-                            paths[i] = xmlSaver.GetFilepath(name);
-                        }
-                        else if (mv.Name.Contains("DDIN"))
+                        if (   mv.Name.Contains("DDIM")
+                            || mv.Name.Contains("DDIN")
+                            || mv.Name.Contains("SIDDOSA3M") )
                         {
                             var dnm = DataRepository.Instance.GetDdin2MeasurementById(mv.Id);
                             var name = CreateName(dnm.Name, dnm.DateTime);
                             xmlSaver.SaveXml(name, xmlCreator.CreateDdin2Xml(dnm));
-
-                            paths[i] = xmlSaver.GetFilepath(name);
-                        }
-                        else if (mv.Name.Contains("SIDDOSA3M"))
-                        {
-                            //Get siddos by id
-                            var sdm = DataRepository.Instance.GetSiddosA3MMeasurementById(mv.Id);
-                            var name = CreateName(sdm.Name, sdm.DateTime);
-                            xmlSaver.SaveXml(name, xmlCreator.CreateSiddosA3MXml(sdm));
 
                             paths[i] = xmlSaver.GetFilepath(name);
                         }
