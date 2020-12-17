@@ -20,10 +20,10 @@ namespace SiamCross.Droid.Models
     [Android.Runtime.Preserve(AllMembers = true)]
     public class BluetoothScannerAndroid : IBluetoothScanner
     {
-        private IAdapter _adapter;
-        private IBluetoothLE _bluetoothBLE;
-        private BluetoothAdapter _socketAdapter;
-        private USBService _usbService;
+        private readonly IAdapter _adapter;
+        private readonly IBluetoothLE _bluetoothBLE;
+        private readonly BluetoothAdapter _socketAdapter;
+        private readonly USBService _usbService;
         public event Action<ScannedDeviceInfo> Received;
         public event Action ScanTimoutElapsed;
 
@@ -48,10 +48,10 @@ namespace SiamCross.Droid.Models
             };
 
             _usbService = USBService.Instance;
-            _usbService.DeviceFounded += _usbService_DeviceFounded;
+            _usbService.DeviceFounded += UsbService_DeviceFounded;
         }
 
-        private void _usbService_DeviceFounded(ScannedDeviceInfo scannedDeviceInfo)
+        private void UsbService_DeviceFounded(ScannedDeviceInfo scannedDeviceInfo)
         {
             Received?.Invoke(scannedDeviceInfo);
         }
@@ -92,9 +92,9 @@ namespace SiamCross.Droid.Models
             }
         }
 
-        private void StartScanUsb()
+        private async void StartScanUsb()
         {
-            _usbService.StartScanQuery();
+            await _usbService.StartScanQuery();
         }
 
         public void Stop()
