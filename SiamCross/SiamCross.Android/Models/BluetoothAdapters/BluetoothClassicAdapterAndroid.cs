@@ -20,7 +20,7 @@ namespace SiamCross.Droid.Models
     
     class BluetoothGattCallbackExt : BluetoothGattCallback
     {
-        BaseBluetoothClassicAdapterAndroid mBt2Adapter = null;
+        readonly BaseBluetoothClassicAdapterAndroid mBt2Adapter = null;
         public BluetoothGattCallbackExt(BaseBluetoothClassicAdapterAndroid bt2adapter)
             :base()
         {
@@ -65,7 +65,7 @@ namespace SiamCross.Droid.Models
             get => mInterface;
         }
 
-        public async void UpdateRssi()
+        public void UpdateRssi()
         {
             
         }
@@ -79,7 +79,7 @@ namespace SiamCross.Droid.Models
         protected Stream _outStream;
 
         private Task mRxThread=null;
-        private SemaphoreSlim semaphore = new SemaphoreSlim(1);
+        private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
         private TaskCompletionSource<bool> mRxTsc = null;
         public Stream mRxStream = new MemoryStream(512);
         CancellationTokenSource CtRxSource = null;
@@ -87,7 +87,7 @@ namespace SiamCross.Droid.Models
 
         private const string _uuid = "00001101-0000-1000-8000-00805f9b34fb";
 
-        private BluetoothAdapter _bluetoothAdapter
+        private BluetoothAdapter BluetoothAdapter
         {
             get
             {
@@ -132,7 +132,7 @@ namespace SiamCross.Droid.Models
 
                 if (_scannedDeviceInfo.BluetoothArgs is string address)
                 {
-                    _bluetoothDevice = _bluetoothAdapter.GetRemoteDevice(address);
+                    _bluetoothDevice = BluetoothAdapter.GetRemoteDevice(address);
                     if (_bluetoothDevice.Name != _scannedDeviceInfo.Name)
                     {
                         _bluetoothDevice.Dispose();
@@ -218,6 +218,7 @@ namespace SiamCross.Droid.Models
                 _socket?.Close();
                 //_socket.Dispose();
                 CtRxSource?.Dispose();
+                mRxThread?.Dispose();
             }
             catch (Java.IO.IOException e)
             {
@@ -279,9 +280,9 @@ namespace SiamCross.Droid.Models
             String action = intent.Action;
             BluetoothDevice device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice);
             string device_name = device.Name;
-            System.Diagnostics.Debug.WriteLine($"OnReceive action={action}");
-
+            Debug.WriteLine($"OnReceive {device_name} action={action}");
             /*
+             
             if (BluetoothDevice.ActionAclConnected.Equals(action))
             {
                 return;
@@ -301,14 +302,6 @@ namespace SiamCross.Droid.Models
             //throw new NotImplementedException();
         }
 
-        //public event Action<byte[]> DataReceived;
-        //public event Action ConnectSucceed;
-        //public event Action ConnectFailed;
-
-        protected void DoActionDataReceived(byte[] data) 
-        {
-            //DataReceived?.Invoke(data);
-        }
         protected void DoActionConnectSucceed()
         {
             //ConnectSucceed?.Invoke();
@@ -407,12 +400,10 @@ namespace SiamCross.Droid.Models
 
         public override async Task<bool> Connect()
         {
-            var buggly_conn = mBaseConn as BaseBluetoothClassicAdapterAndroid;
-            if(null!= buggly_conn)
+            if (mBaseConn is BaseBluetoothClassicAdapterAndroid)
             {
                 bool res = await base.Connect();
-                //buggly_conn._inStream.ReadTimeout = mExchangeTimeout;
-                if(res)
+                if (res)
                 {
                     DoActionConnectSucceed();
                     return res;

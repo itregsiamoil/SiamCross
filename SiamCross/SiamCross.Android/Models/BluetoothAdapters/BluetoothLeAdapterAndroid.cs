@@ -30,10 +30,10 @@ namespace SiamCross.Droid.Models
         }
         public async void UpdateRssi()
         {
-            bool succ = await _device?.UpdateRssiAsync();
+            await _device?.UpdateRssiAsync();
         }
         public int Rssi { get => (null == _device) ? 0 : _device.Rssi; }
-        public IAdapter _adapter
+        public IAdapter Adapter
         {
             get 
             {
@@ -52,9 +52,9 @@ namespace SiamCross.Droid.Models
         private ICharacteristic _writeCharacteristic;
         private ICharacteristic _readCharacteristic;
 
-        private static string _writeCharacteristicGuid = "569a2001-b87f-490c-92cb-11ba5ea5167c";
-        private static string _readCharacteristicGuid = "569a2000-b87f-490c-92cb-11ba5ea5167c";
-        private static string _serviceGuid = "569a1101-b87f-490c-92cb-11ba5ea5167c";
+        private static readonly string _writeCharacteristicGuid = "569a2001-b87f-490c-92cb-11ba5ea5167c";
+        private static readonly string _readCharacteristicGuid = "569a2000-b87f-490c-92cb-11ba5ea5167c";
+        private static readonly string _serviceGuid = "569a1101-b87f-490c-92cb-11ba5ea5167c";
         private ScannedDeviceInfo _deviceInfo;
 
         private bool _isFirstConnectionTry = true;
@@ -91,17 +91,17 @@ namespace SiamCross.Droid.Models
                 if (!mInterface.IsEnbaled)
                     return false;
 
-                if (_adapter == null)
+                if (Adapter == null)
                     return false;
 
                 if (_isFirstConnectionTry)
                 {
-                    await _adapter.ConnectToKnownDeviceAsync(_deviceGuid);
+                    await Adapter.ConnectToKnownDeviceAsync(_deviceGuid);
                 }
                 else
                 {
                     IDevice dev = await CreateIDevice(_deviceGuid);
-                    await _adapter.ConnectToDeviceAsync(dev);
+                    await Adapter.ConnectToDeviceAsync(dev);
                 }
             }
             catch (AggregateException e)
@@ -121,9 +121,9 @@ namespace SiamCross.Droid.Models
                 return false;
             }
 
-            if (_adapter != null)
+            if (Adapter != null)
             {
-                _device = _adapter.ConnectedDevices.Where(x => x.Id == _deviceGuid)
+                _device = Adapter.ConnectedDevices.Where(x => x.Id == _deviceGuid)
                     .LastOrDefault();
             }
             else
@@ -178,7 +178,7 @@ namespace SiamCross.Droid.Models
                 await _readCharacteristic.StartUpdatesAsync();
                 _isFirstConnectionTry = true;
 
-                _adapter.DeviceConnectionLost += (o, args) =>
+                Adapter.DeviceConnectionLost += (o, args) =>
                 {
                     if (args.Device  == _device)
                     {
@@ -266,10 +266,10 @@ namespace SiamCross.Droid.Models
         private async Task<IDevice> CreateIDevice(Guid bluetoothGuid)
         {
             TaskCompletionSource<IDevice> idevice = new TaskCompletionSource<IDevice>();
-            _adapter.ScanTimeout = 5000;
-            _adapter.ScanMode = ScanMode.Balanced;
-            _adapter.ScanTimeoutElapsed += (s, e) => { try { idevice.SetResult(null); } catch { }; };
-            _adapter.DeviceDiscovered += (obj, a) =>
+            Adapter.ScanTimeout = 5000;
+            Adapter.ScanMode = ScanMode.Balanced;
+            Adapter.ScanTimeoutElapsed += (s, e) => { try { idevice.SetResult(null); } catch { }; };
+            Adapter.DeviceDiscovered += (obj, a) =>
             {
                 try
                 {
@@ -280,7 +280,7 @@ namespace SiamCross.Droid.Models
 
                     if (a.Device.Id.Equals(bluetoothGuid))
                     {
-                        _adapter.StopScanningForDevicesAsync();
+                        Adapter.StopScanningForDevicesAsync();
                         idevice.SetResult(a.Device);
                     }
                     System.Diagnostics.Debug.WriteLine("Finded device" + a.Device.Name);
@@ -293,7 +293,7 @@ namespace SiamCross.Droid.Models
                 }
             };
 
-            await _adapter.StartScanningForDevicesAsync();
+            await Adapter.StartScanningForDevicesAsync();
 
             return await idevice.Task;
         }
@@ -304,6 +304,7 @@ namespace SiamCross.Droid.Models
 
         private static void LockLog(string msg)
         {
+            /*
             string ret;
             Thread thread = Thread.CurrentThread;
             {
@@ -313,21 +314,14 @@ namespace SiamCross.Droid.Models
                     //+ String.Format("   Thread Pool: {0} ", thread.IsThreadPoolThread)
                     );
             }
-            //DebugLog.WriteLine(ret);
+            DebugLog.WriteLine(ret);
+            */
         }
 
-        private SemaphoreSlim semaphore = new SemaphoreSlim(1);
+        private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
         private TaskCompletionSource<bool> tcs;// = new TaskCompletionSource<byte[]>();
-        private Stream mRxStream = new MemoryStream(512);
+        private readonly Stream mRxStream = new MemoryStream(512);
 
-
-        private void TimeoutWaitResponse(TaskCompletionSource<bool> ref_tsc)
-        {
-            //TaskCompletionSource<bool> ref_tsc = null;
-            //using (await semaphore.UseWaitAsync())
-            //    ref_tsc = tcs;
-            ref_tsc?.SetResult(false);
-        }
         public async void ClearRx()
         {
             using (await semaphore.UseWaitAsync())
@@ -401,7 +395,7 @@ namespace SiamCross.Droid.Models
 
         public async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
-            int readed = 0;
+            int readed;
             try
             {
                 readed = await DoReadAsync(buffer, offset, count, ct);

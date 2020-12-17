@@ -45,8 +45,10 @@ namespace SiamCross.Droid.Models
                 return false;
             //File.SetAttributes(fullPath, FileAttributes.Normal);
             //FileIOPermission filePermission =new FileIOPermission(FileIOPermissionAccess.AllAccess, fullPath);
-            System.Xml.XmlWriterSettings settings = new System.Xml.XmlWriterSettings();
-            settings.Async = true;
+            System.Xml.XmlWriterSettings settings = new System.Xml.XmlWriterSettings
+            {
+                Async = true
+            };
             System.Xml.XmlWriter writer = System.Xml.XmlWriter.Create(fs, settings);
             CancellationTokenSource cts = new CancellationTokenSource(3000);
             await xml.SaveAsync(writer, cts.Token);

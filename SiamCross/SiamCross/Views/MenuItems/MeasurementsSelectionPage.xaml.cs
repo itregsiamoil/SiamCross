@@ -23,7 +23,7 @@ namespace SiamCross.Views.MenuItems
             InitializeComponent();
         }
 
-        private async void ToolbarItem_Clicked(object sender, EventArgs e)
+        private void ToolbarItem_Clicked(object sender, EventArgs e)
         {
             _vm.ViewModel.SaveMeasurements(sender);
         }

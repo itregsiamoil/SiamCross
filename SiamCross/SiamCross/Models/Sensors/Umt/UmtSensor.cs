@@ -186,7 +186,7 @@ namespace SiamCross.Models.Sensors.Umt
             return true;
         }
 
-        public async Task StartMeasurement(object measurementParameters)
+        public Task StartMeasurement(object measurementParameters)
         {
             //IsMeasurement = true;
             //var startParams = (UmtMeasurementStartParameters)measurementParameters;
@@ -195,6 +195,7 @@ namespace SiamCross.Models.Sensors.Umt
             //var result = await _measurementManager.RunMeasurement();
             //SensorService.Instance.MeasurementHandler(result);
             //IsMeasurement = false;
+            return null;
         }
     }
 }

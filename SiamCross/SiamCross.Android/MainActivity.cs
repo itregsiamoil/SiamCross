@@ -117,8 +117,8 @@ namespace SiamCross.Droid
         public class UsbDeviceDetachedReceiver
             : BroadcastReceiver
         {
-            private string attached = "android.hardware.usb.action.USB_DEVICE_ATTACHED";
-            private string detached = "android.hardware.usb.action.USB_DEVICE_DETACHED";
+            private readonly string attached = "android.hardware.usb.action.USB_DEVICE_ATTACHED";
+            private readonly string detached = "android.hardware.usb.action.USB_DEVICE_DETACHED";
 
             public override void OnReceive(Context context, Intent intent)
             {
@@ -143,7 +143,7 @@ namespace SiamCross.Droid
         public class UsbDeviceAttachedReceiver
             : BroadcastReceiver
         {
-            public override async void OnReceive(Context context, Intent intent) { }
+            public override void OnReceive(Context context, Intent intent) { }
         }
 
         #endregion
