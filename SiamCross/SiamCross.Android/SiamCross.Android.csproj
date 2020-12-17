@@ -137,9 +137,6 @@
     <PackageReference Include="SkiaSharp.Views.Forms">
       <Version>2.80.2</Version>
     </PackageReference>
-    <PackageReference Include="System.Data.SqlClient">
-      <Version>4.8.2</Version>
-    </PackageReference>
     <PackageReference Include="Xamarin.Android.SerialPort">
       <Version>1.0.0.3</Version>
     </PackageReference>
@@ -171,7 +168,6 @@
     <Compile Include="Models\VersionAndBuild_Android.cs" />
     <Compile Include="Models\DatabaseCreatorAndroid.cs" />
     <Compile Include="Models\DefaultAdapterAndroid.cs" />
-    <Compile Include="Models\EmailSenderAndroid.cs" />
     <Compile Include="Models\EventHandlerExtensions.cs" />
     <Compile Include="Models\FileManagerAndroid.cs" />
     <Compile Include="Models\HandbookManagerAndroid.cs" />

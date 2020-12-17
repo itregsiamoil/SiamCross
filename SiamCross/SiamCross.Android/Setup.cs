@@ -39,7 +39,7 @@ namespace SiamCross.Droid
             cb.RegisterType<SaveDevicesServiceAndroid>().As<ISaveDevicesService>();
             cb.RegisterType<SQLiteAndroid>().As<ISQLite>();
             cb.RegisterType<FileManagerAndroid>().As<IFileManager>();
-            cb.RegisterType<EmailSenderAndroid>().As<IEmailSender>();
+            cb.RegisterType<EmailSender>().As<IEmailSender>();
             cb.RegisterType<SettingsSaverAndroid>().As<ISettingsSaver>();
             cb.RegisterType<SqliteConnection>().As<IDbConnection>();
             cb.RegisterType<DatabaseCreatorAndroid>().As<IDatabaseCreator>();
