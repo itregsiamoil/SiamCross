@@ -14,29 +14,36 @@
                       ItemsSource="{Binding Measurements}"
                       SeparatorVisibility="None"
                       rainbows:DebugRainbow.IsDebug="False"
-                      ItemTapped="ListView_ItemTapped"
-                      Margin ="4">
+                      ItemTapped="ListView_ItemTapped" 
+                      BackgroundColor="{StaticResource colorCtrlBg}"
+                      Margin ="0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <Frame Padding="1,1,2,2" Margin="1"  CornerRadius="4" 
-                                       HasShadow="True"  >
-                                    <Grid Margin="5" rainbows:DebugRainbow.IsDebug="False">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="*"></RowDefinition>
-                                        </Grid.RowDefinitions>
-                                        <Label Grid.Row="0" Text="{Binding Field}"
-                                           FontAttributes="Bold"></Label>
-                                        <Label Grid.Row="1" Text="{Binding Name}"/>
-                                        <Label Grid.Row="2" Text="{Binding Date}"></Label>
-                                        <Label Grid.Row="3" Text="{Binding MeasurementType}"></Label>
-                                        <Label Grid.Row="4" Text="{Binding Comments}"></Label>
-                                    </Grid>
+                                <Frame BackgroundColor="{StaticResource launcher_background}"
+                               Margin="4,4,4,4" Padding="4,2,4,2" CornerRadius="4"
+                               HasShadow="true"  >
+                                    <StackLayout Orientation="Vertical" Spacing="10">
+                                        <Grid RowSpacing="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="50*" />
+                                                <ColumnDefinition Width="50*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="25"/>
+                                            </Grid.RowDefinitions>
+                                            <Label Grid.Row="0" Text="{Binding Field}" FontAttributes="Bold"></Label>
+                                            <Label Grid.Row="1" Text="{Binding Date}" FontAttributes="Bold"></Label>
+                                            <Label Grid.Row="2" Text="{Binding Name}"/>
+                                            <Label Grid.Row="2" Grid.Column="1" Text="{Binding MeasurementType}"/>
+                                            <Label Grid.Row="3" Text="{Binding Comments}" Grid.ColumnSpan="2" />
+                                        </Grid>
+                                    </StackLayout>
                                 </Frame>
                             </ViewCell.View>
                         </ViewCell>

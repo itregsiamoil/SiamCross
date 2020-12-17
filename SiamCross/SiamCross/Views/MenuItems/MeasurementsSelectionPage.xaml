@@ -6,6 +6,12 @@
              mc:Ignorable="d"
              x:Class="SiamCross.Views.MenuItems.MeasurementsSelectionPage"
              Title="{Binding Title, Mode=TwoWay}">
+    <NavigationPage.TitleView >
+        <StackLayout>
+            <Label Text="{Binding Title}" FontSize="Small" Font="Bold" TextColor="White" />
+        </StackLayout>
+    </NavigationPage.TitleView>
+
     <!--Icons made by
     <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from
     <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>-->
@@ -19,40 +25,69 @@
         <ToolbarItem IconImageSource="trashcan.png" Command="{Binding DeleteCommand}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="{Binding Title}" TextColor="White" 
-                   BackgroundColor="{StaticResource colorPrimary}"/>
-
-            <CollectionView ItemsSource="{Binding Measurements}"
+        <CollectionView ItemsSource="{Binding Measurements}"
                             SelectedItems="{Binding SelectedMeasurements}"
                             SelectionMode="Multiple"
                             SelectionChangedCommand="{Binding SelectionChanged}"
-                            Margin ="4" 
-                            
-                            >
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame Padding="1,1,2,2" Margin="1"  CornerRadius="4" BackgroundColor="Transparent"
-                               HasShadow="true" BorderColor="{StaticResource colorCtrlBg}" >
-                            <Grid Margin="5">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Label Grid.Row="0" Text="{Binding Field}"
-                                           FontAttributes="Bold"></Label>
-                                <Label Grid.Row="1" Text="{Binding Name}"/>
-                                <Label Grid.Row="2" Text="{Binding Date}"/>
-                                <Label Grid.Row="3" Text="{Binding MeasurementType}"/>
-                                <Label Grid.Row="4" Text="{Binding Comments}"/>
-                            </Grid>
+                            BackgroundColor="{StaticResource colorCtrlBg}"
+                            Margin ="0" >
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Orientation="Vertical" Margin="0" Padding="0" Spacing="0">
+                        <Frame 
+                               Margin="4,4,4,4" Padding="4,2,4,2" CornerRadius="4"
+                               HasShadow="true"  >
+                            <StackLayout Orientation="Vertical" Spacing="0" BackgroundColor="{StaticResource launcher_background}">
+                                <Grid RowSpacing="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50*" />
+                                        <ColumnDefinition Width="50*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Label Grid.Row="0" Text="{Binding Field}" FontAttributes="Bold"></Label>
+                                    <Label Grid.Row="1" Text="{Binding Date}" FontAttributes="Bold"></Label>
+                                    <Label Grid.Row="2" Text="{Binding Name}"/>
+                                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding MeasurementType}"/>
+                                    <Label Grid.Row="3" Text="{Binding Comments}" Grid.ColumnSpan="2" />
+                                </Grid>
+                                <Grid RowSpacing="0" ColumnSpacing="4" Padding="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="100*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="12"/>
+                                        <RowDefinition Height="12"/>
+                                    </Grid.RowDefinitions>
+                                    <ActivityIndicator 
+                                        IsRunning="{Binding Sending}"
+                                        Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" />
+                                    <Label Text="&#x1F4E4;"
+                                           VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                                           Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" >
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding LastSentTimestamp}" Value="" >
+                                                <Setter Property="IsVisible" Value="false"  />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                    <Label Text="{Binding LastSentTimestamp}" 
+                                           Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
+                                           Grid.Row="1" Grid.Column="1" />
+                                    <Label Text="{Binding LastSentRecipient}"
+                                           Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
+                                           Grid.Row="0" Grid.Column="1"  />
+                                </Grid>
+                            </StackLayout>
                         </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </StackLayout>
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </ContentPage.Content>
 </ContentPage>
