@@ -16,26 +16,16 @@ namespace SiamCross.Droid.Models
 {
     public class EmailSenderAndroid : IEmailSender
     {
-        private readonly object _locker = new object();
-        public void SendEmail(string to, 
-                              string subject, 
-                              string text)
+        async Task<bool> SendMessage(MailMessage msg)
         {
+            SmtpClient smtp = null;
             try
             {
-                var from = new MailAddress(Settings.Instance.FromAddress);
-                var toMail = new MailAddress(Settings.Instance.ToAddress);
-                var m = new MailMessage(from, toMail);
-                m.Subject = subject;
-                m.Body = text;
-                m.IsBodyHtml = true;
-                SmtpClient smtp = null;
-
                 if (Settings.Instance.IsNeedAuthorization)
                 {
 
                     smtp = new SmtpClient(Settings.Instance.SmtpAddress,
-                                          Settings.Instance.Port)
+                                            Settings.Instance.Port)
                     {
                         Credentials = new NetworkCredential(Settings.Instance.Username,
                                                             Settings.Instance.Password),
@@ -45,14 +35,15 @@ namespace SiamCross.Droid.Models
                 else
                 {
                     smtp = new SmtpClient(Settings.Instance.SmtpAddress,
-                                          Settings.Instance.Port)
+                                            Settings.Instance.Port)
                     {
                         EnableSsl = false
                     };
                 }
-                
-                smtp?.Send(m);
-
+                await smtp?.SendMailAsync(msg);
+                msg.Dispose();
+                smtp.Dispose();
+                return true;
                 #region С использованием MailKit
                 //var message = new MimeMessage();
                 //message.From.Add(new MailboxAddress("Joey Tribbiani", Settings.Instance.FromAddress));
@@ -86,91 +77,21 @@ namespace SiamCross.Droid.Models
                 throw new Exception(ex.Message);
             }
         }
-
-        public void SendEmailWithFile(string path)
-        {
-            lock (_locker)
-            {
-                if (File.Exists(path))
-                {
-                    var from = new MailAddress(Settings.Instance.FromAddress);
-                    var toMail = new MailAddress(Settings.Instance.ToAddress);
-                    var m = new MailMessage(from, toMail);
-                    m.Attachments.Add(new Attachment(path));
-                    m.Subject = "Mail with attachment";
-                    m.Body = "Measurement ";
-                    m.IsBodyHtml = true;
-                    SmtpClient smtp = null;
-
-                    if (Settings.Instance.IsNeedAuthorization)
-                    {
-                        smtp = new SmtpClient(Settings.Instance.SmtpAddress,
-                                              Settings.Instance.Port)
-                        {
-                            Credentials = new NetworkCredential(Settings.Instance.Username,
-                                                                Settings.Instance.Password),
-                            EnableSsl = true
-                        };
-                    }
-                    else
-                    {
-                        smtp = new SmtpClient(Settings.Instance.SmtpAddress,
-                                              Settings.Instance.Port)
-                        {
-                            EnableSsl = false
-                        };
-                    }
-
-                    smtp?.Send(m);
-                }
-            }
-        }
-
-        public void SendEmailWithFiles(string subject, 
+        public async Task<bool> SendEmailWithFiles(string subject, 
                                        string text, 
                                        string[] filenames)
         {
-            lock (_locker)
+            var from = new MailAddress(Settings.Instance.FromAddress);
+            var toMail = new MailAddress(Settings.Instance.ToAddress);
+            var m = new MailMessage(from, toMail);
+            m.Subject = subject;
+            m.Body = text;
+            m.IsBodyHtml = true;
+            foreach (var path in filenames)
             {
-                var from = new MailAddress(Settings.Instance.FromAddress);
-                var toMail = new MailAddress(Settings.Instance.ToAddress);
-                var m = new MailMessage(from, toMail);
-
-                foreach (var path in filenames)
-                {
-                    if (File.Exists(path))
-                    {
-                        m.Attachments.Add(new Attachment(path));
-                    }
-                }
-
-                m.Subject = subject;
-                m.Body = text;
-                m.IsBodyHtml = true;
-                SmtpClient smtp = null;
-
-                if (Settings.Instance.IsNeedAuthorization)
-                {
-                    smtp = new SmtpClient(Settings.Instance.SmtpAddress,
-                                          Settings.Instance.Port)
-                    {
-                        Credentials = new NetworkCredential(Settings.Instance.Username,
-                                                            Settings.Instance.Password),
-                        EnableSsl = true
-                    };
-                }
-                else
-                {
-                    smtp = new SmtpClient(Settings.Instance.SmtpAddress,
-                                          Settings.Instance.Port)
-                    {
-                        EnableSsl = false
-                    };
-                }
-
-                smtp?.Send(m);
-                m.Dispose();
+                m.Attachments.Add(new Attachment(path));
             }
+            return await SendMessage(m);
         }
     }
 }

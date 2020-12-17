@@ -19,21 +19,10 @@ namespace SiamCross.Services
         {
             _emailSender = AppContainer.Container.Resolve<IEmailSender>();
         }
-
-        public void SendEmailWithFile(string filename)
+        public Task<bool> SendEmailWithFiles(string subject
+            , string text, string[] filenames)
         {
-            _emailSender.SendEmailWithFile(filename);
-        }
-
-        public void SendEmail(string to, string subject, string text)
-        {
-            _emailSender.SendEmail(to, subject, text);
-        }
-
-        public void 
-            SendEmailWithFiles(string subject, string text, string[] filenames)
-        {
-            _emailSender.SendEmailWithFiles(subject, text, filenames);
+            return _emailSender.SendEmailWithFiles(subject, text, filenames);
         }
     }
 }

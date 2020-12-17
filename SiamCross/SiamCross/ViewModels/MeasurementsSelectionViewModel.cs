@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Xml.Linq;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -18,7 +19,8 @@ namespace SiamCross.ViewModels
     public class MeasurementsSelectionViewModel : BaseViewModel, IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
-
+        private List<string> _errorList;
+        private DateTimeConverter _timeConverter = new DateTimeConverter();
         private string _title;
         public string Title 
         {
@@ -36,8 +38,6 @@ namespace SiamCross.ViewModels
         public ICommand SelectionChanged { get; set; }
         public ICommand SendCommand { get; set; }
 
-        private readonly object _locker = new object();
-
         public MeasurementsSelectionViewModel(ObservableCollection<MeasurementView> measurements)
         {
             Measurements = new ObservableCollection<MeasurementView>();
@@ -54,7 +54,6 @@ namespace SiamCross.ViewModels
             SelectionChanged = new Command(RefreshSelectedCount);
             SendCommand = new Command(SendMeasurements);
         }
-
         public async void SaveMeasurements(object obj)
         {
             try
@@ -80,12 +79,10 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
-
         private void RefreshSelectedCount()
         {
             Title = $"{Resource.SelectedMeasurements}: {SelectedMeasurements.Count}";
         }
-
         private void DeleteMeasurements()
         {
             try
@@ -129,9 +126,6 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
-
-        private List<string> _errorList;
-
         private async void SendMeasurements(object obj)
         {
             if (!ValidateForEmptiness())
@@ -144,30 +138,45 @@ namespace SiamCross.ViewModels
 
             try
             {
-                DependencyService.Get<IToast>().Show($"{Resource.SendingMeasurements}...");
-
-                await Task.Run(() =>
+                foreach (MeasurementView survay in SelectedMeasurements)
                 {
-                    var paths = SaveXmlsReturnPaths();
+                    survay.Sending = true;
+                    survay.LastSentRecipient = SiamCross.Models.Tools.Settings.Instance.ToAddress;
+                }
 
-                    EmailService.Instance.SendEmailWithFiles("Siam Measurements",
-                        "Hello!\n\nSiamCompany Telemetry Transfer Service", 
-                        paths);
-                });
 
+                DependencyService.Get<IToast>().Show($"{Resource.SendingMeasurements}...");
+                var paths = await SaveXmlsReturnPaths();
+
+                bool is_ok = await EmailService.Instance.SendEmailWithFiles("Siam Measurements",
+                    "\nSiamCompany Telemetry Transfer Service",
+                    paths);
                 DependencyService.Get<IToast>()
                     .Show($"{SelectedMeasurements.Count} {Resource.MeasurementsSentSuccesfully}");
+
+                foreach (MeasurementView sent_sur in SelectedMeasurements)
+                {
+                    sent_sur.SetLastSentTimestamp(DateTime.Now);
+                    sent_sur.LastSentRecipient = SiamCross.Models.Tools.Settings.Instance.ToAddress;
+                    sent_sur.Sending = false;
+                }
+
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "SendMeasurements command handler" + "\n");
                 await Application.Current.MainPage.DisplayAlert(Resource.Error,
                     ex.Message, "OK");
-                SendCommand = new Command(SendMeasurements);
+                foreach (MeasurementView err_sur in SelectedMeasurements)
+                {
+                    err_sur.SetLastSentTimestamp(new DateTime(0));
+                    err_sur.LastSentRecipient = "";
+                    err_sur.Sending = false;
+                }
             }
             SendCommand = new Command(SendMeasurements);
-        }
 
+        }
         private void ShareMeasurements(object obj)
         {
             try
@@ -193,55 +202,39 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
-
-        private DateTimeConverter _timeConverter = new DateTimeConverter();
-
-        private string[] SaveXmlsReturnPaths()
+        private async Task<string[]> SaveXmlsReturnPaths()
         {
-            lock (_locker)
+            var xmlCreator = new XmlCreator();
+            var xmlSaver = DependencyService.Get<IXmlSaver>();
+            var paths = new string[SelectedMeasurements.Count];
+            for (int i = 0; i < SelectedMeasurements.Count; i++)
             {
-                var xmlCreator = new XmlCreator();
-
-                var xmlSaver = DependencyService.Get<IXmlSaver>();
-
-                var paths = new string[SelectedMeasurements.Count];
-
-                for (int i = 0; i < SelectedMeasurements.Count; i++)
+                if (SelectedMeasurements[i] is MeasurementView mv)
                 {
-                    if (SelectedMeasurements[i] is MeasurementView mv)
+                    if (   mv.Name.Contains("DDIM")
+                        || mv.Name.Contains("DDIN")
+                        || mv.Name.Contains("SIDDOSA3M") )
                     {
-                        if (   mv.Name.Contains("DDIM")
-                            || mv.Name.Contains("DDIN")
-                            || mv.Name.Contains("SIDDOSA3M") )
-                        {
-                            var dnm = DataRepository.Instance.GetDdin2MeasurementById(mv.Id);
-                            var name = CreateName(dnm.Name, dnm.DateTime);
-                            xmlSaver.SaveXml(name, xmlCreator.CreateDdin2Xml(dnm));
-
+                        var dnm = DataRepository.Instance.GetDdin2MeasurementById(mv.Id);
+                        var name = CreateName(dnm.Name, dnm.DateTime);
+                        bool saved = await xmlSaver.SaveXml(name, xmlCreator.CreateDdin2Xml(dnm));
+                        if (saved)
                             paths[i] = xmlSaver.GetFilepath(name);
-                        }
-                        else if (mv.Name.Contains("DU"))
-                        {
-                            //Get siddos by id
-                            var du = DataRepository.Instance.GetDuMeasurementById(mv.Id);
-                            var name = CreateName(du.Name, du.DateTime);
-                            xmlSaver.SaveXml(name, xmlCreator.CreateDuXml(du));
-
+                    }
+                    else if (mv.Name.Contains("DU"))
+                    {
+                        //Get siddos by id
+                        var du = DataRepository.Instance.GetDuMeasurementById(mv.Id);
+                        var name = CreateName(du.Name, du.DateTime);
+                        XDocument doc = xmlCreator.CreateDuXml(du);
+                        bool saved = await xmlSaver.SaveXml(name, doc);
+                        if(saved)
                             paths[i] = xmlSaver.GetFilepath(name);
-                        }
                     }
                 }
-
-                return paths;
             }
+            return paths;
         }
-
-        private string CreateName(string deviceName, DateTime date)
-        {
-            return $"{deviceName}_{_timeConverter.DateTimeToString(date)}.xml"
-                .Replace(':', '-');
-        }
-
         private bool ValidateForEmptiness()
         {
             _errorList.Clear();
@@ -270,7 +263,11 @@ namespace SiamCross.ViewModels
 
             return true;
         }
-
+        private string CreateName(string deviceName, DateTime date)
+        {
+            return $"{deviceName}_{_timeConverter.DateTimeToString(date)}.xml"
+                .Replace(':', '-');
+        }
         private void ShowErrors()
         {
             if (_errorList.Count != 0)
@@ -286,7 +283,6 @@ namespace SiamCross.ViewModels
                 errors, "OK");
             }
         }
-
         private void ValidateParameter(string text, string errorMessage)
         {
             if (string.IsNullOrEmpty(text))

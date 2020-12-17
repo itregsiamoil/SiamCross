@@ -1,6 +1,7 @@
 ﻿using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Du.Measurement;
 using System;
+using System.Globalization;
 
 namespace SiamCross.DataBase.DataBaseModels
 {
@@ -45,9 +46,11 @@ namespace SiamCross.DataBase.DataBaseModels
         public string RadioFirmware
         { get => MeasData.SecondaryParameters.RadioFirmware; set => MeasData.SecondaryParameters.RadioFirmware = value; }
         public string ReportTimestamp
-        { get => MeasData.Date.ToString(); set => MeasData.Date = DateTime.Parse(value); }
+        { 
+            get => MeasData.Date.ToString(CultureInfo.InvariantCulture); 
+            set => MeasData.Date = DateTime.Parse(value, CultureInfo.InvariantCulture); 
+        }
 
-        
         public DuMeasurementData MeasData { get; set; }
         public DateTime DateTime
         { get => MeasData.Date; set => MeasData.Date = value; }

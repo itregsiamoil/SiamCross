@@ -34,6 +34,43 @@ namespace SiamCross.ViewModels
             }
         }
 
+        bool mSending = false;
+        public bool Sending 
+        { 
+            get=> mSending; 
+            set
+            {
+                mSending = value;
+                PropertyChanged?.Invoke(this,
+                    new PropertyChangedEventArgs(nameof(Sending)));
+            }
+        }
+
+        DateTime mZeroTs = new DateTime(0);
+        DateTime mLastSentTimestamp=new DateTime(0);
+        public void SetLastSentTimestamp( DateTime ts)
+        {
+            mLastSentTimestamp = ts;
+            PropertyChanged?.Invoke(this,
+                new PropertyChangedEventArgs(nameof(LastSentTimestamp)));
+        }
+        public string LastSentTimestamp
+        {
+            get => (mLastSentTimestamp == mZeroTs)? "" : mLastSentTimestamp.ToString();
+        }
+
+        string mLastSentRecipient;
+        public string LastSentRecipient
+        {
+            get => mLastSentRecipient;
+            set
+            {
+                mLastSentRecipient = value;
+                PropertyChanged?.Invoke(this,
+                    new PropertyChangedEventArgs(nameof(LastSentRecipient)));
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }
