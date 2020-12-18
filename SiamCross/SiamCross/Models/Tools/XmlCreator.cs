@@ -12,6 +12,41 @@ namespace SiamCross.Models.Tools
 {
     public class XmlCreator
     {
+        static string ExtractName(string str)
+        {
+            int pos = str.IndexOf('_', 0);
+            if(0 < pos)
+                return str.Substring(0, pos);
+
+            pos = -1;
+            for (int i=0; i<str.Length && -1==pos; ++i)
+            {
+                if (!char.IsLetter(str[i]))
+                    pos = i;
+            }
+            if (0 < pos)
+                return str.Substring(0, pos);
+
+            return str;
+        }
+        static string ExtractNumber(string str)
+        {
+            int pos = str.IndexOf('_', 0);
+            if (0 < pos)
+                return str.Substring(pos + 1, str.Length - pos - 1);
+
+            pos = -1;
+            for (int i = 0; i < str.Length && -1 == pos; ++i)
+            {
+                if (!char.IsLetter(str[i]))
+                    pos = i;
+            }
+            if (0 < pos)
+                return str.Substring(pos, str.Length - pos);
+
+            return str;
+        }
+
         public XDocument CreateDdim2Xml(Ddim2Measurement dbDdimModel)
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
@@ -167,25 +202,8 @@ namespace SiamCross.Models.Tools
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             #region Setup
 
-            string name = "";
-            string number = "";
-            foreach (char ch in dbDdinModel.Name)
-            {
-                if (ch > 47 || ch < 58)
-                {
-                    name += ch;
-                }
-                else
-                {
-                    number += ch;
-                }
-            }
-
-            number = dbDdinModel.Name.Substring(dbDdinModel.Name.Length - 4);
-            if(number[0] == '0')
-            {
-                number.Substring(number.Length - 1);
-            }
+            string name = ExtractName(dbDdinModel.Name);
+            string number = ExtractNumber(dbDdinModel.Name);
 
             List<double> movement = new List<double>();
             List<double> weight = new List<double>();
@@ -230,13 +248,22 @@ namespace SiamCross.Models.Tools
 
             #endregion
 
+            int sens_type = 0;
+            string lwname = name.ToLower();
+            if (     lwname.Contains("siddos") || lwname.Contains("сиддос"))
+                sens_type = 0;
+            else if (lwname.Contains("ddin") || lwname.Contains("ддин"))
+                sens_type = 1;
+            else if (lwname.Contains("ddim") || lwname.Contains("ддим"))
+                sens_type = 2;
+
             XDocument document =
                 new XDocument(
                 new XElement("Device_List",
                     new XElement("Device",
 
                         new XAttribute("DEVTID", "siddos01"),
-                        new XAttribute("DSTID", "ДДИН-2"),
+                        new XAttribute("DSTID", name),
                         new XAttribute("DEVSERIALNUMBER", number),
 
                             new XElement("Measurement_List",
@@ -262,7 +289,7 @@ namespace SiamCross.Models.Tools
                                             new XAttribute("MSVDATA", BinaryToBase64(Trim(weight.ToArray(), dbDdinModel.Period), 1000))),                                    //!
 
                                         new XElement("Value",
-                                            new XAttribute("MSVINTEGER", "1"),                                      //Накладной
+                                            new XAttribute("MSVINTEGER", sens_type.ToString()),                       //Накладной
                                             new XAttribute("MSVDICTIONARYID", "sidsensortype")),
 
                                          new XElement("Value",
@@ -471,26 +498,8 @@ namespace SiamCross.Models.Tools
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             #region Setup
 
-            string name = "";
-            string number = "";
-            foreach (char ch in dbDuModel.Name)
-            {
-                if (ch > 47 || ch < 58)
-                {
-                    name += ch;
-                }
-                else
-                {
-                    number += ch;
-                }
-            }
-
-            number = dbDuModel.Name.Substring(dbDuModel.Name.Length - 4);
-            if (number[0] == '0')
-            {
-                number.Substring(number.Length - 1);
-            }
-
+            string name = ExtractName(dbDuModel.Name);
+            string number = ExtractNumber(dbDuModel.Name);
 
             List<double> discretsY = new List<double>();
             float minX;
@@ -557,7 +566,7 @@ namespace SiamCross.Models.Tools
                     new XElement("Device",
 
                         new XAttribute("DEVTID", "siddos01"),
-                        new XAttribute("DSTID", "ДУ-1"),
+                        new XAttribute("DSTID", name),
                         new XAttribute("DEVSERIALNUMBER", number),
 
                             new XElement("Measurement_List",
