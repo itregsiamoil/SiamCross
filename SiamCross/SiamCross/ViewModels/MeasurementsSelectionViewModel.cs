@@ -82,6 +82,15 @@ namespace SiamCross.ViewModels
         private void RefreshSelectedCount()
         {
             Title = $"{Resource.SelectedMeasurements}: {SelectedMeasurements.Count}";
+            foreach (MeasurementView m in Measurements)
+            {
+                m.IsSelected = false;
+            }
+            foreach (MeasurementView m in SelectedMeasurements)
+            {
+                m.IsSelected = true;
+            }
+
         }
         private void DeleteMeasurements()
         {

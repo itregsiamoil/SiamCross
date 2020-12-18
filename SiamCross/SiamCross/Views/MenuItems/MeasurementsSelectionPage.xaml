@@ -34,10 +34,15 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <StackLayout Orientation="Vertical" Margin="0" Padding="0" Spacing="0">
-                        <Frame 
+                        <Frame BackgroundColor="{StaticResource launcher_background}"
                                Margin="4,4,4,4" Padding="4,2,4,2" CornerRadius="4"
                                HasShadow="true"  >
-                            <StackLayout Orientation="Vertical" Spacing="0" BackgroundColor="{StaticResource launcher_background}">
+                            <Frame.Triggers>
+                                <DataTrigger TargetType="Frame" Binding="{Binding IsSelected}" Value="true" >
+                                    <Setter Property="BackgroundColor" Value="{StaticResource colorCtrlNormal}"  />
+                                </DataTrigger>
+                            </Frame.Triggers>
+                            <StackLayout Orientation="Vertical" Spacing="0" >
                                 <Grid RowSpacing="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="50*" />

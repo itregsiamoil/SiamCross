@@ -71,6 +71,17 @@ namespace SiamCross.ViewModels
             }
         }
 
+        bool mIsSelected = false;
+        public bool IsSelected
+        {
+            get => mIsSelected;
+            set
+            {
+                mIsSelected = value;
+                PropertyChanged?.Invoke(this,
+                    new PropertyChangedEventArgs(nameof(IsSelected)));
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }
