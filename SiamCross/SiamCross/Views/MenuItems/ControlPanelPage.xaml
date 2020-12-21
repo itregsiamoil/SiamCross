@@ -16,6 +16,7 @@
     <ContentPage.Content>
 
         <StackLayout>
+            <!--
             <Label 
                    Font="Bold" FontSize="Title" LineBreakMode="WordWrap"
                    HorizontalTextAlignment="Center"
@@ -23,13 +24,13 @@
                    TextColor="White" >
                 <Label.FormattedText>
                     <FormattedString >
-                        <Span Text="Version 2.5.0 rc6 " />
+                        <Span Text="Version 2.5.0 rc7 " />
                         <Span Text="&#10;" />
                         <Span Text="for internal testing only"  />
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
-
+            -->
             <ListView x:Name="sensorList" 
                       ItemsSource="{Binding Sensor}"
                 SeparatorVisibility="None"
