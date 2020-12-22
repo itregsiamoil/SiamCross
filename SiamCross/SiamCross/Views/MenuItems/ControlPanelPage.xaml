@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
+             xmlns:models="clr-namespace:SiamCross.Models"
              x:Class="SiamCross.Views.MenuItems.ControlPanelPage"
              x:Name="ControlPanel"
              Title="{local:Translate ControlPanelTitle}">
@@ -16,7 +17,6 @@
     <ContentPage.Content>
 
         <StackLayout>
-            <!--
             <Label 
                    Font="Bold" FontSize="Title" LineBreakMode="WordWrap"
                    HorizontalTextAlignment="Center"
@@ -24,13 +24,12 @@
                    TextColor="White" >
                 <Label.FormattedText>
                     <FormattedString >
-                        <Span Text="Version 2.5.0 rc7 " />
+                        <Span Text="Version 2.5.1 rc1 " />
                         <Span Text="&#10;" />
                         <Span Text="for internal testing only"  />
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
-            -->
             <ListView x:Name="sensorList" 
                       ItemsSource="{Binding Sensor}"
                 SeparatorVisibility="None"
@@ -41,7 +40,7 @@
                 ItemsSource="{Binding SensorsData}"  
                 -->
                 <ListView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="models:ISensor" >
                         <ViewCell>
                             <ViewCell.View >
                                 <Frame 
@@ -207,8 +206,8 @@
                                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                                     </Grid.ColumnDefinitions>
                                                     <Grid.RowDefinitions>
-                                                        <RowDefinition Height="25*"></RowDefinition>
-                                                        <RowDefinition Height="25*"></RowDefinition>
+                                                        <RowDefinition Height="25"></RowDefinition>
+                                                        <RowDefinition Height="25"></RowDefinition>
                                                     </Grid.RowDefinitions>
                                                     <Label Text="&#x1F4C8;" FontSize="Large" TextColor="Black"
                                                     Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" 

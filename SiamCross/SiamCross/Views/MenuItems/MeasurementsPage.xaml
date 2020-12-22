@@ -2,7 +2,6 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.MenuItems.MeasurementsPage"
-             xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
              xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
              Title="{local:Translate MeasurementsTitle}">
     <ContentPage.ToolbarItems>
@@ -13,7 +12,6 @@
             <ListView HasUnevenRows="True"
                       ItemsSource="{Binding Measurements}"
                       SeparatorVisibility="None"
-                      rainbows:DebugRainbow.IsDebug="False"
                       ItemTapped="ListView_ItemTapped" 
                       BackgroundColor="{StaticResource colorCtrlBg}"
                       Margin ="0">

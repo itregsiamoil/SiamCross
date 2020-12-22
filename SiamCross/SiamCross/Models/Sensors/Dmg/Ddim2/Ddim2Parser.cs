@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Models.Tools;
 using SiamCross.Services.Logging;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
 
 namespace SiamCross.Models.Sensors.Dmg.Ddim2
 

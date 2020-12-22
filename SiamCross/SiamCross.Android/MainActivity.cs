@@ -1,26 +1,21 @@
-﻿using System;
-using System.Threading;
+﻿using Android;
 using Android.App;
-using Android.Content.PM;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Android.OS;
-using Android;
-using Android.Support.V4.Content;
-using Android.Support.V4.App;
-using Android.Bluetooth;
 using Android.Content;
+using Android.Content.PM;
 using Android.Hardware.Usb;
-using Hoho.Android.UsbSerial.Extensions;
-using Hoho.Android.UsbSerial.Driver;
+using Android.OS;
+using Android.Runtime;
+using Android.Support.V4.App;
+using Android.Support.V4.Content;
+using Android.Widget;
 using SiamCross.Models.USB;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms.Platform.Android;
+using Xamarin.Forms.Xaml;
 
 [assembly: UsesFeature("android.hardware.usb.host")]
 [assembly: UsesFeature("android.hardware.usb.accessory")]
-
 namespace SiamCross.Droid
 {
     [Activity(Label = "SIAM SERVICE", Icon = "@mipmap/main_icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]

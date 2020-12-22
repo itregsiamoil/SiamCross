@@ -199,8 +199,8 @@ namespace SiamCross.Models
             CancellationTokenSource ctSrc = new CancellationTokenSource(read_timeout);
             // делаем минимальную задержку чтоб принять как минимум заоловок пакета
             // без ожидания
-            DebugLog.WriteLine($"Prefetch delay = {pf_delay}");
-            await Task.Delay(pf_delay, ctSrc.Token);
+            //DebugLog.WriteLine($"Prefetch delay = {pf_delay}");
+            //await Task.Delay(pf_delay, ctSrc.Token);
 
             int single_read;
             byte[] pkg = { };

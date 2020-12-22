@@ -2,14 +2,11 @@
 <ContentPage BackgroundColor="White"
          xmlns="http://xamarin.com/schemas/2014/forms" 
          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-         xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
          xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
          x:Class="SiamCross.Views.MenuPage">
 
     <ContentPage.Content>
-        <StackLayout Margin="5"
-                     rainbows:DebugRainbow.IsDebug="False"
-                     >
+        <StackLayout Margin="5">
             <!--Padding ="10 , 30 , 10, 10"-->
             <Label Text="SIAM SERVICE" 
                    FontSize="Title"
@@ -27,7 +24,6 @@
             <ListView ItemsSource="{Binding MenuItems}"
                       x:Name="menuListView"
                       ItemTapped="menuListView_ItemTapped"
-                      rainbows:DebugRainbow.IsDebug="False"
                       Margin="5">
                 <!--ItemSelected="menuListView_ItemSelected"-->
                 <ListView.ItemTemplate>
@@ -35,8 +31,7 @@
                         <ViewCell>
                             <Label Text="{Binding Title}" 
                                    FontSize="Medium" 
-                                   Margin="5"
-                                   rainbows:DebugRainbow.IsDebug="False"/>
+                                   Margin="5" />
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
