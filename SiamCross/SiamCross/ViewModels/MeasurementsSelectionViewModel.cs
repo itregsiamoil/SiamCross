@@ -102,19 +102,11 @@ namespace SiamCross.ViewModels
                     {
                         if (m is MeasurementView mv)
                         {
-                            if (mv.Name.Contains("DDIM"))
-                            {
-                                DataRepository.Instance.RemoveDdim2Measurement(mv.Id);
-                                Measurements.Remove(mv);
-                            }
-                            else if (mv.Name.Contains("DDIN"))
+                            if (mv.Name.Contains("DDIM")
+                                || mv.Name.Contains("DDIN")
+                                || mv.Name.Contains("SIDDOSA3M"))
                             {
                                 DataRepository.Instance.RemoveDdin2Measurement(mv.Id);
-                                Measurements.Remove(mv);
-                            }
-                            else if (mv.Name.Contains("SIDDOSA3M"))
-                            {
-                                DataRepository.Instance.RemoveSiddosA3MMeasurement(mv.Id);
                                 Measurements.Remove(mv);
                             }
                             else if (mv.Name.Contains("DU"))
