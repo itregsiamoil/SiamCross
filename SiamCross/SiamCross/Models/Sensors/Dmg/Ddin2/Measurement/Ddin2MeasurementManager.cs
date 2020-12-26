@@ -145,7 +145,6 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
             for (UInt32 i = 0; i < measure_time_sec && !isDone; i++)
             {
                 await Task.Delay(Constants.SecondDelay);
-                Console.WriteLine("ReadDeviceStatus", DmgCmd.Get("ReadDeviceStatus"));
 
                 status = await GetStatus();
                 if (status == DmgMeasureStatus.Ready

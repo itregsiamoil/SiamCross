@@ -1,11 +1,14 @@
 ﻿//#define DEBUG_UNIT
 
+using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
+using Plugin.BLE.Abstractions.EventArgs;
 using SiamCross.Models;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -42,6 +45,13 @@ namespace SiamCross.Droid.Models
             }
         }
 
+#if DEBUG
+        private static readonly int mConnectTimeout = 100000;
+#else
+        private static readonly int mConnectTimeout = 8000;
+#endif
+
+
         private IDevice _device;
         private Guid _deviceGuid;
         private IService _targetService;
@@ -51,9 +61,12 @@ namespace SiamCross.Droid.Models
         private static readonly string _writeCharacteristicGuid = "569a2001-b87f-490c-92cb-11ba5ea5167c";
         private static readonly string _readCharacteristicGuid = "569a2000-b87f-490c-92cb-11ba5ea5167c";
         private static readonly string _serviceGuid = "569a1101-b87f-490c-92cb-11ba5ea5167c";
-        private ScannedDeviceInfo _deviceInfo;
+        private static readonly Guid write_guid = Guid.Parse(_writeCharacteristicGuid);
+        private static readonly Guid read_guid = Guid.Parse(_readCharacteristicGuid);
+        private static readonly Guid svc_guid = Guid.Parse(_serviceGuid);
 
-        private bool _isFirstConnectionTry = true;
+        private ScannedDeviceInfo _deviceInfo;
+        //private bool _isFirstConnectionTry = true;
 
         public BaseBluetoothLeAdapterAndroid(IPhyInterface ifc)
         {
@@ -73,11 +86,12 @@ namespace SiamCross.Droid.Models
         public void SetDeviceInfo(ScannedDeviceInfo deviceInfo)
         {
            _deviceInfo = deviceInfo;
-           _deviceGuid = (Guid)deviceInfo.BluetoothArgs;
+           _deviceGuid = (Guid)deviceInfo.Id;
         }
 
         public async Task<bool> Connect()
         {
+            CancellationTokenSource cts = new CancellationTokenSource(mConnectTimeout);
             try
             {
                 if (null == mInterface)
@@ -90,74 +104,81 @@ namespace SiamCross.Droid.Models
                 if (Adapter == null)
                     return false;
 
+                //ConnectParameters(autoConnect = false, forceBleTransport = true);
+                ConnectParameters conn_param = new ConnectParameters(false, true);
+
+                // try get paired
+                IReadOnlyList<IDevice> paired = Adapter.GetSystemConnectedOrPairedDevices();
+                _device = paired.Where(x => x.Id == _deviceGuid).FirstOrDefault();
+                if (null != _device)
+                {
+                    await Adapter.ConnectToDeviceAsync(_device, conn_param, cts.Token);
+                }
+
+
+                // try get NON paired
+                if (null == _device)
+                {
+                    _device = await Adapter.ConnectToKnownDeviceAsync(_deviceGuid, conn_param, cts.Token);
+                }
+                
+                /*
                 if (_isFirstConnectionTry)
                 {
-                    await Adapter.ConnectToKnownDeviceAsync(_deviceGuid);
+                    _device = await Adapter.ConnectToKnownDeviceAsync(_deviceGuid, conn_param, cts.Token);
                 }
                 else
                 {
                     IDevice dev = await CreateIDevice(_deviceGuid);
-                    await Adapter.ConnectToDeviceAsync(dev);
+                    await Adapter.ConnectToDeviceAsync(dev, conn_param, cts.Token);
                 }
-            }
-            catch (AggregateException e)
-            {
-                System.Diagnostics.Debug.WriteLine("Истек таймаут подключения "
-                    + _deviceInfo.Name + ": " + e.Message);
-                Disconnect();
-                _isFirstConnectionTry = false;
-                return false;
+                _device = Adapter.ConnectedDevices.Where(x => x.Id == _deviceGuid)
+                    .LastOrDefault();
+                */
+            
+                if (_device == null)
+                {
+                    Debug.WriteLine("BluetoothLeAdapterMobile.Connect"
+                        + _deviceInfo.Name + "ошибка соединения BLE - _device был null");
+                    //ConnectFailed();
+                    Disconnect();
+                    //_isFirstConnectionTry = false;
+                    return false;
+                }            
+                bool is_inited = await Initialize(cts.Token);
+                if (!is_inited)
+                    Disconnect();
+                else
+                    return true;
+
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения по Guid "
+                Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения по Guid "
                     + _deviceInfo.Name + ": " + e.Message);
                 Disconnect();
-                _isFirstConnectionTry = false;
-                return false;
+                //_isFirstConnectionTry = false;
             }
-
-            if (Adapter != null)
+            finally
             {
-                _device = Adapter.ConnectedDevices.Where(x => x.Id == _deviceGuid)
-                    .LastOrDefault();
+                cts?.Dispose();
             }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения" +
-                    " _adapter == null. Будет произведена переинициализация адаптера");
-                Disconnect();
-                _isFirstConnectionTry = false;
-                return false;
-            }
-
-            if (_device == null)
-            {
-                System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect"
-                    + _deviceInfo.Name + "ошибка соединения BLE - _device был null");
-                //ConnectFailed();
-                Disconnect();
-                _isFirstConnectionTry = false;
-                return false;
-            }
-            return await Initialize();
+            return false;
         }
 
-        private async Task<bool> Initialize()
+        private async Task<bool> Initialize(CancellationToken ct)
         {
             bool inited = false;
             try
             {
-                _targetService = await _device.GetServiceAsync(Guid.Parse(_serviceGuid));
+                _targetService = await _device.GetServiceAsync(svc_guid, ct);
+                //IReadOnlyList<IService> svc = await _device.GetServicesAsync(ct);
+                if (null == _targetService)
+                    return false;
 
                 var serv = await _targetService.GetCharacteristicsAsync();
-                foreach (var ch in serv)
-                {
-                    System.Diagnostics.Debug.WriteLine(ch.Id);
-                }
-
-                _writeCharacteristic = await _targetService.GetCharacteristicAsync(Guid.Parse(_writeCharacteristicGuid));
-                _readCharacteristic = await _targetService.GetCharacteristicAsync(Guid.Parse(_readCharacteristicGuid));
+                _writeCharacteristic = await _targetService.GetCharacteristicAsync(write_guid);
+                _readCharacteristic = await _targetService.GetCharacteristicAsync(read_guid);
                 _readCharacteristic.ValueUpdated += (o, args) =>
                 {
                     //Debug.WriteLine("Recieved: " + BitConverter.ToString(args.Characteristic.Value) + "\n");
@@ -172,7 +193,7 @@ namespace SiamCross.Droid.Models
                 //mDataNotyfy += DoByteProcess;
 
                 await _readCharacteristic.StartUpdatesAsync();
-                _isFirstConnectionTry = true;
+                //_isFirstConnectionTry = true;
 
                 Adapter.DeviceConnectionLost += (o, args) =>
                 {
@@ -192,80 +213,46 @@ namespace SiamCross.Droid.Models
                 System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect "
                     + _deviceInfo.Name + " ошибка инициализации: " + e.Message);
                 Disconnect();
-                _isFirstConnectionTry = false;
+                //_isFirstConnectionTry = false;
             }
 
             return inited;
         }
-
-        public async Task SendData_Old(byte[] data)
-        {
-            if (!mInterface.IsEnbaled)
-            {
-                //ConnectFailed?.Invoke();
-                return;
-            }
-            System.Diagnostics.Debug.WriteLine("Send: " + BitConverter.ToString(data) + "\n");
-            try
-            {
-                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(1000);
-                await _writeCharacteristic.WriteAsync(data, cancellationTokenSource.Token);
-            }
-            catch (Exception sendingEx)
-            {
-                System.Diagnostics.Debug.WriteLine("Ошибка отправки сообщения BLE: "
-                    + BitConverter.ToString(data)
-                    + " " + sendingEx.Message + " " 
-                    + sendingEx.GetType() + " " 
-                    + sendingEx.StackTrace + "\n");
-                for (int i = 1; i < 4; i++)
-                {
-                    try
-                    {
-                        await Task.Delay(500);
-                        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(500);
-                        await _writeCharacteristic.WriteAsync(data, cancellationTokenSource.Token);
-                        System.Diagnostics.Debug.WriteLine(
-                            $"Повторная попытка отправки номер {i}/3 прошла успешно!" + "\n");
-                        return;
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.WriteLine("UNKNOWN exception in "
-                        + $"Ошибка повторной попытки отправки номер {i}/3 сообщения BLE: " + "\n"
-                        + System.Reflection.MethodBase.GetCurrentMethod().Name
-                        + " : " + e.Message );
-                    }
-                }
-                // Возможно нужно сделать дисконект
-                //ConnectFailed?.Invoke();
-            }
-        }
-
         public void Disconnect()
         {
-            if (_deviceGuid != null)
+            try
+            {
+                if(null!=Adapter && null!= _device)
+                    Adapter.DisconnectDeviceAsync(_device);
+                mInterface?.Disable();
+                //_writeCharacteristic.StopUpdatesAsync();
+                //_readCharacteristic.StopUpdatesAsync();
+                _targetService?.Dispose();
+                _device?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                DebugLog.WriteLine("ERROR"
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
+            }
+            finally
             {
                 _writeCharacteristic = null;
                 _readCharacteristic = null;
-                mInterface?.Disable();
-
-                _device?.Dispose();
-
-                _targetService?.Dispose();
-
                 _device = null;
                 _targetService = null;
             }
         }
-
         private async Task<IDevice> CreateIDevice(Guid bluetoothGuid)
         {
             TaskCompletionSource<IDevice> idevice = new TaskCompletionSource<IDevice>();
             Adapter.ScanTimeout = 5000;
             Adapter.ScanMode = ScanMode.Balanced;
-            Adapter.ScanTimeoutElapsed += (s, e) => { try { idevice.SetResult(null); } catch { }; };
-            Adapter.DeviceDiscovered += (obj, a) =>
+            Adapter.ScanTimeoutElapsed += (s, e) => { try { idevice.TrySetResult(null); } catch { }; };
+            Adapter.DeviceDiscovered += async (obj, a) => 
             {
                 try
                 {
@@ -276,10 +263,10 @@ namespace SiamCross.Droid.Models
 
                     if (a.Device.Id.Equals(bluetoothGuid))
                     {
-                        Adapter.StopScanningForDevicesAsync();
-                        idevice.SetResult(a.Device);
+                        await Adapter.StopScanningForDevicesAsync();
+                        idevice.TrySetResult(a.Device);
                     }
-                    System.Diagnostics.Debug.WriteLine("Finded device" + a.Device.Name);
+                    Debug.WriteLine("Finded device" + a.Device.Name);
                 }
                 catch (Exception e)
                 {
@@ -341,80 +328,35 @@ namespace SiamCross.Droid.Models
                 tcs?.TrySetResult(true);
             }
         }
-        private async Task<int> DoReadAsync(byte[] buffer, int offset, int count, CancellationToken ct)
-        {
-            int readed = 0;
-            try
-            {
-                ct.Register(() =>
-                {
-                    tcs?.TrySetException(new OperationCanceledException());
-                    tcs?.TrySetResult(false);
-                });
-                while (0 == readed)
-                {
-                    ct.ThrowIfCancellationRequested();
-                    LockLog("Read - Try Create");
-                    using (await semaphore.UseWaitAsync())
-                    {
-                        LockLog("Read - Lock Create");
-                        mRxStream.Position = 0;
-                        readed = await mRxStream.ReadAsync(buffer, offset, count, ct);
-                        mRxStream.SetLength(0);
-                    }
-                    if (0 == readed)
-                    {
-                        LockLog("Read - Begin Wait TSC");
-                        tcs = new TaskCompletionSource<bool>();
-                        bool result = await tcs?.Task;
-                        if (!result)
-                            ct.ThrowIfCancellationRequested();
-                    }
-                }//while (0 == readed)
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                /*
-                if (null != tcs)
-                {
-                    using (await semaphore.UseWaitAsync())
-                        tcs = null;
-                }
-                */
-            }
-            return readed;
-        }
 
         public async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
-            int readed;
-            try
+            int readed = 0;
+            ct.Register(() =>
             {
-                readed = await DoReadAsync(buffer, offset, count, ct);
-            }
-            catch (OperationCanceledException ex)
+                tcs?.TrySetException(new OperationCanceledException());
+                tcs?.TrySetResult(false);
+            });
+            while (0 == readed)
             {
-                //DebugLog.WriteLine("ReadAsync canceled by timeout {0}: {1}"
-                //    , ex.GetType().Name, ex.Message);
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                DebugLog.WriteLine("UNKNOWN exception in "
-                    + System.Reflection.MethodBase.GetCurrentMethod().Name
-                    + "\n msg=" + ex.Message
-                    + "\n type=" + ex.GetType()
-                    + "\n stack=" + ex.StackTrace + "\n");
-                throw ex;
-            }
-            finally
-            {
-
-            }
+                ct.ThrowIfCancellationRequested();
+                LockLog("Read - Try Create");
+                using (await semaphore.UseWaitAsync())
+                {
+                    LockLog("Read - Lock Create");
+                    mRxStream.Position = 0;
+                    readed = await mRxStream.ReadAsync(buffer, offset, count, ct);
+                    mRxStream.SetLength(0);
+                }
+                if (0 == readed)
+                {
+                    LockLog("Read - Begin Wait TSC");
+                    tcs = new TaskCompletionSource<bool>();
+                    bool result = await tcs?.Task;
+                    if (!result)
+                        ct.ThrowIfCancellationRequested();
+                }
+            }//while (0 == readed)
             return readed;
         }
         public async Task<int> WriteAsync(byte[] buffer, int offset, int count, CancellationToken ct)

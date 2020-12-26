@@ -11,12 +11,10 @@ namespace SiamCross.Models.Tools
 
     public class DataBuffer
     {
-        private Object mLock = new Object();
         private byte[] mBuff = new byte[512];
         private UInt32 mBuffLength = 0;
         private UInt32 DoGetLength()
         {
-            lock (mLock)
             {
                 return mBuffLength;
             }
@@ -25,13 +23,11 @@ namespace SiamCross.Models.Tools
 
         public bool Append(byte[] src, int len)
         {
-            lock (mLock)
                 DoAppend(src.AsSpan().Slice(0, len));
             return true;
         }
         public bool Append(byte[] src)
         {
-            lock (mLock)
             {
                 DoAppend(src);
             }
@@ -39,7 +35,6 @@ namespace SiamCross.Models.Tools
         }
         public void Clear()
         {
-            lock (mLock)
             {
                 DebugLog.WriteLine($"Clear buffer");
                 mBuffLength = 0;
@@ -47,14 +42,12 @@ namespace SiamCross.Models.Tools
         }
         public byte[] Extract()
         {
-            lock (mLock)
             {
                 return DoExtractPkg();
             }
         }
         public byte[] AppendAndExtract(byte[] inputBytes)
         {
-            lock (mLock)
             {
                 DoAppend(inputBytes);
                 return DoExtractPkg();

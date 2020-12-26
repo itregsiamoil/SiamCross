@@ -7,15 +7,19 @@ namespace SiamCross.Models.Scanners
     public class ScannedDeviceInfo : IEquatable<ScannedDeviceInfo>
     {
         public string Name { get; }
-        public object BluetoothArgs { get; }
-
+        public Guid Id { get; }
+        public string Mac { get; }
         public BluetoothType BluetoothType { get; }
 
-        public ScannedDeviceInfo(string name, object bluetoothArgs, BluetoothType bluetoothType)
+        public ScannedDeviceInfo(string name
+            , Guid id
+            , BluetoothType bluetoothType
+            , string mac)
         {
             Name = name;
-            BluetoothArgs = bluetoothArgs;
+            Id = id;
             BluetoothType = bluetoothType;
+            Mac = mac;
         }
 
         public bool Equals(ScannedDeviceInfo other)

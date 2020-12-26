@@ -91,7 +91,7 @@ namespace SiamCross.Models.USB
                 var name = messageBlocks[3];
 
                 var scannedDeviceInfo = new ScannedDeviceInfo(
-                    name, address, BluetoothType.UsbCustom5);
+                    name, new Guid() , BluetoothType.UsbCustom5, address);
 
                 DeviceFounded?.Invoke(scannedDeviceInfo);
             }

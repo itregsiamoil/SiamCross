@@ -88,7 +88,7 @@ namespace SiamCross.ViewModels
         private void ScannerReceivedDevice(ScannedDeviceInfo dev)
         {
             if (dev.Name == null ||
-                dev.BluetoothArgs == null ||
+                dev.Id == null ||
                 dev.Name == "")
             {
                 return;

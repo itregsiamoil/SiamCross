@@ -28,7 +28,7 @@ namespace SiamCross.Droid.Models.BluetoothAdapters
 
         public CustomBluetooth5Adapter(ScannedDeviceInfo deviceInfo)
         {
-            Address = deviceInfo.BluetoothArgs as string;
+            Address = deviceInfo.Mac;
             _usbService = USBService.Instance;
             _forceScanCounter = 0;
 

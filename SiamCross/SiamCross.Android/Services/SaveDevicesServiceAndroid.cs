@@ -64,26 +64,12 @@ namespace SiamCross.Droid.Services
                         switch (item)
                         {
                             case SavedDevice readDevice:
-                                switch (readDevice.BluetoothType)
-                                {
-                                    case BluetoothType.Classic:
-                                        string address = readDevice.DeviceAddress;
-                                        if (address == null) break;
-                                        devicesInfo.Add(new ScannedDeviceInfo(
-                                            readDevice.DeviceName, address, BluetoothType.Classic));
-                                        break;
-                                    case BluetoothType.Le:
-                                        string addressLe = readDevice.DeviceAddress;
-                                        if (addressLe == null) break;
-                                        if (Guid.TryParse(addressLe, out Guid addressGuid))
-                                        {
-                                            devicesInfo.Add(new ScannedDeviceInfo(
-                                                readDevice.DeviceName, addressGuid, BluetoothType.Le));
-                                        }
-                                        break;
-                                    default:
-                                        break;
-                                }
+                                Guid id = new Guid();
+                                Guid.TryParse(readDevice.Id, out id);
+
+                                devicesInfo.Add(new ScannedDeviceInfo(
+                                            readDevice.DeviceName, id
+                                            , readDevice.BluetoothType, readDevice.Mac));
                                 break;
                             default:
                                 break;
@@ -109,40 +95,17 @@ namespace SiamCross.Droid.Services
                 {
                     foreach (var device in devices)
                     {
-                        switch (device.BluetoothType)
+                        var savedDevice = new SavedDevice
                         {
-                            case BluetoothType.Classic:
-                                if (device.BluetoothArgs is string address)
-                                {
-                                    var savedDevice = new SavedDevice
-                                    {
-                                        DeviceAddress = address,
-                                        DeviceName = device.Name,
-                                        BluetoothType = BluetoothType.Classic
-                                    };
-                                    var jsonString = JsonConvert.SerializeObject(
-                                        savedDevice, _settings);
+                            Id = device.Id.ToString(),
+                            Mac = device.Mac,
+                            DeviceName = device.Name,
+                            BluetoothType = device.BluetoothType
+                        };
+                        var jsonString = JsonConvert.SerializeObject(
+                            savedDevice, _settings);
 
-                                    file.WriteLine(jsonString);
-                                }
-                                break;
-                            case BluetoothType.Le:
-                                if (device.BluetoothArgs is Guid addressGuid)
-                                {
-                                    var savedDevice = new SavedDevice
-                                    {
-                                        DeviceAddress = addressGuid.ToString(),
-                                        DeviceName = device.Name,
-                                        BluetoothType = BluetoothType.Le
-                                    };
-                                    var jsonString = JsonConvert.SerializeObject(
-                                        savedDevice, _settings);
-                                    file.WriteLine(jsonString);
-                                }
-                                break;
-                            default:
-                                break;
-                        }
+                        file.WriteLine(jsonString);
                     }
                 }
             }

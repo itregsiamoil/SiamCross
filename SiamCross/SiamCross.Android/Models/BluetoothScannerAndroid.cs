@@ -43,7 +43,7 @@ namespace SiamCross.Droid.Models
                     return;
                 }
 
-                Received?.Invoke(new ScannedDeviceInfo(a.Device.Name, a.Device.Id, BluetoothType.Le));
+                Received?.Invoke(new ScannedDeviceInfo(a.Device.Name, a.Device.Id, BluetoothType.Le, a.Device.Id.ToString()));
                 System.Diagnostics.Debug.WriteLine("Finded device" + a.Device.Name);
             };
 
@@ -62,6 +62,18 @@ namespace SiamCross.Droid.Models
 
             foreach (var device in devices)
             {
+                string mac_no_delim = device.Address;
+                int exist = mac_no_delim.IndexOf(':');
+                //"00000000-0000-0000-0000-0016a4720012"
+                while (0 < exist)
+                {
+                    mac_no_delim = mac_no_delim.Remove(exist, 1);
+                    exist = mac_no_delim.IndexOf(':');
+                }
+                mac_no_delim = "00000000-0000-0000-0000-" + mac_no_delim;
+                Guid id = new Guid();
+                bool parsed = Guid.TryParse(mac_no_delim, out id);
+
                 BluetoothType bluetoothType = BluetoothType.Le;
                 switch (device.Type)
                 {
@@ -72,9 +84,7 @@ namespace SiamCross.Droid.Models
                         bluetoothType = BluetoothType.Le;
                         break;
                 }
-
-
-                Received?.Invoke(new ScannedDeviceInfo(device.Name, device.Address, bluetoothType));
+                Received?.Invoke(new ScannedDeviceInfo(device.Name, id, bluetoothType, device.Address));
             }
 
             StartLE();

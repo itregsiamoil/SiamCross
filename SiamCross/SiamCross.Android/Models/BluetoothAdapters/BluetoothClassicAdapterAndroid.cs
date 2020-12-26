@@ -130,17 +130,16 @@ namespace SiamCross.Droid.Models
                 if (!mInterface.IsEnbaled)
                     return false;
 
-                if (_scannedDeviceInfo.BluetoothArgs is string address)
+                _bluetoothDevice = BluetoothAdapter.GetRemoteDevice(_scannedDeviceInfo.Mac);
+                if (null == _bluetoothDevice)
+                    return false;
+
+                if (_bluetoothDevice.Name != _scannedDeviceInfo.Name)
                 {
-                    _bluetoothDevice = BluetoothAdapter.GetRemoteDevice(address);
-                    if (_bluetoothDevice.Name != _scannedDeviceInfo.Name)
-                    {
-                        _bluetoothDevice.Dispose();
-                        _bluetoothDevice = null;
-                    }
+                    _bluetoothDevice.Dispose();
+                    _bluetoothDevice = null;
+                    return false;
                 }
-                if (_bluetoothDevice == null) 
-                return false;
 
                 //Context ctx = Android.App.Application.Context;
                 //var callback = new BluetoothGattCallbackExt(this);

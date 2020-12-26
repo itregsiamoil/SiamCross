@@ -8,7 +8,8 @@ namespace SiamCross.Services
     {
         public string DeviceName;
 
-        public string DeviceAddress;
+        public string Id;
+        public string Mac;
 
         public BluetoothType BluetoothType;
     }
