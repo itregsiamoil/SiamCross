@@ -88,7 +88,7 @@ namespace SiamCross.Droid.Models
             }
 
             StartLE();
-            StartScanUsb();
+            //StartScanUsb();
         }
 
         private async void StartLE()

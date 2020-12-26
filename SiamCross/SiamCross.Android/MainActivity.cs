@@ -74,12 +74,12 @@ namespace SiamCross.Droid
             CurrentActivity = this;
 
             DetachedReceiver = new UsbDeviceDetachedReceiver();
-            RegisterReceiver(DetachedReceiver, new IntentFilter(UsbManager.ActionUsbDeviceDetached));
+            //RegisterReceiver(DetachedReceiver, new IntentFilter(UsbManager.ActionUsbDeviceDetached));
             AttachedReceiver = new UsbDeviceAttachedReceiver();
-            RegisterReceiver(DetachedReceiver, new IntentFilter(UsbManager.ActionUsbDeviceAttached));
+            //RegisterReceiver(DetachedReceiver, new IntentFilter(UsbManager.ActionUsbDeviceAttached));
 
             LoadApplication(new App(new Setup()));
-            new Thread(async () => { await USBService.Instance.Initialize(); }).Start();
+            //new Thread(async () => { await USBService.Instance.Initialize(); }).Start();
         }
 
         public static Activity CurrentActivity;

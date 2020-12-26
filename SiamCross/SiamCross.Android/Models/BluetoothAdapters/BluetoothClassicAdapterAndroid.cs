@@ -276,9 +276,9 @@ namespace SiamCross.Droid.Models
 
         public override void OnReceive(Context context, Intent intent)
         {
-            String action = intent.Action;
-            BluetoothDevice device = (BluetoothDevice)intent.GetParcelableExtra(BluetoothDevice.ExtraDevice);
-            string device_name = device.Name;
+            String action = intent?.Action;
+            BluetoothDevice device = (BluetoothDevice)intent?.GetParcelableExtra(BluetoothDevice.ExtraDevice);
+            string device_name = device?.Name;
             Debug.WriteLine($"OnReceive {device_name} action={action}");
             /*
              
