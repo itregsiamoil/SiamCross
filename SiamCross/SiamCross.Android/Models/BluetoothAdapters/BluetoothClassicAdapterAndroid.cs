@@ -6,18 +6,18 @@ using Android.Content;
 using Java.Util;
 using SiamCross.Models;
 using SiamCross.Models.Adapters;
-using SiamCross.Models.Adapters.PhyInterface;
+using SiamCross.Models.Adapters.PhyInterface.Bt2;
 using SiamCross.Models.Scanners;
+using SiamCross.Models.Tools;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using SiamCross.Models.Tools;
 
 namespace SiamCross.Droid.Models
 {
-    
+
     class BluetoothGattCallbackExt : BluetoothGattCallback
     {
         readonly BaseBluetoothClassicAdapterAndroid mBt2Adapter = null;
@@ -93,7 +93,7 @@ namespace SiamCross.Droid.Models
             {
                 if (null == mInterface)
                     return null;
-                var bt2_ifc = mInterface as Bt2Interface;
+                var bt2_ifc = mInterface as DroidBt2Interface;
                 //if (null == ble_ifc)
                 //    return null;
                 return bt2_ifc?.mAdapter;
@@ -105,7 +105,7 @@ namespace SiamCross.Droid.Models
         public BaseBluetoothClassicAdapterAndroid(IPhyInterface ifc)
         {
             if (null == ifc)
-                mInterface = Bt2Interface.Factory.GetCurent();
+                mInterface = Factory.GetCurent();
             else
                 mInterface = ifc;
         }

@@ -27,7 +27,7 @@ namespace SiamCross.Services
                 case BluetoothType.Le:
                     phy_interface = BtLeInterface.Factory.GetCurent(); break;
                 case BluetoothType.Classic:
-                    phy_interface = Bt2Interface.Factory.GetCurent(); break;
+                    phy_interface = Models.Adapters.PhyInterface.Bt2.Factory.GetCurent(); break;
             }
             if (null == phy_interface)
                 return null;

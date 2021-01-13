@@ -34,7 +34,7 @@ namespace SiamCross
             var menuPage = new MenuPage() { Title = "SiamServiceMenu" };
             NavigationPage = new NavigationPage(new ControlPanelPage());
             RootPage = new RootPage();
-            RootPage.Master = menuPage;
+            RootPage.Flyout = menuPage;
             RootPage.Detail = NavigationPage;
             MainPage = RootPage;
             App.Navigation = NavigationPage.Navigation;

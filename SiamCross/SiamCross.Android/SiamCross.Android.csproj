@@ -16,7 +16,7 @@
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
     <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
     <NuGetPackageImportStamp>
@@ -81,7 +81,7 @@
     <AndroidCreatePackagePerAbi>true</AndroidCreatePackagePerAbi>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <AndroidKeyStore>true</AndroidKeyStore>
-    <AndroidSigningKeyStore>C:\Users\BuildServer\AppData\Local\Xamarin\Mono for Android\Keystore\siam\siam.keystore</AndroidSigningKeyStore>
+    <AndroidSigningKeyStore>$(HOMEPATH)\AppData\Local\Xamarin\Mono for Android\Keystore\siam\siam.keystore</AndroidSigningKeyStore>
     <AndroidSigningStorePass>siamsiam</AndroidSigningStorePass>
     <AndroidSigningKeyAlias>siam</AndroidSigningKeyAlias>
     <AndroidSigningKeyPass>siamsiam</AndroidSigningKeyPass>
@@ -124,6 +124,7 @@
     <Compile Include="MainActivity.cs" />
     <Compile Include="Models\BluetoothAdapters\BluetoothClassicAdapterAndroid.cs" />
     <Compile Include="Models\BluetoothAdapters\BluetoothLeAdapterAndroid.cs" />
+    <Compile Include="Models\BluetoothAdapters\DroidBt2Interface.cs" />
     <Compile Include="Models\BluetoothAdapters\CustomBluetooth5Adapter.cs" />
     <Compile Include="Models\BluetoothScannerAndroid.cs" />
     <Compile Include="Models\VersionAndBuild_Android.cs" />

@@ -1,29 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Autofac;
+﻿using Autofac;
 using Mono.Data.Sqlite;
 using SiamCross.AppObjects;
 using SiamCross.DataBase;
 using SiamCross.Droid.Models;
 using SiamCross.Droid.Models.BluetoothAdapters;
 using SiamCross.Droid.Services;
+using SiamCross.Models;
 using SiamCross.Models.Adapters;
+using SiamCross.Models.Adapters.PhyInterface.Bt2;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
-using SiamCross.Models;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using SiamCross.Services.UserOutput;
+using System.Data;
 
 namespace SiamCross.Droid
 {
@@ -31,6 +21,8 @@ namespace SiamCross.Droid
     {
         protected override void RegisterDependencies(ContainerBuilder cb)
         {
+            cb.RegisterType<DroidBt2Interface>().As<Bt2InterfaceCross>();
+
             cb.RegisterType<BluetoothScannerAndroid>().As<IBluetoothScanner>();
 
             cb.RegisterType<BluetoothClassicAdapterAndroid>().As<IConnectionBt2>();
