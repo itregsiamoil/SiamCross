@@ -29,30 +29,12 @@ namespace SiamCross.Views
             }
         }
 
-        public ViewModelWrap(Ddim2Measurement measurement)
-        {
-            using (var scope = AppContainer.Container.BeginLifetimeScope())
-            {
-                ViewModel = AppContainer.Container.Resolve<T>(
-                    new TypedParameter(typeof(Ddim2Measurement), measurement));
-            }
-        }
-
         public ViewModelWrap(Ddin2Measurement measurement)
         {
             using (var scope = AppContainer.Container.BeginLifetimeScope())
             {
                 ViewModel = AppContainer.Container.Resolve<T>(
                     new TypedParameter(typeof(Ddin2Measurement), measurement));
-            }
-        }
-
-        public ViewModelWrap(SiddosA3MMeasurement measurement)
-        {
-            using (var scope = AppContainer.Container.BeginLifetimeScope())
-            {
-                ViewModel = AppContainer.Container.Resolve<T>(
-                    new TypedParameter(typeof(SiddosA3MMeasurement), measurement));
             }
         }
 

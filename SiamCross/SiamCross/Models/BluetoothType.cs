@@ -8,6 +8,6 @@ namespace SiamCross.Models
     {
         Classic,
         Le, 
-        UsbCustom5
+        Serial
     }
 }

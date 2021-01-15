@@ -9,6 +9,8 @@
     <TabbedPage.Children>
         <local:ScanningTab />
         <local:BoundingTab />
+        <!--
         <local:UsbTab />
+        -->
     </TabbedPage.Children>
 </TabbedPage>

@@ -96,7 +96,7 @@ namespace SiamCross.Droid.Models
                 var bt2_ifc = mInterface as DroidBt2Interface;
                 //if (null == ble_ifc)
                 //    return null;
-                return bt2_ifc?.mAdapter;
+                return bt2_ifc?.Adapter;
             }
         }
         public BaseBluetoothClassicAdapterAndroid()

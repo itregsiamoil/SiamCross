@@ -15,8 +15,6 @@ namespace SiamCross.Models
 {
     abstract public class SiamProtocolConnection : IProtocolConnection , INotifyPropertyChanged
     {
-        private static Logger mLogger = AppContainer.Container.Resolve<ILogManager>().GetLog();
-
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
         protected IConnection mBaseConn=null;
@@ -111,9 +109,9 @@ namespace SiamCross.Models
         }
 
         private TaskCompletionSource<bool> mExecTcs;
-        private SemaphoreSlim semaphore = new SemaphoreSlim(1);
-        private byte[] mRxBuf = new byte[512];
-        private DataBuffer mBuf = new DataBuffer();
+        private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
+        private readonly byte[] mRxBuf = new byte[512];
+        private readonly DataBuffer mBuf = new DataBuffer();
         
         public const int mRequestRetry = 3;
         #if DEBUG
@@ -159,7 +157,7 @@ namespace SiamCross.Models
             return timeout;
         }
 
-        Stopwatch mPerfCounter = new Stopwatch();
+        readonly Stopwatch mPerfCounter = new Stopwatch();
 
         private static void LockLog(string msg)
         {

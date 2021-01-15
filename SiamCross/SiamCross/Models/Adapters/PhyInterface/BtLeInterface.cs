@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Plugin.BLE;
-using Plugin.BLE.Abstractions;
-using Plugin.BLE.Abstractions.Contracts;
-using Plugin.BLE.Abstractions.Exceptions;
-using SiamCross.Models.Adapters;
-
-//using SiamCross.Models.Adapters;
-using SiamCross.Droid.Models;
+﻿//using SiamCross.Models.Adapters;
 using Autofac;
+using Plugin.BLE;
+using Plugin.BLE.Abstractions.Contracts;
 using SiamCross.AppObjects;
 using SiamCross.Models.Scanners;
 using System.ComponentModel;

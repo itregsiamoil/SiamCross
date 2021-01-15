@@ -96,23 +96,12 @@
   <ItemGroup>
     <Reference Include="Mono.Android" />
     <Reference Include="Mono.Android.Export" />
-    <Reference Include="Mono.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Mono.Data.Sqlite.Portable">
       <Version>1.0.3.5</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.3</Version>
-    </PackageReference>
-    <PackageReference Include="Xamarin.Android.SerialPort">
-      <Version>1.0.0.3</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="28.0.0.3" />
     <PackageReference Include="XamarinFileChooser">
@@ -125,7 +114,6 @@
     <Compile Include="Models\BluetoothAdapters\BluetoothClassicAdapterAndroid.cs" />
     <Compile Include="Models\BluetoothAdapters\BluetoothLeAdapterAndroid.cs" />
     <Compile Include="Models\BluetoothAdapters\DroidBt2Interface.cs" />
-    <Compile Include="Models\BluetoothAdapters\CustomBluetooth5Adapter.cs" />
     <Compile Include="Models\BluetoothScannerAndroid.cs" />
     <Compile Include="Models\VersionAndBuild_Android.cs" />
     <Compile Include="Models\DatabaseCreatorAndroid.cs" />
@@ -133,33 +121,7 @@
     <Compile Include="Models\EventHandlerExtensions.cs" />
     <Compile Include="Models\FileManagerAndroid.cs" />
     <Compile Include="Models\HandbookManagerAndroid.cs" />
-    <Compile Include="Models\SerialIOManager.cs" />
-    <Compile Include="Models\SerialUsbConnector.cs" />
-    <Compile Include="Models\SerialUsbManagerAndroid.cs" />
-    <Compile Include="Models\SerialUsb\driver\CdcAcmSerialDriver.cs" />
-    <Compile Include="Models\SerialUsb\driver\Ch34xSerialDriver.cs" />
-    <Compile Include="Models\SerialUsb\driver\CommonUsbSerialPort.cs" />
-    <Compile Include="Models\SerialUsb\driver\Cp21xxSerialDriver.cs" />
-    <Compile Include="Models\SerialUsb\driver\FtdiSerialDriver.cs" />
-    <Compile Include="Models\SerialUsb\driver\Parity.cs" />
-    <Compile Include="Models\SerialUsb\driver\ProbeTable.cs" />
-    <Compile Include="Models\SerialUsb\driver\ProlificSerialDriver.cs" />
-    <Compile Include="Models\SerialUsb\driver\STM32SerialDriver.cs" />
-    <Compile Include="Models\SerialUsb\driver\UsbId.cs" />
-    <Compile Include="Models\SerialUsb\driver\UsbSerialDriver.cs" />
-    <Compile Include="Models\SerialUsb\driver\UsbSerialPort.cs" />
-    <Compile Include="Models\SerialUsb\driver\UsbSerialProber.cs" />
-    <Compile Include="Models\SerialUsb\driver\UsbSerialRuntimeException.cs" />
-    <Compile Include="Models\SerialUsb\driver\UsbSupport.cs" />
-    <Compile Include="Models\SerialUsb\Extensions\AsyncExtensions.cs" />
-    <Compile Include="Models\SerialUsb\Extensions\BufferExtensions.cs" />
-    <Compile Include="Models\SerialUsb\Extensions\EventHandlerExtensions.cs" />
-    <Compile Include="Models\SerialUsb\Extensions\SerialDataReceivedArgs.cs" />
-    <Compile Include="Models\SerialUsb\Extensions\SerialInputOutputManager.cs" />
-    <Compile Include="Models\SerialUsb\Extensions\UsbManagerExtensions.cs" />
-    <Compile Include="Models\SerialUsb\Extensions\UsbSerialPortInfo.cs" />
     <Compile Include="Models\SQLiteAndroid.cs" />
-    <Compile Include="Models\SerialUsb\Util\HexDump.cs" />
     <Compile Include="Models\XmlSaverAndroid.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

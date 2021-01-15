@@ -50,9 +50,7 @@ namespace SiamCross.Services
 
             try
             {
-                CreateDdim2Table();
                 CreateDdin2Table();
-                CreateSiddosA3MTable();
                 CreateDuTable();
             }
             catch(Exception e)
@@ -79,79 +77,6 @@ namespace SiamCross.Services
         }
 
         #region Table Creation
-
-        private void CreateDdim2Table()
-        {
-            NonQueryCheck();
-            _database.Execute(@"
-            CREATE TABLE IF NOT EXISTS [Ddim2Measurement] (
-                [Id] INTEGER NOT NULL PRIMARY KEY,
-                [MaxWeight] REAL NOT NULL,
-                [MinWeight] REAL NOT NULL,
-                [Travel] INTEGER NOT NULL,
-                [Period] INTEGER NOT NULL,
-                [Step] INTEGER NOT NULL,
-                [WeightDiscr] INTEGER NOT NULL,
-                [TimeDiscr] INTEGER NOT NULL,
-                [DynGraph] BLOB,
-                [AccelerationGraph] BLOB,
-                [Field] NVARCHAR(128) NOT NULL,
-                [Well] NVARCHAR(128) NOT NULL,
-                [Bush] NVARCHAR(128) NOT NULL,
-                [Shop] NVARCHAR(128) NOT NULL,
-                [BufferPressure] NVARCHAR(128) NOT NULL,
-                [Comment] NVARCHAR(128) NOT NULL,
-                [Name] NVARCHAR(128) NOT NULL,
-                [DateTime] TEXT NOT NULL,
-                [ErrorCode] NVARCHAR(128),
-                [ApertNumber] REAL NOT NULL,
-                [ModelPump] REAL NOT NULL,
-                [MaxBarbellWeight] REAL NOT NULL,
-                [MinBarbellWeight] REAL NOT NULL,
-                [TravelLength] REAL NOT NULL,
-                [SwingCount] REAL NOT NULL,
-                [BatteryVolt] NVARCHAR(128) NOT NULL,
-                [Temperature] NVARCHAR(128) NOT NULL,
-                [MainFirmware] NVARCHAR(128) NOT NULL,
-                [RadioFirmware] NVARCHAR(128) NOT NULL)");
-        }
-
-        private void CreateSiddosA3MTable()
-        {
-            NonQueryCheck();
-
-            _database.Execute(@"
-            CREATE TABLE IF NOT EXISTS [SiddosA3MMeasurement] (
-                [Id] INTEGER NOT NULL PRIMARY KEY,
-                [MaxWeight] REAL NOT NULL,
-                [MinWeight] REAL NOT NULL,
-                [Travel] INTEGER NOT NULL,
-                [Period] INTEGER NOT NULL,
-                [Step] INTEGER NOT NULL,
-                [WeightDiscr] INTEGER NOT NULL,
-                [TimeDiscr] INTEGER NOT NULL,
-                [DynGraph] BLOB,
-                [AccelerationGraph] BLOB,
-                [Field] NVARCHAR(128) NOT NULL,
-                [Well] NVARCHAR(128) NOT NULL,
-                [Bush] NVARCHAR(128) NOT NULL,
-                [Shop] NVARCHAR(128) NOT NULL,
-                [BufferPressure] NVARCHAR(128) NOT NULL,
-                [Comment] NVARCHAR(128) NOT NULL,
-                [Name] NVARCHAR(128) NOT NULL,
-                [DateTime] TEXT NOT NULL,
-                [ErrorCode] NVARCHAR(128),
-                [ApertNumber] REAL NOT NULL,
-                [ModelPump] REAL NOT NULL,
-                [MaxBarbellWeight] REAL NOT NULL,
-                [MinBarbellWeight] REAL NOT NULL,
-                [TravelLength] REAL NOT NULL,
-                [SwingCount] REAL NOT NULL,
-                [BatteryVolt] NVARCHAR(128) NOT NULL,
-                [Temperature] NVARCHAR(128) NOT NULL,
-                [MainFirmware] NVARCHAR(128) NOT NULL,
-                [RadioFirmware] NVARCHAR(128) NOT NULL)");
-        }
 
         private void CreateDdin2Table()
         {
@@ -297,8 +222,6 @@ namespace SiamCross.Services
             }
             return duMeasurement.Id;
         }
-
-        
         public void UpdateDuMeasurement(DuMeasurement duMeasurement)
         {
             try
@@ -343,7 +266,6 @@ namespace SiamCross.Services
                 throw;
             }
         }
-
         public void RemoveDuMeasurement(int removebleId)
         {
             NonQueryCheck();
@@ -357,164 +279,6 @@ namespace SiamCross.Services
                 throw;
             }
         }
-
-        public int SaveDdim2Measurement(Ddim2Measurement ddim2Measurement)
-        {
-            NonQueryCheck();
-            try
-            {
-                if (ddim2Measurement.Id == 0)
-                {
-                    var idsColumn = _database.Query<int>(string.Format(
-                        "SELECT Id FROM Ddim2Measurement"));
-                    if (idsColumn.Count() > 0)
-                    {
-                        ddim2Measurement.Id = idsColumn.Max() + 1;
-                    }
-                    else
-                    {
-                        ddim2Measurement.Id = 1;
-                    }
-                }
-
-                var rows = _database.Query(string.Format(
-                "SELECT COUNT(1) as 'Count' FROM Ddim2Measurement WHERE Id = '{0}'",
-                ddim2Measurement.Id));
-
-                if (rows.First().Count > 0)
-                {
-                    UpdateDdim2Measurement(ddim2Measurement);
-                    return ddim2Measurement.Id;
-                }
-
-                string sql = "INSERT INTO Ddim2Measurement" +
-                        "(MaxWeight, MinWeight, Travel, Period, Step, WeightDiscr, TimeDiscr, DynGraph," +
-                        " AccelerationGraph, Field, Well, Bush, Shop, BufferPressure, Comment, " +
-                        "Name, DateTime, ErrorCode, ApertNumber, ModelPump, MaxBarbellWeight," +
-                        " MinBarbellWeight, TravelLength, SwingCount" +
-                        ", BatteryVolt, Temperature, MainFirmware, RadioFirmware "+
-                        ") Values (@MaxWeight, @MinWeight," +
-                        " @Travel, @Period, @Step, @WeightDiscr, @TimeDiscr, @DynGraph," +
-                        " @AccelerationGraph, @Field, @Well, @Bush, @Shop, @BufferPressure, @Comment, " +
-                        "@Name, @DateTime, @ErrorCode, @ApertNumber, @ModelPump, @MaxBarbellWeight," +
-                        " @MinBarbellWeight, @TravelLength, @SwingCount "+
-                        ", @BatteryVolt, @Temperature, @MainFirmware, @RadioFirmware  );";
-
-
-                var affectedRows = _database.Execute(sql, new
-                {
-                    MaxWeight = ddim2Measurement.MaxWeight,
-                    MinWeight = ddim2Measurement.MinWeight,
-                    DynGraph = ddim2Measurement.DynGraph,
-                    Travel = ddim2Measurement.Travel,
-                    Period = ddim2Measurement.Period,
-                    Step = ddim2Measurement.Step,
-                    WeightDiscr = ddim2Measurement.WeightDiscr,
-                    TimeDiscr = ddim2Measurement.TimeDiscr,
-                    AccelerationGraph = ddim2Measurement.AccelerationGraph,
-                    Field = ddim2Measurement.Field,
-                    Well = ddim2Measurement.Well,
-                    Bush = ddim2Measurement.Bush,
-                    Shop = ddim2Measurement.Shop,
-                    BufferPressure = ddim2Measurement.BufferPressure,
-                    Comment = ddim2Measurement.Comment,
-                    Name = ddim2Measurement.Name,
-                    DateTime = ddim2Measurement.DateTime,
-                    ErrorCode = ddim2Measurement.ErrorCode,
-                    ApertNumber = ddim2Measurement.ApertNumber,
-                    ModelPump = ddim2Measurement.ModelPump,
-                    MaxBarbellWeight = ddim2Measurement.MaxBarbellWeight,
-                    MinBarbellWeight = ddim2Measurement.MinBarbellWeight,
-                    TravelLength = ddim2Measurement.TravelLength,
-                    SwingCount = ddim2Measurement.SwingCount,
-                    BatteryVolt = ddim2Measurement.BatteryVolt,
-                    Temperature = ddim2Measurement.Temperature,
-                    MainFirmware = ddim2Measurement.MainFirmware,
-                    RadioFirmware = ddim2Measurement.RadioFirmware
-                });
-            }
-            catch(Exception e)
-            {
-                _logger.Error(e, $"Ddim2Save database error!" + "\n");
-                throw;
-            }
-
-            return ddim2Measurement.Id;
-        }
-
-        
-        private void UpdateDdim2Measurement(Ddim2Measurement ddim2Measurement)
-        {
-            try
-            {
-                string sql = "UPDATE Ddim2Measurement SET " +
-                    "MaxWeight = @MaxWeight, MinWeight = @MinWeight, Travel = @Travel," +
-                    " Period = @Period, Step = @Step, WeightDiscr = @WeightDiscr," +
-                    " TimeDiscr = @TimeDiscr, DynGraph = @DynGraph," +
-                    " AccelerationGraph = @AccelerationGraph, Field = @Field," +
-                    " Well = @Well, Bush = @Bush, Shop = @Shop, BufferPressure = @BufferPressure," +
-                    " Comment = @Comment, Name = @Name, DateTime = @DateTime," +
-                    " ErrorCode = @ErrorCode, ApertNumber = @ApertNumber," +
-                    " ModelPump = @ModelPump, MaxBarbellWeight = @MaxBarbellWeight," +
-                    " MinBarbellWeight = @MinBarbellWeight, TravelLength = @TravelLength, SwingCount = @SwingCount" +
-                    " ,BatteryVolt=@BatteryVolt, Temperature=@Temperature " +
-                    " ,MainFirmware=@MainFirmware, RadioFirmware=@RadioFirmware " +
-                    " WHERE Id = @Id;";
-
-                var affectedRows = _database.Execute(sql, new
-                {
-                    MaxWeight = ddim2Measurement.MaxWeight,
-                    MinWeight = ddim2Measurement.MinWeight,
-                    Travel = ddim2Measurement.Travel,
-                    Period = ddim2Measurement.Period,
-                    Step = ddim2Measurement.Step,
-                    WeightDiscr = ddim2Measurement.WeightDiscr,
-                    TimeDiscr = ddim2Measurement.TimeDiscr,
-                    DynGraph = ddim2Measurement.DynGraph,
-                    AccelerationGraph = ddim2Measurement.AccelerationGraph,
-                    Field = ddim2Measurement.Field,
-                    Well = ddim2Measurement.Well,
-                    Bush = ddim2Measurement.Bush,
-                    Shop = ddim2Measurement.Shop,
-                    BufferPressure = ddim2Measurement.BufferPressure,
-                    Comment = ddim2Measurement.Comment,
-                    Name = ddim2Measurement.Name,
-                    DateTime = ddim2Measurement.DateTime,
-                    ErrorCode = ddim2Measurement.ErrorCode,
-                    ApertNumber = ddim2Measurement.ApertNumber,
-                    ModelPump = ddim2Measurement.ModelPump,
-                    MaxBarbellWeight = ddim2Measurement.MaxBarbellWeight,
-                    MinBarbellWeight = ddim2Measurement.MinBarbellWeight,
-                    TravelLength = ddim2Measurement.TravelLength,
-                    SwingCount = ddim2Measurement.SwingCount,
-                    BatteryVolt = ddim2Measurement.BatteryVolt,
-                    Temperature = ddim2Measurement.Temperature,
-                    MainFirmware = ddim2Measurement.MainFirmware,
-                    RadioFirmware = ddim2Measurement.RadioFirmware,
-                    Id = ddim2Measurement.Id
-                });
-            }
-            catch(Exception e)
-            {
-                _logger.Error(e, $"Ddim2Update database error!" + "\n");
-                throw;
-            }
-        }
-
-        public void RemoveDdim2Measurement(int removebleId)
-        {
-            NonQueryCheck();
-            try
-            {
-                _database.Execute("DELETE FROM Ddim2Measurement WHERE Id =" + removebleId);
-            }
-            catch(Exception e)
-            {
-                _logger.Error(e, $"Ddim2Delete database error!" + "\n");
-                throw;
-            }
-        }
-
         public IEnumerable<DuMeasurement> GetDuMeasurements()
         {
             NonQueryCheck();
@@ -533,24 +297,6 @@ namespace SiamCross.Services
                 throw;
             }
         }
-
-        public IEnumerable<Ddim2Measurement> GetDdim2Measurements()
-        {
-            NonQueryCheck();
-            try
-            {
-                var ddim2Items = _database.Query<Ddim2Measurement>(
-                    "SELECT * FROM Ddim2Measurement");
-           
-            return ddim2Items;
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e, $"Ddim2Get database error!" + "\n");
-                throw;
-            }
-        }
-
         public DuMeasurement GetDuMeasurementById(int id)
         {
             NonQueryCheck();
@@ -569,22 +315,6 @@ namespace SiamCross.Services
                 throw;
             }
         }
-
-        public Ddim2Measurement GetDdim2MeasurementById(int id)
-        {
-            NonQueryCheck();
-            try
-            {
-                return _database.Query<Ddim2Measurement>(
-                    "SELECT * FROM Ddim2Measurement WHERE Id =" + id).First();
-            }
-            catch(Exception e)
-            {
-                _logger.Error(e, $"Ddim2GetById database error!" + "\n");
-                throw;
-            }
-        }
-
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public int SaveDdin2Measurement(Ddin2Measurement ddin2Measurement)
@@ -672,7 +402,6 @@ namespace SiamCross.Services
 
             return ddin2Measurement.Id;
         }
-
         private void UpdateDdin2Measurement(Ddin2Measurement ddin2Measurement)
         {
             try
@@ -731,7 +460,6 @@ namespace SiamCross.Services
                 throw;
             }
         }
-
         public void RemoveDdin2Measurement(int removebleId)
         {
             NonQueryCheck();
@@ -742,11 +470,10 @@ namespace SiamCross.Services
             }
             catch(Exception e)
             {
-                _logger.Error(e, $"Ddim2Remove database error!" + "\n");
+                _logger.Error(e, $"Ddin2Remove database error!" + "\n");
                 throw;
             }
         }
-
         public IEnumerable<Ddin2Measurement> GetDdin2Measurements()
         {
             NonQueryCheck();
@@ -762,7 +489,6 @@ namespace SiamCross.Services
                 throw;
             }
         }
-
         public Ddin2Measurement GetDdin2MeasurementById(int id)
         {
             NonQueryCheck();
@@ -778,199 +504,6 @@ namespace SiamCross.Services
             }
         }
 
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        public int SaveSiddosA3MMeasurement(SiddosA3MMeasurement siddosA3MMeasurement)
-        {
-            NonQueryCheck();
-
-            try
-            {
-                if (siddosA3MMeasurement.Id == 0)
-                {
-                    var idsColumn =_database.Query<int>(string.Format(
-                        "SELECT Id FROM SiddosA3MMeasurement"));
-                    if(idsColumn.Count() > 0)
-                    {
-                        siddosA3MMeasurement.Id = idsColumn.Max() + 1;
-                    }
-                    else
-                    {
-                        siddosA3MMeasurement.Id = 1;
-                    }
-                }
-
-                var rows = _database.Query(string.Format(
-                "SELECT COUNT(1) as 'Count' FROM SiddosA3MMeasurement WHERE Id = '{0}'",
-                siddosA3MMeasurement.Id));
-
-                if (rows.First().Count > 0)
-                {
-                    UpdateSiddosA3MMeasurement(siddosA3MMeasurement);
-                    return siddosA3MMeasurement.Id;
-                }
-
-                string sql = "INSERT INTO SiddosA3MMeasurement" +
-                        "(MaxWeight, MinWeight, Travel, Period, Step, WeightDiscr, TimeDiscr, DynGraph," +
-                        " AccelerationGraph, Field, Well, Bush, Shop, BufferPressure, Comment, " +
-                        "Name, DateTime, ErrorCode, ApertNumber, ModelPump, MaxBarbellWeight," +
-                        " MinBarbellWeight, TravelLength, SwingCount" +
-                        ", BatteryVolt, Temperature, MainFirmware, RadioFirmware " +
-                        ") Values (" +
-                        "@MaxWeight, @MinWeight," +
-                        " @Travel, @Period, @Step, @WeightDiscr, @TimeDiscr, @DynGraph," +
-                        " @AccelerationGraph, @Field, @Well, @Bush, @Shop, @BufferPressure, @Comment, " +
-                        "@Name, @DateTime, @ErrorCode, @ApertNumber, @ModelPump, @MaxBarbellWeight," +
-                        " @MinBarbellWeight, @TravelLength, @SwingCount "+
-                        ", @BatteryVolt, @Temperature, @MainFirmware, @RadioFirmware  );";
-
-                var affectedRows = _database.Execute(sql, new
-                {
-                    MaxWeight = siddosA3MMeasurement.MaxWeight,
-                    MinWeight = siddosA3MMeasurement.MinWeight,
-                    Travel = siddosA3MMeasurement.Travel,
-                    Period = siddosA3MMeasurement.Period,
-                    Step = siddosA3MMeasurement.Step,
-                    WeightDiscr = siddosA3MMeasurement.WeightDiscr,
-                    TimeDiscr = siddosA3MMeasurement.TimeDiscr,
-                    DynGraph = siddosA3MMeasurement.DynGraph,
-                    AccelerationGraph = siddosA3MMeasurement.AccelerationGraph,
-                    Field = siddosA3MMeasurement.Field,
-                    Well = siddosA3MMeasurement.Well,
-                    Bush = siddosA3MMeasurement.Bush,
-                    Shop = siddosA3MMeasurement.Shop,
-                    BufferPressure = siddosA3MMeasurement.BufferPressure,
-                    Comment = siddosA3MMeasurement.Comment,
-                    Name = siddosA3MMeasurement.Name,
-                    DateTime = siddosA3MMeasurement.DateTime,
-                    ErrorCode = siddosA3MMeasurement.ErrorCode,
-                    ApertNumber = siddosA3MMeasurement.ApertNumber,
-                    ModelPump = siddosA3MMeasurement.ModelPump,
-                    MaxBarbellWeight = siddosA3MMeasurement.MaxBarbellWeight,
-                    MinBarbellWeight = siddosA3MMeasurement.MinBarbellWeight,
-                    TravelLength = siddosA3MMeasurement.TravelLength,
-                    SwingCount = siddosA3MMeasurement.SwingCount,
-                    BatteryVolt = siddosA3MMeasurement.BatteryVolt,
-                    Temperature = siddosA3MMeasurement.Temperature,
-                    MainFirmware = siddosA3MMeasurement.MainFirmware,
-                    RadioFirmware = siddosA3MMeasurement.RadioFirmware
-                });
-            }
-            catch(Exception e)
-            {
-                _logger.Error(e, $"SiddosSave database error!" + "\n");
-                throw;
-            }
-
-            return siddosA3MMeasurement.Id;
-        }
-
-        private void UpdateSiddosA3MMeasurement(SiddosA3MMeasurement siddosA3MMeasurement)
-        {
-            try
-            {
-                string sql = "UPDATE SiddosA3MMeasurement SET " +
-                    "MaxWeight = @MaxWeight, MinWeight = @MinWeight, Travel = @Travel," +
-                    " Period = @Period, Step = @Step, WeightDiscr = @WeightDiscr," +
-                    " TimeDiscr = @TimeDiscr, DynGraph = @DynGraph," +
-                    " AccelerationGraph = @AccelerationGraph, Field = @Field," +
-                    " Well = @Well, Bush = @Bush, Shop = @Shop, BufferPressure = @BufferPressure," +
-                    " Comment = @Comment, Name = @Name, DateTime = @DateTime," +
-                    " ErrorCode = @ErrorCode, ApertNumber = @ApertNumber," +
-                    " ModelPump = @ModelPump, MaxBarbellWeight = @MaxBarbellWeight," +
-                    " MinBarbellWeight = @MinBarbellWeight, TravelLength = @TravelLength, SwingCount = @SwingCount" +
-                    " ,BatteryVolt=@BatteryVolt, Temperature=@Temperature " +
-                    " ,MainFirmware=@MainFirmware, RadioFirmware=@RadioFirmware " +
-                    " WHERE Id = @Id;";
-
-                var affectedRows = _database.Execute(sql, new
-                {
-                    MaxWeight = siddosA3MMeasurement.MaxWeight,
-                    MinWeight = siddosA3MMeasurement.MinWeight,
-                    Travel = siddosA3MMeasurement.Travel,
-                    Period = siddosA3MMeasurement.Period,
-                    Step = siddosA3MMeasurement.Step,
-                    WeightDiscr = siddosA3MMeasurement.WeightDiscr,
-                    TimeDiscr = siddosA3MMeasurement.TimeDiscr,
-                    DynGraph = siddosA3MMeasurement.DynGraph,
-                    AccelerationGraph = siddosA3MMeasurement.AccelerationGraph,
-                    Field = siddosA3MMeasurement.Field,
-                    Well = siddosA3MMeasurement.Well,
-                    Bush = siddosA3MMeasurement.Bush,
-                    Shop = siddosA3MMeasurement.Shop,
-                    BufferPressure = siddosA3MMeasurement.BufferPressure,
-                    Comment = siddosA3MMeasurement.Comment,
-                    Name = siddosA3MMeasurement.Name,
-                    DateTime = siddosA3MMeasurement.DateTime,
-                    ErrorCode = siddosA3MMeasurement.ErrorCode,
-                    ApertNumber = siddosA3MMeasurement.ApertNumber,
-                    ModelPump = siddosA3MMeasurement.ModelPump,
-                    MaxBarbellWeight = siddosA3MMeasurement.MaxBarbellWeight,
-                    MinBarbellWeight = siddosA3MMeasurement.MinBarbellWeight,
-                    TravelLength = siddosA3MMeasurement.TravelLength,
-                    SwingCount = siddosA3MMeasurement.SwingCount,
-                    BatteryVolt = siddosA3MMeasurement.BatteryVolt,
-                    Temperature = siddosA3MMeasurement.Temperature,
-                    MainFirmware = siddosA3MMeasurement.MainFirmware,
-                    RadioFirmware = siddosA3MMeasurement.RadioFirmware,
-                    Id = siddosA3MMeasurement.Id
-                });
-            }
-            catch(Exception e)
-            {
-                _logger.Error(e, $"SiddosUpdate database error!" + "\n");
-                throw;
-            }
-        }
-
-        public void RemoveSiddosA3MMeasurement(int removebleId)
-        {
-            NonQueryCheck();
-
-            try
-            {
-                _database.Execute("DELETE FROM SiddosA3MMeasurement WHERE Id =" + removebleId);
-            }
-            catch(Exception e)
-            {
-                _logger.Error(e, $"SiddosRemove database error!" + "\n");
-                throw;
-            }
-        }
-
-        public IEnumerable<SiddosA3MMeasurement> GetSiddosA3MMeasurements()
-        {
-            NonQueryCheck();
-
-            try
-            {
-                var siddosMeasutemenrs = _database.Query<SiddosA3MMeasurement>(
-                    "SELECT * FROM SiddosA3MMeasurement");
-                return siddosMeasutemenrs;
-            }
-            catch(Exception e)
-            {
-                _logger.Error(e, $"SiddosGet database error!" + "\n");
-                throw;
-            }
-        }
-
-        public SiddosA3MMeasurement GetSiddosA3MMeasurementById(int id)
-        {
-            NonQueryCheck();
-
-            try
-            {
-                var siddosMeasurement = _database.Query<SiddosA3MMeasurement>(
-                    "SELECT * FROM SiddosA3MMeasurement WHERE Id =" + id);
-                return siddosMeasurement.First();
-            }
-            catch(Exception e)
-            {
-                _logger.Error(e, $"SiddosGetById database error!" + "\n");
-                throw;
-            }
-        }
     }
 }
 

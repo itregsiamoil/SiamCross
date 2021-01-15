@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 namespace SiamCross.Models.Adapters.PhyInterface.Bt2
 {
-    public class DroidBt2Interface : Bt2InterfaceCross, INotifyPropertyChanged
+    public class DroidBt2Interface : IBt2InterfaceCross, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         public string Name { get => "BT2"; }
@@ -17,7 +17,7 @@ namespace SiamCross.Models.Adapters.PhyInterface.Bt2
             var connection = AppContainer.Container.Resolve<IConnectionBt2>(t_dvc_inf, t_phy_ifc);
             return connection;
         }
-        public BluetoothAdapter mAdapter
+        public BluetoothAdapter Adapter
         {
             get
             {

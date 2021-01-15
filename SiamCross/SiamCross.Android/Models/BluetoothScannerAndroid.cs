@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using Android.Bluetooth;
+﻿using Android.Bluetooth;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
-using Plugin.BLE.Abstractions.Exceptions;
-using ScanMode = Plugin.BLE.Abstractions.Contracts.ScanMode;
-using Plugin.BLE.Abstractions;
-using SiamCross.Models;
-using Xamarin.Forms;
 using SiamCross.Droid.Models;
+using SiamCross.Models;
 using SiamCross.Models.Scanners;
-using System.Threading.Tasks;
-using System.Threading;
-using SiamCross.Models.USB;
+using System;
+using System.Collections.Generic;
+using Xamarin.Forms;
+using ScanMode = Plugin.BLE.Abstractions.Contracts.ScanMode;
 
 [assembly: Dependency(typeof(BluetoothScannerAndroid))]
 namespace SiamCross.Droid.Models
@@ -23,7 +18,6 @@ namespace SiamCross.Droid.Models
         private readonly IAdapter _adapter;
         private readonly IBluetoothLE _bluetoothBLE;
         private readonly BluetoothAdapter _socketAdapter;
-        private readonly USBService _usbService;
         public event Action<ScannedDeviceInfo> Received;
         public event Action ScanTimoutElapsed;
 
@@ -47,15 +41,7 @@ namespace SiamCross.Droid.Models
                 System.Diagnostics.Debug.WriteLine("Finded device" + a.Device.Name);
             };
 
-            _usbService = USBService.Instance;
-            _usbService.DeviceFounded += UsbService_DeviceFounded;
         }
-
-        private void UsbService_DeviceFounded(ScannedDeviceInfo scannedDeviceInfo)
-        {
-            Received?.Invoke(scannedDeviceInfo);
-        }
-
         public void Start()
         {
             ICollection<BluetoothDevice> devices = _socketAdapter.BondedDevices;
@@ -71,8 +57,9 @@ namespace SiamCross.Droid.Models
                     exist = mac_no_delim.IndexOf(':');
                 }
                 mac_no_delim = "00000000-0000-0000-0000-" + mac_no_delim;
-                Guid id = new Guid();
-                bool parsed = Guid.TryParse(mac_no_delim, out id);
+                bool parsed = Guid.TryParse(mac_no_delim, out Guid id);
+                if (null == id)
+                    id = new Guid();
 
                 BluetoothType bluetoothType = BluetoothType.Le;
                 switch (device.Type)
@@ -88,7 +75,6 @@ namespace SiamCross.Droid.Models
             }
 
             StartLE();
-            //StartScanUsb();
         }
 
         private async void StartLE()
@@ -100,11 +86,6 @@ namespace SiamCross.Droid.Models
                     await _adapter.StartScanningForDevicesAsync();
                 }
             }
-        }
-
-        private async void StartScanUsb()
-        {
-            await _usbService.StartScanQuery();
         }
 
         public void Stop()

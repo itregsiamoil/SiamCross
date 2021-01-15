@@ -17,7 +17,7 @@ namespace SiamCross.Views.MenuItems.SearchPanel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 
-        private ScannerViewModel _viewModel;
+        private readonly ScannerViewModel _viewModel;
         public UsbTab()
         {
             InitializeComponent();
@@ -25,7 +25,6 @@ namespace SiamCross.Views.MenuItems.SearchPanel
             
             _viewModel = vm.ViewModel;
             _viewModel.ScanTimeoutElapsed += () => ScanAnimation.IsRunning = false;
-            _viewModel.UsbStateChanged += OnUsbStateChanged;
             this.BindingContext = _viewModel;
             usbDevicesList.RefreshCommand = new Command(() =>
             {
@@ -63,9 +62,5 @@ namespace SiamCross.Views.MenuItems.SearchPanel
             }
         }
 
-        private void OnUsbStateChanged(bool state)
-        {
-            usbStateLabel.TextColor = state ? Color.Green : Color.Red;
-        }
     }
 }

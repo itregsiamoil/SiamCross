@@ -1,19 +1,17 @@
-﻿ using SiamCross.Models;
+﻿using Autofac;
+using NLog;
+using SiamCross.AppObjects;
+using SiamCross.Models;
 using SiamCross.Services;
+using SiamCross.Services.Logging;
+using SiamCross.Views;
+using SiamCross.Views.MenuItems;
+using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
-using System.Linq;
-using System;
-using SiamCross.Services.Logging;
-using SiamCross.AppObjects;
-using Autofac;
-using NLog;
-using SiamCross.Models.Adapters;
-using System.Diagnostics;
-using SiamCross.Views.MenuItems;
-using SiamCross.Views;
-using SiamCross.Views.MeasurementViews;
 
 namespace SiamCross.ViewModels
 {
@@ -139,17 +137,6 @@ namespace SiamCross.ViewModels
                     {
                         App.NavigationPage.Navigation.PushAsync(
                             new DuMeasurementPage(sensorData));
-                    }
-                }
-            }
-            else if (sensorData.Name.Contains("UMT"))
-            {
-                if (CanOpenMeasurement(sensorData))
-                {
-                    if (CanOpenPage(typeof(UmtMeasurementPage)))
-                    {
-                        App.NavigationPage.Navigation.PushAsync(
-                            new UmtMeasurementPage(sensorData));
                     }
                 }
             }

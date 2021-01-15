@@ -2,7 +2,6 @@
 
 using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
-using Plugin.BLE.Abstractions.EventArgs;
 using SiamCross.Models;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Scanners;
@@ -15,7 +14,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Debug = System.Diagnostics.Debug;
 using OperationCanceledException = System.OperationCanceledException;
-using ScanMode = Plugin.BLE.Abstractions.Contracts.ScanMode;
 
 //[assembly: Dependency(typeof(BluetoothLeAdapterAndroid))]
 namespace SiamCross.Droid.Models
@@ -245,40 +243,6 @@ namespace SiamCross.Droid.Models
                 _device = null;
                 _targetService = null;
             }
-        }
-        private async Task<IDevice> CreateIDevice(Guid bluetoothGuid)
-        {
-            TaskCompletionSource<IDevice> idevice = new TaskCompletionSource<IDevice>();
-            Adapter.ScanTimeout = 5000;
-            Adapter.ScanMode = ScanMode.Balanced;
-            Adapter.ScanTimeoutElapsed += (s, e) => { try { idevice.TrySetResult(null); } catch { }; };
-            Adapter.DeviceDiscovered += async (obj, a) => 
-            {
-                try
-                {
-                    if (obj == null || a == null || a.Device == null || a.Device.Name == null)
-                    {
-                        return;
-                    }
-
-                    if (a.Device.Id.Equals(bluetoothGuid))
-                    {
-                        await Adapter.StopScanningForDevicesAsync();
-                        idevice.TrySetResult(a.Device);
-                    }
-                    Debug.WriteLine("Finded device" + a.Device.Name);
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine("UNKNOWN exception in "
-                    + System.Reflection.MethodBase.GetCurrentMethod().Name
-                    + " : " + e.Message);
-                }
-            };
-
-            await Adapter.StartScanningForDevicesAsync();
-
-            return await idevice.Task;
         }
 
         //public event Action<byte[]> DataReceived;

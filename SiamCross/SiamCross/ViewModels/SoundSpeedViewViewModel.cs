@@ -27,9 +27,9 @@ namespace SiamCross.ViewModels
             MaxGraphY = Math.Round(GetMaximumY(), 1).ToString();
         }
 
-        private IToast _toater;
+        private readonly IToast _toater;
 
-        private SoundSpeedModel _targetSoundSpeed;
+        private readonly SoundSpeedModel _targetSoundSpeed;
 
         public List<KeyValuePair<float, float>> Points { get; private set; }
 

@@ -1,17 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using Autofac;
 using SiamCross.AppObjects;
 using SiamCross.Models;
 using SiamCross.Models.Adapters;
-using SiamCross.Services;
 using SiamCross.ViewModels;
-using Autofac;
-
+using System.Threading;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using System.Threading.Tasks;
-using System.Threading;
-using SiamCross.Views.MeasurementViews;
 
 namespace SiamCross.Views.MenuItems
 {

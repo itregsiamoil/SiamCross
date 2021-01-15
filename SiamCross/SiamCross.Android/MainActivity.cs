@@ -2,25 +2,19 @@
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
-using Android.Hardware.Usb;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.App;
 using Android.Support.V4.Content;
 using Android.Widget;
-using SiamCross.Models.USB;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms.Platform.Android;
 using Xamarin.Forms.Xaml;
 
-[assembly: UsesFeature("android.hardware.usb.host")]
-[assembly: UsesFeature("android.hardware.usb.accessory")]
 namespace SiamCross.Droid
 {
     [Activity(Label = "SIAM SERVICE", Icon = "@mipmap/main_icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    [IntentFilter(new[] { UsbManager.ActionUsbDeviceAttached })]
-    [MetaData(UsbManager.ActionUsbDeviceAttached, Resource = "@xml/device_filter")]
     public class MainActivity : FormsAppCompatActivity
     {
         protected override async void OnCreate(Bundle savedInstanceState)
@@ -73,13 +67,7 @@ namespace SiamCross.Droid
             // Set it in the constructor
             CurrentActivity = this;
 
-            DetachedReceiver = new UsbDeviceDetachedReceiver();
-            //RegisterReceiver(DetachedReceiver, new IntentFilter(UsbManager.ActionUsbDeviceDetached));
-            AttachedReceiver = new UsbDeviceAttachedReceiver();
-            //RegisterReceiver(DetachedReceiver, new IntentFilter(UsbManager.ActionUsbDeviceAttached));
-
             LoadApplication(new App(new Setup()));
-            //new Thread(async () => { await USBService.Instance.Initialize(); }).Start();
         }
 
         public static Activity CurrentActivity;
@@ -106,45 +94,5 @@ namespace SiamCross.Droid
             }
             mAllPermOkExecTcs?.TrySetResult(all_granted);
         }
-
-        #region UsbDeviceDetachedReceiver implementation
-
-        public class UsbDeviceDetachedReceiver
-            : BroadcastReceiver
-        {
-            private readonly string attached = "android.hardware.usb.action.USB_DEVICE_ATTACHED";
-            private readonly string detached = "android.hardware.usb.action.USB_DEVICE_DETACHED";
-
-            public override void OnReceive(Context context, Intent intent)
-            {
-                if (intent.Action == attached)
-                {
-                    System.Diagnostics.Debug.WriteLine(intent.Action);
-                    USBService.Instance.OnUsbAttached();
-                }
-
-                if (intent.Action == detached)
-                {
-                    System.Diagnostics.Debug.WriteLine(intent.Action);
-                    USBService.Instance.OnUsbDetached();
-                }
-            }
-        }
-
-        #endregion
-
-        #region UsbDeviceAttachedReceiver implementation
-
-        public class UsbDeviceAttachedReceiver
-            : BroadcastReceiver
-        {
-            public override void OnReceive(Context context, Intent intent) { }
-        }
-
-        #endregion
-
-        public static UsbDevice Device { get; set; }
-        public UsbDeviceDetachedReceiver DetachedReceiver { get; set; }
-        public UsbDeviceAttachedReceiver AttachedReceiver { get; set; }
     }
 }

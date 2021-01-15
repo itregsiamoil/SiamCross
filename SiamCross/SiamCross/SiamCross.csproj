@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <ProduceAssemblyReference>true</ProduceAssemblyReference>
   </PropertyGroup>
 
@@ -73,20 +73,11 @@
     <Compile Update="Views\MenuItems\HandbookPanel\SoundSpeedPage.xaml.cs">
       <DependentUpon>SoundSpeedPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\MeasurementViews\SiddosA3MMeasurementPage.xaml.cs">
-      <DependentUpon>SiddosA3MMeasurementPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\MeasurementViews\Ddim2MeasurementPage.xaml.cs">
-      <DependentUpon>Ddim2MeasurementPage.xaml</DependentUpon>
-    </Compile>
     <Compile Update="Views\MenuItems\MeasurementsPage.xaml.cs">
       <DependentUpon>MeasurementsPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\MenuItems\SearchPanel\BoundingTab.xaml.cs">
       <DependentUpon>BoundingTab.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\MeasurementViews\SiddosA3MMeasurementDonePage.xaml.cs">
-      <DependentUpon>SiddosA3MMeasurementDonePage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -96,12 +87,6 @@
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\AddFieldPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\MeasurementViews\Ddim2MeasurementDonePage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\MeasurementViews\Ddim2MeasurementPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MeasurementViews\Ddin2MeasurementDonePage.xaml">
@@ -114,9 +99,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MeasurementViews\DuMeasurementPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\MeasurementViews\UmtMeasurementPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MenuItems\AboutPanelPage.xaml">
