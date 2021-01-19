@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace SiamCross.Models.Tools
 {
@@ -14,7 +12,7 @@ namespace SiamCross.Models.Tools
         /// <returns></returns>
         public byte[] CreateReadMessage(byte[] address, byte[] dataSize)
         {
-            var bufList = new List<byte>() { 0x01, 0x01 };
+            List<byte> bufList = new List<byte>() { 0x01, 0x01 };
             bufList.AddRange(address);
             for (int i = 0; i < 4 - address.Length; i++)
             {
@@ -23,7 +21,7 @@ namespace SiamCross.Models.Tools
 
             bufList.AddRange(dataSize);
 
-            var crc = CrcModbusCalculator.ModbusCrc(bufList.ToArray());
+            byte[] crc = CrcModbusCalculator.ModbusCrc(bufList.ToArray());
 
             List<byte> result = new List<byte>() { 0x0D, 0x0A };
             result.AddRange(bufList);
@@ -41,7 +39,7 @@ namespace SiamCross.Models.Tools
         /// <returns></returns>
         public byte[] CreateWriteMessage(byte[] address, byte[] dataSize, byte[] data)
         {
-            var addressAndSizeList = new List<byte>() { 0x01, 0x02 };
+            List<byte> addressAndSizeList = new List<byte>() { 0x01, 0x02 };
             addressAndSizeList.AddRange(address);
             for (int i = 0; i < 4 - address.Length; i++)
             {
@@ -50,8 +48,8 @@ namespace SiamCross.Models.Tools
 
             addressAndSizeList.AddRange(dataSize);
 
-            var crcAS = CrcModbusCalculator.ModbusCrc(addressAndSizeList.ToArray());
-            var crcData = CrcModbusCalculator.ModbusCrc(data);
+            byte[] crcAS = CrcModbusCalculator.ModbusCrc(addressAndSizeList.ToArray());
+            byte[] crcData = CrcModbusCalculator.ModbusCrc(data);
 
             List<byte> result = new List<byte>() { 0x0D, 0x0A };
             result.AddRange(addressAndSizeList);
@@ -70,11 +68,11 @@ namespace SiamCross.Models.Tools
         /// <returns></returns>
         public byte[] CreateWriteMessage(byte[] deviceNameAddressAndSize, byte[] data)
         {
-            var addressAndSizeList = new List<byte>() { 0x01, 0x02 };
+            List<byte> addressAndSizeList = new List<byte>() { 0x01, 0x02 };
             addressAndSizeList.AddRange(deviceNameAddressAndSize);
 
-            var crcAS = CrcModbusCalculator.ModbusCrc(addressAndSizeList.ToArray());
-            var crcData = CrcModbusCalculator.ModbusCrc(data);
+            byte[] crcAS = CrcModbusCalculator.ModbusCrc(addressAndSizeList.ToArray());
+            byte[] crcData = CrcModbusCalculator.ModbusCrc(data);
 
             List<byte> result = new List<byte>() { 0x0D, 0x0A };
             result.AddRange(addressAndSizeList);

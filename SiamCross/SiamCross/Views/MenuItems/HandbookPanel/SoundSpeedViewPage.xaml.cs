@@ -8,9 +8,6 @@ using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -22,8 +19,8 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
     {
         public SoundSpeedViewPage(SoundSpeedModel soundSpeedModel)
         {
-            var vm = new ViewModelWrap<SoundSpeedViewViewModel>(soundSpeedModel);
-            this.BindingContext = vm.ViewModel;
+            ViewModelWrap<SoundSpeedViewViewModel> vm = new ViewModelWrap<SoundSpeedViewViewModel>(soundSpeedModel);
+            BindingContext = vm.ViewModel;
 
             InitializeComponent();
         }
@@ -76,9 +73,9 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
                 double dx = CanvasView.Width / (maxX - minX);
                 double dy = CanvasView.Height / (maxY - minY);
 
-                var skPoints = new List<SKPoint>();
+                List<SKPoint> skPoints = new List<SKPoint>();
 
-                foreach(var pair in vm.Points)
+                foreach (KeyValuePair<float, float> pair in vm.Points)
                 {
                     float y = (float)CanvasView.Height - (float)((pair.Value - minY) * dy);
                     float x = (float)((pair.Key - minX) * dx);
@@ -97,7 +94,7 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
             }
         }
 
-       
+
 
         protected override void OnSizeAllocated(double width, double height)
         {

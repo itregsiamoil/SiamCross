@@ -21,7 +21,7 @@ namespace SiamCross.Models.Tools
             float xDiscrete;
             if (duMeasurement.SoundSpeed == "")
             {
-                var table = HandbookData.Instance.GetSoundSpeedList().SingleOrDefault(
+                SoundSpeedModel table = HandbookData.Instance.GetSoundSpeedList().SingleOrDefault(
                     t => t.ToString() == duMeasurement.SoundSpeedCorrection);
                 tableSpeedCorrection = table.GetApproximatedSpeedFromTable(duMeasurement.AnnularPressure);
                 xDiscrete = tableSpeedCorrection / Constants.EhoFixedSoundSpeed;
@@ -32,11 +32,11 @@ namespace SiamCross.Models.Tools
             }
 
             double xCoordinate = 0;
-            for(int i = 0; i < duMeasurement.Echogram.Length; i++)
+            for (int i = 0; i < duMeasurement.Echogram.Length; i++)
             {
                 double yCoordinate = 0d;
                 int multipler = 1;
-                if(duMeasurement.Echogram[i] > 127)
+                if (duMeasurement.Echogram[i] > 127)
                 {
                     multipler = -1;
                     yCoordinate = duMeasurement.Echogram[i] - 127;
@@ -46,7 +46,7 @@ namespace SiamCross.Models.Tools
                     yCoordinate = duMeasurement.Echogram[i];
                 }
                 //yCoordinate = Math.Pow(yCoordinate, 0.5f / 0.35)* multipler;
-                yCoordinate = yCoordinate*multipler;
+                yCoordinate = yCoordinate * multipler;
 
                 points[i, 0] = xCoordinate;
                 points[i, 1] = yCoordinate;

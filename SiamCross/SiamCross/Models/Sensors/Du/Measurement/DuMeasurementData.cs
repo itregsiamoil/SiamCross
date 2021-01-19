@@ -1,8 +1,6 @@
 ﻿using SiamCross.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Text;
 
 namespace SiamCross.Models.Sensors.Du.Measurement
 {
@@ -13,18 +11,18 @@ namespace SiamCross.Models.Sensors.Du.Measurement
 
         public DuMeasurementSecondaryParameters SecondaryParameters => StartParam.SecondaryParameters;
         public byte[] Echogram { get; set; }
-        public UInt16 FluidLevel 
+        public UInt16 FluidLevel
         {
             get
             {
                 BitVector32 myBV = new BitVector32(SrcFluidLevel);
-                if(true == myBV[0x4000] )
+                if (true == myBV[0x4000])
                     myBV[0x4000] = false;
                 UInt16 fluid_level = (ushort)(myBV.Data);
 
                 if (string.IsNullOrEmpty(StartParam.SecondaryParameters.SoundSpeed))
                 {
-                    var correctionTable = HandbookData.Instance.GetSoundSpeedList().Find(
+                    Tools.SoundSpeedModel correctionTable = HandbookData.Instance.GetSoundSpeedList().Find(
                         x => x.ToString() == StartParam.SecondaryParameters.SoundSpeedCorrection);
                     StartParam.SecondaryParameters.SoundSpeed =
                         correctionTable.GetApproximatedSpeedFromTable(AnnularPressure).ToString();
@@ -34,7 +32,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                 return fluid_level;
             }
         }
-        public UInt16 NumberOfReflections 
+        public UInt16 NumberOfReflections
         {
             get
             {
@@ -47,9 +45,9 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             }
         }
         public float AnnularPressure { get; set; }
-        
+
         public DateTime Date { get; set; }
-        MeasureState State { get; set; }
+        private MeasureState State { get; set; }
         public DuMeasurementStartParameters StartParam { get; }
 
         public DuMeasurementData(DateTime date
@@ -58,7 +56,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             , UInt16 fluidLevel
             , UInt16 numberOfReflections
             , byte[] echogram
-            , MeasureState state= MeasureState.UnknownError)
+            , MeasureState state = MeasureState.UnknownError)
         {
             Date = date;
             StartParam = start_param;

@@ -1,9 +1,8 @@
 ﻿using Autofac;
 using SiamCross.AppObjects;
+using SiamCross.Models;
 using SiamCross.Models.Tools;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SiamCross.Services
@@ -12,9 +11,9 @@ namespace SiamCross.Services
     {
         private static readonly Lazy<EmailService> _instance =
             new Lazy<EmailService>(() => new EmailService());
-        public static EmailService Instance { get => _instance.Value; }
+        public static EmailService Instance => _instance.Value;
 
-        private IEmailSender _emailSender;
+        private readonly IEmailSender _emailSender;
         private EmailService()
         {
             _emailSender = AppContainer.Container.Resolve<IEmailSender>();

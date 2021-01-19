@@ -1,8 +1,5 @@
-﻿using SiamCross.Models.Sensors.Dmg;
-using SiamCross.Models.Tools;
+﻿using SiamCross.Models.Tools;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors
@@ -14,10 +11,10 @@ namespace SiamCross.Models.Sensors
     public class FirmWaveQualifier
     {
 
-        private Func<byte[], Task> QueryParamerter;
+        private readonly Func<byte[], Task> QueryParamerter;
 
-        private byte[] _programmVersionAddressCommand;
-        private byte[] _programmVersionSizeCommand;
+        private readonly byte[] _programmVersionAddressCommand;
+        private readonly byte[] _programmVersionSizeCommand;
 
         /// <summary>
         /// Адресс версии программы
@@ -42,7 +39,7 @@ namespace SiamCross.Models.Sensors
 
         private async Task GetFirmware(byte[] address, byte[] size)
         {
-            var command = new MessageCreator().CreateReadMessage(address, size);
+            byte[] command = new MessageCreator().CreateReadMessage(address, size);
             await QueryParamerter(command);
             await Task.Delay(Constants.ShortDelay);
         }
@@ -53,13 +50,14 @@ namespace SiamCross.Models.Sensors
             {
                 await QueryParamerter(_programmVersionAddressCommand);
                 await Task.Delay(Constants.ShortDelay);
-;           }
+                ;
+            }
             if (DeviceNameSize == null)
             {
                 await QueryParamerter(_programmVersionSizeCommand);
                 await Task.Delay(Constants.ShortDelay);
             }
-            if(DeviceNameAddress != null && DeviceNameSize != null)
+            if (DeviceNameAddress != null && DeviceNameSize != null)
             {
                 await GetFirmware(DeviceNameAddress, DeviceNameSize);
             }
@@ -85,10 +83,7 @@ namespace SiamCross.Models.Sensors
         /// </summary>
         public byte[] DeviceNameSize
         {
-            get
-            {
-                return _programmVersionSize;
-            }
+            get => _programmVersionSize;
             set
             {
                 _programmVersionSize = value;

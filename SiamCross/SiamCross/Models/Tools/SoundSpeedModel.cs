@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 
 namespace SiamCross.Models.Tools
 {
@@ -51,8 +49,8 @@ namespace SiamCross.Models.Tools
 
             for (int i = 1; i < LevelSpeedTable.Count; i++)
             {
-                var average = (LevelSpeedTable[i].Key + LevelSpeedTable[i - 1].Key) / 2;
-                if(pressure > average)
+                float average = (LevelSpeedTable[i].Key + LevelSpeedTable[i - 1].Key) / 2;
+                if (pressure > average)
                 {
                     speed = LevelSpeedTable[i].Value;
                 }

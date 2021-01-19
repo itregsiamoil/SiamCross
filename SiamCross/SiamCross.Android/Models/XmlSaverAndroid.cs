@@ -24,7 +24,7 @@ namespace SiamCross.Droid.Models
 
             if (Directory.Exists(s))
             {
-                var filepath = s + Path.DirectorySeparatorChar + filename;
+                string filepath = s + Path.DirectorySeparatorChar + filename;
                 if (File.Exists(filepath))
                 {
                     File.Delete(filepath);
@@ -39,9 +39,9 @@ namespace SiamCross.Droid.Models
             if (!Directory.Exists(s))
                 return false;
 
-            var fullPath = s + (Path.DirectorySeparatorChar + filename);
+            string fullPath = s + (Path.DirectorySeparatorChar + filename);
             FileStream fs = TryCreateFileStream(fullPath);
-            if(null==fs)
+            if (null == fs)
                 return false;
             //File.SetAttributes(fullPath, FileAttributes.Normal);
             //FileIOPermission filePermission =new FileIOPermission(FileIOPermissionAccess.AllAccess, fullPath);
@@ -59,7 +59,8 @@ namespace SiamCross.Droid.Models
             cts?.Dispose();
             return true;
         }
-        FileStream TryCreateFileStream(string filename)
+
+        private FileStream TryCreateFileStream(string filename)
         {
             FileStream fs = null;
             try

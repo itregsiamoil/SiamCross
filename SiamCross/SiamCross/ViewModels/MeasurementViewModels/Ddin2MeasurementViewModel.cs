@@ -1,22 +1,24 @@
 ﻿using Autofac;
 using NLog;
 using SiamCross.AppObjects;
+using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
 using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
-using System.Collections.Generic;
-using SiamCross.DataBase.DataBaseModels;
-using System.Linq;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class Ddin2MeasurementViewModel : BaseSensorMeasurementViewModel<Ddin2MeasurementStartParameters>, IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
@@ -41,14 +43,14 @@ namespace SiamCross.ViewModels
                     tmp_value = float.Parse(str, CultureInfo.CurrentCulture);
                     tmp_value = 60.0f / tmp_value;
                 }
-                catch (Exception ) { }
+                catch (Exception) { }
             }
             return tmp_value;
         }
-        public string DynPeriod 
+        public string DynPeriod
         {
-            get { return mStrDynPeriod; }
-            set 
+            get => mStrDynPeriod;
+            set
             {
                 if (mStrDynPeriod == value)
                     return;
@@ -58,10 +60,10 @@ namespace SiamCross.ViewModels
                 NotifyPropertyChanged("PumpRate");
             }
         }
-        public string PumpRate 
+        public string PumpRate
         {
             get => mStrPumpRate;
-            set 
+            set
             {
                 if (mStrPumpRate == value)
                     return;
@@ -77,7 +79,7 @@ namespace SiamCross.ViewModels
         public string SelectedModelPump { get; set; }
         public ICommand StartMeasurementCommand { get; set; }
         public ICommand ValveTestCommand { get; set; }
-        public Ddin2MeasurementViewModel(SensorData sensorData) 
+        public Ddin2MeasurementViewModel(SensorData sensorData)
             : base(sensorData)
         {
             try
@@ -154,7 +156,7 @@ namespace SiamCross.ViewModels
                     return;
                 }
 
-                var secondaryParameters = new MeasurementSecondaryParameters(
+                MeasurementSecondaryParameters secondaryParameters = new MeasurementSecondaryParameters(
                     _sensorData.Name,
                     Resource.Dynamogram,
                     SelectedField,
@@ -168,7 +170,7 @@ namespace SiamCross.ViewModels
                     _sensorData.Firmware,
                     _sensorData.RadioFirmware);
 
-                var measurementParams = new Ddin2MeasurementStartParameters(
+                Ddin2MeasurementStartParameters measurementParams = new Ddin2MeasurementStartParameters(
                     float.Parse(Rod, CultureInfo.InvariantCulture),
                     float.Parse(DynPeriod, CultureInfo.InvariantCulture),
                     int.Parse(ApertNumber),

@@ -46,7 +46,7 @@ namespace SiamCross.Droid.Models
         {
             ICollection<BluetoothDevice> devices = _socketAdapter.BondedDevices;
 
-            foreach (var device in devices)
+            foreach (BluetoothDevice device in devices)
             {
                 string mac_no_delim = device.Address;
                 int exist = mac_no_delim.IndexOf(':');

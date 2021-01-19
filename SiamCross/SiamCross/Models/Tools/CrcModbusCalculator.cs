@@ -1,23 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SiamCross.Models.Tools
 {
-    static public class CrcModbusCalculator
+    public static class CrcModbusCalculator
     {
         /// <summary>
         /// Расчет контрольной суммы
         /// </summary>
         /// <param name="buf"></param>
         /// <returns>Результат в виде реверсированного массива 2 байтов</returns>
-        static public byte[] ModbusCrc(byte[] buf, int start=0, int len= -1)
+        public static byte[] ModbusCrc(byte[] buf, int start = 0, int len = -1)
         {
-            if(-1== len)
+            if (-1 == len)
                 len = buf.Length;
             UInt16 crc = 0xFFFF;
 
-            for (int pos = start; pos < start+len; pos++)
+            for (int pos = start; pos < start + len; pos++)
             {
                 crc ^= (UInt16)buf[pos];          // XOR byte into least sig. byte of crc
 

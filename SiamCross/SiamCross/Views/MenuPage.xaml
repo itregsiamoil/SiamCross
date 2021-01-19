@@ -23,7 +23,7 @@
             </Label>
             <ListView ItemsSource="{Binding MenuItems}"
                       x:Name="menuListView"
-                      ItemTapped="menuListView_ItemTapped"
+                      ItemTapped="MenuListView_ItemTapped"
                       Margin="5">
                 <!--ItemSelected="menuListView_ItemSelected"-->
                 <ListView.ItemTemplate>

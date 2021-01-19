@@ -17,13 +17,13 @@ namespace SiamCross.Views.MenuItems.SearchPanel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 
-        private ScannerViewModel _viewModel;
+        private readonly ScannerViewModel _viewModel;
         public BoundingTab()
         {
             InitializeComponent();
-            var vm = new ViewModelWrap<ScannerViewModel>();
+            ViewModelWrap<ScannerViewModel> vm = new ViewModelWrap<ScannerViewModel>();
             _viewModel = vm.ViewModel;
-            this.BindingContext = _viewModel;
+            BindingContext = _viewModel;
             boundedDevicesList.RefreshCommand = new Command(() =>
             {
                 try

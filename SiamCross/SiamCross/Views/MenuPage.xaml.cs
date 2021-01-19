@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SiamCross.ViewModels;
+﻿using SiamCross.ViewModels;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -14,7 +9,7 @@ namespace SiamCross.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MenuPage : ContentPage
     {
-        private MenuPageViewModel _vm;
+        private readonly MenuPageViewModel _vm;
         public MenuPage()
         {
             _vm = new MenuPageViewModel();
@@ -23,7 +18,7 @@ namespace SiamCross.Views
             InitializeComponent();
         }
 
-        private void menuListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private void MenuListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             if (e.SelectedItem != null)
             {
@@ -31,7 +26,7 @@ namespace SiamCross.Views
             }
         }
 
-        private void menuListView_ItemTapped(object sender, ItemTappedEventArgs e)
+        private void MenuListView_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             if (e.Item != null)
             {

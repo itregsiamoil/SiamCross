@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SiamCross.Models.Tools
 {
@@ -11,10 +10,10 @@ namespace SiamCross.Models.Tools
                                        int weightDiscr,
                                        int stepDiscr)
         {
-            var bytesList = new List<byte>();
-            foreach (var bytes in data)
+            List<byte> bytesList = new List<byte>();
+            foreach (byte[] bytes in data)
             {
-                foreach (var b in bytes)
+                foreach (byte b in bytes)
                 {
                     bytesList.Add(b);
                 }
@@ -22,7 +21,7 @@ namespace SiamCross.Models.Tools
 
             short step = (short)(stepDiscr / 10);
 
-            var points = GetXYFromBytes(bytesList);
+            List<double[]> points = GetXYFromBytes(bytesList);
 
             for (int i = 0; i < points.Count; i++)
             {
@@ -39,7 +38,7 @@ namespace SiamCross.Models.Tools
                 }
             }
 
-            var min = points[0].Min();
+            double min = points[0].Min();
 
             for (int j = 0; j < points.Count; j++)
             {
@@ -51,7 +50,7 @@ namespace SiamCross.Models.Tools
 
         private static List<double[]> GetXYFromBytes(List<byte> data)
         {
-            var result = new List<double[]>();
+            List<double[]> result = new List<double[]>();
             for (int i = 0; i < data.Count() / 2; i++)
             {
                 int index = i * 2;
@@ -81,7 +80,7 @@ namespace SiamCross.Models.Tools
             , UInt16 weightDiscr
             , UInt16 qty
             , out float min_x, out float max_x
-            ,out float min_y, out float max_y)
+            , out float min_y, out float max_y)
         {
             min_x = float.MaxValue;
             min_y = float.MaxValue;
@@ -153,7 +152,7 @@ namespace SiamCross.Models.Tools
                 }
                 points[i, 1] = Math.Abs((y * weightDiscr));
 
-                if (points[i, 0] < min )
+                if (points[i, 0] < min)
                     min = points[i, 0];
             }
 
@@ -205,7 +204,7 @@ namespace SiamCross.Models.Tools
             List<short> words = new List<short>();
             for (int i = 0; i + 1 < rawData.Count; i += 2)
             {
-                var bytes = new byte[2] { rawData[i], rawData[i + 1] };
+                byte[] bytes = new byte[2] { rawData[i], rawData[i + 1] };
                 short word = BitConverter.ToInt16(bytes, 0);
                 words.Add(word);
             }

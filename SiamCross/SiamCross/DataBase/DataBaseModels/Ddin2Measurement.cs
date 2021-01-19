@@ -1,6 +1,6 @@
-﻿using System;
+﻿using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
+using System;
 using System.Collections.Generic;
-using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
 
 
 namespace SiamCross.DataBase.DataBaseModels
@@ -93,7 +93,7 @@ namespace SiamCross.DataBase.DataBaseModels
             Comment = ddin2MeasurementData.SecondaryParameters.Comment;
             Name = ddin2MeasurementData.SecondaryParameters.DeviceName;
 
-            var secondaryParams = ddin2MeasurementData.SecondaryParameters;
+            Models.Sensors.MeasurementSecondaryParameters secondaryParams = ddin2MeasurementData.SecondaryParameters;
             BatteryVolt = secondaryParams.BatteryVolt;
             MainFirmware = secondaryParams.MainFirmware;
             Temperature = secondaryParams.Temperature;

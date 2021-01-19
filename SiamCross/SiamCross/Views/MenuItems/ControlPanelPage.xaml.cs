@@ -14,16 +14,16 @@ namespace SiamCross.Views.MenuItems
     {
         public ControlPanelPage()
         {
-            var vm = new ViewModelWrap<ControlPanelPageViewModel>();
+            ViewModelWrap<ControlPanelPageViewModel> vm = new ViewModelWrap<ControlPanelPageViewModel>();
             BindingContext = vm.ViewModel;
             InitializeComponent();
-            var checkBuetooth = new Thread(async () =>
+            Thread checkBuetooth = new Thread(async () =>
             {
-                var defaultAdapter = AppContainer.Container.Resolve<IDefaultAdapter>();
+                IDefaultAdapter defaultAdapter = AppContainer.Container.Resolve<IDefaultAdapter>();
                 if (!defaultAdapter.IsEnbaled)
                 {
                     bool result = await DisplayAlert(
-                        Resource.BluetoothIsDisable, 
+                        Resource.BluetoothIsDisable,
                         Resource.EnableBluetooth,
                         Resource.YesButton,
                         Resource.NotButton);
@@ -36,7 +36,7 @@ namespace SiamCross.Views.MenuItems
             checkBuetooth.Start();
         }
 
-        private void sensorList_ItemTapped(object sender, ItemTappedEventArgs e)
+        private void SensorList_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             if (e.Item != null)
             {

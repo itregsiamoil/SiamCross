@@ -1,5 +1,4 @@
-﻿using SiamCross.Models.Sensors;
-using SiamCross.Models.Sensors.Du.Measurement;
+﻿using SiamCross.Models.Sensors.Du.Measurement;
 using System;
 using System.Globalization;
 
@@ -46,24 +45,22 @@ namespace SiamCross.DataBase.DataBaseModels
         public string RadioFirmware
         { get => MeasData.SecondaryParameters.RadioFirmware; set => MeasData.SecondaryParameters.RadioFirmware = value; }
         public string ReportTimestamp
-        { 
-            get => MeasData.Date.ToString(CultureInfo.InvariantCulture); 
-            set => MeasData.Date = DateTime.Parse(value, CultureInfo.InvariantCulture); 
+        {
+            get => MeasData.Date.ToString(CultureInfo.InvariantCulture);
+            set => MeasData.Date = DateTime.Parse(value, CultureInfo.InvariantCulture);
         }
 
         public DuMeasurementData MeasData { get; set; }
         public DateTime DateTime
         { get => MeasData.Date; set => MeasData.Date = value; }
-        public UInt16 FluidLevel
-        { get => MeasData.FluidLevel; }
-        public UInt16 NumberOfReflections
-        { get => MeasData.NumberOfReflections; }
+        public UInt16 FluidLevel => MeasData.FluidLevel;
+        public UInt16 NumberOfReflections => MeasData.NumberOfReflections;
 
-        public DuMeasurement() 
+        public DuMeasurement()
         {
             DuMeasurementSecondaryParameters sec_par = new DuMeasurementSecondaryParameters();
-            DuMeasurementStartParameters start_par= new DuMeasurementStartParameters(false,false,false, sec_par);
-            MeasData = new DuMeasurementData(new DateTime(0), start_par,  0, 0, 0, new byte[3000] );
+            DuMeasurementStartParameters start_par = new DuMeasurementStartParameters(false, false, false, sec_par);
+            MeasData = new DuMeasurementData(new DateTime(0), start_par, 0, 0, 0, new byte[3000]);
             MeasData.SecondaryParameters.ResearchType = "";
         }
         public DuMeasurement(DuMeasurementData meas_data)

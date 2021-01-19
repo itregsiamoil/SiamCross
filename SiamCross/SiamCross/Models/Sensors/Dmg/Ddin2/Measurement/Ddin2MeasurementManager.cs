@@ -13,18 +13,18 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
     public class Ddin2MeasurementManager
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
-        private CommandGenerator _configGenerator;
-        private Ddin2MeasurementStartParameters _measurementParameters;
+        private readonly CommandGenerator _configGenerator;
+        private readonly Ddin2MeasurementStartParameters _measurementParameters;
         private DmgBaseMeasureReport _report;
-        private ISensor mSensor;
+        private readonly ISensor mSensor;
 
-        public SensorData SensorData { get => mSensor.SensorData; }
-        public ISensor Sensor { get => mSensor; }
+        public SensorData SensorData => mSensor.SensorData;
+        public ISensor Sensor => mSensor;
         public byte[] ErrorCode { get; private set; }
         public DmgMeasureStatus MeasurementStatus { get; set; }
 
-        byte[] _currentDynGraph = new byte[1000*2];
-        byte[] _currentAccelerationGraph = new byte[1000 * 2];
+        private readonly byte[] _currentDynGraph = new byte[1000 * 2];
+        private readonly byte[] _currentAccelerationGraph = new byte[1000 * 2];
 
         public Ddin2MeasurementManager(ISensor sensor,
              Ddin2MeasurementStartParameters measurementParameters)
@@ -86,13 +86,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
             UpdateProgress(pos);
         }
         private float _progress = 0;
-        public int Progress
-        {
-            get
-            {
-                return (int)_progress;
-            }
-        }
+        public int Progress => (int)_progress;
 
         private async Task SendParameters()
         {
@@ -139,7 +133,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
             const UInt32 calc_time_sec = 10;
             UInt32 measure_time_sec = dyn_period * 5 / 1000 + calc_time_sec;
-            float sep_cost = 50f/ measure_time_sec;
+            float sep_cost = 50f / measure_time_sec;
 
             bool isDone = false;
             for (UInt32 i = 0; i < measure_time_sec && !isDone; i++)
@@ -207,11 +201,11 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                 if (null == message || 0 == message.Length)
                     continue;
 
-                var data = Ddin2Parser.GetPayload(message);
-                var report = new List<UInt16>();
+                byte[] data = Ddin2Parser.GetPayload(message);
+                List<ushort> report = new List<UInt16>();
                 for (int i = 0; i + 1 < data.Count(); i += 2)
                 {
-                    var array = new byte[] { data[i], data[i + 1] };
+                    byte[] array = new byte[] { data[i], data[i + 1] };
                     UInt16 value = BitConverter.ToUInt16(array, 0);
                     report.Add(value);
                 }
@@ -258,26 +252,26 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                     DateTime.Now,
                     _measurementParameters.SecondaryParameters,
                     _currentAccelerationGraph.ToList(),
-                    ErrorCode);   
+                    ErrorCode);
             _logger.Trace("end create report");
-            var dynGraphPoints = DgmConverter.GetXYs(measurement.DynGraph.ToList(),
+            double[,] dynGraphPoints = DgmConverter.GetXYs(measurement.DynGraph.ToList(),
                 measurement.Report.Step, measurement.Report.WeightDiscr);
             measurement.DynGraphPoints = dynGraphPoints;
             return measurement;
         }
 
-        static private async Task<bool> ReadMemory(IProtocolConnection conn, byte[] dst,int start
+        private static async Task<bool> ReadMemory(IProtocolConnection conn, byte[] dst, int start
             , UInt32 start_addr, UInt32 mem_size, UInt16 step_size
-            , Action<float> DoStepProgress,  float progress_size)
+            , Action<float> DoStepProgress, float progress_size)
         {
             if (null == dst || dst.Length < (int)mem_size)
                 throw new Exception("dst is too short");
-            
+
             //const UInt32 start_addr = 0x81000000;
             //const UInt32 mem_size = 1000*2;
             //const UInt32 step_size = 20;
             UInt32 step_count = mem_size / step_size;
-            
+
             float sep_cost = (progress_size) / step_count;
 
             byte[] cmd = new byte[]
@@ -311,7 +305,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                 if (mem_size > next_curr_addr)
                     curr_addr = next_curr_addr;
                 else
-                    curr_addr += mem_size- curr_addr;
+                    curr_addr += mem_size - curr_addr;
             }
 
             return true;

@@ -7,8 +7,8 @@ namespace LocalizeApp.Droid
     {
         public System.Globalization.CultureInfo GetCurrentCultureInfo()
         {
-            var androidLocale = Java.Util.Locale.Default;
-            var netLanguage = androidLocale.ToString().Replace("_", "-");
+            Java.Util.Locale androidLocale = Java.Util.Locale.Default;
+            string netLanguage = androidLocale.ToString().Replace("_", "-");
             try
             {
                 return new System.Globalization.CultureInfo(netLanguage);

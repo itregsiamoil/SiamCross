@@ -7,7 +7,7 @@
         public string SoundSpeed { get; set; }
 
         public DuMeasurementSecondaryParameters()
-            :base()
+            : base()
         {
             //ResearchType = "";
             //SoundSpeedCorrection = "";
@@ -15,9 +15,9 @@
         }
 
         public DuMeasurementSecondaryParameters(
-            string name, string measurementType, 
-            string field, string well, 
-            string bush, string shop, 
+            string name, string measurementType,
+            string field, string well,
+            string bush, string shop,
             string bufferPressure, string comment,
             string battery,
             string temperature,

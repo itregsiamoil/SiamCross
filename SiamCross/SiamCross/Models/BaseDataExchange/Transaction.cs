@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SiamCross.Models.Tools
+﻿namespace SiamCross.Models.Tools
 {
-    struct IORestriction
+    internal struct IORestriction
     {
-        public IORestriction(int to=1000, int r=1)
+        public IORestriction(int to = 1000, int r = 1)
         {
             Timeout = 0;
             Retry = r;
@@ -15,19 +11,20 @@ namespace SiamCross.Models.Tools
         public int Timeout;
         public int Retry;
     }
-    struct Timeouts
+
+    internal struct Timeouts
     {
-        public Timeouts(IORestriction r=default, IORestriction w = default)
+        public Timeouts(IORestriction r = default, IORestriction w = default)
         {
             Read = r;
             Write = w;
         }
         public IORestriction Read;
         public IORestriction Write;
-        
+
     }
 
-    class Transaction
+    internal class Transaction
     {
         public enum Status
         {
@@ -63,7 +60,7 @@ namespace SiamCross.Models.Tools
         public Transaction(IProtocolConnection transport)
         {
             mTransport = transport;
-            mTtimeout = new Timeouts(   new IORestriction(3000,byte.MaxValue)
+            mTtimeout = new Timeouts(new IORestriction(3000, byte.MaxValue)
                                       , new IORestriction(2000, 3));
         }
 

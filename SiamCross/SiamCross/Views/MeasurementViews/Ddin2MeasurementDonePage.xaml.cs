@@ -6,14 +6,10 @@ using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using SiamCross.ViewModels;
-using SiamCross.Views.MenuItems;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -24,8 +20,8 @@ namespace SiamCross.Views
     public partial class Ddin2MeasurementDonePage : ContentPage
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
-        private double[,] _points;
-        private Ddin2Measurement _measurement;
+        private readonly double[,] _points;
+        private readonly Ddin2Measurement _measurement;
 
         public float MinX { get; set; }
         public float MinY { get; set; }
@@ -36,8 +32,8 @@ namespace SiamCross.Views
             try
             {
                 _measurement = measurement;
-                var vm = new ViewModelWrap<Ddin2MeasurementDoneViewModel>(measurement);
-                this.BindingContext = vm.ViewModel;
+                ViewModelWrap<Ddin2MeasurementDoneViewModel> vm = new ViewModelWrap<Ddin2MeasurementDoneViewModel>(measurement);
+                BindingContext = vm.ViewModel;
                 InitializeComponent();
                 float minX;
                 float minY;
@@ -143,12 +139,12 @@ namespace SiamCross.Views
                 float offset_x = (float)MinX;
                 float offset_y = (float)MinY;
 
-                int maxpoints = (_measurement.Period > _points.GetLength(0)) ? 
+                int maxpoints = (_measurement.Period > _points.GetLength(0)) ?
                     _points.GetLength(0) : _measurement.Period;
 
 
 
-                var skPoints = new SKPoint[maxpoints];
+                SKPoint[] skPoints = new SKPoint[maxpoints];
                 for (int i = 0; i < maxpoints; i++)
                 {
                     //skPoints[i].Y = (float)(CanvasView.Height - (_points[i, 1]  - offset_y)* scale_y);
@@ -158,7 +154,7 @@ namespace SiamCross.Views
 
                 }
                 //canvas.DrawPoints(SKPointMode.Polygon, skPoints, paint);
-                var path2 = new SKPath { FillType = SKPathFillType.Winding };
+                SKPath path2 = new SKPath { FillType = SKPathFillType.Winding };
                 path2.AddPoly(skPoints, true);
 
                 float sx = (float)scale_x;
@@ -166,7 +162,7 @@ namespace SiamCross.Views
                 float px = 0;
                 float py = 0;
                 canvas.Scale(sx, sy, px, py);
-                canvas.Scale(1.0f, -1.0f, dgm_w / 2, dgm_h/2);
+                canvas.Scale(1.0f, -1.0f, dgm_w / 2, dgm_h / 2);
                 canvas.Translate(-offset_x, -offset_y);
                 canvas.DrawPath(path2, paintFill);
                 canvas.DrawPath(path2, paint);

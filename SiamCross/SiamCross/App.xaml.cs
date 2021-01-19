@@ -1,17 +1,13 @@
-﻿using Autofac;
-using Autofac.Core;
-using SiamCross.AppObjects;
+﻿using SiamCross.AppObjects;
 using SiamCross.Models.Tools;
-using SiamCross.Services;
 using SiamCross.Views;
 using SiamCross.Views.MenuItems;
-using System;
-using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
 namespace SiamCross
 {
+    [Preserve(AllMembers = true)]
     public partial class App : Application
     {
         public static NavigationPage NavigationPage { get; private set; }
@@ -19,19 +15,13 @@ namespace SiamCross
         public static INavigation Navigation { get; private set; }
         public static bool MenuIsPresented
         {
-            get
-            {
-                return RootPage.IsPresented;
-            }
-            set
-            {
-                RootPage.IsPresented = value;
-            }
+            get => RootPage.IsPresented;
+            set => RootPage.IsPresented = value;
         }
 
         private void CallMain()
         {
-            var menuPage = new MenuPage() { Title = "SiamServiceMenu" };
+            MenuPage menuPage = new MenuPage() { Title = "SiamServiceMenu" };
             NavigationPage = new NavigationPage(new ControlPanelPage());
             RootPage = new RootPage();
             RootPage.Flyout = menuPage;
@@ -44,7 +34,7 @@ namespace SiamCross
         {
             InitializeComponent();
             AppContainer.Container = setup.CreateContainer();
-            
+
             if (Device.RuntimePlatform == Device.Android)
             {
                 Resource.Culture = DependencyService.Get<ILocalize>()

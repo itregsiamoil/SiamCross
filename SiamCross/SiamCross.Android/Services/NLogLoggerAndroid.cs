@@ -1,22 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using NLog;
-using SiamCross.Services.Logging;
+﻿using NLog;
 
 namespace SiamCross.Droid.Services
 {
     public class NLogLoggerAndroid : SiamCross.Services.Logging.ILogger
     {
-        private Logger _logger;
+        private readonly Logger _logger;
         public NLogLoggerAndroid(Logger logger)
         {
             _logger = logger;

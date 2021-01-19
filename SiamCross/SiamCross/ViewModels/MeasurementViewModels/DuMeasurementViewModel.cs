@@ -1,40 +1,43 @@
 ﻿using Autofac;
 using NLog;
 using SiamCross.AppObjects;
+using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
 using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
-using System.Collections.Generic;
-using SiamCross.DataBase.DataBaseModels;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
-    public class DuMeasurementViewModel: BaseSensorMeasurementViewModel<DuMeasurementStartParameters>, IViewModel
+    [Preserve(AllMembers = true)]
+    public class DuMeasurementViewModel : BaseSensorMeasurementViewModel<DuMeasurementStartParameters>, IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
-        private List<SoundSpeedModel> _soundSpeedModels;
+        private readonly List<SoundSpeedModel> _soundSpeedModels;
         public ObservableCollection<string> ResearchTypes { get; set; }
         public string SelectedResearchType { get; set; }
         public ObservableCollection<string> SoundSpeedCorrections { get; set; }
 
-        bool mAmplification = false;
-        public bool Amplification 
-        { 
-            get => mAmplification; 
+        private bool mAmplification = false;
+        public bool Amplification
+        {
+            get => mAmplification;
             set
             {
                 mAmplification = value;
                 NotifyPropertyChanged(nameof(Amplification));
             }
         }
-        bool mInlet = false;
+
+        private bool mInlet = false;
         public bool Inlet //Впуск
         {
             get => mInlet;
@@ -45,7 +48,7 @@ namespace SiamCross.ViewModels
             }
         }
 
-        bool mDepth6000 = false;
+        private bool mDepth6000 = false;
         public bool Depth6000 //Впуск
         {
             get => mDepth6000;
@@ -61,16 +64,13 @@ namespace SiamCross.ViewModels
         private string _selectedSoundSpeedCorrection;
         public string SelectedSoundSpeedCorrection
         {
-            get
-            {
-                return _selectedSoundSpeedCorrection;
-            }
+            get => _selectedSoundSpeedCorrection;
             set
             {
                 if (!string.IsNullOrEmpty(_soundSpeed))
                 {
                     _soundSpeed = null;
-                    NotifyPropertyChanged(nameof(SoundSpeed));                 
+                    NotifyPropertyChanged(nameof(SoundSpeed));
                 }
                 _selectedSoundSpeedCorrection = value;
                 NotifyPropertyChanged(nameof(SelectedSoundSpeedCorrection));
@@ -79,10 +79,7 @@ namespace SiamCross.ViewModels
         private string _soundSpeed;
         public string SoundSpeed
         {
-            get
-            {
-                return _soundSpeed;
-            }
+            get => _soundSpeed;
             set
             {
                 if (!string.IsNullOrEmpty(SelectedSoundSpeedCorrection) && !string.IsNullOrEmpty(value))
@@ -112,7 +109,7 @@ namespace SiamCross.ViewModels
                     Resource.StaticLevel
                 };
                 SoundSpeedCorrections = new ObservableCollection<string>();
-                foreach (var elem in _soundSpeedModels)
+                foreach (SoundSpeedModel elem in _soundSpeedModels)
                 {
                     SoundSpeedCorrections.Add(elem.ToString());
                 }
@@ -140,17 +137,17 @@ namespace SiamCross.ViewModels
 
                 StartMeasurementCommand = new Command(() => { });
 
-                if(_selectedSoundSpeedCorrection == null)
+                if (_selectedSoundSpeedCorrection == null)
                 {
                     _selectedSoundSpeedCorrection = "";
                 }
 
-                if(_soundSpeed == null)
+                if (_soundSpeed == null)
                 {
                     _soundSpeed = "";
                 }
 
-                var secondaryParameters = new DuMeasurementSecondaryParameters(
+                DuMeasurementSecondaryParameters secondaryParameters = new DuMeasurementSecondaryParameters(
                     _sensorData.Name,
                     SelectedResearchType,
                     SelectedField,
@@ -167,7 +164,7 @@ namespace SiamCross.ViewModels
                     _selectedSoundSpeedCorrection,
                     _soundSpeed);
 
-                var measurementParams = new DuMeasurementStartParameters(Amplification,
+                DuMeasurementStartParameters measurementParams = new DuMeasurementStartParameters(Amplification,
                     Inlet, Depth6000, secondaryParameters);
 
                 await App.Navigation.PopAsync();
@@ -219,8 +216,8 @@ namespace SiamCross.ViewModels
             base.ValidateParameterForEmtpiness(BufferPressure, Resource.BufferPressureChoiceText);
             base.ValidateParameterForEmtpiness(Comments, Resource.CommentsChoiceText);
             base.ValidateParameterForEmtpiness(SelectedResearchType, Resource.SelectedReasearchTypeChoice);
-            
-            if(string.IsNullOrEmpty(SoundSpeed) && string.IsNullOrEmpty(SelectedSoundSpeedCorrection))
+
+            if (string.IsNullOrEmpty(SoundSpeed) && string.IsNullOrEmpty(SelectedSoundSpeedCorrection))
             {
                 _errorList.Add(Resource.ChoiceSpeedCorrectionTableOrInpunSpeed);
             }

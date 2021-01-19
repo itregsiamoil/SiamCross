@@ -8,9 +8,6 @@ using SiamCross.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -22,8 +19,8 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
     {
         public SoundSpeedPage()
         {
-            var vm = new ViewModelWrap<SoundSpeedViewModel>();
-            this.BindingContext = vm.ViewModel;
+            ViewModelWrap<SoundSpeedViewModel> vm = new ViewModelWrap<SoundSpeedViewModel>();
+            BindingContext = vm.ViewModel;
             InitializeComponent();
         }
 
@@ -38,7 +35,7 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
         {
             try
             {
-                var stack = App.NavigationPage.Navigation.NavigationStack;
+                IReadOnlyList<Page> stack = App.NavigationPage.Navigation.NavigationStack;
                 if (stack.Count > 0)
                 {
                     if (stack[stack.Count - 1].GetType() != typeof(SoundSpeedViewPage))
@@ -62,16 +59,16 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
 
         private async void ToolbarItem_Clicked(object sender, EventArgs e)
         {
-            var dialog = AppContainer.Container.Resolve<IFileOpenDialog>();
-           
-            var path = await dialog.Show();
+            IFileOpenDialog dialog = AppContainer.Container.Resolve<IFileOpenDialog>();
 
-            if(string.IsNullOrWhiteSpace(path))
+            string path = await dialog.Show();
+
+            if (string.IsNullOrWhiteSpace(path))
             {
                 return;
             }
 
-            var fileParcer = new SoundSpeedFileParcer();
+            SoundSpeedFileParcer fileParcer = new SoundSpeedFileParcer();
             List<KeyValuePair<float, float>> newSoundTable;
 
             using (StreamReader reader = new StreamReader(path))
@@ -79,16 +76,16 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
                 newSoundTable = fileParcer.TryToParce(reader.ReadToEnd());
             }
 
-            if(newSoundTable == null)
+            if (newSoundTable == null)
             {
                 await DisplayAlert(
-                    Resource.Attention, 
+                    Resource.Attention,
                     Resource.WrongFormatOrContent,
                     Resource.Ok);
                 return;
             }
 
-            var newSpeedSoundModel = new SoundSpeedModel(0, "", newSoundTable);
+            SoundSpeedModel newSpeedSoundModel = new SoundSpeedModel(0, "", newSoundTable);
 
             await App.NavigationPage.Navigation.PushAsync(
                             new SoundSpeedViewPage(newSpeedSoundModel));

@@ -1,16 +1,17 @@
-﻿using SiamCross.Droid.Models;
+﻿using Android.Runtime;
+using SiamCross.Droid.Models;
 using SiamCross.Models.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(FileManagerAndroid))]
 namespace SiamCross.Droid.Models
 {
+    [Preserve(AllMembers = true)]
     public class FileManagerAndroid : IFileManager
     {
         public Task DeleteAsync(string filename)

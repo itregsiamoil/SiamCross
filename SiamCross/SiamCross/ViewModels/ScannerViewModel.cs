@@ -1,20 +1,17 @@
-﻿using SiamCross.Models.Scanners;
-using SiamCross.Services;
-using System.Collections.ObjectModel;
-using Xamarin.Forms;
-using System.ComponentModel;
-using System.Windows.Input;
-using SiamCross.Models;
-using SiamCross.Services.Logging;
-using SiamCross.AppObjects;
-using Autofac;
+﻿using Autofac;
 using NLog;
+using SiamCross.AppObjects;
+using SiamCross.Models;
+using SiamCross.Models.Scanners;
+using SiamCross.Services.Logging;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class ScannerViewModel : IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
@@ -80,7 +77,7 @@ namespace SiamCross.ViewModels
             return dev.Name.Contains("DDIN")
                    || dev.Name.Contains("DDIM")
                    || dev.Name.Contains("SIDDOSA3M")
-                   || dev.Name.Contains("DU") ;
+                   || dev.Name.Contains("DU");
         }
 
 

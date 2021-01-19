@@ -1,5 +1,6 @@
 ﻿//#define DEBUG_UNIT
 
+using Android.Runtime;
 using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
 using SiamCross.Models;
@@ -20,23 +21,20 @@ namespace SiamCross.Droid.Models
 {
     public class BaseBluetoothLeAdapterAndroid : IConnection
     {
-        readonly IPhyInterface mInterface;
-        public IPhyInterface PhyInterface
-        {
-            get => mInterface;
-        }
+        private readonly IPhyInterface mInterface;
+        public IPhyInterface PhyInterface => mInterface;
         public async void UpdateRssi()
         {
             await _device?.UpdateRssiAsync();
         }
-        public int Rssi { get => (null == _device) ? 0 : _device.Rssi; }
+        public int Rssi => (null == _device) ? 0 : _device.Rssi;
         public IAdapter Adapter
         {
-            get 
+            get
             {
                 if (null == mInterface)
                     return null;
-                var ble_ifc = mInterface as BtLeInterface;
+                BtLeInterface ble_ifc = mInterface as BtLeInterface;
                 //if (null == ble_ifc)
                 //    return null;
                 return ble_ifc?.mAdapter;
@@ -83,8 +81,8 @@ namespace SiamCross.Droid.Models
 
         public void SetDeviceInfo(ScannedDeviceInfo deviceInfo)
         {
-           _deviceInfo = deviceInfo;
-           _deviceGuid = (Guid)deviceInfo.Id;
+            _deviceInfo = deviceInfo;
+            _deviceGuid = (Guid)deviceInfo.Id;
         }
 
         public async Task<bool> Connect()
@@ -119,7 +117,7 @@ namespace SiamCross.Droid.Models
                 {
                     _device = await Adapter.ConnectToKnownDeviceAsync(_deviceGuid, conn_param, cts.Token);
                 }
-                
+
                 /*
                 if (_isFirstConnectionTry)
                 {
@@ -133,7 +131,7 @@ namespace SiamCross.Droid.Models
                 _device = Adapter.ConnectedDevices.Where(x => x.Id == _deviceGuid)
                     .LastOrDefault();
                 */
-            
+
                 if (_device == null)
                 {
                     Debug.WriteLine("BluetoothLeAdapterMobile.Connect"
@@ -142,7 +140,7 @@ namespace SiamCross.Droid.Models
                     Disconnect();
                     //_isFirstConnectionTry = false;
                     return false;
-                }            
+                }
                 bool is_inited = await Initialize(cts.Token);
                 if (!is_inited)
                     Disconnect();
@@ -174,14 +172,14 @@ namespace SiamCross.Droid.Models
                 if (null == _targetService)
                     return false;
 
-                var serv = await _targetService.GetCharacteristicsAsync();
+                IReadOnlyList<ICharacteristic> serv = await _targetService.GetCharacteristicsAsync();
                 _writeCharacteristic = await _targetService.GetCharacteristicAsync(write_guid);
                 _readCharacteristic = await _targetService.GetCharacteristicAsync(read_guid);
                 _readCharacteristic.ValueUpdated += (o, args) =>
                 {
                     //Debug.WriteLine("Recieved: " + BitConverter.ToString(args.Characteristic.Value) + "\n");
                     //DataReceived?.Invoke(args.Characteristic.Value);
-                    if(args.Characteristic== _readCharacteristic)
+                    if (args.Characteristic == _readCharacteristic)
                     {
                         //mDataNotyfy?.Invoke(args.Characteristic.Value);
                         DoByteProcess(args.Characteristic.Value);
@@ -195,7 +193,7 @@ namespace SiamCross.Droid.Models
 
                 Adapter.DeviceConnectionLost += (o, args) =>
                 {
-                    if (args.Device  == _device)
+                    if (args.Device == _device)
                     {
                         Debug.WriteLine("DeviceConnectionLost " + args.ErrorMessage);
                         Disconnect();
@@ -220,7 +218,7 @@ namespace SiamCross.Droid.Models
         {
             try
             {
-                if(null!=Adapter && null!= _device)
+                if (null != Adapter && null != _device)
                     Adapter.DisconnectDeviceAsync(_device);
                 mInterface?.Disable();
                 //_writeCharacteristic.StopUpdatesAsync();
@@ -327,7 +325,7 @@ namespace SiamCross.Droid.Models
         {
             bool sent = await _writeCharacteristic
                 .WriteAsync(buffer.AsSpan().Slice(offset, count).ToArray(), ct);
-            if(!sent)
+            if (!sent)
                 return 0;
             return count;
         }
@@ -335,6 +333,7 @@ namespace SiamCross.Droid.Models
 
     public class BluetoothLeAdapterAndroid : SiamProtocolConnection, IConnectionBtLe
     {
+        [Preserve(AllMembers = true)]
         public BluetoothLeAdapterAndroid(ScannedDeviceInfo deviceInfo, IPhyInterface ifc = null)
             : base(new BaseBluetoothLeAdapterAndroid(deviceInfo, ifc))
         {

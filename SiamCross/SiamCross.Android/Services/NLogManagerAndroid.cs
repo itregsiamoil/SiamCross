@@ -1,39 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using SiamCross.Services.Logging;
+﻿using Android.Runtime;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
+using SiamCross.Services.Logging;
+using System;
 using System.IO;
-using ILogger = SiamCross.Services.Logging.ILogger;
 
 namespace SiamCross.Droid.Services
 {
+    [Preserve(AllMembers = true)]
     public class NLogManagerAndroid : ILogManager
     {
         static NLogManagerAndroid()
         {
-            var config = new LoggingConfiguration();
+            LoggingConfiguration config = new LoggingConfiguration();
 
-            var consoleTarget = new ConsoleTarget();
+            ConsoleTarget consoleTarget = new ConsoleTarget();
             config.AddTarget("console", consoleTarget);
 
-            var consoleRule = new LoggingRule("*", LogLevel.Trace, consoleTarget);
+            LoggingRule consoleRule = new LoggingRule("*", LogLevel.Trace, consoleTarget);
             config.LoggingRules.Add(consoleRule);
 
-            var fileTarget = new FileTarget();
+            FileTarget fileTarget = new FileTarget();
 
             string directory = @"/storage/emulated/0/" + (Path.DirectorySeparatorChar + "SiamService2Log");
-            try 
+            try
             {
                 directory = Directory.CreateDirectory(directory).FullName;
             }
@@ -47,7 +38,7 @@ namespace SiamCross.Droid.Services
             {
                 fileTarget.FileName = Path.Combine(directory, "Log.txt");
             }
-            else 
+            else
             {
                 fileTarget.FileName = Path.Combine(Directory.CreateDirectory(directory).FullName, "Log.txt");
             }
@@ -56,7 +47,7 @@ namespace SiamCross.Droid.Services
 
             config.AddTarget("file", fileTarget);
 
-            var fileRule = new LoggingRule("*", LogLevel.Trace, fileTarget);
+            LoggingRule fileRule = new LoggingRule("*", LogLevel.Trace, fileTarget);
             config.LoggingRules.Add(fileRule);
 
             LogManager.Configuration = config;
@@ -74,7 +65,7 @@ namespace SiamCross.Droid.Services
                 fileName = fileName.Substring(fileName.LastIndexOf("/", StringComparison.CurrentCultureIgnoreCase) + 1);
             }
 
-            var logger = LogManager.GetLogger(fileName);
+            Logger logger = LogManager.GetLogger(fileName);
             //return new NLogLoggerAndroid(logger);
             return logger;
         }

@@ -8,19 +8,21 @@ using SiamCross.Services.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class Ddin2MeasurementDoneViewModel : BaseViewModel, IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 
-        private Ddin2Measurement _measurement;
+        private readonly Ddin2Measurement _measurement;
 
         public ObservableCollection<string> Fields { get; set; }
         public string SelectedField
@@ -78,7 +80,7 @@ namespace SiamCross.ViewModels
         public string PumpRate { get; }
 
         public string UpperRodWeight { get; }
-        public string LowerRodWeight { get;  }
+        public string LowerRodWeight { get; }
         public string SelectedModelPump { get; }
 
         public string MaxGraphX { get; private set; }
@@ -140,17 +142,17 @@ namespace SiamCross.ViewModels
             }
         }
 
-        private DateTimeConverter _timeConverter = new DateTimeConverter();
+        private readonly DateTimeConverter _timeConverter = new DateTimeConverter();
 
         private async void ShareCommandHandler()
         {
             try
             {
-                var xmlCreator = new XmlCreator();
+                XmlCreator xmlCreator = new XmlCreator();
 
-                var xmlSaver = DependencyService.Get<IXmlSaver>();
+                IXmlSaver xmlSaver = DependencyService.Get<IXmlSaver>();
 
-                var name = CreateName(_measurement.Name, _measurement.DateTime);
+                string name = CreateName(_measurement.Name, _measurement.DateTime);
                 await xmlSaver.SaveXml(name, xmlCreator.CreateDdin2Xml(_measurement));
 
                 string filepath = xmlSaver.GetFilepath(name);

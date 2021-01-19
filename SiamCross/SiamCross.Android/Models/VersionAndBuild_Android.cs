@@ -1,9 +1,8 @@
-﻿using Android.Content.PM;  
-using VersionAndBuildNumber.Droid.DependencyServices;
+﻿using VersionAndBuildNumber.Droid.DependencyServices;
 using Xamarin.Essentials;
-using Xamarin.Forms;  
+using Xamarin.Forms;
 
-[assembly: Dependency(typeof(VersionAndBuild_Android))]  
+[assembly: Dependency(typeof(VersionAndBuild_Android))]
 namespace VersionAndBuildNumber.Droid.DependencyServices
 {
     public class VersionAndBuild_Android : SiamCross.Models.Tools.IAppVersionAndBuild

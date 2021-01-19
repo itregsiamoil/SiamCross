@@ -5,14 +5,14 @@ using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class SoundSpeedViewModel : BaseViewModel, IViewModel
     {
         public ObservableCollection<SoundSpeedModel> SoundSpeedList { get; set; }
@@ -21,13 +21,13 @@ namespace SiamCross.ViewModels
         {
             SoundSpeedList = new ObservableCollection<SoundSpeedModel>();
             Update();
-                
+
             AddSoundSpeed = new Command(AddSound);
 
             MessagingCenter.Subscribe<SoundSpeedViewViewModel>(
                 this,
                 "Refresh",
-                (sender) =>  { Update(); });
+                (sender) => { Update(); });
         }
 
         private void Update()
@@ -53,8 +53,8 @@ namespace SiamCross.ViewModels
 
         private void LoadSoundSpeeds()
         {
-            var soundSpeedList = HandbookData.Instance.GetSoundSpeedList();
-            foreach(var soundItem in soundSpeedList)
+            System.Collections.Generic.List<SoundSpeedModel> soundSpeedList = HandbookData.Instance.GetSoundSpeedList();
+            foreach (SoundSpeedModel soundItem in soundSpeedList)
             {
                 SoundSpeedList.Add(soundItem);
             }

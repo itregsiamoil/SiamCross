@@ -10,9 +10,6 @@ using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -22,14 +19,14 @@ namespace SiamCross.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DuMeasurementDonePage : ContentPage
     {
-        private static readonly Logger _logger = 
+        private static readonly Logger _logger =
             AppContainer.Container.Resolve<ILogManager>().GetLog();
 
-        private double[,] _points;
-        float minX;
-        float minY;
-        float maxX;
-        float maxY;
+        private readonly double[,] _points;
+        private readonly float minX;
+        private readonly float minY;
+        private readonly float maxX;
+        private readonly float maxY;
 
         private readonly DuMeasurement _measurement;
 
@@ -38,11 +35,11 @@ namespace SiamCross.Views
             try
             {
                 _measurement = measurement;
-                var vmWrap = new ViewModelWrap<DuMeasurementDoneViewModel>(measurement);
+                ViewModelWrap<DuMeasurementDoneViewModel> vmWrap = new ViewModelWrap<DuMeasurementDoneViewModel>(measurement);
                 _points = EchogramConverter.GetPoints(measurement
                     , out minX, out maxX, out minY, out maxY);
                 vmWrap.ViewModel.SetAxisLimits(minX, maxX, minY, maxY);
-                this.BindingContext = vmWrap.ViewModel;
+                BindingContext = vmWrap.ViewModel;
                 InitializeComponent();
             }
             catch (Exception ex)
@@ -85,12 +82,12 @@ namespace SiamCross.Views
                 const float yReserve = 5;
                 double dx = (canvWidth) / (maxX - minX);
                 double dy = (canvHeight - yReserve) / (maxY - minY);
-                double yOffset = minY;               
+                double yOffset = minY;
 
-                var skPoints = new List<SKPoint>();
+                List<SKPoint> skPoints = new List<SKPoint>();
                 for (int i = 0; i < _points.GetLength(0); i++)
                 {
-                    float y = (float)canvHeight - 
+                    float y = (float)canvHeight -
                         (float)(_points[i, 1] * dy + Math.Abs(yOffset) * dy + yReserve / 2);
                     float x = (float)(_points[i, 0] * dx);
 
@@ -101,7 +98,7 @@ namespace SiamCross.Views
                 for (int i = 0; i < skPoints.Count - 1; i++)
                 {
                     canvas.DrawLine(skPoints[i], skPoints[i + 1], paint);
-                    if(skPoints[i].Y > canvHeight)
+                    if (skPoints[i].Y > canvHeight)
                     {
                         pList.Add(skPoints[i].Y);
                     }

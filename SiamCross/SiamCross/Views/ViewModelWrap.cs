@@ -14,7 +14,7 @@ namespace SiamCross.Views
 
         public ViewModelWrap()
         {
-            using (var scope = AppContainer.Container.BeginLifetimeScope())
+            using (ILifetimeScope scope = AppContainer.Container.BeginLifetimeScope())
             {
                 ViewModel = AppContainer.Container.Resolve<T>();
             }
@@ -22,7 +22,7 @@ namespace SiamCross.Views
 
         public ViewModelWrap(SensorData sensorData)
         {
-            using (var scope = AppContainer.Container.BeginLifetimeScope())
+            using (ILifetimeScope scope = AppContainer.Container.BeginLifetimeScope())
             {
                 ViewModel = AppContainer.Container.Resolve<T>(
                     new TypedParameter(typeof(SensorData), sensorData));
@@ -31,7 +31,7 @@ namespace SiamCross.Views
 
         public ViewModelWrap(Ddin2Measurement measurement)
         {
-            using (var scope = AppContainer.Container.BeginLifetimeScope())
+            using (ILifetimeScope scope = AppContainer.Container.BeginLifetimeScope())
             {
                 ViewModel = AppContainer.Container.Resolve<T>(
                     new TypedParameter(typeof(Ddin2Measurement), measurement));
@@ -40,7 +40,7 @@ namespace SiamCross.Views
 
         public ViewModelWrap(DuMeasurement measurement)
         {
-            using (var scope = AppContainer.Container.BeginLifetimeScope())
+            using (ILifetimeScope scope = AppContainer.Container.BeginLifetimeScope())
             {
                 ViewModel = AppContainer.Container.Resolve<T>(
                     new TypedParameter(typeof(DuMeasurement), measurement));
@@ -49,7 +49,7 @@ namespace SiamCross.Views
 
         public ViewModelWrap(ObservableCollection<MeasurementView> measurements)
         {
-            using (var scope = AppContainer.Container.BeginLifetimeScope())
+            using (ILifetimeScope scope = AppContainer.Container.BeginLifetimeScope())
             {
                 ViewModel = AppContainer.Container.Resolve<T>(
                     new TypedParameter(
@@ -59,7 +59,7 @@ namespace SiamCross.Views
 
         public ViewModelWrap(SoundSpeedModel soundSpeedModel)
         {
-            using (var scope = AppContainer.Container.BeginLifetimeScope())
+            using (ILifetimeScope scope = AppContainer.Container.BeginLifetimeScope())
             {
                 ViewModel = AppContainer.Container.Resolve<T>(
                     new TypedParameter(

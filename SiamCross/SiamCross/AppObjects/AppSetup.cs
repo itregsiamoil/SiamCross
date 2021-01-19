@@ -1,13 +1,15 @@
 ﻿using Autofac;
 using SiamCross.ViewModels;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.AppObjects
 {
+    [Preserve(AllMembers = true)]
     public class AppSetup
     {
         public IContainer CreateContainer()
         {
-            var containerBuilder = new ContainerBuilder();
+            ContainerBuilder containerBuilder = new ContainerBuilder();
             RegisterDependencies(containerBuilder);
             return containerBuilder.Build();
         }
@@ -26,7 +28,7 @@ namespace SiamCross.AppObjects
             cb.RegisterType<DirectoryViewModel>().AsSelf();
             cb.RegisterType<MeasurementsViewModel>().AsSelf();
             cb.RegisterType<MeasurementsSelectionViewModel>().AsSelf();
-            cb.RegisterType<SettingsViewModel>().AsSelf(); 
+            cb.RegisterType<SettingsViewModel>().AsSelf();
             cb.RegisterType<AddFieldViewModel>().AsSelf();
             cb.RegisterType<DuMeasurementViewModel>().AsSelf();
             cb.RegisterType<SoundSpeedViewModel>().AsSelf();

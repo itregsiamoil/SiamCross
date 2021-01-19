@@ -42,9 +42,9 @@ namespace SiamCross.Models.Sensors.Du
         /// <summary>
         /// Определитель версии прошивки
         /// </summary>
-        private FirmWaveQualifier _deviceFirmWaveQualifier;
+        private readonly FirmWaveQualifier _deviceFirmWaveQualifier;
 
-        public DuParser(bool isResponseCheck=false)
+        public DuParser(bool isResponseCheck = false)
         {
             _byteBuffer = new ByteBuffer(isResponseCheck);
         }
@@ -64,7 +64,7 @@ namespace SiamCross.Models.Sensors.Du
         {
             try
             {
-                var message = _byteBuffer.AddBytes(inputBytes);
+                byte[] message = _byteBuffer.AddBytes(inputBytes);
                 if (message.Length == 0)
                 {
                     return;
@@ -72,8 +72,8 @@ namespace SiamCross.Models.Sensors.Du
 
                 Debug.WriteLine("DU: " + BitConverter.ToString(message) + "\n");
 
-                var commandName = DefineCommand(message);
-                var commandData = ConvertToStringPayload(message);
+                DuCommandsEnum commandName = DefineCommand(message);
+                string commandData = ConvertToStringPayload(message);
 
                 switch (commandName)
                 {
@@ -94,12 +94,12 @@ namespace SiamCross.Models.Sensors.Du
                         Console.WriteLine("Read Measurement Report");
                         break;
                     case DuCommandsEnum.Revbit:
-                        var payload = GetPayload(message);
+                        byte[] payload = GetPayload(message);
 
                         Debug.WriteLine(BitConverter.ToString(payload));
                         Debug.WriteLine(AddZerosToBinary(Convert.ToString(payload[1], 2)));
                         Debug.WriteLine(AddZerosToBinary(Convert.ToString(payload[0], 2)));
-                     
+
                         break;
                     case DuCommandsEnum.Pressure:
                         ExportByteData(DuCommandsEnum.Pressure, message);
@@ -137,7 +137,7 @@ namespace SiamCross.Models.Sensors.Du
 
         private void ExportByteData(DuCommandsEnum commandName, byte[] message)
         {
-            var points = GetPayload(message);
+            byte[] points = GetPayload(message);
             ByteMessageReceived?.Invoke(commandName, points);
         }
 
@@ -149,7 +149,7 @@ namespace SiamCross.Models.Sensors.Du
         private byte[] GetPayload(byte[] message)
         {
             int payloadSize = message[8] + message[9] * 10;                // 9ый байт указывает на размер данных
-            var payloadBytes = new byte[payloadSize];
+            byte[] payloadBytes = new byte[payloadSize];
             if (message.Length > 12)
             {
                 for (int i = 0; i < payloadSize; i++)
@@ -172,9 +172,9 @@ namespace SiamCross.Models.Sensors.Du
             try
             {
                 string result = "";
-                var payloadBytes = GetPayload(message);
+                byte[] payloadBytes = GetPayload(message);
 
-                var dataType = DefineDataType(message);
+                DeviceRegistersTypes dataType = DefineDataType(message);
                 switch (dataType)
                 {
                     case DeviceRegistersTypes.Int32:
@@ -185,8 +185,8 @@ namespace SiamCross.Models.Sensors.Du
                         Debug.WriteLine($"TO INT16 {BitConverter.ToString(payloadBytes)}");
                         break;
                     case DeviceRegistersTypes.Int8:
-                        if(payloadBytes.Length == 1)
-                        result = BitConverter.ToInt16(new byte[]{ payloadBytes[0], 0x00}, 0).ToString();
+                        if (payloadBytes.Length == 1)
+                            result = BitConverter.ToInt16(new byte[] { payloadBytes[0], 0x00 }, 0).ToString();
                         break;
                     case DeviceRegistersTypes.S16:
                         float value = BitConverter.ToInt16(payloadBytes, 0);
@@ -219,9 +219,9 @@ namespace SiamCross.Models.Sensors.Du
         /// <returns></returns>
         public DeviceRegistersTypes DefineDataType(byte[] message)
         {
-            switch(message[7])
+            switch (message[7])
             {
-                case 0x00:                                  
+                case 0x00:
                     {
                         switch (message[5])
                         {
@@ -241,7 +241,7 @@ namespace SiamCross.Models.Sensors.Du
                                 }
                             case 0x10:                                          // Справочные регистры
                                 {
-                                    switch(message[4])
+                                    switch (message[4])
                                     {
                                         case 0x00:
                                             return DeviceRegistersTypes.Int32;
@@ -253,10 +253,10 @@ namespace SiamCross.Models.Sensors.Du
                             case 0x80:                                          // Параметры прибора и исследования
                                 return DeviceRegistersTypes.Int16;
                             case 0x84:                                          // Текущие данные
-                                return DeviceRegistersTypes.S16;                
+                                return DeviceRegistersTypes.S16;
                             case 0x88:                                          // Операционные регистры
                                 {
-                                    switch(message[4])
+                                    switch (message[4])
                                     {
                                         case 0x00:
                                             return DeviceRegistersTypes.Int8;
@@ -284,13 +284,13 @@ namespace SiamCross.Models.Sensors.Du
         /// <returns></returns>
         public DuCommandsEnum DefineCommand(byte[] message)
         {
-            var commandBytes = new byte[]
+            byte[] commandBytes = new byte[]
             {
                 message[4],
                 message[5],
                 message[6],
                 message[7]
-            }; 
+            };
             if (commandBytes[3] == 0x81) //Если чтение графика эхограммы
             {
                 return DuCommandsEnum.EchogramData;
@@ -298,7 +298,7 @@ namespace SiamCross.Models.Sensors.Du
 
             else
             {
-                foreach (var key in _commandDictionary.Keys)
+                foreach (byte[] key in _commandDictionary.Keys)
                 {
                     if (key[0] == commandBytes[0] &&
                        key[1] == commandBytes[1] &&
@@ -316,7 +316,7 @@ namespace SiamCross.Models.Sensors.Du
         /// <summary>
         /// Словарь соответствия адрессов командам
         /// </summary>
-        private Dictionary<byte[], DuCommandsEnum> _commandDictionary = new Dictionary<byte[], DuCommandsEnum>()
+        private readonly Dictionary<byte[], DuCommandsEnum> _commandDictionary = new Dictionary<byte[], DuCommandsEnum>()
         {
             { new byte[]{ 0x00, 0x00, 0x00, 0x00}, DuCommandsEnum.DeviceType },
             { new byte[]{ 0x02, 0x00, 0x00, 0x00}, DuCommandsEnum.MemoryModelVersion },

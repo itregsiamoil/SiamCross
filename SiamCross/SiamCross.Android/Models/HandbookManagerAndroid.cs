@@ -1,22 +1,14 @@
-﻿using System;
+﻿using Android.Runtime;
+using Newtonsoft.Json;
+using SiamCross.Models.Tools;
+using SiamCross.Services;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Newtonsoft.Json;
-using SiamCross.Services;
-using SiamCross.Models.Tools;
 using System.Reflection;
 
 namespace SiamCross.Droid.Models
 {
+    [Preserve(AllMembers = true)]
     public class HandbookManagerAndroid : IHandbookManager
     {
         private static readonly JsonSerializerSettings
@@ -31,11 +23,11 @@ namespace SiamCross.Droid.Models
         #region Field
         public Dictionary<string, int> LoadFields()
         {
-            var fieldDictionary = new Dictionary<string, int>();
+            Dictionary<string, int> fieldDictionary = new Dictionary<string, int>();
 
             lock (_fieldFileLocker)
             {
-                var backingFile = Path.Combine(
+                string backingFile = Path.Combine(
                     System.Environment.GetFolderPath(
                         System.Environment.SpecialFolder.Personal), "Fields.json");
 
@@ -44,13 +36,13 @@ namespace SiamCross.Droid.Models
                     return fieldDictionary;
                 }
 
-                var file = new StreamReader(backingFile, true);
+                StreamReader file = new StreamReader(backingFile, true);
 
                 if (file != null)
                 {
                     while (!file.EndOfStream)
                     {
-                        var line = file.ReadLine();
+                        string line = file.ReadLine();
 
                         object item = JsonConvert.DeserializeObject(
                             line, _settings);
@@ -58,7 +50,7 @@ namespace SiamCross.Droid.Models
                         switch (item)
                         {
                             case Dictionary<string, int> fieldPair:
-                                foreach (var pair in fieldPair)
+                                foreach (KeyValuePair<string, int> pair in fieldPair)
                                 {
                                     fieldDictionary.TryAdd(pair.Key, pair.Value);
                                 }
@@ -79,16 +71,16 @@ namespace SiamCross.Droid.Models
             lock (_fieldFileLocker)
             {
 
-                var backingFile = Path.Combine(
+                string backingFile = Path.Combine(
                     System.Environment.GetFolderPath(
                         System.Environment.SpecialFolder.Personal),
                     "Fields.json");
 
-                using (var file = File.CreateText(backingFile))
+                using (StreamWriter file = File.CreateText(backingFile))
                 {
-                    foreach (var field in fieldDict)
+                    foreach (KeyValuePair<string, int> field in fieldDict)
                     {
-                        var jsonString = JsonConvert.SerializeObject(
+                        string jsonString = JsonConvert.SerializeObject(
                             fieldDict, _settings);
 
                         file.WriteLine(jsonString);
@@ -103,11 +95,11 @@ namespace SiamCross.Droid.Models
 
         public List<SoundSpeedModel> LoadSoundSpeeds()
         {
-            var soundSpeedList = new List<SoundSpeedModel>();
+            List<SoundSpeedModel> soundSpeedList = new List<SoundSpeedModel>();
 
             lock (_soundSpeedFileLocker)
             {
-                var backingFile = Path.Combine(
+                string backingFile = Path.Combine(
                     System.Environment.GetFolderPath(
                         System.Environment.SpecialFolder.Personal), "SoundSpeed.json");
 
@@ -119,13 +111,13 @@ namespace SiamCross.Droid.Models
                     return soundSpeedList;
                 }
 
-                var file = new StreamReader(backingFile, true);
+                StreamReader file = new StreamReader(backingFile, true);
 
                 if (file != null)
                 {
                     while (!file.EndOfStream)
                     {
-                        var line = file.ReadLine();
+                        string line = file.ReadLine();
 
                         object item = JsonConvert.DeserializeObject(
                             line, _settings);
@@ -150,16 +142,16 @@ namespace SiamCross.Droid.Models
             lock (_soundSpeedFileLocker)
             {
 
-                var backingFile = Path.Combine(
+                string backingFile = Path.Combine(
                     System.Environment.GetFolderPath(
                         System.Environment.SpecialFolder.Personal),
                     "SoundSpeed.json");
 
-                using (var file = File.CreateText(backingFile))
+                using (StreamWriter file = File.CreateText(backingFile))
                 {
-                    foreach (var speed in soundSpeedList)
+                    foreach (SoundSpeedModel speed in soundSpeedList)
                     {
-                        var jsonString = JsonConvert.SerializeObject(
+                        string jsonString = JsonConvert.SerializeObject(
                             speed, _settings);
 
                         file.WriteLine(jsonString);
@@ -170,25 +162,25 @@ namespace SiamCross.Droid.Models
 
         public List<SoundSpeedModel> CreateDefaultSoundSpeeds()
         {
-            var assembly = IntrospectionExtensions.GetTypeInfo(typeof(App)).Assembly;
-            var soundFileParcer = new SoundSpeedFileParcer();
+            Assembly assembly = IntrospectionExtensions.GetTypeInfo(typeof(App)).Assembly;
+            SoundSpeedFileParcer soundFileParcer = new SoundSpeedFileParcer();
 
             List<KeyValuePair<float, float>> langepasDictionary;
             List<KeyValuePair<float, float>> tatariaDictonary;
 
             Stream langepasStream = assembly.GetManifestResourceStream("SiamCross.DefaultSoundSpeedResources.langepas");
-            using (var reader = new StreamReader(langepasStream))
+            using (StreamReader reader = new StreamReader(langepasStream))
             {
-                var text = reader.ReadToEnd();
+                string text = reader.ReadToEnd();
                 langepasDictionary = soundFileParcer.TryToParce(text);
             }
 
             Stream tatariaStream = assembly.GetManifestResourceStream("SiamCross.DefaultSoundSpeedResources.tataria");
-            using (var reader = new StreamReader(tatariaStream))
+            using (StreamReader reader = new StreamReader(tatariaStream))
             {
-                var text = reader.ReadToEnd();
+                string text = reader.ReadToEnd();
                 tatariaDictonary = soundFileParcer.TryToParce(text);
-            }       
+            }
 
             return new List<SoundSpeedModel>()
             {

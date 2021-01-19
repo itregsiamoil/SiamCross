@@ -1,17 +1,12 @@
 ﻿//#define DEBUG_UNIT
 using System;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Text;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 
 namespace SiamCross.Models.Tools
 {
 
     public class DataBuffer
     {
-        private byte[] mBuff = new byte[512];
+        private readonly byte[] mBuff = new byte[512];
         private UInt32 mBuffLength = 0;
         private UInt32 DoGetLength()
         {
@@ -19,11 +14,11 @@ namespace SiamCross.Models.Tools
                 return mBuffLength;
             }
         }
-        public UInt32 Length { get => DoGetLength(); }
+        public UInt32 Length => DoGetLength();
 
         public bool Append(byte[] src, int len)
         {
-                DoAppend(src.AsSpan().Slice(0, len));
+            DoAppend(src.AsSpan().Slice(0, len));
             return true;
         }
         public bool Append(byte[] src)
@@ -71,7 +66,7 @@ namespace SiamCross.Models.Tools
             UInt32 before = mBuffLength;
             if (mBuffLength < qty || mBuff.Length < qty)
             {
-                DebugLog.WriteLine($"Buffer reduce error: {mBuffLength.ToString()} - {qty.ToString()}");
+                DebugLog.WriteLine($"Buffer reduce error: {mBuffLength} - {qty}");
                 mBuffLength = qty = 0;
             }
             // 0
@@ -85,7 +80,7 @@ namespace SiamCross.Models.Tools
             Span<byte> src_buf = mBuff.AsSpan().Slice((int)qty, (int)mBuffLength);
             src_buf.CopyTo(dst_buf);
             DebugLog.WriteLine($"Reducing " + qty.ToString() + " bytes "
-                + $"BuffLength {before.ToString()} -> {mBuffLength.ToString()}");
+                + $"BuffLength {before} -> {mBuffLength}");
             //3
             //mBuffLength -= qty;
             //byte[] tmp = new byte[mBuffLength];
@@ -109,7 +104,7 @@ namespace SiamCross.Models.Tools
             if (0 > free_space)
             {
                 DebugLog.WriteLine($"Wrong buffer length is: " +
-                    $"{mBuffLength.ToString()}");
+                    $"{mBuffLength}");
                 mBuffLength = 0;
             }
 
@@ -118,7 +113,7 @@ namespace SiamCross.Models.Tools
                 UInt32 reduce_size = (UInt32)src_len - (UInt32)free_space;
                 DoReduce(reduce_size);
                 DebugLog.WriteLine($"Buffer overrun: add" +
-                    $" {src_len.ToString()}  length is {mBuffLength.ToString()}");
+                    $" {src_len}  length is {mBuffLength}");
             }
             //Array.Copy(src, 0, mBuff, mBuffLength, src.Length);
             Span<byte> src_buf = src.Slice(0, src_len);
@@ -126,9 +121,9 @@ namespace SiamCross.Models.Tools
             src_buf.CopyTo(dst_buf);
             mBuffLength += (UInt32)src_len;
 
-            DebugLog.WriteLine($"Appending " + src.Length.ToString() +" bytes "
-                 +$": [ {BitConverter.ToString(src.ToArray())} ] "
-                 + $"BuffLength {before.ToString()} -> {mBuffLength.ToString()}");
+            DebugLog.WriteLine($"Appending " + src.Length.ToString() + " bytes "
+                 + $": [ {BitConverter.ToString(src.ToArray())} ] "
+                 + $"BuffLength {before} -> {mBuffLength}");
         }
         private byte[] TryGetPackage()
         {
@@ -157,7 +152,7 @@ namespace SiamCross.Models.Tools
                 DoReduce(buf_qty);
                 return new byte[] { };
             }
-            if (min_qty-1 > (buf_qty - pkg_start - 1))
+            if (min_qty - 1 > (buf_qty - pkg_start - 1))
             {
                 DebugLog.WriteLine($"Data required ");
                 return new byte[] { };
@@ -193,7 +188,7 @@ namespace SiamCross.Models.Tools
 
             }
 
-            
+
             //ReadOnlySpan<byte> addr_arr = buf.Slice((int)pkg_start + 4, 4);
             UInt32 addr = BitConverter.ToUInt32(mBuff, (int)pkg_start + 4);
             //ReadOnlySpan<byte> data_len_arr = buf.Slice((int)pkg_start + 8, 2);
@@ -202,7 +197,7 @@ namespace SiamCross.Models.Tools
             UInt16 rq_crc = BitConverter.ToUInt16(mBuff, (int)pkg_start + 10);
             byte[] rq_calc_crc_arr = CrcModbusCalculator.ModbusCrc(mBuff, (int)pkg_start + 2, 12 - 2 - 2);
             UInt16 rq_calc_crc = BitConverter.ToUInt16(rq_calc_crc_arr, 0);
-            
+
             //if (rq_calc_crc != rq_crc)
             //{
             //    DebugLog.WriteLine($"Request CRC mismatch: {BitConverter.ToString(buf.ToArray())}");
@@ -217,10 +212,10 @@ namespace SiamCross.Models.Tools
                 if (12 + data_len + 2 > (buf_qty - pkg_start))
                 {
                     DebugLog.WriteLine($"Data required data_len= "
-                        + data_len.ToString()+ " buflen="+(buf_qty - pkg_start).ToString());
+                        + data_len.ToString() + " buflen=" + (buf_qty - pkg_start).ToString());
                     return new byte[] { };
                 }
-                    
+
                 UInt32 pkg_len = (UInt32)12 + data_len + 2;
                 UInt32 pkg_end = pkg_start + pkg_len;
 

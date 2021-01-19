@@ -12,21 +12,23 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class MeasurementsViewModel : BaseViewModel, IViewModel
     {
         public void PushPage(MeasurementView selectedMeasurement)
         {
             try
             {
-                if (   selectedMeasurement.Name.Contains("DDIM")
+                if (selectedMeasurement.Name.Contains("DDIM")
                     || selectedMeasurement.Name.Contains("DDIN")
                     || selectedMeasurement.Name.Contains("SIDDOSA3M")
                     )
                 {
-                    var measurement = _ddin2Measurements?
+                    Ddin2Measurement measurement = _ddin2Measurements?
                         .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
                     if (measurement != null)
                     {
@@ -40,7 +42,7 @@ namespace SiamCross.ViewModels
                 }
                 else if (selectedMeasurement.Name.Contains("DU"))
                 {
-                    var measurement = _duMeasurements?
+                    DuMeasurement measurement = _duMeasurements?
                         .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
                     if (measurement != null)
                     {
@@ -63,7 +65,7 @@ namespace SiamCross.ViewModels
         private bool CanOpenModalPage(Type type)
         {
             bool result = false;
-            var stack = App.NavigationPage.Navigation.ModalStack;
+            IReadOnlyList<Page> stack = App.NavigationPage.Navigation.ModalStack;
 
             if (stack.Count > 0)
             {
@@ -81,7 +83,7 @@ namespace SiamCross.ViewModels
 
         private bool CanOpenPage(Type type)
         {
-            var stack = App.NavigationPage.Navigation.NavigationStack;
+            IReadOnlyList<Page> stack = App.NavigationPage.Navigation.NavigationStack;
             if (stack[stack.Count - 1].GetType() != type)
                 return true;
             return false;
@@ -114,7 +116,7 @@ namespace SiamCross.ViewModels
 
             List<MeasurementView> ordered = Measurements.OrderByDescending(m => m.Date).ToList();
             Measurements.Clear();
-            foreach (var m in ordered)
+            foreach (MeasurementView m in ordered)
             {
                 Measurements.Add(m);
             }
@@ -127,7 +129,7 @@ namespace SiamCross.ViewModels
                     {
                         try
                         {
-                            var mv = Measurements
+                            MeasurementView mv = Measurements
                             .SingleOrDefault(m => m.Id == arg.Id && m.Name == arg.Name);
                             if (mv != null)
                             {
@@ -150,7 +152,7 @@ namespace SiamCross.ViewModels
                 {
                     try
                     {
-                        var mv = Measurements
+                        MeasurementView mv = Measurements
                             .SingleOrDefault(m => m.Id == args.Id && m.Name == args.Name);
                         if (mv != null)
                         {
@@ -194,7 +196,7 @@ namespace SiamCross.ViewModels
                 _ddin2Measurements = DataRepository.Instance.GetDdin2Measurements().ToList();
                 _duMeasurements = DataRepository.Instance.GetDuMeasurements().ToList();
 
-                foreach (var m in _ddin2Measurements)
+                foreach (Ddin2Measurement m in _ddin2Measurements)
                 {
                     Measurements.Add(
                         new MeasurementView
@@ -208,7 +210,7 @@ namespace SiamCross.ViewModels
                         });
                 }
 
-                foreach (var m in _duMeasurements)
+                foreach (DuMeasurement m in _duMeasurements)
                 {
                     Measurements.Add(
                         new MeasurementView

@@ -38,7 +38,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
         /// <summary>
         /// Определитель версии прошивки
         /// </summary>
-        private FirmWaveQualifier _deviceFirmWaveQualifier;
+        private readonly FirmWaveQualifier _deviceFirmWaveQualifier;
 
         public Ddin2Parser()
         {
@@ -60,14 +60,14 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
         {
             try
             {
-                var message = _byteBuffer.AddBytes(inputBytes);
+                byte[] message = _byteBuffer.AddBytes(inputBytes);
                 if (message.Length == 0)
                 {
                     return;
                 }
 
-                var commandName = DefineCommand(message);
-                var commandData = ConvertToStringPayload(message);
+                string commandName = DefineCommand(message);
+                string commandData = ConvertToStringPayload(message);
 
                 switch (commandName)
                 {
@@ -90,7 +90,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
                         _deviceFirmWaveQualifier.DeviceNameSize = GetPayload(message);
                         break;
                     case "Program":
-                        var adr = BitConverter.ToString(new[] { message[5], message[4] });
+                        string adr = BitConverter.ToString(new[] { message[5], message[4] });
                         MessageReceived?.Invoke(commandName, adr);
                         break;
                     case "ExportDynGraph":
@@ -122,13 +122,13 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
                 _logger.Error(ex, "ByteProcess" + ex.StackTrace + "\n");
                 _logger.Error(ex, "ByteBuffer is recreate, throw force skip!" + "\n");
                 _byteBuffer = new ByteBuffer(_byteBuffer.IsResponseCheck);
-               // throw;
+                // throw;
             }
         }
 
         private void ExportByteData(string commandName, byte[] message)
         {
-            var points = GetPayload(message);
+            byte[] points = GetPayload(message);
             ByteMessageReceived?.Invoke(commandName, points);
         }
 
@@ -137,11 +137,11 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        static public byte[] GetPayload(byte[] message)
+        public static byte[] GetPayload(byte[] message)
         {
             //Console.WriteLine("GetPayload READ:" + BitConverter.ToString(message));
             int payloadSize = message[8] + message[9] * 16;                // 9ый байт указывает на размер данных
-            var payloadBytes = new byte[payloadSize];
+            byte[] payloadBytes = new byte[payloadSize];
             if (message.Length > 12)
             {
                 for (int i = 0; i < payloadSize; i++)
@@ -159,12 +159,12 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        static public string ConvertToStringPayload(byte[] message)
+        public static string ConvertToStringPayload(byte[] message)
         {
-            var payloadBytes = GetPayload(message);
+            byte[] payloadBytes = GetPayload(message);
 
             string result = "Данные потеряны";
-            var dataType = DefineDataType(message);
+            string dataType = DefineDataType(message);
             switch (dataType)
             {
                 case "int32":
@@ -200,7 +200,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
                     result = ":" + BitConverter.ToString(new byte[] { message[8] })
                                  + BitConverter.ToString(new byte[] { message[5] })
                                  + BitConverter.ToString(new byte[] { message[4] }) + "00";
-                    foreach (var character in payloadBytes.Reverse())
+                    foreach (byte character in payloadBytes.Reverse())
                     {
                         result += BitConverter.ToString(new byte[] { character });
                     }
@@ -209,7 +209,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
                     break;
                 case "report":
                     string resultString = "";
-                    foreach (var oneByte in payloadBytes.Reverse())
+                    foreach (byte oneByte in payloadBytes.Reverse())
                     {
                         resultString = resultString + oneByte + " ";
                     }
@@ -228,7 +228,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
         /// </summary>
         /// <param name="deviceCode"></param>
         /// <returns></returns>
-        static public string DefineDeviceType(string deviceCode)
+        public static string DefineDeviceType(string deviceCode)
         {
             switch (deviceCode)
             {
@@ -246,7 +246,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        static public string DefineDataType(byte[] message)
+        public static string DefineDataType(byte[] message)
         {
             if (message[7] == 0xFF)
             {
@@ -347,7 +347,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        static public string DefineCommand(byte[] message)
+        public static string DefineCommand(byte[] message)
         {
             if (message[3] == 0x02 && message[7] == 0xFF)
             {
@@ -360,7 +360,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
             }
 
             string commandName = "";
-            var commandBytes = new byte[]
+            byte[] commandBytes = new byte[]
             {
                 message[4],
                 message[5],
@@ -394,7 +394,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
             }
             else
             {
-                foreach (var key in _commandDictionary.Keys)
+                foreach (byte[] key in _commandDictionary.Keys)
                 {
                     if (key[0] == commandBytes[0] &&
                        key[1] == commandBytes[1] &&
@@ -412,7 +412,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
         /// <summary>
         /// Словарь соответствия адрессов командам
         /// </summary>
-        static private Dictionary<byte[], string> _commandDictionary = new Dictionary<byte[], string>()
+        private static readonly Dictionary<byte[], string> _commandDictionary = new Dictionary<byte[], string>()
         {
             { new byte[]{ 0x00, 0x00, 0x00, 0x00}, "DeviceType" },
             { new byte[]{ 0x02, 0x00, 0x00, 0x00}, "MemoryModelVersion" },

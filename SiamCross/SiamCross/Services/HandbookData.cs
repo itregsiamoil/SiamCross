@@ -1,12 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Autofac;
 using SiamCross.AppObjects;
+using SiamCross.Models.Tools;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac;
-using SiamCross.Models.Tools;
 
 namespace SiamCross.Services
 {
@@ -15,8 +11,8 @@ namespace SiamCross.Services
         private static readonly Lazy<HandbookData> _instance =
             new Lazy<HandbookData>(() => new HandbookData());
 
-        public static HandbookData Instance { get => _instance.Value; }
-        private IHandbookManager _handbookManager;
+        public static HandbookData Instance => _instance.Value;
+        private readonly IHandbookManager _handbookManager;
 
         private Dictionary<string, int> _fieldDictionary;
         private List<SoundSpeedModel> _soundSpeedList;
@@ -52,9 +48,9 @@ namespace SiamCross.Services
 
         public IEnumerable<string> GetFieldList()
         {
-            var fieldDictionay = GetFieldDictionary();
-            var fieldList = new List<string>();
-            foreach(var field in fieldDictionay)
+            Dictionary<string, int> fieldDictionay = GetFieldDictionary();
+            List<string> fieldList = new List<string>();
+            foreach (KeyValuePair<string, int> field in fieldDictionay)
             {
                 fieldList.Add(field.Key + ": " + field.Value);
             }

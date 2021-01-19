@@ -1,7 +1,5 @@
 ﻿using SiamCross.Models.Tools;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,7 +7,7 @@ namespace SiamCross.Models.Sensors.Dmg
 {
     public abstract class DmgBaseSensor : BaseSensor
     {
-        private DmgBaseQuickReportBuiler _reportBuilder = new DmgBaseQuickReportBuiler();
+        private readonly DmgBaseQuickReportBuiler _reportBuilder = new DmgBaseQuickReportBuiler();
 
         public DmgBaseSensor(IProtocolConnection conn, SensorData sensorData)
             : base(conn, sensorData)
@@ -34,7 +32,7 @@ namespace SiamCross.Models.Sensors.Dmg
             resp.AsSpan().Slice(12, 2).CopyTo(fw_size);
 
             cancelToken.ThrowIfCancellationRequested();
-            var req = new MessageCreator().CreateReadMessage(fw_address, fw_size);
+            byte[] req = new MessageCreator().CreateReadMessage(fw_address, fw_size);
             resp = await Connection.Exchange(req); ;
             if (0 == resp.Length)
                 return false;

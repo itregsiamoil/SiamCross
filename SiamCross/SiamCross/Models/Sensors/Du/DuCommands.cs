@@ -240,11 +240,11 @@ namespace SiamCross.Models.Sensors.Du
         /// </summary>
         public static Dictionary<DuCommandsEnum, byte[]> CommandRegistersDictionary =
             new Dictionary<DuCommandsEnum, byte[]>()
-        {
-            [DuCommandsEnum.EchogramData] = new byte[]
+            {
+                [DuCommandsEnum.EchogramData] = new byte[]
             {
                 0x00, 0x00, 0x00, 0x81
             },
-        };
+            };
     }
 }

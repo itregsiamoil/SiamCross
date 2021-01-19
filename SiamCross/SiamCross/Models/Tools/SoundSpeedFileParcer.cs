@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace SiamCross.Models.Tools
 {
@@ -9,18 +6,18 @@ namespace SiamCross.Models.Tools
     {
         public List<KeyValuePair<float, float>> TryToParce(string fileText)
         {
-            var soundSpeedsList = new List<KeyValuePair<float, float>>();
+            List<KeyValuePair<float, float>> soundSpeedsList = new List<KeyValuePair<float, float>>();
 
             string[] lines = fileText.Split('\n');
 
-            foreach (var line in lines)
+            foreach (string line in lines)
             {
                 if (line.Length == 0)
                 {
                     continue;
                 }
                 List<string> lineValues = new List<string>();
-                foreach (var str in line.Split(' '))
+                foreach (string str in line.Split(' '))
                 {
                     if (str != "")
                     {

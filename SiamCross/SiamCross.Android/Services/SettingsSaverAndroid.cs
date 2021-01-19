@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Android.Runtime;
+using Newtonsoft.Json;
 using SiamCross.Droid.Services;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
@@ -10,6 +11,7 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(SettingsSaverAndroid))]
 namespace SiamCross.Droid.Services
 {
+    [Preserve(AllMembers = true)]
     public class SettingsSaverAndroid : ISettingsSaver
     {
         private readonly SemaphoreSlim _mutex = new SemaphoreSlim(1);
@@ -38,11 +40,11 @@ namespace SiamCross.Droid.Services
             await _mutex.WaitAsync();
             try
             {
-                var file = new StreamReader(_path);
+                StreamReader file = new StreamReader(_path);
 
                 while (!file.EndOfStream)
                 {
-                    var line = await file.ReadLineAsync();
+                    string line = await file.ReadLineAsync();
 
                     object item = JsonConvert.DeserializeObject(
                         line, _jsonSettings);
@@ -70,9 +72,9 @@ namespace SiamCross.Droid.Services
 
             try
             {
-                using (var file = new StreamWriter(_path))
+                using (StreamWriter file = new StreamWriter(_path))
                 {
-                    var jsonString = JsonConvert.SerializeObject(settings,
+                    string jsonString = JsonConvert.SerializeObject(settings,
                                                             _jsonSettings);
                     await file.WriteLineAsync(jsonString);
                 }

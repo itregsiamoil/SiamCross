@@ -1,25 +1,22 @@
 ﻿using SiamCross.DataBase.DataBaseModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using Xamarin.Forms.Internals;
 using System.Globalization;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace SiamCross.Models.Tools
 {
     public class XmlCreator
     {
-        static string ExtractName(string str)
+        private static string ExtractName(string str)
         {
             int pos = str.IndexOf('_', 0);
-            if(0 < pos)
+            if (0 < pos)
                 return str.Substring(0, pos);
 
             pos = -1;
-            for (int i=0; i<str.Length && -1==pos; ++i)
+            for (int i = 0; i < str.Length && -1 == pos; ++i)
             {
                 if (!char.IsLetter(str[i]))
                     pos = i;
@@ -29,7 +26,8 @@ namespace SiamCross.Models.Tools
 
             return str;
         }
-        static string ExtractNumber(string str)
+
+        private static string ExtractNumber(string str)
         {
             int pos = str.IndexOf('_', 0);
             if (0 < pos)
@@ -57,7 +55,7 @@ namespace SiamCross.Models.Tools
 
             List<double> movement = new List<double>();
             List<double> weight = new List<double>();
-            var discrets = DgmConverter.GetXYs(
+            double[,] discrets = DgmConverter.GetXYs(
                 dbDdinModel.DynGraph.ToList(),
                 dbDdinModel.Step,
                 dbDdinModel.WeightDiscr);
@@ -67,16 +65,16 @@ namespace SiamCross.Models.Tools
                 weight.Add(discrets[i, 1]);
             }
 
-            var maxStaticW = weight.Max();
-            var minStaticW = weight.Min();
+            double maxStaticW = weight.Max();
+            double minStaticW = weight.Min();
 
-            var month = dbDdinModel.DateTime.Date.Month.ToString();
-            if(month.Length < 2)
+            string month = dbDdinModel.DateTime.Date.Month.ToString();
+            if (month.Length < 2)
             {
                 month = "0" + month;
             }
 
-            var day = dbDdinModel.DateTime.Date.Day.ToString();
+            string day = dbDdinModel.DateTime.Date.Day.ToString();
             if (day.Length < 2)
             {
                 day = "0" + day;
@@ -87,7 +85,7 @@ namespace SiamCross.Models.Tools
             string time = dbDdinModel.DateTime.TimeOfDay.ToString().Split('.')[0];
 
             string field = "";
-            var tempField = dbDdinModel.Field.Split(':');
+            string[] tempField = dbDdinModel.Field.Split(':');
             if (tempField.Length > 1)
             {
                 if (tempField[1].Length > 1)
@@ -100,7 +98,7 @@ namespace SiamCross.Models.Tools
 
             int sens_type = 0;
             string lwname = name.ToLower();
-            if (     lwname.Contains("siddos") || lwname.Contains("сиддос"))
+            if (lwname.Contains("siddos") || lwname.Contains("сиддос"))
                 sens_type = 0;
             else if (lwname.Contains("ddin") || lwname.Contains("ддин"))
                 sens_type = 1;
@@ -151,7 +149,7 @@ namespace SiamCross.Models.Tools
                                             new XAttribute("MSVDICTIONARYID", "sidskippedcyclecount")),
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", dbDdinModel.TimeDiscr.ToString()),         
+                                            new XAttribute("MSVDOUBLE", dbDdinModel.TimeDiscr.ToString()),
                                             new XAttribute("MSVDICTIONARYID", "sidtimediscrete")),
 
                                         new XElement("Value",
@@ -167,8 +165,8 @@ namespace SiamCross.Models.Tools
                                             new XAttribute("MSVDICTIONARYID", "holeindex")),
 
                                         new XElement("Value",
-                                            new XAttribute("MSVDOUBLE", dbDdinModel.Rod),                    
-                                            new XAttribute("MSVDICTIONARYID", "dynbossdiameter")),                        
+                                            new XAttribute("MSVDOUBLE", dbDdinModel.Rod),
+                                            new XAttribute("MSVDICTIONARYID", "dynbossdiameter")),
 
                                         new XElement("Value",
                                             new XAttribute("MSVDOUBLE", dbDdinModel.TravelLength.ToString("N3")),
@@ -206,20 +204,20 @@ namespace SiamCross.Models.Tools
             float maxX;
             float maxY;
 
-            var convertedEhogram = EchogramConverter.GetPoints(dbDuModel
+            double[,] convertedEhogram = EchogramConverter.GetPoints(dbDuModel
                 , out minX, out maxX, out minY, out maxY);
             for (int i = 0; i < convertedEhogram.GetLength(0); i++)
             {
                 discretsY.Add(convertedEhogram[i, 1]);
             }
 
-            var month = dbDuModel.DateTime.Date.Month.ToString();
+            string month = dbDuModel.DateTime.Date.Month.ToString();
             if (month.Length < 2)
             {
                 month = "0" + month;
             }
 
-            var day = dbDuModel.DateTime.Date.Day.ToString();
+            string day = dbDuModel.DateTime.Date.Day.ToString();
             if (day.Length < 2)
             {
                 day = "0" + day;
@@ -230,7 +228,7 @@ namespace SiamCross.Models.Tools
             string time = dbDuModel.DateTime.TimeOfDay.ToString().Split('.')[0];
 
             string field = "";
-            var tempField = dbDuModel.Field.Split(':');
+            string[] tempField = dbDuModel.Field.Split(':');
             if (tempField.Length > 1)
             {
                 if (tempField[1].Length > 1)
@@ -244,15 +242,15 @@ namespace SiamCross.Models.Tools
             {
                 measurementType = 1;
             }
-            else if(dbDuModel.MeasurementType == Resource.DynamicLevel)
+            else if (dbDuModel.MeasurementType == Resource.DynamicLevel)
             {
                 measurementType = 2;
             }
 
-            var numberOfCorrectionTable = "0";
+            string numberOfCorrectionTable = "0";
 
-            var stringFragments = dbDuModel.SoundSpeedCorrection.Split(' ');
-            if(stringFragments.Length == 2)
+            string[] stringFragments = dbDuModel.SoundSpeedCorrection.Split(' ');
+            if (stringFragments.Length == 2)
             {
                 numberOfCorrectionTable = stringFragments[1];
             }
@@ -273,7 +271,7 @@ namespace SiamCross.Models.Tools
                                     new XElement("Header",
                                         new XAttribute("MESTYPEID", "levelgage"),
                                         new XAttribute("MESSTARTDATE", date + "T" + time),
-                                        new XAttribute("MESDEVICEOPERATORID", "0"),                                             
+                                        new XAttribute("MESDEVICEOPERATORID", "0"),
                                         new XAttribute("MESDEVICEFIELDID", field),
                                         new XAttribute("MESDEVICEWELLCLUSTERID", dbDuModel.Bush.ToString()),
                                         new XAttribute("MESDEVICEWELLID", dbDuModel.Well.ToString()),
@@ -320,12 +318,12 @@ namespace SiamCross.Models.Tools
 
         private const float arrayDivider = 10;
 
-        private String BinaryToBase64(double[] array, int div) //!
+        private string BinaryToBase64(double[] array, int div) //!
         {
-            return Convert.ToBase64String(array.SelectMany(n => 
+            return Convert.ToBase64String(array.SelectMany(n =>
             {
                 return BitConverter.GetBytes(n / div);
-            }).ToArray(), 
+            }).ToArray(),
             Base64FormattingOptions.None);
         }
 
@@ -335,7 +333,7 @@ namespace SiamCross.Models.Tools
             {
                 if (array.Count() > 0)
                 {
-                    var trimedZerosList = new List<double>();
+                    List<double> trimedZerosList = new List<double>();
                     for (int i = 0; i < period; i++)
                     {
                         trimedZerosList.Add(array[i]);

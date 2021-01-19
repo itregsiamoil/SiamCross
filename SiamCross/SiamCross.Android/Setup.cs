@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using Android.Runtime;
+using Autofac;
 using Mono.Data.Sqlite;
 using SiamCross.AppObjects;
 using SiamCross.DataBase;
@@ -16,6 +17,7 @@ using System.Data;
 
 namespace SiamCross.Droid
 {
+    [Preserve(AllMembers = true)]
     public class Setup : AppSetup
     {
         protected override void RegisterDependencies(ContainerBuilder cb)
@@ -39,5 +41,5 @@ namespace SiamCross.Droid
             cb.RegisterType<FileOpenDialogAndroid>().As<IFileOpenDialog>();
             base.RegisterDependencies(cb);
         }
-    }    
+    }
 }

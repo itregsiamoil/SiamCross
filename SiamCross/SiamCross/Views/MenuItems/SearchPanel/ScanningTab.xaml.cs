@@ -6,7 +6,6 @@ using SiamCross.Services;
 using SiamCross.Services.Logging;
 using SiamCross.ViewModels;
 using System;
-using System.Diagnostics;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -17,12 +16,12 @@ namespace SiamCross.Views.MenuItems.SearchPanel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 
-        private ScannerViewModel _vm;
+        private readonly ScannerViewModel _vm;
         public ScanningTab()
         {
             InitializeComponent();
             _vm = new ViewModelWrap<ScannerViewModel>().ViewModel;
-            this.BindingContext = _vm;
+            BindingContext = _vm;
             _vm.ScanTimeoutElapsed += () => ScanAnimation.IsRunning = false;
             scannedDevicesList.RefreshCommand = new Command(() =>
             {
@@ -42,7 +41,7 @@ namespace SiamCross.Views.MenuItems.SearchPanel
         public void ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             try
-            {        
+            {
                 if (e.SelectedItem != null)
                 {
                     if (e.SelectedItem is ScannedDeviceInfo dev)

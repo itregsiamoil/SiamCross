@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
-using SiamCross.Models;
-using Xamarin.Forms;
-using SiamCross.Views;
-using SiamCross.Views.MenuItems;
-using SiamCross.Services.Logging;
-using SiamCross.AppObjects;
-using Autofac;
+﻿using Autofac;
 using NLog;
-using SiamCross.Views.MenuItems.SearchPanel;
-using SiamCross.Views.MenuItems.HandbookPanel;
+using SiamCross.AppObjects;
 using SiamCross.Models.Tools;
+using SiamCross.Services.Logging;
+using SiamCross.Views.MenuItems;
+using SiamCross.Views.MenuItems.HandbookPanel;
+using SiamCross.Views.MenuItems.SearchPanel;
+using System;
+using System.Collections.Generic;
+using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
@@ -38,13 +35,10 @@ namespace SiamCross.ViewModels
         public ICommand GoSettingsPanel { get; set; }
         public ICommand GoAboutPanel { get; set; }
 
-        public MenuPageItem SelectedItem 
-        { 
-            get => _selectedItem; 
-            set
-            {
-                _selectedItem = value;
-            }
+        public MenuPageItem SelectedItem
+        {
+            get => _selectedItem;
+            set => _selectedItem = value;
         }
         public MenuPageViewModel()
         {
@@ -90,7 +84,7 @@ namespace SiamCross.ViewModels
             };
         }
 
-        void GoHome(object obj)
+        private void GoHome(object obj)
         {
             App.NavigationPage.Navigation.PopToRootAsync();
             App.MenuIsPresented = false;
@@ -106,7 +100,7 @@ namespace SiamCross.ViewModels
         {
             try
             {
-                var stack = App.NavigationPage.Navigation.NavigationStack;
+                IReadOnlyList<Page> stack = App.NavigationPage.Navigation.NavigationStack;
                 if (stack[stack.Count - 1].GetType() != type)
                     return true;
                 return false;
@@ -118,7 +112,7 @@ namespace SiamCross.ViewModels
             }
         }
 
-        void GoSearch(object obj)
+        private void GoSearch(object obj)
         {
             if (CanOpenPage(typeof(SearchPanelPage)))
             {
@@ -127,7 +121,7 @@ namespace SiamCross.ViewModels
             }
         }
 
-        void GoMeasuring(object obj)
+        private void GoMeasuring(object obj)
         {
             if (CanOpenPage(typeof(MeasurementsPage)))
             {
@@ -136,7 +130,7 @@ namespace SiamCross.ViewModels
             }
         }
 
-        void GoHandbook(object obj)
+        private void GoHandbook(object obj)
         {
             if (CanOpenPage(typeof(DirectoryPage)))
             {
@@ -145,7 +139,7 @@ namespace SiamCross.ViewModels
             }
         }
 
-        void GoSettings(object obj)
+        private void GoSettings(object obj)
         {
             if (CanOpenPage(typeof(SettingsPanelPage)))
             {
@@ -154,7 +148,7 @@ namespace SiamCross.ViewModels
             }
         }
 
-        void GoAbout(object obj)
+        private void GoAbout(object obj)
         {
             if (CanOpenPage(typeof(AboutPanelPage)))
             {
@@ -163,12 +157,6 @@ namespace SiamCross.ViewModels
             }
         }
 
-        public string Version
-        {
-            get
-            {
-                return DependencyService.Get<IAppVersionAndBuild>().GetVersionNumber();
-            }
-        }
+        public string Version => DependencyService.Get<IAppVersionAndBuild>().GetVersionNumber();
     }
 }

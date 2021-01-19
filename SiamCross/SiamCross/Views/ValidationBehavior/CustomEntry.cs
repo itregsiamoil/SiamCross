@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
+﻿using System.Globalization;
 using Xamarin.Forms;
 
 namespace SiamCross.Views.ValidationBehavior
@@ -10,7 +7,7 @@ namespace SiamCross.Views.ValidationBehavior
     {
         public void OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            var entry = (CustomEntry)sender;
+            CustomEntry entry = (CustomEntry)sender;
             string nonDecimalSeparator = "";
             if (CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator == ",")
             {

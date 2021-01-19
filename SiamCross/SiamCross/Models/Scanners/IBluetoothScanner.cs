@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SiamCross.Models.Scanners
 {
@@ -13,6 +10,6 @@ namespace SiamCross.Models.Scanners
 
         event Action<ScannedDeviceInfo> Received;
 
-        event Action ScanTimoutElapsed; 
+        event Action ScanTimoutElapsed;
     }
 }

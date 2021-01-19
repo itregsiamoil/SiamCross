@@ -14,7 +14,7 @@ using Xamarin.Forms;
 
 namespace SiamCross.Services
 {
-    public sealed class SensorService 
+    public sealed class SensorService
     {
         private static readonly Lazy<SensorService> _instance =
             new Lazy<SensorService>(() => new SensorService());
@@ -37,9 +37,9 @@ namespace SiamCross.Services
             _sensors = new List<ISensor>();
         }
 
-        public static SensorService Instance { get => _instance.Value; }
+        public static SensorService Instance => _instance.Value;
 
-        private List<ISensor> _sensors;
+        private readonly List<ISensor> _sensors;
 
         public IEnumerable<ISensor> Sensors => _sensors;
 
@@ -49,15 +49,15 @@ namespace SiamCross.Services
         {
             lock (_lock)
             {
-                var savedSensors = SensorsSaverService.Instance.ReadSavedSensors();
+                IEnumerable<ScannedDeviceInfo> savedSensors = SensorsSaverService.Instance.ReadSavedSensors();
 
                 _sensors.Clear();
 
                 if (savedSensors == null) return;
 
-                foreach (var sensor_info in savedSensors)
+                foreach (ScannedDeviceInfo sensor_info in savedSensors)
                 {
-                    var sensor = SensorFactory.CreateSensor(sensor_info);
+                    ISensor sensor = SensorFactory.CreateSensor(sensor_info);
                     if (sensor == null)
                         continue;
                     _sensors.Add(sensor);
@@ -70,7 +70,7 @@ namespace SiamCross.Services
         {
             lock (_lock)
             {
-                foreach (var sensor in Sensors)
+                foreach (ISensor sensor in Sensors)
                 {
                     if (sensor.SensorData.Name == deviceInfo.Name)
                     {
@@ -78,7 +78,7 @@ namespace SiamCross.Services
                     }
                 }
 
-                var addebleSensor = SensorFactory.CreateSensor(deviceInfo);
+                ISensor addebleSensor = SensorFactory.CreateSensor(deviceInfo);
                 if (addebleSensor == null)
                 {
                     return;
@@ -99,7 +99,7 @@ namespace SiamCross.Services
         {
             lock (_lock)
             {
-                var sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
+                ISensor sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
                 if (sensor != null)
                 {
                     _sensors.Remove(sensor);
@@ -114,7 +114,7 @@ namespace SiamCross.Services
 
         public async Task StartMeasurementOnSensor(Guid id, object parameters)
         {
-            var sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
+            ISensor sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
             if (sensor != null)
             {
                 await sensor.StartMeasurement(parameters);
@@ -127,18 +127,18 @@ namespace SiamCross.Services
             switch (measurementArgs)
             {
                 case Ddin2MeasurementData ddin2Data:
-                    var dbModelDdin2 = new Ddin2Measurement(ddin2Data);
+                    Ddin2Measurement dbModelDdin2 = new Ddin2Measurement(ddin2Data);
                     addId = DataRepository.Instance.SaveDdin2Measurement(dbModelDdin2);
-                    var dbObj = DataRepository.Instance.GetDdin2MeasurementById(addId);
+                    Ddin2Measurement dbObj = DataRepository.Instance.GetDdin2MeasurementById(addId);
 
                     await App.NavigationPage.Navigation.PushAsync(
-                           new Ddin2MeasurementDonePage(dbObj), true);                    
+                           new Ddin2MeasurementDonePage(dbObj), true);
                     break;
                 case DuMeasurementData duData:
-                    var dbModelDu = new DuMeasurement(duData);
+                    DuMeasurement dbModelDu = new DuMeasurement(duData);
                     addId = DataRepository.Instance.SaveDuMeasurement(dbModelDu);
                     await App.NavigationPage.Navigation.PushAsync(
-                        new DuMeasurementDonePage(DataRepository.Instance.GetDuMeasurementById(addId)), 
+                        new DuMeasurementDonePage(DataRepository.Instance.GetDuMeasurementById(addId)),
                         true);
                     break;
                 default:

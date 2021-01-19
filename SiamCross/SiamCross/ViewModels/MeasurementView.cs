@@ -34,10 +34,10 @@ namespace SiamCross.ViewModels
             }
         }
 
-        bool mSending = false;
-        public bool Sending 
-        { 
-            get=> mSending; 
+        private bool mSending = false;
+        public bool Sending
+        {
+            get => mSending;
             set
             {
                 mSending = value;
@@ -46,20 +46,17 @@ namespace SiamCross.ViewModels
             }
         }
 
-        DateTime mZeroTs = new DateTime(0);
-        DateTime mLastSentTimestamp=new DateTime(0);
-        public void SetLastSentTimestamp( DateTime ts)
+        private readonly DateTime mZeroTs = new DateTime(0);
+        private DateTime mLastSentTimestamp = new DateTime(0);
+        public void SetLastSentTimestamp(DateTime ts)
         {
             mLastSentTimestamp = ts;
             PropertyChanged?.Invoke(this,
                 new PropertyChangedEventArgs(nameof(LastSentTimestamp)));
         }
-        public string LastSentTimestamp
-        {
-            get => (mLastSentTimestamp == mZeroTs)? "" : mLastSentTimestamp.ToString();
-        }
+        public string LastSentTimestamp => (mLastSentTimestamp == mZeroTs) ? "" : mLastSentTimestamp.ToString();
 
-        string mLastSentRecipient;
+        private string mLastSentRecipient;
         public string LastSentRecipient
         {
             get => mLastSentRecipient;
@@ -71,7 +68,7 @@ namespace SiamCross.ViewModels
             }
         }
 
-        bool mIsSelected = false;
+        private bool mIsSelected = false;
         public bool IsSelected
         {
             get => mIsSelected;

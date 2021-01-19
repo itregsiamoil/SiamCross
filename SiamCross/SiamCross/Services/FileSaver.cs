@@ -6,7 +6,7 @@ namespace SiamCross.Services
 {
     public class FileSaver
     {
-        private IFileManager _fileManager;
+        private readonly IFileManager _fileManager;
 
         public FileSaver(IFileManager fileManager)
         {
@@ -15,7 +15,7 @@ namespace SiamCross.Services
 
         public void SaveXml(string filename, XDocument xml)
         {
-            var path = Path.Combine(
+            string path = Path.Combine(
                    System.Environment.GetFolderPath(
                        System.Environment.SpecialFolder.Personal), filename);
             xml.Save(path);
@@ -23,7 +23,7 @@ namespace SiamCross.Services
 
         public void DeleteFile(string filename)
         {
-            var path = Path.Combine(
+            string path = Path.Combine(
                    System.Environment.GetFolderPath(
                        System.Environment.SpecialFolder.Personal), filename);
 

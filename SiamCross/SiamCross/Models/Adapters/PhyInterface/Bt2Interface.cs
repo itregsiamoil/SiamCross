@@ -3,12 +3,12 @@ using SiamCross.AppObjects;
 
 namespace SiamCross.Models.Adapters.PhyInterface.Bt2
 {
-    public interface IBt2InterfaceCross : IPhyInterface    { }
-    static public class Factory
+    public interface IBt2InterfaceCross : IPhyInterface { }
+    public static class Factory
     {
-        static public IPhyInterface GetCurent()
+        public static IPhyInterface GetCurent()
         {
-            var bt2ifc = AppContainer.Container.Resolve<IBt2InterfaceCross>();
+            IBt2InterfaceCross bt2ifc = AppContainer.Container.Resolve<IBt2InterfaceCross>();
             return bt2ifc;
         }
     }//static public class Factory

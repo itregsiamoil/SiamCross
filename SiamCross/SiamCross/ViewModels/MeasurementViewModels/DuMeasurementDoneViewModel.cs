@@ -6,24 +6,21 @@ using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using System;
-using System.Globalization;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using System.Collections.Specialized;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
-    public class DuMeasurementDoneViewModel: BaseViewModel, IViewModel
+    [Preserve(AllMembers = true)]
+    public class DuMeasurementDoneViewModel : BaseViewModel, IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 
-        private DuMeasurement _measurement;
+        private readonly DuMeasurement _measurement;
 
         public ObservableCollection<string> Fields { get; set; }
         public string SelectedField => _measurement.Field;
@@ -52,7 +49,7 @@ namespace SiamCross.ViewModels
             _measurement = measurement;
             Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
             SoundSpeedCorrections = new ObservableCollection<string>();
-            foreach (var elem in HandbookData.Instance.GetSoundSpeedList())
+            foreach (SoundSpeedModel elem in HandbookData.Instance.GetSoundSpeedList())
             {
                 SoundSpeedCorrections.Add(elem.ToString());
             }
@@ -67,25 +64,25 @@ namespace SiamCross.ViewModels
             MinGraphX = min_x.ToString("N0");
             MaxGraphX = (max_x).ToString("N0");
 
-            MinGraphY = ((0 > min_y) ? 
-                Math.Pow(Math.Abs(min_y), 0.5f / 0.35) * (-1) 
+            MinGraphY = ((0 > min_y) ?
+                Math.Pow(Math.Abs(min_y), 0.5f / 0.35) * (-1)
                 : Math.Pow(min_y, 0.5f / 0.35)).ToString("N0");
             MaxGraphY = ((0 > max_y) ?
                 Math.Pow(Math.Abs(max_y), 0.5f / 0.35) * (-1)
                 : Math.Pow(max_y, 0.5f / 0.35)).ToString("N0");
         }
 
-        private DateTimeConverter _timeConverter = new DateTimeConverter();
+        private readonly DateTimeConverter _timeConverter = new DateTimeConverter();
 
         private async void ShareCommandHandler()
         {
             try
             {
-                var xmlCreator = new XmlCreator();
+                XmlCreator xmlCreator = new XmlCreator();
 
-                var xmlSaver = DependencyService.Get<IXmlSaver>();
+                IXmlSaver xmlSaver = DependencyService.Get<IXmlSaver>();
 
-                var name = CreateName(_measurement.Name, _measurement.DateTime);
+                string name = CreateName(_measurement.Name, _measurement.DateTime);
                 await xmlSaver.SaveXml(name, xmlCreator.CreateDuXml(_measurement));
 
                 string filepath = xmlSaver.GetFilepath(name);
@@ -109,7 +106,7 @@ namespace SiamCross.ViewModels
                 .Replace(':', '-');
         }
 
-        public string MaxGraphY { get; private set;  }
+        public string MaxGraphY { get; private set; }
         public string MinGraphY { get; private set; }
         public string MaxGraphX { get; private set; }
         public string MinGraphX { get; private set; }

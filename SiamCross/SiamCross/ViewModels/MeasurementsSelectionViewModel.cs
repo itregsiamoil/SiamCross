@@ -7,29 +7,29 @@ using SiamCross.Services.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Linq;
-using Xamarin.Essentials;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class MeasurementsSelectionViewModel : BaseViewModel, IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
-        private List<string> _errorList;
-        private DateTimeConverter _timeConverter = new DateTimeConverter();
+        private readonly List<string> _errorList;
+        private readonly DateTimeConverter _timeConverter = new DateTimeConverter();
         private string _title;
-        public string Title 
+        public string Title
         {
-            get => _title; 
+            get => _title;
             set
             {
                 _title = value;
                 NotifyPropertyChanged(nameof(Title));
-            } 
+            }
         }
         public ObservableCollection<MeasurementView> Measurements { get; set; }
         public ObservableCollection<object> SelectedMeasurements { get; set; }
@@ -42,7 +42,7 @@ namespace SiamCross.ViewModels
         {
             Measurements = new ObservableCollection<MeasurementView>();
             SelectedMeasurements = new ObservableCollection<object>();
-            foreach (var m in measurements)
+            foreach (MeasurementView m in measurements)
             {
                 Measurements.Add(m);
                 //SelectedMeasurements.Add(m);
@@ -62,10 +62,10 @@ namespace SiamCross.ViewModels
 
                 await Task.Run(() =>
                 {
-                    var paths = SaveXmlsReturnPaths();
+                    Task<string[]> paths = SaveXmlsReturnPaths();
                 });
 
-                var savePath = @"""Measurements""";
+                string savePath = @"""Measurements""";
 
                 DependencyService.Get<IToast>()
                     .Show($"{SelectedMeasurements.Count} " +
@@ -98,7 +98,7 @@ namespace SiamCross.ViewModels
             {
                 if (SelectedMeasurements.Count != 0)
                 {
-                    foreach (var m in SelectedMeasurements)
+                    foreach (object m in SelectedMeasurements)
                     {
                         if (m is MeasurementView mv)
                         {
@@ -147,7 +147,7 @@ namespace SiamCross.ViewModels
 
 
                 DependencyService.Get<IToast>().Show($"{Resource.SendingMeasurements}...");
-                var paths = await SaveXmlsReturnPaths();
+                string[] paths = await SaveXmlsReturnPaths();
 
                 bool is_ok = await EmailService.Instance.SendEmailWithFiles("Siam Measurements",
                     "\nSiamCompany Telemetry Transfer Service",
@@ -205,19 +205,19 @@ namespace SiamCross.ViewModels
         }
         private async Task<string[]> SaveXmlsReturnPaths()
         {
-            var xmlCreator = new XmlCreator();
-            var xmlSaver = DependencyService.Get<IXmlSaver>();
-            var paths = new string[SelectedMeasurements.Count];
+            XmlCreator xmlCreator = new XmlCreator();
+            IXmlSaver xmlSaver = DependencyService.Get<IXmlSaver>();
+            string[] paths = new string[SelectedMeasurements.Count];
             for (int i = 0; i < SelectedMeasurements.Count; i++)
             {
                 if (SelectedMeasurements[i] is MeasurementView mv)
                 {
-                    if (   mv.Name.Contains("DDIM")
+                    if (mv.Name.Contains("DDIM")
                         || mv.Name.Contains("DDIN")
-                        || mv.Name.Contains("SIDDOSA3M") )
+                        || mv.Name.Contains("SIDDOSA3M"))
                     {
-                        var dnm = DataRepository.Instance.GetDdin2MeasurementById(mv.Id);
-                        var name = CreateName(dnm.Name, dnm.DateTime);
+                        DataBase.DataBaseModels.Ddin2Measurement dnm = DataRepository.Instance.GetDdin2MeasurementById(mv.Id);
+                        string name = CreateName(dnm.Name, dnm.DateTime);
                         bool saved = await xmlSaver.SaveXml(name, xmlCreator.CreateDdin2Xml(dnm));
                         if (saved)
                             paths[i] = xmlSaver.GetFilepath(name);
@@ -225,11 +225,11 @@ namespace SiamCross.ViewModels
                     else if (mv.Name.Contains("DU"))
                     {
                         //Get siddos by id
-                        var du = DataRepository.Instance.GetDuMeasurementById(mv.Id);
-                        var name = CreateName(du.Name, du.DateTime);
+                        DataBase.DataBaseModels.DuMeasurement du = DataRepository.Instance.GetDuMeasurementById(mv.Id);
+                        string name = CreateName(du.Name, du.DateTime);
                         XDocument doc = xmlCreator.CreateDuXml(du);
                         bool saved = await xmlSaver.SaveXml(name, doc);
-                        if(saved)
+                        if (saved)
                             paths[i] = xmlSaver.GetFilepath(name);
                     }
                 }
@@ -240,7 +240,7 @@ namespace SiamCross.ViewModels
         {
             _errorList.Clear();
 
-            ValidateParameter(Settings.Instance.FromAddress, 
+            ValidateParameter(Settings.Instance.FromAddress,
                 $"{Resource.EnterFromAddress}");
             ValidateParameter(Settings.Instance.ToAddress,
                 $"{Resource.EnterToAddress}!");
@@ -254,7 +254,7 @@ namespace SiamCross.ViewModels
                 ValidateParameter(Settings.Instance.Password,
                     $"{Resource.EnterPassword}!");
             }
-            
+
 
             if (_errorList.Count != 0)
             {

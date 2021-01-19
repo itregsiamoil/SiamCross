@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SiamCross
+﻿namespace SiamCross
 {
     public static class Constants
     {

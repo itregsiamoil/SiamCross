@@ -27,29 +27,29 @@ namespace SiamCross.Services
             }
             if (null == phy_interface)
                 return null;
-            var connection = phy_interface.MakeConnection(deviceInfo);
+            IProtocolConnection connection = phy_interface.MakeConnection(deviceInfo);
             if (null == connection)
                 return null;
             //lock (_locker)
             {
                 if (deviceInfo.Name.Contains("DDIN"))
                 {
-                    var sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
-                    var sensor = new Ddin2Sensor(connection, sens_data);
+                    SensorData sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
+                    Ddin2Sensor sensor = new Ddin2Sensor(connection, sens_data);
                     sensor.ScannedDeviceInfo = deviceInfo;
                     return sensor;
                 }
                 else if (deviceInfo.Name.Contains("DDIM"))
                 {
-                    var sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
-                    var sensor = new Ddin2Sensor(connection, sens_data);
+                    SensorData sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
+                    Ddin2Sensor sensor = new Ddin2Sensor(connection, sens_data);
                     sensor.ScannedDeviceInfo = deviceInfo;
                     return sensor;
                 }
                 else if (deviceInfo.Name.Contains("SIDDOSA3M"))
                 {
-                    var sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
-                    var sensor = new Ddin2Sensor(connection, sens_data);
+                    SensorData sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
+                    Ddin2Sensor sensor = new Ddin2Sensor(connection, sens_data);
                     sensor.ScannedDeviceInfo = deviceInfo;
                     return sensor;
                 }
@@ -58,23 +58,23 @@ namespace SiamCross.Services
                     switch (deviceInfo.BluetoothType)
                     {
                         case BluetoothType.Le:
-                        {
-                            var sensor = new DuSensor(
-                                AppContainer.Container.Resolve<IConnectionBtLe>
-                                    (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                                new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, ""));
-                            sensor.ScannedDeviceInfo = deviceInfo;
-                            return sensor;
-                        }
+                            {
+                                DuSensor sensor = new DuSensor(
+                                    AppContainer.Container.Resolve<IConnectionBtLe>
+                                        (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
+                                    new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, ""));
+                                sensor.ScannedDeviceInfo = deviceInfo;
+                                return sensor;
+                            }
                         case BluetoothType.Classic:
-                        {
-                            var sensor = new DuSensor(
-                                AppContainer.Container.Resolve<IConnectionBt2>
-                                    (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                                new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, ""));
-                            sensor.ScannedDeviceInfo = deviceInfo;
-                            return sensor;
-                        }
+                            {
+                                DuSensor sensor = new DuSensor(
+                                    AppContainer.Container.Resolve<IConnectionBt2>
+                                        (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
+                                    new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, ""));
+                                sensor.ScannedDeviceInfo = deviceInfo;
+                                return sensor;
+                            }
                     }
                 }
 

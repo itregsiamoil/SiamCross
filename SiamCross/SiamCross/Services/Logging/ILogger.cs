@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SiamCross.Services.Logging
+﻿namespace SiamCross.Services.Logging
 {
     public interface ILogger
     {

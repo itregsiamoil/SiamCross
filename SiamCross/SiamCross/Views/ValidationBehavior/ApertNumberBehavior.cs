@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Xamarin.Forms;
 
 namespace SiamCross.Views
@@ -32,7 +30,7 @@ namespace SiamCross.Views
                         isValid ? args.NewTextValue : args.NewTextValue.Remove(
                             args.NewTextValue.Length - 1);
                 }
-                
+
             }
         }
     }

@@ -1,7 +1,7 @@
 ﻿namespace SiamCross.Models.Sensors
 {
     public enum DeviceRegistersTypes
-    { 
+    {
         Int8,
         Int32,
         Int16,

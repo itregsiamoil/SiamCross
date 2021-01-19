@@ -3,17 +3,19 @@ using MimeKit;
 using SiamCross.Models.Tools;
 using System;
 using System.Threading.Tasks;
+using Xamarin.Forms.Internals;
 using Settings = SiamCross.Models.Tools.Settings;
 
 namespace SiamCross.Models
 {
+    [Preserve(AllMembers = true)]
     public class EmailSender : IEmailSender
     {
-        async Task<bool> SendMessage(MimeMessage msg)
+        private async Task<bool> SendMessage(MimeMessage msg)
         {
             try
             {
-                using (var client = new SmtpClient())
+                using (SmtpClient client = new SmtpClient())
                 {
                     client.Connect(Settings.Instance.SmtpAddress, Settings.Instance.Port);
 
@@ -34,11 +36,11 @@ namespace SiamCross.Models
                 throw new Exception(ex.Message);
             }
         }
-        public async Task<bool> SendEmailWithFiles(string subject, 
-                                       string text, 
+        public async Task<bool> SendEmailWithFiles(string subject,
+                                       string text,
                                        string[] filenames)
         {
-            var m = new MimeMessage();
+            MimeMessage m = new MimeMessage();
 
             MailboxAddress sender = new MailboxAddress("SiamService", Settings.Instance.FromAddress);
             MailboxAddress receiver = new MailboxAddress("", Settings.Instance.ToAddress);
@@ -46,10 +48,10 @@ namespace SiamCross.Models
             m.To.Add(receiver);
             m.Subject = subject;
 
-            var builder = new BodyBuilder();
+            BodyBuilder builder = new BodyBuilder();
             builder.TextBody = text;
 
-            foreach (var path in filenames)
+            foreach (string path in filenames)
             {
                 builder.Attachments.Add(path);
             }

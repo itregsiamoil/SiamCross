@@ -1,7 +1,9 @@
 ﻿using SiamCross.Models.Tools;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class SettingsViewModel : BaseViewModel, IViewModel
     {
         private string _fromAddress;
@@ -72,8 +74,8 @@ namespace SiamCross.ViewModels
             }
         }
 
-        public string Password 
-        { 
+        public string Password
+        {
             get => _password;
             set
             {

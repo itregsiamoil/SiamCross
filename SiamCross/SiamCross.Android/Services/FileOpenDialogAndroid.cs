@@ -1,24 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using SiamCross.Services.UserOutput;
+﻿using Android.Runtime;
 using Com.Obsez.Android.Lib.Filechooser;
-using static Com.Obsez.Android.Lib.Filechooser.Listeners;
-using Xamarin.Forms;
+using SiamCross.Services.UserOutput;
 using System.Threading.Tasks;
+using static Com.Obsez.Android.Lib.Filechooser.Listeners;
 
 namespace SiamCross.Droid.Services
 {
     public class FileOpenDialogAndroid : IFileOpenDialog
     {
+        [Preserve(AllMembers = true)]
         public Task<string> Show()
         {
             TaskCompletionSource<string> filePikcerCompletion = new TaskCompletionSource<string>();

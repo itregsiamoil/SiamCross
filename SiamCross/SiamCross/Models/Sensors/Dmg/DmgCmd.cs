@@ -13,7 +13,7 @@ namespace SiamCross.Models.Sensors.Dmg
             return FullCommandDictionary[name];
         }
 
-        private static Dictionary<string, byte[]> FullCommandDictionary = new Dictionary<string, byte[]>()
+        private static readonly Dictionary<string, byte[]> FullCommandDictionary = new Dictionary<string, byte[]>()
         {
             // Общие регистры (0x00000000)
 

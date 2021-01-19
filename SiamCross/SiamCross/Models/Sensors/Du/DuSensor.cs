@@ -1,12 +1,7 @@
-﻿using SiamCross.Models.Scanners;
-using SiamCross.Models.Sensors;
-using SiamCross.Models.Sensors.Du.Measurement;
+﻿using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,8 +9,8 @@ namespace SiamCross.Models.Sensors.Du
 {
     public class DuSensor : BaseSensor
     {
-        DuMeasurementManager _measurementManager;
-        private DuQuickReportBuilder _reportBuilder=new DuQuickReportBuilder();
+        private DuMeasurementManager _measurementManager;
+        private readonly DuQuickReportBuilder _reportBuilder = new DuQuickReportBuilder();
 
         public DuSensor(IProtocolConnection conn, SensorData sensorData)
             : base(conn, sensorData)
@@ -26,7 +21,7 @@ namespace SiamCross.Models.Sensors.Du
             byte[] resp;
             byte[] fw_address = new byte[4];
             byte[] fw_size = new byte[2];
-            
+
 
             cancelToken.ThrowIfCancellationRequested();
             resp = await Connection.Exchange
@@ -43,7 +38,7 @@ namespace SiamCross.Models.Sensors.Du
             resp.AsSpan().Slice(12, 2).CopyTo(fw_size);
 
             cancelToken.ThrowIfCancellationRequested();
-            var req = new MessageCreator().CreateReadMessage(fw_address, fw_size);
+            byte[] req = new MessageCreator().CreateReadMessage(fw_address, fw_size);
             resp = await Connection.Exchange(req); ;
             if (0 == resp.Length)
                 return false;
@@ -72,7 +67,7 @@ namespace SiamCross.Models.Sensors.Du
             if (14 > resp.Length)
                 return false;
             _reportBuilder.Pressure = (((float)BitConverter.ToInt16(resp, 12)) / 10).ToString();
-            
+
             /*
             byte[] req = new byte[] { 0x0D, 0x0A, 0x01, 0x01,
                 0x00, 0x84, 0x00, 0x00,    0x04, 0x00,    0x5C, 0x1C };
@@ -99,7 +94,7 @@ namespace SiamCross.Models.Sensors.Du
             DuMeasurementStatus status = DuMeasurementStatus.Empty;
             byte[] resp = { };
             resp = await Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.SensorState]);
-            if(null== resp || 12 > resp.Length)
+            if (null == resp || 12 > resp.Length)
                 throw new IOEx_Timeout("GetStatus timeout");
             if (0x01 != resp[3])
                 throw new IOEx_ErrorResponse("GetStatus response error");
@@ -116,7 +111,7 @@ namespace SiamCross.Models.Sensors.Du
             resp = await Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.StateZeroing]);
             if (null == resp || 12 != resp.Length)
                 throw new IOEx_Timeout("SetStatus wrong len or timeout");
-            if(0x02 != resp[3])
+            if (0x02 != resp[3])
                 throw new IOEx_ErrorResponse("SetStatus response error");
         }
         public override async Task<bool> PostConnectInit(CancellationToken cancelToken)
@@ -150,7 +145,7 @@ namespace SiamCross.Models.Sensors.Du
             {
                 SensorData.Status = Resource.Survey;
                 IsMeasurement = true;
-                var startParams = (DuMeasurementStartParameters)measurementParameters;
+                DuMeasurementStartParameters startParams = (DuMeasurementStartParameters)measurementParameters;
                 _measurementManager = new DuMeasurementManager(this, startParams);
                 report = await _measurementManager.RunMeasurement();
 

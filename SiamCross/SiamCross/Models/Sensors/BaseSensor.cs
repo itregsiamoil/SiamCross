@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors
 {
-    abstract public class BaseSensor : ISensor, INotifyPropertyChanged
+    public abstract class BaseSensor : ISensor, INotifyPropertyChanged
     {
         #region TmpVariables
         #endregion
@@ -26,7 +26,7 @@ namespace SiamCross.Models.Sensors
             //_uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             Connection.PropertyChanged += (obj, a) =>
             {
-                if("State" == a.PropertyName)
+                if ("State" == a.PropertyName)
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ConnStateStr"));
             };
             //mConnection.PropertyChanged += PropertyChanged;
@@ -39,16 +39,13 @@ namespace SiamCross.Models.Sensors
         #endregion
         #region basic implementation
         #region Variables
-        private IProtocolConnection mConnection;
+        private readonly IProtocolConnection mConnection;
         #endregion
         public string ConnStateStr => ConnectionStateAdapter.ToString(Connection.State);
-        public int MeasureProgressP
-        {
-            get => (int)(mMeasureProgress*100);
-        }
+        public int MeasureProgressP => (int)(mMeasureProgress * 100);
 
-        float mMeasureProgress = 0;
-        public float MeasureProgress 
+        private float mMeasureProgress = 0;
+        public float MeasureProgress
         {
             get => mMeasureProgress;
             set
@@ -59,8 +56,9 @@ namespace SiamCross.Models.Sensors
             }
         }
         public IProtocolConnection Connection => mConnection;
-        bool mIsAlive = false;
-        public bool IsAlive 
+
+        private bool mIsAlive = false;
+        public bool IsAlive
         {
             get => mIsAlive;
             protected set
@@ -70,8 +68,8 @@ namespace SiamCross.Models.Sensors
             }
         }
 
-        bool mIsMeasurement = false;
-        public bool IsMeasurement 
+        private bool mIsMeasurement = false;
+        public bool IsMeasurement
         {
             get => mIsMeasurement;
             protected set
@@ -90,13 +88,14 @@ namespace SiamCross.Models.Sensors
         #region Activate implementation
         #region Variables
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
-        private CancellationTokenSource _cancellToken= null;
+        private CancellationTokenSource _cancellToken = null;
+
         //TaskCompletionSource<bool> mLiveTaskCompleated=null;
-        Task _liveTask = null;
+        private Task _liveTask = null;
         private bool _activated = false;
-        private SemaphoreSlim semaphore = new SemaphoreSlim(1);
+        private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
         #endregion
-        async void AsyncActivate()
+        private async void AsyncActivate()
         {
             using (await semaphore.UseWaitAsync())
             {
@@ -106,12 +105,12 @@ namespace SiamCross.Models.Sensors
                     ct = new CancellationTokenSource();
                     _liveTask = Task.Run(async () =>
                     {
-                    
-                            //mLiveTaskCompleated = new TaskCompletionSource<bool>();
-                            _cancellToken = ct;
-                            _activated = true;
-                            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
-                            await ExecuteAsync(_cancellToken.Token);
+
+                        //mLiveTaskCompleated = new TaskCompletionSource<bool>();
+                        _cancellToken = ct;
+                        _activated = true;
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
+                        await ExecuteAsync(_cancellToken.Token);
                     }, ct.Token);
                     await _liveTask;
                 }
@@ -129,13 +128,13 @@ namespace SiamCross.Models.Sensors
                 }
                 finally
                 {
-                    switch(_liveTask.Status)
+                    switch (_liveTask.Status)
                     {
                         case TaskStatus.RanToCompletion:
                         case TaskStatus.Canceled:
                             _liveTask?.Dispose();
                             break;
-                        default:break;
+                        default: break;
                     }
                     //_liveTask = null;
                     ct?.Cancel();
@@ -151,7 +150,7 @@ namespace SiamCross.Models.Sensors
             }
         }
 
-        async void Deactivate()
+        private async void Deactivate()
         {
             try
             {
@@ -159,10 +158,10 @@ namespace SiamCross.Models.Sensors
                 {
                     _cancellToken.Cancel();
                     //await mLiveTaskCompleated.Task;
-                }                
+                }
                 using (await semaphore.UseWaitAsync())
                 {
-                    if(null != mConnection)
+                    if (null != mConnection)
                     {
                         if (ConnectionState.Disconnected != mConnection.State)
                             mConnection?.Disconnect();
@@ -193,7 +192,7 @@ namespace SiamCross.Models.Sensors
             {
                 if (value)
                 {
-                    if (!_activated )
+                    if (!_activated)
                     {
                         DebugLog.WriteLine("try activate = true");
                         AsyncActivate();

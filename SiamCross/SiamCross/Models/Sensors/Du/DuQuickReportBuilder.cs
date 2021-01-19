@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SiamCross.Models.Sensors.Du
+﻿namespace SiamCross.Models.Sensors.Du
 {
     public class DuQuickReportBuilder
     {
@@ -11,37 +7,24 @@ namespace SiamCross.Models.Sensors.Du
 
         public string BatteryVoltage
         {
-            get
-            {
-                return 
-                    _batteryVoltage != null ?
+            get => _batteryVoltage != null ?
                         $"{Resource.Voltage}: "
-                        + _batteryVoltage 
+                        + _batteryVoltage
                         + $", {Resource.VoltsUnits}\n"
                     : "";
-            }
 
-            set
-            {
-                _batteryVoltage = value;
-            }
+            set => _batteryVoltage = value;
         }
 
         public string Pressure
         {
-            get
-            {
-                return _pressure != null ?
-                    $"{Resource.Pressure}: " 
-                    + _pressure 
+            get => _pressure != null ?
+                    $"{Resource.Pressure}: "
+                    + _pressure
                     + $"({Resource.KGFCMUnits})\n"
                 : "";
-            }
 
-            set
-            {
-                _pressure = value;
-            }
+            set => _pressure = value;
         }
 
         public string GetReport()

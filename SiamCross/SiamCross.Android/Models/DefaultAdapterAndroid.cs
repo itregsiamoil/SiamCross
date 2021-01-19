@@ -1,20 +1,15 @@
-﻿using SiamCross.Models.Adapters;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
+﻿using Android.Bluetooth;
 using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Android.Bluetooth;
 using SiamCross.Models;
+using SiamCross.Models.Adapters;
 using SiamCross.Models.Scanners;
 
 namespace SiamCross.Droid.Models
 {
+    [Preserve(AllMembers = true)]
     public class DefaultAdapterAndroid : IDefaultAdapter
     {
-        public string Name { get => "DefaultAdapter"; }
+        public string Name => "DefaultAdapter";
 
         public void Enable()
         {
@@ -31,6 +26,6 @@ namespace SiamCross.Droid.Models
             throw new System.NotImplementedException();
         }
 
-        public bool IsEnbaled { get => BluetoothAdapter.DefaultAdapter.IsEnabled; }
+        public bool IsEnbaled => BluetoothAdapter.DefaultAdapter.IsEnabled;
     }
 }

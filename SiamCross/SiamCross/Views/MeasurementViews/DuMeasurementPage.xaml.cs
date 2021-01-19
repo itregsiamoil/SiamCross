@@ -1,10 +1,5 @@
 ﻿using SiamCross.Models;
 using SiamCross.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -14,12 +9,12 @@ namespace SiamCross.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DuMeasurementPage : ContentPage
     {
-        private DuMeasurementViewModel _vm;
+        private readonly DuMeasurementViewModel _vm;
         public DuMeasurementPage(SensorData sensorData)
         {
-            var vm = new ViewModelWrap<DuMeasurementViewModel>(sensorData);
+            ViewModelWrap<DuMeasurementViewModel> vm = new ViewModelWrap<DuMeasurementViewModel>(sensorData);
             _vm = vm.ViewModel;
-            this.BindingContext = _vm;
+            BindingContext = _vm;
             InitializeComponent();
         }
 
@@ -27,7 +22,7 @@ namespace SiamCross.Views
         {
             //_vm.Amplification = e.Value;
         }
-        
+
         private void InletCheckboxChanged(object sender, CheckedChangedEventArgs e)
         {
             //_vm.Inlet = e.Value;

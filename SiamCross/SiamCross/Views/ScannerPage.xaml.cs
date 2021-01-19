@@ -1,9 +1,4 @@
 ﻿using SiamCross.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -18,7 +13,7 @@ namespace SiamCross.Views
         {
             InitializeComponent();
             ScannerVM = vm;
-            this.BindingContext = ScannerVM;
+            BindingContext = ScannerVM;
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SiamCross.Models.Sensors.Dmg
+﻿namespace SiamCross.Models.Sensors.Dmg
 {
     public enum DmgMeasureStatus
     {
@@ -13,9 +9,9 @@ namespace SiamCross.Models.Sensors.Dmg
         Error = 5
     }
 
-    static public class DmgMeasureStatusAdapter
+    public static class DmgMeasureStatusAdapter
     {
-        static public DmgMeasureStatus StringStatusToEnum(string stringStatus)
+        public static DmgMeasureStatus StringStatusToEnum(string stringStatus)
         {
             if (!string.IsNullOrEmpty(stringStatus))
             {
@@ -32,7 +28,7 @@ namespace SiamCross.Models.Sensors.Dmg
             return DmgMeasureStatus.Empty; //stub
         }
 
-        static public string StringStatusToReport(string stringStatus)
+        public static string StringStatusToReport(string stringStatus)
         {
             if (!string.IsNullOrEmpty(stringStatus))
             {
@@ -49,7 +45,7 @@ namespace SiamCross.Models.Sensors.Dmg
             return Resource.Stat_Free; //stub
         }
 
-        static public string StatusToReport(DmgMeasureStatus status)
+        public static string StatusToReport(DmgMeasureStatus status)
         {
             switch (status)
             {
@@ -63,7 +59,7 @@ namespace SiamCross.Models.Sensors.Dmg
         }
 
 
-        static public string CreateProgressStatus(int progress)
+        public static string CreateProgressStatus(int progress)
         {
             return Resource.Stat_Complete + $" {progress}%";
         }

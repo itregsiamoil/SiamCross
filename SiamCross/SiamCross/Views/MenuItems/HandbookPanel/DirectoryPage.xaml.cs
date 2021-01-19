@@ -1,9 +1,4 @@
 ﻿using SiamCross.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -15,8 +10,8 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
     {
         public DirectoryPage()
         {
-            var vm = new ViewModelWrap<DirectoryViewModel>();
-            this.BindingContext = vm.ViewModel;
+            ViewModelWrap<DirectoryViewModel> vm = new ViewModelWrap<DirectoryViewModel>();
+            BindingContext = vm.ViewModel;
             InitializeComponent();
         }
     }

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using SiamCross.Models.Scanners;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using SiamCross.Models.Scanners;
-using SiamCross.Models.Tools;
 
 namespace SiamCross.Models
 {

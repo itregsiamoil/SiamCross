@@ -1,7 +1,4 @@
 ﻿using SiamCross.Models.Scanners;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SiamCross.Models.Adapters
 {

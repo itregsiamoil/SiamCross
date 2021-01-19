@@ -8,24 +8,18 @@ using System.ComponentModel;
 
 namespace SiamCross.Models.Adapters
 {
-    public class BtLeInterface: IPhyInterface, INotifyPropertyChanged
+    public class BtLeInterface : IPhyInterface, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
-        public string Name { get => "BT4LE"; }
+        public string Name => "BT4LE";
         public IProtocolConnection MakeConnection(ScannedDeviceInfo deviceInfo)
         {
-            var t_dvc_inf = new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo);
-            var t_phy_ifc = new TypedParameter(typeof(IPhyInterface), this);
-            var connection = AppContainer.Container.Resolve<IConnectionBtLe>(t_dvc_inf, t_phy_ifc);
+            TypedParameter t_dvc_inf = new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo);
+            TypedParameter t_phy_ifc = new TypedParameter(typeof(IPhyInterface), this);
+            IConnectionBtLe connection = AppContainer.Container.Resolve<IConnectionBtLe>(t_dvc_inf, t_phy_ifc);
             return connection;
         }
-        public IAdapter mAdapter
-        {
-            get 
-            {
-                return mBle?.Adapter;
-            }
-        }
+        public IAdapter mAdapter => mBle?.Adapter;
 
         private IBluetoothLE mBle;
 
@@ -34,22 +28,16 @@ namespace SiamCross.Models.Adapters
             mBle = ble;
         }
 
-        protected BtLeInterface(bool enable=true)
+        protected BtLeInterface(bool enable = true)
         {
             if (enable)
                 Enable();
 
         }
 
-        public bool IsEnbaled 
-        { 
-            get
-            {
-                return null != mBle
-                    && null != mBle.Adapter 
+        public bool IsEnbaled => null != mBle
+                    && null != mBle.Adapter
                     && BluetoothState.On == mBle.State;
-            }
-        }
 
         public void Disable()
         {
@@ -61,9 +49,9 @@ namespace SiamCross.Models.Adapters
             mBle = CrossBluetoothLE.Current;
         }
 
-        static public class Factory
+        public static class Factory
         {
-            static public BtLeInterface GetCurent()
+            public static BtLeInterface GetCurent()
             {
                 return new BtLeInterface(CrossBluetoothLE.Current);
             }

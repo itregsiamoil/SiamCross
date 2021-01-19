@@ -1,7 +1,6 @@
 ﻿using SiamCross.Models.Scanners;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace SiamCross.Services
@@ -13,7 +12,7 @@ namespace SiamCross.Services
             Lazy<SensorsSaverService> _instance =
             new Lazy<SensorsSaverService>(() => new SensorsSaverService());
 
-        public static SensorsSaverService Instance { get => _instance.Value; }
+        public static SensorsSaverService Instance => _instance.Value;
         #endregion
 
         private readonly ISaveDevicesService _manager;
@@ -21,8 +20,8 @@ namespace SiamCross.Services
         {
             _manager = DependencyService.Get<ISaveDevicesService>();
             MessagingCenter.Subscribe<SensorService, IEnumerable<ScannedDeviceInfo>>(this,
-                "Refresh saved sensors", 
-                (sender, arg) => 
+                "Refresh saved sensors",
+                (sender, arg) =>
                 {
                     _manager.SaveDevices(arg);
                 });
@@ -30,7 +29,7 @@ namespace SiamCross.Services
 
         public IEnumerable<ScannedDeviceInfo> ReadSavedSensors()
         {
-            var sensors = _manager.LoadDevices();
+            List<ScannedDeviceInfo> sensors = _manager.LoadDevices();
 
             return sensors;
         }

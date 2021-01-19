@@ -17,12 +17,12 @@ namespace SiamCross.Services
     {
         private static readonly Lazy<DataRepository> _instance =
             new Lazy<DataRepository>(() => new DataRepository());
-        public static DataRepository Instance { get => _instance.Value; }
-        private IDbConnection _database;
-        private static object _locker = new object();
-        private string _databasePart;
+        public static DataRepository Instance => _instance.Value;
+        private readonly IDbConnection _database;
+        private static readonly object _locker = new object();
+        private readonly string _databasePart;
 
-        private static readonly Logger _logger = 
+        private static readonly Logger _logger =
             AppContainer.Container.Resolve<ILogManager>().GetLog();
 
         private DataRepository()
@@ -42,7 +42,7 @@ namespace SiamCross.Services
                         (string.Format("Data Source={0};Version=3;", _databasePart))));
                 _database.Open();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.Error(e, $"Database creation error! Database path: {_databasePart}" + "\n");
                 throw;
@@ -53,7 +53,7 @@ namespace SiamCross.Services
                 CreateDdin2Table();
                 CreateDuTable();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.Error(e, $"Table creation error!" + "\n");
                 throw;
@@ -153,7 +153,7 @@ namespace SiamCross.Services
             {
                 if (duMeasurement.Id == 0)
                 {
-                    var idsColumn = _database.Query<int>(string.Format(
+                    IEnumerable<int> idsColumn = _database.Query<int>(string.Format(
                         "SELECT Id FROM DuMeasurement"));
                     if (idsColumn.Count() > 0)
                     {
@@ -165,7 +165,7 @@ namespace SiamCross.Services
                     }
                 }
 
-                var rows = _database.Query(string.Format(
+                IEnumerable<dynamic> rows = _database.Query(string.Format(
                     "SELECT COUNT(1) AS 'Count' FROM DuMeasurement WHERE Id = '{0}'", duMeasurement.Id));
 
                 if (rows.First().Count > 0)
@@ -174,21 +174,21 @@ namespace SiamCross.Services
                     return duMeasurement.Id;
                 }
 
-                string sql = "INSERT INTO DuMeasurement ("+
+                string sql = "INSERT INTO DuMeasurement (" +
                         "  SrcFluidLevel, SrcReflectionsCount, AnnularPressure" +
-                        ", Echogram, SoundSpeed, MeasurementType"+
+                        ", Echogram, SoundSpeed, MeasurementType" +
                         ", SoundSpeedCorrection, ReportTimestamp, Field" +
-                        ", Well, Bush, Shop"+
+                        ", Well, Bush, Shop" +
                         ", BufferPressure, Comment, Name" +
-                        ", BatteryVolt, Temperature, MainFirmware, RadioFirmware"+
+                        ", BatteryVolt, Temperature, MainFirmware, RadioFirmware" +
                         ") Values (" +
                         "  @SrcFluidLevel, @SrcReflectionsCount, @AnnularPressure" +
-                        ", @Echogram, @SoundSpeed, @MeasurementType"+
+                        ", @Echogram, @SoundSpeed, @MeasurementType" +
                         ", @SoundSpeedCorrection, @ReportTimestamp,  @Field" +
                         ", @Well, @Bush, @Shop" +
-                        ", @BufferPressure, @Comment, @Name "+
+                        ", @BufferPressure, @Comment, @Name " +
                         ", @BatteryVolt, @Temperature, @MainFirmware, @RadioFirmware  );";
-                var affectedRows = _database.Execute(sql, new
+                int affectedRows = _database.Execute(sql, new
                 {
                     duMeasurement.SrcFluidLevel,
                     duMeasurement.SrcReflectionsCount,
@@ -232,11 +232,11 @@ namespace SiamCross.Services
                     "MeasurementType = @MeasurementType, SoundSpeedCorrection = @SoundSpeedCorrection, " +
                     "ReportTimestamp = @ReportTimestamp," +
                     " Field = @Field, Well = @Well, Bush = @Bush, Shop = @Shop, BufferPressure = @BufferPressure," +
-                    " Comment = @Comment, Name = @Name "+
-                    " ,BatteryVolt=@BatteryVolt, Temperature=@Temperature "+
-                    " ,MainFirmware=@MainFirmware, RadioFirmware=@RadioFirmware "+
+                    " Comment = @Comment, Name = @Name " +
+                    " ,BatteryVolt=@BatteryVolt, Temperature=@Temperature " +
+                    " ,MainFirmware=@MainFirmware, RadioFirmware=@RadioFirmware " +
                     " WHERE Id = @Id;";
-                var affectedRows = _database.Execute(sql, new
+                int affectedRows = _database.Execute(sql, new
                 {
                     duMeasurement.SrcFluidLevel,
                     duMeasurement.SrcReflectionsCount,
@@ -284,7 +284,7 @@ namespace SiamCross.Services
             NonQueryCheck();
             try
             {
-                var duItems = _database.Query<DuMeasurement>(
+                IEnumerable<DuMeasurement> duItems = _database.Query<DuMeasurement>(
                     "SELECT * FROM DuMeasurement");
                 return duItems;
             }
@@ -325,7 +325,7 @@ namespace SiamCross.Services
             {
                 if (ddin2Measurement.Id == 0)
                 {
-                    var idsColumn = _database.Query<int>(string.Format(
+                    IEnumerable<int> idsColumn = _database.Query<int>(string.Format(
                         "SELECT Id FROM Ddin2Measurement"));
                     if (idsColumn.Count() > 0)
                     {
@@ -337,7 +337,7 @@ namespace SiamCross.Services
                     }
                 }
 
-                var rows = _database.Query(string.Format(
+                IEnumerable<dynamic> rows = _database.Query(string.Format(
                     "SELECT COUNT(1) as 'Count' FROM Ddin2Measurement WHERE Id = '{0}'",
                     ddin2Measurement.Id));
 
@@ -358,10 +358,10 @@ namespace SiamCross.Services
                         " @Travel, @Period, @Step, @WeightDiscr, @TimeDiscr, @DynGraph," +
                         " @AccelerationGraph, @Field, @Well, @Bush, @Shop, @BufferPressure, @Comment, " +
                         "@Name, @DateTime, @ErrorCode, @ApertNumber, @ModelPump, @Rod, @MaxBarbellWeight," +
-                        " @MinBarbellWeight, @TravelLength, @SwingCount "+
+                        " @MinBarbellWeight, @TravelLength, @SwingCount " +
                         ", @BatteryVolt, @Temperature, @MainFirmware, @RadioFirmware  );";
 
-                var affectedRows = _database.Execute(sql, new
+                int affectedRows = _database.Execute(sql, new
                 {
                     MaxWeight = ddin2Measurement.MaxWeight,
                     MinWeight = ddin2Measurement.MinWeight,
@@ -394,7 +394,7 @@ namespace SiamCross.Services
                     RadioFirmware = ddin2Measurement.RadioFirmware
                 });
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.Error(e, $"Ddin2Save database error!" + "\n");
                 throw;
@@ -420,7 +420,7 @@ namespace SiamCross.Services
                      " ,MainFirmware=@MainFirmware, RadioFirmware=@RadioFirmware " +
                      " WHERE Id = @Id;";
 
-                var affectedRows = _database.Execute(sql, new
+                int affectedRows = _database.Execute(sql, new
                 {
                     MaxWeight = ddin2Measurement.MaxWeight,
                     MinWeight = ddin2Measurement.MinWeight,
@@ -454,7 +454,7 @@ namespace SiamCross.Services
                     Id = ddin2Measurement.Id
                 });
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.Error(e, $"Ddin2Update database error!" + "\n");
                 throw;
@@ -468,7 +468,7 @@ namespace SiamCross.Services
             {
                 _database.Execute("DELETE FROM Ddin2Measurement WHERE Id =" + removebleId);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.Error(e, $"Ddin2Remove database error!" + "\n");
                 throw;
@@ -483,7 +483,7 @@ namespace SiamCross.Services
                 return _database.Query<Ddin2Measurement>(
                     "SELECT * FROM Ddin2Measurement");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.Error(e, $"Ddin2Get database error!" + "\n");
                 throw;
@@ -497,7 +497,7 @@ namespace SiamCross.Services
                 return _database.Query<Ddin2Measurement>(
                     "SELECT * FROM Ddin2Measurement WHERE Id =" + id).First();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.Error(e, $"Ddin2GetById database error!" + "\n");
                 throw;

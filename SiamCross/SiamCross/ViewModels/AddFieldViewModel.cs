@@ -4,13 +4,13 @@ using SiamCross.AppObjects;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class AddFieldViewModel : BaseViewModel, IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
@@ -21,7 +21,7 @@ namespace SiamCross.ViewModels
             _toater = DependencyService.Get<IToast>();
         }
 
-        private IToast _toater;
+        private readonly IToast _toater;
 
         public string FieldName { get; set; }
         public string FieldCode { get; set; }

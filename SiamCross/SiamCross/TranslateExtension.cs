@@ -1,17 +1,17 @@
 ﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using System.Resources;
 using System.Globalization;
 using System.Reflection;
+using System.Resources;
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace SiamCross
 {
     [ContentProperty("Text")]
     public class TranslateExtension : IMarkupExtension
     {
-        readonly CultureInfo ci;
-        const string ResourceId = "SiamCross.Resource";
+        private readonly CultureInfo ci;
+        private const string ResourceId = "SiamCross.Resource";
 
         public TranslateExtension()
         {
@@ -28,7 +28,7 @@ namespace SiamCross
             ResourceManager resmgr = new ResourceManager(ResourceId,
                         typeof(TranslateExtension).GetTypeInfo().Assembly);
 
-            var translation = resmgr.GetString(Text, ci);
+            string translation = resmgr.GetString(Text, ci);
 
             if (translation == null)
             {
@@ -48,7 +48,7 @@ namespace SiamCross
             {
                 return null;
             }
-            var imageSource = ImageSource.FromResource(Source);
+            ImageSource imageSource = ImageSource.FromResource(Source);
 
             return imageSource;
         }

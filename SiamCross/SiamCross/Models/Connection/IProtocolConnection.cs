@@ -14,8 +14,8 @@ namespace SiamCross.Models
     public class IOEx_WriteTimeout : IOEx_Timeout
     {
         public IOEx_WriteTimeout() { }
-        public IOEx_WriteTimeout(string message) : base(message) {}
-        public IOEx_WriteTimeout(string message, Exception inner): base(message, inner){}
+        public IOEx_WriteTimeout(string message) : base(message) { }
+        public IOEx_WriteTimeout(string message, Exception inner) : base(message, inner) { }
     }
     public class IOEx_ReadTimeout : IOEx_Timeout
     {
@@ -37,9 +37,9 @@ namespace SiamCross.Models
         Connected = 2,
         PendingDisconnect = 3
     }
-    static public class ConnectionStateAdapter
+    public static class ConnectionStateAdapter
     {
-        static public string ToString(ConnectionState conn)
+        public static string ToString(ConnectionState conn)
         {
             switch (conn)
             {

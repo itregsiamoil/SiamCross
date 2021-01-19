@@ -12,11 +12,11 @@ namespace SiamCross.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Ddin2MeasurementPage : ContentPage
     {
-        private Stopwatch _stopwatch;
+        private readonly Stopwatch _stopwatch;
 
         public Ddin2MeasurementPage(SensorData sensorData)
         {
-            var vm = new ViewModelWrap<Ddin2MeasurementViewModel>(sensorData);
+            ViewModelWrap<Ddin2MeasurementViewModel> vm = new ViewModelWrap<Ddin2MeasurementViewModel>(sensorData);
             BindingContext = vm.ViewModel;
             _stopwatch = new Stopwatch();
             InitializeComponent();

@@ -12,9 +12,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class ControlPanelPageViewModel : BaseViewModel, IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
@@ -30,7 +32,7 @@ namespace SiamCross.ViewModels
         {
             try
             {
-                var stack = App.NavigationPage.Navigation.NavigationStack;
+                System.Collections.Generic.IReadOnlyList<Page> stack = App.NavigationPage.Navigation.NavigationStack;
                 if (stack[stack.Count - 1].GetType() != type)
                     return true;
                 return false;
@@ -41,15 +43,12 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
-        public ICommand RecentMeasurementCommand
-        {
-            get => new Command<Guid>(RecentMeasurement);
-        }
+        public ICommand RecentMeasurementCommand => new Command<Guid>(RecentMeasurement);
         private void RecentMeasurement(Guid id)
         {
             try
             {
-                var sensor = SensorService.Instance.Sensors
+                ISensor sensor = SensorService.Instance.Sensors
                     .SingleOrDefault(s => s.SensorData.Id == id);
                 if (sensor != null)
                 {
@@ -66,15 +65,12 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
-        public ICommand DeleteSensorCommand
-        {
-            get => new Command<Guid>(DeleteSensorHandler);
-        }
+        public ICommand DeleteSensorCommand => new Command<Guid>(DeleteSensorHandler);
         private void DeleteSensorHandler(Guid id)
         {
             try
             {
-                var sensor = SensorService.Instance.Sensors
+                ISensor sensor = SensorService.Instance.Sensors
                     .SingleOrDefault(s => s.SensorData.Id == id);
                 if (sensor != null)
                 {
@@ -100,13 +96,10 @@ namespace SiamCross.ViewModels
                 Sensor.Add(sensor);
             }
         }
-        public ICommand GotoMeasurementPageCommand
-        {
-            get => new Command<Guid>(GotoMeasurementPage);
-        }
+        public ICommand GotoMeasurementPageCommand => new Command<Guid>(GotoMeasurementPage);
         private void GotoMeasurementPage(Guid id)
         {
-            var sensor = SensorService.Instance.Sensors
+            ISensor sensor = SensorService.Instance.Sensors
                 .SingleOrDefault(s => s.SensorData.Id == id);
             if (sensor == null)
                 return;
@@ -115,7 +108,7 @@ namespace SiamCross.ViewModels
                 return;
 
 
-            if (   sensorData.Name.Contains("DDIM")
+            if (sensorData.Name.Contains("DDIM")
                 || sensorData.Name.Contains("DDIN")
                 || sensorData.Name.Contains("SIDDOSA3M")
                 )
@@ -140,12 +133,12 @@ namespace SiamCross.ViewModels
                     }
                 }
             }
-            
+
         }
         private bool CanOpenMeasurement(SensorData sensorData)
         {
             bool result = true;
-            var sensor = SensorService.Instance.Sensors.SingleOrDefault(
+            ISensor sensor = SensorService.Instance.Sensors.SingleOrDefault(
                                 s => s.SensorData.Id == sensorData.Id);
             if (sensor != null)
             {
@@ -162,7 +155,7 @@ namespace SiamCross.ViewModels
         private bool CanOpenModalPage(Type type)
         {
             bool result = false;
-            var stack = App.NavigationPage.Navigation.ModalStack;
+            System.Collections.Generic.IReadOnlyList<Page> stack = App.NavigationPage.Navigation.ModalStack;
 
             if (stack.Count > 0)
             {

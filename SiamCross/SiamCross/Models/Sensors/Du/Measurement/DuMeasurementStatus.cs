@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SiamCross.Models.Sensors.Du.Measurement
+﻿namespace SiamCross.Models.Sensors.Du.Measurement
 {
     public enum DuMeasurementStatus
     {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 {
@@ -19,11 +18,8 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
         public MeasurementSecondaryParameters SecondaryParameters { get; set; }
 
-        public string ErrorCode
-        {
-            get => _errorCode != null ?
+        public string ErrorCode => _errorCode != null ?
                 Convert.ToString(BitConverter.ToInt16(_errorCode, 0), 16) : "";
-        }
 
         public DateTime Date => _date;
 

@@ -6,7 +6,7 @@
         public bool Amplification { get; set; }
         public bool Inlet { get; set; }
         public DuMeasurementSecondaryParameters SecondaryParameters { get; }
-        public DuMeasurementStartParameters(bool amplification, bool inlet,bool depth6000,
+        public DuMeasurementStartParameters(bool amplification, bool inlet, bool depth6000,
             DuMeasurementSecondaryParameters secondaryParameters)
         {
             Amplification = amplification;

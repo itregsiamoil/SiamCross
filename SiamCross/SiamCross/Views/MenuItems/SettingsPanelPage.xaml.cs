@@ -19,7 +19,7 @@ namespace SiamCross.Views.MenuItems
         public SettingsPanelPage()
         {
             _vm = new ViewModelWrap<SettingsViewModel>();
-            this.BindingContext = _vm.ViewModel;
+            BindingContext = _vm.ViewModel;
             InitializeComponent();
             if (Settings.Instance.IsNeedAuthorization)
             {

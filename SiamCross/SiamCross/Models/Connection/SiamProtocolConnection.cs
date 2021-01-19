@@ -1,10 +1,6 @@
 ﻿#define DEBUG_UNIT
-using Autofac;
-using NLog;
-using SiamCross.AppObjects;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Tools;
-using SiamCross.Services.Logging;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -13,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models
 {
-    abstract public class SiamProtocolConnection : IProtocolConnection , INotifyPropertyChanged
+    public abstract class SiamProtocolConnection : IProtocolConnection, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
-        protected IConnection mBaseConn=null;
+        protected IConnection mBaseConn = null;
         protected ConnectionState mState = ConnectionState.Disconnected;
         public SiamProtocolConnection(IConnection base_conn)
         {
@@ -43,15 +39,15 @@ namespace SiamCross.Models
         }
         public ConnectionState State
         {
-            get { return mState; }
-            private set 
+            get => mState;
+            private set
             {
                 mState = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("State"));
-                DebugLog.WriteLine("Connect State="+ mState.ToString());
+                DebugLog.WriteLine("Connect State=" + mState.ToString());
             }
         }
-        
+
         public virtual async Task<bool> Connect()
         {
             State = ConnectionState.PendingConnect;
@@ -66,16 +62,16 @@ namespace SiamCross.Models
                 DebugLog.WriteLine("Exception in: "
                     + System.Reflection.MethodBase.GetCurrentMethod().Name
                     + "\n msg=" + ex.Message
-                    + "\n type=" + ex.GetType() 
+                    + "\n type=" + ex.GetType()
                     + "\n stack=" + ex.StackTrace + "\n");
                 result = false;
                 await Disconnect();
             }
             finally
             {
-                if(result)
+                if (result)
                 {
-                    if(ConnectionState.Connected != State)
+                    if (ConnectionState.Connected != State)
                         State = ConnectionState.Connected;
                 }
                 else
@@ -83,7 +79,7 @@ namespace SiamCross.Models
                     if (ConnectionState.Disconnected != State)
                         State = ConnectionState.Disconnected;
                 }
-                    
+
             }
             return result;
         }
@@ -112,24 +108,24 @@ namespace SiamCross.Models
         private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
         private readonly byte[] mRxBuf = new byte[512];
         private readonly DataBuffer mBuf = new DataBuffer();
-        
+
         public const int mRequestRetry = 3;
-        #if DEBUG
+#if DEBUG
         public const int mResponseRetry = 100;
-        #else
+#else
         public const int mResponseRetry = 256;
-        #endif
+#endif
 
         private const int mAdditioonTime = 500;
         private const int mMinSpeed = 9600; ///bit per second
-        private const float multipler = 1000.0f / (mMinSpeed / (8 + 1 + 1)) ;
+        private const float multipler = 1000.0f / (mMinSpeed / (8 + 1 + 1));
         private static int GetTime(int bytes)
         {
             // 1000000usec
             // mMinSpeed/(8+1+1) - byte per second
             //one byte = 1000000 / (9600 / (8 + 1 + 1)) / 1000 = 1,04166msec
             //int timeout = 1000000 / (mMinSpeed / (8 + 1 + 1)) * bytes / 1000;
-            int timeout = (int)(bytes* multipler+0.5);
+            int timeout = (int)(bytes * multipler + 0.5);
             return (1 > timeout) ? 1 : timeout;
         }
         public static int GetRequestTimeout(byte[] rq)
@@ -157,7 +153,7 @@ namespace SiamCross.Models
             return timeout;
         }
 
-        readonly Stopwatch mPerfCounter = new Stopwatch();
+        private readonly Stopwatch mPerfCounter = new Stopwatch();
 
         private static void LockLog(string msg)
         {
@@ -181,11 +177,11 @@ namespace SiamCross.Models
             {
                 ctSrc.Token.ThrowIfCancellationRequested();
                 int sent = await mBaseConn.WriteAsync(data, 0, data.Length, ctSrc.Token);
-                if(data.Length == sent)
+                if (data.Length == sent)
                     sent_ok = true;
                 DebugLog.WriteLine("Sent " + data.Length.ToString()
-                    +" elapsed=" + mPerfCounter.ElapsedMilliseconds.ToString()
-                    +": [" + BitConverter.ToString(data) + "]\n");
+                    + " elapsed=" + mPerfCounter.ElapsedMilliseconds.ToString()
+                    + ": [" + BitConverter.ToString(data) + "]\n");
             }
             //if (!sent)
             //    ConnectFailed?.Invoke();
@@ -194,7 +190,7 @@ namespace SiamCross.Models
         private async Task<byte[]> ResponseAsync(byte[] req)
         {
             int pf_delay = GetResponseTimeout(req);
-            int read_timeout = GetResponseTimeout(req)+ mAdditioonTime;
+            int read_timeout = GetResponseTimeout(req) + mAdditioonTime;
             CancellationTokenSource ctSrc = new CancellationTokenSource(read_timeout);
             // делаем минимальную задержку чтоб принять как минимум заоловок пакета
             // без ожидания
@@ -216,7 +212,7 @@ namespace SiamCross.Models
                         DebugLog.WriteLine("Appended bytes=" + single_read.ToString()
                             + " elapsed=" + mPerfCounter.ElapsedMilliseconds.ToString()
                             + " / " + read_timeout.ToString());
-                            //+ ": [" + BitConverter.ToString(mRxBuf, 0, single_read) + "]\n");
+                        //+ ": [" + BitConverter.ToString(mRxBuf, 0, single_read) + "]\n");
                         pkg = mBuf.Extract();
                         if (0 != pkg.Length)
                         {
@@ -232,7 +228,7 @@ namespace SiamCross.Models
                             else
                             {
                                 DebugLog.WriteLine("OK response"
-                                    + " expected="+ pf_delay.ToString()
+                                    + " expected=" + pf_delay.ToString()
                                     + " elapsed=" + mPerfCounter.ElapsedMilliseconds.ToString()
                                     + " / " + read_timeout.ToString()
                                     + ": [" + BitConverter.ToString(pkg) + "]\n");
@@ -269,11 +265,11 @@ namespace SiamCross.Models
                     return await ResponseAsync(req);
                 }
             }
-            catch (OperationCanceledException )
+            catch (OperationCanceledException)
             {
                 DebugLog.WriteLine("Exchange canceled by timeout disconnect");
             }
-            return new byte[]{ };
+            return new byte[] { };
         }
         private async Task<byte[]> ExchangeData(byte[] req, int retry)
         {
@@ -302,14 +298,14 @@ namespace SiamCross.Models
 
         public async Task<byte[]> Exchange(byte[] req)
         {
-            #if DEBUG
+#if DEBUG
             mPerfCounter.Restart();
             byte[] res = await Exchange(req, 3);
             mPerfCounter.Stop();
             return res;
-            #else
+#else
             return await Exchange(req, 3);
-            #endif
+#endif
         }
         public async Task<byte[]> Exchange(byte[] req, int retry)
         {

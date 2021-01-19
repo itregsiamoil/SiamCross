@@ -15,7 +15,7 @@ using Xamarin.Forms;
 namespace SiamCross.ViewModels
 {
     public abstract class BaseSensorMeasurementViewModel<T> : INotifyPropertyChanged, IHaveSecondaryParameters
-        where T:class
+        where T : class
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
         protected SensorData _sensorData;
@@ -28,8 +28,8 @@ namespace SiamCross.ViewModels
         public string Shop { get; set; }
         public string BufferPressure { get; set; }
         public string Comments { get; set; }
-        
-        public ICommand AddField { get; set; } 
+
+        public ICommand AddField { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -63,8 +63,8 @@ namespace SiamCross.ViewModels
             try
             {
                 Fields.Clear();
-                var fieldList = HandbookData.Instance.GetFieldList();
-                foreach (var field in fieldList)
+                IEnumerable<string> fieldList = HandbookData.Instance.GetFieldList();
+                foreach (string field in fieldList)
                 {
                     Fields.Add(field);
                 }
@@ -80,7 +80,7 @@ namespace SiamCross.ViewModels
         {
             try
             {
-                var stack = App.NavigationPage.Navigation.ModalStack;
+                IReadOnlyList<Page> stack = App.NavigationPage.Navigation.ModalStack;
                 if (stack.Count > 0)
                 {
                     if (stack[stack.Count - 1].GetType() != typeof(AddFieldPage))

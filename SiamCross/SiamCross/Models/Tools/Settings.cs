@@ -11,7 +11,7 @@ namespace SiamCross.Models.Tools
         private static readonly Lazy<Settings> _instance =
             new Lazy<Settings>(() => new Settings());
 
-        public static Settings Instance { get => _instance.Value; }
+        public static Settings Instance => _instance.Value;
 
         private readonly ISettingsSaver _settingsSaver;
 
@@ -22,7 +22,7 @@ namespace SiamCross.Models.Tools
 
         public async Task Initialize()
         {
-            var settings = await _settingsSaver.ReadSettings();
+            SettingsParameters settings = await _settingsSaver.ReadSettings();
             if (settings != null) //Если файл настроек не пустой
             {
                 FromAddress = settings.FromAddress;
@@ -49,14 +49,14 @@ namespace SiamCross.Models.Tools
 
         public async Task SaveSettings()
         {
-           await  _settingsSaver.SaveSettings(new SettingsParameters(
-                FromAddress,
-                ToAddress,
-                SmtpAddress,
-                Port,
-                Username,
-                Password,
-                IsNeedAuthorization));
+            await _settingsSaver.SaveSettings(new SettingsParameters(
+                 FromAddress,
+                 ToAddress,
+                 SmtpAddress,
+                 Port,
+                 Username,
+                 Password,
+                 IsNeedAuthorization));
         }
 
         public string FromAddress { get; set; }

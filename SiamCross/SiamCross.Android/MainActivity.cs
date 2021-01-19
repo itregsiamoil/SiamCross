@@ -1,16 +1,13 @@
 ﻿using Android;
 using Android.App;
-using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.App;
 using Android.Support.V4.Content;
 using Android.Widget;
-using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms.Platform.Android;
-using Xamarin.Forms.Xaml;
 
 namespace SiamCross.Droid
 {
@@ -31,7 +28,7 @@ namespace SiamCross.Droid
             {
                 Xamarin.Essentials.Platform.Init(this, savedInstanceState);
                 global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-                var locationPermissions = new[]
+                string[] locationPermissions = new[]
                 {
                     Manifest.Permission.AccessCoarseLocation,
                     Manifest.Permission.AccessFineLocation,
@@ -39,14 +36,14 @@ namespace SiamCross.Droid
                 };
 
                 // check if the app has permission to access coarse location
-                var coarseLocationPermissionGranted =
+                Permission coarseLocationPermissionGranted =
                     ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessCoarseLocation);
 
                 // check if the app has permission to access fine location
-                var fineLocationPermissionGranted =
+                Permission fineLocationPermissionGranted =
                     ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation);
 
-                var externalFilesPermissionGranted =
+                Permission externalFilesPermissionGranted =
                     ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage);
 
                 // if either is denied permission, request permission from the user
@@ -79,13 +76,13 @@ namespace SiamCross.Droid
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
-            System.Diagnostics.Debug.WriteLine( $"OnRequestPermissionsResult(requestCode={requestCode} " +
+            System.Diagnostics.Debug.WriteLine($"OnRequestPermissionsResult(requestCode={requestCode} " +
                 $"- Permissions Count={permissions.Length} - GrantResults Count={grantResults.Length})");
 
             bool all_granted = true;
-            foreach(var g  in grantResults)
+            foreach (Permission g in grantResults)
             {
-                if(g!= Permission.Granted)
+                if (g != Permission.Granted)
                 {
                     all_granted = false;
                     Toast.MakeText(this, "You must approve all permissions", ToastLength.Long).Show();

@@ -3,12 +3,13 @@ using SiamCross.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class SoundSpeedViewViewModel : IViewModel
     {
         public SoundSpeedViewViewModel(SoundSpeedModel soundSpeed)
@@ -60,7 +61,7 @@ namespace SiamCross.ViewModels
 
         private void TrySaveEdits()
         {
-            if(string.IsNullOrWhiteSpace(Name) || 
+            if (string.IsNullOrWhiteSpace(Name) ||
                string.IsNullOrWhiteSpace(Code))
             {
                 _toater.Show(Resource.FillInAllTheFields);
@@ -82,7 +83,7 @@ namespace SiamCross.ViewModels
         {
             double max = Points[0].Key;
 
-            foreach (var pair in Points)
+            foreach (KeyValuePair<float, float> pair in Points)
             {
                 if (pair.Key > max)
                 {
@@ -97,7 +98,7 @@ namespace SiamCross.ViewModels
         {
             double min = Points[0].Key;
 
-            foreach (var pair in Points)
+            foreach (KeyValuePair<float, float> pair in Points)
             {
                 if (pair.Key < min)
                 {
@@ -112,7 +113,7 @@ namespace SiamCross.ViewModels
         {
             double min = Points[0].Value;
 
-            foreach (var pair in Points)
+            foreach (KeyValuePair<float, float> pair in Points)
             {
                 if (pair.Value < min)
                 {
@@ -127,7 +128,7 @@ namespace SiamCross.ViewModels
         {
             double max = Points[0].Value;
 
-            foreach (var pair in Points)
+            foreach (KeyValuePair<float, float> pair in Points)
             {
                 if (pair.Value > max)
                 {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 
 namespace SiamCross.Models.Tools
 {
@@ -19,8 +18,8 @@ namespace SiamCross.Models.Tools
         {
             _dynDictionary = new Dictionary<byte[], byte[]>(new ByteArrayComparer());
 
-            var startAddress = new byte[] { 0x00, 0x00, 0x00, 0x81 };
-            var currentAddress = new byte[] { 0x00, 0x00, 0x00, 0x00 };
+            byte[] startAddress = new byte[] { 0x00, 0x00, 0x00, 0x81 };
+            byte[] currentAddress = new byte[] { 0x00, 0x00, 0x00, 0x00 };
             _dynDictionary.Add(startAddress, null);
 
             for (int i = 0; i < 198; i++)
@@ -41,8 +40,8 @@ namespace SiamCross.Models.Tools
 
         public List<byte[]> GetEmptyAddresses()
         {
-            var emptyAddresses = new List<byte[]>();
-            foreach (var pair in _dynDictionary.ToList())
+            List<byte[]> emptyAddresses = new List<byte[]>();
+            foreach (KeyValuePair<byte[], byte[]> pair in _dynDictionary.ToList())
             {
                 if (pair.Value == null)
                 {
@@ -54,8 +53,8 @@ namespace SiamCross.Models.Tools
 
         public List<byte[]> GetDynData()
         {
-            var dynData = new List<byte[]>();
-            foreach (var pair in _dynDictionary)
+            List<byte[]> dynData = new List<byte[]>();
+            foreach (KeyValuePair<byte[], byte[]> pair in _dynDictionary)
             {
                 if (pair.Value == null)
                 {
@@ -71,14 +70,14 @@ namespace SiamCross.Models.Tools
 
         public bool AddData(byte[] address, byte[] data)
         {
-            var isNew = false;
-            if(_dynDictionary[address] == null)
+            bool isNew = false;
+            if (_dynDictionary[address] == null)
             {
                 isNew = true;
             }
             _dynDictionary[address] = data;
             Debug.WriteLine($"Add: {BitConverter.ToString(address)} : {BitConverter.ToString(data)}\n");
-            return isNew; 
+            return isNew;
         }
     }
 

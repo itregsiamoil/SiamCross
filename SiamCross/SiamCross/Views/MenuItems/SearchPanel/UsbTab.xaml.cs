@@ -21,11 +21,11 @@ namespace SiamCross.Views.MenuItems.SearchPanel
         public UsbTab()
         {
             InitializeComponent();
-            var vm = new ViewModelWrap<ScannerViewModel>();
-            
+            ViewModelWrap<ScannerViewModel> vm = new ViewModelWrap<ScannerViewModel>();
+
             _viewModel = vm.ViewModel;
             _viewModel.ScanTimeoutElapsed += () => ScanAnimation.IsRunning = false;
-            this.BindingContext = _viewModel;
+            BindingContext = _viewModel;
             usbDevicesList.RefreshCommand = new Command(() =>
             {
                 try

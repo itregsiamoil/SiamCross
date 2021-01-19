@@ -5,14 +5,14 @@ using SiamCross.Services;
 using SiamCross.Services.Logging;
 using SiamCross.Views;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class DirectoryViewModel : BaseViewModel, IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
@@ -37,8 +37,8 @@ namespace SiamCross.ViewModels
             try
             {
                 Fields.Clear();
-                var fieldDict = HandbookData.Instance.GetFieldDictionary();
-                foreach (var field in fieldDict)
+                System.Collections.Generic.Dictionary<string, int> fieldDict = HandbookData.Instance.GetFieldDictionary();
+                foreach (System.Collections.Generic.KeyValuePair<string, int> field in fieldDict)
                 {
                     Fields.Add(new FieldPair(field.Key, field.Value.ToString()));
                 }
@@ -76,7 +76,7 @@ namespace SiamCross.ViewModels
         {
             try
             {
-                var stack = App.NavigationPage.Navigation.ModalStack;
+                System.Collections.Generic.IReadOnlyList<Page> stack = App.NavigationPage.Navigation.ModalStack;
                 if (stack.Count > 0)
                 {
                     if (stack[stack.Count - 1].GetType() != typeof(AddFieldPage))

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using Xamarin.Essentials;
 
 namespace SiamCross.Models
 {
@@ -60,11 +59,11 @@ namespace SiamCross.Models
             }
         }
 
-        private string _firmware="0";
-        private string _battery="0";
-        private string _temperature="0";
-        private string _radiofirmware="0.0.0";
-        
+        private string _firmware = "0";
+        private string _battery = "0";
+        private string _temperature = "0";
+        private string _radiofirmware = "0.0.0";
+
 
         private string _status;
 

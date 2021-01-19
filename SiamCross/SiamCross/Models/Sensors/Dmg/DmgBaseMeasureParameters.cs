@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SiamCross.Models.Sensors.Dmg
 {
@@ -17,7 +15,7 @@ namespace SiamCross.Models.Sensors.Dmg
                                  float imtravel,
                                  int modelPump,
                                  MeasurementSecondaryParameters secondaryParameters)
-            :base(secondaryParameters)
+            : base(secondaryParameters)
         {
             DynPeriod = Convert.ToInt32(dynPeriod * 1000);
             ApertNumber = apertNumber;

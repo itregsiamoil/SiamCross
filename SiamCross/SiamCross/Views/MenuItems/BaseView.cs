@@ -11,7 +11,7 @@ namespace SiamCross.Views.MenuItems
 
         public BaseView()
         {
-            using (var scope = AppContainer.Container.BeginLifetimeScope())
+            using (ILifetimeScope scope = AppContainer.Container.BeginLifetimeScope())
             {
                 ViewModel = AppContainer.Container.Resolve<T>();
             }

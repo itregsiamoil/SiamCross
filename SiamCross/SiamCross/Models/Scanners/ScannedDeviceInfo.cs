@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SiamCross.Models.Scanners
 {
@@ -24,7 +22,7 @@ namespace SiamCross.Models.Scanners
 
         public bool Equals(ScannedDeviceInfo other)
         {
-            return this.Name == other.Name ? true : false;
+            return Name == other.Name ? true : false;
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SiamCross.Models.Sensors
+﻿namespace SiamCross.Models.Sensors
 {
     public enum MeasureState
     {
@@ -14,17 +10,17 @@ namespace SiamCross.Models.Sensors
     public class MeasurementSecondaryParameters
     {
         public MeasurementSecondaryParameters(
-            string name="",
-            string measurementType="",
-            string field="",
-            string well="",
-            string bush="",
-            string shop="",
-            string bufferPressure="",
-            string comment="",
+            string name = "",
+            string measurementType = "",
+            string field = "",
+            string well = "",
+            string bush = "",
+            string shop = "",
+            string bufferPressure = "",
+            string comment = "",
             string battery = "0.0",
             string temperature = "0.0",
-            string mainfirmware="0.0.0",
+            string mainfirmware = "0.0.0",
             string radiofirmware = "0.0.0"
             )
         {
@@ -43,8 +39,8 @@ namespace SiamCross.Models.Sensors
         }
 
         public string DeviceName { get; set; }
-        public string MeasurementType { get; set;  }
-        public string Field { get; set;  }
+        public string MeasurementType { get; set; }
+        public string Field { get; set; }
         public string Well { get; set; }
         public string Bush { get; set; }
         public string Shop { get; set; }
@@ -54,7 +50,7 @@ namespace SiamCross.Models.Sensors
         public string Temperature { get; set; }
         public string MainFirmware { get; set; }
         public string RadioFirmware { get; set; }
-        
+
 
     }
 }

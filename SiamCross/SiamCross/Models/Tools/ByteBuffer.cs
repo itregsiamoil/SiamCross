@@ -1,11 +1,10 @@
-﻿using SiamCross.AppObjects;
+﻿using Autofac;
+using SiamCross.AppObjects;
+using SiamCross.Services.Logging;
 using System;
 using System.Collections.Generic;
-using Autofac;
-using SiamCross.Services.Logging;
-using System.Threading;
-using System.Text;
 using System.Linq;
+using System.Threading;
 
 namespace SiamCross.Models.Tools
 {
@@ -27,10 +26,10 @@ namespace SiamCross.Models.Tools
         /// <summary>
         /// Буффер
         /// </summary>
-        private List<byte> _byffer = new List<byte>();
+        private readonly List<byte> _byffer = new List<byte>();
 
 
-        public List<byte> Buffer { get => _byffer; }
+        public List<byte> Buffer => _byffer;
 
         /// <summary>
         /// Ожидаемый размер данных
@@ -115,15 +114,15 @@ namespace SiamCross.Models.Tools
 
             if (_byffer.Count >= _expectedLength && _expectedLength != -1)
             {
-                if(!IsСoincidenceCrc())
+                if (!IsСoincidenceCrc())
                 {
                     FailCrc();
                 }
 
                 _dataSize = -1;
                 _expectedLength = -1;
-                var result = _byffer.ToArray();
-                _byffer.Clear();               
+                byte[] result = _byffer.ToArray();
+                _byffer.Clear();
                 return result;
             }
             else
@@ -134,7 +133,7 @@ namespace SiamCross.Models.Tools
 
         private bool IsСoincidenceCrc()
         {
-            if(!IsResponseCheck)
+            if (!IsResponseCheck)
             {
                 return true;
             }
@@ -197,7 +196,7 @@ namespace SiamCross.Models.Tools
                     {
                         return false;
                     }
-                    var startDataIndex = _expectedLength - _dataSize - 2;
+                    int startDataIndex = _expectedLength - _dataSize - 2;
                     List<byte> payloadDataList = new List<byte>();
                     for (int i = startDataIndex; i < _expectedLength - 2; i++)
                     {
