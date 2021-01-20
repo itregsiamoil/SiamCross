@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<linker>
+  <assembly fullname="Autofac">
+    <type fullname="*" />
+  </assembly>
+  <!--
+  <assembly fullname="SiamCross">
+    <type fullname="App" />
+  </assembly>
+  <assembly fullname="mscorlib">
+    <type fullname="System.Core"/>
+  </assembly>
+  <assembly fullname="TestApp">
+    <type fullname="TestApp.*" />
+  </assembly>
+  <assembly fullname="Android">
+    <type fullname="*" />
+  </assembly>
+  <assembly fullname="Xamarin">
+    <type fullname="*" />
+  </assembly>
+
+  <assembly fullname="Mono">
+    <type fullname="*" />
+  </assembly>
+  -->
+</linker>
