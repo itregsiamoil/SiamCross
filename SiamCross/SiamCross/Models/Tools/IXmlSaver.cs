@@ -5,6 +5,7 @@ namespace SiamCross.Models.Tools
 {
     public interface IXmlSaver
     {
+        Task UpdateStorageFolderAsync();
         Task<bool> SaveXml(string filename, XDocument xml);
         void DeleteXml(string filename);
 

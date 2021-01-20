@@ -234,6 +234,7 @@ namespace SiamCross.ViewModels
                     }
                 }
             }
+            await xmlSaver.UpdateStorageFolderAsync();
             return paths;
         }
         private bool ValidateForEmptiness()

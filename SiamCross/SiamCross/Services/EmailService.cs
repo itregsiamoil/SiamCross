@@ -1,6 +1,4 @@
-﻿using Autofac;
-using SiamCross.AppObjects;
-using SiamCross.Models;
+﻿using SiamCross.Models;
 using SiamCross.Models.Tools;
 using System;
 using System.Threading.Tasks;
@@ -16,7 +14,7 @@ namespace SiamCross.Services
         private readonly IEmailSender _emailSender;
         private EmailService()
         {
-            _emailSender = AppContainer.Container.Resolve<IEmailSender>();
+            _emailSender = new EmailSender();
         }
         public Task<bool> SendEmailWithFiles(string subject
             , string text, string[] filenames)

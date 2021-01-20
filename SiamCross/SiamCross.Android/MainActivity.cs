@@ -11,23 +11,43 @@ using Xamarin.Forms.Platform.Android;
 
 namespace SiamCross.Droid
 {
-    [Activity(Label = "SIAM SERVICE", Icon = "@mipmap/main_icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "SIAM SERVICE",
+        Icon = "@mipmap/main_icon",
+        Theme = "@style/Theme.Splash",
+        MainLauncher = true,
+        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : FormsAppCompatActivity
     {
+        public static Activity CurrentActivity;
+        private TaskCompletionSource<bool> mAllPermOkExecTcs;
         protected override async void OnCreate(Bundle savedInstanceState)
         {
+            SetTheme(Resource.Style.MainTheme);
             // set the layout resources first
             FormsAppCompatActivity.ToolbarResource = Resource.Layout.Toolbar;
             FormsAppCompatActivity.TabLayoutResource = Resource.Layout.Tabbar;
-
             base.OnCreate(savedInstanceState);
+            await GetPermissionsAsync();
+
             //Xamarin.Forms.Forms.SetFlags("Expander_Experimental");
             Xamarin.Forms.Forms.SetFlags("SwipeView_Experimental");
+            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+            Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            CurrentActivity = this;
+            
+
+
+            // Set it in the constructor
+            
+
+            LoadApplication(new App(new Setup()));
+        }
+
+        public async Task GetPermissionsAsync()
+        {
             bool all_granted = false;
             while (!all_granted)
             {
-                Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-                global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
                 string[] locationPermissions = new[]
                 {
                     Manifest.Permission.AccessCoarseLocation,
@@ -60,16 +80,8 @@ namespace SiamCross.Droid
                 else
                     all_granted = true;
             }
-
-            // Set it in the constructor
-            CurrentActivity = this;
-
-            LoadApplication(new App(new Setup()));
         }
 
-        public static Activity CurrentActivity;
-
-        private TaskCompletionSource<bool> mAllPermOkExecTcs;
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);

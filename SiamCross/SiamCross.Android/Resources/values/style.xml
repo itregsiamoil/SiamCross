@@ -48,4 +48,14 @@
     <item name="android:textColor">@color/cardview_dark_background</item>
     -->
   </style>
+
+  <style name="Theme.Splash"
+        parent="Theme.AppCompat.NoActionBar">
+    <item name="windowNoTitle">true</item>
+
+    <item name="colorPrimary">@color/primary</item>
+    <item name="colorPrimaryDark">@color/primaryDark</item>
+
+    <item name="android:windowBackground">@drawable/splash_screen</item>
+  </style>
 </resources>
