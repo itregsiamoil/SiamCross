@@ -6,6 +6,7 @@ using Android.Runtime;
 using Android.Support.V4.App;
 using Android.Support.V4.Content;
 using Android.Widget;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms.Platform.Android;
 
@@ -34,55 +35,63 @@ namespace SiamCross.Droid
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
             CurrentActivity = this;
-            
-
-
             // Set it in the constructor
-            
-
             LoadApplication(new App(new Setup()));
         }
 
+        class PermGrantStor
+        {
+            public readonly string Name;
+            public Permission Access;
+            public PermGrantStor(string perm, Permission grant = Permission.Denied)
+            {
+                Name = perm;
+                Access = grant;
+            }
+        };
         public async Task GetPermissionsAsync()
         {
-            bool all_granted = false;
-            while (!all_granted)
+            List<string> not_granted_perm = new List<string>();
+            string[] all_perm = 
             {
-                string[] locationPermissions = new[]
+                Manifest.Permission.Bluetooth,
+                Manifest.Permission.BluetoothAdmin,
+
+                Manifest.Permission.ReadExternalStorage,
+                Manifest.Permission.WriteExternalStorage,
+
+                Manifest.Permission.AccessCoarseLocation,
+                Manifest.Permission.AccessFineLocation,
+
+                //Manifest.Permission.SystemAlertWindow,
+            };
+            
+            do
+            {
+                not_granted_perm.Clear();
+                foreach (var perm in all_perm)
                 {
-                    Manifest.Permission.AccessCoarseLocation,
-                    Manifest.Permission.AccessFineLocation,
-                    Manifest.Permission.WriteExternalStorage
-                };
-
-                // check if the app has permission to access coarse location
-                Permission coarseLocationPermissionGranted =
-                    ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessCoarseLocation);
-
-                // check if the app has permission to access fine location
-                Permission fineLocationPermissionGranted =
-                    ContextCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation);
-
-                Permission externalFilesPermissionGranted =
-                    ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage);
-
-                // if either is denied permission, request permission from the user
-                const int locationPermissionsRequestCode = 1000;
-                if (coarseLocationPermissionGranted == Permission.Denied ||
-                    fineLocationPermissionGranted == Permission.Denied ||
-                    externalFilesPermissionGranted == Permission.Denied)
-                {
-                    ActivityCompat.RequestPermissions(this, locationPermissions, locationPermissionsRequestCode);
-                    mAllPermOkExecTcs = new TaskCompletionSource<bool>();
-                    all_granted = await mAllPermOkExecTcs.Task;
-                    await Task.Delay(1000);
+                    // check if the app has permission to access 
+                    if (Permission.Granted != ContextCompat.CheckSelfPermission(this, perm))
+                        not_granted_perm.Add(perm);
                 }
-                else
-                    all_granted = true;
+                if (0 != not_granted_perm.Count)
+                {
+                    const int request_code = 1000;
+                    ActivityCompat.RequestPermissions(this, not_granted_perm.ToArray(), request_code);
+                    mAllPermOkExecTcs = new TaskCompletionSource<bool>();
+                    bool all_granted = await mAllPermOkExecTcs.Task;
+                    if(!all_granted)
+                    {
+                        Toast.MakeText(this, "You must approve all permissions", ToastLength.Long).Show();
+                        await Task.Delay(1000);
+                    }
+                }
             }
-        }
+            while (0 < not_granted_perm.Count);
+        }//public async Task GetPermissionsAsync()
 
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -97,7 +106,6 @@ namespace SiamCross.Droid
                 if (g != Permission.Granted)
                 {
                     all_granted = false;
-                    Toast.MakeText(this, "You must approve all permissions", ToastLength.Long).Show();
                     break;
                 }
             }
