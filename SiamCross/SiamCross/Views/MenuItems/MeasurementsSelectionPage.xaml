@@ -16,83 +16,111 @@
     <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from
     <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>-->
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="&#x25A3;" Command="{Binding SelectAllCommand}"/>
         <!--
-            Waiting Essetional 1.6
-            ToolbarItem IconImageSource="share.png" Text="Share" Command="{Binding ShareCommand}"
-        -->
+        <ToolbarItem IconImageSource="share.png" Text="Share" Command="{Binding ShareCommand}"/>
         <ToolbarItem IconImageSource="send.png" Command="{Binding SendCommand}"/>
         <ToolbarItem IconImageSource="save.png" Clicked="ToolbarItem_Clicked"/>
         <ToolbarItem IconImageSource="trashcan.png" Command="{Binding DeleteCommand}"/>
+        -->
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <CollectionView ItemsSource="{Binding Measurements}"
+        <StackLayout Spacing="0" Margin="0">
+            <CollectionView ItemsSource="{Binding Measurements}"
                             SelectedItems="{Binding SelectedMeasurements}"
                             SelectionMode="Multiple"
                             SelectionChangedCommand="{Binding SelectionChanged}"
                             BackgroundColor="{StaticResource colorCtrlBg}"
                             Margin ="0" >
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <StackLayout Orientation="Vertical" Margin="0" Padding="0" Spacing="0">
-                        <Frame BackgroundColor="{StaticResource launcher_background}"
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Orientation="Vertical" Margin="0" Padding="0" Spacing="0">
+                            <Frame BackgroundColor="{StaticResource launcher_background}"
                                Margin="4,4,4,4" Padding="4,2,4,2" CornerRadius="4"
                                HasShadow="true"  >
-                            <Frame.Triggers>
-                                <DataTrigger TargetType="Frame" Binding="{Binding IsSelected}" Value="true" >
-                                    <Setter Property="BackgroundColor" Value="{StaticResource colorCtrlNormal}"  />
-                                </DataTrigger>
-                            </Frame.Triggers>
-                            <StackLayout Orientation="Vertical" Spacing="0" >
-                                <Grid RowSpacing="0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50*" />
-                                        <ColumnDefinition Width="50*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
-                                    <Label Grid.Row="0" Text="{Binding Field}" FontAttributes="Bold"></Label>
-                                    <Label Grid.Row="1" Text="{Binding Date}" FontAttributes="Bold"></Label>
-                                    <Label Grid.Row="2" Text="{Binding Name}"/>
-                                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding MeasurementType}"/>
-                                    <Label Grid.Row="3" Text="{Binding Comments}" Grid.ColumnSpan="2" />
-                                </Grid>
-                                <Grid RowSpacing="0" ColumnSpacing="4" Padding="0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="20" />
-                                        <ColumnDefinition Width="100*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="12"/>
-                                        <RowDefinition Height="12"/>
-                                    </Grid.RowDefinitions>
-                                    <ActivityIndicator 
+                                <Frame.Triggers>
+                                    <DataTrigger TargetType="Frame" Binding="{Binding IsSelected}" Value="true" >
+                                        <Setter Property="BackgroundColor" Value="{StaticResource colorCtrlNormal}"  />
+                                    </DataTrigger>
+                                </Frame.Triggers>
+                                <StackLayout Orientation="Vertical" Spacing="0" >
+                                    <Grid RowSpacing="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50*" />
+                                            <ColumnDefinition Width="50*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Row="0" Text="{Binding Field}" FontAttributes="Bold"></Label>
+                                        <Label Grid.Row="1" Text="{Binding Date}" FontAttributes="Bold"></Label>
+                                        <Label Grid.Row="2" Text="{Binding Name}"/>
+                                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding MeasurementType}"/>
+                                        <Label Grid.Row="3" Text="{Binding Comments}" Grid.ColumnSpan="2" />
+                                    </Grid>
+                                    <Grid RowSpacing="0" ColumnSpacing="4" Padding="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="20" />
+                                            <ColumnDefinition Width="100*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="12"/>
+                                            <RowDefinition Height="12"/>
+                                        </Grid.RowDefinitions>
+                                        <ActivityIndicator 
                                         IsRunning="{Binding Sending}"
                                         Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" />
-                                    <Label Text="&#x1F4E4;"
+                                        <Label Text="&#x1F4E4;"
                                            VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
                                            Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" >
-                                        <Label.Triggers>
-                                            <DataTrigger TargetType="Label" Binding="{Binding LastSentTimestamp}" Value="" >
-                                                <Setter Property="IsVisible" Value="false"  />
-                                            </DataTrigger>
-                                        </Label.Triggers>
-                                    </Label>
-                                    <Label Text="{Binding LastSentTimestamp}" 
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding LastSentTimestamp}" Value="" >
+                                                    <Setter Property="IsVisible" Value="false"  />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                        <Label Text="{Binding LastSentTimestamp}" 
                                            Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
                                            Grid.Row="1" Grid.Column="1" />
-                                    <Label Text="{Binding LastSentRecipient}"
+                                        <Label Text="{Binding LastSentRecipient}"
                                            Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
                                            Grid.Row="0" Grid.Column="1"  />
-                                </Grid>
-                            </StackLayout>
-                        </Frame>
-                    </StackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                                    </Grid>
+                                </StackLayout>
+                            </Frame>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <FlexLayout BackgroundColor="{StaticResource colorPrimary}"
+                Wrap="Wrap" JustifyContent="Center" Direction="Row" 
+                Margin="0" Padding="0" >
+                <Button ImageSource="share.png" 
+                        FlexLayout.AlignSelf="Center" FlexLayout.Basis="30" FlexLayout.Grow="40"
+                        BackgroundColor="Transparent"
+                        Command="{Binding Path=ShareCommand}" 
+                         />
+                <Button ImageSource="send.png"
+                        FlexLayout.AlignSelf="Center" FlexLayout.Basis="30" FlexLayout.Grow="40"
+                        BackgroundColor="Transparent"
+                        Command="{Binding Path=SendCommand}" 
+                         />
+                <Button ImageSource="save.png"
+                        FlexLayout.AlignSelf="Center" FlexLayout.Basis="30" FlexLayout.Grow="40"
+                        BackgroundColor="Transparent"
+                        Clicked="ToolbarItem_Clicked"
+                         />
+                <Button ImageSource="trashcan.png" 
+                        FlexLayout.AlignSelf="Center" FlexLayout.Basis="30" FlexLayout.Grow="40"
+                        BackgroundColor="Transparent"
+                        Command="{Binding Path=DeleteCommand}" 
+                         />
+                
+            </FlexLayout>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

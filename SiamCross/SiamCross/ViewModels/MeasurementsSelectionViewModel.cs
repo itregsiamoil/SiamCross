@@ -27,6 +27,8 @@ namespace SiamCross.ViewModels
         private readonly List<string> _errorList;
         private readonly DateTimeConverter _timeConverter = new DateTimeConverter();
         private string _title;
+
+        private bool _select_all = false;
         public string Title
         {
             get => _title;
@@ -42,6 +44,7 @@ namespace SiamCross.ViewModels
         public ICommand DeleteCommand { get; set; }
         public ICommand SelectionChanged { get; set; }
         public ICommand SendCommand { get; set; }
+        public ICommand SelectAllCommand { get; set; }
 
         public MeasurementsSelectionViewModel(ObservableCollection<MeasurementView> measurements)
         {
@@ -57,6 +60,7 @@ namespace SiamCross.ViewModels
             DeleteCommand = new Command(DeleteMeasurements);
             SelectionChanged = new Command(RefreshSelectedCount);
             SendCommand = new Command(SendMeasurements);
+            SelectAllCommand = new Command(SelectAll);
             ShareCommand = new Command(ShareMeasurementsAsync);
         }
         public async void SaveMeasurements(object obj)
@@ -204,6 +208,26 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
+        private void SelectAll(object obj)
+        {
+            if (0 < SelectedMeasurements.Count)
+            {
+                _select_all = false;
+                SelectedMeasurements.Clear();
+                return;
+            }
+            else
+            {
+                foreach (MeasurementView m in Measurements)
+                {
+                    SelectedMeasurements.Add(m);
+                    m.IsSelected = true;
+                }
+                _select_all = true;
+            }
+        }
+
+
         private async Task<string[]> SaveXmlsReturnPaths()
         {
             XmlCreator xmlCreator = new XmlCreator();
