@@ -57,6 +57,7 @@ namespace SiamCross.ViewModels
             DeleteCommand = new Command(DeleteMeasurements);
             SelectionChanged = new Command(RefreshSelectedCount);
             SendCommand = new Command(SendMeasurements);
+            ShareCommand = new Command(ShareMeasurementsAsync);
         }
         public async void SaveMeasurements(object obj)
         {
