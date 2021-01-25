@@ -1,15 +1,14 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
-using SiamCross.Models.Tools;
 using System;
 using System.Threading.Tasks;
 using Xamarin.Forms.Internals;
 using Settings = SiamCross.Models.Tools.Settings;
 
-namespace SiamCross.Models
+namespace SiamCross.Services.Email
 {
     [Preserve(AllMembers = true)]
-    public class EmailSender : IEmailSender
+    internal class EmailSender
     {
         private async Task<bool> SendMessage(MimeMessage msg)
         {
@@ -17,17 +16,17 @@ namespace SiamCross.Models
             {
                 using (SmtpClient client = new SmtpClient())
                 {
-                    client.Connect(Settings.Instance.SmtpAddress, Settings.Instance.Port);
+                    await client.ConnectAsync(Settings.Instance.SmtpAddress, Settings.Instance.Port);
 
                     if (Settings.Instance.IsNeedAuthorization)
                     {
                         // Note: since we don't have an OAuth2 token, disable
                         // the XOAUTH2 authentication mechanism.
                         //client.AuthenticationMechanisms.Remove("XOAUTH2");
-                        client.Authenticate(Settings.Instance.Username, Settings.Instance.Password);
+                        await client.AuthenticateAsync(Settings.Instance.Username, Settings.Instance.Password);
                     }
                     await client.SendAsync(msg);
-                    client.Disconnect(true);
+                    await client.DisconnectAsync(true);
                     return true;
                 }
             }
@@ -36,7 +35,7 @@ namespace SiamCross.Models
                 throw new Exception(ex.Message);
             }
         }
-        public async Task<bool> SendEmailWithFiles(string subject,
+        public async Task<bool> SendEmailWithFilesAsync(string subject,
                                        string text,
                                        string[] filenames)
         {

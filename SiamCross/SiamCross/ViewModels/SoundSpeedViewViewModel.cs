@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models.Tools;
 using SiamCross.Services;
+using SiamCross.Services.Toast;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +17,6 @@ namespace SiamCross.ViewModels
         {
             _targetSoundSpeed = soundSpeed;
             Edit = new Command(TrySaveEdits);
-            _toater = DependencyService.Get<IToast>();
             Name = soundSpeed.Name;
             Code = soundSpeed.Code.ToString();
 
@@ -27,8 +27,6 @@ namespace SiamCross.ViewModels
             MinGraphY = Math.Round(GetMinimumY(), 1).ToString();
             MaxGraphY = Math.Round(GetMaximumY(), 1).ToString();
         }
-
-        private readonly IToast _toater;
 
         private readonly SoundSpeedModel _targetSoundSpeed;
 
@@ -64,7 +62,7 @@ namespace SiamCross.ViewModels
             if (string.IsNullOrWhiteSpace(Name) ||
                string.IsNullOrWhiteSpace(Code))
             {
-                _toater.Show(Resource.FillInAllTheFields);
+                ToastService.Instance.LongAlert(Resource.FillInAllTheFields);
                 return;
             }
 

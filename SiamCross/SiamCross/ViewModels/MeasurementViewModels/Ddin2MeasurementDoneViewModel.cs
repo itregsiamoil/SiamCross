@@ -149,13 +149,8 @@ namespace SiamCross.ViewModels
             try
             {
                 XmlCreator xmlCreator = new XmlCreator();
-
-                IXmlSaver xmlSaver = DependencyService.Get<IXmlSaver>();
-
                 string name = CreateName(_measurement.Name, _measurement.DateTime);
-                await xmlSaver.SaveXml(name, xmlCreator.CreateDdin2Xml(_measurement));
-
-                string filepath = xmlSaver.GetFilepath(name);
+                string filepath = await XmlSaver.SaveXml(name, xmlCreator.CreateDdin2Xml(_measurement));
 
                 await Share.RequestAsync(new ShareFileRequest
                 {

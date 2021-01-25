@@ -3,7 +3,7 @@ using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Models.Tools;
 using SiamCross.Services.Logging;
-using SiamCross.Services.UserOutput;
+using SiamCross.Services.StdDialog;
 using SiamCross.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -59,9 +59,7 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
 
         private async void ToolbarItem_Clicked(object sender, EventArgs e)
         {
-            IFileOpenDialog dialog = AppContainer.Container.Resolve<IFileOpenDialog>();
-
-            string path = await dialog.Show();
+            string path = await StdDialogService.Instance.ShowOpenDialog();
 
             if (string.IsNullOrWhiteSpace(path))
             {

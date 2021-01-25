@@ -7,6 +7,7 @@ using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
+using SiamCross.Services.Toast;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -93,7 +94,7 @@ namespace SiamCross.ViewModels
                 };
                 StartMeasurementCommand = new Command(StartMeasurementHandler);
 
-                ValveTestCommand = new Command(() => DependencyService.Get<IToast>().Show(Resource.ValveTest));
+                ValveTestCommand = new Command(() => ToastService.Instance.LongAlert(Resource.ValveTest));
             }
             catch (Exception ex)
             {

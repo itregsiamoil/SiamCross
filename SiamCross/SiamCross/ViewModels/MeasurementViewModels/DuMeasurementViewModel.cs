@@ -7,6 +7,7 @@ using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
+using SiamCross.Services.Toast;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -114,7 +115,7 @@ namespace SiamCross.ViewModels
                     SoundSpeedCorrections.Add(elem.ToString());
                 }
                 StartMeasurementCommand = new Command(StartMeasurementHandler);
-                ValveTestCommand = new Command(() => DependencyService.Get<IToast>().Show(Resource.ValveTest));
+                ValveTestCommand = new Command(() => ToastService.Instance.LongAlert(Resource.ValveTest));
 
                 if (SoundSpeedCorrections.Count != 0)
                 {

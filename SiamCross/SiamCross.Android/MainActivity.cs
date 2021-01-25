@@ -38,21 +38,10 @@ namespace SiamCross.Droid
             // Set it in the constructor
             LoadApplication(new App(new Setup()));
         }
-
-        class PermGrantStor
-        {
-            public readonly string Name;
-            public Permission Access;
-            public PermGrantStor(string perm, Permission grant = Permission.Denied)
-            {
-                Name = perm;
-                Access = grant;
-            }
-        };
         public async Task GetPermissionsAsync()
         {
             List<string> not_granted_perm = new List<string>();
-            string[] all_perm = 
+            string[] all_perm =
             {
                 Manifest.Permission.Bluetooth,
                 Manifest.Permission.BluetoothAdmin,
@@ -65,11 +54,11 @@ namespace SiamCross.Droid
 
                 //Manifest.Permission.SystemAlertWindow,
             };
-            
+
             do
             {
                 not_granted_perm.Clear();
-                foreach (var perm in all_perm)
+                foreach (string perm in all_perm)
                 {
                     // check if the app has permission to access 
                     if (Permission.Granted != ContextCompat.CheckSelfPermission(this, perm))
@@ -81,7 +70,7 @@ namespace SiamCross.Droid
                     ActivityCompat.RequestPermissions(this, not_granted_perm.ToArray(), request_code);
                     mAllPermOkExecTcs = new TaskCompletionSource<bool>();
                     bool all_granted = await mAllPermOkExecTcs.Task;
-                    if(!all_granted)
+                    if (!all_granted)
                     {
                         Toast.MakeText(this, "You must approve all permissions", ToastLength.Long).Show();
                         await Task.Delay(1000);

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace SiamCross.Services.UserOutput
+namespace SiamCross.Services.StdDialog
 {
     public interface IFileOpenDialog
     {

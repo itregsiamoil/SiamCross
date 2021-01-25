@@ -3,13 +3,18 @@ using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
+using SiamCross.Services.Email;
+using SiamCross.Services.Environment;
 using SiamCross.Services.Logging;
+using SiamCross.Services.MediaScanner;
+using SiamCross.Services.Toast;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Linq;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -49,7 +54,6 @@ namespace SiamCross.ViewModels
             }
             _errorList = new List<string>();
             Title = $"{Resource.SelectedMeasurements}: {SelectedMeasurements.Count}";
-            SendCommand = new Command(ShareMeasurements);
             DeleteCommand = new Command(DeleteMeasurements);
             SelectionChanged = new Command(RefreshSelectedCount);
             SendCommand = new Command(SendMeasurements);
@@ -58,7 +62,7 @@ namespace SiamCross.ViewModels
         {
             try
             {
-                DependencyService.Get<IToast>().Show($"{Resource.SavingMeasurements}...");
+                ToastService.Instance.LongAlert($"{Resource.SavingMeasurements}...");
 
                 await Task.Run(() =>
                 {
@@ -67,8 +71,7 @@ namespace SiamCross.ViewModels
 
                 string savePath = @"""Measurements""";
 
-                DependencyService.Get<IToast>()
-                    .Show($"{SelectedMeasurements.Count} " +
+                ToastService.Instance.LongAlert($"{SelectedMeasurements.Count} " +
                     $"{Resource.MeasurementsSavedSuccesfully} {savePath}");
             }
             catch (Exception ex)
@@ -145,15 +148,13 @@ namespace SiamCross.ViewModels
                     survay.LastSentRecipient = SiamCross.Models.Tools.Settings.Instance.ToAddress;
                 }
 
-
-                DependencyService.Get<IToast>().Show($"{Resource.SendingMeasurements}...");
+                ToastService.Instance.LongAlert($"{Resource.SendingMeasurements}...");
                 string[] paths = await SaveXmlsReturnPaths();
 
-                bool is_ok = await EmailService.Instance.SendEmailWithFiles("Siam Measurements",
+                bool is_ok = await EmailService.Instance.SendEmailWithFilesAsync("Siam Measurements",
                     "\nSiamCompany Telemetry Transfer Service",
                     paths);
-                DependencyService.Get<IToast>()
-                    .Show($"{SelectedMeasurements.Count} {Resource.MeasurementsSentSuccesfully}");
+                ToastService.Instance.LongAlert($"{SelectedMeasurements.Count} {Resource.MeasurementsSentSuccesfully}");
 
                 foreach (MeasurementView sent_sur in SelectedMeasurements)
                 {
@@ -178,24 +179,23 @@ namespace SiamCross.ViewModels
             SendCommand = new Command(SendMeasurements);
 
         }
-        private void ShareMeasurements(object obj)
+        private async void ShareMeasurementsAsync(object obj)
         {
             try
             {
-                /*
-                 Waiting Essentional 1.6
-                var paths = SaveXmlsReturnPaths();
-                ShareFile[] sf = new ShareFile[paths.Length];
+                string ShareFilesTitle = "ShareMultiple";
+                string[] paths = await SaveXmlsReturnPaths();
+
+                List<ShareFile> sf = new List<ShareFile>();
                 for (int i = 0; i < paths.Length; ++i)
                 {
-                    sf[i] = new ShareFile(paths[i]);
+                    sf.Add(new ShareFile(paths[i]));
                 }
                 await Share.RequestAsync(new ShareMultipleFilesRequest
                 {
-                    Title = Title,
+                    Title = ShareFilesTitle,
                     Files = sf
                 });
-                */
             }
             catch (Exception ex)
             {
@@ -206,35 +206,33 @@ namespace SiamCross.ViewModels
         private async Task<string[]> SaveXmlsReturnPaths()
         {
             XmlCreator xmlCreator = new XmlCreator();
-            IXmlSaver xmlSaver = DependencyService.Get<IXmlSaver>();
             string[] paths = new string[SelectedMeasurements.Count];
             for (int i = 0; i < SelectedMeasurements.Count; i++)
             {
                 if (SelectedMeasurements[i] is MeasurementView mv)
                 {
-                    if (mv.Name.Contains("DDIM")
-                        || mv.Name.Contains("DDIN")
-                        || mv.Name.Contains("SIDDOSA3M"))
+                    string file_name = null;
+                    XDocument doc = null;
+
+                    if (mv.Name.Contains("DDIM") || mv.Name.Contains("DDIN") || mv.Name.Contains("SIDDOSA3M"))
                     {
                         DataBase.DataBaseModels.Ddin2Measurement dnm = DataRepository.Instance.GetDdin2MeasurementById(mv.Id);
-                        string name = CreateName(dnm.Name, dnm.DateTime);
-                        bool saved = await xmlSaver.SaveXml(name, xmlCreator.CreateDdin2Xml(dnm));
-                        if (saved)
-                            paths[i] = xmlSaver.GetFilepath(name);
+                        file_name = CreateName(dnm.Name, dnm.DateTime);
+                        doc = xmlCreator.CreateDdin2Xml(dnm);
                     }
                     else if (mv.Name.Contains("DU"))
                     {
                         //Get siddos by id
                         DataBase.DataBaseModels.DuMeasurement du = DataRepository.Instance.GetDuMeasurementById(mv.Id);
-                        string name = CreateName(du.Name, du.DateTime);
-                        XDocument doc = xmlCreator.CreateDuXml(du);
-                        bool saved = await xmlSaver.SaveXml(name, doc);
-                        if (saved)
-                            paths[i] = xmlSaver.GetFilepath(name);
+                        file_name = CreateName(du.Name, du.DateTime);
+                        doc = xmlCreator.CreateDuXml(du);
                     }
+                    paths[i] = await XmlSaver.SaveXml(file_name, doc);
                 }
             }
-            await xmlSaver.UpdateStorageFolderAsync();
+
+            string mes_dir = EnvironmentService.Instance.GetDir_Measurements();
+            await MediaScannerService.Instance.Scan(mes_dir);
             return paths;
         }
         private bool ValidateForEmptiness()
@@ -278,7 +276,7 @@ namespace SiamCross.ViewModels
 
                 for (int i = 0; i < _errorList.Count; i++)
                 {
-                    errors += _errorList[i] + Environment.NewLine;
+                    errors += _errorList[i] + System.Environment.NewLine;
                 }
 
                 Application.Current.MainPage.DisplayAlert(Resource.IncorrectDataEnteredErrorText,

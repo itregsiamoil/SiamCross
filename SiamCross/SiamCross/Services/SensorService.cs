@@ -3,7 +3,6 @@ using SiamCross.Models;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
 using SiamCross.Models.Sensors.Du.Measurement;
-using SiamCross.Models.Tools;
 using SiamCross.Views;
 using System;
 using System.Collections.Generic;
@@ -109,8 +108,6 @@ namespace SiamCross.Services
                     _sensors.Select(s => s.ScannedDeviceInfo));
             }
         }
-
-        public IFileManager AppCotainer { get; private set; }
 
         public async Task StartMeasurementOnSensor(Guid id, object parameters)
         {

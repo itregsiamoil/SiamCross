@@ -3,6 +3,7 @@ using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
+using SiamCross.Services.Toast;
 using System;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -18,10 +19,7 @@ namespace SiamCross.ViewModels
         public AddFieldViewModel()
         {
             Add = new Command(SaveField);
-            _toater = DependencyService.Get<IToast>();
         }
-
-        private readonly IToast _toater;
 
         public string FieldName { get; set; }
         public string FieldCode { get; set; }
@@ -32,12 +30,12 @@ namespace SiamCross.ViewModels
         {
             if (FieldName == null || FieldCode == null)
             {
-                _toater.Show(Resource.FillInAllTheFields);
+                ToastService.Instance.LongAlert(Resource.FillInAllTheFields);
                 return;
             }
             else if (FieldName == "" || FieldCode == "")
             {
-                _toater.Show(Resource.FillInAllTheFields);
+                ToastService.Instance.LongAlert(Resource.FillInAllTheFields);
                 return;
             }
 

@@ -1,9 +1,7 @@
-﻿using SiamCross.Models;
-using SiamCross.Models.Tools;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
-namespace SiamCross.Services
+namespace SiamCross.Services.Email
 {
     public sealed class EmailService
     {
@@ -11,15 +9,15 @@ namespace SiamCross.Services
             new Lazy<EmailService>(() => new EmailService());
         public static EmailService Instance => _instance.Value;
 
-        private readonly IEmailSender _emailSender;
+        private readonly EmailSender _emailSender;
         private EmailService()
         {
             _emailSender = new EmailSender();
         }
-        public Task<bool> SendEmailWithFiles(string subject
+        public async Task<bool> SendEmailWithFilesAsync(string subject
             , string text, string[] filenames)
         {
-            return _emailSender.SendEmailWithFiles(subject, text, filenames);
+            return await _emailSender.SendEmailWithFilesAsync(subject, text, filenames);
         }
     }
 }
