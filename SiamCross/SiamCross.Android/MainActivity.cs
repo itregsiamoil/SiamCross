@@ -13,7 +13,7 @@ using Xamarin.Forms.Platform.Android;
 namespace SiamCross.Droid
 {
     [Activity(Label = "SIAM SERVICE",
-        Icon = "@mipmap/main_icon",
+        Icon = "@mipmap/main_ricon",
         Theme = "@style/Theme.Splash",
         MainLauncher = true,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
