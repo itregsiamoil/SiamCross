@@ -8,10 +8,10 @@ namespace SiamCross.Views.MenuItems
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MeasurementsPage : ContentPage
     {
-        private readonly MeasurementsViewModel _vm;
+        private readonly MeasurementsSelectionViewModel _vm;
         public MeasurementsPage()
         {
-            _vm = new ViewModelWrap<MeasurementsViewModel>().ViewModel;
+            _vm = new ViewModelWrap<MeasurementsSelectionViewModel>().ViewModel;
             BindingContext = _vm;
             InitializeComponent();
         }

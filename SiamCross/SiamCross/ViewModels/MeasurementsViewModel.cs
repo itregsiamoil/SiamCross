@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿/*
+using Autofac;
 using NLog;
 using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
@@ -21,6 +22,8 @@ namespace SiamCross.ViewModels
     {
         public void PushPage(MeasurementView selectedMeasurement)
         {
+            if (null == selectedMeasurement)
+                return;
             try
             {
                 if (selectedMeasurement.Name.Contains("DDIM")
@@ -97,17 +100,36 @@ namespace SiamCross.ViewModels
 
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 
-        public ICommand SelectAll { get; set; }
+        public ICommand StartSelectCommand { get; set; }
+        public ICommand GotoItemViewCommand { get; set; }
 
+
+        public void GotoItemView(object obj)
+        {
+            PushPage(obj as MeasurementView);
+        }
+
+        public void StartSelect(object obj)
+        {
+            ObservableCollection<MeasurementView> selected
+                = new ObservableCollection<MeasurementView>();
+            var item = obj as MeasurementView;
+            if(null != item)
+            {
+                selected.Add(item);
+            }
+        
+            App.NavigationPage
+                .Navigation
+                .PushAsync(new MeasurementsSelectionPage(Measurements, selected));
+            App.MenuIsPresented = false;
+        }
         public MeasurementsViewModel()
         {
-            SelectAll = new Command(() =>
-            {
-                App.NavigationPage
-                    .Navigation
-                    .PushAsync(new MeasurementsSelectionPage(Measurements));
-                App.MenuIsPresented = false;
-            });
+            StartSelectCommand = new Command(StartSelect);
+            GotoItemViewCommand = new Command(GotoItemView);
+
+
             Measurements = new ObservableCollection<MeasurementView>();
             _ddin2Measurements = new List<Ddin2Measurement>();
             _duMeasurements = new List<DuMeasurement>();
@@ -232,3 +254,4 @@ namespace SiamCross.ViewModels
         }
     }
 }
+*/

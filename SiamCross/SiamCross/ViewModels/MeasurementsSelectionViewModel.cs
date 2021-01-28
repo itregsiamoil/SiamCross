@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using NLog;
 using SiamCross.AppObjects;
+using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Email;
@@ -8,9 +9,12 @@ using SiamCross.Services.Environment;
 using SiamCross.Services.Logging;
 using SiamCross.Services.MediaScanner;
 using SiamCross.Services.Toast;
+using SiamCross.Views;
+using SiamCross.Views.MenuItems;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Linq;
@@ -24,11 +28,10 @@ namespace SiamCross.ViewModels
     public class MeasurementsSelectionViewModel : BaseViewModel, IViewModel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
-        private readonly List<string> _errorList;
+        private List<string> _errorList;
         private readonly DateTimeConverter _timeConverter = new DateTimeConverter();
         private string _title;
 
-        private bool _select_all = false;
         public string Title
         {
             get => _title;
@@ -45,24 +48,38 @@ namespace SiamCross.ViewModels
         public ICommand SelectionChanged { get; set; }
         public ICommand SendCommand { get; set; }
         public ICommand SelectAllCommand { get; set; }
+        public ICommand UnselectAllCommand { get; set; }
 
-        public MeasurementsSelectionViewModel(ObservableCollection<MeasurementView> measurements)
+        public ICommand StartSelectCommand { get; set; }
+        public ICommand GotoItemViewCommand { get; set; }
+
+
+        private List<Ddin2Measurement> _ddin2Measurements;
+
+        private List<DuMeasurement> _duMeasurements;
+
+        private void Init()
         {
-            Measurements = new ObservableCollection<MeasurementView>();
-            SelectedMeasurements = new ObservableCollection<object>();
-            foreach (MeasurementView m in measurements)
-            {
-                Measurements.Add(m);
-                //SelectedMeasurements.Add(m);
-            }
             _errorList = new List<string>();
             Title = $"{Resource.SelectedMeasurements}: {SelectedMeasurements.Count}";
             DeleteCommand = new Command(DeleteMeasurements);
             SelectionChanged = new Command(RefreshSelectedCount);
             SendCommand = new Command(SendMeasurements);
             SelectAllCommand = new Command(SelectAll);
+            UnselectAllCommand = new Command(UnselectAll);
             ShareCommand = new Command(ShareMeasurementsAsync);
+            StartSelectCommand = new Command(StartSelect);
+            GotoItemViewCommand = new Command(GotoItemView);
+
         }
+
+        public MeasurementsSelectionViewModel()
+        {
+            SelectedMeasurements = new ObservableCollection<object>();
+            GetMeasurementsFromDb();
+            Init();
+        }
+
         public async void SaveMeasurements(object obj)
         {
             try
@@ -87,7 +104,28 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
-        private void RefreshSelectedCount()
+
+        public void UpdateSelectedItem(MeasurementView item)
+        {
+
+        }
+        public void UpdateSelectedItems(IReadOnlyList<object> prev, IReadOnlyList<object> curr)
+        {
+            IEnumerable<object> unselected = prev.Except(curr);
+            Parallel.ForEach(unselected, element =>
+            {
+                (element as MeasurementView).IsSelected = false;
+            });
+
+            IEnumerable<MeasurementView> sel = curr.Cast<MeasurementView>();
+            IEnumerable<MeasurementView> selected = sel.Where(element => !element.IsSelected);
+            Parallel.ForEach(selected, element =>
+            {
+                (element as MeasurementView).IsSelected = true;
+            });
+        }
+
+        private void RefreshSelectedCount(object obj)
         {
             Title = $"{Resource.SelectedMeasurements}: {SelectedMeasurements.Count}";
             foreach (MeasurementView m in Measurements)
@@ -126,7 +164,7 @@ namespace SiamCross.ViewModels
                     }
                     MessagingCenter.Send<MeasurementsSelectionViewModel>(this, "RefreshAfterDeleting");
                     SelectedMeasurements.Clear();
-                    RefreshSelectedCount();
+                    //RefreshSelectedCount();
                 }
             }
             catch (Exception ex)
@@ -208,26 +246,25 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
+        private void UnselectAll(object obj)
+        {
+            foreach (MeasurementView m in Measurements)
+            {
+                m.IsSelected = false;
+            }
+            SelectedMeasurements.Clear();
+        }
         private void SelectAll(object obj)
         {
-            if (0 < SelectedMeasurements.Count)
+            foreach (MeasurementView m in Measurements)
             {
-                _select_all = false;
-                SelectedMeasurements.Clear();
-                return;
-            }
-            else
-            {
-                foreach (MeasurementView m in Measurements)
+                if (!m.IsSelected)
                 {
                     SelectedMeasurements.Add(m);
                     m.IsSelected = true;
                 }
-                _select_all = true;
             }
         }
-
-
         private async Task<string[]> SaveXmlsReturnPaths()
         {
             XmlCreator xmlCreator = new XmlCreator();
@@ -313,6 +350,121 @@ namespace SiamCross.ViewModels
             if (string.IsNullOrEmpty(text))
             {
                 _errorList.Add(errorMessage);
+            }
+        }
+
+        private bool CanOpenPage(Type type)
+        {
+            IReadOnlyList<Page> stack = App.NavigationPage.Navigation.NavigationStack;
+            if (stack[stack.Count - 1].GetType() != type)
+                return true;
+            return false;
+        }
+        public void PushPage(MeasurementView selectedMeasurement)
+        {
+            if (null == selectedMeasurement)
+                return;
+            try
+            {
+                if (selectedMeasurement.Name.Contains("DDIM")
+                    || selectedMeasurement.Name.Contains("DDIN")
+                    || selectedMeasurement.Name.Contains("SIDDOSA3M")
+                    )
+                {
+                    Ddin2Measurement measurement = _ddin2Measurements?
+                        .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
+                    if (measurement != null)
+                    {
+                        if (CanOpenPage(typeof(Ddin2MeasurementDonePage)))
+                        {
+                            App.NavigationPage.Navigation
+                            .PushAsync(
+                            new Ddin2MeasurementDonePage(measurement), true);
+                        }
+                    }
+                }
+                else if (selectedMeasurement.Name.Contains("DU"))
+                {
+                    DuMeasurement measurement = _duMeasurements?
+                        .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
+                    if (measurement != null)
+                    {
+                        if (CanOpenPage(typeof(DuMeasurementDonePage)))
+                        {
+                            App.NavigationPage.Navigation
+                                .PushAsync(
+                                    new DuMeasurementDonePage(measurement), true);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "PushPage method" + "\n");
+                throw;
+            }
+        }
+        public void GotoItemView(object obj)
+        {
+            PushPage(obj as MeasurementView);
+        }
+
+        public void StartSelect(object obj)
+        {
+            SelectedMeasurements.Clear();
+            MeasurementView item = obj as MeasurementView;
+            if (null != item)
+            {
+                SelectedMeasurements.Add(item);
+            }
+            //Xamarin.Forms.Application.Current.MainPage.Navigation.NavigationStack.LastOrDefault();
+
+            MeasurementsSelectionPage page = new MeasurementsSelectionPage(this);
+            App.NavigationPage.Navigation.PushAsync(page);
+            App.MenuIsPresented = false;
+        }
+        private void GetMeasurementsFromDb()
+        {
+            try
+            {
+                SelectedMeasurements.Clear();
+                ObservableCollection<MeasurementView> meas = new ObservableCollection<MeasurementView>();
+                _ddin2Measurements = DataRepository.Instance.GetDdin2Measurements().ToList();
+                _duMeasurements = DataRepository.Instance.GetDuMeasurements().ToList();
+
+                foreach (Ddin2Measurement m in _ddin2Measurements)
+                {
+                    meas.Add(
+                        new MeasurementView
+                        {
+                            Id = m.Id,
+                            Name = m.Name,
+                            Field = m.Field,
+                            Date = m.DateTime,
+                            MeasurementType = Resource.Dynamogram,
+                            Comments = m.Comment
+                        });
+                }
+
+                foreach (DuMeasurement m in _duMeasurements)
+                {
+                    meas.Add(
+                        new MeasurementView
+                        {
+                            Id = m.Id,
+                            Name = m.Name,
+                            Field = m.Field,
+                            Date = m.DateTime,
+                            MeasurementType = Resource.Echogram,
+                            Comments = m.Comment
+                        });
+                }
+                Measurements = new ObservableCollection<MeasurementView>(meas.OrderByDescending(m => m.Date));
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "GetMeasurementFromDb method" + "\n");
+                throw;
             }
         }
     }

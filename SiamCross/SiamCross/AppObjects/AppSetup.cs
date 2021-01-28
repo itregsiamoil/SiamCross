@@ -26,7 +26,6 @@ namespace SiamCross.AppObjects
             cb.RegisterType<Ddin2MeasurementDoneViewModel>().AsSelf();
             cb.RegisterType<DuMeasurementDoneViewModel>().AsSelf();
             cb.RegisterType<DirectoryViewModel>().AsSelf();
-            cb.RegisterType<MeasurementsViewModel>().AsSelf();
             cb.RegisterType<MeasurementsSelectionViewModel>().AsSelf();
             cb.RegisterType<SettingsViewModel>().AsSelf();
             cb.RegisterType<AddFieldViewModel>().AsSelf();

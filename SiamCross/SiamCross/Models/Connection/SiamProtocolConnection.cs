@@ -309,8 +309,6 @@ namespace SiamCross.Models
         }
         public async Task<byte[]> Exchange(byte[] req, int retry)
         {
-            Stopwatch perf_counter = new Stopwatch();
-            perf_counter.Start();
             byte[] ret = { };
             try
             {
@@ -340,7 +338,7 @@ namespace SiamCross.Models
                 mExecTcs = null;
             }
             DebugLog.WriteLine("Total"
-                + " elapsed=" + perf_counter.ElapsedMilliseconds.ToString());
+                + " elapsed=" + mPerfCounter.ElapsedMilliseconds.ToString());
             return ret;
         }
         public async Task SendData(byte[] req)

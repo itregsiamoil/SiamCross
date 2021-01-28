@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
              x:Class="SiamCross.Views.MenuItems.MeasurementsSelectionPage"
              Title="{Binding Title, Mode=TwoWay}">
     <NavigationPage.TitleView >
@@ -12,10 +9,29 @@
         </StackLayout>
     </NavigationPage.TitleView>
 
+    <ContentPage.Resources>
+        <Style TargetType="StackLayout">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="{StaticResource colorCtrlNormal}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+    
     <!--Icons made by
     <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from
     <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>-->
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="&#x25A1;" Command="{Binding UnselectAllCommand}"/>
         <ToolbarItem Text="&#x25A3;" Command="{Binding SelectAllCommand}"/>
         <!--
         <ToolbarItem IconImageSource="share.png" Text="Share" Command="{Binding ShareCommand}"/>
@@ -23,27 +39,26 @@
         <ToolbarItem IconImageSource="save.png" Clicked="ToolbarItem_Clicked"/>
         <ToolbarItem IconImageSource="trashcan.png" Command="{Binding DeleteCommand}"/>
         -->
+        <!--
+        SelectionChangedCommand="{Binding SelectionChanged}"
+        
+        -->
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout Spacing="0" Margin="0">
             <CollectionView ItemsSource="{Binding Measurements}"
                             SelectedItems="{Binding SelectedMeasurements}"
                             SelectionMode="Multiple"
-                            SelectionChangedCommand="{Binding SelectionChanged}"
+                            SelectedItem="{Binding OnSelectItem}"
+                            SelectionChanged="OnCollectionViewSelectionChanged"
+                            
                             BackgroundColor="{StaticResource colorCtrlBg}"
                             Margin ="0" >
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout Orientation="Vertical" Margin="0" Padding="0" Spacing="0">
-                            <Frame BackgroundColor="{StaticResource launcher_background}"
-                               Margin="4,4,4,4" Padding="4,2,4,2" CornerRadius="4"
-                               HasShadow="true"  >
-                                <Frame.Triggers>
-                                    <DataTrigger TargetType="Frame" Binding="{Binding IsSelected}" Value="true" >
-                                        <Setter Property="BackgroundColor" Value="{StaticResource colorCtrlNormal}"  />
-                                    </DataTrigger>
-                                </Frame.Triggers>
-                                <StackLayout Orientation="Vertical" Spacing="0" >
+                        <StackLayout Orientation="Vertical" Margin="0" Padding="10,0,10,0" Spacing="0"
+                                     BackgroundColor="{StaticResource launcher_background}" >
+                            <StackLayout Orientation="Vertical" Spacing="0" >
                                     <Grid RowSpacing="0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="50*" />
@@ -55,7 +70,15 @@
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="*"/>
                                         </Grid.RowDefinitions>
-                                        <Label Grid.Row="0" Text="{Binding Field}" FontAttributes="Bold"></Label>
+                                    <CheckBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+                                              HorizontalOptions="End" IsEnabled="false">
+                                        <CheckBox.Triggers>
+                                            <DataTrigger TargetType="CheckBox" Binding="{Binding IsSelected}" Value="true" >
+                                                <Setter Property="IsChecked" Value="true"  />
+                                            </DataTrigger>
+                                        </CheckBox.Triggers>
+                                    </CheckBox>
+                                    <Label Grid.Row="0" Text="{Binding Field}" FontAttributes="Bold"></Label>
                                         <Label Grid.Row="1" Text="{Binding Date}" FontAttributes="Bold"></Label>
                                         <Label Grid.Row="2" Text="{Binding Name}"/>
                                         <Label Grid.Row="2" Grid.Column="1" Text="{Binding MeasurementType}"/>
@@ -90,7 +113,10 @@
                                            Grid.Row="0" Grid.Column="1"  />
                                     </Grid>
                                 </StackLayout>
-                            </Frame>
+                            <BoxView 
+                                Color="{StaticResource colorCtrlInactive}"
+                                HeightRequest="2">
+                            </BoxView>
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

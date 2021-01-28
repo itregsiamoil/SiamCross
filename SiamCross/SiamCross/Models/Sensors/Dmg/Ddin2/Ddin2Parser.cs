@@ -1,7 +1,4 @@
-﻿using Autofac;
-using SiamCross.AppObjects;
-using SiamCross.Models.Tools;
-using SiamCross.Services.Logging;
+﻿using SiamCross.Models.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,24 +8,13 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
 {
     public class Ddin2Parser
     {
-        private static readonly NLog.Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
         /// <summary>
         /// Буффер сообщений
         /// </summary>
-        private ByteBuffer _byteBuffer;
+        private readonly ByteBuffer _byteBuffer;
 
         // Делегат обработки данных из сообшений
         public delegate void DataHandler(string dataName, string dataValue);
-
-        /// <summary>
-        /// Событие принятия сообщения
-        /// </summary>
-        public event DataHandler MessageReceived;
-
-        /// <summary>
-        /// Получены данные графика
-        /// </summary>
-        public Action<string, byte[]> ByteMessageReceived { get; set; }
 
         ///// <summary>
         ///// Определитель имени устройства
@@ -38,98 +24,9 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
         /// <summary>
         /// Определитель версии прошивки
         /// </summary>
-        private readonly FirmWaveQualifier _deviceFirmWaveQualifier;
-
         public Ddin2Parser()
         {
-            _deviceFirmWaveQualifier = null;
             _byteBuffer = new ByteBuffer(false);
-        }
-        public Ddin2Parser(FirmWaveQualifier deviceFirmWaveQualifier,
-            bool isResponseCheck)
-        {
-            _deviceFirmWaveQualifier = deviceFirmWaveQualifier;
-            _byteBuffer = new ByteBuffer(isResponseCheck);
-        }
-
-        /// <summary>
-        /// Обработать входящие байты
-        /// </summary>
-        /// <param name="inputBytes"></param>
-        public void ByteProcess(byte[] inputBytes)
-        {
-            try
-            {
-                byte[] message = _byteBuffer.AddBytes(inputBytes);
-                if (message.Length == 0)
-                {
-                    return;
-                }
-
-                string commandName = DefineCommand(message);
-                string commandData = ConvertToStringPayload(message);
-
-                switch (commandName)
-                {
-                    //case "DeviceNameAddress":
-                    //    _commandDictionary.Add(
-                    //        new byte[] { message[12], message[13], message[14], message[15] },
-                    //        "DeviceName");
-                    //    _deviceNameQualifier.DeviceNameAddress = GetPayload(message);
-                    //    break;
-                    //case "DeviceNameSize":
-                    //    _deviceNameQualifier.DeviceNameSize = GetPayload(message);
-                    //    break;
-                    case "ProgrammVersionAddress":
-                        _commandDictionary.Add(
-                            new byte[] { message[12], message[13], message[14], message[15] },
-                            "DeviceProgrammVersion");
-                        _deviceFirmWaveQualifier.DeviceNameAddress = GetPayload(message);
-                        break;
-                    case "ProgrammVersionSize":
-                        _deviceFirmWaveQualifier.DeviceNameSize = GetPayload(message);
-                        break;
-                    case "Program":
-                        string adr = BitConverter.ToString(new[] { message[5], message[4] });
-                        MessageReceived?.Invoke(commandName, adr);
-                        break;
-                    case "ExportDynGraph":
-                        ExportByteData(commandName, message);
-                        break;
-                    case "ExportAccelerationGraph":
-                        ExportByteData(commandName, message);
-                        break;
-                    case "ReadMeasurementReport":
-                        ExportByteData(commandName, message);
-                        Console.WriteLine("Read Measurement Report");
-                        break;
-                    case "ReadMeasurementErrorCode":
-                        ExportByteData(commandName, message);
-                        break;
-                    case "DgmPart1":
-                    case "DgmPart2":
-                        ExportByteData(commandName, message);
-                        break;
-                }
-                //Если команда чтения
-                if (message[3] == 0x01)
-                {
-                    MessageReceived?.Invoke(commandName, commandData);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "ByteProcess" + ex.StackTrace + "\n");
-                _logger.Error(ex, "ByteBuffer is recreate, throw force skip!" + "\n");
-                _byteBuffer = new ByteBuffer(_byteBuffer.IsResponseCheck);
-                // throw;
-            }
-        }
-
-        private void ExportByteData(string commandName, byte[] message)
-        {
-            byte[] points = GetPayload(message);
-            ByteMessageReceived?.Invoke(commandName, points);
         }
 
         /// <summary>

@@ -1,8 +1,4 @@
-﻿using Autofac;
-using NLog;
-using SiamCross.AppObjects;
-using SiamCross.Models.Tools;
-using SiamCross.Services.Logging;
+﻿using SiamCross.Models.Tools;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,115 +8,17 @@ namespace SiamCross.Models.Sensors.Du
 {
     public class DuParser
     {
-        private static readonly NLog.Logger _logger = AppContainer.Container
-           .Resolve<ILogManager>().GetLog();
         /// <summary>
         /// Буффер сообщений
         /// </summary>
-        private ByteBuffer _byteBuffer;
+        private readonly ByteBuffer _byteBuffer;
 
         // Делегат обработки данных из сообшений
         public delegate void DataHandler(DuCommandsEnum dataName, string dataValue);
 
-        /// <summary>
-        /// Событие принятия сообщения
-        /// </summary>
-        public event DataHandler MessageReceived;
-
-        /// <summary>
-        /// Получены данные графика
-        /// </summary>
-        public Action<DuCommandsEnum, byte[]> ByteMessageReceived { get; set; }
-
-        public static Logger Logger => _logger;
-
-        ///// <summary>
-        ///// Определитель имени устройства
-        ///// </summary>
-        //private DeviceNameQualifier _deviceNameQualifier;
-
-        /// <summary>
-        /// Определитель версии прошивки
-        /// </summary>
-        private readonly FirmWaveQualifier _deviceFirmWaveQualifier;
-
         public DuParser(bool isResponseCheck = false)
         {
             _byteBuffer = new ByteBuffer(isResponseCheck);
-        }
-
-        public DuParser(FirmWaveQualifier deviceFirmWaveQualifier,
-            bool isResponseCheck)
-        {
-            _deviceFirmWaveQualifier = deviceFirmWaveQualifier;
-            _byteBuffer = new ByteBuffer(isResponseCheck);
-        }
-
-        /// <summary>
-        /// Обработать входящие байты
-        /// </summary>
-        /// <param name="inputBytes"></param>
-        public void ByteProcess(byte[] inputBytes)
-        {
-            try
-            {
-                byte[] message = _byteBuffer.AddBytes(inputBytes);
-                if (message.Length == 0)
-                {
-                    return;
-                }
-
-                Debug.WriteLine("DU: " + BitConverter.ToString(message) + "\n");
-
-                DuCommandsEnum commandName = DefineCommand(message);
-                string commandData = ConvertToStringPayload(message);
-
-                switch (commandName)
-                {
-                    case DuCommandsEnum.ProgrammVersionAddress:
-                        _commandDictionary.Add(
-                            new byte[] { message[12], message[13], message[14], message[15] },
-                            DuCommandsEnum.DeviceProgrammVersion);
-                        _deviceFirmWaveQualifier.DeviceNameAddress = GetPayload(message);
-                        break;
-                    case DuCommandsEnum.ProgrammVersionSize:
-                        _deviceFirmWaveQualifier.DeviceNameSize = GetPayload(message);
-                        break;
-                    case DuCommandsEnum.EchogramData:
-                        ExportByteData(DuCommandsEnum.EchogramData, message);
-                        break;
-                    case DuCommandsEnum.ResearchHeader:
-                        ExportByteData(DuCommandsEnum.ResearchHeader, message);
-                        Console.WriteLine("Read Measurement Report");
-                        break;
-                    case DuCommandsEnum.Revbit:
-                        byte[] payload = GetPayload(message);
-
-                        Debug.WriteLine(BitConverter.ToString(payload));
-                        Debug.WriteLine(AddZerosToBinary(Convert.ToString(payload[1], 2)));
-                        Debug.WriteLine(AddZerosToBinary(Convert.ToString(payload[0], 2)));
-
-                        break;
-                    case DuCommandsEnum.Pressure:
-                        ExportByteData(DuCommandsEnum.Pressure, message);
-                        break;
-                        //case DuCommandsEnum.SensorState:
-                        //    ExportByteData(DuCommandsEnum.SensorState, message);
-                        //    break;
-                }
-                //Если команда чтения
-                if (message[3] == 0x01)
-                {
-                    MessageReceived?.Invoke(commandName, commandData);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "ByteProcess " + ex.StackTrace + "\n");
-                _logger.Error(ex, "ByteBuffer is recreate, throw force skip!" + "\n");
-                Debug.WriteLine(BitConverter.ToString(_byteBuffer.Buffer.ToArray()));
-                _byteBuffer = new ByteBuffer(_byteBuffer.IsResponseCheck);
-            }
         }
 
         private string AddZerosToBinary(string binary)
@@ -133,12 +31,6 @@ namespace SiamCross.Models.Sensors.Du
                 }
             }
             return binary;
-        }
-
-        private void ExportByteData(DuCommandsEnum commandName, byte[] message)
-        {
-            byte[] points = GetPayload(message);
-            ByteMessageReceived?.Invoke(commandName, points);
         }
 
         /// <summary>
