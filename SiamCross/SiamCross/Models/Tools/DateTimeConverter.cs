@@ -2,9 +2,9 @@
 
 namespace SiamCross.Models.Tools
 {
-    public class DateTimeConverter
+    public static class DateTimeConverter
     {
-        public string DateTimeToString(DateTime dateTime)
+        public static string DateTimeToString(DateTime dateTime)
         {
             string month = dateTime.Date.Month.ToString();
             if (month.Length < 2)

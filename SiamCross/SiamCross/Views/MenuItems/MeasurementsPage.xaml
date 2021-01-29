@@ -10,28 +10,25 @@
         <ToolbarItem Text="{local:Translate Select}" Command="{Binding StartSelectCommand}"/>
     </ContentPage.ToolbarItems>
 
+    <!--
+    NavigationPage.HasBackButton ="false"
+
+    
+    -->
+    
     <ContentPage.Content>
         <StackLayout Spacing="0" Margin="0">
             <CollectionView ItemsSource="{Binding Measurements}"
-                            SelectionMode="None"
+                            SelectionMode="Single"
                             BackgroundColor="{StaticResource colorCtrlBg}"
                             Margin ="0" >
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout Orientation="Vertical" Margin="0" Padding="10,0,10,0" Spacing="0"
-                                     BackgroundColor="{StaticResource launcher_background}" >
-                            <StackLayout Orientation="Vertical" Spacing="0"
-                                localEffects:LongPressedEffect.Command="{Binding Path=BindingContext.StartSelectCommand
-                                    , Source={x:Reference MyPage}}" 
-                                localEffects:LongPressedEffect.CommandParameter="{Binding .}"
-                                localEffects:PressedEffect.Command="{Binding Path=BindingContext.GotoItemViewCommand
-                                    , Source={x:Reference MyPage}}" 
-                                localEffects:PressedEffect.CommandParameter="{Binding .}">
-                                <StackLayout.Effects>
-                                    <localEffects:PressedEffect />
-                                    <localEffects:LongPressedEffect />
-                                </StackLayout.Effects>
-                                
+                                     BackgroundColor="{StaticResource launcher_background}" 
+                                     >
+
+                            <StackLayout Orientation="Vertical" Spacing="0">
                                 <Grid RowSpacing="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="50*" />

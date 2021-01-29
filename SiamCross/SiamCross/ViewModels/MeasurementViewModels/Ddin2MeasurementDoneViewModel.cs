@@ -142,8 +142,6 @@ namespace SiamCross.ViewModels
             }
         }
 
-        private readonly DateTimeConverter _timeConverter = new DateTimeConverter();
-
         private async void ShareCommandHandler()
         {
             try
@@ -165,9 +163,9 @@ namespace SiamCross.ViewModels
             }
         }
 
-        private string CreateName(string deviceName, DateTime date)
+        private static string CreateName(string deviceName, DateTime date)
         {
-            return $"{deviceName}_{_timeConverter.DateTimeToString(date)}.xml"
+            return $"{deviceName}_{DateTimeConverter.DateTimeToString(date)}.xml"
                 .Replace(':', '-');
         }
 
