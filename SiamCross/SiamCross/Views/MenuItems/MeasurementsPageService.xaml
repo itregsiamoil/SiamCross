@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SiamCross.Views.MenuItems.MeasurementsSelectionPage"
+             x:Class="SiamCross.Views.MenuItems.MeasurementsPageService"
              xmlns:localEffects="clr-namespace:SiamCross.Services;assembly=SiamCross"
+             xmlns:local="clr-namespace:SiamCross.ViewModels;assembly=SiamCross"
              NavigationPage.HasBackButton ="true"
              x:Name="MyPage"
              Title="{Binding Title, Mode=TwoWay}">
@@ -62,7 +63,7 @@
                       CachingStrategy="RecycleElementAndDataTemplate"
                       Margin ="0" >
                 <ListView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="local:MeasurementView">
                         <ViewCell>
                             <ViewCell.View>
                                 <StackLayout>
@@ -75,7 +76,7 @@
                                             , Source={x:Reference MyPage}}" 
                                         localEffects:PressedEffect.CommandParameter="{Binding .}">
                                         <StackLayout.Effects>
-                                            <localEffects:PressedEffect />
+                                            <!--localEffects:PressedEffect /-->
                                             <localEffects:LongPressedEffect />
                                         </StackLayout.Effects>
                                         <StackLayout Orientation="Vertical" Spacing="0" >
@@ -90,10 +91,10 @@
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="*"/>
                                                 </Grid.RowDefinitions>
-                                                <CheckBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
-                                              IsChecked="{Binding IsSelected}"
-                                              IsVisible="false"
-                                              HorizontalOptions="End" >
+                                                <CheckBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" HorizontalOptions="End"
+                                                          IsVisible="false"
+                                                          IsChecked="{Binding IsSelected}" 
+                                                          CheckedChanged="OnCheckBoxCheckedChanged">
                                                     <CheckBox.Triggers>
                                                         <DataTrigger TargetType="CheckBox" Binding="{Binding Path=BindingContext.SelectMode , Source={x:Reference MyPage}}" Value="true" >
                                                             <Setter Property="IsVisible" Value="true"  />
@@ -110,17 +111,18 @@
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="20" />
                                                     <ColumnDefinition Width="100*" />
+                                                    <ColumnDefinition Width="20" />
+                                                    <ColumnDefinition Width="100*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="12"/>
                                                     <RowDefinition Height="12"/>
                                                 </Grid.RowDefinitions>
-                                                <ActivityIndicator 
-                                        IsRunning="{Binding Sending}"
-                                        Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" />
+                                                <ActivityIndicator IsRunning="{Binding Sending}"
+                                                                   Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" />
                                                 <Label Text="&#x1F4E4;"
-                                           VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
-                                           Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" >
+                                                       VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                                                       Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" >
                                                     <Label.Triggers>
                                                         <DataTrigger TargetType="Label" Binding="{Binding LastSentTimestamp}" Value="" >
                                                             <Setter Property="IsVisible" Value="false"  />
@@ -128,16 +130,37 @@
                                                     </Label.Triggers>
                                                 </Label>
                                                 <Label Text="{Binding LastSentTimestamp}" 
-                                           Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
-                                           Grid.Row="1" Grid.Column="1" />
+                                                       Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
+                                                       Grid.Row="1" Grid.Column="1" />
                                                 <Label Text="{Binding LastSentRecipient}"
-                                           Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
-                                           Grid.Row="0" Grid.Column="1"  />
+                                                       LineBreakMode="MiddleTruncation"
+                                                       Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
+                                                       Grid.Row="0" Grid.Column="1"  />
+
+                                                <ActivityIndicator IsRunning="{Binding Saving}"
+                                                                   Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" />
+                                                <Label Text="&#x1F4BE;"
+                                                       VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                                                       Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" >
+                                                    <Label.Triggers>
+                                                        <DataTrigger TargetType="Label" Binding="{Binding LastSaveTimestamp}" Value="" >
+                                                            <Setter Property="IsVisible" Value="false"  />
+                                                        </DataTrigger>
+                                                    </Label.Triggers>
+                                                </Label>
+                                                <Label Text="{Binding LastSaveTimestamp}" 
+                                                       Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
+                                                       Grid.Row="1" Grid.Column="3" />
+                                                <Label Text="{Binding LastSaveFolder}"
+                                                       LineBreakMode="MiddleTruncation"
+                                                       Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
+                                                       Grid.Row="0" Grid.Column="3"  />
+
                                             </Grid>
                                         </StackLayout>
                                         <BoxView 
-                                Color="{StaticResource colorCtrlInactive}"
-                                HeightRequest="2">
+                                            Color="{StaticResource colorCtrlInactive}"
+                                            HeightRequest="2">
                                         </BoxView>
                                     </StackLayout>
                                 </StackLayout>

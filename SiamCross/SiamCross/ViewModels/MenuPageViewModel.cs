@@ -123,9 +123,9 @@ namespace SiamCross.ViewModels
 
         private void GoMeasuring(object obj)
         {
-            if (CanOpenPage(typeof(MeasurementsSelectionPage)))
+            if (CanOpenPage(typeof(MeasurementsPageService)))
             {
-                App.NavigationPage.Navigation.PushAsync(new MeasurementsSelectionPage());
+                App.NavigationPage.Navigation.PushAsync(MeasurementsPageService.Instance);
                 App.MenuIsPresented = false;
             }
         }

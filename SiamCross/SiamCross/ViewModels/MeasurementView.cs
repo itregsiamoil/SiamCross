@@ -34,28 +34,29 @@ namespace SiamCross.ViewModels
             }
         }
 
-        private bool mSending = false;
+        private bool _Sending = false;
         public bool Sending
         {
-            get => mSending;
+            get => _Sending;
             set
             {
-                mSending = value;
+                _Sending = value;
                 PropertyChanged?.Invoke(this,
                     new PropertyChangedEventArgs(nameof(Sending)));
             }
         }
 
-        private readonly DateTime mZeroTs = new DateTime(0);
-        private DateTime mLastSentTimestamp = new DateTime(0);
-        public void SetLastSentTimestamp(DateTime ts)
+        private string _LastSentTimestamp = "";
+        public string LastSentTimestamp
         {
-            mLastSentTimestamp = ts;
-            PropertyChanged?.Invoke(this,
-                new PropertyChangedEventArgs(nameof(LastSentTimestamp)));
+            get => _LastSentTimestamp;
+            set
+            {
+                _LastSentTimestamp = value;
+                PropertyChanged?.Invoke(this,
+                    new PropertyChangedEventArgs(nameof(LastSentTimestamp)));
+            }
         }
-        public string LastSentTimestamp => (mLastSentTimestamp == mZeroTs) ? "" : mLastSentTimestamp.ToString();
-
         private string mLastSentRecipient;
         public string LastSentRecipient
         {
@@ -68,17 +69,57 @@ namespace SiamCross.ViewModels
             }
         }
 
-        private bool mIsSelected = false;
+        private bool _IsSelected = false;
+        public void SetSelected(bool sel)
+        {
+            _IsSelected = sel;
+        }
         public bool IsSelected
         {
-            get => mIsSelected;
+            get => _IsSelected;
             set
             {
-                mIsSelected = value;
+                if (_IsSelected == value)
+                    return;
+                _IsSelected = value;
                 PropertyChanged?.Invoke(this,
                     new PropertyChangedEventArgs(nameof(IsSelected)));
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private bool _Saving;
+        private string _LastSaveTimestamp = "";
+        private string _LastSaveFolder;
+        public bool Saving
+        {
+            get => _Saving;
+            set
+            {
+                _Saving = value;
+                PropertyChanged?.Invoke(this,
+                    new PropertyChangedEventArgs(nameof(Saving)));
+            }
+        }
+        public string LastSaveTimestamp
+        {
+            get => _LastSaveTimestamp;
+            set
+            {
+                _LastSaveTimestamp = value;
+                PropertyChanged?.Invoke(this,
+                    new PropertyChangedEventArgs(nameof(LastSaveTimestamp)));
+            }
+        }
+        public string LastSaveFolder
+        {
+            get => _LastSaveFolder;
+            set
+            {
+                _LastSaveFolder = value;
+                PropertyChanged?.Invoke(this,
+                    new PropertyChangedEventArgs(nameof(LastSaveFolder)));
+            }
+        }
     }
 }

@@ -73,8 +73,8 @@
     <Compile Update="Views\MenuItems\HandbookPanel\SoundSpeedPage.xaml.cs">
       <DependentUpon>SoundSpeedPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\MenuItems\MeasurementsPage.xaml.cs">
-      <DependentUpon>MeasurementsPage.xaml</DependentUpon>
+    <Compile Update="Views\MenuItems\MeasurementsPageService.xaml.cs">
+      <DependentUpon>MeasurementsPageService.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\MenuItems\SearchPanel\BoundingTab.xaml.cs">
       <DependentUpon>BoundingTab.xaml</DependentUpon>
@@ -116,10 +116,7 @@
     <EmbeddedResource Update="Views\MenuItems\HandbookPanel\SoundSpeedViewPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\MenuItems\MeasurementsPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\MenuItems\MeasurementsSelectionPage.xaml">
+    <EmbeddedResource Update="Views\MenuItems\MeasurementsPageService.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MenuItems\HandbookPanel\SoundSpeedPage.xaml">

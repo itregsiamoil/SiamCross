@@ -1,4 +1,5 @@
 ﻿using SiamCross.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xamarin.Forms;
@@ -7,18 +8,16 @@ using Xamarin.Forms.Xaml;
 namespace SiamCross.Views.MenuItems
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MeasurementsSelectionPage : ContentPage
+    public partial class MeasurementsPageService : ContentPage
     {
-        private readonly MeasurementsSelectionViewModel _vm = null;
-        public MeasurementsSelectionPage()
+        private static readonly Lazy<MeasurementsPageService> _instance =
+            new Lazy<MeasurementsPageService>(() => new MeasurementsPageService());
+        public static MeasurementsPageService Instance => _instance.Value;
+
+        private readonly MeasurementsVM _vm = null;
+        private MeasurementsPageService()
         {
-            _vm = new MeasurementsSelectionViewModel();
-            base.BindingContext = _vm;
-            InitializeComponent();
-        }
-        public MeasurementsSelectionPage(MeasurementsSelectionViewModel vm)
-        {
-            _vm = vm;
+            _vm = new MeasurementsVM();
             base.BindingContext = _vm;
             InitializeComponent();
         }
@@ -42,15 +41,8 @@ namespace SiamCross.Views.MenuItems
             MeasurementView meas = chk.BindingContext as MeasurementView;
             if (null == meas)
                 return;
-            
-            List<object> previous = new List<object>(_vm.SelectedMeasurements);
-            if (e.Value)
-            {
-                if (!_vm.SelectedMeasurements.Contains(meas))
-                    _vm.SelectedMeasurements.Add(meas);
-            }
-            else
-                _vm.SelectedMeasurements.Remove(meas);
+
+            _vm.UpdateSelect(meas, e.Value);
         }
 
         protected override bool OnBackButtonPressed()
@@ -65,5 +57,9 @@ namespace SiamCross.Views.MenuItems
             _vm.OnItemTapped(e.Item as MeasurementView);
         }
 
+        protected override void OnAppearing()
+        {
+            _vm.ReloadMeasurementsFromDb();
+        }
     }
 }

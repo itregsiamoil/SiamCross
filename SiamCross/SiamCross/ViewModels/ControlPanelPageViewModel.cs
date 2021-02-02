@@ -52,9 +52,9 @@ namespace SiamCross.ViewModels
                     .SingleOrDefault(s => s.SensorData.Id == id);
                 if (sensor != null)
                 {
-                    if (CanOpenPage(typeof(MeasurementsPage)))
+                    if (CanOpenPage(typeof(MeasurementsPageService)))
                     {
-                        App.NavigationPage.Navigation.PushAsync(new MeasurementsPage());
+                        App.NavigationPage.Navigation.PushAsync(MeasurementsPageService.Instance);
                         App.MenuIsPresented = false;
                     }
                 }

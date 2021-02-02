@@ -8,12 +8,11 @@ using SiamCross.Services.Email;
 using SiamCross.Services.Environment;
 using SiamCross.Services.Logging;
 using SiamCross.Services.MediaScanner;
-using SiamCross.Services.Toast;
 using SiamCross.Views;
-using SiamCross.Views.MenuItems;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -25,14 +24,13 @@ using Xamarin.Forms.Internals;
 namespace SiamCross.ViewModels
 {
     [Preserve(AllMembers = true)]
-    public class MeasurementsSelectionViewModel : BaseViewModel, IViewModel
+    public sealed class MeasurementsVM : BaseViewModel, IViewModel
     {
         private string _title;
         private List<Ddin2Measurement> _ddin2Measurements;
         private List<DuMeasurement> _duMeasurements;
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
-
-        bool _selectMode = false;
+        private bool _selectMode = false;
 
         public bool SelectMode
         {
@@ -54,10 +52,9 @@ namespace SiamCross.ViewModels
             }
         }
         public int SelCount => SelectedMeasurements.Count;
-        
 
-        public ObservableCollection<MeasurementView> Measurements { get; set; }
-        public ObservableCollection<object> SelectedMeasurements { get; set; }
+        public ObservableCollection<MeasurementView> Measurements { get; }
+        public ObservableCollection<object> SelectedMeasurements { get; }
 
         public ICommand RefreshCommand { get; set; }
         public ICommand SelectAllCommand { get; set; }
@@ -68,39 +65,32 @@ namespace SiamCross.ViewModels
         public ICommand DeleteCommand { get; set; }
         public ICommand SaveCommand { get; set; }
 
-        public ICommand StartSelectCommand { get; set; }
-        public ICommand GotoItemViewCommand { get; set; }
-
         public ICommand OnItemLongPressCommand { get; set; }
         public ICommand OnItemTappedCommand { get; set; }
 
-        
-            
-
-        public MeasurementsSelectionViewModel()
+        public MeasurementsVM()
         {
+            Measurements = new ObservableCollection<MeasurementView>();
             SelectedMeasurements = new ObservableCollection<object>();
             Title = Resource.MeasurementsTitle;
-            GetMeasurementsFromDb();
-            RefreshCommand = new Command(GetMeasurementsFromDb);
+            RefreshCommand = new Command(ReloadMeasurementsFromDb);
             SelectAllCommand = new Command(SelectAll);
             UnselectAllCommand = new Command(UnselectAll);
             ShareCommand = new Command(ShareMeasurementsAsync);
-            SendCommand = new Command(SendMeasurements);
-            SaveCommand = new Command(SaveMeasurements);
+            SendCommand = new Command(SendMeasurementsAsync);
+            SaveCommand = new Command(SaveMeasurementsAsync);
             DeleteCommand = new Command(DeleteMeasurementsAsync);
-            StartSelectCommand = new Command(StartSelect);
-            GotoItemViewCommand = new Command(GotoItemView);
 
-            OnItemTappedCommand= new Command(obj => OnItemTapped(obj as MeasurementView));
+            OnItemTappedCommand = new Command(obj => OnItemTapped(obj as MeasurementView));
             OnItemLongPressCommand = new Command(obj => OnItemLongPress(obj as MeasurementView));
 
         }
-        private void GetMeasurementsFromDb()
+        public void ReloadMeasurementsFromDb()
         {
             try
             {
                 SelectedMeasurements.Clear();
+                Measurements.Clear();
                 ObservableCollection<MeasurementView> meas = new ObservableCollection<MeasurementView>();
                 _ddin2Measurements = DataRepository.Instance.GetDdin2Measurements().ToList();
                 _duMeasurements = DataRepository.Instance.GetDuMeasurements().ToList();
@@ -132,7 +122,11 @@ namespace SiamCross.ViewModels
                             Comments = m.Comment
                         });
                 }
-                Measurements = new ObservableCollection<MeasurementView>(meas.OrderByDescending(m => m.Date));
+
+                foreach (MeasurementView element in meas.OrderByDescending(m => m.Date))
+                {
+                    Measurements.Add(element);
+                }
             }
             catch (Exception ex)
             {
@@ -140,7 +134,6 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
-
         public bool OnBackButton()
         {
             if (SelectMode)
@@ -152,25 +145,28 @@ namespace SiamCross.ViewModels
             }
             return false;
         }
+        public void UpdateSelect(MeasurementView item, bool select)
+        {
+            if (select)
+            {
+                if (!SelectedMeasurements.Contains(item))
+                    SelectedMeasurements.Add(item);
+            }
+            else
+            {
+                SelectedMeasurements.Remove(item);
+            }
+            Title = $"{Resource.SelectedMeasurements}: {SelCount}";
+        }
         public void OnItemTapped(MeasurementView item)
         {
             if (SelectMode)
             {
-                if (null != item)
-                {
-                    if (item.IsSelected)
-                    {
-                        SelectedMeasurements.Remove(item);
-                        item.IsSelected = false;
-                    }
-                    else
-                    {
-                        if (!SelectedMeasurements.Contains(item))
-                            SelectedMeasurements.Add(item);
-                        item.IsSelected = true;
-                    }
-                }
-                Title = $"{Resource.SelectedMeasurements}: {SelCount}";
+                if (null == item)
+                    return;
+                // при срабатывании события INotifyPropertyChanged.PropertyChanged
+                // произойдёт вызов UpdateSelect
+                item.IsSelected = !item.IsSelected;
             }
             else
                 PushPage(item);
@@ -185,39 +181,30 @@ namespace SiamCross.ViewModels
         {
             Title = $"{Resource.SelectedMeasurements}: {SelectedMeasurements.Count}";
             IEnumerable<object> unselected = prev.Except(curr);
-            Parallel.ForEach(unselected, element =>
-            {
-                (element as MeasurementView).IsSelected = false;
-            });
+            foreach (MeasurementView item in unselected)
+                item.IsSelected = false;
 
             IEnumerable<MeasurementView> sel = curr.Cast<MeasurementView>();
             IEnumerable<MeasurementView> selected = sel.Where(element => !element.IsSelected);
-            Parallel.ForEach(selected, element =>
-            {
-                (element as MeasurementView).IsSelected = true;
-            });
+            foreach (MeasurementView item in selected)
+                item.IsSelected = true;
         }
         private void UnselectAll()
         {
             if (!SelectMode)
                 return;
             IEnumerable<MeasurementView> selected = Measurements.Where(element => element.IsSelected);
-            Parallel.ForEach(selected, element => element.IsSelected = false);
-            SelectedMeasurements.Clear();
-            Title = $"{Resource.SelectedMeasurements}: {SelCount}";
+            foreach (MeasurementView item in selected)
+                item.IsSelected = false;
+
         }
         private void SelectAll()
         {
             if (!SelectMode)
                 SelectMode = true;
             IEnumerable<MeasurementView> selected = Measurements.Where(element => !element.IsSelected);
-            Parallel.ForEach(selected, element => element.IsSelected = true);
-            IEnumerable<object> unselected = Measurements.Except(SelectedMeasurements);
-            Parallel.ForEach(unselected, element =>
-            {
-                SelectedMeasurements.Add(element);
-            });
-            Title = $"{Resource.SelectedMeasurements}: {SelCount}";
+            foreach (MeasurementView item in selected)
+                item.IsSelected = true;
         }
         private async void ShareMeasurementsAsync(object obj)
         {
@@ -225,7 +212,6 @@ namespace SiamCross.ViewModels
             {
                 if (0 == SelectedMeasurements.Count)
                     return;
-                string ShareFilesTitle = "ShareMultiple";
                 string[] paths = await SaveXmlsReturnPaths(SelectedMeasurements);
 
                 List<ShareFile> sf = new List<ShareFile>();
@@ -235,7 +221,7 @@ namespace SiamCross.ViewModels
                 }
                 await Share.RequestAsync(new ShareMultipleFilesRequest
                 {
-                    Title = ShareFilesTitle,
+                    Title = Title,
                     Files = sf
                 });
             }
@@ -245,7 +231,7 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
-        private async void SendMeasurements(object obj)
+        private async void SendMeasurementsAsync(object obj)
         {
             try
             {
@@ -260,17 +246,17 @@ namespace SiamCross.ViewModels
                     survay.LastSentRecipient = SiamCross.Models.Tools.Settings.Instance.ToAddress;
                 }
 
-                ToastService.Instance.LongAlert($"{Resource.SendingMeasurements}...");
+                //ToastService.Instance.LongAlert($"{Resource.SendingMeasurements}...");
                 string[] paths = await SaveXmlsReturnPaths(SelectedMeasurements);
 
                 bool is_ok = await EmailService.Instance.SendEmailWithFilesAsync("Siam Measurements",
                     "\nSiamCompany Telemetry Transfer Service",
                     paths);
-                ToastService.Instance.LongAlert($"{SelectedMeasurements.Count} {Resource.MeasurementsSentSuccesfully}");
+                //ToastService.Instance.LongAlert($"{SelectedMeasurements.Count} {Resource.MeasurementsSentSuccesfully}");
 
                 foreach (MeasurementView sent_sur in SelectedMeasurements)
                 {
-                    sent_sur.SetLastSentTimestamp(DateTime.Now);
+                    sent_sur.LastSentTimestamp = DateTime.Now.ToString();
                     sent_sur.LastSentRecipient = SiamCross.Models.Tools.Settings.Instance.ToAddress;
                     sent_sur.Sending = false;
                 }
@@ -283,28 +269,35 @@ namespace SiamCross.ViewModels
                     ex.Message, "OK");
                 foreach (MeasurementView err_sur in SelectedMeasurements)
                 {
-                    err_sur.SetLastSentTimestamp(new DateTime(0));
+                    err_sur.LastSentTimestamp = "";
                     err_sur.LastSentRecipient = "";
                     err_sur.Sending = false;
                 }
             }
         }
-        private async void SaveMeasurements(object obj)
+        private async void SaveMeasurementsAsync(object obj)
         {
             try
             {
                 if (0 == SelectedMeasurements.Count)
                     return;
                 //ToastService.Instance.LongAlert($"{Resource.SavingMeasurements}...");
+                foreach (MeasurementView survay in SelectedMeasurements)
+                    survay.Saving = true;
 
-                await Task.Run(() =>
+                string[] paths = await SaveXmlsReturnPaths(SelectedMeasurements);
+
+                string ts = DateTime.Now.ToString();
+                string dir = EnvironmentService.Instance.GetDir_Measurements();
+                foreach (MeasurementView m in SelectedMeasurements)
                 {
-                    Task<string[]> paths = SaveXmlsReturnPaths(SelectedMeasurements);
-                });
-
-                string savePath = @"""Measurements""";
-                ToastService.Instance.LongAlert($"{SelectedMeasurements.Count} " +
-                    $"{Resource.MeasurementsSavedSuccesfully} {savePath}");
+                    m.Saving = false;
+                    m.LastSaveTimestamp = ts;
+                    m.LastSaveFolder = dir;
+                }
+                //string savePath = @"""Measurements""";
+                //ToastService.Instance.LongAlert($"{SelectedMeasurements.Count} " +
+                //    $"{Resource.MeasurementsSavedSuccesfully} {savePath}");
             }
             catch (Exception ex)
             {
@@ -320,11 +313,11 @@ namespace SiamCross.ViewModels
             {
                 if (0 == SelectedMeasurements.Count)
                     return;
-                
-                bool FileResult = await Application.Current.MainPage
-                    .DisplayAlert("Removeing", "Remove", "OK", "Cancel");
 
-                if(!FileResult)
+                bool FileResult = await Application.Current.MainPage
+                    .DisplayAlert("", Resource.DeleteQuestion, Resource.Ok, Resource.Cancel);
+
+                if (!FileResult)
                     return;
 
                 if (SelectedMeasurements.Count != 0)
@@ -347,7 +340,7 @@ namespace SiamCross.ViewModels
                             }
                         }
                     }
-                    MessagingCenter.Send(this, "RefreshAfterDeleting");
+                    //MessagingCenter.Send(this, "RefreshAfterDeleting");
                     SelectedMeasurements.Clear();
                 }
             }
@@ -356,24 +349,6 @@ namespace SiamCross.ViewModels
                 _logger.Error(ex, "DeleteMeasurements method" + "\n");
                 throw;
             }
-        }
-        private void StartSelect(object obj)
-        {
-            SelectedMeasurements.Clear();
-            MeasurementView item = obj as MeasurementView;
-            if (null != item)
-            {
-                SelectedMeasurements.Add(item);
-            }
-            //Xamarin.Forms.Application.Current.MainPage.Navigation.NavigationStack.LastOrDefault();
-
-            MeasurementsSelectionPage page = new MeasurementsSelectionPage(this);
-            App.NavigationPage.Navigation.PushAsync(page);
-            App.MenuIsPresented = false;
-        }
-        private void GotoItemView(object obj)
-        {
-            PushPage(obj as MeasurementView);
         }
         public void PushPage(MeasurementView selectedMeasurement)
         {

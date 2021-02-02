@@ -83,7 +83,7 @@ namespace SiamCross.Droid
             {
                 if (Control != null)
                 {
-                    Control.LongClickable = true;
+                    Control.LongClickable = false;
                     Control.LongClick -= Control_LongClick;
                     Control.Clickable = false;
                     Control.Click -= Control_Click;
@@ -91,7 +91,7 @@ namespace SiamCross.Droid
                 }
                 else
                 {
-                    Container.LongClickable = true;
+                    Container.LongClickable = false;
                     Container.LongClick -= Control_LongClick;
                     Container.Clickable = false;
                     Container.Click -= Control_Click;
