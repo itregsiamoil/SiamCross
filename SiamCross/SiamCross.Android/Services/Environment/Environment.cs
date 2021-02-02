@@ -17,7 +17,9 @@ namespace SiamCross.Droid.Utils.FileSystem
         }
         public string GetDir_Measurements()
         {
-            return Path.Combine(GetDir_Downloads(), "SiamServiceMeasurement");
+            string p = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
+            return Path.Combine(p, "Measurements");
+            //return Path.Combine(GetDir_Downloads(), "SiamServiceMeasurement");
         }
 
     }

@@ -2,6 +2,7 @@
 using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Models;
+using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using SiamCross.Views;
@@ -21,6 +22,8 @@ namespace SiamCross.ViewModels
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
         public ObservableCollection<ISensor> Sensor { get; }
+        public bool IsRelease => !Version.ToLower().Contains("rc");
+        public string Version => DependencyService.Get<IAppVersionAndBuild>().GetVersionNumber();
         public ControlPanelPageViewModel()
         {
             Sensor = new ObservableCollection<ISensor>();
@@ -52,9 +55,9 @@ namespace SiamCross.ViewModels
                     .SingleOrDefault(s => s.SensorData.Id == id);
                 if (sensor != null)
                 {
-                    if (CanOpenPage(typeof(MeasurementsPageService)))
+                    if (CanOpenPage(typeof(MeasurementsPage)))
                     {
-                        App.NavigationPage.Navigation.PushAsync(MeasurementsPageService.Instance);
+                        App.NavigationPage.Navigation.PushAsync(new MeasurementsPage());
                         App.MenuIsPresented = false;
                     }
                 }

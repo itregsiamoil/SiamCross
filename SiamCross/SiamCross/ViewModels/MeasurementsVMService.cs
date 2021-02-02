@@ -12,7 +12,6 @@ using SiamCross.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -24,8 +23,13 @@ using Xamarin.Forms.Internals;
 namespace SiamCross.ViewModels
 {
     [Preserve(AllMembers = true)]
-    public sealed class MeasurementsVM : BaseViewModel, IViewModel
+    public class MeasurementsVMService : BaseViewModel, IViewModel
     {
+        private static readonly Lazy<MeasurementsVMService> _instance =
+            new Lazy<MeasurementsVMService>(() => new MeasurementsVMService());
+        public static MeasurementsVMService Instance => _instance.Value;
+
+
         private string _title;
         private List<Ddin2Measurement> _ddin2Measurements;
         private List<DuMeasurement> _duMeasurements;
@@ -68,7 +72,7 @@ namespace SiamCross.ViewModels
         public ICommand OnItemLongPressCommand { get; set; }
         public ICommand OnItemTappedCommand { get; set; }
 
-        public MeasurementsVM()
+        private MeasurementsVMService()
         {
             Measurements = new ObservableCollection<MeasurementView>();
             SelectedMeasurements = new ObservableCollection<object>();
@@ -421,11 +425,11 @@ namespace SiamCross.ViewModels
                         doc = xmlCreator.CreateDuXml(du);
                     }
                     paths[i] = await XmlSaver.SaveXml(file_name, doc);
+                    await MediaScannerService.Instance.Scan(paths[i]);
                 }
             }
-
-            string mes_dir = EnvironmentService.Instance.GetDir_Measurements();
-            await MediaScannerService.Instance.Scan(mes_dir);
+            //string mes_dir = EnvironmentService.Instance.GetDir_Measurements();
+            //await MediaScannerService.Instance.Scan(mes_dir);
             return paths;
         }
         private static bool ValidateForEmptiness()

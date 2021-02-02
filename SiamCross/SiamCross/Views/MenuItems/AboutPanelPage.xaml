@@ -26,8 +26,10 @@
                         </ViewCell>
                         <TextCell Text="{Binding Version}"
                                   Detail="{local:Translate AppVersion}"  />
+                        <!--
                         <TextCell Text="{Binding Build}"
                                   Detail="Build number"  />
+                        -->
                         <!--
                         <TextCell x:Name="lblVersionNumber"
                                   Detail="{local:Translate AppVersion}"  />

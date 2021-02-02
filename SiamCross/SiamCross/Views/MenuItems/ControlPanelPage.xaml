@@ -25,11 +25,17 @@
                    TextColor="White" >
                 <Label.FormattedText>
                     <FormattedString >
-                        <Span Text="Version 2.6.0 rc0" />
+                        <Span Text="Version " />
+                        <Span Text="{Binding Version}" />
                         <Span Text="&#10;" />
                         <Span Text="for internal testing only"  />
                     </FormattedString>
                 </Label.FormattedText>
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding IsRelease}" Value="true" >
+                        <Setter Property="IsVisible" Value="false"  />
+                    </DataTrigger>
+                </Label.Triggers>
             </Label>
             
             <ListView x:Name="sensorList" 

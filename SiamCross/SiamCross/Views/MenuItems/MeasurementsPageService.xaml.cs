@@ -1,5 +1,4 @@
 ﻿using SiamCross.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xamarin.Forms;
@@ -8,16 +7,13 @@ using Xamarin.Forms.Xaml;
 namespace SiamCross.Views.MenuItems
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MeasurementsPageService : ContentPage
-    {
-        private static readonly Lazy<MeasurementsPageService> _instance =
-            new Lazy<MeasurementsPageService>(() => new MeasurementsPageService());
-        public static MeasurementsPageService Instance => _instance.Value;
 
-        private readonly MeasurementsVM _vm = null;
-        private MeasurementsPageService()
+    public partial class MeasurementsPage : ContentPage
+    {
+        private readonly MeasurementsVMService _vm = MeasurementsVMService.Instance;
+        public MeasurementsPage()
         {
-            _vm = new MeasurementsVM();
+            _vm.ReloadMeasurementsFromDb();
             base.BindingContext = _vm;
             InitializeComponent();
         }
@@ -59,7 +55,7 @@ namespace SiamCross.Views.MenuItems
 
         protected override void OnAppearing()
         {
-            _vm.ReloadMeasurementsFromDb();
+
         }
     }
 }
