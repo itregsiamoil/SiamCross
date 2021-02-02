@@ -23,25 +23,9 @@ namespace SiamCross.Droid.Services
 
             FileTarget fileTarget = new FileTarget();
 
-            string directory = @"/storage/emulated/0/" + (Path.DirectorySeparatorChar + "SiamService2Log");
-            try
-            {
-                directory = Directory.CreateDirectory(directory).FullName;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("The process failed: {0}", e.ToString());
-            }
-
-
-            if (Directory.Exists(directory))
-            {
-                fileTarget.FileName = Path.Combine(directory, "Log.txt");
-            }
-            else
-            {
-                fileTarget.FileName = Path.Combine(Directory.CreateDirectory(directory).FullName, "Log.txt");
-            }
+            const string file_name = "SiamServiceLog.txt";
+            const Environment.SpecialFolder dir_uid = Environment.SpecialFolder.Personal;
+            fileTarget.FileName = Path.Combine(Environment.GetFolderPath(dir_uid), file_name);
 
             fileTarget.Layout = "${longdate}|${level:uppercase=true}|${logger}|${message}|${exception:format=tostring}";
 
@@ -51,8 +35,6 @@ namespace SiamCross.Droid.Services
             config.LoggingRules.Add(fileRule);
 
             LogManager.Configuration = config;
-
-
 
         }
 
