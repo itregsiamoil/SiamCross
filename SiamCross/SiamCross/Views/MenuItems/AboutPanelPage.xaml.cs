@@ -38,13 +38,13 @@ namespace SiamCross.Views.MenuItems
 
 
                 string ret = "";
-                byte[] result;
+                //byte[] result;
                 StringBuilder builder = new StringBuilder();
                 //Если ресурс существует, то извлекаем его.
                 if (isExistsResourceName)
                 {
                     Stream stream = myAssembly.GetManifestResourceStream(fullResourceName);
-                    result = new byte[stream.Length];
+                    //result = new byte[stream.Length];
                     StreamReader reader = new StreamReader(stream);
                     ret = reader.ReadToEnd();
                 }

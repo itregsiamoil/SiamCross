@@ -109,8 +109,8 @@
     <Compile Include="AndroidLongPressedEffect.cs" />
     <Compile Include="LocalizeAndroid.cs" />
     <Compile Include="MainActivity.cs" />
-    <Compile Include="Models\BluetoothAdapters\BluetoothClassicAdapterAndroid.cs" />
-    <Compile Include="Models\BluetoothAdapters\BluetoothLeAdapterAndroid.cs" />
+    <Compile Include="Models\BluetoothAdapters\ConnectionBt2.cs" />
+    <Compile Include="Models\BluetoothAdapters\ConnectionBtLe.cs" />
     <Compile Include="Models\BluetoothAdapters\DroidBt2Interface.cs" />
     <Compile Include="Models\BluetoothScannerAndroid.cs" />
     <Compile Include="Models\VersionAndBuild_Android.cs" />
@@ -147,12 +147,6 @@
   <ItemGroup>
     <Folder Include="ViewModels\" />
     <Folder Include="Views\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SiamCross\SiamCross.csproj">
-      <Project>{9cb87d99-4818-43dc-88e0-ac8201361c85}</Project>
-      <Name>SiamCross</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\xml\file_paths.xml">
@@ -310,6 +304,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\mipmap-xxxhdpi\main_ricon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SiamCross\SiamCross.csproj">
+      <Project>{9cb87d99-4818-43dc-88e0-ac8201361c85}</Project>
+      <Name>SiamCross</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>

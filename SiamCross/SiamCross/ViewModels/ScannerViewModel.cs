@@ -18,6 +18,21 @@ namespace SiamCross.ViewModels
 
         private readonly IBluetoothScanner _scanner;
 
+        bool _ActiveScan = false;
+        public bool ActiveScan
+        {
+            get => _ActiveScan;
+            private set 
+            {
+                if (value)
+                    StartScan();
+                else
+                    StopScan();
+                _ActiveScan = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ActiveScan)));
+            }
+        }
+
         public ObservableCollection<ScannedDeviceInfo> ScannedDevices { get; }
 
         public ObservableCollection<ScannedDeviceInfo> ClassicDevices { get; }
@@ -38,11 +53,12 @@ namespace SiamCross.ViewModels
 
         private void ScannerScanTimoutElapsed()
         {
-            ScanTimeoutElapsed?.Invoke();
+            
         }
 
         private void ScannerReceivedDevice(ScannedDeviceInfo dev)
         {
+            /*
             if (dev.Name == null ||
                 dev.Id == null ||
                 dev.Name == "")
@@ -52,7 +68,7 @@ namespace SiamCross.ViewModels
 
             if (!IsSiamSensor(dev))
                 return;
-
+            */
             switch (dev.BluetoothType)
             {
                 case BluetoothType.Classic:
@@ -96,5 +112,17 @@ namespace SiamCross.ViewModels
             }
         }
 
+        public void StopScan()
+        {
+            try
+            {
+                _scanner.Stop();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "StopScan" + "\n");
+                throw;
+            }
+        }
     }
 }

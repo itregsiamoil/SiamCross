@@ -22,12 +22,14 @@ namespace SiamCross.Views.MenuItems.SearchPanel
             InitializeComponent();
             _vm = new ViewModelWrap<ScannerViewModel>().ViewModel;
             BindingContext = _vm;
+            /*
+            _vm.StartScan();
             _vm.ScanTimeoutElapsed += () => ScanAnimation.IsRunning = false;
             scannedDevicesList.RefreshCommand = new Command(() =>
             {
                 try
                 {
-                    _vm.StartScan();
+                    
                     ScanAnimation.IsRunning = true;
                     scannedDevicesList.IsRefreshing = false;
                 }
@@ -36,6 +38,7 @@ namespace SiamCross.Views.MenuItems.SearchPanel
                     _logger.Error(ex, "RefreshCommand" + "\n");
                 }
             });
+            */
         }
 
         public void ItemSelected(object sender, SelectedItemChangedEventArgs e)
@@ -56,6 +59,18 @@ namespace SiamCross.Views.MenuItems.SearchPanel
             {
                 _logger.Error(ex, "ItemSelected (creating sensor)" + "\n");
             }
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            
+
+        }
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            _vm.StopScan();
         }
     }
 }

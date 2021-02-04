@@ -30,8 +30,6 @@ namespace SiamCross.Droid
         {
             cb.RegisterType<DroidBt2Interface>().As<IBt2InterfaceCross>();
             cb.RegisterType<BluetoothScannerAndroid>().As<IBluetoothScanner>();
-            cb.RegisterType<BluetoothClassicAdapterAndroid>().As<IConnectionBt2>();
-            cb.RegisterType<BluetoothLeAdapterAndroid>().As<IConnectionBtLe>();
             cb.RegisterType<SaveDevicesServiceAndroid>().As<ISaveDevicesService>();
             cb.RegisterType<SQLiteAndroid>().As<ISQLite>();
             cb.RegisterType<SettingsSaverAndroid>().As<ISettingsSaver>();
@@ -40,6 +38,10 @@ namespace SiamCross.Droid
             cb.RegisterType<HandbookManagerAndroid>().As<IHandbookManager>();
             cb.RegisterType<NLogManagerAndroid>().As<ILogManager>();
             cb.RegisterType<DefaultAdapterAndroid>().As<IDefaultAdapter>();
+
+            cb.RegisterType<ConnectionBt2>().As<IConnectionBt2>();
+            cb.RegisterType<ConnectionBtLe>().As<IConnectionBtLe>();
+
 
             DependencyService.RegisterSingleton<IMediaScanner>(new MediaScanner());
             DependencyService.RegisterSingleton<IEnvironment>(new Environment());

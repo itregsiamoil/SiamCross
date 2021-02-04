@@ -31,10 +31,10 @@ namespace SiamCross.Models.Sensors
             };
             //mConnection.PropertyChanged += PropertyChanged;
         }
-        public void Dispose()
+        public async void Dispose()
         {
-            _cancellToken?.Cancel();
-            mConnection?.Disconnect();
+            await Deactivate();
+            await mConnection.Disconnect();
         }
         #endregion
         #region basic implementation
@@ -95,7 +95,7 @@ namespace SiamCross.Models.Sensors
         private bool _activated = false;
         private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
         #endregion
-        private async void AsyncActivate()
+        private async Task AsyncActivate()
         {
             using (await semaphore.UseWaitAsync())
             {
@@ -150,7 +150,7 @@ namespace SiamCross.Models.Sensors
             }
         }
 
-        private async void Deactivate()
+        private async Task Deactivate()
         {
             try
             {
@@ -164,7 +164,7 @@ namespace SiamCross.Models.Sensors
                     if (null != mConnection)
                     {
                         if (ConnectionState.Disconnected != mConnection.State)
-                            mConnection?.Disconnect();
+                            await mConnection?.Disconnect();
                     }
                     if (_activated)
                     {
@@ -195,13 +195,13 @@ namespace SiamCross.Models.Sensors
                     if (!_activated)
                     {
                         DebugLog.WriteLine("try activate = true");
-                        AsyncActivate();
+                        Task.Run(AsyncActivate);
                     }
                 }
                 else
                 {
                     DebugLog.WriteLine("try activate = false");
-                    Deactivate();
+                    Task.Run(Deactivate);
                 }
             }
         }

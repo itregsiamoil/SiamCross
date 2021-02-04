@@ -12,14 +12,14 @@ namespace SiamCross.Models.Adapters
     {
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         public string Name => "BT4LE";
-        public IProtocolConnection MakeConnection(ScannedDeviceInfo deviceInfo)
+        public IPhyConnection MakeConnection(ScannedDeviceInfo deviceInfo)
         {
             TypedParameter t_dvc_inf = new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo);
             TypedParameter t_phy_ifc = new TypedParameter(typeof(IPhyInterface), this);
             IConnectionBtLe connection = AppContainer.Container.Resolve<IConnectionBtLe>(t_dvc_inf, t_phy_ifc);
             return connection;
         }
-        public IAdapter mAdapter => mBle?.Adapter;
+        public IAdapter Adapter => mBle?.Adapter;
 
         private IBluetoothLE mBle;
 

@@ -8,6 +8,10 @@ namespace SiamCross.Models
     public interface ISensor : IDisposable
     {
         IProtocolConnection Connection { get; }
+
+        //Task ActivateAsync();
+        //Task DeactivateAsync();
+
         string ConnStateStr { get; }
         bool Activate { get; set; }
         bool IsAlive { get; }

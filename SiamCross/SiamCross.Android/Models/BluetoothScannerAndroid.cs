@@ -17,7 +17,6 @@ namespace SiamCross.Droid.Models
     {
         private readonly IAdapter _adapter;
         private readonly IBluetoothLE _bluetoothBLE;
-        private readonly BluetoothAdapter _socketAdapter;
         public event Action<ScannedDeviceInfo> Received;
         public event Action ScanTimoutElapsed;
 
@@ -25,7 +24,6 @@ namespace SiamCross.Droid.Models
         {
             _bluetoothBLE = CrossBluetoothLE.Current;
             _adapter = CrossBluetoothLE.Current.Adapter;
-            _socketAdapter = BluetoothAdapter.DefaultAdapter;
             _adapter.ScanTimeout = 10000;
             _adapter.ScanMode = ScanMode.Balanced;
             _adapter.ScanTimeoutElapsed += (s, e) => { ScanTimoutElapsed?.Invoke(); };
@@ -33,18 +31,23 @@ namespace SiamCross.Droid.Models
             _adapter.DeviceDiscovered += (obj, a) =>
             {
                 if (obj == null || a == null || a.Device == null || a.Device.Name == null)
-                {
                     return;
-                }
-
-                Received?.Invoke(new ScannedDeviceInfo(a.Device.Name, a.Device.Id, BluetoothType.Le, a.Device.Id.ToString()));
+                ScannedDeviceInfo sd = new ScannedDeviceInfo
+                {
+                    Name = a.Device.Name,
+                    Mac = a.Device.Id.ToString(),
+                    Id = a.Device.Id,
+                    BluetoothType = BluetoothType.Le
+                };
+                Received?.Invoke(sd);
                 System.Diagnostics.Debug.WriteLine("Finded device" + a.Device.Name);
             };
 
         }
-        public void Start()
+
+        private void StartBounded()
         {
-            ICollection<BluetoothDevice> devices = _socketAdapter.BondedDevices;
+            ICollection<BluetoothDevice> devices = BluetoothAdapter.DefaultAdapter.BondedDevices;
 
             foreach (BluetoothDevice device in devices)
             {
@@ -71,9 +74,20 @@ namespace SiamCross.Droid.Models
                         bluetoothType = BluetoothType.Le;
                         break;
                 }
-                Received?.Invoke(new ScannedDeviceInfo(device.Name, id, bluetoothType, device.Address));
+                ScannedDeviceInfo sd = new ScannedDeviceInfo
+                {
+                    Name = device.Name,
+                    Mac = device.Address,
+                    Id = id,
+                    BluetoothType = bluetoothType
+                };
+                Received?.Invoke(sd);
             }
 
+        }
+        public void Start()
+        {
+            StartBounded();
             StartLE();
         }
 

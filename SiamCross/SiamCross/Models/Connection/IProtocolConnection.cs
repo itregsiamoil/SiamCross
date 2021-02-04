@@ -1,5 +1,4 @@
-﻿using SiamCross.Models.Adapters;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
@@ -57,22 +56,26 @@ namespace SiamCross.Models
         void UpdateRssi();
         int Rssi { get; }
         ConnectionState State { get; }
-        IPhyInterface PhyInterface { get; }
+        IPhyConnection PhyConnection { get; }
 
         Task<bool> Connect();
-        Task Disconnect();
+        Task<bool> Disconnect();
+
+        Task<byte[]> Exchange(byte[] req);
+
+        event PropertyChangedEventHandler PropertyChanged;
+
+        /*
         Task SendData(byte[] data);
         event Action<byte[]> DataReceived;
         event Action ConnectSucceed;
         event Action ConnectFailed;
 
-        Task<byte[]> Exchange(byte[] req);
-
         void DoActionDataReceived(byte[] data);
         void DoActionConnectSucceed();
         void DoActionConnectFailed();
+        */
 
-        event PropertyChangedEventHandler PropertyChanged;
     }
 
 

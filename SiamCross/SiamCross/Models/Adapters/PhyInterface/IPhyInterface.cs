@@ -8,7 +8,7 @@ namespace SiamCross.Models.Adapters
         void Disable();
         void Enable();
 
-        IProtocolConnection MakeConnection(ScannedDeviceInfo deviceInfo);
+        IPhyConnection MakeConnection(ScannedDeviceInfo deviceInfo);
         bool IsEnbaled { get; }
     }
 }

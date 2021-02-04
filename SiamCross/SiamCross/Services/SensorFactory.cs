@@ -1,6 +1,4 @@
-﻿using Autofac;
-using SiamCross.AppObjects;
-using SiamCross.Models;
+﻿using SiamCross.Models;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Dmg.Ddin2;
@@ -27,7 +25,8 @@ namespace SiamCross.Services
             }
             if (null == phy_interface)
                 return null;
-            IProtocolConnection connection = phy_interface.MakeConnection(deviceInfo);
+            IPhyConnection conn = phy_interface.MakeConnection(deviceInfo);
+            IProtocolConnection connection = new SiamProtocolConnection(conn);
             if (null == connection)
                 return null;
             //lock (_locker)
@@ -55,27 +54,10 @@ namespace SiamCross.Services
                 }
                 else if (deviceInfo.Name.Contains("DU"))
                 {
-                    switch (deviceInfo.BluetoothType)
-                    {
-                        case BluetoothType.Le:
-                            {
-                                DuSensor sensor = new DuSensor(
-                                    AppContainer.Container.Resolve<IConnectionBtLe>
-                                        (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                                    new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, ""));
-                                sensor.ScannedDeviceInfo = deviceInfo;
-                                return sensor;
-                            }
-                        case BluetoothType.Classic:
-                            {
-                                DuSensor sensor = new DuSensor(
-                                    AppContainer.Container.Resolve<IConnectionBt2>
-                                        (new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo)),
-                                    new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, ""));
-                                sensor.ScannedDeviceInfo = deviceInfo;
-                                return sensor;
-                            }
-                    }
+                    SensorData sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, "");
+                    DuSensor sensor = new DuSensor(connection, sens_data);
+                    sensor.ScannedDeviceInfo = deviceInfo;
+                    return sensor;
                 }
 
                 return null;

@@ -102,6 +102,7 @@ namespace SiamCross.Services
                 if (sensor != null)
                 {
                     _sensors.Remove(sensor);
+                    //sensor.Activate = false;
                     sensor.Dispose();
                 }
                 MessagingCenter.Send(this, "Refresh saved sensors",

@@ -1,6 +1,6 @@
 ﻿namespace SiamCross.Models.Adapters
 {
-    public interface IConnectionBtLe : IProtocolConnection
+    public interface IConnectionBtLe : IPhyConnection
     {
     }
 }

@@ -1,5 +1,4 @@
 ﻿#define DEBUG_UNIT
-using SiamCross.Models.Adapters;
 using SiamCross.Models.Tools;
 using System;
 using System.ComponentModel;
@@ -9,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models
 {
-    public abstract class SiamProtocolConnection : IProtocolConnection, INotifyPropertyChanged
+    public class SiamProtocolConnection : IProtocolConnection, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
-        protected IConnection mBaseConn = null;
+        protected IPhyConnection mBaseConn = null;
         protected ConnectionState mState = ConnectionState.Disconnected;
-        public SiamProtocolConnection(IConnection base_conn)
+        public SiamProtocolConnection(IPhyConnection base_conn)
         {
             mBaseConn = base_conn;
         }
-        public IPhyInterface PhyInterface => mBaseConn.PhyInterface;
+        public IPhyConnection PhyConnection => mBaseConn;
 
         public void UpdateRssi()
         {
@@ -83,12 +82,13 @@ namespace SiamCross.Models
             }
             return result;
         }
-        public virtual async Task Disconnect()
+        public virtual async Task<bool> Disconnect()
         {
+            bool ret = false;
             State = ConnectionState.PendingDisconnect;
             try
             {
-                mBaseConn.Disconnect();
+                ret = await mBaseConn.Disconnect();
             }
             catch (Exception ex)
             {
@@ -102,6 +102,7 @@ namespace SiamCross.Models
             {
                 State = ConnectionState.Disconnected;
             }
+            return ret;
         }
 
         private TaskCompletionSource<bool> mExecTcs;
@@ -341,23 +342,6 @@ namespace SiamCross.Models
                 + " elapsed=" + mPerfCounter.ElapsedMilliseconds.ToString());
             return ret;
         }
-        public async Task SendData(byte[] req)
-        {
-            byte[] ret = await Exchange(req);
 
-            if (null != ret && 0 < ret.Length)
-            {
-                DoActionDataReceived(ret);
-                //DataReceived?.Invoke(ret);
-            }
-        }
-
-        public abstract event Action<byte[]> DataReceived;
-        public abstract event Action ConnectSucceed;
-        public abstract event Action ConnectFailed;
-
-        public abstract void DoActionDataReceived(byte[] data);
-        public abstract void DoActionConnectSucceed();
-        public abstract void DoActionConnectFailed();
     }
 }

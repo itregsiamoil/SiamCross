@@ -3,9 +3,7 @@
 using Android.App;
 using Android.Bluetooth;
 using Android.Content;
-using Android.Runtime;
 using Java.Util;
-using SiamCross.Models;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Adapters.PhyInterface.Bt2;
 using SiamCross.Models.Scanners;
@@ -20,8 +18,8 @@ namespace SiamCross.Droid.Models
 {
     internal class BluetoothGattCallbackExt : BluetoothGattCallback
     {
-        private readonly BaseBluetoothClassicAdapterAndroid mBt2Adapter = null;
-        public BluetoothGattCallbackExt(BaseBluetoothClassicAdapterAndroid bt2adapter)
+        private readonly ConnectionBt2 mBt2Adapter = null;
+        public BluetoothGattCallbackExt(ConnectionBt2 bt2adapter)
             : base()
         {
             mBt2Adapter = bt2adapter;
@@ -56,7 +54,7 @@ namespace SiamCross.Droid.Models
         , BluetoothDevice.ActionBondStateChanged
         , BluetoothDevice.ActionNameChanged
     })]
-    public class BaseBluetoothClassicAdapterAndroid : BroadcastReceiver, IConnection
+    public class ConnectionBt2 : BroadcastReceiver, IConnectionBt2
     {
         private readonly IPhyInterface mInterface;
         public IPhyInterface PhyInterface => mInterface;
@@ -72,12 +70,10 @@ namespace SiamCross.Droid.Models
         private BluetoothSocket _socket;
         protected ScannedDeviceInfo _scannedDeviceInfo;
 
-        protected Stream _outStream;
-
-        private Task mRxThread = null;
+        private Task<int> mRxThread = null;
         private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
         private TaskCompletionSource<bool> mRxTsc = null;
-        public Stream mRxStream = new MemoryStream(512);
+        public readonly Stream mRxStream = new MemoryStream(512);
         private CancellationTokenSource CtRxSource = null;
 
 
@@ -95,17 +91,17 @@ namespace SiamCross.Droid.Models
                 return bt2_ifc?.Adapter;
             }
         }
-        public BaseBluetoothClassicAdapterAndroid()
+        public ConnectionBt2()
             : this(null)
         { }
-        public BaseBluetoothClassicAdapterAndroid(IPhyInterface ifc)
+        public ConnectionBt2(IPhyInterface ifc)
         {
             if (null == ifc)
                 mInterface = Factory.GetCurent();
             else
                 mInterface = ifc;
         }
-        public BaseBluetoothClassicAdapterAndroid(ScannedDeviceInfo deviceInfo, IPhyInterface ifc = null)
+        public ConnectionBt2(ScannedDeviceInfo deviceInfo, IPhyInterface ifc = null)
             : this(ifc)
         {
             SetDeviceInfo(deviceInfo);
@@ -156,10 +152,8 @@ namespace SiamCross.Droid.Models
                     await _socket.ConnectAsync();
                 }
 
-                _outStream = _socket.OutputStream;
-
                 CtRxSource = new CancellationTokenSource();
-                mRxThread = Task.Factory.StartNew(
+                mRxThread = await Task.Factory.StartNew(
                     () => RxThreadFunction(_socket.InputStream, CtRxSource.Token)
                     , CtRxSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
 
@@ -170,49 +164,71 @@ namespace SiamCross.Droid.Models
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile.Connect "
                     + _scannedDeviceInfo.Name + ": " + e.Message);
-                Disconnect();
+                await Disconnect();
             }
             catch (ObjectDisposedException e)
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile.Connect "
                     + _scannedDeviceInfo.Name + ": " + e.Message);
-                Disconnect();
+                await Disconnect();
             }
             catch (Java.Lang.NullPointerException e)
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile.Connect "
                     + _scannedDeviceInfo.Name + ": " + e.Message);
-                Disconnect();
+                await Disconnect();
             }
             return false;
         }
-        public void Disconnect()
+        public async Task<bool> Disconnect()
         {
+            Debug.WriteLine("bt2 start Disconnecting ");
+            bool ret = true;
             try
             {
-                RxThreadCancel();
-                _outStream?.Close();
+                mInterface.Disable();
+                await RxThreadCancel();
+
                 _bluetoothDevice?.Dispose();
             }
             catch (Exception)
             {
                 Debug.WriteLine("ERROR unknown in Disconnect");
+                ret = false;
             }
             finally
             {
-                _outStream = null;
                 _bluetoothDevice = null;
             }
+            return ret;
         }
 
-        private void RxThreadCancel()
+
+
+        private async Task<bool> TryWaitRxThread(int timeout)
+        {
+            if (null == mRxThread)
+                return true;
+            Task reason = await Task.WhenAny(mRxThread, Task.Delay(1000));
+            return mRxThread == reason;
+        }
+
+        private async Task RxThreadCancel()
         {
             try
             {
                 CtRxSource?.Cancel();
                 mRxTsc?.TrySetResult(false);
+
+                if (!await TryWaitRxThread(1000))
+                    Debug.WriteLine("RxThreadCancel cancel await failed"); ;
+
                 _socket?.Close();
-                //_socket.Dispose();
+
+                if (!await TryWaitRxThread(20000))
+                    Debug.WriteLine("RxThreadCancel Close socket await failed");
+
+                _socket?.Dispose();
                 CtRxSource?.Dispose();
                 mRxThread?.Dispose();
             }
@@ -220,16 +236,21 @@ namespace SiamCross.Droid.Models
             {
                 Debug.WriteLine("close of connect socket failed " + e.Message);
             }
+            catch (Exception)
+            {
+                Debug.WriteLine("ERROR unknown in RxThreadCancel");
+            }
             finally
             {
+                _socket = null;
                 CtRxSource = null;
                 mRxTsc = null;
                 mRxThread = null;
-                _socket = null;
+
             }
         }
 
-        private async Task RxThreadFunction(Stream rx_stream, CancellationToken ct)
+        private async Task<int> RxThreadFunction(Stream rx_stream, CancellationToken ct)
         {
             Debug.WriteLine("RxTask start");
             byte[] buffer = new byte[512];
@@ -252,17 +273,23 @@ namespace SiamCross.Droid.Models
                 catch (Java.IO.IOException e)
                 {
                     Debug.WriteLine("RxTask canceled " + e.Message);
-                    break;
+                    return 1;
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("RxTask error " + e.Message);
+                    await Task.Delay(1000, ct);
                 }
             }
             Debug.WriteLine("RxTask end");
+            return 0;
         }
 
         public virtual async Task SendData(byte[] data)
         {
             try
             {
-                await _outStream.WriteAsync(data);
+                await _socket.OutputStream.WriteAsync(data);
             }
             catch (Exception e)
             {
@@ -320,7 +347,7 @@ namespace SiamCross.Droid.Models
         }
         public void ClearTx()
         {
-            _outStream.Flush();
+            _socket.OutputStream.Flush();
             //_outStream.Position = 0;
             //_inStream.SetLength(0);
         }
@@ -382,50 +409,10 @@ namespace SiamCross.Droid.Models
         public async Task<int> WriteAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
             ct.ThrowIfCancellationRequested();
-            await _outStream.WriteAsync(buffer, offset, count, ct);
+            await _socket.OutputStream.WriteAsync(buffer, offset, count, ct);
             return count;
         }
 
-    }
-
-    public class BluetoothClassicAdapterAndroid : SiamProtocolConnection, IConnectionBt2
-    {
-        [Preserve(AllMembers = true)]
-        public BluetoothClassicAdapterAndroid(ScannedDeviceInfo deviceInfo)
-         : base(new BaseBluetoothClassicAdapterAndroid(deviceInfo))
-        {
-        }
-
-        public override async Task<bool> Connect()
-        {
-            if (mBaseConn is BaseBluetoothClassicAdapterAndroid)
-            {
-                bool res = await base.Connect();
-                if (res)
-                {
-                    DoActionConnectSucceed();
-                    return res;
-                }
-            }
-            DoActionConnectFailed();
-            return false;
-        }
-        public override void DoActionDataReceived(byte[] data)
-        {
-            DataReceived?.Invoke(data);
-        }
-        public override void DoActionConnectSucceed()
-        {
-            ConnectSucceed?.Invoke();
-        }
-        public override void DoActionConnectFailed()
-        {
-            ConnectFailed?.Invoke();
-        }
-
-        public override event Action<byte[]> DataReceived;
-        public override event Action ConnectSucceed;
-        public override event Action ConnectFailed;
     }
 
 }

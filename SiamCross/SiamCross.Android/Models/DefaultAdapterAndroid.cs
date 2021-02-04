@@ -21,9 +21,19 @@ namespace SiamCross.Droid.Models
             BluetoothAdapter.DefaultAdapter.Disable();
         }
 
-        public IProtocolConnection MakeConnection(ScannedDeviceInfo deviceInfo)
+        IPhyConnection IPhyInterface.MakeConnection(ScannedDeviceInfo deviceInfo)
         {
-            throw new System.NotImplementedException();
+            /*
+            switch (deviceInfo.BluetoothType)
+            {
+                default: break;
+                case BluetoothType.Le:
+                    return new BaseBluetoothLeAdapterAndroid(deviceInfo, this);
+                case BluetoothType.Classic:
+                    return new BaseBluetoothClassicAdapterAndroid(deviceInfo, this);
+            }
+            */
+            return null;
         }
 
         public bool IsEnbaled => BluetoothAdapter.DefaultAdapter.IsEnabled;

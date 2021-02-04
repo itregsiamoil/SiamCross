@@ -58,9 +58,14 @@ namespace SiamCross.Droid.Services
                                 Guid id = new Guid();
                                 Guid.TryParse(readDevice.Id, out id);
 
-                                devicesInfo.Add(new ScannedDeviceInfo(
-                                            readDevice.DeviceName, id
-                                            , readDevice.BluetoothType, readDevice.Mac));
+                                ScannedDeviceInfo sd = new ScannedDeviceInfo
+                                {
+                                    Name = readDevice.DeviceName,
+                                    Mac = readDevice.Mac,
+                                    Id = id,
+                                    BluetoothType = readDevice.BluetoothType
+                                };
+                                devicesInfo.Add(sd);
                                 break;
                             default:
                                 break;

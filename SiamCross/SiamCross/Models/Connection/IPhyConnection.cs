@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models
 {
-    public interface IConnection
+    public interface IPhyConnection
     {
         void UpdateRssi();
         int Rssi { get; }
         IPhyInterface PhyInterface { get; }
         Task<bool> Connect();
-        void Disconnect();
+        Task<bool> Disconnect();
         void ClearRx();
         void ClearTx();
         Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken);

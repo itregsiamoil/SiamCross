@@ -4,25 +4,21 @@ namespace SiamCross.Models.Scanners
 {
     public class ScannedDeviceInfo : IEquatable<ScannedDeviceInfo>
     {
-        public string Name { get; }
-        public Guid Id { get; }
-        public string Mac { get; }
-        public BluetoothType BluetoothType { get; }
-
-        public ScannedDeviceInfo(string name
-            , Guid id
-            , BluetoothType bluetoothType
-            , string mac)
-        {
-            Name = name;
-            Id = id;
-            BluetoothType = bluetoothType;
-            Mac = mac;
-        }
-
+        public string Name { get; set; }
+        public Guid Id { get; set; }
+        public string Mac { get; set; }
+        public BluetoothType BluetoothType { get; set; }
+        public string PrimaryPhy { get; set; }
+        public string SecondaryPhy { get; set; }
+        public string Rssi { get; set; }
+        public string PeriodicAdvertisingInterval { get; set; }
+        public string IsLegacy { get; set; }
+        public string IsConnectable { get; set; }
+        public string TxPower { get; set; }
+        public string BondState { get; set; }
         public bool Equals(ScannedDeviceInfo other)
         {
-            return Name == other.Name ? true : false;
+            return Name == other.Name;
         }
     }
 }

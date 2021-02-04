@@ -12,7 +12,7 @@ namespace SiamCross.Models.Adapters.PhyInterface.Bt2
     {
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         public string Name => "BT2";
-        public IProtocolConnection MakeConnection(ScannedDeviceInfo deviceInfo)
+        public IPhyConnection MakeConnection(ScannedDeviceInfo deviceInfo)
         {
             TypedParameter t_dvc_inf = new TypedParameter(typeof(ScannedDeviceInfo), deviceInfo);
             TypedParameter t_phy_ifc = new TypedParameter(typeof(IPhyInterface), this);
