@@ -1,23 +1,95 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
+             xmlns:dm="clr-namespace:SiamCross.Models.Scanners"
              x:Class="SiamCross.Views.MenuItems.SearchPanel.BoundingTab"
-             Title="Bluetooth 2"
-             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross">
-
+             x:Name="BondedTabView"
+             Title="Bluetooth 2">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="{local:Translate FoundDevices}" FontSize="Medium" />
+            <!--
+            ItemSelected="ItemSelected"
+            -->
             <ListView x:Name="boundedDevicesList" 
+                      HasUnevenRows="True"
                       ItemsSource="{Binding ClassicDevices}" 
-                      ItemSelected="ItemSelected"
+                      RefreshCommand="{Binding RefreshCommand}"
                       IsPullToRefreshEnabled="True">
                 <ListView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="dm:ScannedDeviceInfo" >
                         <ViewCell>
                             <ViewCell.View>
                                 <StackLayout>
-                                    <Label Text="{Binding Name}" FontSize="Medium"></Label>
+                                    <xct:Expander Margin="5" >
+                                        <xct:Expander.Header>
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*"></RowDefinition>
+                                                    <!--RowDefinition Height="{Binding FontSize:Large}"></> -->
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                                    <ColumnDefinition Width="50"></ColumnDefinition>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Label Grid.Row="0" Grid.Column="0">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer 
+                                                        Command="{Binding Path=BindingContext.SelectItemCommand
+                                                        , Source={x:Reference BondedTabView}}"
+                                                        CommandParameter="{Binding .}"/>
+                                                    </Label.GestureRecognizers>
+                                                    <Label.FormattedText>
+                                                        <FormattedString >
+                                                            <Span Text="{Binding Name}" FontAttributes="Bold" />
+                                                            <Span Text="&#10;" />
+                                                            <Span Text="{Binding Mac}" FontSize="Micro"/>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                                <Label Text="&#x25BC;" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                                       Grid.Row="0" Grid.Column="1" >
+                                                    <Label.Triggers>
+                                                        <DataTrigger TargetType="Label"
+                                                            Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}
+                                                                    , Path=IsExpanded}" 
+                                                            Value="True">
+                                                            <Setter Property="Text" 
+                                                                    Value="&#x25B2;" />
+                                                        </DataTrigger>
+                                                    </Label.Triggers>
+                                                </Label>
+
+                                            </Grid>
+                                        </xct:Expander.Header>
+                                        <xct:Expander.ContentTemplate>
+                                            <DataTemplate>
+                                                <Label Margin="5">
+                                                    <Label.FormattedText>
+                                                        <FormattedString >
+                                                            <Span Text="&#10;PrimaryPhy: " />
+                                                            <Span Text="{Binding PrimaryPhy}"/>
+                                                            <Span Text="&#10;SecondaryPhy: " />
+                                                            <Span Text="{Binding SecondaryPhy}"/>
+                                                            <Span Text="&#10;Rssi: " />
+                                                            <Span Text="{Binding Rssi}"/>
+                                                            <Span Text="&#10;PeriodicAdvertisingInterval: " />
+                                                            <Span Text="{Binding PeriodicAdvertisingInterval}"/>
+                                                            <Span Text="&#10;IsLegacy: " />
+                                                            <Span Text="{Binding IsLegacy}"/>
+                                                            <Span Text="&#10;IsConnectable: " />
+                                                            <Span Text="{Binding IsConnectable}"/>
+                                                            <Span Text="&#10;TxPower: " />
+                                                            <Span Text="{Binding TxPower}"/>
+                                                            <Span Text="&#10;BondState: " />
+                                                            <Span Text="{Binding BondState}"/>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                            </DataTemplate>
+                                        </xct:Expander.ContentTemplate>
+                                    </xct:Expander>
                                 </StackLayout>
                             </ViewCell.View>
                         </ViewCell>

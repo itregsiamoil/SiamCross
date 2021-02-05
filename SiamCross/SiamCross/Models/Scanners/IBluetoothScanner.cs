@@ -8,8 +8,12 @@ namespace SiamCross.Models.Scanners
 
         void Stop();
 
-        event Action<ScannedDeviceInfo> Received;
+        void StartBounded();
+        bool ActiveScan { get; }
+        string ScanString { get; }
 
-        event Action ScanTimoutElapsed;
+        event Action<ScannedDeviceInfo> Received;
+        event Action ScanStarted;
+        event Action ScanStoped;
     }
 }

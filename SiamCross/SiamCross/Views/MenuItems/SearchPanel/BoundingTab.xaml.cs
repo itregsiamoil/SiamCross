@@ -17,25 +17,14 @@ namespace SiamCross.Views.MenuItems.SearchPanel
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 
-        private readonly ScannerViewModel _viewModel;
+        private readonly ScannerViewModel _vm;
         public BoundingTab()
         {
             InitializeComponent();
-            ViewModelWrap<ScannerViewModel> vm = new ViewModelWrap<ScannerViewModel>();
-            _viewModel = vm.ViewModel;
-            BindingContext = _viewModel;
-            boundedDevicesList.RefreshCommand = new Command(() =>
-            {
-                try
-                {
-                    _viewModel.StartScan();
-                    boundedDevicesList.IsRefreshing = false;
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex, "RefreshCommand" + "\n");
-                }
-            });
+            _vm = new ViewModelWrap<ScannerViewModel>().ViewModel;
+            _vm.Scanner.ScanStarted += () => { boundedDevicesList.IsRefreshing = true; };
+            _vm.Scanner.ScanStoped += () => { boundedDevicesList.IsRefreshing = false; };
+            BindingContext = _vm;
         }
 
 
@@ -57,6 +46,15 @@ namespace SiamCross.Views.MenuItems.SearchPanel
             {
                 _logger.Error(ex, "ItemSelected, creating sensor" + "\n");
             }
+        }
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+        }
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            _vm.StopScan();
         }
     }
 }

@@ -10,11 +10,14 @@ namespace SiamCross.Droid.Utils.FileSystem
     [Preserve(AllMembers = true)]
     public class Environment : IEnvironment
     {
+        [System.Obsolete]
         public string GetDir_Downloads()
         {
             string dw = Android.OS.Environment.DirectoryDownloads;
             return Android.OS.Environment.GetExternalStoragePublicDirectory(dw).AbsolutePath;
         }
+
+        [System.Obsolete]
         public string GetDir_Measurements()
         {
             string p = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;

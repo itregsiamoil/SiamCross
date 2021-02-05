@@ -24,7 +24,7 @@ namespace SiamCross.Views.MenuItems.SearchPanel
             ViewModelWrap<ScannerViewModel> vm = new ViewModelWrap<ScannerViewModel>();
 
             _viewModel = vm.ViewModel;
-            _viewModel.ScanTimeoutElapsed += () => ScanAnimation.IsRunning = false;
+            //_viewModel.ScanTimeoutElapsed += () => ScanAnimation.IsRunning = false;
             BindingContext = _viewModel;
             usbDevicesList.RefreshCommand = new Command(() =>
             {

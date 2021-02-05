@@ -1,38 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SiamCross.Views.MenuItems.SearchPanel.ScanningTab"
-             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
-             xmlns:dm="clr-namespace:SiamCross.Models.Scanners"
              xmlns:xct="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
+             xmlns:dm="clr-namespace:SiamCross.Models.Scanners"
+             x:Class="SiamCross.Views.MenuItems.SearchPanel.ScanningTab"
+             x:Name="ScanningTabView"
              Title="Bluetooth 4LE">
     <ContentPage.Content>
         <StackLayout>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Label Text="{local:Translate FoundDevices}" 
-                       FontSize="Medium" 
-                       Grid.Column="0"/>
-                <ActivityIndicator IsRunning="{Binding ActiveScan}"
-                                   Color="CornflowerBlue" 
-                                   HorizontalOptions="Center"
-                                   Grid.Column="1"/>
-            </Grid>
+            <StackLayout Orientation="Horizontal">
+                <!--
+                <ActivityIndicator IsRunning="{Binding Scanner.ActiveScan}"/>
+                ItemSelected ="ItemSelected"
+                -->
+                <Label Text="{Binding Scanner.ScanString}" 
+                       IsVisible="{Binding Scanner.ActiveScan}">
+                </Label>
+            </StackLayout>
             <ListView x:Name="scannedDevicesList" 
                       HasUnevenRows="True"
                       ItemsSource="{Binding ScannedDevices}"
-                      ItemSelected ="ItemSelected"
+                      RefreshCommand="{Binding RefreshCommand}"
                       IsPullToRefreshEnabled="True">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="dm:ScannedDeviceInfo">
                         <ViewCell>
                             <ViewCell.View>
                                 <StackLayout>
-                                    
-                                    <xct:Expander Margin="10, 10, 0, 0" >
+                                    <xct:Expander Margin="5" >
                                         <xct:Expander.Header>
                                             <Grid>
                                                 <Grid.RowDefinitions>
@@ -41,20 +36,44 @@
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"></ColumnDefinition>
+                                                    <ColumnDefinition Width="20"></ColumnDefinition>
+                                                    <ColumnDefinition Width="20"></ColumnDefinition>
                                                     <ColumnDefinition Width="50"></ColumnDefinition>
                                                 </Grid.ColumnDefinitions>
 
                                                 <Label Grid.Row="0" Grid.Column="0">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer 
+                                                        Command="{Binding Path=BindingContext.SelectItemCommand
+                                                        , Source={x:Reference ScanningTabView}}"
+                                                        CommandParameter="{Binding .}"/>
+                                                    </Label.GestureRecognizers>
                                                     <Label.FormattedText>
                                                         <FormattedString >
-                                                            <Span Text="{Binding Name}" FontAttributes="Bold"/>
+                                                            <Span Text="{Binding Name}" FontAttributes="Bold" />
                                                             <Span Text="&#10;" />
                                                             <Span Text="{Binding Mac}" FontSize="Micro"/>
                                                         </FormattedString>
                                                     </Label.FormattedText>
                                                 </Label>
+
+                                                <Label Text=""
+                                                       Grid.Row="0" Grid.Column="1">
+                                                    <Label.Triggers>
+                                                        <DataTrigger TargetType="Label"
+                                                            Binding="{Binding BondState}" 
+                                                            Value="Bonded">
+                                                            <Setter Property="Text" 
+                                                                    Value="&#x1F517;" />
+                                                        </DataTrigger>
+                                                    </Label.Triggers>
+                                                </Label>
+                                                <Label Text="{Binding BluetoothType}"
+                                                       Grid.Row="0" Grid.Column="2">
+                                                </Label>
+
                                                 <Label Text="&#x25BC;" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
-                                                       Grid.Row="0" Grid.Column="1" >
+                                                       Grid.Row="0" Grid.Column="3" >
                                                     <Label.Triggers>
                                                         <DataTrigger TargetType="Label"
                                                             Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}
@@ -95,18 +114,6 @@
                                             </DataTemplate>
                                         </xct:Expander.ContentTemplate>
                                     </xct:Expander>
-                                            
-                                    <!--
-                                    <Label Margin="5">
-                                        <Label.FormattedText>
-                                            <FormattedString >
-                                                <Span Text="{Binding Name}" FontAttributes="Bold"/>
-                                                <Span Text="&#10;" />
-                                                <Span Text="{Binding Mac}" FontSize="Micro"/>
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
-                                    -->
                                 </StackLayout>
                             </ViewCell.View>
                         </ViewCell>
