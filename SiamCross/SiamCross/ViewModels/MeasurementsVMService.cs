@@ -199,8 +199,10 @@ namespace SiamCross.ViewModels
                 return;
             IEnumerable<MeasurementView> selected = Measurements.Where(element => element.IsSelected);
             foreach (MeasurementView item in selected)
+            {
                 item.IsSelected = false;
-
+                UpdateSelect(item, item.IsSelected);
+            }
         }
         private void SelectAll()
         {
@@ -208,7 +210,10 @@ namespace SiamCross.ViewModels
                 SelectMode = true;
             IEnumerable<MeasurementView> selected = Measurements.Where(element => !element.IsSelected);
             foreach (MeasurementView item in selected)
+            {
                 item.IsSelected = true;
+                UpdateSelect(item, item.IsSelected);
+            }
         }
         private async void ShareMeasurementsAsync(object obj)
         {
@@ -335,17 +340,18 @@ namespace SiamCross.ViewModels
                                 || mv.Name.Contains("SIDDOSA3M"))
                             {
                                 DataRepository.Instance.RemoveDdin2Measurement(mv.Id);
-                                Measurements.Remove(mv);
+                                
                             }
                             else if (mv.Name.Contains("DU"))
                             {
                                 DataRepository.Instance.RemoveDuMeasurement(mv.Id);
-                                Measurements.Remove(mv);
                             }
+                            Measurements.Remove(mv);
                         }
                     }
                     //MessagingCenter.Send(this, "RefreshAfterDeleting");
                     SelectedMeasurements.Clear();
+                    Title = $"{Resource.SelectedMeasurements}: {SelCount}";
                 }
             }
             catch (Exception ex)
