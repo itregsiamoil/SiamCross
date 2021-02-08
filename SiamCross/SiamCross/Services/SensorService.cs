@@ -43,6 +43,7 @@ namespace SiamCross.Services
         public IEnumerable<ISensor> Sensors => _sensors;
 
         public event Action<ISensor> SensorAdded;
+        public event Action<ISensor> SensorDeleting;
 
         public void Initinalize()
         {
@@ -101,12 +102,13 @@ namespace SiamCross.Services
                 ISensor sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
                 if (sensor != null)
                 {
+                    sensor.Activate = false;
+                    SensorDeleting(sensor);
                     _sensors.Remove(sensor);
-                    //sensor.Activate = false;
                     sensor.Dispose();
                 }
-                MessagingCenter.Send(this, "Refresh saved sensors",
-                    _sensors.Select(s => s.ScannedDeviceInfo));
+                //MessagingCenter.Send(this, "Refresh saved sensors",
+                //    _sensors.Select(s => s.ScannedDeviceInfo));
             }
         }
 

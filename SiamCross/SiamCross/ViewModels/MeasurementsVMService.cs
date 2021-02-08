@@ -340,7 +340,7 @@ namespace SiamCross.ViewModels
                                 || mv.Name.Contains("SIDDOSA3M"))
                             {
                                 DataRepository.Instance.RemoveDdin2Measurement(mv.Id);
-                                
+
                             }
                             else if (mv.Name.Contains("DU"))
                             {

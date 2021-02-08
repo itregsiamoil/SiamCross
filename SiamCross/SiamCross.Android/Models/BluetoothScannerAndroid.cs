@@ -5,6 +5,7 @@ using SiamCross.Models.Scanners;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using BLE = Android.Bluetooth.LE;
@@ -38,13 +39,13 @@ namespace SiamCross.Droid.Models
     [Android.Runtime.Preserve(AllMembers = true)]
     public class BluetoothScannerAndroid : IBluetoothScanner, INotifyPropertyChanged
     {
-        readonly BluetoothScanReceiver _receiver = new BluetoothScanReceiver();
-        static readonly BluetoothAdapter _bt_adapter = BluetoothAdapter.DefaultAdapter;
-        readonly BLE.BluetoothLeScanner _ble_scanner = _bt_adapter.BluetoothLeScanner;
+        private readonly BluetoothScanReceiver _receiver = new BluetoothScanReceiver();
+        private static readonly BluetoothAdapter _bt_adapter = BluetoothAdapter.DefaultAdapter;
+        private readonly BLE.BluetoothLeScanner _ble_scanner = _bt_adapter.BluetoothLeScanner;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        bool _ActiveScan = false;
+        private bool _ActiveScan = false;
         public bool ActiveScan
         {
             get => _ActiveScan;
@@ -55,7 +56,7 @@ namespace SiamCross.Droid.Models
             }
         }
 
-        string  _ScanString;
+        private string _ScanString;
         public string ScanString
         {
             get => _ScanString;
@@ -75,8 +76,8 @@ namespace SiamCross.Droid.Models
 
         public BluetoothScannerAndroid()
         {
-            ScanTimeout = 30000;
-            IsFilterEnabled = false;
+            ScanTimeout = 5000;
+            IsFilterEnabled = true;
 
             _receiver.ActionOnScanResult += OnScanResult;
         }
@@ -92,7 +93,10 @@ namespace SiamCross.Droid.Models
 
         public void OnScanResult(BLE.ScanResult result)
         {
-            var sd = new ScannedDeviceInfo
+            if (BLE.DataStatus.Complete != result.DataStatus)
+                return;
+
+            ScannedDeviceInfo sd = new ScannedDeviceInfo
             {
                 BluetoothType = BluetoothType.Le,
                 Name = result.Device.Name,
@@ -101,21 +105,67 @@ namespace SiamCross.Droid.Models
                 PrimaryPhy = ((BluetoothPhy)result.PrimaryPhy).ToString(),
                 SecondaryPhy = ((BluetoothPhy)result.SecondaryPhy).ToString(),
                 Rssi = result.Rssi.ToString(),
-                PeriodicAdvertisingInterval = result.PeriodicAdvertisingInterval.ToString(),
                 IsLegacy = result.IsLegacy.ToString(),
                 IsConnectable = result.IsConnectable.ToString(),
-                TxPower = ((BLE.AdvertiseTxPower)result.TxPower).ToString(),
-                BondState = ((Bond)result.Device.BondState).ToString()
+                TxPower = (BLE.ScanResult.TxPowerNotPresent == (int)result.TxPower) ?
+                    "TxPowerNotPresent" : ((BLE.AdvertiseTxPower)result.TxPower).ToString(),
+                BondState = result.Device.BondState.ToString()
             };
 
+            IList<Android.OS.ParcelUuid> svc = result.ScanRecord.ServiceUuids;
+            if (null != svc)
+            {
+                List<string> list = new List<string>();
+                foreach (Android.OS.ParcelUuid s in svc)
+                {
+                    if (s.ToString() == "569a1101-b87f-490c-92cb-11ba5ea5167c")
+                        sd.HasSiamServiceUid = true;
+                }
+            }
+
+            List<object> scan_info = new List<object>();
+            byte[] bt = result.ScanRecord.GetBytes();
+            int pos = 0;
+            while (pos + 2 < bt.GetLength(0))
+            {
+                byte data_block_len = bt[pos];
+                data_block_len--;
+
+                pos++;
+                if (pos > bt.GetLength(0))
+                    break;
+                byte data_block_type = bt[pos];
+                pos++;
+                if (pos > bt.GetLength(0))
+                    break;
+
+                if (24 == data_block_type)
+                {
+                    //string data_block_str = bt.AsSpan(pos, data_block_len).ToString();
+                    byte[] data_block_data = bt.AsSpan(pos, data_block_len).ToArray();
+                    //string bytesUtf7 = Encoding.UTF7.GetString(data_block_data);
+                    string bytesUnicode = Encoding.Unicode.GetString(data_block_data).ToUpper();
+                    //string bytesDefault = Encoding.Default.GetString(data_block_data);
+                    //string bytesASCII = Encoding.ASCII.GetString(data_block_data);
+                    //string bytesUtf8 = Encoding.UTF8.GetString(data_block_data);
+                    //string convertedUtf32 = Encoding.UTF32.GetString(data_block_data); // For UTF-16
+                    if (bytesUnicode.Contains("СИАМ") || bytesUnicode.Contains("SIAM"))
+                        sd.HasUriTag = true;
+                }
+
+                //var v = new { Len = data_block_len , Type = data_block_type, Data = data_block_data };
+                //scan_info.Add(v);
+                pos += data_block_len;
+            }
             DoNotifyDevice(sd);
         }
 
-
-        async Task StartScanLeAsync()
+        private async Task StartScanLeAsync()
         {
+            string info = SiamCross.Resource.SearchTitle + " BLE ... ";
+            StartScanInfo(info, ScanTimeout / 1000);
             ScanStarted?.Invoke();
-            var b = new BLE.ScanSettings.Builder();
+            BLE.ScanSettings.Builder b = new BLE.ScanSettings.Builder();
             if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
             {
                 b.SetPhy((BluetoothPhy)255);
@@ -131,19 +181,20 @@ namespace SiamCross.Droid.Models
             b.SetReportDelay(0);
             BLE.ScanSettings st = b.Build();
             _ble_scanner.StartScan(null, st, _receiver);
-            string info = SiamCross.Resource.SearchTitle + " BLE ... ";
-            StartScanInfo(info, ScanTimeout/1000);
             await Task.Delay(ScanTimeout);
             StopScanLeAsync();
         }
-        void StopScanLeAsync()
+
+        private void StopScanLeAsync()
         {
+            BluetoothScanReceiver _stop_receiver = new BluetoothScanReceiver();
+            _stop_receiver.ActionOnScanResult += OnScanResult;
             _ble_scanner.StopScan(_receiver);
             _ble_scanner.FlushPendingScanResults(_receiver);
+            _stop_receiver.ActionOnScanResult -= OnScanResult;
             ClearScanInfo();
             ScanStoped?.Invoke();
         }
-
         public void StartBounded()
         {
             ICollection<BluetoothDevice> devices = BluetoothAdapter.DefaultAdapter.BondedDevices;
@@ -253,25 +304,39 @@ namespace SiamCross.Droid.Models
         {
             if (IsFilterEnabled)
             {
-                if (IsEmptyDevice(sd))
-                    return;
+
                 if (!IsSiamSensor(sd))
                     return;
             }
             Received?.Invoke(sd);
         }
-        static public bool IsEmptyDevice(ScannedDeviceInfo dev)
+        public static bool IsEmptyDevice(ScannedDeviceInfo dev)
         {
             return (dev.Name == null || dev.Name == "" || dev.Id == null);
         }
-        static public bool IsSiamSensor(ScannedDeviceInfo dev)
+        public static bool IsSiamSensor(ScannedDeviceInfo dev)
         {
-            return dev.Name.Contains("DDIN")
-                   || dev.Name.Contains("DDIM")
-                   || dev.Name.Contains("SIDDOSA3M")
-                   || dev.Name.Contains("DU");
+            if (dev.HasSiamServiceUid || dev.HasUriTag)
+                return true;
+
+            if (IsEmptyDevice(dev))
+                return false;
+
+            string name = dev.Name.ToUpper();
+
+            return name.Contains("DDIN")
+                   || name.Contains("DDIM")
+                   || name.Contains("SIDDOSA3M")
+                   || name.Contains("DU")
+                   || name.Contains("DUA")
+                   || name.Contains("UMT")
+                   || name.Contains("DMTA")
+                   || name.Contains("SIAM")
+                   ;
+            ;
         }
-        static bool TryMacToGuid(string mac, out Guid giud)
+
+        private static bool TryMacToGuid(string mac, out Guid giud)
         {
             string mac_no_delim = mac.ToUpper();
             int exist = mac_no_delim.IndexOf(':');
@@ -282,9 +347,10 @@ namespace SiamCross.Droid.Models
                 exist = mac_no_delim.IndexOf(':');
             }
             mac_no_delim = "00000000-0000-0000-0000-" + mac_no_delim;
-            return  Guid.TryParse(mac_no_delim, out giud);
+            return Guid.TryParse(mac_no_delim, out giud);
         }
-        static Guid MacToGuid(string mac)
+
+        private static Guid MacToGuid(string mac)
         {
             if (TryMacToGuid(mac, out Guid guid))
                 return guid;

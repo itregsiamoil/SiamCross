@@ -4,7 +4,7 @@
   <color name="primaryDark">#003771</color>
   <color name="accent">#e03010</color>
   <color name="window_background">#FFFFFF</color>
-  <color name="ctrlNormal">#D0E9F0</color>
+  <color name="ctrlNormal">#AADCFF</color>
   <color name="ctrlActivated">#60A0D0</color>
   <color name="ctrlHighlight">#00A0FF</color>
   <color name="ctrlInactive">#E0E0E0</color>

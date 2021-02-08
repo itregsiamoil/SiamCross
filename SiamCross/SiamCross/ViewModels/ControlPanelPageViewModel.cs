@@ -29,24 +29,13 @@ namespace SiamCross.ViewModels
             Sensor = new ObservableCollection<ISensor>();
 
             SensorService.Instance.SensorAdded += SensorAdded;
+            SensorService.Instance.SensorDeleting += SensorDeleted;
+
             SensorService.Instance.Initinalize();
         }
-        private bool CanOpenPage(Type type)
-        {
-            try
-            {
-                System.Collections.Generic.IReadOnlyList<Page> stack = App.NavigationPage.Navigation.NavigationStack;
-                if (stack[stack.Count - 1].GetType() != type)
-                    return true;
-                return false;
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "CanOpenPage method" + "\n");
-                throw;
-            }
-        }
         public ICommand RecentMeasurementCommand => new Command<Guid>(RecentMeasurement);
+        public ICommand DeleteSensorCommand => new Command<Guid>(DeleteSensorHandler);
+        public ICommand GotoMeasurementPageCommand => new Command<Guid>(GotoMeasurementPage);
         private void RecentMeasurement(Guid id)
         {
             try
@@ -68,7 +57,6 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
-        public ICommand DeleteSensorCommand => new Command<Guid>(DeleteSensorHandler);
         private void DeleteSensorHandler(Guid id)
         {
             try
@@ -79,10 +67,21 @@ namespace SiamCross.ViewModels
                 {
                     if (!sensor.IsMeasurement)
                     {
-                        Sensor.Remove(sensor);
                         SensorService.Instance.DeleteSensor(id);
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "DeleteSensorHandler" + "\n");
+                throw;
+            }
+        }
+        private void SensorDeleted(ISensor sensor)
+        {
+            try
+            {
+                Sensor.Remove(sensor);
             }
             catch (Exception ex)
             {
@@ -99,7 +98,7 @@ namespace SiamCross.ViewModels
                 Sensor.Add(sensor);
             }
         }
-        public ICommand GotoMeasurementPageCommand => new Command<Guid>(GotoMeasurementPage);
+
         private void GotoMeasurementPage(Guid id)
         {
             ISensor sensor = SensorService.Instance.Sensors
@@ -173,6 +172,20 @@ namespace SiamCross.ViewModels
             }
             return result;
         }
-
+        private bool CanOpenPage(Type type)
+        {
+            try
+            {
+                System.Collections.Generic.IReadOnlyList<Page> stack = App.NavigationPage.Navigation.NavigationStack;
+                if (stack[stack.Count - 1].GetType() != type)
+                    return true;
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "CanOpenPage method" + "\n");
+                throw;
+            }
+        }
     }//public class ControlPanelPageViewModel : BaseViewModel, IViewModel
 }

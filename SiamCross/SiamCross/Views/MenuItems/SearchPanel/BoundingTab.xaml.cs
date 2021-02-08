@@ -50,6 +50,7 @@ namespace SiamCross.Views.MenuItems.SearchPanel
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            _vm.AppendBonded();
         }
         protected override void OnDisappearing()
         {

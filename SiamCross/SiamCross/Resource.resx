@@ -659,4 +659,10 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="start" xml:space="preserve">
     <value>start</value>
   </data>
+  <data name="Protocol" xml:space="preserve">
+    <value>Protocol</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
 </root>

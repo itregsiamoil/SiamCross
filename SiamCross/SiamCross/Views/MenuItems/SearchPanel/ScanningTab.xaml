@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
              xmlns:dm="clr-namespace:SiamCross.Models.Scanners"
+             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
              x:Class="SiamCross.Views.MenuItems.SearchPanel.ScanningTab"
              x:Name="ScanningTabView"
              Title="Bluetooth 4LE">
@@ -29,7 +30,17 @@
                                 <StackLayout>
                                     <xct:Expander Margin="5" >
                                         <xct:Expander.Header>
+
                                             <Grid>
+                                                <Grid.Triggers>
+                                                    <DataTrigger TargetType="Grid"
+                                                            Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}
+                                                                    , Path=IsExpanded}" 
+                                                            Value="True">
+                                                        <Setter Property="BackgroundColor" 
+                                                                    Value="{StaticResource colorCtrlNormal}" />
+                                                    </DataTrigger>
+                                                </Grid.Triggers>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="*"></RowDefinition>
                                                     <!--RowDefinition Height="{Binding FontSize:Large}"></> -->
@@ -37,22 +48,41 @@
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"></ColumnDefinition>
                                                     <ColumnDefinition Width="20"></ColumnDefinition>
-                                                    <ColumnDefinition Width="20"></ColumnDefinition>
                                                     <ColumnDefinition Width="50"></ColumnDefinition>
                                                 </Grid.ColumnDefinitions>
+                                                <!--header expander symbol -->
+                                                <Label Text="&#x25BC;" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                                       Grid.Row="0" Grid.Column="2" >
+                                                    <Label.Triggers>
+                                                        <DataTrigger TargetType="Label"
+                                                            Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}
+                                                                    , Path=IsExpanded}" 
+                                                            Value="True">
+                                                            <Setter Property="Text" 
+                                                                    Value="&#x25B2;" />
+                                                        </DataTrigger>
+                                                    </Label.Triggers>
+                                                </Label>
 
-                                                <Label Grid.Row="0" Grid.Column="0">
+                                                <Label Grid.Row="0" Grid.Column="0" FontSize="Micro">
+                                                    <!--
                                                     <Label.GestureRecognizers>
                                                         <TapGestureRecognizer 
                                                         Command="{Binding Path=BindingContext.SelectItemCommand
                                                         , Source={x:Reference ScanningTabView}}"
                                                         CommandParameter="{Binding .}"/>
                                                     </Label.GestureRecognizers>
+                                                    -->
                                                     <Label.FormattedText>
                                                         <FormattedString >
-                                                            <Span Text="{Binding Name}" FontAttributes="Bold" />
+                                                            <Span Text="{Binding Name}" FontAttributes="Bold" FontSize="Medium" />
                                                             <Span Text="&#10;" />
-                                                            <Span Text="{Binding Mac}" FontSize="Micro"/>
+                                                            <Span Text=" Mac: " />
+                                                            <Span Text="{Binding Mac}" FontAttributes="Bold" FontSize="Micro" />
+                                                            <Span Text=" Phy: " />
+                                                            <Span Text="{Binding PrimaryPhy}" FontAttributes="Bold" FontSize="Micro" />
+                                                            <Span Text=" Rssi: " />
+                                                            <Span Text="{Binding Rssi}" FontAttributes="Bold" FontSize="Micro" />
                                                         </FormattedString>
                                                     </Label.FormattedText>
                                                 </Label>
@@ -68,49 +98,68 @@
                                                         </DataTrigger>
                                                     </Label.Triggers>
                                                 </Label>
-                                                <Label Text="{Binding BluetoothType}"
-                                                       Grid.Row="0" Grid.Column="2">
-                                                </Label>
 
-                                                <Label Text="&#x25BC;" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
-                                                       Grid.Row="0" Grid.Column="3" >
-                                                    <Label.Triggers>
-                                                        <DataTrigger TargetType="Label"
-                                                            Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}
-                                                                    , Path=IsExpanded}" 
-                                                            Value="True">
-                                                            <Setter Property="Text" 
-                                                                    Value="&#x25B2;" />
-                                                        </DataTrigger>
-                                                    </Label.Triggers>
-                                                </Label>
+
 
                                             </Grid>
                                         </xct:Expander.Header>
                                         <xct:Expander.ContentTemplate>
                                             <DataTemplate>
-                                                <Label Margin="5">
-                                                    <Label.FormattedText>
-                                                        <FormattedString >
-                                                            <Span Text="&#10;PrimaryPhy: " />
-                                                            <Span Text="{Binding PrimaryPhy}"/>
-                                                            <Span Text="&#10;SecondaryPhy: " />
-                                                            <Span Text="{Binding SecondaryPhy}"/>
-                                                            <Span Text="&#10;Rssi: " />
-                                                            <Span Text="{Binding Rssi}"/>
-                                                            <Span Text="&#10;PeriodicAdvertisingInterval: " />
-                                                            <Span Text="{Binding PeriodicAdvertisingInterval}"/>
-                                                            <Span Text="&#10;IsLegacy: " />
-                                                            <Span Text="{Binding IsLegacy}"/>
-                                                            <Span Text="&#10;IsConnectable: " />
-                                                            <Span Text="{Binding IsConnectable}"/>
-                                                            <Span Text="&#10;TxPower: " />
-                                                            <Span Text="{Binding TxPower}"/>
-                                                            <Span Text="&#10;BondState: " />
-                                                            <Span Text="{Binding BondState}"/>
-                                                        </FormattedString>
-                                                    </Label.FormattedText>
-                                                </Label>
+                                                <StackLayout Orientation="Vertical" 
+                                                             BackgroundColor="{StaticResource colorCtrlNormal}">
+                                                    <!--
+                                                    <Label Margin="5">
+                                                        <Label.FormattedText>
+                                                            <FormattedString >
+                                                                <Span Text="PrimaryPhy: " />
+                                                                <Span Text="{Binding PrimaryPhy}"/>
+                                                                <Span Text="&#10;SecondaryPhy: " />
+                                                                <Span Text="{Binding SecondaryPhy}"/>
+                                                                <Span Text="&#10;Rssi: " />
+                                                                <Span Text="{Binding Rssi}"/>
+                                                                <Span Text="&#10;IsLegacy: " />
+                                                                <Span Text="{Binding IsLegacy}"/>
+                                                                <Span Text="&#10;IsConnectable: " />
+                                                                <Span Text="{Binding IsConnectable}"/>
+                                                                <Span Text="&#10;TxPower: " />
+                                                                <Span Text="{Binding TxPower}"/>
+                                                                <Span Text="&#10;BondState: " />
+                                                                <Span Text="{Binding BondState}"/>
+                                                            </FormattedString>
+                                                        </Label.FormattedText>
+                                                    </Label>
+                                                    -->
+                                                    <Label Text="{local:Translate Protocol}" HorizontalTextAlignment="Center" />
+                                                    <Grid RowSpacing="0">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="*"></RowDefinition>
+                                                            <!--RowDefinition Height="{Binding FontSize:Large}"></> -->
+                                                        </Grid.RowDefinitions>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="40"></ColumnDefinition>
+                                                            <ColumnDefinition Width="50*"></ColumnDefinition>
+                                                            <ColumnDefinition Width="40"></ColumnDefinition>
+                                                            <ColumnDefinition Width="50*"></ColumnDefinition>
+                                                        </Grid.ColumnDefinitions>
+                                                        <RadioButton IsChecked="True" 
+                                                               Grid.Row="0" Grid.Column="0" />
+                                                        <Label Text="Siam" VerticalTextAlignment="Center"
+                                                               Grid.Row="0" Grid.Column="1" />
+
+                                                        <RadioButton IsChecked="False" IsEnabled="False"
+                                                               Grid.Row="0" Grid.Column="2" />
+                                                        <Label Text="Modbus" VerticalTextAlignment="Center"
+                                                               Grid.Row="0" Grid.Column="3" />
+                                                    </Grid>
+                                                    <Entry Placeholder="{local:Translate Address}" Text="1"></Entry>
+                                                    
+                                                    <Button x:Name="AddSensor" Text="{local:Translate StatConn_PendingConnect}"
+                                                        Command="{Binding Path=BindingContext.SelectItemCommand
+                                                        , Source={x:Reference ScanningTabView}}"
+                                                        CommandParameter="{Binding .}" >
+                                                    </Button>                                                    
+                                                    
+                                                </StackLayout>
                                             </DataTemplate>
                                         </xct:Expander.ContentTemplate>
                                     </xct:Expander>

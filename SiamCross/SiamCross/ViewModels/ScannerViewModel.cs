@@ -46,6 +46,7 @@ namespace SiamCross.ViewModels
             RefreshCommand = new Command(StartScan);
             SelectItemCommand = new Command(SelectItem);
             StartStopScanCommand = new Command(StartStopScan);
+            StartScan();
         }
 
         private void ScannerScanTimoutElapsed()
@@ -73,7 +74,7 @@ namespace SiamCross.ViewModels
             }
         }
 
-        
+
 
         private void SelectItem(object obj)
         {

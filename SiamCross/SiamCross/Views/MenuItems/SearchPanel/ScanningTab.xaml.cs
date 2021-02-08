@@ -1,11 +1,4 @@
-﻿using Autofac;
-using NLog;
-using SiamCross.AppObjects;
-using SiamCross.Models.Scanners;
-using SiamCross.Services;
-using SiamCross.Services.Logging;
-using SiamCross.ViewModels;
-using System;
+﻿using SiamCross.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -22,7 +15,6 @@ namespace SiamCross.Views.MenuItems.SearchPanel
             _vm.Scanner.ScanStarted += () => { scannedDevicesList.IsRefreshing = true; };
             _vm.Scanner.ScanStoped += () => { scannedDevicesList.IsRefreshing = false; };
             BindingContext = _vm;
-            
         }
         /*
         public void ItemSelected(object sender, SelectedItemChangedEventArgs e)

@@ -3,7 +3,7 @@ using SiamCross.AppObjects;
 using SiamCross.Models;
 using SiamCross.Models.Adapters;
 using SiamCross.ViewModels;
-using System.Threading;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -17,23 +17,7 @@ namespace SiamCross.Views.MenuItems
             ViewModelWrap<ControlPanelPageViewModel> vm = new ViewModelWrap<ControlPanelPageViewModel>();
             BindingContext = vm.ViewModel;
             InitializeComponent();
-            Thread checkBuetooth = new Thread(async () =>
-            {
-                IDefaultAdapter defaultAdapter = AppContainer.Container.Resolve<IDefaultAdapter>();
-                if (!defaultAdapter.IsEnbaled)
-                {
-                    bool result = await DisplayAlert(
-                        Resource.BluetoothIsDisable,
-                        Resource.EnableBluetooth,
-                        Resource.YesButton,
-                        Resource.NotButton);
-                    if (result)
-                    {
-                        defaultAdapter.Enable();
-                    }
-                }
-            });
-            checkBuetooth.Start();
+
         }
 
         private void SensorList_ItemTapped(object sender, ItemTappedEventArgs e)
@@ -45,6 +29,33 @@ namespace SiamCross.Views.MenuItems
                     //dvc.Activate = !dvc.Activate;
                 }
             }
+        }
+
+        protected async Task RequestEnableBuetooth()
+        {
+            IDefaultAdapter defaultAdapter = AppContainer.Container.Resolve<IDefaultAdapter>();
+            if (!defaultAdapter.IsEnbaled)
+            {
+                bool result = await DisplayAlert(
+                    Resource.BluetoothIsDisable,
+                    Resource.EnableBluetooth,
+                    Resource.YesButton,
+                    Resource.NotButton);
+                if (result)
+                {
+                    defaultAdapter.Enable();
+                }
+            }
+        }
+        protected async void StartRequestEnableBuetooth()
+        {
+            Task checkBuetooth = Task.Run(RequestEnableBuetooth);
+            await checkBuetooth;
+        }
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            StartRequestEnableBuetooth();
         }
 
 

@@ -668,4 +668,10 @@
   <data name="Survey" xml:space="preserve">
     <value>исследование</value>
   </data>
+  <data name="Protocol" xml:space="preserve">
+    <value>Протокол</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Адрес</value>
+  </data>
 </root>
