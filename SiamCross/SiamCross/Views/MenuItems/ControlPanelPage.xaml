@@ -40,9 +40,10 @@
             
             <ListView x:Name="sensorList" 
                       ItemsSource="{Binding Sensor}"
-                SeparatorVisibility="None"
-                HasUnevenRows="True"
-                Margin="0">
+                      SeparatorVisibility="None"
+                      HasUnevenRows="True"
+                      CachingStrategy="RecycleElementAndDataTemplate"
+                      Margin="0">
                 <!--
                 ItemTapped="sensorList_ItemTapped"
                 ItemsSource="{Binding SensorsData}"  

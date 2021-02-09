@@ -32,6 +32,7 @@
                                         <xct:Expander.Header>
 
                                             <Grid>
+                                                <!--
                                                 <Grid.Triggers>
                                                     <DataTrigger TargetType="Grid"
                                                             Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}
@@ -41,6 +42,7 @@
                                                                     Value="{StaticResource colorCtrlNormal}" />
                                                     </DataTrigger>
                                                 </Grid.Triggers>
+                                                -->
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="*"></RowDefinition>
                                                     <!--RowDefinition Height="{Binding FontSize:Large}"></> -->
@@ -105,54 +107,30 @@
                                         </xct:Expander.Header>
                                         <xct:Expander.ContentTemplate>
                                             <DataTemplate>
-                                                <StackLayout Orientation="Vertical" 
-                                                             BackgroundColor="{StaticResource colorCtrlNormal}">
-                                                    <!--
-                                                    <Label Margin="5">
-                                                        <Label.FormattedText>
-                                                            <FormattedString >
-                                                                <Span Text="PrimaryPhy: " />
-                                                                <Span Text="{Binding PrimaryPhy}"/>
-                                                                <Span Text="&#10;SecondaryPhy: " />
-                                                                <Span Text="{Binding SecondaryPhy}"/>
-                                                                <Span Text="&#10;Rssi: " />
-                                                                <Span Text="{Binding Rssi}"/>
-                                                                <Span Text="&#10;IsLegacy: " />
-                                                                <Span Text="{Binding IsLegacy}"/>
-                                                                <Span Text="&#10;IsConnectable: " />
-                                                                <Span Text="{Binding IsConnectable}"/>
-                                                                <Span Text="&#10;TxPower: " />
-                                                                <Span Text="{Binding TxPower}"/>
-                                                                <Span Text="&#10;BondState: " />
-                                                                <Span Text="{Binding BondState}"/>
-                                                            </FormattedString>
-                                                        </Label.FormattedText>
-                                                    </Label>
-                                                    -->
-                                                    <Label Text="{local:Translate Protocol}" HorizontalTextAlignment="Center" />
-                                                    <Grid RowSpacing="0">
+                                                <StackLayout Orientation="Vertical" Margin="10">
+                                                    <Grid >
                                                         <Grid.RowDefinitions>
                                                             <RowDefinition Height="*"></RowDefinition>
-                                                            <!--RowDefinition Height="{Binding FontSize:Large}"></> -->
                                                         </Grid.RowDefinitions>
                                                         <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="40"></ColumnDefinition>
-                                                            <ColumnDefinition Width="50*"></ColumnDefinition>
-                                                            <ColumnDefinition Width="40"></ColumnDefinition>
-                                                            <ColumnDefinition Width="50*"></ColumnDefinition>
+                                                            <ColumnDefinition Width="*"></ColumnDefinition>
                                                         </Grid.ColumnDefinitions>
-                                                        <RadioButton IsChecked="True" 
-                                                               Grid.Row="0" Grid.Column="0" />
-                                                        <Label Text="Siam" VerticalTextAlignment="Center"
-                                                               Grid.Row="0" Grid.Column="1" />
 
-                                                        <RadioButton IsChecked="False" IsEnabled="False"
-                                                               Grid.Row="0" Grid.Column="2" />
-                                                        <Label Text="Modbus" VerticalTextAlignment="Center"
-                                                               Grid.Row="0" Grid.Column="3" />
+                                                        <Picker IsEnabled="true"
+                                                                Grid.Row="0" Grid.Column="0"
+                                                                ItemsSource="{Binding ProtocolNames}"
+                                                                SelectedItem ="{Binding Protocol.Kind}"
+                                                                >
+                                                        </Picker>
+                                                        <Label Text="{local:Translate Protocol}" FontSize="Micro"
+                                                               Grid.Row="0" Grid.Column="0" />
+
+                                                        <Entry IsEnabled="True" Text="{Binding Protocol.Address}" 
+                                                               Grid.Row="1" Grid.Column="0" >
+                                                        </Entry>
+                                                        <Label Text="{local:Translate Address}" FontSize="Micro"
+                                                               Grid.Row="1" Grid.Column="0" />
                                                     </Grid>
-                                                    <Entry Placeholder="{local:Translate Address}" Text="1"></Entry>
-                                                    
                                                     <Button x:Name="AddSensor" Text="{local:Translate StatConn_PendingConnect}"
                                                         Command="{Binding Path=BindingContext.SelectItemCommand
                                                         , Source={x:Reference ScanningTabView}}"

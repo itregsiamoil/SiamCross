@@ -122,7 +122,17 @@ namespace SiamCross.Droid.Models
                         sd.HasSiamServiceUid = true;
                 }
             }
-
+            /*
+            Java.Util.UUID uuid1101 = Java.Util.UUID.FromString("00001101-0000-1000-8000-00805f9b34fb");
+            Android.OS.ParcelUuid fpu1101 = new Android.OS.ParcelUuid(uuid1101);
+            byte[] uuid_data = result.ScanRecord.GetServiceData(fpu1101);
+            if(null!= uuid_data)
+            {
+                string bytesUtf8 = Encoding.UTF8.GetString(uuid_data).ToUpper();
+                if (bytesUtf8 .Contains("СИАМ") || bytesUtf8 .Contains("SIAM"))
+                    sd.HasUriTag = true;
+            }
+            */
             List<object> scan_info = new List<object>();
             byte[] bt = result.ScanRecord.GetBytes();
             int pos = 0;
@@ -139,24 +149,29 @@ namespace SiamCross.Droid.Models
                 if (pos > bt.GetLength(0))
                     break;
 
-                if (24 == data_block_type)
+                if (0x24 == data_block_type || 0x16 == data_block_type)
                 {
                     //string data_block_str = bt.AsSpan(pos, data_block_len).ToString();
                     byte[] data_block_data = bt.AsSpan(pos, data_block_len).ToArray();
                     //string bytesUtf7 = Encoding.UTF7.GetString(data_block_data);
-                    string bytesUnicode = Encoding.Unicode.GetString(data_block_data).ToUpper();
+                    //string bytesUnicode = Encoding.Unicode.GetString(data_block_data).ToUpper();
                     //string bytesDefault = Encoding.Default.GetString(data_block_data);
                     //string bytesASCII = Encoding.ASCII.GetString(data_block_data);
-                    //string bytesUtf8 = Encoding.UTF8.GetString(data_block_data);
+                    string bytesUtf8 = Encoding.UTF8.GetString(data_block_data).ToUpper();
                     //string convertedUtf32 = Encoding.UTF32.GetString(data_block_data); // For UTF-16
-                    if (bytesUnicode.Contains("СИАМ") || bytesUnicode.Contains("SIAM"))
+                    if (bytesUtf8.Contains("СИАМ") || bytesUtf8.Contains("SIAM"))
+                    {
                         sd.HasUriTag = true;
+                        break;
+                    }
                 }
-
                 //var v = new { Len = data_block_len , Type = data_block_type, Data = data_block_data };
                 //scan_info.Add(v);
                 pos += data_block_len;
             }
+
+            sd.Protocol = new ProtocolInfo();
+
             DoNotifyDevice(sd);
         }
 
