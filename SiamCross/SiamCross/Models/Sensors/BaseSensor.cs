@@ -1,6 +1,7 @@
 ﻿#define DEBUG_UNIT
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
+using SiamCross.Protocol.Exceptions;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -243,12 +244,12 @@ namespace SiamCross.Models.Sensors
                             await Task.Delay(2000, cancelToken);
                     }
                 }
-                catch (IOEx_Timeout)
+                catch (IOTimeoutException)
                 {
                     IsAlive = false;
                     SensorData.Status = "IOEx_Timeout";
                 }
-                catch (IOEx_ErrorResponse)
+                catch (IOErrPkgException)
                 {
                     IsAlive = false;
                     SensorData.Status = "IOEx_ErrorResponse";

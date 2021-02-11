@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Models.Tools;
+using SiamCross.Protocol.Exceptions;
 using SiamCross.Services;
 using System;
 using System.Threading;
@@ -95,11 +96,11 @@ namespace SiamCross.Models.Sensors.Du
             byte[] resp = { };
             resp = await Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.SensorState]);
             if (null == resp || 12 > resp.Length)
-                throw new IOEx_Timeout("GetStatus timeout");
+                throw new IOTimeoutException("GetStatus timeout");
             if (0x01 != resp[3])
-                throw new IOEx_ErrorResponse("GetStatus response error");
+                throw new IOErrPkgException("GetStatus response error");
             if (16 != resp.Length)
-                throw new IOEx_ErrorResponse("GetStatus response length error");
+                throw new IOErrPkgException("GetStatus response length error");
             status = (DuMeasurementStatus)BitConverter.ToUInt16(resp, 12);
             System.Diagnostics.Debug.WriteLine("DU status=" + status.ToString());
             return status;
@@ -110,9 +111,9 @@ namespace SiamCross.Models.Sensors.Du
             byte[] resp = { };
             resp = await Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.StateZeroing]);
             if (null == resp || 12 != resp.Length)
-                throw new IOEx_Timeout("SetStatus wrong len or timeout");
+                throw new IOTimeoutException("SetStatus wrong len or timeout");
             if (0x02 != resp[3])
-                throw new IOEx_ErrorResponse("SetStatus response error");
+                throw new IOErrPkgException("SetStatus response error");
         }
         public override async Task<bool> PostConnectInit(CancellationToken cancelToken)
         {

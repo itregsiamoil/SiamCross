@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Xamarin.Forms;
 
 namespace SiamCross.Models.Scanners
 {
@@ -30,24 +28,24 @@ namespace SiamCross.Models.Scanners
 
     public class ProtocolInfo
     {
-        ProtocolKind _kind;
+        private ProtocolKind _kind;
 
-        public string Kind 
-        { 
+        public string Kind
+        {
             get => _kind.ToString();
-            set 
+            set
             {
                 if (value.ToString() == ProtocolKind.Modbus.ToString())
                     _kind = ProtocolKind.Modbus;
                 else
                     _kind = ProtocolKind.Siam;
-            } 
+            }
         }
 
         //public ProtocolType Type { get; set; }
         public byte Address { get; set; }
 
-        public ProtocolInfo(ProtocolKind type=ProtocolKind.Siam, byte addr=1)
+        public ProtocolInfo(ProtocolKind type = ProtocolKind.Siam, byte addr = 1)
         {
             _kind = type;
             Address = addr;
@@ -57,7 +55,7 @@ namespace SiamCross.Models.Scanners
 
     public class ScannedDeviceInfo : IEquatable<ScannedDeviceInfo>
     {
-        static readonly List<string> _proto_list = Enum.GetNames(typeof(ProtocolKind)).Select(b => b.SplitCamelCase()).ToList();
+        private static readonly List<string> _proto_list = Enum.GetNames(typeof(ProtocolKind)).Select(b => b.SplitCamelCase()).ToList();
         public List<string> ProtocolNames => _proto_list;
         public ProtocolInfo Protocol { get; set; }
         public string Name { get; set; }

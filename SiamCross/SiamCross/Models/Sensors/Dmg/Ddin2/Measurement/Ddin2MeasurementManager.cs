@@ -2,6 +2,7 @@
 using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Models.Tools;
+using SiamCross.Protocol.Exceptions;
 using SiamCross.Services.Logging;
 using System;
 using System.Collections.Generic;
@@ -55,11 +56,11 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                 await SetStatusEmpty();
 
             }
-            catch (IOEx_Timeout)
+            catch (IOTimeoutException)
             {
                 error = MeasureState.IOError;
             }
-            catch (IOEx_ErrorResponse)
+            catch (IOErrPkgException)
             {
                 error = MeasureState.LogicError;
             }
@@ -96,23 +97,23 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
             //Console.WriteLine("SetDynPeriod: " + BitConverter.ToString(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod)));
             resp = await Sensor.Connection.Exchange(_configGenerator.SetDynPeriod(_measurementParameters.DynPeriod));
             if (0 == resp.Length)
-                throw new IOEx_Timeout("SetStatus wrong len or timeout");
+                throw new IOTimeoutException("SetStatus wrong len or timeout");
             //Console.WriteLine("SetApertNumber: " + BitConverter.ToString(_configGenerator.SetApertNumber(_measurementParameters.ApertNumber)));
             resp = await Sensor.Connection.Exchange(_configGenerator.SetApertNumber(_measurementParameters.ApertNumber));
             if (0 == resp.Length)
-                throw new IOEx_Timeout("SetStatus wrong len or timeout");
+                throw new IOTimeoutException("SetStatus wrong len or timeout");
             //Console.WriteLine("SetImtravel", _configGenerator.SetImtravel(_measurementParameters.Imtravel));
             resp = await Sensor.Connection.Exchange(_configGenerator.SetImtravel(_measurementParameters.Imtravel));
             if (0 == resp.Length)
-                throw new IOEx_Timeout("SetStatus wrong len or timeout");
+                throw new IOTimeoutException("SetStatus wrong len or timeout");
             //Console.WriteLine("SetModelPump", _configGenerator.SetModelPump(_measurementParameters.ModelPump));
             resp = await Sensor.Connection.Exchange(_configGenerator.SetModelPump(_measurementParameters.ModelPump));
             if (0 == resp.Length)
-                throw new IOEx_Timeout("SetStatus wrong len or timeout");
+                throw new IOTimeoutException("SetStatus wrong len or timeout");
             //Console.WriteLine("SetRod: " + BitConverter.ToString(_configGenerator.SetRod(_measurementParameters.Rod)));
             resp = await Sensor.Connection.Exchange(_configGenerator.SetRod(_measurementParameters.Rod));
             if (0 == resp.Length)
-                throw new IOEx_Timeout("SetStatus wrong len or timeout");
+                throw new IOTimeoutException("SetStatus wrong len or timeout");
             Console.WriteLine("PARAMETERS HAS BEEN SENT");
         }
 
@@ -180,11 +181,11 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
             byte[] resp = { };
             resp = await Sensor.Connection.Exchange(DmgCmd.Get("ReadDeviceStatus"));
             if (null == resp || 12 > resp.Length)
-                throw new IOEx_Timeout("GetStatus timeout");
+                throw new IOTimeoutException("GetStatus timeout");
             if (0x01 != resp[3])
-                throw new IOEx_ErrorResponse("GetStatus response error");
+                throw new IOErrPkgException("GetStatus response error");
             if (16 != resp.Length)
-                throw new IOEx_ErrorResponse("GetStatus response length error");
+                throw new IOErrPkgException("GetStatus response length error");
             status = (DmgMeasureStatus)BitConverter.ToUInt16(resp, 12);
             System.Diagnostics.Debug.WriteLine("status=" + status.ToString());
             return status;
@@ -315,9 +316,9 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
             byte[] resp = { };
             resp = await Sensor.Connection.Exchange(DmgCmd.Get("InitializeMeasurement"));
             if (null == resp || 12 != resp.Length)
-                throw new IOEx_Timeout("SetStatus wrong len or timeout");
+                throw new IOTimeoutException("SetStatus wrong len or timeout");
             if (0x02 != resp[3])
-                throw new IOEx_ErrorResponse("SetStatus response error");
+                throw new IOErrPkgException("SetStatus response error");
         }
 
     }

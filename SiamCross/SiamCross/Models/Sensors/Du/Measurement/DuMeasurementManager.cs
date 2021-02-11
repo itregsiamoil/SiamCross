@@ -3,6 +3,7 @@ using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Models.Sensors.Dmg;
 using SiamCross.Models.Tools;
+using SiamCross.Protocol.Exceptions;
 using SiamCross.Services.Logging;
 using System;
 using System.Collections.Specialized;
@@ -60,11 +61,11 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                 await SetStatusEmpty();
 
             }
-            catch (IOEx_Timeout)
+            catch (IOTimeoutException)
             {
                 error = MeasureState.IOError;
             }
-            catch (IOEx_ErrorResponse)
+            catch (IOErrPkgException)
             {
                 error = MeasureState.LogicError;
             }
@@ -115,9 +116,9 @@ namespace SiamCross.Models.Sensors.Du.Measurement
 
             byte[] resp = await Sensor.Connection.Exchange(command);
             if (null == resp || 12 != resp.Length)
-                throw new IOEx_Timeout("SetStatus wrong len or timeout");
+                throw new IOTimeoutException("SetStatus wrong len or timeout");
             if (0x02 != resp[3])
-                throw new IOEx_ErrorResponse("SetStatus response error");
+                throw new IOErrPkgException("SetStatus response error");
         }
         private async Task<DuMeasurementStatus> ExecuteMeasurement()
         {
@@ -284,11 +285,11 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             byte[] resp = { };
             resp = await Sensor.Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.SensorState]);
             if (null == resp || 12 > resp.Length)
-                throw new IOEx_Timeout("GetStatus timeout");
+                throw new IOTimeoutException("GetStatus timeout");
             if (0x01 != resp[3])
-                throw new IOEx_ErrorResponse("GetStatus response error");
+                throw new IOErrPkgException("GetStatus response error");
             if (16 != resp.Length)
-                throw new IOEx_ErrorResponse("GetStatus response length error");
+                throw new IOErrPkgException("GetStatus response length error");
             status = (DuMeasurementStatus)BitConverter.ToUInt16(resp, 12);
             System.Diagnostics.Debug.WriteLine("DU status=" + status.ToString());
             return status;
@@ -298,9 +299,9 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             byte[] resp = { };
             resp = await Sensor.Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.StateZeroing]);
             if (null == resp || 12 != resp.Length)
-                throw new IOEx_Timeout("SetStatus wrong len or timeout");
+                throw new IOTimeoutException("SetStatus wrong len or timeout");
             if (0x02 != resp[3])
-                throw new IOEx_ErrorResponse("SetStatus response error");
+                throw new IOErrPkgException("SetStatus response error");
         }
         private void UpdateProgress(float pos)
         {
