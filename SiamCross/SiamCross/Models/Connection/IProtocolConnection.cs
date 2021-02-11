@@ -40,17 +40,14 @@ namespace SiamCross.Models
         Task<byte[]> Exchange(byte[] req);
 
         event PropertyChangedEventHandler PropertyChanged;
+        UInt16 MaxReqLen { get; set; }
 
-        /*
-        Task SendData(byte[] data);
-        event Action<byte[]> DataReceived;
-        event Action ConnectSucceed;
-        event Action ConnectFailed;
-
-        void DoActionDataReceived(byte[] data);
-        void DoActionConnectSucceed();
-        void DoActionConnectFailed();
-        */
+        Task<bool> ReadMemoryAsync(byte device_addr
+            , UInt32 addr, UInt32 len
+            , byte[] dst, int dst_start = 0
+            , Action<float> onStepProgress = null, CancellationToken cancellationToken = default);
+        Task<UInt32> WriteMemoryAsync(UInt32 addr, byte[] data, UInt16 step_len
+            , CancellationToken cancellationToken, Action<float> DoStepProgress);
 
     }
 

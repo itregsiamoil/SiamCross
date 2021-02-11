@@ -15,6 +15,14 @@ namespace SiamCross.Models.Sensors.Dmg
         }
         public async Task<bool> UpdateFirmware(CancellationToken cancelToken)
         {
+            byte[] mem_block = new byte[4];
+            await Connection.ReadMemoryAsync(1, 0x00001000, 4, mem_block);
+
+            await Connection.ReadMemoryAsync(1
+                , DmgMap.DeviceType.Address, DmgMap.DeviceType.Len, mem_block);
+
+
+
             byte[] resp;
             byte[] fw_address = new byte[4];
             byte[] fw_size = new byte[2];
