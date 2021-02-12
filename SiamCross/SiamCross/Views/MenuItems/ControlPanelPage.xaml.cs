@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using SiamCross.AppObjects;
 using SiamCross.Models;
-using SiamCross.Models.Adapters;
+using SiamCross.Models.Adapters.PhyInterface;
 using SiamCross.ViewModels;
 using System.Threading.Tasks;
 using Xamarin.Forms;

@@ -3,6 +3,7 @@ using Autofac;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using SiamCross.AppObjects;
+using SiamCross.Models.Connection.Phy;
 using SiamCross.Models.Scanners;
 using System.ComponentModel;
 

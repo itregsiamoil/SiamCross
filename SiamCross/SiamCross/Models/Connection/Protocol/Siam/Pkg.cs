@@ -2,13 +2,13 @@
 using System;
 using System.Diagnostics;
 
-namespace SiamCross.Protocol.Siam
+namespace SiamCross.Models.Connection.Protocol.Siam
 {
     public static class Pkg
     {
         public const int MAX_PKG_SIZE = 256;
         public const int MIN_PKG_SIZE = 12;
-        private static readonly bool CHECK_RESPONSE_CRC = true;
+        private static readonly bool CHECK_RESPONSE_CRC = false;
         private static readonly byte[] begin_marker = { 0x0D, 0x0A };
         public static int GetDataLen(ReadOnlySpan<byte> req)
         {

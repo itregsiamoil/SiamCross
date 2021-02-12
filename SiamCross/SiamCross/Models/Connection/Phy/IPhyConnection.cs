@@ -2,15 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SiamCross.Models
+namespace SiamCross.Models.Connection.Phy
 {
-    public interface IPhyConnection
+    public interface IPhyConnection : IConnection
     {
-        void UpdateRssi();
         int Rssi { get; }
         IPhyInterface PhyInterface { get; }
-        Task<bool> Connect();
-        Task<bool> Disconnect();
+        void UpdateRssi();
         void ClearRx();
         void ClearTx();
         Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken);

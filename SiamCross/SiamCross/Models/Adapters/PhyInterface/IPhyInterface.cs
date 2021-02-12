@@ -1,4 +1,5 @@
-﻿using SiamCross.Models.Scanners;
+﻿using SiamCross.Models.Connection.Phy;
+using SiamCross.Models.Scanners;
 
 namespace SiamCross.Models.Adapters
 {

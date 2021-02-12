@@ -1,8 +1,6 @@
 ﻿//#define DEBUG_UNIT
 
-using Android.App;
 using Android.Bluetooth;
-using Android.Content;
 using Java.Util;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Adapters.PhyInterface.Bt2;
@@ -16,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Droid.Models
 {
+    /*
     internal class BluetoothGattCallbackExt : BluetoothGattCallback
     {
         private readonly ConnectionBt2 mBt2Adapter = null;
@@ -41,7 +40,7 @@ namespace SiamCross.Droid.Models
 
         }
     };
-
+    
     [BroadcastReceiver(Enabled = true, Exported = true)]
     [IntentFilter(new[] {
           BluetoothAdapter.ActionStateChanged
@@ -54,26 +53,47 @@ namespace SiamCross.Droid.Models
         , BluetoothDevice.ActionBondStateChanged
         , BluetoothDevice.ActionNameChanged
     })]
-    public class ConnectionBt2 : BroadcastReceiver, IConnectionBt2
+    public class BluetoothReceiver: BroadcastReceiver
+    {
+        public override void OnReceive(Context context, Intent intent)
+        {
+            string action = intent?.Action;
+            BluetoothDevice device = (BluetoothDevice)intent?.GetParcelableExtra(BluetoothDevice.ExtraDevice);
+            string device_name = device?.Name;
+            Debug.WriteLine($"OnReceive {device_name} action={action}");
+            //if (BluetoothDevice.ActionAclConnected.Equals(action))
+            //{
+            //    return;
+            //}
+            ////if (   BluetoothDevice.ExtraRssi.Equals(action) || BluetoothDevice.ActionFound.Equals(action) )
+            //{
+            //    mRssi = intent.GetShortExtra(BluetoothDevice.ExtraRssi, short.MinValue);
+            //}
+            //if (BluetoothDevice.ActionAclDisconnected.Equals(action))
+            //{
+            //    if(null!= this._bluetoothDevice && _bluetoothDevice.Equals(device))
+            //        Disconnect();
+            //}
+        }
+    }
+    */
+
+    public class ConnectionBt2 : IConnectionBt2
     {
         private readonly IPhyInterface mInterface;
-        public IPhyInterface PhyInterface => mInterface;
+        public override IPhyInterface PhyInterface => mInterface;
 
-        public void UpdateRssi()
-        {
-
-        }
-        private int mRssi = 0;
-        public int Rssi { get => mRssi; set => mRssi = value; }
+        public override void UpdateRssi() { }
+        public override int Rssi => 0;
 
         private BluetoothDevice _bluetoothDevice;
         private BluetoothSocket _socket;
-        protected ScannedDeviceInfo _scannedDeviceInfo;
+        private ScannedDeviceInfo _scannedDeviceInfo;
 
         private Task<int> mRxThread = null;
         private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
         private TaskCompletionSource<bool> mRxTsc = null;
-        public readonly Stream mRxStream = new MemoryStream(512);
+        private readonly Stream mRxStream = new MemoryStream(512);
         private CancellationTokenSource CtRxSource = null;
 
 
@@ -111,7 +131,7 @@ namespace SiamCross.Droid.Models
         {
             _scannedDeviceInfo = deviceInfo;
         }
-        public virtual async Task<bool> Connect()
+        public override async Task<bool> Connect()
         {
             try
             {
@@ -157,7 +177,6 @@ namespace SiamCross.Droid.Models
                     () => RxThreadFunction(_socket.InputStream, CtRxSource.Token)
                     , CtRxSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
 
-                DoActionConnectSucceed();
                 return true;
             }
             catch (Java.IO.IOException e)
@@ -180,7 +199,7 @@ namespace SiamCross.Droid.Models
             }
             return false;
         }
-        public async Task<bool> Disconnect()
+        public override async Task<bool> Disconnect()
         {
             Debug.WriteLine("bt2 start Disconnecting ");
             bool ret = true;
@@ -202,8 +221,6 @@ namespace SiamCross.Droid.Models
             }
             return ret;
         }
-
-
 
         private async Task<bool> TryWaitRxThread(int timeout)
         {
@@ -285,57 +302,7 @@ namespace SiamCross.Droid.Models
             return 0;
         }
 
-        public virtual async Task SendData(byte[] data)
-        {
-            try
-            {
-                await _socket.OutputStream.WriteAsync(data);
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapter.SendData  " + _scannedDeviceInfo.Name + ": " + e.Message);
-                DoActionConnectFailed();
-            }
-            await Task.Delay(Constants.ShortDelay);
-        }
-
-        public override void OnReceive(Context context, Intent intent)
-        {
-            string action = intent?.Action;
-            BluetoothDevice device = (BluetoothDevice)intent?.GetParcelableExtra(BluetoothDevice.ExtraDevice);
-            string device_name = device?.Name;
-            Debug.WriteLine($"OnReceive {device_name} action={action}");
-            /*
-             
-            if (BluetoothDevice.ActionAclConnected.Equals(action))
-            {
-                return;
-            }
-            //if (   BluetoothDevice.ExtraRssi.Equals(action) || BluetoothDevice.ActionFound.Equals(action) )
-            {
-                mRssi = intent.GetShortExtra(BluetoothDevice.ExtraRssi, short.MinValue);
-            }
-
-
-            if (BluetoothDevice.ActionAclDisconnected.Equals(action))
-            {
-                if(null!= this._bluetoothDevice && _bluetoothDevice.Equals(device))
-                    Disconnect();
-            }
-            */
-            //throw new NotImplementedException();
-        }
-
-        protected void DoActionConnectSucceed()
-        {
-            //ConnectSucceed?.Invoke();
-        }
-        protected void DoActionConnectFailed()
-        {
-            //ConnectFailed?.Invoke();
-        }
-
-        public async void ClearRx()
+        public override async void ClearRx()
         {
             using (await semaphore.UseWaitAsync())
             {
@@ -345,13 +312,13 @@ namespace SiamCross.Droid.Models
             }
 
         }
-        public void ClearTx()
+        public override void ClearTx()
         {
             _socket.OutputStream.Flush();
             //_outStream.Position = 0;
             //_inStream.SetLength(0);
         }
-        public async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken ct)
+        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
             //https://github.com/dotnet/runtime/issues/23736
             //https://github.com/dotnet/runtime/issues/24093
@@ -406,7 +373,7 @@ namespace SiamCross.Droid.Models
             return readed;
         }
 
-        public async Task<int> WriteAsync(byte[] buffer, int offset, int count, CancellationToken ct)
+        public override async Task<int> WriteAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
             ct.ThrowIfCancellationRequested();
             await _socket.OutputStream.WriteAsync(buffer, offset, count, ct);

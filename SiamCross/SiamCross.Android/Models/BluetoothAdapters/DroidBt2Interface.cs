@@ -2,6 +2,7 @@
 using Android.Runtime;
 using Autofac;
 using SiamCross.AppObjects;
+using SiamCross.Models.Connection.Phy;
 using SiamCross.Models.Scanners;
 using System.ComponentModel;
 

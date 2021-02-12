@@ -1,6 +1,6 @@
-﻿using SiamCross.Models.Sensors.Du.Measurement;
+﻿using SiamCross.Models.Connection.Protocol;
+using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Models.Tools;
-using SiamCross.Protocol.Exceptions;
 using SiamCross.Services;
 using System;
 using System.Threading;

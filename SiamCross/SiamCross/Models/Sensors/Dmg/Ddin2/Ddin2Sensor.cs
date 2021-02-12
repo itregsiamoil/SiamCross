@@ -1,4 +1,5 @@
-﻿using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
+﻿using SiamCross.Models.Connection.Protocol;
+using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
 using SiamCross.Services;
 using System;
 using System.Threading.Tasks;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SiamCross.Protocol.Exceptions
+namespace SiamCross.Models.Connection.Protocol
 {
     public class IOTimeoutException : Exception
     {

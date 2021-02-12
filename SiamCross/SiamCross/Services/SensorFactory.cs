@@ -1,5 +1,8 @@
 ﻿using SiamCross.Models;
 using SiamCross.Models.Adapters;
+using SiamCross.Models.Connection.Phy;
+using SiamCross.Models.Connection.Protocol;
+using SiamCross.Models.Connection.Protocol.Siam;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Dmg.Ddin2;
 using SiamCross.Models.Sensors.Du;

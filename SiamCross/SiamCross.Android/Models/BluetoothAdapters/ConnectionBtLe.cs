@@ -7,6 +7,7 @@ using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -20,12 +21,13 @@ namespace SiamCross.Droid.Models
     public class ConnectionBtLe : IConnectionBtLe
     {
         private readonly IPhyInterface mInterface;
-        public IPhyInterface PhyInterface => mInterface;
-        public async void UpdateRssi()
+        public override IPhyInterface PhyInterface => mInterface;
+        public override int Rssi => (null == _device) ? 0 : _device.Rssi;
+        public override async void UpdateRssi()
         {
             await _device?.UpdateRssiAsync();
+            OnPropChange(new PropertyChangedEventArgs(nameof(Rssi)));
         }
-        public int Rssi => (null == _device) ? 0 : _device.Rssi;
         public IAdapter Adapter
         {
             get
@@ -83,7 +85,7 @@ namespace SiamCross.Droid.Models
             _deviceGuid = (Guid)deviceInfo.Id;
         }
 
-        public async Task<bool> Connect()
+        public override async Task<bool> Connect()
         {
             CancellationTokenSource cts = new CancellationTokenSource(mConnectTimeout);
             try
@@ -212,7 +214,7 @@ namespace SiamCross.Droid.Models
 
             return inited;
         }
-        public async Task<bool> Disconnect()
+        public override async Task<bool> Disconnect()
         {
             bool ret = true;
             try
@@ -270,7 +272,7 @@ namespace SiamCross.Droid.Models
         private TaskCompletionSource<bool> tcs;// = new TaskCompletionSource<byte[]>();
         private readonly Stream mRxStream = new MemoryStream(512);
 
-        public async void ClearRx()
+        public override async void ClearRx()
         {
             using (await semaphore.UseWaitAsync())
             {
@@ -279,7 +281,7 @@ namespace SiamCross.Droid.Models
                 mRxStream.SetLength(0);
             }
         }
-        public void ClearTx()
+        public override void ClearTx()
         {
         }
         private async void DoByteProcess(byte[] inputBytes)
@@ -294,7 +296,7 @@ namespace SiamCross.Droid.Models
             }
         }
 
-        public async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken ct)
+        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
             int readed = 0;
             ct.Register(() =>
@@ -324,7 +326,7 @@ namespace SiamCross.Droid.Models
             }//while (0 == readed)
             return readed;
         }
-        public async Task<int> WriteAsync(byte[] buffer, int offset, int count, CancellationToken ct)
+        public override async Task<int> WriteAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
             bool sent = await _writeCharacteristic
                 .WriteAsync(buffer.AsSpan().Slice(offset, count).ToArray(), ct);

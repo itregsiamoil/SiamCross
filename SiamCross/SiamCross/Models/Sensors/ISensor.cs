@@ -1,11 +1,13 @@
-﻿using SiamCross.Models.Scanners;
+﻿using SiamCross.Models.Connection.Protocol;
+using SiamCross.Models.Scanners;
 using System;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models
 {
-    public interface ISensor : IDisposable
+    public interface ISensor : IDisposable, INotifyPropertyChanged
     {
         IProtocolConnection Connection { get; }
 

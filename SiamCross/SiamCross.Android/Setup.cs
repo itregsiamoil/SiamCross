@@ -10,6 +10,7 @@ using SiamCross.Droid.Services.StdDialog;
 using SiamCross.Droid.Services.Toast;
 using SiamCross.Droid.Utils.FileSystem;
 using SiamCross.Models.Adapters;
+using SiamCross.Models.Adapters.PhyInterface;
 using SiamCross.Models.Adapters.PhyInterface.Bt2;
 using SiamCross.Models.Scanners;
 using SiamCross.Services;

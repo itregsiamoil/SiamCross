@@ -43,6 +43,7 @@
                       SeparatorVisibility="None"
                       HasUnevenRows="True"
                       CachingStrategy="RecycleElementAndDataTemplate"
+                      CachingStrategy="RetainElement"
                       Margin="0">
                 <!--
                 ItemTapped="sensorList_ItemTapped"
@@ -121,7 +122,7 @@
                                                     </Label.Triggers>
                                                     -->
                                                     </Label>
-                                                    <Switch IsToggled="{Binding Activate}" Margin="5"
+                                                    <Switch IsToggled="{Binding Activate, Mode=Default}" Margin="5"
                                                         Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" >
                                                         <Switch.Triggers>
                                                             <DataTrigger TargetType="Switch" Binding="{Binding IsMeasurement}" Value="true" >
@@ -134,7 +135,7 @@
                                             </FlexLayout>
                                             <StackLayout Orientation="Vertical" Spacing="1">
                                                 <StackLayout.Triggers>
-                                                    <DataTrigger TargetType="StackLayout" Binding="{Binding Activate}" Value="false" >
+                                                    <DataTrigger TargetType="StackLayout" Binding="{Binding Activate, Mode=OneWay}" Value="false" >
                                                         <Setter Property="IsVisible" Value="false"  />
                                                     </DataTrigger>
                                                     <!-- BindingContext="{x:Reference btnColapse}" WidthRequest ="{Binding Height, Mode=OneWay}"> -->
@@ -144,7 +145,7 @@
                                                 <Grid x:Name="SensorInfoBox" 
                                                     RowSpacing="0" ColumnSpacing="0" Padding="0">
                                                     <Grid.Triggers>
-                                                        <DataTrigger TargetType="Grid" Binding="{Binding Activate}" Value="false" >
+                                                        <DataTrigger TargetType="Grid" Binding="{Binding Activate, Mode=OneWay}" Value="false" >
                                                             <Setter Property="IsVisible" Value="false"  />
                                                         </DataTrigger>
                                                     </Grid.Triggers>
@@ -199,7 +200,7 @@
                                                         <Label.FormattedText>
                                                             <FormattedString >
                                                                 <Span Text="&#x1F4F6;"  />
-                                                                <Span Text="{Binding Connection.Rssi}" />
+                                                                <Span Text="{Binding Connection.PhyConnection.Rssi}" />
                                                                 <Span Text="dbm" />
                                                             </FormattedString>
                                                         </Label.FormattedText>

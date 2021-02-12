@@ -1,7 +1,8 @@
 ﻿#define DEBUG_UNIT
+using SiamCross.Models.Connection;
+using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
-using SiamCross.Protocol.Exceptions;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors
 {
-    public abstract class BaseSensor : ISensor, INotifyPropertyChanged
+    public abstract class BaseSensor : ISensor
     {
         #region TmpVariables
         #endregion
@@ -88,7 +89,7 @@ namespace SiamCross.Models.Sensors
         #endregion
         #region Activate implementation
         #region Variables
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public event PropertyChangedEventHandler PropertyChanged;
         private CancellationTokenSource _cancellToken = null;
 
         //TaskCompletionSource<bool> mLiveTaskCompleated=null;
@@ -227,7 +228,7 @@ namespace SiamCross.Models.Sensors
                             if (rssi_update_period > rssi_update_curr++)
                             {
                                 rssi_update_curr = 0;
-                                Connection.UpdateRssi();
+                                Connection.PhyConnection.UpdateRssi();
                             }
                         }
                         else

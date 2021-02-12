@@ -1,7 +1,8 @@
 ﻿using Android.Bluetooth;
 using Android.Runtime;
-using SiamCross.Models;
 using SiamCross.Models.Adapters;
+using SiamCross.Models.Adapters.PhyInterface;
+using SiamCross.Models.Connection.Phy;
 using SiamCross.Models.Scanners;
 
 namespace SiamCross.Droid.Models

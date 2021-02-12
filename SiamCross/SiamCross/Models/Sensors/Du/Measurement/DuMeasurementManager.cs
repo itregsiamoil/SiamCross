@@ -1,9 +1,9 @@
 using Autofac;
 using NLog;
 using SiamCross.AppObjects;
+using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Sensors.Dmg;
 using SiamCross.Models.Tools;
-using SiamCross.Protocol.Exceptions;
 using SiamCross.Services.Logging;
 using System;
 using System.Collections.Specialized;

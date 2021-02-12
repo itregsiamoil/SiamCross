@@ -148,4 +148,8 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\Connection\Protocol\Modbus\" />
+  </ItemGroup>
 </Project>
