@@ -18,6 +18,8 @@ namespace SiamCross.Models.Connection.Phy
         public ConnectionState State => _ConnState;
         protected void SetState(ConnectionState state)
         {
+            if (state == _ConnState)
+                return;
             _ConnState = state;
             OnPropChange(new PropertyChangedEventArgs(nameof(State)));
         }

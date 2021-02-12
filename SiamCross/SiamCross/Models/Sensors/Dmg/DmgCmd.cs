@@ -1,7 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SiamCross.Models.Sensors.Dmg
 {
+    public struct CellInfo
+    {
+        public UInt32 Address;
+        public UInt32 Len;
+        public CellInfo(UInt32 addrr, UInt16 len)
+        {
+            Address = addrr;
+            Len = len;
+        }
+    }
+
+    public static class DmgMap
+    {
+        public static CellInfo DeviceType = new CellInfo(0x00000000, 2);
+        //public static CellInfo DeviceType1(0x00000000, 2);
+    }
+
+
     public static class DmgCmd
     {
         /// <summary>

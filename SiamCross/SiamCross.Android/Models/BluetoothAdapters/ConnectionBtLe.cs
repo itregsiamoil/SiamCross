@@ -3,6 +3,7 @@
 using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
 using SiamCross.Models.Adapters;
+using SiamCross.Models.Connection;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
 using System;
@@ -86,6 +87,25 @@ namespace SiamCross.Droid.Models
         }
 
         public override async Task<bool> Connect()
+        {
+            SetState(ConnectionState.PendingConnect);
+            bool ret = await DoConnect();
+            if (ret)
+                SetState(ConnectionState.Connected);
+            else
+                SetState(ConnectionState.Disconnected);
+            return ret;
+        }
+        public override async Task<bool> Disconnect()
+        {
+            SetState(ConnectionState.PendingDisconnect);
+            bool ret = await DoDisconnect();
+            if (ret)
+                SetState(ConnectionState.Disconnected);
+            return ret;
+        }
+
+        private async Task<bool> DoConnect()
         {
             CancellationTokenSource cts = new CancellationTokenSource(mConnectTimeout);
             try
@@ -214,7 +234,7 @@ namespace SiamCross.Droid.Models
 
             return inited;
         }
-        public override async Task<bool> Disconnect()
+        private async Task<bool> DoDisconnect()
         {
             bool ret = true;
             try

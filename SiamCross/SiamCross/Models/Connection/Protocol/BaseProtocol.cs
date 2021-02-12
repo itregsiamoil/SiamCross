@@ -52,9 +52,10 @@ namespace SiamCross.Models.Connection.Protocol
         public async Task<bool> Connect()
         {
             if (ConnectionState.Connected == mPhyConn.State)
+            {
+                SetState(ConnectionState.Connected);
                 return true;
-            
-            SetState(ConnectionState.PendingConnect);
+            }
 
             bool result = false;
             try
@@ -90,7 +91,10 @@ namespace SiamCross.Models.Connection.Protocol
         public async Task<bool> Disconnect()
         {
             if (ConnectionState.Disconnected == mPhyConn.State)
+            {
+                SetState(ConnectionState.Disconnected);
                 return true;
+            }
 
             bool ret = false;
             SetState(ConnectionState.PendingDisconnect);

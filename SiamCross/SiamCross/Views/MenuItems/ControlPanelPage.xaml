@@ -42,8 +42,6 @@
                       ItemsSource="{Binding Sensor}"
                       SeparatorVisibility="None"
                       HasUnevenRows="True"
-                      CachingStrategy="RecycleElementAndDataTemplate"
-                      CachingStrategy="RetainElement"
                       Margin="0">
                 <!--
                 ItemTapped="sensorList_ItemTapped"
@@ -122,7 +120,7 @@
                                                     </Label.Triggers>
                                                     -->
                                                     </Label>
-                                                    <Switch IsToggled="{Binding Activate, Mode=Default}" Margin="5"
+                                                    <Switch IsToggled="{Binding Activate}" Margin="5"
                                                         Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" >
                                                         <Switch.Triggers>
                                                             <DataTrigger TargetType="Switch" Binding="{Binding IsMeasurement}" Value="true" >

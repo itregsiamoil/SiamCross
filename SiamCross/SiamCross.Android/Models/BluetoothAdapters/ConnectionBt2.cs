@@ -4,6 +4,7 @@ using Android.Bluetooth;
 using Java.Util;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Adapters.PhyInterface.Bt2;
+using SiamCross.Models.Connection;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
 using System;
@@ -131,7 +132,27 @@ namespace SiamCross.Droid.Models
         {
             _scannedDeviceInfo = deviceInfo;
         }
+
         public override async Task<bool> Connect()
+        {
+            SetState(ConnectionState.PendingConnect);
+            bool ret = await DoConnect();
+            if(ret)
+                SetState(ConnectionState.Connected);
+            else
+                SetState(ConnectionState.Disconnected);
+            return ret;
+        }
+        public override async Task<bool> Disconnect()
+        {
+            SetState(ConnectionState.PendingDisconnect);
+            bool ret = await DoDisconnect();
+            if (ret)
+                SetState(ConnectionState.Disconnected);
+            return ret;
+        }
+
+        private async Task<bool> DoConnect()
         {
             try
             {
@@ -199,7 +220,7 @@ namespace SiamCross.Droid.Models
             }
             return false;
         }
-        public override async Task<bool> Disconnect()
+        private async Task<bool> DoDisconnect()
         {
             Debug.WriteLine("bt2 start Disconnecting ");
             bool ret = true;
