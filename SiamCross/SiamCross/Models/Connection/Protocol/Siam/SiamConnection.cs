@@ -94,16 +94,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             //    ConnectFailed?.Invoke();
             return sent_ok;
         }
-        private enum RespResult
-        {
-            NormalPkg = 0
-          , ErrorCrc = -1
-          , ErrorPkg = -2
-          , ErrorTimeout = -3
-          , ErrorSending = -4
-          , ErrorConnection = -5
-          , ErrorUnknown = -100
-        }
+
 
         /// <summary>
         /// 
@@ -132,7 +123,8 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                     CheckEmptySpace();
                     int readed = await mPhyConn.ReadAsync(_RxBuf, _EndRxBuf, _RxBuf.Length - _EndRxBuf, ctSrc.Token);
                     _EndRxBuf += readed;
-                    DebugLog.WriteLine($"Appended bytes={readed} elapsed={_PerfCounter.ElapsedMilliseconds}/{read_timeout}");
+                    DebugLog.WriteLine($"Appended bytes={readed} elapsed={_PerfCounter.ElapsedMilliseconds}/{read_timeout}"
+                        + $" begin={_BeginRxBuf} end={_EndRxBuf}");
                     Pkg.Extract(_TxBuf, _RxBuf, ref _BeginRxBuf, _EndRxBuf, ref need);
                     if (-2 > need)
                         return RespResult.ErrorUnknown;
@@ -140,14 +132,15 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                     {
                         default:
                             break;
+                        case -2:
+                        case -1: _BeginRxBuf = 0; goto case 0;
                         case 0:
-                            DebugLog.WriteLine($"GET response "
+                            DebugLog.WriteLine($"GET response "+ ((RespResult)need).ToString()
                                 + $" expected={pf_delay}"
                                 + $" elapsed={_PerfCounter.ElapsedMilliseconds}/{read_timeout}"
+                                + ": [" + BitConverter.ToString(_RxBuf, _BeginRxBuf, _EndRxBuf- _BeginRxBuf) + "]\n"
                                 + ": [" + BitConverter.ToString(_RxBuf, 0, _EndRxBuf) + "]\n");
-                            return RespResult.NormalPkg;
-                        case -1: return RespResult.ErrorCrc;
-                        case -2: return RespResult.ErrorPkg;
+                            return ((RespResult)need);
                     }
                 }//for (int i = 0; i < mResponseRetry && 0 == pkg.Length; ++i)
             }
@@ -167,14 +160,16 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         }
         private async Task<RespResult> SingleExchangeAsync()
         {
+            RespResult ret = RespResult.ErrorUnknown;
             try
             {
                 mPhyConn.ClearRx();
                 mPhyConn.ClearTx();
                 bool sent = await RequestAsync();
-                if (!sent)
-                    return RespResult.ErrorSending;
-                return await ResponseAsync();
+                if (sent)
+                    ret = await ResponseAsync();
+                else
+                    ret = RespResult.ErrorSending;
             }
             catch (Exception ex)
             {
@@ -186,19 +181,23 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                     + "\n type=" + ex.GetType()
                     + "\n stack=" + ex.StackTrace + "\n");
             }
-            return RespResult.ErrorUnknown;
+            finally 
+            { 
+            
+            }
+            return ret;
         }
         private static bool NeedRetry(RespResult result)
         {
             switch (result)
             {
                 default:
+                case RespResult.ErrorUnknown:
+                case RespResult.ErrorSending:
                 case RespResult.ErrorConnection:
                 case RespResult.ErrorPkg: 
                 case RespResult.NormalPkg: return false;
 
-                case RespResult.ErrorUnknown:
-                case RespResult.ErrorSending:
                 case RespResult.ErrorTimeout:
                 case RespResult.ErrorCrc: return true;
             }
@@ -216,12 +215,12 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             }
             return ret;
         }
-        private async Task<bool> DoReadMemoryAsync(uint addr_offset, uint mem_size
+        private async Task<RespResult> DoReadMemoryAsync(uint addr_offset, uint mem_size
             , byte[] dst, int dst_start
             , Action<float> onStepProgress, CancellationToken cancellationToken)
         {
             if (null == dst || dst.Length < (int)mem_size)
-                throw new Exception("dst is too short");
+                return RespResult.ErrorUnknown;
             uint step_count = mem_size / MaxReqLen + 1;
             float sep_cost = 1.0f / step_count;
             float progress = 0.0f;
@@ -245,7 +244,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 _EndTxBuf = 12;
                 RespResult ret = await ExchangeAsync(_Retry);
                 if (RespResult.NormalPkg != ret)
-                    return false;
+                    return ret;
 
                 _RxBuf.AsSpan(_BeginRxBuf + 12, curr_len)
                     .CopyTo(dst.AsSpan(dst_start, curr_len));
@@ -254,14 +253,15 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 progress += sep_cost;
                 onStepProgress?.Invoke(progress);
             }
-            return true;
+            return RespResult.NormalPkg;
         }
-        private async Task<bool> DoWriteMemoryAsync(uint addr_offset, uint mem_size
+        private async Task<RespResult> DoWriteMemoryAsync(uint addr_offset, uint mem_size
             , byte[] src, int src_start = 0
             , Action<float> onStepProgress = null, CancellationToken cancellationToken = default)
         {
             if (null == src || src.Length < (int)mem_size)
-                throw new Exception("dst is too short");
+                return RespResult.ErrorUnknown;
+                //throw new Exception("dst is too short");
             uint step_count = mem_size / MaxReqLen + 1;
             float sep_cost = 1.0f / step_count;
             float progress = 0.0f;
@@ -293,38 +293,38 @@ namespace SiamCross.Models.Connection.Protocol.Siam
 
                 RespResult ret = await ExchangeAsync(_Retry);
                 if (RespResult.NormalPkg != ret)
-                    return false;
+                    return ret;
 
                 curr_addr += curr_len;
 
                 progress += sep_cost;
                 onStepProgress?.Invoke(progress);
             }
-            return true;
+            return RespResult.NormalPkg;
         }
-        public override async Task<bool> ReadMemoryAsync(uint start_addr, uint mem_size
+        public override async Task<RespResult> TryReadMemoryAsync(uint start_addr, uint mem_size
             , byte[] dst, int dst_start
             , Action<float> onStepProgress, CancellationToken cancellationToken)
         {
-            using (await _semaphore.UseWaitAsync())
+            try
             {
-                try
+                #if DEBUG
+                _PerfCounter.Restart();
+                #endif
+                using (await _semaphore.UseWaitAsync())
                 {
-                    #if DEBUG
-                    _PerfCounter.Restart();
-                    #endif
-                    return await DoReadMemoryAsync(start_addr, mem_size
+                    return  await DoReadMemoryAsync(start_addr, mem_size
                         , dst, dst_start, onStepProgress, cancellationToken);
                 }
-                finally
-                {
-                    #if DEBUG
-                    _PerfCounter.Stop();
-                    #endif
-                }
+            }
+            finally
+            {
+                #if DEBUG
+                _PerfCounter.Stop();
+                #endif
             }
         }
-        public override async Task<bool> WriteMemoryAsync(uint start_addr, uint mem_size
+        public override async Task<RespResult> TryWriteMemoryAsync(uint start_addr, uint mem_size
             , byte[] src, int src_start = 0
             , Action<float> onStepProgress = null, CancellationToken cancellationToken = default)
         {

@@ -120,11 +120,11 @@ namespace SiamCross.Models.Connection.Protocol
 
 
         public abstract Task<byte[]> Exchange(byte[] req);
-        public abstract Task<bool> ReadMemoryAsync(uint addr, uint len
+        public abstract Task<RespResult> TryReadMemoryAsync(uint addr, uint len
             , byte[] dst, int dst_start = 0
             , Action<float> onStepProgress = null, CancellationToken cancellationToken = default);
 
-        public abstract Task<bool> WriteMemoryAsync(uint addr, uint len
+        public abstract Task<RespResult> TryWriteMemoryAsync(uint addr, uint len
             , byte[] src, int src_start = 0
             , Action<float> onStepProgress = null, CancellationToken cancellationToken = default);
 

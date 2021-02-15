@@ -6,6 +6,12 @@ namespace SiamCross.Models.Connection.Protocol.Siam
 {
     public static class Pkg
     {
+        public enum Command
+        {
+            Read = 0x01
+          , Write = 0x02
+        }
+
         public const int MAX_PKG_SIZE = 256;
         public const int MIN_PKG_SIZE = 12;
         private static readonly bool CHECK_RESPONSE_CRC = false;
@@ -14,19 +20,24 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         {
             return System.Buffers.Binary.BinaryPrimitives.ReadUInt16LittleEndian(req.Slice(8, 2));
         }
+
+        public static Command GetCommand(ReadOnlySpan<byte> req)
+        {
+            return (Command)req[3];
+        }
         public static int GetRespLen(ReadOnlySpan<byte> req)
         {
             if (req.Length < 3)
                 return -1;
-            switch (req[3])
+            switch (GetCommand(req))
             {
                 default: return -1;
-                case 0x01:
+                case Command.Read:
                     int data_len = GetDataLen(req);
                     if (255 < data_len)
                         return -1;
                     return 12 + data_len + 2;
-                case 0x02:
+                case Command.Write:
                     return 12;
             }
         }
@@ -58,6 +69,21 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             else
                 return -1;
         }
+        private static int ExtractErrPkgData(ReadOnlySpan<byte> res_data)
+        {
+            int need = 14 - res_data.Length;
+            if (0 < need)
+                return need;
+
+            ReadOnlySpan<byte> data_and_crc = res_data.Slice(2, 12);
+
+            if (0 == CrcModbusCalculator.Calc(data_and_crc))
+                return -2;
+            else
+                return -1;
+        }
+
+
         private static int Extract(ReadOnlySpan<byte> req, ReadOnlySpan<byte> res_span, ref int begin)
         {
             begin = 0;
@@ -69,17 +95,22 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 ReadOnlySpan<byte> pkg_hdr = res_span.Slice(begin, 12);
                 if (IsNormalPkgHeader(pkg_hdr, req))
                 {
-                    if (CHECK_RESPONSE_CRC)
-                        if (0 != CrcModbusCalculator.Calc(pkg_hdr.Slice(2)))
-                            return -1;
-                    return ExtractPkgData(res_span.Slice(begin + 12), req);
+                    switch (GetCommand(req))
+                    {
+                        case Command.Read:
+                            if (CHECK_RESPONSE_CRC)
+                                if (0 != CrcModbusCalculator.Calc(pkg_hdr.Slice(2)))
+                                    return -1;
+                            return ExtractPkgData(res_span.Slice(begin + 12), req);
+                        case Command.Write:
+                            if (0 != CrcModbusCalculator.Calc(pkg_hdr.Slice(2)))
+                                return -1;
+                            return 0;
+                    }
                 }
                 if (IsErrorPkgHeader(pkg_hdr, req))
                 {
-                    if (0 == CrcModbusCalculator.Calc(pkg_hdr.Slice(2)))
-                        return -2;
-                    else
-                        return -1;
+                    return ExtractErrPkgData(res_span.Slice(begin, 14));
                 }
 
                 begin++;
@@ -111,7 +142,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         public static void Extract(ReadOnlySpan<byte> req, byte[] res, ref int begin, int end, ref int need)
         {
             int pos = 0;
-            need = Extract(req, res.AsSpan(pos, end - pos), ref pos);
+            need = Extract(req, res.AsSpan(begin, end - begin), ref pos);
             begin += pos;
         }
 

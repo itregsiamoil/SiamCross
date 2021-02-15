@@ -6,6 +6,7 @@ using Android.Runtime;
 using Android.Support.V4.App;
 using Android.Support.V4.Content;
 using Android.Widget;
+using SiamCross.Models.Connection.Protocol.Siam;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms.Platform.Android;
@@ -23,6 +24,7 @@ namespace SiamCross.Droid
         private TaskCompletionSource<bool> mAllPermOkExecTcs;
         protected override async void OnCreate(Bundle savedInstanceState)
         {
+            Pkg.Test();
             SetTheme(Resource.Style.MainTheme);
             // set the layout resources first
             FormsAppCompatActivity.ToolbarResource = Resource.Layout.Toolbar;

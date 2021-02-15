@@ -23,10 +23,31 @@ namespace SiamCross.Droid.Models
     {
         private readonly IPhyInterface mInterface;
         public override IPhyInterface PhyInterface => mInterface;
-        public override int Rssi => (null == _device) ? 0 : _device.Rssi;
+
+
+        int _Rssi = 0;
+        public override int Rssi => _Rssi;
         public override async void UpdateRssi()
         {
-            await _device?.UpdateRssiAsync();
+            try
+            {
+                if (null != _device)
+                {
+                    await _device.UpdateRssiAsync();
+                    _Rssi = _device.Rssi;
+                }
+                else
+                    _Rssi = 0;
+            }
+            catch (Exception ex)
+            {
+                DebugLog.WriteLine("EXCEPTION in UpdateRssi"
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
+                _Rssi = 0;
+            }
             OnPropChange(new PropertyChangedEventArgs(nameof(Rssi)));
         }
         public IAdapter Adapter

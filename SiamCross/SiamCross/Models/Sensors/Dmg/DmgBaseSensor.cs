@@ -2,6 +2,7 @@
 using SiamCross.Models.Connection.Protocol.Siam;
 using SiamCross.Models.Tools;
 using System;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,99 +13,138 @@ namespace SiamCross.Models.Sensors.Dmg
     {
         private readonly DmgBaseQuickReportBuiler _reportBuilder = new DmgBaseQuickReportBuiler();
 
+
+        readonly IProtocolConnection ProtConn;
+        readonly byte[] _membuf = new byte[1024];
+        
+        static void ThrowOnError(RespResult ret)
+        {
+            switch (ret)
+            {
+                case RespResult.NormalPkg: break;
+                case RespResult.ErrorCrc: throw new IOCrcException();
+                case RespResult.ErrorPkg: throw new IOErrPkgException();
+                case RespResult.ErrorTimeout: throw new IOTimeoutException();
+                case RespResult.ErrorSending: 
+                case RespResult.ErrorConnection:
+                case RespResult.ErrorUnknown:
+                default: throw new ProtocolException();
+            }
+        }
+        async Task ReadMem(MemItem item)
+        {
+            RespResult ret = await ProtConn.TryReadMemoryAsync(item.Address, item.Size, _membuf);
+            ThrowOnError(ret);
+            item.FromArray(_membuf);
+        }
+        async Task WriteMem(MemItem item)
+        {
+            RespResult ret =  await ProtConn.TryWriteMemoryAsync(item.Address, item.Size, item.ToArray());
+            ThrowOnError(ret);
+        }
+        
+        readonly MemStruct _CommonReg;
+        readonly MemVarUInt16 DeviceType;
+        readonly MemVarUInt16 MemoryModelVersion;
+        readonly MemVarUInt32 DeviceNameAddress;
+        readonly MemVarUInt16 DeviceNameSize;
+        readonly MemVarUInt32 DeviceNumber;
+
+        readonly MemStruct _InfoReg;
+        readonly MemVarUInt32 ProgrammVersionAddress;
+        readonly MemVarUInt16 ProgrammVersionSize;
+
+        readonly MemStruct _SurvayReg;
+
+
+
+
+        readonly MemStruct _CurrentParamReg;
+        readonly MemVarUInt16 BatteryVoltage;
+        readonly MemVarInt16 Тemperature;
+        readonly MemVarFloat LoadChanel;
+        readonly MemVarFloat AccelerationChanel;
+
+
         public DmgBaseSensor(IProtocolConnection conn, SensorData sensorData)
             : base(conn, sensorData)
         {
+            ProtConn = new SiamConnection(Connection.PhyConnection, 1);
+
+            _CommonReg = new MemStruct(0);
+            DeviceType = _CommonReg.Add(new MemVarUInt16(), nameof(DeviceType));
+            MemoryModelVersion = _CommonReg.Add(new MemVarUInt16(), nameof(MemoryModelVersion));
+            DeviceNameAddress = _CommonReg.Add(new MemVarUInt32(), nameof(DeviceNameAddress));
+            DeviceNameSize = _CommonReg.Add(new MemVarUInt16(), nameof(DeviceNameSize));
+            DeviceNumber = _CommonReg.Add(new MemVarUInt32(), nameof(DeviceNumber));
+
+            _InfoReg = new MemStruct(0x1000);
+            ProgrammVersionAddress = _InfoReg.Add(new MemVarUInt32(), nameof(ProgrammVersionAddress));
+            ProgrammVersionSize = _InfoReg.Add(new MemVarUInt16(), nameof(ProgrammVersionSize));
+
+            _CurrentParamReg = new MemStruct(0x8400);
+            BatteryVoltage = _CurrentParamReg.Add(new MemVarUInt16(), nameof(BatteryVoltage));
+            Тemperature = _CurrentParamReg.Add(new MemVarInt16(), nameof(Тemperature));
+            LoadChanel = _CurrentParamReg.Add(new MemVarFloat(), nameof(LoadChanel));
+            AccelerationChanel = _CurrentParamReg.Add(new MemVarFloat(), nameof(AccelerationChanel));
+
+
         }
-
-
-        IProtocolConnection ProtConn;
 
         public async Task<bool> UpdateFirmware(CancellationToken cancelToken)
         {
-            byte[] data = new byte[6];
-            bool ret = false;
-            ret = await ProtConn.ReadMemoryAsync(0x00001000, 6, data);
+            try 
+            {
+                await ReadMem(_InfoReg);
+                UInt32 fw_address = ProgrammVersionAddress.Value;
+                UInt16 fw_size = ProgrammVersionSize.Value;
 
-            UInt32 fw_address = BitConverter.ToUInt32(data, 0);
-            UInt16 fw_size = BitConverter.ToUInt16(data, 4);
+                var ret = await ProtConn.TryReadMemoryAsync(fw_address, fw_size, _membuf);
+                ThrowOnError(ret);
+                SensorData.Firmware = Encoding.UTF8.GetString(_membuf, 0, fw_size);
+                return true;
+            }
+            catch(ProtocolException ex)
+            {
 
-            byte[] str = new byte[fw_size];
-            ret = await ProtConn.ReadMemoryAsync(fw_address, fw_size, str);
-
-            SensorData.Firmware = Encoding.UTF8.GetString(str);
-
-            /*
-            byte[] resp;
-            byte[] fw_address = new byte[4];
-            byte[] fw_size = new byte[2];
-
-            cancelToken.ThrowIfCancellationRequested();
-            resp = await Connection.Exchange(DmgCmd.Get("ProgrammVersionAddress")); ;
-            if (0 == resp.Length)
-                return false;
-            resp.AsSpan().Slice(12, 4).CopyTo(fw_address);
-
-            cancelToken.ThrowIfCancellationRequested();
-            resp = await Connection.Exchange(DmgCmd.Get("ProgrammVersionSize")); ;
-            if (0 == resp.Length)
-                return false;
-            resp.AsSpan().Slice(12, 2).CopyTo(fw_size);
-
-            cancelToken.ThrowIfCancellationRequested();
-            byte[] req = new MessageCreator().CreateReadMessage(fw_address, fw_size);
-            resp = await Connection.Exchange(req); ;
-            if (0 == resp.Length)
-                return false;
-
-            string dataValue;
-            dataValue = GetStringPayload(resp);
-            if (null == dataValue || 0 == dataValue.Length)
-                return false;
-            SensorData.Firmware = dataValue;
-            */
-            return true;
-            
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception in: "
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
+            }
+            return false;
         }
         public override async Task<bool> QuickReport(CancellationToken cancelToken)
         {
-            cancelToken.ThrowIfCancellationRequested();
-
-            byte[] resp1 = new byte[0x0C];
-            bool ret = false;
-            ret = await ProtConn.ReadMemoryAsync(0x00008400, 0x0C, resp1);
-            SensorData.Battery = (((float)BitConverter.ToInt16(resp1,0)) / 10).ToString();
-            SensorData.Temperature = (((float)BitConverter.ToInt16(resp1, 2)) / 10).ToString();
-            _reportBuilder.Load = BitConverter.ToSingle(resp1, 4).ToString();
-            _reportBuilder.Acceleration = BitConverter.ToSingle(resp1, 8).ToString();
-            SensorData.Status = _reportBuilder.GetReport();
-            return true;
-
-
-
-            //"BatteryVoltage" + "Тemperature"+"LoadChanel"+"AccelerationChanel"
-            byte[] req = new byte[] { 0x0D, 0x0A, 0x01, 0x01,
-                0x00, 0x84, 0x00, 0x00,    0x0C, 0x00,    0x64, 0x19 };
-            byte[] resp = await Connection.Exchange(req);
-            if (0 == resp.Length)
+            try
             {
-                return false;
+                cancelToken.ThrowIfCancellationRequested();
+                await ReadMem(_CurrentParamReg);
+
+                SensorData.Battery = (BatteryVoltage.Value / 10.0).ToString();
+                SensorData.Temperature = (Тemperature.Value / 10.0).ToString();
+                _reportBuilder.Load = LoadChanel.Value.ToString();
+                _reportBuilder.Acceleration = AccelerationChanel.Value.ToString();
+                SensorData.Status = _reportBuilder.GetReport();
+                return true;
             }
+            catch (ProtocolException ex)
+            {
 
-            SensorData.Battery = (((float)BitConverter.ToInt16(resp, 12)) / 10).ToString();
-            SensorData.Temperature = (((float)BitConverter.ToInt16(resp, 12 + 2)) / 10).ToString();
-            _reportBuilder.Load = BitConverter.ToSingle(resp, 12 + 4).ToString();
-            _reportBuilder.Acceleration = BitConverter.ToSingle(resp, 12 + 8).ToString();
-
-            SensorData.Status = _reportBuilder.GetReport();
-            return true;
-            
-            /*
-            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["BatteryVoltage"]);
-            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["Тemperature"]);
-            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["LoadChanel"]);
-            await BluetoothAdapter.SendData(DynamographCommands.FullCommandDictionary["AccelerationChanel"]);
-            */
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception in: "
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
+            }
+            return false;
         }
         public async Task<bool> KillosParametersQuery(CancellationToken cancelToken)
         {
@@ -135,9 +175,7 @@ namespace SiamCross.Models.Sensors.Dmg
         }
         public override async Task<bool> PostConnectInit(CancellationToken cancelToken)
         {
-            ProtConn = new SiamConnection(Connection.PhyConnection, 1);
             await ProtConn.Connect();
-
             SensorData.Status = Resource.ConnectedStatus;
             return (await UpdateFirmware(cancelToken) && await KillosParametersQuery(cancelToken));
         }
