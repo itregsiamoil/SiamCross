@@ -17,7 +17,7 @@ namespace SiamCross.Models.Connection.Protocol
     }
     public interface IProtocolConnection : IConnection
     {
-
+        void ThrowOnError(RespResult ret);
         IPhyConnection PhyConnection { get; }
 
         Task<byte[]> Exchange(byte[] req);
@@ -31,6 +31,11 @@ namespace SiamCross.Models.Connection.Protocol
         Task<RespResult> TryWriteMemoryAsync(uint addr, uint len
             , byte[] src, int src_start = 0
             , Action<float> onStepProgress = null, CancellationToken cancellationToken = default);
+
+        Task<RespResult> TryReadVarAsync(MemStruct var
+            , Action<float> onStep = null, CancellationToken ct = default);
+        Task<RespResult> TryWriteVarAsync(MemStruct var
+            , Action<float> onStep = null, CancellationToken ct = default);
 
     }
 

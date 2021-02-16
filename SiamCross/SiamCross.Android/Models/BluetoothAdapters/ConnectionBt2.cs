@@ -137,7 +137,7 @@ namespace SiamCross.Droid.Models
         {
             SetState(ConnectionState.PendingConnect);
             bool ret = await DoConnect();
-            if(ret)
+            if (ret)
                 SetState(ConnectionState.Connected);
             else
                 SetState(ConnectionState.Disconnected);

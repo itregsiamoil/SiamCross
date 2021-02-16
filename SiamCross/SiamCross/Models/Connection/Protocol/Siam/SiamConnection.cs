@@ -2,6 +2,7 @@
 using SiamCross.Models.Connection.Phy;
 using SiamCross.Models.Tools;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,12 +11,26 @@ namespace SiamCross.Models.Connection.Protocol.Siam
 {
     public class SiamConnection : BaseProtocol
     {
-        
 
-        public SiamConnection(IPhyConnection base_conn, byte address=1)
+
+        public SiamConnection(IPhyConnection base_conn, byte address = 1)
             : base(base_conn, address)
         {
+            _TxBuf[0] = 0x0D;
+            _TxBuf[1] = 0x0A;
+            _TxBuf[2] = base.Address;
         }
+
+        public override byte Address
+        {
+            get => base.Address;
+            set
+            {
+                base.Address = value;
+                _TxBuf[2] = base.Address;
+            }
+        }
+
 
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
@@ -95,7 +110,6 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             return sent_ok;
         }
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -135,11 +149,12 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                         case -2:
                         case -1: _BeginRxBuf = 0; goto case 0;
                         case 0:
-                            DebugLog.WriteLine($"GET response "+ ((RespResult)need).ToString()
+                            DebugLog.WriteLine($"GET response " + ((RespResult)need).ToString()
                                 + $" expected={pf_delay}"
                                 + $" elapsed={_PerfCounter.ElapsedMilliseconds}/{read_timeout}"
-                                + ": [" + BitConverter.ToString(_RxBuf, _BeginRxBuf, _EndRxBuf- _BeginRxBuf) + "]\n"
-                                + ": [" + BitConverter.ToString(_RxBuf, 0, _EndRxBuf) + "]\n");
+                                + ": [" + BitConverter.ToString(_RxBuf, _BeginRxBuf, _EndRxBuf - _BeginRxBuf) + "]\n"
+                                //+ ": [" + BitConverter.ToString(_RxBuf, 0, _EndRxBuf) + "]\n"
+                                );
                             return ((RespResult)need);
                     }
                 }//for (int i = 0; i < mResponseRetry && 0 == pkg.Length; ++i)
@@ -181,9 +196,9 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                     + "\n type=" + ex.GetType()
                     + "\n stack=" + ex.StackTrace + "\n");
             }
-            finally 
-            { 
-            
+            finally
+            {
+
             }
             return ret;
         }
@@ -195,7 +210,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 case RespResult.ErrorUnknown:
                 case RespResult.ErrorSending:
                 case RespResult.ErrorConnection:
-                case RespResult.ErrorPkg: 
+                case RespResult.ErrorPkg:
                 case RespResult.NormalPkg: return false;
 
                 case RespResult.ErrorTimeout:
@@ -224,9 +239,9 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             uint step_count = mem_size / MaxReqLen + 1;
             float sep_cost = 1.0f / step_count;
             float progress = 0.0f;
-            _TxBuf[0] = 0x0D;
-            _TxBuf[1] = 0x0A;
-            _TxBuf[2] = Address;
+            //_TxBuf[0] = 0x0D;
+            //_TxBuf[1] = 0x0A;
+            //_TxBuf[2] = Address;
             _TxBuf[3] = 0x01; //read
 
             uint curr_addr = 0;
@@ -261,13 +276,13 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         {
             if (null == src || src.Length < (int)mem_size)
                 return RespResult.ErrorUnknown;
-                //throw new Exception("dst is too short");
+            //throw new Exception("dst is too short");
             uint step_count = mem_size / MaxReqLen + 1;
             float sep_cost = 1.0f / step_count;
             float progress = 0.0f;
-            _TxBuf[0] = 0x0D;
-            _TxBuf[1] = 0x0A;
-            _TxBuf[2] = Address;
+            //_TxBuf[0] = 0x0D;
+            //_TxBuf[1] = 0x0A;
+            //_TxBuf[2] = Address;
             _TxBuf[3] = 0x02; //write
 
             uint curr_addr = 0;
@@ -283,11 +298,11 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 byte[] crc = CrcModbusCalculator.ModbusCrc(_TxBuf, 2, 8);
                 crc.CopyTo(_TxBuf.AsSpan(10, 2)); //crc
 
-                src.AsSpan((int)curr_addr+ src_start, curr_len)
+                src.AsSpan((int)curr_addr + src_start, curr_len)
                     .CopyTo(_TxBuf.AsSpan(12 + (int)curr_addr, curr_len));
 
                 crc = CrcModbusCalculator.ModbusCrc(_TxBuf, 12, curr_len);
-                crc.CopyTo(_TxBuf.AsSpan(12+ curr_len, 2)); //crc
+                crc.CopyTo(_TxBuf.AsSpan(12 + curr_len, 2)); //crc
 
                 _EndTxBuf = 12 + curr_len + 2;
 
@@ -308,20 +323,20 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         {
             try
             {
-                #if DEBUG
+#if DEBUG
                 _PerfCounter.Restart();
-                #endif
+#endif
                 using (await _semaphore.UseWaitAsync())
                 {
-                    return  await DoReadMemoryAsync(start_addr, mem_size
+                    return await DoReadMemoryAsync(start_addr, mem_size
                         , dst, dst_start, onStepProgress, cancellationToken);
                 }
             }
             finally
             {
-                #if DEBUG
+#if DEBUG
                 _PerfCounter.Stop();
-                #endif
+#endif
             }
         }
         public override async Task<RespResult> TryWriteMemoryAsync(uint start_addr, uint mem_size
@@ -332,20 +347,143 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             {
                 try
                 {
-                    #if DEBUG
+#if DEBUG
                     _PerfCounter.Restart();
-                    #endif
+#endif
                     return await DoWriteMemoryAsync(start_addr, mem_size
                         , src, src_start, onStepProgress, cancellationToken);
                 }
                 finally
                 {
-                    #if DEBUG
+#if DEBUG
                     _PerfCounter.Stop();
-                    #endif
+#endif
                 }
             }
         }
+
+        private async Task<RespResult> DoReadVarAsync(MemStruct mem
+            , Action<float> onStepProgress, CancellationToken ct)
+        {
+            float sep_byte_cost = 1.0f / mem.Size;
+            MemStruct vars = new MemStruct(0);
+
+            IReadOnlyDictionary<MemItem, string> vdict = mem.GetVars();
+            IEnumerator<KeyValuePair<MemItem, string>> enumerator = vdict.GetEnumerator();
+
+            bool has_next = enumerator.MoveNext();
+
+            while (has_next)
+            {
+                MemItem curr = enumerator.Current.Key;
+                vars.Reset(curr.Address);
+                while (has_next && vars.Size + curr.Size < Pkg.MAX_PKG_SIZE)
+                {
+                    vars.Add(curr);
+                    has_next = enumerator.MoveNext();
+                    curr = enumerator.Current.Key;
+                }
+                //MakeReadRequest(vars.Address, vars.Size);
+                _TxBuf[3] = 0x01; //read
+                BitConverter.GetBytes(vars.Address).CopyTo(_TxBuf.AsSpan(4, 4)); //addr
+                BitConverter.GetBytes((UInt16)vars.Size).CopyTo(_TxBuf.AsSpan(8, 2)); //len
+                CrcModbusCalculator.ModbusCrc(_TxBuf, 2, 8).CopyTo(_TxBuf.AsSpan(10, 2)); //crc
+                _EndTxBuf = 12;
+
+                RespResult ret = await ExchangeAsync(_Retry);
+                if (RespResult.NormalPkg != ret)
+                    return ret;
+                vars.FromArray(_RxBuf, (UInt32)_BeginRxBuf + 12);
+
+                onStepProgress?.Invoke(vars.Size * sep_byte_cost);
+
+            }
+            return RespResult.NormalPkg;
+        }
+        private async Task<RespResult> DoWriteVarAsync(MemStruct mem
+            , Action<float> onStepProgress, CancellationToken ct)
+        {
+            float sep_byte_cost = 1.0f / mem.Size;
+            MemStruct vars = new MemStruct(0);
+
+            IReadOnlyDictionary<MemItem, string> vdict = mem.GetVars();
+            IEnumerator<KeyValuePair<MemItem, string>> enumerator = vdict.GetEnumerator();
+
+            bool has_next = enumerator.MoveNext();
+
+            while (has_next)
+            {
+                MemItem curr = enumerator.Current.Key;
+                vars.Reset(curr.Address);
+                while (has_next && vars.Size + curr.Size < Pkg.MAX_PKG_SIZE)
+                {
+                    vars.Add(curr);
+                    has_next = enumerator.MoveNext();
+                    curr = enumerator.Current.Key;
+                }
+                //MakeReadRequest(vars.Address, vars.Size);
+                _TxBuf[3] = 0x02; //write
+                BitConverter.GetBytes(vars.Address).CopyTo(_TxBuf.AsSpan(4, 4)); //addr
+                BitConverter.GetBytes((UInt16)vars.Size).CopyTo(_TxBuf.AsSpan(8, 2)); //len
+                CrcModbusCalculator.ModbusCrc(_TxBuf, 2, 8).CopyTo(_TxBuf.AsSpan(10, 2)); //crc
+
+                vars.ToArray(_TxBuf, 12);
+
+                CrcModbusCalculator.ModbusCrc(_TxBuf, 12, (int)vars.Size).CopyTo(_TxBuf.AsSpan(12 + (int)vars.Size, 2)); //crc
+                _EndTxBuf = 12 + (int)vars.Size + 2;
+
+                RespResult ret = await ExchangeAsync(_Retry);
+                if (RespResult.NormalPkg != ret)
+                    return ret;
+
+                onStepProgress?.Invoke(vars.Size * sep_byte_cost);
+
+            }
+            return RespResult.NormalPkg;
+        }
+
+        public override async Task<RespResult> TryReadVarAsync(MemStruct var
+            , Action<float> onStepProgress, CancellationToken ct)
+        {
+            using (await _semaphore.UseWaitAsync())
+            {
+                try
+                {
+#if DEBUG
+                    _PerfCounter.Restart();
+#endif
+                    return await DoReadVarAsync(var, onStepProgress, ct);
+                }
+                finally
+                {
+#if DEBUG
+                    _PerfCounter.Stop();
+#endif
+                }
+            }
+        }
+        public override async Task<RespResult> TryWriteVarAsync(MemStruct var
+                , Action<float> onStepProgress, CancellationToken ct)
+        {
+            using (await _semaphore.UseWaitAsync())
+            {
+                try
+                {
+#if DEBUG
+                    _PerfCounter.Restart();
+#endif
+                    return await DoWriteVarAsync(var, onStepProgress, ct);
+                }
+                finally
+                {
+#if DEBUG
+                    _PerfCounter.Stop();
+#endif
+                }
+            }
+        }
+
+
 
         public override Task<byte[]> Exchange(byte[] req)
         {

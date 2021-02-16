@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SiamCross.Models.Connection.Protocol
 {
@@ -10,14 +10,15 @@ namespace SiamCross.Models.Connection.Protocol
         UInt32 Size { get; }
         string Name { get; }
 
+        void ToArray(byte[] dst, int start = 0);
         byte[] ToArray();
-        bool FromArray(byte[] array, UInt32 start=0);
+        bool FromArray(byte[] array, UInt32 start = 0);
     }
 
     public abstract class MemVar : MemItem
     {
-        MemStruct _Parent;
-        public MemVar(UInt32 address, MemStruct parent = null, string name=null )
+        private MemStruct _Parent;
+        public MemVar(UInt32 address, MemStruct parent = null, string name = null)
         {
             _Address = address;
             _Parent = parent;
@@ -44,7 +45,13 @@ namespace SiamCross.Models.Connection.Protocol
             _Parent = parent;
         }
 
-        public abstract byte[] ToArray();
+        public abstract void ToArray(byte[] dst, int start = 0);
+        public virtual byte[] ToArray()
+        {
+            byte[] dst = new byte[Size];
+            ToArray(dst, 0);
+            return dst;
+        }
         public abstract bool FromArray(byte[] array, UInt32 start);
     }
 
@@ -53,9 +60,14 @@ namespace SiamCross.Models.Connection.Protocol
     {
         public override UInt32 Size => sizeof(UInt32);
         public UInt32 Value;
-        public MemVarUInt32(UInt32 address = 0, MemStruct parent = null, string name=null)
+        public MemVarUInt32(UInt32 address = 0, MemStruct parent = null, string name = null)
             : base(address, parent, name)
         { }
+
+        public override void ToArray(byte[] dst, int start = 0)
+        {
+            BinaryPrimitives.WriteUInt32LittleEndian(dst, Value);
+        }
         public override byte[] ToArray()
         {
             return BitConverter.GetBytes(Value);
@@ -73,6 +85,10 @@ namespace SiamCross.Models.Connection.Protocol
         public MemVarUInt16(UInt32 address = 0, MemStruct parent = null, string name = null)
             : base(address, parent, name)
         { }
+        public override void ToArray(byte[] dst, int start = 0)
+        {
+            BinaryPrimitives.WriteUInt16LittleEndian(dst, Value);
+        }
         public override byte[] ToArray()
         {
             return BitConverter.GetBytes(Value);
@@ -90,6 +106,10 @@ namespace SiamCross.Models.Connection.Protocol
         public MemVarInt16(UInt32 address = 0, MemStruct parent = null, string name = null)
             : base(address, parent, name)
         { }
+        public override void ToArray(byte[] dst, int start = 0)
+        {
+            BinaryPrimitives.WriteInt16LittleEndian(dst, Value);
+        }
         public override byte[] ToArray()
         {
             return BitConverter.GetBytes(Value);
@@ -107,6 +127,10 @@ namespace SiamCross.Models.Connection.Protocol
         public MemVarFloat(UInt32 address = 0, MemStruct parent = null, string name = null)
             : base(address, parent, name)
         { }
+        public override void ToArray(byte[] dst, int start = 0)
+        {
+            BitConverter.GetBytes(Value).CopyTo(dst, start);
+        }
         public override byte[] ToArray()
         {
             return BitConverter.GetBytes(Value);
@@ -121,7 +145,7 @@ namespace SiamCross.Models.Connection.Protocol
 
     public class MemStruct : MemVar
     {
-        protected UInt32 _Size=0;
+        protected UInt32 _Size = 0;
         public override UInt32 Size => _Size;
 
         private readonly Dictionary<MemItem, string> _Var = new Dictionary<MemItem, string>();
@@ -131,7 +155,7 @@ namespace SiamCross.Models.Connection.Protocol
         {
         }
 
-        public T Add<T>(T item, string name)
+        public T Add<T>(T item, string name = null)
         {
             if (!(item is MemVar vv))
                 return default(T);
@@ -141,25 +165,26 @@ namespace SiamCross.Models.Connection.Protocol
             return item;
         }
 
-        public override byte[] ToArray()
+        public void Reset(UInt32 address)
         {
-            UInt32 sz =0;
-            foreach(var v in _Var)
-                sz += v.Key.Size;
-            byte[] data = new byte[sz];
-
-            sz = 0;
-            foreach (var v in _Var)
-            {
-                v.Key.ToArray().CopyTo(data, sz);
-                sz += v.Key.Size;
-            }
-            return data;
+            _Address = address;
+            _Var.Clear();
         }
-        public override bool FromArray(byte[] array, UInt32 start=0)
+
+        public override void ToArray(byte[] dst, int start)
         {
             UInt32 sz = 0;
-            foreach (var v in _Var)
+            foreach (KeyValuePair<MemItem, string> v in _Var)
+            {
+                v.Key.ToArray().CopyTo(dst, sz + start);
+                sz += v.Key.Size;
+            }
+        }
+
+        public override bool FromArray(byte[] array, UInt32 start = 0)
+        {
+            UInt32 sz = 0;
+            foreach (KeyValuePair<MemItem, string> v in _Var)
             {
                 v.Key.FromArray(array, start + sz);
                 sz += v.Key.Size;
@@ -174,7 +199,7 @@ namespace SiamCross.Models.Connection.Protocol
         public UInt32 GetOffset(MemVar item)
         {
             UInt32 offset = 0;
-            foreach (var v in _Var)
+            foreach (KeyValuePair<MemItem, string> v in _Var)
             {
                 if (v.Key == item)
                     break;
@@ -183,6 +208,9 @@ namespace SiamCross.Models.Connection.Protocol
             return offset;
         }
 
-
+        public IReadOnlyDictionary<MemItem, string> GetVars()
+        {
+            return _Var;
+        }
     }
 }

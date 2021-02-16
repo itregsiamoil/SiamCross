@@ -29,9 +29,8 @@ namespace SiamCross.Services
             if (null == phy_interface)
                 return null;
             IPhyConnection conn = phy_interface.MakeConnection(deviceInfo);
-            IProtocolConnection connection = new SiamProtocolConnection(conn);
-            if (null == connection)
-                return null;
+            IProtocolConnection connection = new SiamConnection(conn);
+            IProtocolConnection connection_old = new SiamProtocolConnection(conn);
             //lock (_locker)
             {
                 if (deviceInfo.Name.Contains("DDIN"))
@@ -58,7 +57,7 @@ namespace SiamCross.Services
                 else if (deviceInfo.Name.Contains("DU"))
                 {
                     SensorData sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, "");
-                    DuSensor sensor = new DuSensor(connection, sens_data);
+                    DuSensor sensor = new DuSensor(connection_old, sens_data);
                     sensor.ScannedDeviceInfo = deviceInfo;
                     return sensor;
                 }

@@ -24,8 +24,7 @@ namespace SiamCross.Droid.Models
         private readonly IPhyInterface mInterface;
         public override IPhyInterface PhyInterface => mInterface;
 
-
-        int _Rssi = 0;
+        private int _Rssi = 0;
         public override int Rssi => _Rssi;
         public override async void UpdateRssi()
         {
