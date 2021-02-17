@@ -17,7 +17,6 @@ namespace SiamCross.Models.Connection.Protocol
     }
     public interface IProtocolConnection : IConnection
     {
-        void ThrowOnError(RespResult ret);
         IPhyConnection PhyConnection { get; }
 
         Task<byte[]> Exchange(byte[] req);
@@ -31,10 +30,32 @@ namespace SiamCross.Models.Connection.Protocol
         Task<RespResult> TryWriteMemoryAsync(uint addr, uint len
             , byte[] src, int src_start = 0
             , Action<float> onStepProgress = null, CancellationToken cancellationToken = default);
+        Task<RespResult> ReadMemAsync(uint addr, uint len
+            , byte[] dst, int dst_start = 0
+            , Action<float> onStepProgress = null, CancellationToken cancellationToken = default);
+        Task<RespResult> WriteMemAsync(uint addr, uint len
+            , byte[] src, int src_start = 0
+            , Action<float> onStepProgress = null, CancellationToken cancellationToken = default);
 
-        Task<RespResult> TryReadVarAsync(MemStruct var
+
+        Task<RespResult> TryReadAsync(MemStruct var
             , Action<float> onStep = null, CancellationToken ct = default);
-        Task<RespResult> TryWriteVarAsync(MemStruct var
+        Task<RespResult> TryWriteAsync(MemStruct var
+            , Action<float> onStep = null, CancellationToken ct = default);
+        Task<RespResult> ReadAsync(MemStruct var
+            , Action<float> onStep = null, CancellationToken ct = default);
+        Task<RespResult> WriteAsync(MemStruct var
+            , Action<float> onStep = null, CancellationToken ct = default);
+
+
+        Task<RespResult> TryReadAsync(MemVar var
+            , Action<float> onStep = null, CancellationToken ct = default);
+        Task<RespResult> TryWriteAsync(MemVar var
+            , Action<float> onStep = null, CancellationToken ct = default);
+
+        Task<RespResult> ReadAsync(MemVar var
+            , Action<float> onStep = null, CancellationToken ct = default);
+        Task<RespResult> WriteAsync(MemVar var
             , Action<float> onStep = null, CancellationToken ct = default);
 
     }

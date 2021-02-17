@@ -47,7 +47,7 @@ namespace SiamCross.Models.Connection.Protocol
         {
             _Address = address;
             mPhyConn = base_conn;
-            MaxReqLen = 200;
+            MaxReqLen = 40;
         }
         public async Task<bool> Connect()
         {
@@ -117,7 +117,7 @@ namespace SiamCross.Models.Connection.Protocol
             return ret;
         }
 
-        public void ThrowOnError(RespResult ret)
+        private void ThrowOnError(RespResult ret)
         {
             switch (ret)
             {
@@ -133,22 +133,85 @@ namespace SiamCross.Models.Connection.Protocol
         }
 
         public abstract Task<byte[]> Exchange(byte[] req);
-        public abstract Task<RespResult> TryReadMemoryAsync(uint addr, uint len
-            , byte[] dst, int dst_start = 0
-            , Action<float> onStepProgress = null, CancellationToken cancellationToken = default);
 
+        public abstract Task<RespResult> TryReadMemoryAsync(uint addr, uint len
+            , byte[] dst, int dst_start
+            , Action<float> onStepProgress, CancellationToken cancellationToken);
         public abstract Task<RespResult> TryWriteMemoryAsync(uint addr, uint len
-            , byte[] src, int src_start = 0
-            , Action<float> onStepProgress = null, CancellationToken cancellationToken = default);
-        public virtual Task<RespResult> TryReadVarAsync(MemStruct var
+            , byte[] src, int src_start
+            , Action<float> onStepProgress, CancellationToken cancellationToken);
+        public async Task<RespResult> ReadMemAsync(uint addr, uint len
+            , byte[] dst, int dst_start
+            , Action<float> onStep, CancellationToken ct)
+        {
+            var ret = await TryReadMemoryAsync(addr, len, dst, dst_start, onStep, ct);
+            ThrowOnError(ret);
+            return ret;
+        }
+        public async Task<RespResult> WriteMemAsync(uint addr, uint len
+            , byte[] src, int src_start
+            , Action<float> onStep, CancellationToken ct)
+        {
+            var ret = await WriteMemAsync(addr, len, src, src_start, onStep, ct);
+            ThrowOnError(ret);
+            return ret;
+        }
+
+
+        public virtual Task<RespResult> TryReadAsync(MemStruct var
             , Action<float> onStep, CancellationToken ct)
         {
             throw new NotImplementedException();
         }
-        public virtual Task<RespResult> TryWriteVarAsync(MemStruct var
+        public virtual Task<RespResult> TryWriteAsync(MemStruct var
             , Action<float> onStep, CancellationToken ct)
         {
             throw new NotImplementedException();
         }
+        public async Task<RespResult> ReadAsync(MemStruct var
+            , Action<float> onStep, CancellationToken ct)
+        {
+            var ret = await TryReadAsync(var, onStep, ct);
+            ThrowOnError(ret);
+            return ret;
+        }
+        public async Task<RespResult> WriteAsync(MemStruct var
+            , Action<float> onStep, CancellationToken ct)
+        {
+            var ret = await TryWriteAsync(var, onStep, ct);
+            ThrowOnError(ret);
+            return ret;
+        }
+
+
+        public Task<RespResult> TryReadAsync(MemVar var
+            , Action<float> onStep, CancellationToken ct)
+        {
+            MemStruct tmp_struct = new MemStruct(var.Address);
+            tmp_struct.Add(var);
+            return TryReadAsync(tmp_struct, onStep, ct);
+        }
+        public Task<RespResult> TryWriteAsync(MemVar var
+            , Action<float> onStep, CancellationToken ct)
+        {
+            MemStruct tmp_struct = new MemStruct(var.Address);
+            tmp_struct.Add(var);
+            return TryWriteAsync(tmp_struct, onStep, ct);
+        }
+        public Task<RespResult> ReadAsync(MemVar var
+            , Action<float> onStep, CancellationToken ct)
+        {
+            MemStruct tmp_struct = new MemStruct(var.Address);
+            tmp_struct.Add(var);
+            return ReadAsync(tmp_struct, onStep, ct);
+        }
+        public Task<RespResult> WriteAsync(MemVar var
+            , Action<float> onStep, CancellationToken ct)
+        {
+            MemStruct tmp_struct = new MemStruct(var.Address);
+            tmp_struct.Add(var);
+            return WriteAsync(tmp_struct, onStep, ct);
+        }
+
     }
 }

@@ -27,7 +27,6 @@ namespace SiamCross.Models.Connection.Protocol
         }
         protected UInt32 _Address;
         public UInt32 Address => (null == _Parent) ? _Address : _Parent.GetOffset(this) + _Parent.Address;
-
         public string Name
         {
             get
@@ -37,14 +36,11 @@ namespace SiamCross.Models.Connection.Protocol
                 return _Parent.GetName(this);
             }
         }
-
         public abstract UInt32 Size { get; }
-
         public void SetParent(MemStruct parent)
         {
             _Parent = parent;
         }
-
         public abstract void ToArray(byte[] dst, int start = 0);
         public virtual byte[] ToArray()
         {
@@ -54,8 +50,7 @@ namespace SiamCross.Models.Connection.Protocol
         }
         public abstract bool FromArray(byte[] array, UInt32 start);
     }
-
-
+    
     public class MemVarUInt32 : MemVar
     {
         public override UInt32 Size => sizeof(UInt32);
@@ -63,7 +58,6 @@ namespace SiamCross.Models.Connection.Protocol
         public MemVarUInt32(UInt32 address = 0, MemStruct parent = null, string name = null)
             : base(address, parent, name)
         { }
-
         public override void ToArray(byte[] dst, int start = 0)
         {
             BinaryPrimitives.WriteUInt32LittleEndian(dst, Value);

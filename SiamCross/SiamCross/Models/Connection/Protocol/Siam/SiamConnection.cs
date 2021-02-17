@@ -262,7 +262,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                     return ret;
 
                 _RxBuf.AsSpan(_BeginRxBuf + 12, curr_len)
-                    .CopyTo(dst.AsSpan(dst_start, curr_len));
+                    .CopyTo(dst.AsSpan(dst_start+ (int)curr_addr, curr_len));
                 curr_addr += curr_len;
 
                 progress += sep_cost;
@@ -377,7 +377,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             {
                 MemItem curr = enumerator.Current.Key;
                 vars.Reset(curr.Address);
-                while (has_next && vars.Size + curr.Size < Pkg.MAX_PKG_SIZE)
+                while (has_next && vars.Size + curr.Size < MaxReqLen)
                 {
                     vars.Add(curr);
                     has_next = enumerator.MoveNext();
@@ -415,7 +415,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             {
                 MemItem curr = enumerator.Current.Key;
                 vars.Reset(curr.Address);
-                while (has_next && vars.Size + curr.Size < Pkg.MAX_PKG_SIZE)
+                while (has_next && vars.Size + curr.Size < MaxReqLen)
                 {
                     vars.Add(curr);
                     has_next = enumerator.MoveNext();
@@ -442,7 +442,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             return RespResult.NormalPkg;
         }
 
-        public override async Task<RespResult> TryReadVarAsync(MemStruct var
+        public override async Task<RespResult> TryReadAsync(MemStruct var
             , Action<float> onStepProgress, CancellationToken ct)
         {
             using (await _semaphore.UseWaitAsync())
@@ -462,7 +462,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 }
             }
         }
-        public override async Task<RespResult> TryWriteVarAsync(MemStruct var
+        public override async Task<RespResult> TryWriteAsync(MemStruct var
                 , Action<float> onStepProgress, CancellationToken ct)
         {
             using (await _semaphore.UseWaitAsync())

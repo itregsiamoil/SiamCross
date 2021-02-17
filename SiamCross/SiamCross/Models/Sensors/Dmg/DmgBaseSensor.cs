@@ -115,19 +115,23 @@ namespace SiamCross.Models.Sensors.Dmg
             RespResult ret;
             try
             {
-                DeviceNumber.Value = 170;
+                //DeviceNumber.Value = 170;
                 //MemStruct ms = new MemStruct(0x0A);
                 //ms.Add(DeviceNumber);
-                //ret = await ProtConn.TryWriteVarAsync(ms);
-                //ret = await ProtConn.TryReadVarAsync(_Common);
-                //ThrowOnError(ret);
-                ret = await Connection.TryReadVarAsync(_Info);
-                Connection.ThrowOnError(ret);
+                //ret = await ProtConn.WriteAsync(ms);
+                
+                ret = await Connection.ReadAsync(_Common);
+                if (10 < MemoryModelVersion.Value)
+                    Connection.MaxReqLen = 247-3-12-2;
+                else
+                    Connection.MaxReqLen = 40;
+
+
+                ret = await Connection.ReadAsync(_Info);
                 UInt32 fw_address = ProgrammVersionAddress.Value;
                 UInt16 fw_size = ProgrammVersionSize.Value;
                 byte[] membuf = new byte[fw_size];
-                ret = await Connection.TryReadMemoryAsync(fw_address, fw_size, membuf);
-                Connection.ThrowOnError(ret);
+                ret = await Connection.ReadMemAsync(fw_address, fw_size, membuf);
                 SensorData.Firmware = Encoding.UTF8.GetString(membuf, 0, fw_size);
                 return true;
             }
@@ -150,8 +154,7 @@ namespace SiamCross.Models.Sensors.Dmg
             try
             {
                 cancelToken.ThrowIfCancellationRequested();
-                RespResult ret = await Connection.TryReadVarAsync(_CurrentParam);
-                Connection.ThrowOnError(ret);
+                RespResult ret = await Connection.ReadAsync(_CurrentParam);
 
                 SensorData.Battery = (BatteryVoltage.Value / 10.0).ToString();
                 SensorData.Temperature = (Тemperature.Value / 10.0).ToString();
@@ -180,8 +183,7 @@ namespace SiamCross.Models.Sensors.Dmg
             RespResult ret;
             try
             {
-                ret = await Connection.TryReadVarAsync(_NonvolatileParam);
-                Connection.ThrowOnError(ret);
+                ret = await Connection.ReadAsync(_NonvolatileParam);
                 //_reportBuilder.SensitivityLoad = Rkp.Value.ToString();
                 //_reportBuilder.ZeroOffsetLoad = Nkp.Value.ToString();
                 return true;

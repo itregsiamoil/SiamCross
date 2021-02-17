@@ -85,6 +85,23 @@ namespace SiamCross.Droid.Models
         private ScannedDeviceInfo _deviceInfo;
         //private bool _isFirstConnectionTry = true;
 
+        private ConnectionInterval _ConnInterval = ConnectionInterval.Normal;
+        public int ConnInterval 
+        {
+            get 
+            {
+                return _ConnInterval switch
+                {
+                    ConnectionInterval.High => 20,
+                    ConnectionInterval.Low => 100,
+                    _ => 50,
+                };
+            }
+        }
+
+        private int _Mtu = 20;
+        public int Mtu => _Mtu;
+
         public ConnectionBtLe(IPhyInterface ifc)
         {
             if (null == ifc)
@@ -207,6 +224,15 @@ namespace SiamCross.Droid.Models
             bool inited = false;
             try
             {
+                _Mtu = await _device.RequestMtuAsync(256+3) -3;
+                OnPropChange(new PropertyChangedEventArgs(nameof(Mtu)));
+
+                if (_device.UpdateConnectionInterval(ConnectionInterval.High))
+                    _ConnInterval = ConnectionInterval.High;
+                else
+                    _ConnInterval = ConnectionInterval.Normal;
+                OnPropChange(new PropertyChangedEventArgs(nameof(ConnInterval)));
+
                 _targetService = await _device.GetServiceAsync(svc_guid, ct);
                 //IReadOnlyList<IService> svc = await _device.GetServicesAsync(ct);
                 if (null == _targetService)
@@ -368,11 +394,34 @@ namespace SiamCross.Droid.Models
         }
         public override async Task<int> WriteAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
-            bool sent = await _writeCharacteristic
-                .WriteAsync(buffer.AsSpan().Slice(offset, count).ToArray(), ct);
-            if (!sent)
-                return 0;
-            return count;
+            int sent = 0;
+            int curr_count = 0;
+            while (sent < count)
+            {
+                if (sent + Mtu > count)
+                    curr_count = count - sent;
+                else
+                    curr_count = Mtu;
+
+                curr_count = (sent + Mtu > count) ? (count - sent) : Mtu;
+
+
+                var buf = buffer.AsSpan().Slice(offset+ sent, curr_count).ToArray();
+                bool is_ok = await _writeCharacteristic.WriteAsync(buf, ct);
+                Debug.WriteLine($" writing chunk size={curr_count} - resilt is {is_ok}");
+                if (!is_ok)
+                {
+                    if(Mtu>20)
+                    {
+                        Debug.WriteLine($"Set minimum Mtu=20");
+                        _Mtu = 20;
+                        OnPropChange(new PropertyChangedEventArgs(nameof(Mtu)));
+                    }
+                    return 0;
+                }    
+                sent += curr_count;
+            }
+            return sent;
         }
     }
 
