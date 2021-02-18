@@ -12,7 +12,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
           , Write = 0x02
         }
 
-        public const int MAX_PKG_SIZE = 512;
+        public const int MAX_PKG_SIZE = 256;
         public const int MIN_PKG_SIZE = 12;
         private static readonly bool CHECK_RESPONSE_CRC = false;
         private static readonly byte[] begin_marker = { 0x0D, 0x0A };

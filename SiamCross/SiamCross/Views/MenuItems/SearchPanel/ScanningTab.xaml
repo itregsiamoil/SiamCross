@@ -18,21 +18,44 @@
                        IsVisible="{Binding Scanner.ActiveScan}">
                 </Label>
             </StackLayout>
-            <ListView x:Name="scannedDevicesList" 
-                      HasUnevenRows="True"
-                      ItemsSource="{Binding ScannedDevices}"
-                      RefreshCommand="{Binding RefreshCommand}"
-                      IsPullToRefreshEnabled="True">
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="dm:ScannedDeviceInfo">
-                        <ViewCell>
-                            <ViewCell.View>
-                                <StackLayout>
-                                    <xct:Expander Margin="5" >
-                                        <xct:Expander.Header>
-
-                                            <Grid>
-                                                <!--
+            <!--
+            RefreshCommand="{Binding RefreshCommand}"
+            IsPullToRefreshEnabled="True"
+            -->
+            <RefreshView x:Name="RView"
+                IsRefreshing="{Binding IsRefreshing}"
+             Command="{Binding RefreshCommand}">
+                <CollectionView x:Name="scannedDevicesList" 
+                                ItemsSource="{Binding ScannedDevices}"
+                                Header="{Binding .}"
+                                Footer="{Binding .}"
+                                SelectionMode="None">
+                    <!--
+                    <CollectionView.HeaderTemplate>
+                        <DataTemplate>
+                            <StackLayout BackgroundColor="Red">
+                                <Label Margin="10,0,0,0"
+                       Text="Monkeys"
+                       FontSize="Small"
+                       FontAttributes="Bold" />
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.HeaderTemplate>
+                    -->
+                    <CollectionView.FooterTemplate >
+                        <DataTemplate >
+                            <StackLayout BackgroundColor="LightGray" IsVisible="{Binding Scanner.ActiveScan}" >
+                                <Label Margin="10,0,0,0" Text="{Binding Scanner.ScanString}"/>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.FooterTemplate>
+                    
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="dm:ScannedDeviceInfo">
+                            <xct:Expander Margin="5" >
+                                <xct:Expander.Header>
+                                    <Grid>
+                                        <!--
                                                 <Grid.Triggers>
                                                     <DataTrigger TargetType="Grid"
                                                             Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}
@@ -43,31 +66,31 @@
                                                     </DataTrigger>
                                                 </Grid.Triggers>
                                                 -->
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="*"></RowDefinition>
-                                                    <!--RowDefinition Height="{Binding FontSize:Large}"></> -->
-                                                </Grid.RowDefinitions>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                                    <ColumnDefinition Width="20"></ColumnDefinition>
-                                                    <ColumnDefinition Width="50"></ColumnDefinition>
-                                                </Grid.ColumnDefinitions>
-                                                <!--header expander symbol -->
-                                                <Label Text="&#x25BC;" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"></RowDefinition>
+                                            <!--RowDefinition Height="{Binding FontSize:Large}"></> -->
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="20"></ColumnDefinition>
+                                            <ColumnDefinition Width="50"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <!--header expander symbol -->
+                                        <Label Text="&#x25BC;" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
                                                        Grid.Row="0" Grid.Column="2" >
-                                                    <Label.Triggers>
-                                                        <DataTrigger TargetType="Label"
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label"
                                                             Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}
                                                                     , Path=IsExpanded}" 
                                                             Value="True">
-                                                            <Setter Property="Text" 
+                                                    <Setter Property="Text" 
                                                                     Value="&#x25B2;" />
-                                                        </DataTrigger>
-                                                    </Label.Triggers>
-                                                </Label>
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
 
-                                                <Label Grid.Row="0" Grid.Column="0" FontSize="Micro">
-                                                    <!--
+                                        <Label Grid.Row="0" Grid.Column="0" FontSize="Micro">
+                                            <!--
                                                     <Label.GestureRecognizers>
                                                         <TapGestureRecognizer 
                                                         Command="{Binding Path=BindingContext.SelectItemCommand
@@ -75,78 +98,76 @@
                                                         CommandParameter="{Binding .}"/>
                                                     </Label.GestureRecognizers>
                                                     -->
-                                                    <Label.FormattedText>
-                                                        <FormattedString >
-                                                            <Span Text="{Binding Name}" FontAttributes="Bold" FontSize="Medium" />
-                                                            <Span Text="&#10;" />
-                                                            <Span Text=" Mac: " />
-                                                            <Span Text="{Binding Mac}" FontAttributes="Bold" FontSize="Micro" />
-                                                            <Span Text=" Phy: " />
-                                                            <Span Text="{Binding PrimaryPhy}" FontAttributes="Bold" FontSize="Micro" />
-                                                            <Span Text=" Rssi: " />
-                                                            <Span Text="{Binding Rssi}" FontAttributes="Bold" FontSize="Micro" />
-                                                        </FormattedString>
-                                                    </Label.FormattedText>
-                                                </Label>
+                                            <Label.FormattedText>
+                                                <FormattedString >
+                                                    <Span Text="{Binding Name}" FontAttributes="Bold" FontSize="Medium" />
+                                                    <Span Text="&#10;" />
+                                                    <Span Text=" Mac: " />
+                                                    <Span Text="{Binding Mac}" FontAttributes="Bold" FontSize="Micro" />
+                                                    <Span Text=" Phy: " />
+                                                    <Span Text="{Binding PrimaryPhy}" FontAttributes="Bold" FontSize="Micro" />
+                                                    <Span Text=" Rssi: " />
+                                                    <Span Text="{Binding Rssi}" FontAttributes="Bold" FontSize="Micro" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
 
-                                                <Label Text=""
+                                        <Label Text=""
                                                        Grid.Row="0" Grid.Column="1">
-                                                    <Label.Triggers>
-                                                        <DataTrigger TargetType="Label"
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label"
                                                             Binding="{Binding BondState}" 
                                                             Value="Bonded">
-                                                            <Setter Property="Text" 
+                                                    <Setter Property="Text" 
                                                                     Value="&#x1F517;" />
-                                                        </DataTrigger>
-                                                    </Label.Triggers>
-                                                </Label>
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
 
 
 
-                                            </Grid>
-                                        </xct:Expander.Header>
-                                        <xct:Expander.ContentTemplate>
-                                            <DataTemplate>
-                                                <StackLayout Orientation="Vertical" Margin="10">
-                                                    <Grid >
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="*"></RowDefinition>
-                                                        </Grid.RowDefinitions>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="*"></ColumnDefinition>
-                                                        </Grid.ColumnDefinitions>
+                                    </Grid>
+                                </xct:Expander.Header>
+                                <xct:Expander.ContentTemplate>
+                                    <DataTemplate>
+                                        <StackLayout Orientation="Vertical" Margin="10">
+                                            <Grid >
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*"></RowDefinition>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                                </Grid.ColumnDefinitions>
 
-                                                        <Picker IsEnabled="true"
+                                                <Picker IsEnabled="true"
                                                                 Grid.Row="0" Grid.Column="0"
                                                                 ItemsSource="{Binding ProtocolNames}"
-                                                                SelectedItem ="{Binding Protocol.Kind}"
+                                                                SelectedItem ="{Binding Protocol.KindStr}"
                                                                 >
-                                                        </Picker>
-                                                        <Label Text="{local:Translate Protocol}" FontSize="Micro"
+                                                </Picker>
+                                                <Label Text="{local:Translate Protocol}" FontSize="Micro"
                                                                Grid.Row="0" Grid.Column="0" />
 
-                                                        <Entry IsEnabled="True" Text="{Binding Protocol.Address}" 
+                                                <Entry IsEnabled="True" Text="{Binding Protocol.Address}" 
                                                                Grid.Row="1" Grid.Column="0" >
-                                                        </Entry>
-                                                        <Label Text="{local:Translate Address}" FontSize="Micro"
+                                                </Entry>
+                                                <Label Text="{local:Translate Address}" FontSize="Micro"
                                                                Grid.Row="1" Grid.Column="0" />
-                                                    </Grid>
-                                                    <Button x:Name="AddSensor" Text="{local:Translate StatConn_PendingConnect}"
+                                            </Grid>
+                                            <Button x:Name="AddSensor" Text="{local:Translate StatConn_PendingConnect}"
                                                         Command="{Binding Path=BindingContext.SelectItemCommand
                                                         , Source={x:Reference ScanningTabView}}"
                                                         CommandParameter="{Binding .}" >
-                                                    </Button>                                                    
-                                                    
-                                                </StackLayout>
-                                            </DataTemplate>
-                                        </xct:Expander.ContentTemplate>
-                                    </xct:Expander>
-                                </StackLayout>
-                            </ViewCell.View>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                                            </Button>
+
+                                        </StackLayout>
+                                    </DataTemplate>
+                                </xct:Expander.ContentTemplate>
+                            </xct:Expander>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

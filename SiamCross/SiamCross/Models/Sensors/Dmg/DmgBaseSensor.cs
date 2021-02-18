@@ -121,11 +121,10 @@ namespace SiamCross.Models.Sensors.Dmg
                 //ret = await ProtConn.WriteAsync(ms);
                 
                 ret = await Connection.ReadAsync(_Common);
-                if (10 < MemoryModelVersion.Value)
-                    Connection.MaxReqLen = 247-3-12-2;
-                else
+                if (10 > MemoryModelVersion.Value)
                     Connection.MaxReqLen = 40;
-
+                else
+                    Connection.MaxReqLen = Pkg.MAX_PKG_SIZE;
 
                 ret = await Connection.ReadAsync(_Info);
                 UInt32 fw_address = ProgrammVersionAddress.Value;

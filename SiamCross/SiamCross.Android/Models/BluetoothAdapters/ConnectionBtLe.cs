@@ -395,17 +395,10 @@ namespace SiamCross.Droid.Models
         public override async Task<int> WriteAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
             int sent = 0;
-            int curr_count = 0;
+            int curr_count;
             while (sent < count)
             {
-                if (sent + Mtu > count)
-                    curr_count = count - sent;
-                else
-                    curr_count = Mtu;
-
                 curr_count = (sent + Mtu > count) ? (count - sent) : Mtu;
-
-
                 var buf = buffer.AsSpan().Slice(offset+ sent, curr_count).ToArray();
                 bool is_ok = await _writeCharacteristic.WriteAsync(buf, ct);
                 Debug.WriteLine($" writing chunk size={curr_count} - resilt is {is_ok}");
@@ -414,7 +407,7 @@ namespace SiamCross.Droid.Models
                     if(Mtu>20)
                     {
                         Debug.WriteLine($"Set minimum Mtu=20");
-                        _Mtu = 20;
+                        _Mtu = await _device.RequestMtuAsync(20 + 3) - 3;
                         OnPropChange(new PropertyChangedEventArgs(nameof(Mtu)));
                     }
                     return 0;

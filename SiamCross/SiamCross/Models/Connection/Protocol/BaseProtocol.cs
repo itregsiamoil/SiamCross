@@ -1,4 +1,5 @@
 ﻿using SiamCross.Models.Connection.Phy;
+using SiamCross.Models.Connection.Protocol.Siam;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -27,7 +28,20 @@ namespace SiamCross.Models.Connection.Protocol
 
         protected IPhyConnection mPhyConn = null;
         public IPhyConnection PhyConnection => mPhyConn;
-        public ushort MaxReqLen { get; set; }
+
+        private ushort _MaxReqLen=40;
+        public ushort MaxReqLen 
+        { 
+            get => _MaxReqLen; 
+            set
+            {
+                if (value + 12 + 2 > Pkg.MAX_PKG_SIZE)
+                    _MaxReqLen = Pkg.MAX_PKG_SIZE - 12 - 2;
+                else
+                    _MaxReqLen = value;
+                OnPropChange(new PropertyChangedEventArgs(nameof(MaxReqLen)));
+            }
+        }
 
         private byte _Address = 1;
         public virtual byte Address
@@ -47,7 +61,6 @@ namespace SiamCross.Models.Connection.Protocol
         {
             _Address = address;
             mPhyConn = base_conn;
-            MaxReqLen = 40;
         }
         public async Task<bool> Connect()
         {

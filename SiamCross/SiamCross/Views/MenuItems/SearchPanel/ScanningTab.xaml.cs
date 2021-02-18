@@ -12,16 +12,10 @@ namespace SiamCross.Views.MenuItems.SearchPanel
         {
             InitializeComponent();
             _vm = new ViewModelWrap<ScannerViewModel>().ViewModel;
-            _vm.Scanner.ScanStarted += () => { scannedDevicesList.IsRefreshing = true; };
-            _vm.Scanner.ScanStoped += () => { scannedDevicesList.IsRefreshing = false; };
+            _vm.Scanner.ScanStarted += () => { RView.IsRefreshing = true; };
+            _vm.Scanner.ScanStoped += () => { RView.IsRefreshing = false; };
             BindingContext = _vm;
         }
-        /*
-        public void ItemSelected(object sender, SelectedItemChangedEventArgs e)
-        {
-            _vm.SelectItem(e.SelectedItem)
-        }
-        */
         protected override void OnAppearing()
         {
             base.OnAppearing();

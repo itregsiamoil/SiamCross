@@ -28,26 +28,26 @@ namespace SiamCross.Models.Scanners
 
     public class ProtocolInfo
     {
-        private ProtocolKind _kind;
-
-        public string Kind
+        public string KindStr
         {
-            get => _kind.ToString();
+            get => Kind.ToString();
             set
             {
-                if (value.ToString() == ProtocolKind.Modbus.ToString())
-                    _kind = ProtocolKind.Modbus;
+                if (null==value
+                    || value.ToString() == ProtocolKind.Modbus.ToString())
+                    Kind = ProtocolKind.Modbus;
                 else
-                    _kind = ProtocolKind.Siam;
+                    Kind = ProtocolKind.Siam;
             }
         }
 
-        //public ProtocolType Type { get; set; }
+        public ProtocolKind Kind { get; set; }
+
         public byte Address { get; set; }
 
         public ProtocolInfo(ProtocolKind type = ProtocolKind.Siam, byte addr = 1)
         {
-            _kind = type;
+            Kind = type;
             Address = addr;
         }
     }
@@ -55,6 +55,11 @@ namespace SiamCross.Models.Scanners
 
     public class ScannedDeviceInfo : IEquatable<ScannedDeviceInfo>
     {
+        public ScannedDeviceInfo()
+        {
+            Protocol = new ProtocolInfo();
+        }
+
         private static readonly List<string> _proto_list = Enum.GetNames(typeof(ProtocolKind)).Select(b => b.SplitCamelCase()).ToList();
         public List<string> ProtocolNames => _proto_list;
         public ProtocolInfo Protocol { get; set; }

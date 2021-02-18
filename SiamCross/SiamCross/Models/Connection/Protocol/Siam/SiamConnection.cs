@@ -83,8 +83,12 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private void CheckEmptySpace()
         {
             int empty_space = _RxBuf.Length - _EndRxBuf;
-            if (empty_space < Pkg.MAX_PKG_SIZE)
+            if(0==empty_space)
+                throw new System.IO.InternalBufferOverflowException();
+
+            if (Pkg.MAX_PKG_SIZE > empty_space)
             {
+                DebugLog.WriteLine($"MemMove in buffer begin={_BeginRxBuf} end={_EndRxBuf}");
                 Span<byte> dst_buf = _RxBuf;
                 Span<byte> src_buf = _RxBuf.AsSpan().Slice(_BeginRxBuf, _EndRxBuf);
                 src_buf.CopyTo(dst_buf);

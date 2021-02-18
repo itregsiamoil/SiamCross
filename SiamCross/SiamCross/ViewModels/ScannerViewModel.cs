@@ -2,12 +2,21 @@
 using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Models;
+using SiamCross.Models.Adapters;
+using SiamCross.Models.Connection.Phy;
+using SiamCross.Models.Connection.Protocol;
+using SiamCross.Models.Connection.Protocol.Siam;
 using SiamCross.Models.Scanners;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -24,9 +33,9 @@ namespace SiamCross.ViewModels
         public IBluetoothScanner Scanner => _scanner;
 
 
-        public ObservableCollection<ScannedDeviceInfo> ScannedDevices { get; }
+        public ObservableCollection<ScannedDeviceInfo> ScannedDevices { get; private set; }
 
-        public ObservableCollection<ScannedDeviceInfo> ClassicDevices { get; }
+        public ObservableCollection<ScannedDeviceInfo> ClassicDevices { get; private set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -47,6 +56,18 @@ namespace SiamCross.ViewModels
             SelectItemCommand = new Command(SelectItem);
             StartStopScanCommand = new Command(StartStopScan);
             StartScan();
+
+            _Common = new MemStruct(0x00);
+            DeviceType = _Common.Add(new MemVarUInt16(), nameof(DeviceType));
+            MemoryModelVersion = _Common.Add(new MemVarUInt16(), nameof(MemoryModelVersion));
+            DeviceNameAddress = _Common.Add(new MemVarUInt32(), nameof(DeviceNameAddress));
+            DeviceNameSize = _Common.Add(new MemVarUInt16(), nameof(DeviceNameSize));
+            DeviceNumber = _Common.Add(new MemVarUInt32(), nameof(DeviceNumber));
+
+            _Info = new MemStruct(0x1000);
+            ProgrammVersionAddress = _Info.Add(new MemVarUInt32(), nameof(ProgrammVersionAddress));
+            ProgrammVersionSize = _Info.Add(new MemVarUInt16(), nameof(ProgrammVersionSize));
+
         }
 
         private void ScannerScanTimoutElapsed()
@@ -79,16 +100,27 @@ namespace SiamCross.ViewModels
         private void SelectItem(object obj)
         {
             if (obj is ScannedDeviceInfo dev)
-                SelectItem(dev);
+                SelectItemAsync(dev);
         }
-        public void SelectItem(ScannedDeviceInfo item)
+        public async Task SelectItemAsync(ScannedDeviceInfo item)
         {
             try
             {
                 if (item == null)
                     return;
+
+                var devices = await GetDevice(item);
+                
+
+                string action = await Application.Current.MainPage
+                    .DisplayActionSheet("Select device"
+                    , "Cancel", null, devices.Keys.AsEnumerable().ToArray() );
+                if (action == "Cancel")
+                    return;
+
+
                 SensorService.Instance.AddSensor(item);
-                App.NavigationPage.Navigation.PopToRootAsync();
+                await App.NavigationPage.Navigation.PopToRootAsync();
                 App.MenuIsPresented = false;
             }
             catch (Exception ex)
@@ -96,6 +128,76 @@ namespace SiamCross.ViewModels
                 _logger.Error(ex, "ItemSelected (creating sensor)" + "\n");
             }
         }
+        private async Task< Dictionary<string, int> > GetDevice(ScannedDeviceInfo phy_item)
+        {
+            Dictionary<string, int> dir = new Dictionary<string, int>();
+            IPhyInterface phy_interface = null;
+            switch (phy_item.BluetoothType)
+            {
+                default: break;
+                case BluetoothType.Le:
+                    phy_interface = BtLeInterface.Factory.GetCurent(); break;
+                case BluetoothType.Classic:
+                    phy_interface = Models.Adapters.PhyInterface.Bt2.Factory.GetCurent(); break;
+            }
+            IPhyConnection conn = phy_interface.MakeConnection(phy_item);
+
+            switch (phy_item.Protocol.Kind)
+            {
+                case ProtocolKind.Siam:
+                    IProtocolConnection connection = new SiamConnection(conn);
+                    await connection.Connect();
+                    await connection.ReadAsync(_Common);
+                    await connection.ReadAsync(_Info);
+
+                    UInt32 address = DeviceNameAddress.Value;
+                    UInt16 len = DeviceNameSize.Value;
+                    byte[] membuf = new byte[len];
+                    await connection.ReadMemAsync(address, len, membuf);
+                    string dvc_name;
+                    if (10 > MemoryModelVersion.Value)
+                        dvc_name = Encoding.GetEncoding(1251).GetString(membuf,0,len);
+                    else
+                        dvc_name = Encoding.UTF8.GetString(membuf, 0, len);
+
+                    address = ProgrammVersionAddress.Value;
+                    len = ProgrammVersionSize.Value;
+                    membuf = new byte[len];
+                    await connection.ReadMemAsync(address, len, membuf);
+                    string firmware;
+                    if (10 > MemoryModelVersion.Value)
+                        firmware = Encoding.GetEncoding(1251).GetString(membuf, 0, len);
+                    else
+                        firmware = Encoding.UTF8.GetString(membuf, 0, len);
+
+
+                    string label;
+                    label = $"{DeviceType.Value}0 {dvc_name} {DeviceNumber.Value} {firmware}";
+                    dir.Add(label, phy_item.Protocol.Address);
+                    label = $"{DeviceType.Value}1 {dvc_name} {DeviceNumber.Value} {firmware}";
+                    dir.Add(label, phy_item.Protocol.Address);
+                    label = $"{DeviceType.Value}2 {dvc_name} {DeviceNumber.Value} {firmware}";
+                    dir.Add(label, phy_item.Protocol.Address);
+                    break;
+                default:
+                case ProtocolKind.Modbus: break;
+            }
+
+            return dir;
+        }
+
+
+        public readonly MemStruct _Common;
+        public readonly MemVarUInt16 DeviceType;
+        public readonly MemVarUInt16 MemoryModelVersion;
+        public readonly MemVarUInt32 DeviceNameAddress;
+        public readonly MemVarUInt16 DeviceNameSize;
+        public readonly MemVarUInt32 DeviceNumber;
+        public readonly MemStruct _Info;
+        public readonly MemVarUInt32 ProgrammVersionAddress;
+        public readonly MemVarUInt16 ProgrammVersionSize;
+        public readonly MemStruct _SurvayParam;
+
 
         public void AppendBonded()
         {
@@ -116,6 +218,8 @@ namespace SiamCross.ViewModels
             {
                 ScannedDevices.Clear();
                 ClassicDevices.Clear();
+                //ScannedDevices = new ObservableCollection<ScannedDeviceInfo>();
+                //ClassicDevices = new ObservableCollection<ScannedDeviceInfo>();
                 _scanner.Start();
             }
             catch (Exception ex)

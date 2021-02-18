@@ -39,9 +39,11 @@ namespace SiamCross.Droid.Models
     [Android.Runtime.Preserve(AllMembers = true)]
     public class BluetoothScannerAndroid : IBluetoothScanner, INotifyPropertyChanged
     {
-        private readonly BluetoothScanReceiver _receiver = new BluetoothScanReceiver();
-        private static readonly BluetoothAdapter _bt_adapter = BluetoothAdapter.DefaultAdapter;
-        private readonly BLE.BluetoothLeScanner _ble_scanner = _bt_adapter.BluetoothLeScanner;
+        private static readonly BluetoothScanReceiver _receiver = new BluetoothScanReceiver();
+        //private static readonly BluetoothAdapter _bt_adapter = BluetoothAdapter.DefaultAdapter;
+        private BLE.BluetoothLeScanner _ble_scanner = null;
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -195,6 +197,7 @@ namespace SiamCross.Droid.Models
             b.SetScanMode(BLE.ScanMode.LowLatency);
             b.SetReportDelay(0);
             BLE.ScanSettings st = b.Build();
+            _ble_scanner = BluetoothAdapter.DefaultAdapter.BluetoothLeScanner;
             _ble_scanner.StartScan(null, st, _receiver);
             await Task.Delay(ScanTimeout);
             StopScanLeAsync();
@@ -202,12 +205,14 @@ namespace SiamCross.Droid.Models
 
         private void StopScanLeAsync()
         {
-            BluetoothScanReceiver _stop_receiver = new BluetoothScanReceiver();
-            _stop_receiver.ActionOnScanResult += OnScanResult;
+            if (null == _ble_scanner)
+                return;
             _ble_scanner.StopScan(_receiver);
             _ble_scanner.FlushPendingScanResults(_receiver);
-            _stop_receiver.ActionOnScanResult -= OnScanResult;
+
             ClearScanInfo();
+            _ble_scanner?.Dispose();
+            _ble_scanner = null;
             ScanStoped?.Invoke();
         }
         public void StartBounded()

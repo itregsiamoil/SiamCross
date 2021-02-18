@@ -47,6 +47,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
             {
                 /*
                 await SendParameters();
+                
                 MeasurementStatus = await ExecuteMeasurement();
                 if (DmgMeasureStatus.Ready != MeasurementStatus)
                 {
@@ -101,17 +102,17 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
             mSensor.Imtravel.Value = (UInt16)_measurementParameters.Imtravel;
             mSensor.ModelPump.Value = (UInt16)_measurementParameters.ModelPump;
 
-            if (10 < mSensor.MemoryModelVersion.Value)
-            {
-                await _Connection.WriteAsync(mSensor._SurvayParam);
-            }
-            else 
+            if (10 > mSensor.MemoryModelVersion.Value)
             {
                 await _Connection.WriteAsync(mSensor.Rod);
                 await _Connection.WriteAsync(mSensor.DynPeriod);
                 await _Connection.WriteAsync(mSensor.ApertNumber);
                 await _Connection.WriteAsync(mSensor.Imtravel);
                 await _Connection.WriteAsync(mSensor.ModelPump);
+            }
+            else 
+            {
+                await _Connection.WriteAsync(mSensor._SurvayParam);
             }
             Debug.WriteLine("PARAMETERS HAS BEEN SENT");
         }
@@ -199,8 +200,14 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                 UpdateProgress(_progress);
             };
 
+            Stopwatch _PerfCounter = new Stopwatch();
+            _PerfCounter.Restart();
+
             var ret =  await _Connection.ReadMemAsync(0x81000000, 1000 * 2, _currentDynGraph
                 ,0, StepProgress);
+
+            Debug.WriteLine(" elapsed=" + _PerfCounter.ElapsedMilliseconds.ToString());
+
 
             /*
             UpdateProgress(_progress, "Read axgm");
