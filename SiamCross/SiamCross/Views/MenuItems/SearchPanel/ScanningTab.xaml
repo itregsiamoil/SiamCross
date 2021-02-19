@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
              x:Class="SiamCross.Views.MenuItems.SearchPanel.ScanningTab"
              x:Name="ScanningTabView"
-             Title="Bluetooth 4LE">
+             Title="{Binding Scanner.Phy.Name}">
     <ContentPage.Content>
         <StackLayout>
             <StackLayout Orientation="Horizontal">
@@ -27,8 +27,6 @@
              Command="{Binding RefreshCommand}">
                 <CollectionView x:Name="scannedDevicesList" 
                                 ItemsSource="{Binding ScannedDevices}"
-                                Header="{Binding .}"
-                                Footer="{Binding .}"
                                 SelectionMode="None">
                     <!--
                     <CollectionView.HeaderTemplate>
@@ -41,7 +39,7 @@
                             </StackLayout>
                         </DataTemplate>
                     </CollectionView.HeaderTemplate>
-                    -->
+                    
                     <CollectionView.FooterTemplate >
                         <DataTemplate >
                             <StackLayout BackgroundColor="LightGray" IsVisible="{Binding Scanner.ActiveScan}" >
@@ -49,7 +47,7 @@
                             </StackLayout>
                         </DataTemplate>
                     </CollectionView.FooterTemplate>
-                    
+                    -->
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="dm:ScannedDeviceInfo">
                             <xct:Expander Margin="5" >
@@ -131,28 +129,30 @@
                                 <xct:Expander.ContentTemplate>
                                     <DataTemplate>
                                         <StackLayout Orientation="Vertical" Margin="10">
-                                            <Grid >
+                                            <Grid RowSpacing="0">
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="*"></RowDefinition>
+                                                    <RowDefinition Height="15"></RowDefinition>
+                                                    <RowDefinition Height="40"></RowDefinition>
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                                    <ColumnDefinition Width="50*"></ColumnDefinition>
+                                                    <ColumnDefinition Width="50*"></ColumnDefinition>
                                                 </Grid.ColumnDefinitions>
 
-                                                <Picker IsEnabled="true"
-                                                                Grid.Row="0" Grid.Column="0"
-                                                                ItemsSource="{Binding ProtocolNames}"
-                                                                SelectedItem ="{Binding Protocol.KindStr}"
-                                                                >
-                                                </Picker>
                                                 <Label Text="{local:Translate Protocol}" FontSize="Micro"
-                                                               Grid.Row="0" Grid.Column="0" />
+                                                       Grid.Row="0" Grid.Column="0" />
 
-                                                <Entry IsEnabled="True" Text="{Binding Protocol.Address}" 
-                                                               Grid.Row="1" Grid.Column="0" >
-                                                </Entry>
+                                                <Picker IsEnabled="False"
+                                                        Grid.Row="1" Grid.Column="0"
+                                                        ItemsSource="{Binding ProtocolNames}"
+                                                        SelectedItem ="{Binding Protocol.KindStr}" >
+                                                </Picker>
                                                 <Label Text="{local:Translate Address}" FontSize="Micro"
-                                                               Grid.Row="1" Grid.Column="0" />
+                                                       Grid.Row="0" Grid.Column="1" />
+                                                <Entry IsEnabled="False"
+                                                       Text="{Binding Protocol.Address}" 
+                                                       Grid.Row="1" Grid.Column="1" >
+                                                </Entry>
                                             </Grid>
                                             <Button x:Name="AddSensor" Text="{local:Translate StatConn_PendingConnect}"
                                                         Command="{Binding Path=BindingContext.SelectItemCommand

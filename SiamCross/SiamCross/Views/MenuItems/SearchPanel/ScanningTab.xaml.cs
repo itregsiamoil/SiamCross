@@ -1,4 +1,6 @@
-﻿using SiamCross.ViewModels;
+﻿using SiamCross.Models.Adapters.PhyInterface;
+using SiamCross.Models.Scanners;
+using SiamCross.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -8,23 +10,36 @@ namespace SiamCross.Views.MenuItems.SearchPanel
     public partial class ScanningTab : ContentPage
     {
         private readonly ScannerViewModel _vm;
-        public ScanningTab()
+
+        public ScanningTab(IBluetoothScanner scanner)
         {
-            InitializeComponent();
-            _vm = new ViewModelWrap<ScannerViewModel>().ViewModel;
+            _vm = new ScannerViewModel(scanner);
             _vm.Scanner.ScanStarted += () => { RView.IsRefreshing = true; };
             _vm.Scanner.ScanStoped += () => { RView.IsRefreshing = false; };
             BindingContext = _vm;
+            InitializeComponent();
+        }
+        public ScanningTab()
+            : this(FactoryBtLe.GetCurent().GetScanner())
+        {
         }
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            _vm.AppendBonded();
         }
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
             _vm.StopScan();
+        }
+    }
+
+    public class BoundingTab : ScanningTab
+    {
+        public BoundingTab()
+            : base(FactoryBt2.GetCurent().GetScanner())
+        {
+
         }
     }
 }

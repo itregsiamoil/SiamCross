@@ -50,7 +50,7 @@ namespace SiamCross.Models.Connection.Protocol
         }
         public abstract bool FromArray(byte[] array, UInt32 start);
     }
-    
+
     public class MemVarUInt32 : MemVar
     {
         public override UInt32 Size => sizeof(UInt32);

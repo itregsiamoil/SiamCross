@@ -2,7 +2,9 @@
 
 using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
+using SiamCross.Droid.Models.BluetoothAdapters;
 using SiamCross.Models.Adapters;
+using SiamCross.Models.Adapters.PhyInterface;
 using SiamCross.Models.Connection;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
@@ -55,7 +57,7 @@ namespace SiamCross.Droid.Models
             {
                 if (null == mInterface)
                     return null;
-                BtLeInterface ble_ifc = mInterface as BtLeInterface;
+                BtLeInterfaceDroid ble_ifc = mInterface as BtLeInterfaceDroid;
                 //if (null == ble_ifc)
                 //    return null;
                 return ble_ifc?.Adapter;
@@ -86,16 +88,17 @@ namespace SiamCross.Droid.Models
         //private bool _isFirstConnectionTry = true;
 
         private ConnectionInterval _ConnInterval = ConnectionInterval.Normal;
-        public int ConnInterval 
+        public int ConnInterval
         {
-            get 
+            get
             {
-                return _ConnInterval switch
+                switch (_ConnInterval)
                 {
-                    ConnectionInterval.High => 20,
-                    ConnectionInterval.Low => 100,
-                    _ => 50,
-                };
+                    default:
+                    case ConnectionInterval.Normal: return 50;
+                    case ConnectionInterval.High: return 20;
+                    case ConnectionInterval.Low: return 100;
+                }
             }
         }
 
@@ -105,7 +108,7 @@ namespace SiamCross.Droid.Models
         public ConnectionBtLe(IPhyInterface ifc)
         {
             if (null == ifc)
-                mInterface = BtLeInterface.Factory.GetCurent();
+                mInterface = FactoryBtLe.GetCurent();
             else
                 mInterface = ifc;
         }
@@ -224,7 +227,7 @@ namespace SiamCross.Droid.Models
             bool inited = false;
             try
             {
-                _Mtu = await _device.RequestMtuAsync(256+3) -3;
+                _Mtu = await _device.RequestMtuAsync(256 + 3) - 3;
                 OnPropChange(new PropertyChangedEventArgs(nameof(Mtu)));
 
                 if (_device.UpdateConnectionInterval(ConnectionInterval.High))
@@ -356,7 +359,7 @@ namespace SiamCross.Droid.Models
             using (await semaphore.UseWaitAsync()) //lock (lockObj)
             {
                 LockLog("Add - Lock");
-                await mRxStream.WriteAsync(inputBytes);
+                await mRxStream.WriteAsync(inputBytes, 0, inputBytes.Length);
                 LockLog("Add - SetResult");
                 tcs?.TrySetResult(true);
             }
@@ -399,19 +402,19 @@ namespace SiamCross.Droid.Models
             while (sent < count)
             {
                 curr_count = (sent + Mtu > count) ? (count - sent) : Mtu;
-                var buf = buffer.AsSpan().Slice(offset+ sent, curr_count).ToArray();
+                byte[] buf = buffer.AsSpan().Slice(offset + sent, curr_count).ToArray();
                 bool is_ok = await _writeCharacteristic.WriteAsync(buf, ct);
                 Debug.WriteLine($" writing chunk size={curr_count} - resilt is {is_ok}");
                 if (!is_ok)
                 {
-                    if(Mtu>20)
+                    if (Mtu > 20)
                     {
                         Debug.WriteLine($"Set minimum Mtu=20");
                         _Mtu = await _device.RequestMtuAsync(20 + 3) - 3;
                         OnPropChange(new PropertyChangedEventArgs(nameof(Mtu)));
                     }
                     return 0;
-                }    
+                }
                 sent += curr_count;
             }
             return sent;

@@ -29,10 +29,10 @@ namespace SiamCross.Models.Connection.Protocol
         protected IPhyConnection mPhyConn = null;
         public IPhyConnection PhyConnection => mPhyConn;
 
-        private ushort _MaxReqLen=40;
-        public ushort MaxReqLen 
-        { 
-            get => _MaxReqLen; 
+        private ushort _MaxReqLen = 40;
+        public ushort MaxReqLen
+        {
+            get => _MaxReqLen;
             set
             {
                 if (value + 12 + 2 > Pkg.MAX_PKG_SIZE)
@@ -157,7 +157,7 @@ namespace SiamCross.Models.Connection.Protocol
             , byte[] dst, int dst_start
             , Action<float> onStep, CancellationToken ct)
         {
-            var ret = await TryReadMemoryAsync(addr, len, dst, dst_start, onStep, ct);
+            RespResult ret = await TryReadMemoryAsync(addr, len, dst, dst_start, onStep, ct);
             ThrowOnError(ret);
             return ret;
         }
@@ -165,7 +165,7 @@ namespace SiamCross.Models.Connection.Protocol
             , byte[] src, int src_start
             , Action<float> onStep, CancellationToken ct)
         {
-            var ret = await WriteMemAsync(addr, len, src, src_start, onStep, ct);
+            RespResult ret = await WriteMemAsync(addr, len, src, src_start, onStep, ct);
             ThrowOnError(ret);
             return ret;
         }
@@ -184,14 +184,14 @@ namespace SiamCross.Models.Connection.Protocol
         public async Task<RespResult> ReadAsync(MemStruct var
             , Action<float> onStep, CancellationToken ct)
         {
-            var ret = await TryReadAsync(var, onStep, ct);
+            RespResult ret = await TryReadAsync(var, onStep, ct);
             ThrowOnError(ret);
             return ret;
         }
         public async Task<RespResult> WriteAsync(MemStruct var
             , Action<float> onStep, CancellationToken ct)
         {
-            var ret = await TryWriteAsync(var, onStep, ct);
+            RespResult ret = await TryWriteAsync(var, onStep, ct);
             ThrowOnError(ret);
             return ret;
         }

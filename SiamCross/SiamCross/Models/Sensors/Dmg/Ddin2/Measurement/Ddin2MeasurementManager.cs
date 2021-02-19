@@ -1,9 +1,5 @@
-﻿using Autofac;
-using NLog;
-using SiamCross.AppObjects;
-using SiamCross.Models.Connection.Protocol;
+﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Tools;
-using SiamCross.Services.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -95,7 +91,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
         private async Task SendParameters()
         {
             UpdateProgress(1, Resource.Init);
-            
+
             mSensor.Rod.Value = (UInt16)_measurementParameters.Rod;
             mSensor.DynPeriod.Value = (UInt32)_measurementParameters.DynPeriod;
             mSensor.ApertNumber.Value = (UInt16)_measurementParameters.ApertNumber;
@@ -110,7 +106,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                 await _Connection.WriteAsync(mSensor.Imtravel);
                 await _Connection.WriteAsync(mSensor.ModelPump);
             }
-            else 
+            else
             {
                 await _Connection.WriteAsync(mSensor._SurvayParam);
             }
@@ -151,19 +147,19 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
         {
             UpdateProgress(2, Resource.start);
             mSensor.CtrlReg.Value = 0x01;
-            var ret = await _Connection.WriteAsync(mSensor.CtrlReg);
+            RespResult ret = await _Connection.WriteAsync(mSensor.CtrlReg);
             Debug.WriteLine("MEASUREMENT STARTED");
             return RespResult.NormalPkg == ret;
         }
 
         public async Task<UInt32> ReadErrorCode()
         {
-            var ret = await _Connection.ReadAsync(mSensor.ErrorReg);
+            RespResult ret = await _Connection.ReadAsync(mSensor.ErrorReg);
             return mSensor.ErrorReg.Value;
         }
         private async Task<DmgMeasureStatus> GetStatus()
         {
-            var ret = await _Connection.ReadAsync(mSensor.StatReg);
+            RespResult ret = await _Connection.ReadAsync(mSensor.StatReg);
             Debug.WriteLine($"Status is {(DmgMeasureStatus)mSensor.StatReg.Value}");
             return (DmgMeasureStatus)mSensor.StatReg.Value;
         }
@@ -172,7 +168,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
         {
             Debug.WriteLine("DownloadHeader start");
             UpdateProgress(_progress, Resource.ReadingHeader);
-            var ret = await _Connection.ReadAsync(mSensor._Report);
+            RespResult ret = await _Connection.ReadAsync(mSensor._Report);
             _report = new DmgBaseMeasureReport(
                 mSensor.MaxWeight.Value
                 , mSensor.MinWeight.Value
@@ -180,7 +176,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                 , mSensor.Period.Value
                 , mSensor.Step.Value
                 , mSensor.WeightDiscr.Value
-                , mSensor.TimeDiscr.Value );
+                , mSensor.TimeDiscr.Value);
             Debug.WriteLine("DownloadHeader end");
             return true;
         }
@@ -193,18 +189,18 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
             float global_progress_start = _progress;
             float global_progress_left = (100f - _progress);
-            
+
             Action<float> StepProgress = (float progress) =>
             {
-                _progress = global_progress_start + progress* global_progress_left;
+                _progress = global_progress_start + progress * global_progress_left;
                 UpdateProgress(_progress);
             };
 
             Stopwatch _PerfCounter = new Stopwatch();
             _PerfCounter.Restart();
 
-            var ret =  await _Connection.ReadMemAsync(0x81000000, 1000 * 2, _currentDynGraph
-                ,0, StepProgress);
+            RespResult ret = await _Connection.ReadMemAsync(0x81000000, 1000 * 2, _currentDynGraph
+                , 0, StepProgress);
 
             Debug.WriteLine(" elapsed=" + _PerfCounter.ElapsedMilliseconds.ToString());
 
@@ -233,11 +229,11 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                     _measurementParameters.SecondaryParameters,
                     _currentAccelerationGraph.ToList(),
                     BitConverter.GetBytes(ErrorCode));
-            
+
             double[,] dynGraphPoints = DgmConverter.GetXYs(measurement.DynGraph.ToList(),
                 measurement.Report.Step, measurement.Report.WeightDiscr);
             measurement.DynGraphPoints = dynGraphPoints;
-            
+
             Debug.WriteLine("MakeReport end");
             return measurement;
         }
@@ -245,7 +241,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
         private async Task SetStatusEmpty()
         {
             mSensor.CtrlReg.Value = 0x02;
-            var ret = await _Connection.WriteAsync(mSensor.CtrlReg);
+            RespResult ret = await _Connection.WriteAsync(mSensor.CtrlReg);
             Debug.WriteLine("SetStatusEmpty end");
         }
 

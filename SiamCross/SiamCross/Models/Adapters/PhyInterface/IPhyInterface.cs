@@ -10,6 +10,8 @@ namespace SiamCross.Models.Adapters
         void Enable();
 
         IPhyConnection MakeConnection(ScannedDeviceInfo deviceInfo);
+
+        IBluetoothScanner GetScanner();
         bool IsEnbaled { get; }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using Android.Bluetooth;
-using SiamCross.Droid.Models;
 using SiamCross.Models;
+using SiamCross.Models.Adapters;
 using SiamCross.Models.Scanners;
+using SiamCross.Models.Tools;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using BLE = Android.Bluetooth.LE;
 
-[assembly: Dependency(typeof(BluetoothScannerAndroid))]
+[assembly: Dependency(typeof(IScannerLe))]
 namespace SiamCross.Droid.Models
 {
     public class BluetoothScanReceiver : BLE.ScanCallback
@@ -37,9 +38,9 @@ namespace SiamCross.Droid.Models
 
 
     [Android.Runtime.Preserve(AllMembers = true)]
-    public class BluetoothScannerAndroid : IBluetoothScanner, INotifyPropertyChanged
+    public class ScannerLe : IScannerLe, INotifyPropertyChanged
     {
-        private static readonly BluetoothScanReceiver _receiver = new BluetoothScanReceiver();
+        private readonly BluetoothScanReceiver _receiver = new BluetoothScanReceiver();
         //private static readonly BluetoothAdapter _bt_adapter = BluetoothAdapter.DefaultAdapter;
         private BLE.BluetoothLeScanner _ble_scanner = null;
 
@@ -72,25 +73,24 @@ namespace SiamCross.Droid.Models
         public int ScanTimeout { get; set; }
         public bool IsFilterEnabled { get; set; }
 
+        private readonly IPhyInterface _Phy;
+        public IPhyInterface Phy => _Phy;
+
         public event Action<ScannedDeviceInfo> Received;
         public event Action ScanStoped;
         public event Action ScanStarted;
 
-        public BluetoothScannerAndroid()
+        public ScannerLe(IPhyInterface phy)
+            : this()
         {
-            ScanTimeout = 5000;
+            _Phy = phy;
+        }
+        public ScannerLe()
+        {
+            ScanTimeout = 10000;
             IsFilterEnabled = true;
 
             _receiver.ActionOnScanResult += OnScanResult;
-        }
-        public async void Start()
-        {
-            StartBounded();
-            await StartScanLeAsync();
-        }
-        public void Stop()
-        {
-            StopScanLeAsync();
         }
 
         public void OnScanResult(BLE.ScanResult result)
@@ -103,7 +103,7 @@ namespace SiamCross.Droid.Models
                 BluetoothType = BluetoothType.Le,
                 Name = result.Device.Name,
                 Mac = result.Device.Address,
-                Id = MacToGuid(result.Device.Address),
+                Id = MacToGuid.Convert(result.Device.Address),
                 PrimaryPhy = ((BluetoothPhy)result.PrimaryPhy).ToString(),
                 SecondaryPhy = ((BluetoothPhy)result.SecondaryPhy).ToString(),
                 Rssi = result.Rssi.ToString(),
@@ -177,11 +177,38 @@ namespace SiamCross.Droid.Models
             DoNotifyDevice(sd);
         }
 
-        private async Task StartScanLeAsync()
+        public void AddBonded()
+        {
+            ScanStarted?.Invoke();
+            ICollection<BluetoothDevice> devices = BluetoothAdapter.DefaultAdapter.BondedDevices;
+
+            foreach (BluetoothDevice device in devices)
+            {
+                BluetoothType bluetoothType = BluetoothType.Le;
+                switch (device.Type)
+                {
+                    default: continue;
+                    case BluetoothDeviceType.Le:
+                        bluetoothType = BluetoothType.Le;
+                        break;
+                }
+                ScannedDeviceInfo sd = new ScannedDeviceInfo
+                {
+                    Name = device.Name,
+                    Mac = device.Address,
+                    Id = MacToGuid.Convert(device.Address),
+                    BluetoothType = bluetoothType,
+                    BondState = device.BondState.ToString()
+                };
+                DoNotifyDevice(sd);
+            }
+        }
+        public async void Start()
         {
             string info = SiamCross.Resource.SearchTitle + " BLE ... ";
             StartScanInfo(info, ScanTimeout / 1000);
             ScanStarted?.Invoke();
+            AddBonded();
             BLE.ScanSettings.Builder b = new BLE.ScanSettings.Builder();
             if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
             {
@@ -200,10 +227,10 @@ namespace SiamCross.Droid.Models
             _ble_scanner = BluetoothAdapter.DefaultAdapter.BluetoothLeScanner;
             _ble_scanner.StartScan(null, st, _receiver);
             await Task.Delay(ScanTimeout);
-            StopScanLeAsync();
+            Stop();
         }
 
-        private void StopScanLeAsync()
+        public void Stop()
         {
             if (null == _ble_scanner)
                 return;
@@ -215,34 +242,6 @@ namespace SiamCross.Droid.Models
             _ble_scanner = null;
             ScanStoped?.Invoke();
         }
-        public void StartBounded()
-        {
-            ICollection<BluetoothDevice> devices = BluetoothAdapter.DefaultAdapter.BondedDevices;
-
-            foreach (BluetoothDevice device in devices)
-            {
-                BluetoothType bluetoothType = BluetoothType.Le;
-                switch (device.Type)
-                {
-                    case BluetoothDeviceType.Classic:
-                        bluetoothType = BluetoothType.Classic;
-                        break;
-                    case BluetoothDeviceType.Le:
-                        bluetoothType = BluetoothType.Le;
-                        break;
-                }
-                ScannedDeviceInfo sd = new ScannedDeviceInfo
-                {
-                    Name = device.Name,
-                    Mac = device.Address,
-                    Id = MacToGuid(device.Address),
-                    BluetoothType = bluetoothType,
-                    BondState = device.BondState.ToString()
-                };
-                DoNotifyDevice(sd);
-            }
-        }
-
 
         #region over_PluginBLE
         /*
@@ -356,25 +355,6 @@ namespace SiamCross.Droid.Models
             ;
         }
 
-        private static bool TryMacToGuid(string mac, out Guid giud)
-        {
-            string mac_no_delim = mac.ToUpper();
-            int exist = mac_no_delim.IndexOf(':');
-            //"00000000-0000-0000-0000-0016a4720012"
-            while (0 < exist)
-            {
-                mac_no_delim = mac_no_delim.Remove(exist, 1);
-                exist = mac_no_delim.IndexOf(':');
-            }
-            mac_no_delim = "00000000-0000-0000-0000-" + mac_no_delim;
-            return Guid.TryParse(mac_no_delim, out giud);
-        }
 
-        private static Guid MacToGuid(string mac)
-        {
-            if (TryMacToGuid(mac, out Guid guid))
-                return guid;
-            return new Guid();
-        }
     }
 }

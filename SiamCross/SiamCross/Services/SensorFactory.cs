@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models;
 using SiamCross.Models.Adapters;
+using SiamCross.Models.Adapters.PhyInterface;
 using SiamCross.Models.Connection.Phy;
 using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Connection.Protocol.Siam;
@@ -22,9 +23,9 @@ namespace SiamCross.Services
             {
                 default: break;
                 case BluetoothType.Le:
-                    phy_interface = BtLeInterface.Factory.GetCurent(); break;
+                    phy_interface = FactoryBtLe.GetCurent(); break;
                 case BluetoothType.Classic:
-                    phy_interface = Models.Adapters.PhyInterface.Bt2.Factory.GetCurent(); break;
+                    phy_interface = FactoryBt2.GetCurent(); break;
             }
             if (null == phy_interface)
                 return null;

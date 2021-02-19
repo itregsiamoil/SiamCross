@@ -77,9 +77,6 @@
     <Compile Update="Views\MenuItems\MeasurementsPageService.xaml.cs">
       <DependentUpon>MeasurementsPageService.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\MenuItems\SearchPanel\BoundingTab.xaml.cs">
-      <DependentUpon>BoundingTab.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -124,9 +121,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MenuItems\SearchPanel\SearchPanelPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\MenuItems\SearchPanel\BoundingTab.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MenuItems\SearchPanel\ScanningTab.xaml">

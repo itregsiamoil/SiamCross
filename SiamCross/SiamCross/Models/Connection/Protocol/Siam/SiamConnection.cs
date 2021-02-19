@@ -83,7 +83,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private void CheckEmptySpace()
         {
             int empty_space = _RxBuf.Length - _EndRxBuf;
-            if(0==empty_space)
+            if (0 == empty_space)
                 throw new System.IO.InternalBufferOverflowException();
 
             if (Pkg.MAX_PKG_SIZE > empty_space)
@@ -266,7 +266,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                     return ret;
 
                 _RxBuf.AsSpan(_BeginRxBuf + 12, curr_len)
-                    .CopyTo(dst.AsSpan(dst_start+ (int)curr_addr, curr_len));
+                    .CopyTo(dst.AsSpan(dst_start + (int)curr_addr, curr_len));
                 curr_addr += curr_len;
 
                 progress += sep_cost;

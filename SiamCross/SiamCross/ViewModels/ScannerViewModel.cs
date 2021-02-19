@@ -3,6 +3,7 @@ using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Models;
 using SiamCross.Models.Adapters;
+using SiamCross.Models.Adapters.PhyInterface;
 using SiamCross.Models.Connection.Phy;
 using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Connection.Protocol.Siam;
@@ -10,11 +11,10 @@ using SiamCross.Models.Scanners;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -32,10 +32,9 @@ namespace SiamCross.ViewModels
 
         public IBluetoothScanner Scanner => _scanner;
 
+        //public string Title => Scanner.Phy.Name;
 
         public ObservableCollection<ScannedDeviceInfo> ScannedDevices { get; private set; }
-
-        public ObservableCollection<ScannedDeviceInfo> ClassicDevices { get; private set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -47,7 +46,6 @@ namespace SiamCross.ViewModels
         {
             _scanner = scanner;
             ScannedDevices = new ObservableCollection<ScannedDeviceInfo>();
-            ClassicDevices = new ObservableCollection<ScannedDeviceInfo>();
 
             _scanner.Received += ScannerReceivedDevice;
             _scanner.ScanStoped += ScannerScanTimoutElapsed;
@@ -76,31 +74,17 @@ namespace SiamCross.ViewModels
 
         private void ScannerReceivedDevice(ScannedDeviceInfo dev)
         {
-            switch (dev.BluetoothType)
-            {
-                case BluetoothType.Classic:
-                    if (!ClassicDevices.Contains(dev))
-                    {
-                        ClassicDevices.Add(dev);
-                    }
-                    break;
-                case BluetoothType.Le:
-                    if (!ScannedDevices.Contains(dev))
-                    {
-                        ScannedDevices.Add(dev);
-                    }
-                    break;
-                default:
-                    break;
-            }
+            if (ScannedDevices.Contains(dev))
+                return;
+            ScannedDevices.Add(dev);
         }
 
 
 
-        private void SelectItem(object obj)
+        private async void SelectItem(object obj)
         {
             if (obj is ScannedDeviceInfo dev)
-                SelectItemAsync(dev);
+                await SelectItemAsync(dev);
         }
         public async Task SelectItemAsync(ScannedDeviceInfo item)
         {
@@ -109,12 +93,12 @@ namespace SiamCross.ViewModels
                 if (item == null)
                     return;
 
-                var devices = await GetDevice(item);
-                
+                Dictionary<string, int> devices = await GetDevice(item);
+
 
                 string action = await Application.Current.MainPage
                     .DisplayActionSheet("Select device"
-                    , "Cancel", null, devices.Keys.AsEnumerable().ToArray() );
+                    , "Cancel", null, devices.Keys.AsEnumerable().ToArray());
                 if (action == "Cancel")
                     return;
 
@@ -128,7 +112,7 @@ namespace SiamCross.ViewModels
                 _logger.Error(ex, "ItemSelected (creating sensor)" + "\n");
             }
         }
-        private async Task< Dictionary<string, int> > GetDevice(ScannedDeviceInfo phy_item)
+        private async Task<Dictionary<string, int>> GetDevice(ScannedDeviceInfo phy_item)
         {
             Dictionary<string, int> dir = new Dictionary<string, int>();
             IPhyInterface phy_interface = null;
@@ -136,9 +120,9 @@ namespace SiamCross.ViewModels
             {
                 default: break;
                 case BluetoothType.Le:
-                    phy_interface = BtLeInterface.Factory.GetCurent(); break;
+                    phy_interface = FactoryBtLe.GetCurent(); break;
                 case BluetoothType.Classic:
-                    phy_interface = Models.Adapters.PhyInterface.Bt2.Factory.GetCurent(); break;
+                    phy_interface = FactoryBt2.GetCurent(); break;
             }
             IPhyConnection conn = phy_interface.MakeConnection(phy_item);
 
@@ -156,7 +140,7 @@ namespace SiamCross.ViewModels
                     await connection.ReadMemAsync(address, len, membuf);
                     string dvc_name;
                     if (10 > MemoryModelVersion.Value)
-                        dvc_name = Encoding.GetEncoding(1251).GetString(membuf,0,len);
+                        dvc_name = Encoding.GetEncoding(1251).GetString(membuf, 0, len);
                     else
                         dvc_name = Encoding.UTF8.GetString(membuf, 0, len);
 
@@ -178,10 +162,13 @@ namespace SiamCross.ViewModels
                     dir.Add(label, phy_item.Protocol.Address);
                     label = $"{DeviceType.Value}2 {dvc_name} {DeviceNumber.Value} {firmware}";
                     dir.Add(label, phy_item.Protocol.Address);
+
+                    await connection.Disconnect();
                     break;
                 default:
                 case ProtocolKind.Modbus: break;
             }
+            await conn.Disconnect();
 
             return dir;
         }
@@ -198,12 +185,6 @@ namespace SiamCross.ViewModels
         public readonly MemVarUInt16 ProgrammVersionSize;
         public readonly MemStruct _SurvayParam;
 
-
-        public void AppendBonded()
-        {
-            _scanner.StartBounded();
-        }
-
         private void StartStopScan(object obj)
         {
             if (_scanner.ActiveScan)
@@ -217,9 +198,7 @@ namespace SiamCross.ViewModels
             try
             {
                 ScannedDevices.Clear();
-                ClassicDevices.Clear();
                 //ScannedDevices = new ObservableCollection<ScannedDeviceInfo>();
-                //ClassicDevices = new ObservableCollection<ScannedDeviceInfo>();
                 _scanner.Start();
             }
             catch (Exception ex)

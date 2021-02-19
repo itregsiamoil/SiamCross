@@ -109,13 +109,14 @@
     <Compile Include="AndroidLongPressedEffect.cs" />
     <Compile Include="LocalizeAndroid.cs" />
     <Compile Include="MainActivity.cs" />
+    <Compile Include="Models\BluetoothAdapters\BtLeInterfaceDroid.cs" />
     <Compile Include="Models\BluetoothAdapters\ConnectionBt2.cs" />
     <Compile Include="Models\BluetoothAdapters\ConnectionBtLe.cs" />
-    <Compile Include="Models\BluetoothAdapters\DroidBt2Interface.cs" />
-    <Compile Include="Models\BluetoothScannerAndroid.cs" />
+    <Compile Include="Models\BluetoothAdapters\Bt2InterfaceDroid.cs" />
+    <Compile Include="Models\ScannerLe.cs" />
+    <Compile Include="Models\ScannerBt2.cs" />
     <Compile Include="Models\VersionAndBuild_Android.cs" />
     <Compile Include="Models\DatabaseCreatorAndroid.cs" />
-    <Compile Include="Models\DefaultAdapterAndroid.cs" />
     <Compile Include="Models\EventHandlerExtensions.cs" />
     <Compile Include="Services\Environment\Environment.cs" />
     <Compile Include="Models\HandbookManagerAndroid.cs" />

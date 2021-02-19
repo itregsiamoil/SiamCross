@@ -1,15 +1,14 @@
-﻿using Autofac;
-using SiamCross.AppObjects;
+﻿using Xamarin.Forms;
 
-namespace SiamCross.Models.Adapters.PhyInterface.Bt2
+namespace SiamCross.Models.Adapters.PhyInterface
 {
     public interface IBt2InterfaceCross : IPhyInterface { }
-    public static class Factory
+    public static class FactoryBt2
     {
         public static IPhyInterface GetCurent()
         {
-            IBt2InterfaceCross bt2ifc = AppContainer.Container.Resolve<IBt2InterfaceCross>();
-            return bt2ifc;
+            return DependencyService.Resolve<IBt2InterfaceCross>();
         }
     }//static public class Factory
+
 }

@@ -1,6 +1,5 @@
-﻿using Autofac;
-using SiamCross.AppObjects;
-using SiamCross.Models;
+﻿using SiamCross.Models;
+using SiamCross.Models.Adapters;
 using SiamCross.Models.Adapters.PhyInterface;
 using SiamCross.ViewModels;
 using System.Threading.Tasks;
@@ -17,7 +16,6 @@ namespace SiamCross.Views.MenuItems
             ViewModelWrap<ControlPanelPageViewModel> vm = new ViewModelWrap<ControlPanelPageViewModel>();
             BindingContext = vm.ViewModel;
             InitializeComponent();
-
         }
 
         private void SensorList_ItemTapped(object sender, ItemTappedEventArgs e)
@@ -33,7 +31,8 @@ namespace SiamCross.Views.MenuItems
 
         protected async Task RequestEnableBuetooth()
         {
-            IDefaultAdapter defaultAdapter = AppContainer.Container.Resolve<IDefaultAdapter>();
+            IPhyInterface defaultAdapter = FactoryBt2.GetCurent();
+
             if (!defaultAdapter.IsEnbaled)
             {
                 bool result = await DisplayAlert(

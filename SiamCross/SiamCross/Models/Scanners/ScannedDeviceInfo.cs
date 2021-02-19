@@ -33,8 +33,10 @@ namespace SiamCross.Models.Scanners
             get => Kind.ToString();
             set
             {
-                if (null==value
-                    || value.ToString() == ProtocolKind.Modbus.ToString())
+                if (null == value)
+                    return;
+
+                if (value.ToString() == ProtocolKind.Modbus.ToString())
                     Kind = ProtocolKind.Modbus;
                 else
                     Kind = ProtocolKind.Siam;

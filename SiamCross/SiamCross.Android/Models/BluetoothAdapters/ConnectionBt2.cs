@@ -2,8 +2,9 @@
 
 using Android.Bluetooth;
 using Java.Util;
+using SiamCross.Droid.Models.BluetoothAdapters;
 using SiamCross.Models.Adapters;
-using SiamCross.Models.Adapters.PhyInterface.Bt2;
+using SiamCross.Models.Adapters.PhyInterface;
 using SiamCross.Models.Connection;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
@@ -106,7 +107,7 @@ namespace SiamCross.Droid.Models
             {
                 if (null == mInterface)
                     return null;
-                DroidBt2Interface bt2_ifc = mInterface as DroidBt2Interface;
+                Bt2InterfaceDroid bt2_ifc = mInterface as Bt2InterfaceDroid;
                 //if (null == ble_ifc)
                 //    return null;
                 return bt2_ifc?.Adapter;
@@ -118,7 +119,7 @@ namespace SiamCross.Droid.Models
         public ConnectionBt2(IPhyInterface ifc)
         {
             if (null == ifc)
-                mInterface = Factory.GetCurent();
+                mInterface = FactoryBt2.GetCurent();
             else
                 mInterface = ifc;
         }

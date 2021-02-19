@@ -119,7 +119,7 @@ namespace SiamCross.Models.Sensors.Dmg
                 //MemStruct ms = new MemStruct(0x0A);
                 //ms.Add(DeviceNumber);
                 //ret = await ProtConn.WriteAsync(ms);
-                
+
                 ret = await Connection.ReadAsync(_Common);
                 if (10 > MemoryModelVersion.Value)
                     Connection.MaxReqLen = 40;
