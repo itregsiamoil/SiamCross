@@ -34,7 +34,7 @@ namespace SiamCross.ViewModels
                 return;
             }
 
-            if(FieldCode.Length > 4)
+            if (FieldCode.Length > 4)
             {
                 bool accept = await Application.Current.MainPage.DisplayAlert(Resource.Attention
                     , Resource.WarningFieldIdOverflow, Resource.Ok, Resource.Cancel);
