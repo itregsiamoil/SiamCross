@@ -66,7 +66,6 @@ namespace SiamCross.ViewModels
             RefreshCommand = new Command(StartScan);
             SelectItemCommand = new Command(SelectItem);
             StartStopScanCommand = new Command(StartStopScan);
-            
 
             DeviceType = _Common.Add(new MemVarUInt16(), nameof(DeviceType));
             MemoryModelVersion = _Common.Add(new MemVarUInt16(), nameof(MemoryModelVersion));
@@ -105,7 +104,8 @@ namespace SiamCross.ViewModels
                     return;
 
                 Dictionary<string, SiamDeviceInfo> devices = await GetDevice(item);
-
+                if (null == devices || 0 == devices.Count)
+                    return;
                 string action = await Application.Current.MainPage
                     .DisplayActionSheet("Select device"
                     , "Cancel", null, devices.Keys.AsEnumerable().ToArray());
@@ -115,6 +115,10 @@ namespace SiamCross.ViewModels
                     return;
 
                 item.Name = $"{siam_device.Name} №{siam_device.Num}";
+                item.Name = item.Name.Replace("\0", string.Empty);
+                item.Name = item.Name.Replace("\r", string.Empty);
+                item.Name = item.Name.Replace("\n", string.Empty);
+                item.Name = item.Name.Replace("\t", string.Empty);
                 item.Protocol.Address = siam_device.Address;
                 item.Kind = siam_device.Kind;
 
@@ -128,7 +132,6 @@ namespace SiamCross.ViewModels
             }
         }
 
-        
         private async Task<Dictionary<string, SiamDeviceInfo>> GetDevice(ScannedDeviceInfo phy_item)
         {
             _Detecting = true;
@@ -145,13 +148,12 @@ namespace SiamCross.ViewModels
                     phy_interface = FactoryBt2.GetCurent(); break;
             }
             IPhyConnection conn = phy_interface.MakeConnection(phy_item);
-
             switch (phy_item.Protocol.Kind)
             {
                 case ProtocolKind.Siam:
                     IProtocolConnection connection = new SiamConnection(conn);
-                    if (await connection.Connect() && RespResult.NormalPkg== await connection.ReadAsync(_Common))
-                    { 
+                    if (await connection.Connect() && RespResult.NormalPkg == await connection.ReadAsync(_Common))
+                    {
                         UInt32 address = DeviceNameAddress.Value;
                         UInt16 len = DeviceNameSize.Value;
                         byte[] membuf = new byte[len];
@@ -161,29 +163,28 @@ namespace SiamCross.ViewModels
                             dvc_name = Encoding.GetEncoding(1251).GetString(membuf, 0, len);
                         else
                             dvc_name = Encoding.UTF8.GetString(membuf, 0, len);
-                        /*
-                         * await connection.ReadAsync(_Info);
-                        address = ProgrammVersionAddress.Value;
-                        len = ProgrammVersionSize.Value;
-                        membuf = new byte[len];
-                        await connection.ReadMemAsync(address, len, membuf);
-                        string firmware;
-                        if (10 > MemoryModelVersion.Value)
-                            firmware = Encoding.GetEncoding(1251).GetString(membuf, 0, len);
-                        else
-                            firmware = Encoding.UTF8.GetString(membuf, 0, len);
-                        */
+
+                        //await connection.ReadAsync(_Info);
+                        //address = ProgrammVersionAddress.Value;
+                        //len = ProgrammVersionSize.Value;
+                        //membuf = new byte[len];
+                        //await connection.ReadMemAsync(address, len, membuf);
+                        //string firmware;
+                        //if (10 > MemoryModelVersion.Value)
+                        //    firmware = Encoding.GetEncoding(1251).GetString(membuf, 0, len);
+                        //else
+                        //    firmware = Encoding.UTF8.GetString(membuf, 0, len);
 
                         string label;
                         label = $"{dvc_name} №{DeviceNumber.Value}"
-                            +$"\n{Resource.Address}: { phy_item.Protocol.Address}"
-                            +$" {Resource.Type}: 0x"+ DeviceType.Value.ToString("X2");
+                            + $"\n{Resource.Address}: { phy_item.Protocol.Address}"
+                            + $" {Resource.Type}: 0x" + DeviceType.Value.ToString("X2");
 
                         var siam_device = new SiamDeviceInfo(dvc_name
                             , DeviceNumber.Value.ToString(), phy_item.Protocol.Address, DeviceType.Value);
 
-                        dir.Add(label, siam_device);                    
-                    
+                        dir.Add(label, siam_device);
+
                     }
                     await connection.Disconnect();
                     break;

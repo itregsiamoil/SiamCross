@@ -31,7 +31,6 @@ namespace SiamCross.Services
                 return null;
             IPhyConnection conn = phy_interface.MakeConnection(deviceInfo);
             IProtocolConnection connection = new SiamConnection(conn);
-            
 
             switch (deviceInfo.Kind)
             {

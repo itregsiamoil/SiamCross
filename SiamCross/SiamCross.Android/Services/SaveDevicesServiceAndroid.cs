@@ -65,7 +65,6 @@ namespace SiamCross.Droid.Services
                                     Id = id,
                                     BluetoothType = readDevice.BluetoothType,
                                     Kind = readDevice.Kind
-                                    
                                 };
                                 sd.Protocol.KindStr = readDevice.Protocol;
                                 sd.Protocol.Address = readDevice.Address;
@@ -102,7 +101,7 @@ namespace SiamCross.Droid.Services
                             Mac = device.Mac,
                             DeviceName = device.Name,
                             BluetoothType = device.BluetoothType,
-                            Kind = device.Kind, 
+                            Kind = device.Kind,
                             Protocol = device.Protocol.Kind.ToString(),
                             Address = device.Protocol.Address
                         };

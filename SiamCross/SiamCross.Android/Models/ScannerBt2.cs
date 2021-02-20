@@ -61,7 +61,7 @@ namespace SiamCross.Droid.Models
 
             foreach (BluetoothDevice device in devices)
             {
-                if(BluetoothDeviceType.Classic!= device.Type)
+                if (BluetoothDeviceType.Classic != device.Type)
                     continue;
                 ScannedDeviceInfo sd = new ScannedDeviceInfo
                 {

@@ -1,5 +1,4 @@
 ﻿using SiamCross.Models.Connection.Protocol;
-using SiamCross.Models.Connection.Protocol.Siam;
 using System;
 using System.Diagnostics;
 using System.Text;
@@ -125,7 +124,7 @@ namespace SiamCross.Models.Sensors.Dmg
                 if (10 > MemoryModelVersion.Value)
                     Connection.MaxReqLen = 40;
                 else
-                    Connection.MaxReqLen = Pkg.MAX_PKG_SIZE;
+                    Connection.MaxReqLen = 230;// 247 - 3(bt header) - 12(siam header)-2(crc)
 
                 ret = await Connection.ReadAsync(_Info);
                 UInt32 fw_address = ProgrammVersionAddress.Value;

@@ -290,12 +290,11 @@ namespace SiamCross.Droid.Models
                 if (null != Adapter && null != _device)
                     await Adapter.DisconnectDeviceAsync(_device);
                 await Task.Delay(200);
-
-                mInterface?.Disable();
                 //_writeCharacteristic.StopUpdatesAsync();
                 //_readCharacteristic.StopUpdatesAsync();
                 _targetService?.Dispose();
                 _device?.Dispose();
+                //mInterface?.Disable();
             }
             catch (Exception ex)
             {

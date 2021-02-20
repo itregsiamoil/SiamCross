@@ -14,7 +14,8 @@ namespace SiamCross.Droid.Models.BluetoothAdapters
         public string Name => "BT4LE";
         public IPhyConnection MakeConnection(ScannedDeviceInfo deviceInfo)
         {
-            return new ConnectionBtLe(deviceInfo, this);
+            IPhyConnection conn = new ConnectionBtLe(deviceInfo, this);
+            return conn;
         }
         public IAdapter Adapter => mBle?.Adapter;
 

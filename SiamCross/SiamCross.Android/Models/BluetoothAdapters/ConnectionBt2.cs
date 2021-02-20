@@ -223,14 +223,12 @@ namespace SiamCross.Droid.Models
         }
         private async Task<bool> DoDisconnect()
         {
-            Debug.WriteLine("bt2 start Disconnecting ");
             bool ret = true;
             try
             {
-                mInterface.Disable();
                 await RxThreadCancel();
-
                 _bluetoothDevice?.Dispose();
+                //mInterface.Disable();
             }
             catch (Exception)
             {
@@ -260,7 +258,7 @@ namespace SiamCross.Droid.Models
                 mRxTsc?.TrySetResult(false);
 
                 if (!await TryWaitRxThread(1000))
-                    Debug.WriteLine("RxThreadCancel cancel await failed"); ;
+                    Debug.WriteLine("RxThreadCancel cancel await failed");
 
                 _socket?.Close();
 

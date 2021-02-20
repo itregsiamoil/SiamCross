@@ -126,7 +126,7 @@ namespace SiamCross.ViewModels
                     App.NavigationPage.Navigation.PushAsync(
                         new DuMeasurementPage(sensorData));
                     break;
-                default:break;
+                default: break;
             }
 
         }

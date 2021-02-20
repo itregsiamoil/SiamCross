@@ -1,7 +1,6 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Tools;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,12 +37,11 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
             try
             {
                 await SendParameters();
-                
                 MeasurementStatus = await ExecuteMeasurement();
                 if (DmgMeasureStatus.Ready != MeasurementStatus)
                 {
                     ErrorCode = await ReadErrorCode();
-                    if(0 < ErrorCode)
+                    if (0 < ErrorCode)
                         error = MeasureState.LogicError;
                 }
                 await DownloadHeader();
@@ -186,13 +184,11 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
             float global_progress_start = _progress;
             float global_progress_left = (100f - _progress);
-            
             Action<float> StepProgress = (float progress) =>
             {
                 _progress = global_progress_start + progress * global_progress_left;
                 UpdateProgress(_progress);
             };
-            
             Stopwatch _PerfCounter = new Stopwatch();
             _PerfCounter.Restart();
 

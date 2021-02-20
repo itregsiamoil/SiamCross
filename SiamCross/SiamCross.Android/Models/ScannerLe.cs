@@ -38,7 +38,7 @@ namespace SiamCross.Droid.Models
 
 
     [Android.Runtime.Preserve(AllMembers = true)]
-    public class ScannerLe : IScannerLe 
+    public class ScannerLe : IScannerLe
     {
         private readonly BluetoothScanReceiver _receiver = new BluetoothScanReceiver();
         //private static readonly BluetoothAdapter _bt_adapter = BluetoothAdapter.DefaultAdapter;
@@ -127,7 +127,6 @@ namespace SiamCross.Droid.Models
                         DoNotifyDevice(sd);
                         return;
                     }
-                        
                 }
             }
             /*

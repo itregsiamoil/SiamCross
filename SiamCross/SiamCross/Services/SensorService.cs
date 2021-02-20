@@ -107,8 +107,8 @@ namespace SiamCross.Services
                     _sensors.Remove(sensor);
                     sensor.Dispose();
                 }
-                //MessagingCenter.Send(this, "Refresh saved sensors",
-                //    _sensors.Select(s => s.ScannedDeviceInfo));
+                MessagingCenter.Send(this, "Refresh saved sensors",
+                    _sensors.Select(s => s.ScannedDeviceInfo));
             }
         }
 

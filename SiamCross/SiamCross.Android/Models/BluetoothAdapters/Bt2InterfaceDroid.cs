@@ -14,10 +14,10 @@ namespace SiamCross.Droid.Models.BluetoothAdapters
         public string Name => "BT2";
         public IPhyConnection MakeConnection(ScannedDeviceInfo deviceInfo)
         {
-            return new ConnectionBt2(deviceInfo, this);
+            IPhyConnection conn = new ConnectionBt2(deviceInfo, this);
+            return conn;
         }
         public BluetoothAdapter Adapter => mBt2;
-
 
         private BluetoothAdapter mBt2;
 
@@ -43,6 +43,7 @@ namespace SiamCross.Droid.Models.BluetoothAdapters
 
         public void Disable()
         {
+            mBt2.Dispose();
             mBt2 = null;
         }
 

@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models.Adapters;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,6 +23,7 @@ namespace SiamCross.Models.Connection.Phy
                 return;
             _ConnState = state;
             OnPropChange(new PropertyChangedEventArgs(nameof(State)));
+            Debug.WriteLine($"{this.GetType().Name} is {_ConnState}");
         }
         public abstract IPhyInterface PhyInterface { get; }
         public abstract int Rssi { get; }

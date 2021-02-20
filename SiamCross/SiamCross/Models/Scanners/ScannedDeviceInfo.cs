@@ -90,7 +90,7 @@ namespace SiamCross.Models.Scanners
 
     public class SiamDeviceInfo
     {
-        public SiamDeviceInfo() 
+        public SiamDeviceInfo()
         {
             Name = "";
             Num = "";
