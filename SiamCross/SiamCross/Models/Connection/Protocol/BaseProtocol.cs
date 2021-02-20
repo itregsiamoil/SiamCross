@@ -13,7 +13,7 @@ namespace SiamCross.Models.Connection.Protocol
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropChange(PropertyChangedEventArgs arg)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(State)));
+            PropertyChanged?.Invoke(this, arg);
         }
 
         private ConnectionState _ConnState = ConnectionState.Disconnected;

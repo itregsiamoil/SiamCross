@@ -674,4 +674,7 @@
   <data name="Address" xml:space="preserve">
     <value>Адрес</value>
   </data>
+  <data name="Type" xml:space="preserve">
+    <value>Тип</value>
+  </data>
 </root>

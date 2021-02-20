@@ -38,7 +38,7 @@ namespace SiamCross.Droid.Models
 
 
     [Android.Runtime.Preserve(AllMembers = true)]
-    public class ScannerLe : IScannerLe, INotifyPropertyChanged
+    public class ScannerLe : IScannerLe 
     {
         private readonly BluetoothScanReceiver _receiver = new BluetoothScanReceiver();
         //private static readonly BluetoothAdapter _bt_adapter = BluetoothAdapter.DefaultAdapter;
@@ -113,15 +113,21 @@ namespace SiamCross.Droid.Models
                     "TxPowerNotPresent" : ((BLE.AdvertiseTxPower)result.TxPower).ToString(),
                 BondState = result.Device.BondState.ToString()
             };
+            //sd.Protocol = new ProtocolInfo();
 
             IList<Android.OS.ParcelUuid> svc = result.ScanRecord.ServiceUuids;
             if (null != svc)
             {
-                List<string> list = new List<string>();
+                //List<string> list = new List<string>();
                 foreach (Android.OS.ParcelUuid s in svc)
                 {
                     if (s.ToString() == "569a1101-b87f-490c-92cb-11ba5ea5167c")
+                    {
                         sd.HasSiamServiceUid = true;
+                        DoNotifyDevice(sd);
+                        return;
+                    }
+                        
                 }
             }
             /*
@@ -134,8 +140,8 @@ namespace SiamCross.Droid.Models
                 if (bytesUtf8 .Contains("СИАМ") || bytesUtf8 .Contains("SIAM"))
                     sd.HasUriTag = true;
             }
-            */
             List<object> scan_info = new List<object>();
+            */
             byte[] bt = result.ScanRecord.GetBytes();
             int pos = 0;
             while (pos + 2 < bt.GetLength(0))
@@ -153,14 +159,8 @@ namespace SiamCross.Droid.Models
 
                 if (0x24 == data_block_type || 0x16 == data_block_type)
                 {
-                    //string data_block_str = bt.AsSpan(pos, data_block_len).ToString();
                     byte[] data_block_data = bt.AsSpan(pos, data_block_len).ToArray();
-                    //string bytesUtf7 = Encoding.UTF7.GetString(data_block_data);
-                    //string bytesUnicode = Encoding.Unicode.GetString(data_block_data).ToUpper();
-                    //string bytesDefault = Encoding.Default.GetString(data_block_data);
-                    //string bytesASCII = Encoding.ASCII.GetString(data_block_data);
                     string bytesUtf8 = Encoding.UTF8.GetString(data_block_data).ToUpper();
-                    //string convertedUtf32 = Encoding.UTF32.GetString(data_block_data); // For UTF-16
                     if (bytesUtf8.Contains("СИАМ") || bytesUtf8.Contains("SIAM"))
                     {
                         sd.HasUriTag = true;
@@ -172,8 +172,6 @@ namespace SiamCross.Droid.Models
                 pos += data_block_len;
             }
 
-            sd.Protocol = new ProtocolInfo();
-
             DoNotifyDevice(sd);
         }
 
@@ -184,20 +182,14 @@ namespace SiamCross.Droid.Models
 
             foreach (BluetoothDevice device in devices)
             {
-                BluetoothType bluetoothType = BluetoothType.Le;
-                switch (device.Type)
-                {
-                    default: continue;
-                    case BluetoothDeviceType.Le:
-                        bluetoothType = BluetoothType.Le;
-                        break;
-                }
+                if (BluetoothDeviceType.Le != device.Type)
+                    continue;
                 ScannedDeviceInfo sd = new ScannedDeviceInfo
                 {
                     Name = device.Name,
                     Mac = device.Address,
                     Id = MacToGuid.Convert(device.Address),
-                    BluetoothType = bluetoothType,
+                    BluetoothType = BluetoothType.Le,
                     BondState = device.BondState.ToString()
                 };
                 DoNotifyDevice(sd);

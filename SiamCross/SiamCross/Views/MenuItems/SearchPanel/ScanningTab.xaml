@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
              x:Class="SiamCross.Views.MenuItems.SearchPanel.ScanningTab"
              x:Name="ScanningTabView"
-             Title="{Binding Scanner.Phy.Name}">
+             Title="{Binding Scanner.Phy.Name , Mode=OneWay}">
     <ContentPage.Content>
         <StackLayout>
             <StackLayout Orientation="Horizontal">
@@ -14,17 +14,16 @@
                 <ActivityIndicator IsRunning="{Binding Scanner.ActiveScan}"/>
                 ItemSelected ="ItemSelected"
                 -->
-                <Label Text="{Binding Scanner.ScanString}" 
-                       IsVisible="{Binding Scanner.ActiveScan}">
+                <Label Text="{Binding Scanner.ScanString , Mode=OneWay}" 
+                       IsVisible="{Binding Scanner.ActiveScan , Mode=OneWay}">
                 </Label>
             </StackLayout>
             <!--
-            RefreshCommand="{Binding RefreshCommand}"
-            IsPullToRefreshEnabled="True"
+            
             -->
             <RefreshView x:Name="RView"
-                IsRefreshing="{Binding IsRefreshing}"
-             Command="{Binding RefreshCommand}">
+                         IsRefreshing="{Binding Scanner.ActiveScan, Mode=OneWay}"
+                         Command="{Binding RefreshCommand}">
                 <CollectionView x:Name="scannedDevicesList" 
                                 ItemsSource="{Binding ScannedDevices}"
                                 SelectionMode="None">
@@ -50,7 +49,7 @@
                     -->
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="dm:ScannedDeviceInfo">
-                            <xct:Expander Margin="5" >
+                            <xct:Expander Padding="5" >
                                 <xct:Expander.Header>
                                     <Grid>
                                         <!--
@@ -153,11 +152,24 @@
                                                        Text="{Binding Protocol.Address}" 
                                                        Grid.Row="1" Grid.Column="1" >
                                                 </Entry>
+                                                <ActivityIndicator IsRunning="{Binding Path=BindingContext.Detecting
+                                                                , Source={x:Reference ScanningTabView}}" 
+                                                                   Grid.RowSpan ="2" Grid.ColumnSpan="2" /> 
                                             </Grid>
+
                                             <Button x:Name="AddSensor" Text="{local:Translate StatConn_PendingConnect}"
                                                         Command="{Binding Path=BindingContext.SelectItemCommand
                                                         , Source={x:Reference ScanningTabView}}"
                                                         CommandParameter="{Binding .}" >
+                                                <Button.Triggers>
+                                                    <DataTrigger TargetType="Button"
+                                                            Binding="{Binding Path=BindingContext.Detecting
+                                                                , Source={x:Reference ScanningTabView} } "
+                                                            Value="True">
+                                                        <Setter Property="IsEnabled" 
+                                                                    Value="False" />
+                                                    </DataTrigger>
+                                                </Button.Triggers>
                                             </Button>
 
                                         </StackLayout>

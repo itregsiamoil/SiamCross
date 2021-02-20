@@ -39,7 +39,7 @@ namespace SiamCross.Views.MenuItems
 
                 string ret = "";
                 //byte[] result;
-                StringBuilder builder = new StringBuilder();
+                //StringBuilder builder = new StringBuilder();
                 //Если ресурс существует, то извлекаем его.
                 if (isExistsResourceName)
                 {

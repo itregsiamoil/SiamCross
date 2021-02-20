@@ -248,7 +248,7 @@ namespace SiamCross.Droid.Models
         {
             if (null == mRxThread)
                 return true;
-            Task reason = await Task.WhenAny(mRxThread, Task.Delay(1000));
+            Task reason = await Task.WhenAny(mRxThread, Task.Delay(timeout));
             return mRxThread == reason;
         }
 

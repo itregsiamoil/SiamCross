@@ -29,7 +29,6 @@ namespace SiamCross.Models.Sensors.Du.Measurement
         private UInt16 mSrcReflectionsCount = 0;
         private float _pressure;
 
-        private readonly DuParser _parser = new DuParser();
 
         public DuMeasurementManager(ISensor sensor,
             DuMeasurementStartParameters measurementParameters)

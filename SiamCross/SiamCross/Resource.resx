@@ -665,4 +665,7 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="Address" xml:space="preserve">
     <value>Address</value>
   </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
 </root>

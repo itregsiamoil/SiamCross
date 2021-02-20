@@ -372,14 +372,14 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             float sep_byte_cost = 1.0f / mem.Size;
             MemStruct vars = new MemStruct(0);
 
-            IReadOnlyDictionary<MemItem, string> vdict = mem.GetVars();
-            IEnumerator<KeyValuePair<MemItem, string>> enumerator = vdict.GetEnumerator();
+            IReadOnlyDictionary<IMemItem, string> vdict = mem.GetVars();
+            IEnumerator<KeyValuePair<IMemItem, string>> enumerator = vdict.GetEnumerator();
 
             bool has_next = enumerator.MoveNext();
 
             while (has_next)
             {
-                MemItem curr = enumerator.Current.Key;
+                IMemItem curr = enumerator.Current.Key;
                 vars.Reset(curr.Address);
                 while (has_next && vars.Size + curr.Size < MaxReqLen)
                 {
@@ -410,14 +410,14 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             float sep_byte_cost = 1.0f / mem.Size;
             MemStruct vars = new MemStruct(0);
 
-            IReadOnlyDictionary<MemItem, string> vdict = mem.GetVars();
-            IEnumerator<KeyValuePair<MemItem, string>> enumerator = vdict.GetEnumerator();
+            IReadOnlyDictionary<IMemItem, string> vdict = mem.GetVars();
+            IEnumerator<KeyValuePair<IMemItem, string>> enumerator = vdict.GetEnumerator();
 
             bool has_next = enumerator.MoveNext();
 
             while (has_next)
             {
-                MemItem curr = enumerator.Current.Key;
+                IMemItem curr = enumerator.Current.Key;
                 vars.Reset(curr.Address);
                 while (has_next && vars.Size + curr.Size < MaxReqLen)
                 {

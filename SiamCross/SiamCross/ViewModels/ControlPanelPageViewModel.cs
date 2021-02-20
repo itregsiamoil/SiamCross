@@ -108,32 +108,25 @@ namespace SiamCross.ViewModels
             SensorData sensorData = sensor.SensorData as SensorData;
             if (sensorData == null)
                 return;
+            if (!CanOpenMeasurement(sensorData))
+                return;
 
-
-            if (sensorData.Name.Contains("DDIM")
-                || sensorData.Name.Contains("DDIN")
-                || sensorData.Name.Contains("SIDDOSA3M")
-                )
+            switch (sensor.ScannedDeviceInfo.Kind)
             {
-                if (CanOpenMeasurement(sensorData))
-                {
-                    if (CanOpenPage(typeof(Ddin2MeasurementPage)))
-                    {
-                        App.NavigationPage.Navigation.PushAsync(
-                            new Ddin2MeasurementPage(sensorData));
-                    }
-                }
-            }
-            else if (sensorData.Name.Contains("DU"))
-            {
-                if (CanOpenMeasurement(sensorData))
-                {
-                    if (CanOpenPage(typeof(DuMeasurementPage)))
-                    {
-                        App.NavigationPage.Navigation.PushAsync(
-                            new DuMeasurementPage(sensorData));
-                    }
-                }
+                case 0x1301: case 0x1302: case 0x1303:
+                case 0x1401: case 0x1402: case 0x1403:
+                    if (!CanOpenPage(typeof(Ddin2MeasurementPage)))
+                        return;
+                    App.NavigationPage.Navigation.PushAsync(
+                        new Ddin2MeasurementPage(sensorData));
+                    break;
+                case 0x1101:
+                    if (!CanOpenPage(typeof(DuMeasurementPage)))
+                        return;
+                    App.NavigationPage.Navigation.PushAsync(
+                        new DuMeasurementPage(sensorData));
+                    break;
+                default:break;
             }
 
         }

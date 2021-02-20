@@ -1,9 +1,10 @@
 ﻿using SiamCross.Models.Adapters;
 using System;
+using System.ComponentModel;
 
 namespace SiamCross.Models.Scanners
 {
-    public interface IBluetoothScanner
+    public interface IBluetoothScanner: INotifyPropertyChanged
     {
         void Start();
         void Stop();

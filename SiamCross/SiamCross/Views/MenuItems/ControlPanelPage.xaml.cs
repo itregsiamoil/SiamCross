@@ -18,24 +18,13 @@ namespace SiamCross.Views.MenuItems
             InitializeComponent();
         }
 
-        private void SensorList_ItemTapped(object sender, ItemTappedEventArgs e)
-        {
-            if (e.Item != null)
-            {
-                if (e.Item is ISensor dvc)
-                {
-                    //dvc.Activate = !dvc.Activate;
-                }
-            }
-        }
-
-        protected async Task RequestEnableBuetooth()
+        static protected async Task RequestEnableBuetooth()
         {
             IPhyInterface defaultAdapter = FactoryBt2.GetCurent();
 
             if (!defaultAdapter.IsEnbaled)
             {
-                bool result = await DisplayAlert(
+                bool result = await Application.Current.MainPage.DisplayAlert(
                     Resource.BluetoothIsDisable,
                     Resource.EnableBluetooth,
                     Resource.YesButton,
@@ -46,10 +35,9 @@ namespace SiamCross.Views.MenuItems
                 }
             }
         }
-        protected async void StartRequestEnableBuetooth()
+        static protected async void StartRequestEnableBuetooth()
         {
-            Task checkBuetooth = Task.Run(RequestEnableBuetooth);
-            await checkBuetooth;
+            await Task.Run(RequestEnableBuetooth);
         }
         protected override void OnAppearing()
         {

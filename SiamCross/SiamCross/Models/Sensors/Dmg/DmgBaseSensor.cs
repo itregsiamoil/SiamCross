@@ -115,6 +115,7 @@ namespace SiamCross.Models.Sensors.Dmg
             RespResult ret;
             try
             {
+                cancelToken.ThrowIfCancellationRequested();
                 //DeviceNumber.Value = 170;
                 //MemStruct ms = new MemStruct(0x0A);
                 //ms.Add(DeviceNumber);
@@ -182,6 +183,7 @@ namespace SiamCross.Models.Sensors.Dmg
             RespResult ret;
             try
             {
+                cancelToken.ThrowIfCancellationRequested();
                 ret = await Connection.ReadAsync(_NonvolatileParam);
                 //_reportBuilder.SensitivityLoad = Rkp.Value.ToString();
                 //_reportBuilder.ZeroOffsetLoad = Nkp.Value.ToString();

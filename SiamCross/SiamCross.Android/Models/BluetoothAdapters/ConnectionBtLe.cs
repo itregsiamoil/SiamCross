@@ -92,13 +92,12 @@ namespace SiamCross.Droid.Models
         {
             get
             {
-                switch (_ConnInterval)
+                return _ConnInterval switch
                 {
-                    default:
-                    case ConnectionInterval.Normal: return 50;
-                    case ConnectionInterval.High: return 20;
-                    case ConnectionInterval.Low: return 100;
-                }
+                    ConnectionInterval.High => 20,
+                    ConnectionInterval.Low => 100,
+                    _ => 50,
+                };
             }
         }
 
@@ -321,22 +320,6 @@ namespace SiamCross.Droid.Models
         //public event Action ConnectSucceed;
         //public event Action ConnectFailed;
 
-        private static void LockLog(string msg)
-        {
-            /*
-            string ret;
-            Thread thread = Thread.CurrentThread;
-            {
-                ret = msg
-                    + String.Format("   Thread ID: {0} ", thread.ManagedThreadId
-                    //+ String.Format("   Background: {0} ", thread.IsBackground)
-                    //+ String.Format("   Thread Pool: {0} ", thread.IsThreadPoolThread)
-                    );
-            }
-            DebugLog.WriteLine(ret);
-            */
-        }
-
         private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
         private TaskCompletionSource<bool> tcs;// = new TaskCompletionSource<byte[]>();
         private readonly Stream mRxStream = new MemoryStream(512);
@@ -355,12 +338,9 @@ namespace SiamCross.Droid.Models
         }
         private async void DoByteProcess(byte[] inputBytes)
         {
-            LockLog("Add - Try");
             using (await semaphore.UseWaitAsync()) //lock (lockObj)
             {
-                LockLog("Add - Lock");
                 await mRxStream.WriteAsync(inputBytes, 0, inputBytes.Length);
-                LockLog("Add - SetResult");
                 tcs?.TrySetResult(true);
             }
         }
@@ -376,17 +356,14 @@ namespace SiamCross.Droid.Models
             while (0 == readed)
             {
                 ct.ThrowIfCancellationRequested();
-                LockLog("Read - Try Create");
                 using (await semaphore.UseWaitAsync())
                 {
-                    LockLog("Read - Lock Create");
                     mRxStream.Position = 0;
                     readed = await mRxStream.ReadAsync(buffer, offset, count, ct);
                     mRxStream.SetLength(0);
                 }
                 if (0 == readed)
                 {
-                    LockLog("Read - Begin Wait TSC");
                     tcs = new TaskCompletionSource<bool>();
                     bool result = await tcs?.Task;
                     if (!result)

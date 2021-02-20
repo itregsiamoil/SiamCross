@@ -63,8 +63,13 @@ namespace SiamCross.Droid.Services
                                     Name = readDevice.DeviceName,
                                     Mac = readDevice.Mac,
                                     Id = id,
-                                    BluetoothType = readDevice.BluetoothType
+                                    BluetoothType = readDevice.BluetoothType,
+                                    Kind = readDevice.Kind
+                                    
                                 };
+                                sd.Protocol.KindStr = readDevice.Protocol;
+                                sd.Protocol.Address = readDevice.Address;
+
                                 devicesInfo.Add(sd);
                                 break;
                             default:
@@ -96,7 +101,10 @@ namespace SiamCross.Droid.Services
                             Id = device.Id.ToString(),
                             Mac = device.Mac,
                             DeviceName = device.Name,
-                            BluetoothType = device.BluetoothType
+                            BluetoothType = device.BluetoothType,
+                            Kind = device.Kind, 
+                            Protocol = device.Protocol.Kind.ToString(),
+                            Address = device.Protocol.Address
                         };
                         string jsonString = JsonConvert.SerializeObject(
                             savedDevice, _settings);

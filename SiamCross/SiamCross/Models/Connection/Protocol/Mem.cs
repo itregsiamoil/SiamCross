@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SiamCross.Models.Connection.Protocol
 {
-    public interface MemItem
+    public interface IMemItem
     {
         UInt32 Address { get; }
         UInt32 Size { get; }
@@ -15,7 +15,7 @@ namespace SiamCross.Models.Connection.Protocol
         bool FromArray(byte[] array, UInt32 start = 0);
     }
 
-    public abstract class MemVar : MemItem
+    public abstract class MemVar : IMemItem
     {
         private MemStruct _Parent;
         public MemVar(UInt32 address, MemStruct parent = null, string name = null)
@@ -142,7 +142,7 @@ namespace SiamCross.Models.Connection.Protocol
         protected UInt32 _Size = 0;
         public override UInt32 Size => _Size;
 
-        private readonly Dictionary<MemItem, string> _Var = new Dictionary<MemItem, string>();
+        private readonly Dictionary<IMemItem, string> _Var = new Dictionary<IMemItem, string>();
 
         public MemStruct(UInt32 address, MemStruct parent = null, string name = null)
             : base(address, parent, name)
@@ -168,7 +168,7 @@ namespace SiamCross.Models.Connection.Protocol
         public override void ToArray(byte[] dst, int start)
         {
             UInt32 sz = 0;
-            foreach (KeyValuePair<MemItem, string> v in _Var)
+            foreach (KeyValuePair<IMemItem, string> v in _Var)
             {
                 v.Key.ToArray().CopyTo(dst, sz + start);
                 sz += v.Key.Size;
@@ -178,7 +178,7 @@ namespace SiamCross.Models.Connection.Protocol
         public override bool FromArray(byte[] array, UInt32 start = 0)
         {
             UInt32 sz = 0;
-            foreach (KeyValuePair<MemItem, string> v in _Var)
+            foreach (KeyValuePair<IMemItem, string> v in _Var)
             {
                 v.Key.FromArray(array, start + sz);
                 sz += v.Key.Size;
@@ -193,7 +193,7 @@ namespace SiamCross.Models.Connection.Protocol
         public UInt32 GetOffset(MemVar item)
         {
             UInt32 offset = 0;
-            foreach (KeyValuePair<MemItem, string> v in _Var)
+            foreach (KeyValuePair<IMemItem, string> v in _Var)
             {
                 if (v.Key == item)
                     break;
@@ -202,7 +202,7 @@ namespace SiamCross.Models.Connection.Protocol
             return offset;
         }
 
-        public IReadOnlyDictionary<MemItem, string> GetVars()
+        public IReadOnlyDictionary<IMemItem, string> GetVars()
         {
             return _Var;
         }

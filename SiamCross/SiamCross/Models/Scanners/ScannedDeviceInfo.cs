@@ -66,6 +66,7 @@ namespace SiamCross.Models.Scanners
         public List<string> ProtocolNames => _proto_list;
         public ProtocolInfo Protocol { get; set; }
         public string Name { get; set; }
+        public UInt16 Kind { get; set; }
         public Guid Id { get; set; }
         public string Mac { get; set; }
         public BluetoothType BluetoothType { get; set; }
@@ -85,4 +86,28 @@ namespace SiamCross.Models.Scanners
             return Mac == other.Mac;
         }
     }
+
+
+    public class SiamDeviceInfo
+    {
+        public SiamDeviceInfo() 
+        {
+            Name = "";
+            Num = "";
+            Address = 1;
+            Kind = 0xFFFF;
+        }
+        public SiamDeviceInfo(string name, string num, byte address, UInt16 kind)
+        {
+            Name = name;
+            Num = num;
+            Address = address;
+            Kind = kind;
+        }
+        public string Name { get; set; }
+        public string Num { get; set; }
+        public byte Address { get; set; }
+        public UInt16 Kind { get; set; }
+    }
+
 }

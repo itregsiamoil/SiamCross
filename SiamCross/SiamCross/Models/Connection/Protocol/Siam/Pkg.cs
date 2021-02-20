@@ -87,7 +87,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private static int Extract(ReadOnlySpan<byte> req, ReadOnlySpan<byte> res_span, ref int begin)
         {
             begin = 0;
-            int marker_pos = 0;
+            int marker_pos;
             int rest = res_span.Length - begin;
 
             while (MIN_PKG_SIZE <= rest)

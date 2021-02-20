@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SiamCross.Models;
+using System;
 
 namespace SiamCross.Services
 {
@@ -7,10 +8,12 @@ namespace SiamCross.Services
     public class SavedDevice
     {
         public string DeviceName;
-
         public string Id;
         public string Mac;
-
         public BluetoothType BluetoothType;
+        public UInt16 Kind;
+        public string Protocol;
+        public byte Address;
+
     }
 }

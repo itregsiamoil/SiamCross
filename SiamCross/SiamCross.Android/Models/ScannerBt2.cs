@@ -9,7 +9,7 @@ using System.ComponentModel;
 
 namespace SiamCross.Droid.Models
 {
-    internal class ScannerBt2 : IScannerBt2, INotifyPropertyChanged
+    internal class ScannerBt2 : IScannerBt2
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -61,20 +61,14 @@ namespace SiamCross.Droid.Models
 
             foreach (BluetoothDevice device in devices)
             {
-                BluetoothType bluetoothType = BluetoothType.Le;
-                switch (device.Type)
-                {
-                    default: continue;
-                    case BluetoothDeviceType.Classic:
-                        bluetoothType = BluetoothType.Classic;
-                        break;
-                }
+                if(BluetoothDeviceType.Classic!= device.Type)
+                    continue;
                 ScannedDeviceInfo sd = new ScannedDeviceInfo
                 {
                     Name = device.Name,
                     Mac = device.Address,
                     Id = MacToGuid.Convert(device.Address),
-                    BluetoothType = bluetoothType,
+                    BluetoothType = BluetoothType.Classic,
                     BondState = device.BondState.ToString()
                 };
                 DoNotifyDevice(sd);
@@ -84,6 +78,7 @@ namespace SiamCross.Droid.Models
 
         public void Stop()
         {
+            ActiveScan = false;
             ScanStoped?.Invoke();
         }
 

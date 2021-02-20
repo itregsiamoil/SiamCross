@@ -14,8 +14,8 @@ namespace SiamCross.Views.MenuItems.SearchPanel
         public ScanningTab(IBluetoothScanner scanner)
         {
             _vm = new ScannerViewModel(scanner);
-            _vm.Scanner.ScanStarted += () => { RView.IsRefreshing = true; };
-            _vm.Scanner.ScanStoped += () => { RView.IsRefreshing = false; };
+            //_vm.Scanner.ScanStarted += () => { RView.IsRefreshing = true; };
+            //_vm.Scanner.ScanStoped += () => { RView.IsRefreshing = false; };
             BindingContext = _vm;
             InitializeComponent();
         }
@@ -29,8 +29,8 @@ namespace SiamCross.Views.MenuItems.SearchPanel
         }
         protected override void OnDisappearing()
         {
-            base.OnDisappearing();
             _vm.StopScan();
+            base.OnDisappearing();
         }
     }
 

@@ -10,7 +10,6 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 {
     public class Ddin2MeasurementManager
     {
-        //private readonly CommandGenerator _configGenerator = new CommandGenerator();
         private readonly Ddin2MeasurementStartParameters _measurementParameters;
         private DmgBaseMeasureReport _report;
         private readonly DmgBaseSensor mSensor;
@@ -30,18 +29,14 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
             _measurementParameters = measurementParameters;
             mSensor = sensor as DmgBaseSensor;
             _Connection = mSensor.Connection;
-
-            //_currentDynGraph = new List<byte[]>();
-            //_currentAccelerationGraph = new List<byte[]>();
         }
 
         public async Task<object> RunMeasurement()
         {
             MeasureState error = MeasureState.Ok;
-            Ddin2MeasurementData report = null;
+            Ddin2MeasurementData report;
             try
             {
-                /*
                 await SendParameters();
                 
                 MeasurementStatus = await ExecuteMeasurement();
@@ -51,7 +46,6 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                     if(0 < ErrorCode)
                         error = MeasureState.LogicError;
                 }
-                */
                 await DownloadHeader();
                 await DownloadMeasurement();
                 await SetStatusEmpty();
@@ -154,12 +148,12 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
         public async Task<UInt32> ReadErrorCode()
         {
-            RespResult ret = await _Connection.ReadAsync(mSensor.ErrorReg);
+            await _Connection.ReadAsync(mSensor.ErrorReg);
             return mSensor.ErrorReg.Value;
         }
         private async Task<DmgMeasureStatus> GetStatus()
         {
-            RespResult ret = await _Connection.ReadAsync(mSensor.StatReg);
+            await _Connection.ReadAsync(mSensor.StatReg);
             Debug.WriteLine($"Status is {(DmgMeasureStatus)mSensor.StatReg.Value}");
             return (DmgMeasureStatus)mSensor.StatReg.Value;
         }
@@ -168,7 +162,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
         {
             Debug.WriteLine("DownloadHeader start");
             UpdateProgress(_progress, Resource.ReadingHeader);
-            RespResult ret = await _Connection.ReadAsync(mSensor._Report);
+            await _Connection.ReadAsync(mSensor._Report);
             _report = new DmgBaseMeasureReport(
                 mSensor.MaxWeight.Value
                 , mSensor.MinWeight.Value
@@ -181,6 +175,9 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
             return true;
         }
 
+
+
+
         public async Task DownloadMeasurement()
         {
             Debug.WriteLine("DownloadMeasurement start");
@@ -189,13 +186,13 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
             float global_progress_start = _progress;
             float global_progress_left = (100f - _progress);
-
+            
             Action<float> StepProgress = (float progress) =>
             {
                 _progress = global_progress_start + progress * global_progress_left;
                 UpdateProgress(_progress);
             };
-
+            
             Stopwatch _PerfCounter = new Stopwatch();
             _PerfCounter.Restart();
 
@@ -216,7 +213,6 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
         private Ddin2MeasurementData MakeReport(MeasureState state)
         {
             Debug.WriteLine("MakeReport start");
-            List<byte> dynRawBytes = _currentDynGraph.ToList();
 
             Ddin2MeasurementData measurement =
                 new Ddin2MeasurementData(
@@ -241,7 +237,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
         private async Task SetStatusEmpty()
         {
             mSensor.CtrlReg.Value = 0x02;
-            RespResult ret = await _Connection.WriteAsync(mSensor.CtrlReg);
+            await _Connection.WriteAsync(mSensor.CtrlReg);
             Debug.WriteLine("SetStatusEmpty end");
         }
 

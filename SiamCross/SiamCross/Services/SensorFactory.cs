@@ -31,39 +31,28 @@ namespace SiamCross.Services
                 return null;
             IPhyConnection conn = phy_interface.MakeConnection(deviceInfo);
             IProtocolConnection connection = new SiamConnection(conn);
-            IProtocolConnection connection_old = new SiamProtocolConnection(conn);
-            //lock (_locker)
-            {
-                if (deviceInfo.Name.Contains("DDIN"))
-                {
-                    SensorData sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
-                    Ddin2Sensor sensor = new Ddin2Sensor(connection, sens_data);
-                    sensor.ScannedDeviceInfo = deviceInfo;
-                    return sensor;
-                }
-                else if (deviceInfo.Name.Contains("DDIM"))
-                {
-                    SensorData sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
-                    Ddin2Sensor sensor = new Ddin2Sensor(connection, sens_data);
-                    sensor.ScannedDeviceInfo = deviceInfo;
-                    return sensor;
-                }
-                else if (deviceInfo.Name.Contains("SIDDOSA3M"))
-                {
-                    SensorData sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
-                    Ddin2Sensor sensor = new Ddin2Sensor(connection, sens_data);
-                    sensor.ScannedDeviceInfo = deviceInfo;
-                    return sensor;
-                }
-                else if (deviceInfo.Name.Contains("DU"))
-                {
-                    SensorData sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, "");
-                    DuSensor sensor = new DuSensor(connection_old, sens_data);
-                    sensor.ScannedDeviceInfo = deviceInfo;
-                    return sensor;
-                }
+            
 
-                return null;
+            switch (deviceInfo.Kind)
+            {
+                case 0x1301: case 0x1302: case 0x1303: 
+                case 0x1401: case 0x1402: case 0x1403:
+                    {
+                        SensorData sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
+                        Ddin2Sensor sensor = new Ddin2Sensor(connection, sens_data);
+                        sensor.ScannedDeviceInfo = deviceInfo;
+                        return sensor;
+                    }
+                case 0x1101:
+                    {
+                        IProtocolConnection connection_old = new SiamProtocolConnection(conn);
+                        SensorData sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, "");
+                        DuSensor sensor = new DuSensor(connection_old, sens_data);
+                        sensor.ScannedDeviceInfo = deviceInfo;
+                        return sensor;
+                    }
+                default:
+                    return null; ;
             }
         }
     }
