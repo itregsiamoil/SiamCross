@@ -1629,6 +1629,16 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Field code length exceeds 4 characters. 
+        ///DB Siam can&apos;t import the files with the same identifiers..
+        /// </summary>
+        public static string WarningFieldIdOverflow {
+            get {
+                return ResourceManager.GetString("WarningFieldIdOverflow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Well.
         /// </summary>
         public static string Well {

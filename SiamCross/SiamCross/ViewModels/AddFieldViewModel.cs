@@ -18,7 +18,7 @@ namespace SiamCross.ViewModels
 
         public AddFieldViewModel()
         {
-            Add = new Command(SaveField);
+            Add = new Command(SaveFieldAsync);
         }
 
         public string FieldName { get; set; }
@@ -26,24 +26,27 @@ namespace SiamCross.ViewModels
 
         public ICommand Add { get; set; }
 
-        private void SaveField()
+        private async void SaveFieldAsync()
         {
-            if (FieldName == null || FieldCode == null)
+            if (FieldName == null || FieldCode == null || FieldName == "" || FieldCode == "")
             {
                 ToastService.Instance.LongAlert(Resource.FillInAllTheFields);
                 return;
             }
-            else if (FieldName == "" || FieldCode == "")
+
+            if(FieldCode.Length > 4)
             {
-                ToastService.Instance.LongAlert(Resource.FillInAllTheFields);
-                return;
+                bool accept = await Application.Current.MainPage.DisplayAlert(Resource.Attention
+                    , Resource.WarningFieldIdOverflow, Resource.Ok, Resource.Cancel);
+                if (!accept)
+                    return;
             }
 
             try
             {
                 HandbookData.Instance.AddField(FieldName, int.Parse(FieldCode));
                 MessagingCenter.Send<AddFieldViewModel>(this, "Refresh");
-                App.NavigationPage.Navigation.PopModalAsync();
+                await App.NavigationPage.Navigation.PopModalAsync();
             }
             catch (Exception ex)
             {

@@ -668,4 +668,8 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
   <data name="Type" xml:space="preserve">
     <value>Type</value>
   </data>
+  <data name="WarningFieldIdOverflow" xml:space="preserve">
+    <value>Field code length exceeds 4 characters. 
+DB Siam can't import the files with the same identifiers.</value>
+  </data>
 </root>

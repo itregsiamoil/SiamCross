@@ -677,4 +677,8 @@
   <data name="Type" xml:space="preserve">
     <value>Тип</value>
   </data>
+  <data name="WarningFieldIdOverflow" xml:space="preserve">
+    <value>Длина кода месторождения превышает 4 символа. 
+БД Сиам не может импортировать файлы с такими идентификаторами.</value>
+  </data>
 </root>
