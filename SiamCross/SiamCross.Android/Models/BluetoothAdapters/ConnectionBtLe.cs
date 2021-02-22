@@ -128,7 +128,7 @@ namespace SiamCross.Droid.Models
         public override async Task<bool> Connect()
         {
             SetState(ConnectionState.PendingConnect);
-            bool ret = await DoConnect();
+            bool ret = await DoConnectAsync();
             if (ret)
                 SetState(ConnectionState.Connected);
             else
@@ -138,13 +138,13 @@ namespace SiamCross.Droid.Models
         public override async Task<bool> Disconnect()
         {
             SetState(ConnectionState.PendingDisconnect);
-            bool ret = await DoDisconnect();
+            bool ret = await DoDisconnectAsync();
             if (ret)
                 SetState(ConnectionState.Disconnected);
             return ret;
         }
 
-        private async Task<bool> DoConnect()
+        private async Task<bool> DoConnectAsync()
         {
             CancellationTokenSource cts = new CancellationTokenSource(mConnectTimeout);
             try
@@ -200,7 +200,7 @@ namespace SiamCross.Droid.Models
                     //_isFirstConnectionTry = false;
                     return false;
                 }
-                bool is_inited = await Initialize(cts.Token);
+                bool is_inited = await InitializeAsync(cts.Token);
                 if (!is_inited)
                     await Disconnect();
                 else
@@ -221,7 +221,7 @@ namespace SiamCross.Droid.Models
             return false;
         }
 
-        private async Task<bool> Initialize(CancellationToken ct)
+        private async Task<bool> InitializeAsync(CancellationToken ct)
         {
             bool inited = false;
             try
@@ -282,7 +282,7 @@ namespace SiamCross.Droid.Models
 
             return inited;
         }
-        private async Task<bool> DoDisconnect()
+        private async Task<bool> DoDisconnectAsync()
         {
             bool ret = true;
             try

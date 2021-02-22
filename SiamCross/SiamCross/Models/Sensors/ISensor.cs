@@ -22,6 +22,6 @@ namespace SiamCross.Models
         Task<bool> QuickReport(CancellationToken cancelToken);
         Task StartMeasurement(object measurementParameters);
         SensorData SensorData { get; }
-        ScannedDeviceInfo ScannedDeviceInfo { get; set; }
+        ScannedDeviceInfo ScannedDeviceInfo { get; }
     }
 }

@@ -137,7 +137,7 @@ namespace SiamCross.Droid.Models
         public override async Task<bool> Connect()
         {
             SetState(ConnectionState.PendingConnect);
-            bool ret = await DoConnect();
+            bool ret = await DoConnectAsync();
             if (ret)
                 SetState(ConnectionState.Connected);
             else
@@ -147,13 +147,13 @@ namespace SiamCross.Droid.Models
         public override async Task<bool> Disconnect()
         {
             SetState(ConnectionState.PendingDisconnect);
-            bool ret = await DoDisconnect();
+            bool ret = await DoDisconnectAsync();
             if (ret)
                 SetState(ConnectionState.Disconnected);
             return ret;
         }
 
-        private async Task<bool> DoConnect()
+        private async Task<bool> DoConnectAsync()
         {
             try
             {
@@ -196,7 +196,7 @@ namespace SiamCross.Droid.Models
 
                 CtRxSource = new CancellationTokenSource();
                 mRxThread = await Task.Factory.StartNew(
-                    () => RxThreadFunction(_socket.InputStream, CtRxSource.Token)
+                    () => RxThreadFunctionAsync(_socket.InputStream, CtRxSource.Token)
                     , CtRxSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
 
                 return true;
@@ -221,12 +221,12 @@ namespace SiamCross.Droid.Models
             }
             return false;
         }
-        private async Task<bool> DoDisconnect()
+        private async Task<bool> DoDisconnectAsync()
         {
             bool ret = true;
             try
             {
-                await RxThreadCancel();
+                await RxThreadCancelAsync();
                 _bluetoothDevice?.Dispose();
                 //mInterface.Disable();
             }
@@ -242,7 +242,7 @@ namespace SiamCross.Droid.Models
             return ret;
         }
 
-        private async Task<bool> TryWaitRxThread(int timeout)
+        private async Task<bool> TryWaitRxThreadAsync(int timeout)
         {
             if (null == mRxThread)
                 return true;
@@ -250,19 +250,19 @@ namespace SiamCross.Droid.Models
             return mRxThread == reason;
         }
 
-        private async Task RxThreadCancel()
+        private async Task RxThreadCancelAsync()
         {
             try
             {
                 CtRxSource?.Cancel();
                 mRxTsc?.TrySetResult(false);
 
-                if (!await TryWaitRxThread(1000))
+                if (!await TryWaitRxThreadAsync(1000))
                     Debug.WriteLine("RxThreadCancel cancel await failed");
 
                 _socket?.Close();
 
-                if (!await TryWaitRxThread(20000))
+                if (!await TryWaitRxThreadAsync(20000))
                     Debug.WriteLine("RxThreadCancel Close socket await failed");
 
                 _socket?.Dispose();
@@ -287,7 +287,7 @@ namespace SiamCross.Droid.Models
             }
         }
 
-        private async Task<int> RxThreadFunction(Stream rx_stream, CancellationToken ct)
+        private async Task<int> RxThreadFunctionAsync(Stream rx_stream, CancellationToken ct)
         {
             Debug.WriteLine("RxTask start");
             byte[] buffer = new byte[512];

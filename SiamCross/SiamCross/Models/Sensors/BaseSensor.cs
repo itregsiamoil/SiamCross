@@ -6,7 +6,6 @@ using SiamCross.Models.Tools;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,8 +27,9 @@ namespace SiamCross.Models.Sensors
             //_uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             Connection.PropertyChanged += (obj, a) =>
             {
-                if ("State" == a.PropertyName)
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ConnStateStr"));
+                if (null == a || "State" != a.PropertyName)
+                    return;
+                OnPropChange(new PropertyChangedEventArgs("ConnStateStr"));
             };
             //mConnection.PropertyChanged += PropertyChanged;
         }
@@ -47,6 +47,10 @@ namespace SiamCross.Models.Sensors
         public int MeasureProgressP => (int)(mMeasureProgress * 100);
 
         private float mMeasureProgress = 0;
+        public void OnPropChange(PropertyChangedEventArgs arg)
+        {
+            PropertyChanged?.Invoke(this, arg);
+        }
         public float MeasureProgress
         {
             get => mMeasureProgress;
@@ -284,13 +288,6 @@ namespace SiamCross.Models.Sensors
             SensorData.RadioFirmware = "";
             SensorData.Status = "";
             IsAlive = false;
-        }
-        public string GetStringPayload(byte[] pkg)
-        {
-            Span<byte> payload = pkg.AsSpan(12, pkg.Length - 12 - 2);
-            if (payload.Length > 20)
-                return Encoding.UTF8.GetString(payload.ToArray());
-            return Encoding.GetEncoding(1251).GetString(payload.ToArray());
         }
 
 

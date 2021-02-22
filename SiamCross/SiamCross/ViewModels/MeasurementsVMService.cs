@@ -349,7 +349,7 @@ namespace SiamCross.ViewModels
                             Measurements.Remove(mv);
                         }
                     }
-                    //MessagingCenter.Send(this, "RefreshAfterDeleting");
+                    MessagingCenter.Send(this, "RefreshAfterDeleting");
                     SelectedMeasurements.Clear();
                     Title = $"{Resource.SelectedMeasurements}: {SelCount}";
                 }

@@ -33,7 +33,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
             {
                 if (null != report)
                 {
-                    SensorService.Instance.MeasurementHandler(report);
+                    SensorService.MeasurementHandler(report);
                     SensorData.Status = Resource.Survey + ": complete";
                 }
                 else

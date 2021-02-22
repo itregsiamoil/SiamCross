@@ -94,24 +94,21 @@ namespace SiamCross.Services
                 Debug.WriteLine("AddSensor");
             }
         }
-
         public void DeleteSensor(Guid id)
         {
+            ISensor sensor;
             lock (_lock)
             {
-                ISensor sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
-                if (sensor != null)
-                {
-                    sensor.Activate = false;
-                    SensorDeleting(sensor);
-                    _sensors.Remove(sensor);
-                    sensor.Dispose();
-                }
-                MessagingCenter.Send(this, "Refresh saved sensors",
-                    _sensors.Select(s => s.ScannedDeviceInfo));
+                sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
+                if (sensor == null)
+                    return;
+                SensorDeleting(sensor);
+                _sensors.Remove(sensor);
             }
+            MessagingCenter.Send(this, "Refresh saved sensors",
+                _sensors.Select(s => s.ScannedDeviceInfo));
+            sensor?.Dispose();
         }
-
         public async Task StartMeasurementOnSensor(Guid id, object parameters)
         {
             ISensor sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
@@ -121,7 +118,7 @@ namespace SiamCross.Services
             }
         }
 
-        public async void MeasurementHandler(object measurementArgs)
+        static public async void MeasurementHandler(object measurementArgs)
         {
             int addId;
             switch (measurementArgs)

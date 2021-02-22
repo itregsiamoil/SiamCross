@@ -73,6 +73,7 @@ namespace SiamCross.Models.Connection.Protocol
             bool result = false;
             try
             {
+                SetState(ConnectionState.PendingConnect);
                 result = await mPhyConn.Connect();
             }
             catch (Exception ex)
@@ -110,9 +111,9 @@ namespace SiamCross.Models.Connection.Protocol
             }
 
             bool ret = false;
-            SetState(ConnectionState.PendingDisconnect);
             try
             {
+                SetState(ConnectionState.PendingDisconnect);
                 ret = await mPhyConn.Disconnect();
             }
             catch (Exception ex)

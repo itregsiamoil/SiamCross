@@ -3,6 +3,7 @@ using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -159,7 +160,7 @@ namespace SiamCross.Models.Sensors.Du
             {
                 if (null != report)
                 {
-                    SensorService.Instance.MeasurementHandler(report);
+                    SensorService.MeasurementHandler(report);
                     SensorData.Status = Resource.Survey + ": complete";
                 }
                 else
@@ -169,6 +170,14 @@ namespace SiamCross.Models.Sensors.Du
                 await Task.Delay(2000);
                 IsMeasurement = false;
             }
+        }
+
+        public string GetStringPayload(byte[] pkg)
+        {
+            Span<byte> payload = pkg.AsSpan(12, pkg.Length - 12 - 2);
+            if (payload.Length > 20)
+                return Encoding.UTF8.GetString(payload.ToArray());
+            return Encoding.GetEncoding(1251).GetString(payload.ToArray());
         }
     }
 }
