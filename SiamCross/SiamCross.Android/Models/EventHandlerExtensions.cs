@@ -8,15 +8,13 @@ namespace SiamCross.Droid.Models
         public static void Raise(this EventHandler handler, object sender, EventArgs e)
         {
             EventHandler temp = Volatile.Read(ref handler);
-            if (temp != null)
-                temp(sender, e);
+            temp?.Invoke(sender, e);
         }
 
         public static void Raise<T>(this EventHandler<T> handler, object sender, T e) where T : EventArgs
         {
             EventHandler<T> temp = Volatile.Read(ref handler);
-            if (temp != null)
-                temp(sender, e);
+            temp?.Invoke(sender, e);
         }
     }
 }

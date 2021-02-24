@@ -154,24 +154,20 @@ namespace SiamCross.Services
                 if (duMeasurement.Id == 0)
                 {
                     IEnumerable<int> idsColumn = _database.Query<int>(string.Format(
-                        "SELECT Id FROM DuMeasurement"));
+                        "SELECT max(Id)+1 FROM DuMeasurement"));
                     if (idsColumn.Count() > 0)
-                    {
-                        duMeasurement.Id = idsColumn.Max() + 1;
-                    }
+                        duMeasurement.Id = idsColumn.First();
                     else
-                    {
                         duMeasurement.Id = 1;
-                    }
                 }
-
-                IEnumerable<dynamic> rows = _database.Query(string.Format(
-                    "SELECT COUNT(1) AS 'Count' FROM DuMeasurement WHERE Id = '{0}'", duMeasurement.Id));
-
-                if (rows.First().Count > 0)
                 {
-                    UpdateDuMeasurement(duMeasurement);
-                    return duMeasurement.Id;
+                    IEnumerable<int> rows1 = _database.Query<int>(string.Format(
+                        "SELECT COUNT(1) AS 'Count' FROM DuMeasurement WHERE Id = '{0}'", duMeasurement.Id));
+                    if (rows1.Count() > 0)
+                    {
+                        UpdateDuMeasurement(duMeasurement);
+                        return duMeasurement.Id;
+                    }
                 }
 
                 string sql = "INSERT INTO DuMeasurement (" +
@@ -326,25 +322,21 @@ namespace SiamCross.Services
                 if (ddin2Measurement.Id == 0)
                 {
                     IEnumerable<int> idsColumn = _database.Query<int>(string.Format(
-                        "SELECT Id FROM Ddin2Measurement"));
+                        "SELECT max(Id)+1 FROM Ddin2Measurement"));
                     if (idsColumn.Count() > 0)
-                    {
-                        ddin2Measurement.Id = idsColumn.Max() + 1;
-                    }
+                        ddin2Measurement.Id = idsColumn.First();
                     else
-                    {
                         ddin2Measurement.Id = 1;
-                    }
                 }
-
-                IEnumerable<dynamic> rows = _database.Query(string.Format(
-                    "SELECT COUNT(1) as 'Count' FROM Ddin2Measurement WHERE Id = '{0}'",
-                    ddin2Measurement.Id));
-
-                if (rows.First().Count > 0)
                 {
-                    UpdateDdin2Measurement(ddin2Measurement);
-                    return ddin2Measurement.Id;
+                    var rows2 = _database.Query<int>(string.Format(
+                        "SELECT COUNT(1) as 'Count' FROM Ddin2Measurement WHERE Id = '{0}'",
+                        ddin2Measurement.Id));
+                    if (rows2.Count() > 0)
+                    {
+                        UpdateDdin2Measurement(ddin2Measurement);
+                        return ddin2Measurement.Id;
+                    }
                 }
 
                 string sql = "INSERT INTO Ddin2Measurement" +
