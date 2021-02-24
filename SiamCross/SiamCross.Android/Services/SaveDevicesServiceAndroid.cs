@@ -66,8 +66,8 @@ namespace SiamCross.Droid.Services
                                     BluetoothType = readDevice.BluetoothType,
                                     Kind = readDevice.Kind
                                 };
-                                sd.Protocol.KindStr = readDevice.Protocol;
-                                sd.Protocol.Address = readDevice.Address;
+                                sd.ProtocolKind = readDevice.ProtocolId;
+                                sd.ProtocolAddress = readDevice.ProtocolAddress;
 
                                 devicesInfo.Add(sd);
                                 break;
@@ -102,8 +102,8 @@ namespace SiamCross.Droid.Services
                             DeviceName = device.Name,
                             BluetoothType = device.BluetoothType,
                             Kind = device.Kind,
-                            Protocol = device.Protocol.Kind.ToString(),
-                            Address = device.Protocol.Address
+                            ProtocolId = device.ProtocolKind,
+                            ProtocolAddress = device.ProtocolAddress
                         };
                         string jsonString = JsonConvert.SerializeObject(
                             savedDevice, _settings);

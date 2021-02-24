@@ -119,7 +119,7 @@ namespace SiamCross.ViewModels
                 item.Name = item.Name.Replace("\r", string.Empty);
                 item.Name = item.Name.Replace("\n", string.Empty);
                 item.Name = item.Name.Replace("\t", string.Empty);
-                item.Protocol.Address = siam_device.Address;
+                item.ProtocolAddress = siam_device.Address;
                 item.Kind = siam_device.Kind;
 
                 SensorService.Instance.AddSensor(item);
@@ -148,9 +148,9 @@ namespace SiamCross.ViewModels
                     phy_interface = FactoryBt2.GetCurent(); break;
             }
             IPhyConnection conn = phy_interface.MakeConnection(phy_item);
-            switch (phy_item.Protocol.Kind)
+            switch (phy_item.ProtocolKind)
             {
-                case ProtocolKind.Siam:
+                case 0: // ProtocolKind.Siam:
                     IProtocolConnection connection = new SiamConnection(conn);
                     if (await connection.Connect() && RespResult.NormalPkg == await connection.ReadAsync(_Common))
                     {
@@ -177,11 +177,11 @@ namespace SiamCross.ViewModels
 
                         string label;
                         label = $"{dvc_name} №{DeviceNumber.Value}"
-                            + $"\n{Resource.Address}: { phy_item.Protocol.Address}"
+                            + $"\n{Resource.Address}: { phy_item.ProtocolAddress}"
                             + $" {Resource.Type}: 0x" + DeviceType.Value.ToString("X2");
 
-                        var siam_device = new SiamDeviceInfo(dvc_name
-                            , DeviceNumber.Value.ToString(), phy_item.Protocol.Address, DeviceType.Value);
+                        SiamDeviceInfo siam_device = new SiamDeviceInfo(dvc_name
+                            , DeviceNumber.Value.ToString(), phy_item.ProtocolAddress, DeviceType.Value);
 
                         dir.Add(label, siam_device);
 
@@ -189,7 +189,8 @@ namespace SiamCross.ViewModels
                     await connection.Disconnect();
                     break;
                 default:
-                case ProtocolKind.Modbus: break;
+                case 1://ProtocolKind.Modbus: 
+                    break;
             }
             await conn.Disconnect();
             _Detecting = false;

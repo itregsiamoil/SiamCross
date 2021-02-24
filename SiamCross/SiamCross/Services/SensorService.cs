@@ -118,7 +118,7 @@ namespace SiamCross.Services
             }
         }
 
-        static public async void MeasurementHandler(object measurementArgs)
+        public static async void MeasurementHandler(object measurementArgs)
         {
             int addId;
             switch (measurementArgs)

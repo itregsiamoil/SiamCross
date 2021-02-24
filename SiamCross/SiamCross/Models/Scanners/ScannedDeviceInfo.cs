@@ -1,92 +1,109 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace SiamCross.Models.Scanners
 {
-    public static class StringExtensions
-    {
-        public static string SplitCamelCase(this string str)
-        {
-            return Regex.Replace(
-                Regex.Replace(
-                    str,
-                    @"(\P{Ll})(\P{Ll}\p{Ll})",
-                    "$1 $2"
-                ),
-                @"(\p{Ll})(\P{Ll})",
-                "$1 $2"
-            );
-        }
-    }
-    public enum ProtocolKind
-    {
-        Siam = 0
-        , Modbus = 1
-    }
-
-    public class ProtocolInfo
-    {
-        public string KindStr
-        {
-            get => Kind.ToString();
-            set
-            {
-                if (null == value)
-                    return;
-
-                if (value.ToString() == ProtocolKind.Modbus.ToString())
-                    Kind = ProtocolKind.Modbus;
-                else
-                    Kind = ProtocolKind.Siam;
-            }
-        }
-
-        public ProtocolKind Kind { get; set; }
-
-        public byte Address { get; set; }
-
-        public ProtocolInfo(ProtocolKind type = ProtocolKind.Siam, byte addr = 1)
-        {
-            Kind = type;
-            Address = addr;
-        }
-    }
-
-
     public class ScannedDeviceInfo : IEquatable<ScannedDeviceInfo>
     {
         public ScannedDeviceInfo()
         {
-            Protocol = new ProtocolInfo();
+            ProtocolKind = 0;
+            ProtocolData["Address"] = "1";
+        }
+        public string ProtocolKindStr
+        {
+            get
+            {
+                if (ProtocolIndex.Instance.TryGetName(ProtocolKind, out string name))
+                    return name;
+                return string.Empty;
+            }
+            set
+            {
+                if (uint.TryParse(value, out uint idx))
+                {
+                    if (ProtocolIndex.Instance.TryGetName(idx, out string name))
+                    {
+                        ProtocolKind = idx;
+                    }
+                    return;
+                }
+                if (ProtocolIndex.Instance.TryGetId(value, out uint idxx))
+                {
+                    ProtocolKind = idxx;
+                }
+            }
+        }
+        public uint ProtocolKind { get; set; }
+
+        public byte ProtocolAddress
+        {
+            get
+            {
+                if (ProtocolData.TryGetValue("Address", out object pi))
+                {
+                    if (pi is string str)
+                    {
+                        if (byte.TryParse(str, out byte val))
+                            return val;
+                    }
+                }
+                return 1;
+            }
+            set
+            {
+                string str_val = "1";
+                if (0 < value && 127 > value)
+                    str_val = value.ToString();
+                ProtocolData["Address"] = str_val;
+            }
         }
 
-        private static readonly List<string> _proto_list = Enum.GetNames(typeof(ProtocolKind)).Select(b => b.SplitCamelCase()).ToList();
-        public List<string> ProtocolNames => _proto_list;
-        public ProtocolInfo Protocol { get; set; }
+        public readonly Dictionary<string, object> ProtocolData = new Dictionary<string, object>();
+        private static readonly IReadOnlyList<string> _proto_list = ProtocolIndex.Instance.GetNames().ToList();
+        public IReadOnlyList<string> ProtocolNames => _proto_list;
         public string Name { get; set; }
         public UInt16 Kind { get; set; }
         public Guid Id { get; set; }
         public string Mac { get; set; }
         public BluetoothType BluetoothType { get; set; }
-        public string PrimaryPhy { get; set; }
-        public string SecondaryPhy { get; set; }
-        public string Rssi { get; set; }
-        public string IsLegacy { get; set; }
-        public string IsConnectable { get; set; }
-        public string TxPower { get; set; }
-        public string BondState { get; set; }
 
-        public bool HasSiamServiceUid { get; set; }
-        public bool HasUriTag { get; set; }
+        public string Description
+        {
+            get
+            {
+                string phy = string.Empty;
+                if (ProtocolData.TryGetValue("PrimaryPhy", out object pi_phy))
+                    if (pi_phy is string str)
+                        phy = str;
+
+                string rssi = string.Empty;
+                if (ProtocolData.TryGetValue("Rssi", out object pi_rssi))
+                    if (pi_rssi is string str)
+                        rssi = str;
+
+                return $" Mac:{Mac} Phy:{phy} Rssi:{rssi}";
+            }
+        }
+
+        public string BondState
+        {
+            get
+            {
+                if (ProtocolData.TryGetValue("BondState", out object pi))
+                    if (pi is string str)
+                        return str;
+                return string.Empty;
+            }
+            set => ProtocolData["BondState"] = value;
+        }
 
         public bool Equals(ScannedDeviceInfo other)
         {
             return Mac == other.Mac;
         }
     }
-
 
     public class SiamDeviceInfo
     {

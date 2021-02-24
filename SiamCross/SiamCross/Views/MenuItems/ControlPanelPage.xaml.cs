@@ -17,7 +17,7 @@ namespace SiamCross.Views.MenuItems
             InitializeComponent();
         }
 
-        static protected async Task RequestEnableBuetooth()
+        protected static async Task RequestEnableBuetooth()
         {
             IPhyInterface defaultAdapter = FactoryBt2.GetCurent();
 
@@ -34,7 +34,7 @@ namespace SiamCross.Views.MenuItems
                 }
             }
         }
-        static protected async void StartRequestEnableBuetooth()
+        protected static async void StartRequestEnableBuetooth()
         {
             await Task.Run(RequestEnableBuetooth);
         }

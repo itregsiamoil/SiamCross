@@ -15,7 +15,7 @@ namespace SiamCross.Views.MenuItems
         public string Version => DependencyService.Get<IAppVersionAndBuild>().GetVersionNumber();
         public string Build => DependencyService.Get<IAppVersionAndBuild>().GetBuildNumber();
         public ICommand CmdShowChanges { get; }
-        int _VersionClickCount = 0;
+        private int _VersionClickCount = 0;
 
         public AboutPanelPage()
         {
@@ -26,7 +26,7 @@ namespace SiamCross.Views.MenuItems
             //lblBuildNumber.Text = DependencyService.Get<IAppVersionAndBuild>().GetBuildNumber();
         }
 
-        void ShowChanges(object obj)
+        private void ShowChanges(object obj)
         {
             _VersionClickCount++;
             if (_VersionClickCount > 5)

@@ -12,8 +12,8 @@ namespace SiamCross.Services
         public string Mac;
         public BluetoothType BluetoothType;
         public UInt16 Kind;
-        public string Protocol;
-        public byte Address;
+        public uint ProtocolId;
+        public byte ProtocolAddress;
 
     }
 }

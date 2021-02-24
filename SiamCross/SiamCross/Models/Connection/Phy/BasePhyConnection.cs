@@ -24,7 +24,7 @@ namespace SiamCross.Models.Connection.Phy
                 return;
             _ConnState = state;
             ChangeNotify(nameof(State));
-            Debug.WriteLine($"{this.GetType().Name} is {_ConnState}");
+            Debug.WriteLine($"{GetType().Name} is {_ConnState}");
         }
         public abstract IPhyInterface PhyInterface { get; }
         public abstract int Rssi { get; }

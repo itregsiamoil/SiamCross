@@ -99,12 +99,7 @@
                                                 <FormattedString >
                                                     <Span Text="{Binding Name}" FontAttributes="Bold" FontSize="Medium" />
                                                     <Span Text="&#10;" />
-                                                    <Span Text=" Mac: " />
-                                                    <Span Text="{Binding Mac}" FontAttributes="Bold" FontSize="Micro" />
-                                                    <Span Text=" Phy: " />
-                                                    <Span Text="{Binding PrimaryPhy}" FontAttributes="Bold" FontSize="Micro" />
-                                                    <Span Text=" Rssi: " />
-                                                    <Span Text="{Binding Rssi}" FontAttributes="Bold" FontSize="Micro" />
+                                                    <Span Text="{Binding Description}" FontAttributes="Italic" FontSize="Micro" />
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
@@ -144,12 +139,12 @@
                                                 <Picker IsEnabled="False"
                                                         Grid.Row="1" Grid.Column="0"
                                                         ItemsSource="{Binding ProtocolNames}"
-                                                        SelectedItem ="{Binding Protocol.KindStr}" >
+                                                        SelectedItem ="{Binding ProtocolKindStr}" >
                                                 </Picker>
                                                 <Label Text="{local:Translate Address}" FontSize="Micro"
                                                        Grid.Row="0" Grid.Column="1" />
                                                 <Entry IsEnabled="False"
-                                                       Text="{Binding Protocol.Address}" 
+                                                       Text="{Binding ProtocolAddress}" 
                                                        Grid.Row="1" Grid.Column="1" >
                                                 </Entry>
                                                 <ActivityIndicator IsRunning="{Binding Path=BindingContext.Detecting

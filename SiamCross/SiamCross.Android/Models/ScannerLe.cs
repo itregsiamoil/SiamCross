@@ -104,16 +104,18 @@ namespace SiamCross.Droid.Models
                 Name = result.Device.Name,
                 Mac = result.Device.Address,
                 Id = MacToGuid.Convert(result.Device.Address),
-                PrimaryPhy = ((BluetoothPhy)result.PrimaryPhy).ToString(),
-                SecondaryPhy = ((BluetoothPhy)result.SecondaryPhy).ToString(),
-                Rssi = result.Rssi.ToString(),
-                IsLegacy = result.IsLegacy.ToString(),
-                IsConnectable = result.IsConnectable.ToString(),
-                TxPower = (BLE.ScanResult.TxPowerNotPresent == (int)result.TxPower) ?
-                    "TxPowerNotPresent" : ((BLE.AdvertiseTxPower)result.TxPower).ToString(),
                 BondState = result.Device.BondState.ToString()
             };
-            //sd.Protocol = new ProtocolInfo();
+            sd.ProtocolData["PrimaryPhy"] = ((BluetoothPhy)result.PrimaryPhy).ToString();
+            sd.ProtocolData["SecondaryPhy"] = ((BluetoothPhy)result.SecondaryPhy).ToString();
+            sd.ProtocolData["Rssi"] = result.Rssi.ToString();
+            sd.ProtocolData["IsLegacy"] = result.IsLegacy.ToString();
+            sd.ProtocolData["IsConnectable"] = result.IsConnectable.ToString();
+            sd.ProtocolData["TxPower"] = (BLE.ScanResult.TxPowerNotPresent == (int)result.TxPower) ?
+                    "TxPowerNotPresent" : ((BLE.AdvertiseTxPower)result.TxPower).ToString();
+
+            bool HasSiamServiceUid = false;
+            bool HasUriTag = false;
 
             IList<Android.OS.ParcelUuid> svc = result.ScanRecord.ServiceUuids;
             if (null != svc)
@@ -123,7 +125,7 @@ namespace SiamCross.Droid.Models
                 {
                     if (s.ToString() == "569a1101-b87f-490c-92cb-11ba5ea5167c")
                     {
-                        sd.HasSiamServiceUid = true;
+                        HasSiamServiceUid = true;
                         DoNotifyDevice(sd);
                         return;
                     }
@@ -162,7 +164,7 @@ namespace SiamCross.Droid.Models
                     string bytesUtf8 = Encoding.UTF8.GetString(data_block_data).ToUpper();
                     if (bytesUtf8.Contains("СИАМ") || bytesUtf8.Contains("SIAM"))
                     {
-                        sd.HasUriTag = true;
+                        HasUriTag = true;
                         break;
                     }
                 }
@@ -171,7 +173,13 @@ namespace SiamCross.Droid.Models
                 pos += data_block_len;
             }
 
-            DoNotifyDevice(sd);
+            if (IsFilterEnabled)
+            {
+                if (sd.Id != null && (HasSiamServiceUid || HasUriTag || IsSiamSensor(sd.Name)))
+                    DoNotifyDevice(sd);
+            }
+            else
+                DoNotifyDevice(sd);
         }
 
         public void AddBonded()
@@ -189,9 +197,16 @@ namespace SiamCross.Droid.Models
                     Mac = device.Address,
                     Id = MacToGuid.Convert(device.Address),
                     BluetoothType = BluetoothType.Le,
-                    BondState = device.BondState.ToString()
                 };
-                DoNotifyDevice(sd);
+                sd.ProtocolData["BondState"] = device.BondState.ToString();
+
+                if (IsFilterEnabled)
+                {
+                    if (sd.Id != null && IsSiamSensor(sd.Name))
+                        DoNotifyDevice(sd);
+                }
+                else
+                    DoNotifyDevice(sd);
             }
         }
         public async void Start()
@@ -312,28 +327,13 @@ namespace SiamCross.Droid.Models
 
         private void DoNotifyDevice(ScannedDeviceInfo sd)
         {
-            if (IsFilterEnabled)
-            {
-
-                if (!IsSiamSensor(sd))
-                    return;
-            }
             Received?.Invoke(sd);
         }
-        public static bool IsEmptyDevice(ScannedDeviceInfo dev)
+        public static bool IsSiamSensor(string dvc_name)
         {
-            return (dev.Name == null || dev.Name == "" || dev.Id == null);
-        }
-        public static bool IsSiamSensor(ScannedDeviceInfo dev)
-        {
-            if (dev.HasSiamServiceUid || dev.HasUriTag)
-                return true;
-
-            if (IsEmptyDevice(dev))
+            if (dvc_name == null)
                 return false;
-
-            string name = dev.Name.ToUpper();
-
+            string name = dvc_name.ToUpper();
             return name.Contains("DDIN")
                    || name.Contains("DDIM")
                    || name.Contains("SIDDOSA3M")
@@ -343,7 +343,6 @@ namespace SiamCross.Droid.Models
                    || name.Contains("DMTA")
                    || name.Contains("SIAM")
                    ;
-            ;
         }
 
 

@@ -76,7 +76,7 @@
                                                     Padding="5" Margin="0" Spacing="0" >
                                             <StackLayout.Triggers>
                                                 <DataTrigger TargetType="StackLayout" Binding="{Binding IsAlive}" Value="true" >
-                                                    <Setter Property="BackgroundColor" Value="{StaticResource colorContentBg}"   />
+                                                    <Setter Property="BackgroundColor" Value="{StaticResource colorCtrlNormal}"   />
                                                 </DataTrigger>
                                             </StackLayout.Triggers>
                                             <FlexLayout Wrap="Wrap" JustifyContent="Center" Direction="Row" 

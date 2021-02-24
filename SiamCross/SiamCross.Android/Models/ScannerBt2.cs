@@ -71,7 +71,13 @@ namespace SiamCross.Droid.Models
                     BluetoothType = BluetoothType.Classic,
                     BondState = device.BondState.ToString()
                 };
-                DoNotifyDevice(sd);
+                if (IsFilterEnabled)
+                {
+                    if (sd.Id != null && IsSiamSensor(sd.Name))
+                        DoNotifyDevice(sd);
+                }
+                else
+                    DoNotifyDevice(sd);
             }
             Stop();
         }
@@ -84,28 +90,13 @@ namespace SiamCross.Droid.Models
 
         private void DoNotifyDevice(ScannedDeviceInfo sd)
         {
-            if (IsFilterEnabled)
-            {
-
-                if (!IsSiamSensor(sd))
-                    return;
-            }
             Received?.Invoke(sd);
         }
-        public static bool IsEmptyDevice(ScannedDeviceInfo dev)
+        public static bool IsSiamSensor(string dvc_name)
         {
-            return (dev.Name == null || dev.Name == "" || dev.Id == null);
-        }
-        public static bool IsSiamSensor(ScannedDeviceInfo dev)
-        {
-            if (dev.HasSiamServiceUid || dev.HasUriTag)
-                return true;
-
-            if (IsEmptyDevice(dev))
+            if (dvc_name == null)
                 return false;
-
-            string name = dev.Name.ToUpper();
-
+            string name = dvc_name.ToUpper();
             return name.Contains("DDIN")
                    || name.Contains("DDIM")
                    || name.Contains("SIDDOSA3M")
@@ -115,7 +106,6 @@ namespace SiamCross.Droid.Models
                    || name.Contains("DMTA")
                    || name.Contains("SIAM")
                    ;
-            ;
         }
     }
 }

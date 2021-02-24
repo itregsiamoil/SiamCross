@@ -10,7 +10,6 @@ using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -88,18 +87,12 @@ namespace SiamCross.Droid.Models
         //private bool _isFirstConnectionTry = true;
 
         private ConnectionInterval _ConnInterval = ConnectionInterval.Normal;
-        public int ConnInterval
+        public int ConnInterval => _ConnInterval switch
         {
-            get
-            {
-                return _ConnInterval switch
-                {
-                    ConnectionInterval.High => 20,
-                    ConnectionInterval.Low => 100,
-                    _ => 50,
-                };
-            }
-        }
+            ConnectionInterval.High => 20,
+            ConnectionInterval.Low => 100,
+            _ => 50,
+        };
 
         private int _Mtu = 20;
         public override int Mtu => _Mtu;

@@ -1,79 +1,86 @@
-﻿using System;
+﻿using SiamCross.Models;
+using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace SiamCross.ViewModels
 {
     public class MeasurementView : INotifyPropertyChanged
     {
-        private string _field;
-        private string _comments;
+        private SurveyInfo _Survey;
 
-        public int Id { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void ChangeNotify([CallerMemberName] string prop = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
 
-        public string Name { get; set; }
+        public int Id
+        { get => _Survey.Id; set { _Survey.Id = value; ChangeNotify(); } }
+        public string Name
+        { get => _Survey.Device.Name; set { _Survey.Device.Name = value; ChangeNotify(); } }
         public string Field
-        {
-            get => _field;
-            set
-            {
-                _field = value;
-                PropertyChanged?.Invoke(this,
-                    new PropertyChangedEventArgs(nameof(Field)));
-            }
-        }
-        public DateTime Date { get; set; }
-        public string MeasurementType { get; set; }
+        { get => _Survey.Position.Field; set { _Survey.Position.Field = value; ChangeNotify(); } }
         public string Comments
+        { get => _Survey.Comment; set { _Survey.Comment = value; ChangeNotify(); } }
+        public DateTime Date
+        { get => _Survey.Measure.EndTimestamp; set { _Survey.Measure.EndTimestamp = value; ChangeNotify(); } }
+        public string MeasurementType
         {
-            get => _comments;
+            get
+            {
+                if (MeasurementIndex.Instance.TryGetName(_Survey.Measure.Kind, out string name))
+                    return name;
+                return string.Empty;
+            }
             set
             {
-                _comments = value;
-                PropertyChanged?.Invoke(this,
-                    new PropertyChangedEventArgs(nameof(Comments)));
+                if (uint.TryParse(value, out uint idx))
+                {
+                    if (MeasurementIndex.Instance.TryGetName(idx, out string name))
+                    {
+                        _Survey.Measure.Kind = idx;
+                        ChangeNotify();
+                    }
+                    return;
+                }
+                if (MeasurementIndex.Instance.TryGetId(value, out uint idxx))
+                {
+                    _Survey.Measure.Kind = idxx;
+                    ChangeNotify();
+                }
             }
         }
 
-        private bool _Sending = false;
-        public bool Sending
-        {
-            get => _Sending;
-            set
-            {
-                _Sending = value;
-                PropertyChanged?.Invoke(this,
-                    new PropertyChangedEventArgs(nameof(Sending)));
-            }
-        }
-
-        private string _LastSentTimestamp = "";
         public string LastSentTimestamp
         {
-            get => _LastSentTimestamp;
-            set
-            {
-                _LastSentTimestamp = value;
-                PropertyChanged?.Invoke(this,
-                    new PropertyChangedEventArgs(nameof(LastSentTimestamp)));
-            }
+            get => DateTime.MinValue == _Survey.MailDistribution.Timestamp ? string.Empty : _Survey.MailDistribution.Timestamp.ToString();
+            set { DateTime.TryParse(value, out _Survey.MailDistribution.Timestamp); ChangeNotify(); }
         }
-        private string mLastSentRecipient;
         public string LastSentRecipient
         {
-            get => mLastSentRecipient;
-            set
-            {
-                mLastSentRecipient = value;
-                PropertyChanged?.Invoke(this,
-                    new PropertyChangedEventArgs(nameof(LastSentRecipient)));
-            }
+            get => _Survey.MailDistribution.Destination;
+            set { _Survey.MailDistribution.Destination = value; ChangeNotify(); }
         }
 
-        private bool _IsSelected = false;
-        public void SetSelected(bool sel)
+        public string LastSaveTimestamp
         {
-            _IsSelected = sel;
+            get => DateTime.MinValue == _Survey.FileDistribution.Timestamp ? string.Empty : _Survey.FileDistribution.Timestamp.ToString();
+            set { DateTime.TryParse(value, out _Survey.FileDistribution.Timestamp); ChangeNotify(); }
         }
+        public string LastSaveFolder
+        {
+            get => _Survey.FileDistribution.Destination;
+            set { _Survey.FileDistribution.Destination = value; ChangeNotify(); }
+        }
+
+        // view info 
+        public bool Sending
+        { get => _Sending; set { _Sending = value; ChangeNotify(); } }
+        private bool _Sending = false;
+        public bool Saving
+        { get => _Saving; set { _Saving = value; ChangeNotify(); } }
+        private bool _Saving;
         public bool IsSelected
         {
             get => _IsSelected;
@@ -82,44 +89,10 @@ namespace SiamCross.ViewModels
                 if (_IsSelected == value)
                     return;
                 _IsSelected = value;
-                PropertyChanged?.Invoke(this,
-                    new PropertyChangedEventArgs(nameof(IsSelected)));
+                ChangeNotify();
             }
         }
-        public event PropertyChangedEventHandler PropertyChanged;
+        private bool _IsSelected = false;
 
-        private bool _Saving;
-        private string _LastSaveTimestamp = "";
-        private string _LastSaveFolder;
-        public bool Saving
-        {
-            get => _Saving;
-            set
-            {
-                _Saving = value;
-                PropertyChanged?.Invoke(this,
-                    new PropertyChangedEventArgs(nameof(Saving)));
-            }
-        }
-        public string LastSaveTimestamp
-        {
-            get => _LastSaveTimestamp;
-            set
-            {
-                _LastSaveTimestamp = value;
-                PropertyChanged?.Invoke(this,
-                    new PropertyChangedEventArgs(nameof(LastSaveTimestamp)));
-            }
-        }
-        public string LastSaveFolder
-        {
-            get => _LastSaveFolder;
-            set
-            {
-                _LastSaveFolder = value;
-                PropertyChanged?.Invoke(this,
-                    new PropertyChangedEventArgs(nameof(LastSaveFolder)));
-            }
-        }
     }
 }
