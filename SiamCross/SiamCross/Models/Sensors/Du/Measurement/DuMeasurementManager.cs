@@ -242,8 +242,19 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                 _progress += sep_cost;
                 UpdateProgress(_progress);
             };
+
+            UInt16 data_len = 40;
+            if ("BT2" == Sensor.Connection.PhyConnection.PhyInterface.Name)
+            {
+                data_len = 200;
+                //if (12 + 2 < Sensor.Connection.PhyConnection.Mtu)
+                //    data_len = (ushort)(Sensor.Connection.PhyConnection.Mtu - 12 - 2);
+                //else
+                //    data_len = 256 - 12 - 2;
+            }
+
             await ReadMemory(Sensor.Connection, _currentEchogram
-                , 0, 0x81000000, (uint)_currentEchogram.Length, 50, StepProgress, progress_size);
+                , 0, 0x81000000, (uint)_currentEchogram.Length, data_len, StepProgress, progress_size);
 
             _logger.Trace("end read echogramm");
         }

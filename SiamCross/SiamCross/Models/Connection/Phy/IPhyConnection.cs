@@ -6,6 +6,7 @@ namespace SiamCross.Models.Connection.Phy
 {
     public interface IPhyConnection : IConnection
     {
+        int Mtu { get; }
         int Rssi { get; }
         IPhyInterface PhyInterface { get; }
         void UpdateRssi();

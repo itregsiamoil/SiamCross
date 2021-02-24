@@ -49,7 +49,7 @@ namespace SiamCross.Droid.Models
                     + "\n stack=" + ex.StackTrace + "\n");
                 _Rssi = 0;
             }
-            OnPropChange(new PropertyChangedEventArgs(nameof(Rssi)));
+            ChangeNotify(nameof(Rssi));
         }
         public IAdapter Adapter
         {
@@ -102,7 +102,7 @@ namespace SiamCross.Droid.Models
         }
 
         private int _Mtu = 20;
-        public int Mtu => _Mtu;
+        public override int Mtu => _Mtu;
 
         public ConnectionBtLe(IPhyInterface ifc)
         {
@@ -227,13 +227,13 @@ namespace SiamCross.Droid.Models
             try
             {
                 _Mtu = await _device.RequestMtuAsync(256 + 3) - 3;
-                OnPropChange(new PropertyChangedEventArgs(nameof(Mtu)));
+                ChangeNotify(nameof(Mtu));
 
                 if (_device.UpdateConnectionInterval(ConnectionInterval.High))
                     _ConnInterval = ConnectionInterval.High;
                 else
                     _ConnInterval = ConnectionInterval.Normal;
-                OnPropChange(new PropertyChangedEventArgs(nameof(ConnInterval)));
+                ChangeNotify(nameof(ConnInterval));
 
                 _targetService = await _device.GetServiceAsync(svc_guid, ct);
                 //IReadOnlyList<IService> svc = await _device.GetServicesAsync(ct);
@@ -387,7 +387,7 @@ namespace SiamCross.Droid.Models
                     {
                         Debug.WriteLine($"Set minimum Mtu=20");
                         _Mtu = await _device.RequestMtuAsync(20 + 3) - 3;
-                        OnPropChange(new PropertyChangedEventArgs(nameof(Mtu)));
+                        ChangeNotify(nameof(Mtu));
                     }
                     return 0;
                 }

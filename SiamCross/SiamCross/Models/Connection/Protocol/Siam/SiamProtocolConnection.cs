@@ -29,7 +29,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         public const int mResponseRetry = 256;
 #endif
 
-        private const int mAdditioonTime = 500;
+        private const int mAdditioonTime = 600;
         private const int mMinSpeed = 9600; ///bit per second
         private const float multipler = 1000.0f / (mMinSpeed / (8 + 1 + 1));
         private static int GetTime(int bytes)

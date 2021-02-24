@@ -87,6 +87,7 @@ namespace SiamCross.Droid.Models
 
         public override void UpdateRssi() { }
         public override int Rssi => 0;
+        public override int Mtu => 256;
 
         private BluetoothDevice _bluetoothDevice;
         private BluetoothSocket _socket;
@@ -168,12 +169,12 @@ namespace SiamCross.Droid.Models
                 if (null == _bluetoothDevice)
                     return false;
 
-                if (_bluetoothDevice.Name != _scannedDeviceInfo.Name)
-                {
-                    _bluetoothDevice.Dispose();
-                    _bluetoothDevice = null;
-                    return false;
-                }
+                //if (_bluetoothDevice.Name != _scannedDeviceInfo.Name)
+                //{
+                //    _bluetoothDevice.Dispose();
+                //    _bluetoothDevice = null;
+                //    return false;
+                //}
 
                 //Context ctx = Android.App.Application.Context;
                 //var callback = new BluetoothGattCallbackExt(this);
