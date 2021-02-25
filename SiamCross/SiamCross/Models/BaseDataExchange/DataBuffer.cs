@@ -236,7 +236,7 @@ namespace SiamCross.Models.Tools
                 byte[] pkg = new byte[pkg_len];
                 Array.Copy(mBuff, pkg_start, pkg, 0, (int)pkg_len);
 
-                DebugLog.WriteLine($"pkg {cmd.ToString()} assembled");
+                DebugLog.WriteLine($"pkg {cmd} assembled");
                 DoReduce(pkg_end);
                 return pkg;
             }

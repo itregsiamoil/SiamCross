@@ -3,8 +3,6 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
-using Android.Support.V4.App;
-using Android.Support.V4.Content;
 using Android.Widget;
 using SiamCross.Models.Connection.Protocol.Siam;
 using System.Collections.Generic;
@@ -65,13 +63,13 @@ namespace SiamCross.Droid
                 foreach (string perm in all_perm)
                 {
                     // check if the app has permission to access 
-                    if (Permission.Granted != ContextCompat.CheckSelfPermission(this, perm))
+                    if (Permission.Granted != ApplicationContext.CheckSelfPermission(perm))
                         not_granted_perm.Add(perm);
                 }
                 if (0 != not_granted_perm.Count)
                 {
                     const int request_code = 1000;
-                    ActivityCompat.RequestPermissions(this, not_granted_perm.ToArray(), request_code);
+                    CurrentActivity.RequestPermissions(not_granted_perm.ToArray(), request_code);
                     mAllPermOkExecTcs = new TaskCompletionSource<bool>();
                     bool all_granted = await mAllPermOkExecTcs.Task;
                     if (!all_granted)

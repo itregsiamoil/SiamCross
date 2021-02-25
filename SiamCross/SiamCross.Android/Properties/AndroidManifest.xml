@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="2.6.0rc7" package="com.siam" android:installLocation="auto" android:versionCode="1">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="2.6.0rc6" package="com.siam" android:installLocation="auto" android:versionCode="1">
 	<uses-sdk android:targetSdkVersion="29" android:minSdkVersion="24" />
 	<application android:label="SIAM SERVICE" android:icon="@mipmap/main_icon" android:roundIcon="@mipmap/main_ricon" android:theme="@style/MainTheme" android:noHistory="true" android:finishOnTaskLaunch="true" android:requestLegacyExternalStorage="true">
 		<provider android:name="android.support.v4.content.FileProvider" android:authorities="com.companyname.fileprovider" android:exported="false" android:grantUriPermissions="true">
