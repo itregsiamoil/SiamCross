@@ -152,6 +152,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 , 0x00, 0x05, 0x00, 0x00, 0x10, 0x25 };
         private static readonly byte[] rx_buf = new byte[512];
 
+#if DEBUG
         public static bool Test()
         {
             try
@@ -325,5 +326,6 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             return 1 == need && 12 == begin;
 
         }
+#endif
     }
 }

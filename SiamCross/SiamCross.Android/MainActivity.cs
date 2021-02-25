@@ -24,7 +24,9 @@ namespace SiamCross.Droid
         private TaskCompletionSource<bool> mAllPermOkExecTcs;
         protected override async void OnCreate(Bundle savedInstanceState)
         {
+#if DEBUG
             Pkg.Test();
+#endif
             SetTheme(Resource.Style.MainTheme);
             // set the layout resources first
             FormsAppCompatActivity.ToolbarResource = Resource.Layout.Toolbar;
