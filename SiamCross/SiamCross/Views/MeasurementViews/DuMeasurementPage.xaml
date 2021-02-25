@@ -50,8 +50,17 @@
                    
                     <SwitchCell Text="{local1:Translate Amplification}" On="{Binding Amplification}" />
                     <SwitchCell Text="{local1:Translate Inlet}" On="{Binding Inlet}" />
-                    <SwitchCell Text="Maximum depth 6000" On="{Binding Depth6000}" />
-
+                    <SwitchCell Text="{local1:Translate MaxDepth6000}" On="{Binding Depth6000}" />
+                    
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{local1:Translate PumpDepth}"></Label>
+                            <local2:CustomEntry Text="{Binding PumpDepth}" 
+                                            Keyboard="Numeric">
+                            </local2:CustomEntry>
+                        </StackLayout>
+                    </ViewCell>
+                    
                     <ViewCell>
                         <StackLayout  >
                             <Label Text="{local1:Translate BufferPressure}"></Label>

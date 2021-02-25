@@ -56,10 +56,13 @@ namespace SiamCross.DataBase.DataBaseModels
         public UInt16 FluidLevel => MeasData.FluidLevel;
         public UInt16 NumberOfReflections => MeasData.NumberOfReflections;
 
+        public double PumpDepth //Глубина подвески насоса
+        { get => MeasData.StartParam.PumpDepth; set => MeasData.StartParam.PumpDepth = value; }
+
         public DuMeasurement()
         {
             DuMeasurementSecondaryParameters sec_par = new DuMeasurementSecondaryParameters();
-            DuMeasurementStartParameters start_par = new DuMeasurementStartParameters(false, false, false, sec_par);
+            DuMeasurementStartParameters start_par = new DuMeasurementStartParameters(false, false, false, sec_par, 0.0);
             MeasData = new DuMeasurementData(new DateTime(0), start_par, 0, 0, 0, new byte[3000]);
             MeasData.SecondaryParameters.ResearchType = "";
         }
@@ -68,5 +71,6 @@ namespace SiamCross.DataBase.DataBaseModels
             MeasData = meas_data;
             MeasData.SecondaryParameters.ResearchType = "";
         }
-    }
+
+    }//public class DuMeasurement
 }

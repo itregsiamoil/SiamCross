@@ -672,4 +672,10 @@ This software «SIAM SERVICE 2» is a «SIAM» software package designed for sto
     <value>Field code length exceeds 4 characters. 
 DB Siam can't import the files with the same identifiers.</value>
   </data>
+  <data name="PumpDepth" xml:space="preserve">
+    <value>Pump depth</value>
+  </data>
+  <data name="MaxDepth6000" xml:space="preserve">
+    <value>Depth measurement up to 6000m</value>
+  </data>
 </root>

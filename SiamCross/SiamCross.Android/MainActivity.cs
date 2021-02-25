@@ -30,7 +30,6 @@ namespace SiamCross.Droid
             FormsAppCompatActivity.ToolbarResource = Resource.Layout.Toolbar;
             FormsAppCompatActivity.TabLayoutResource = Resource.Layout.Tabbar;
             base.OnCreate(savedInstanceState);
-            
 
             //Xamarin.Forms.Forms.SetFlags("Expander_Experimental");
             Xamarin.Forms.Forms.SetFlags("SwipeView_Experimental");

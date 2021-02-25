@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -26,7 +27,32 @@ namespace SiamCross.ViewModels
         public string Well { get; set; }
         public string Bush { get; set; }
         public string Shop { get; set; }
-        public string BufferPressure { get; set; }
+
+        private double _BufferPressure = 0.0;
+        public string BufferPressure
+        {
+            get => _BufferPressure.ToString();
+            set
+            {
+                string group_sep = CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator;
+                string ret = value.Replace(group_sep, string.Empty);
+                string cur_sep = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+                string inv_sep = CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator;
+                ret = ret.Replace(cur_sep, inv_sep);
+
+                if (double.TryParse(ret, NumberStyles.Any, CultureInfo.InvariantCulture, out double val))
+                {
+                    if (_BufferPressure != val)
+                    {
+                        _BufferPressure = val;
+                        NotifyPropertyChanged(nameof(BufferPressure));
+                    }
+                }
+            }
+        }
+
+
+
         public string Comments { get; set; }
 
         public ICommand AddField { get; set; }

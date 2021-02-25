@@ -28,7 +28,23 @@ namespace SiamCross.ViewModels
         public string Bush => _measurement.Bush;
         public string Shop => _measurement.Shop;
         public string Date => _measurement.DateTime.ToString();
-        public string BufferPressure => _measurement.BufferPressure;
+
+        public string BufferPressure
+        {
+            get
+            {
+                string group_sep = CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator;
+                string ret = _measurement.BufferPressure.Replace(group_sep, string.Empty);
+                string cur_sep = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+                string inv_sep = CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator;
+                ret = ret.Replace(cur_sep, inv_sep);
+
+                if (double.TryParse(ret, NumberStyles.Any, CultureInfo.InvariantCulture, out double val))
+                    return val.ToString("F3", CultureInfo.InvariantCulture);
+                return "";
+            }
+        }
+        public string PumpDepth => _measurement.PumpDepth.ToString("F3", CultureInfo.InvariantCulture);
         public string Comments => _measurement.Comment;
         public string DeviceName => _measurement.Name;
         public string BatteryVolt => _measurement.BatteryVolt;
@@ -38,7 +54,7 @@ namespace SiamCross.ViewModels
         public string MeasurementType => _measurement.MeasurementType;
         public string FluidLevel => _measurement.FluidLevel.ToString("N3", CultureInfo.InvariantCulture);
         public string AnnularPressure => _measurement.AnnularPressure.ToString("N3", CultureInfo.InvariantCulture);
-        public string NumberOfReflections => _measurement.NumberOfReflections.ToString("N3", CultureInfo.InvariantCulture);
+        public string NumberOfReflections => _measurement.NumberOfReflections.ToString(CultureInfo.InvariantCulture);
         public ObservableCollection<string> SoundSpeedCorrections { get; }
         public string SelectedSoundSpeedCorrection => _measurement.SoundSpeedCorrection;
         public string SoundSpeed => _measurement.SoundSpeed;

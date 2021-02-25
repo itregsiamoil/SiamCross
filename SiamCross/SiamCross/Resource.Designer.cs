@@ -899,6 +899,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Depth measurement up to 6000m.
+        /// </summary>
+        public static string MaxDepth6000 {
+            get {
+                return ResourceManager.GetString("MaxDepth6000", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Maximum level at a speed of sound 341m / s.
         /// </summary>
         public static string MaxLevelAt341 {
@@ -1138,6 +1147,15 @@ namespace SiamCross {
         public static string Protocol {
             get {
                 return ResourceManager.GetString("Protocol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Pump depth.
+        /// </summary>
+        public static string PumpDepth {
+            get {
+                return ResourceManager.GetString("PumpDepth", resourceCulture);
             }
         }
         

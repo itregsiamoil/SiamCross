@@ -141,7 +141,8 @@ namespace SiamCross.Services
                 [BatteryVolt] NVARCHAR(128) NOT NULL,
                 [Temperature] NVARCHAR(128) NOT NULL,
                 [MainFirmware] NVARCHAR(128) NOT NULL,
-                [RadioFirmware] NVARCHAR(128) NOT NULL)");
+                [RadioFirmware] NVARCHAR(128) NOT NULL,
+                [PumpDepth] NUMERIC NOT NULL)");
         }
 
         #endregion 
@@ -153,17 +154,17 @@ namespace SiamCross.Services
             {
                 if (duMeasurement.Id == 0)
                 {
-                    var idsColumn = _database.Query<Nullable<int>>(string.Format(
+                    IEnumerable<int?> idsColumn = _database.Query<Nullable<int>>(string.Format(
                         "SELECT max(Id)+1 as 'Id' FROM DuMeasurement"));
-                    if (idsColumn.Count() > 0 && null!=idsColumn.First())
+                    if (idsColumn.Count() > 0 && null != idsColumn.First())
                         duMeasurement.Id = idsColumn.First().Value;
                     else
                         duMeasurement.Id = 1;
                 }
                 {
-                    var rows1 = _database.Query<int?>(string.Format(
+                    IEnumerable<int?> rows1 = _database.Query<int?>(string.Format(
                         "SELECT COUNT(1) AS 'Count' FROM DuMeasurement WHERE Id = '{0}'", duMeasurement.Id));
-                    if (rows1.Count() > 0 && null != rows1.First() && 0 < rows1.First().Value )
+                    if (rows1.Count() > 0 && null != rows1.First() && 0 < rows1.First().Value)
                     {
                         UpdateDuMeasurement(duMeasurement);
                         return duMeasurement.Id;
@@ -177,13 +178,17 @@ namespace SiamCross.Services
                         ", Well, Bush, Shop" +
                         ", BufferPressure, Comment, Name" +
                         ", BatteryVolt, Temperature, MainFirmware, RadioFirmware" +
+                        ", PumpDepth " +
                         ") Values (" +
                         "  @SrcFluidLevel, @SrcReflectionsCount, @AnnularPressure" +
                         ", @Echogram, @SoundSpeed, @MeasurementType" +
                         ", @SoundSpeedCorrection, @ReportTimestamp,  @Field" +
                         ", @Well, @Bush, @Shop" +
                         ", @BufferPressure, @Comment, @Name " +
-                        ", @BatteryVolt, @Temperature, @MainFirmware, @RadioFirmware  );";
+                        ", @BatteryVolt, @Temperature, @MainFirmware, @RadioFirmware " +
+                        ", @PumpDepth" +
+                        "  );";
+
                 int affectedRows = _database.Execute(sql, new
                 {
                     duMeasurement.SrcFluidLevel,
@@ -204,7 +209,8 @@ namespace SiamCross.Services
                     duMeasurement.BatteryVolt,
                     duMeasurement.Temperature,
                     duMeasurement.MainFirmware,
-                    duMeasurement.RadioFirmware
+                    duMeasurement.RadioFirmware,
+                    duMeasurement.PumpDepth
                 });
             }
             catch (Exception ex)
@@ -231,6 +237,7 @@ namespace SiamCross.Services
                     " Comment = @Comment, Name = @Name " +
                     " ,BatteryVolt=@BatteryVolt, Temperature=@Temperature " +
                     " ,MainFirmware=@MainFirmware, RadioFirmware=@RadioFirmware " +
+                    " ,PumpDepth=@PumpDepth " +
                     " WHERE Id = @Id;";
                 int affectedRows = _database.Execute(sql, new
                 {
@@ -253,6 +260,7 @@ namespace SiamCross.Services
                     duMeasurement.Temperature,
                     duMeasurement.MainFirmware,
                     duMeasurement.RadioFirmware,
+                    duMeasurement.PumpDepth,
                     duMeasurement.Id
                 });
             }
@@ -321,7 +329,7 @@ namespace SiamCross.Services
             {
                 if (ddin2Measurement.Id == 0)
                 {
-                    var idsColumn = _database.Query<int?>(string.Format(
+                    IEnumerable<int?> idsColumn = _database.Query<int?>(string.Format(
                         "SELECT max(Id)+1 as 'Id' FROM Ddin2Measurement"));
                     if (idsColumn.Count() > 0 && null != idsColumn.First())
                         ddin2Measurement.Id = idsColumn.First().Value;
@@ -329,7 +337,7 @@ namespace SiamCross.Services
                         ddin2Measurement.Id = 1;
                 }
                 {
-                    var rows2 = _database.Query<int?>(string.Format(
+                    IEnumerable<int?> rows2 = _database.Query<int?>(string.Format(
                         "SELECT COUNT(1) as 'Count' FROM Ddin2Measurement WHERE Id = '{0}'",
                         ddin2Measurement.Id));
                     if (rows2.Count() > 0 && null != rows2.First() && 0 < rows2.First().Value)

@@ -681,4 +681,10 @@
     <value>Длина кода месторождения превышает 4 символа. 
 БД Сиам не может импортировать файлы с такими идентификаторами.</value>
   </data>
+  <data name="PumpDepth" xml:space="preserve">
+    <value>Глубина насоса</value>
+  </data>
+  <data name="MaxDepth6000" xml:space="preserve">
+    <value>Измерение глубины до 6000м</value>
+  </data>
 </root>

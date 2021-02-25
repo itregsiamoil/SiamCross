@@ -11,6 +11,7 @@ using SiamCross.Services.Toast;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -60,6 +61,28 @@ namespace SiamCross.ViewModels
             }
         }
 
+        private double _PumpDepth = 0.0;
+        public string PumpDepth
+        {
+            get => _PumpDepth.ToString();
+            set
+            {
+                string group_sep = CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator;
+                string ret = value.Replace(group_sep, string.Empty);
+                string cur_sep = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+                string inv_sep = CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator;
+                ret = ret.Replace(cur_sep, inv_sep);
+
+                if (double.TryParse(ret, NumberStyles.Any, CultureInfo.InvariantCulture, out double val))
+                {
+                    if (_PumpDepth != val)
+                    {
+                        _PumpDepth = val;
+                        NotifyPropertyChanged(nameof(PumpDepth));
+                    }
+                }
+            }
+        }
         public ICommand StartMeasurementCommand { get; set; }
         public ICommand ValveTestCommand { get; set; }
         private string _selectedSoundSpeedCorrection;
@@ -166,7 +189,7 @@ namespace SiamCross.ViewModels
                     _soundSpeed);
 
                 DuMeasurementStartParameters measurementParams = new DuMeasurementStartParameters(Amplification,
-                    Inlet, Depth6000, secondaryParameters);
+                    Inlet, Depth6000, secondaryParameters, _PumpDepth);
 
                 await App.Navigation.PopAsync();
                 await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);
@@ -185,6 +208,7 @@ namespace SiamCross.ViewModels
             SelectedSoundSpeedCorrection = "";
             SelectedResearchType = "";
             SensorName = _sensorData.Name;
+            _PumpDepth = 0.0;
 
             IEnumerable<DuMeasurement> mes
                 = DataRepository.Instance.GetDuMeasurements().
@@ -199,6 +223,7 @@ namespace SiamCross.ViewModels
                 Bush = _measurement.Bush;
                 Shop = _measurement.Shop;
                 BufferPressure = _measurement.BufferPressure;
+                _PumpDepth = _measurement.PumpDepth;
                 Comments = _measurement.Comment;
                 SelectedResearchType = _measurement.MeasurementType;
                 SelectedSoundSpeedCorrection = _measurement.SoundSpeedCorrection;

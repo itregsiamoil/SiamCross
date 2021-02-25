@@ -279,6 +279,10 @@ namespace SiamCross.Models.Tools
                                         new XAttribute("MESDEVICEBUFFERPRESSUREID", dbDuModel.BufferPressure.ToString())),
 
                                     new XElement("Value_List",
+
+                                    new XElement("Value",
+                                            new XAttribute("MSVDOUBLE", dbDuModel.PumpDepth.ToString("N3")),
+                                            new XAttribute("MSVDICTIONARYID", "pumpdepth")),
                                     new XElement("Value",
                                             new XAttribute("MSVINTEGER", numberOfCorrectionTable),
                                             new XAttribute("MSVDICTIONARYID", "sudcorrectiontype")),

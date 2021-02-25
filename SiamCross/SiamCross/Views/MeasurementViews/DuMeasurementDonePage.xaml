@@ -81,6 +81,7 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <!-- Default mode for Text is Mode=OneWay>-->
                             
@@ -108,10 +109,14 @@
                                    Grid.Column="0" Grid.Row="5" />
                             <Label Text="{Binding SoundSpeed}"
                                    Grid.Column="1" Grid.Row="5" Font="Bold" TextColor="Black" />
-                            <Label Text="{local1:Translate BufferPressure}"
+                            <Label Text="{local1:Translate PumpDepth}"
                                    Grid.Column="0" Grid.Row="6" />
-                            <Label Text="{Binding BufferPressure}" 
+                            <Label Text="{Binding PumpDepth}" 
                                    Grid.Column="1" Grid.Row="6" Font="Bold" TextColor="Black" />
+                            <Label Text="{local1:Translate BufferPressure}"
+                                   Grid.Column="0" Grid.Row="7" />
+                            <Label Text="{Binding BufferPressure}" 
+                                   Grid.Column="1" Grid.Row="7" Font="Bold" TextColor="Black" />
                             
                         </Grid>
                         

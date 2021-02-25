@@ -26,8 +26,12 @@ namespace SiamCross.Services
             //FileIOPermission filePermission =new FileIOPermission(FileIOPermissionAccess.AllAccess, fullPath);
             System.Xml.XmlWriterSettings settings = new System.Xml.XmlWriterSettings
             {
-                Async = true
+                Async = true,
+                OmitXmlDeclaration = true,
+                Indent = true,
+                NewLineOnAttributes = true
             };
+
             System.Xml.XmlWriter writer = System.Xml.XmlWriter.Create(fs, settings);
             xml.Save(writer);
             //MediaScannerConnection.ScanFile(Android.App.Application.Context, new String[] { fullPath }, null, null);

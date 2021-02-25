@@ -2,7 +2,6 @@
 using NLog;
 using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
-using SiamCross.Models;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Email;
@@ -336,16 +335,8 @@ namespace SiamCross.ViewModels
                     {
                         if (m is MeasurementView mv)
                         {
-                            switch (mv.MeasureKind) // MeasurementIndex.Instance.
-                            {
-                                default: break;
-                                case 0:
-                                    DataRepository.Instance.RemoveDdin2Measurement(mv.Id);
-                                    break;
-                                case 1:
-                                    DataRepository.Instance.RemoveDuMeasurement(mv.Id);
-                                    break;
-                            }
+                            DataRepository.Instance.RemoveDdin2Measurement(mv.Id);
+                            DataRepository.Instance.RemoveDuMeasurement(mv.Id);
                             Measurements.Remove(mv);
                         }
                     }
@@ -412,7 +403,7 @@ namespace SiamCross.ViewModels
                     string file_name = null;
                     XDocument doc = null;
 
-                    switch(mv.MeasureKind) // MeasurementIndex.Instance.
+                    switch (mv.MeasureKind) // MeasurementIndex.Instance.
                     {
                         default: break;
                         case 0:
