@@ -25,7 +25,9 @@ namespace SiamCross.ViewModels
         { get => _Survey.Comment; set { _Survey.Comment = value; ChangeNotify(); } }
         public DateTime Date
         { get => _Survey.Measure.EndTimestamp; set { _Survey.Measure.EndTimestamp = value; ChangeNotify(); } }
-        public string MeasurementType
+        public uint MeasureKind
+        { get => _Survey.Measure.Kind; set { _Survey.Measure.Kind = value; ChangeNotify(); } }
+        public string MeasureKindName
         {
             get
             {

@@ -153,17 +153,17 @@ namespace SiamCross.Services
             {
                 if (duMeasurement.Id == 0)
                 {
-                    IEnumerable<int> idsColumn = _database.Query<int>(string.Format(
-                        "SELECT max(Id)+1 FROM DuMeasurement"));
-                    if (idsColumn.Count() > 0)
-                        duMeasurement.Id = idsColumn.First();
+                    var idsColumn = _database.Query<Nullable<int>>(string.Format(
+                        "SELECT max(Id)+1 as 'Id' FROM DuMeasurement"));
+                    if (idsColumn.Count() > 0 && null!=idsColumn.First())
+                        duMeasurement.Id = idsColumn.First().Value;
                     else
                         duMeasurement.Id = 1;
                 }
                 {
-                    IEnumerable<int> rows1 = _database.Query<int>(string.Format(
+                    var rows1 = _database.Query<int?>(string.Format(
                         "SELECT COUNT(1) AS 'Count' FROM DuMeasurement WHERE Id = '{0}'", duMeasurement.Id));
-                    if (rows1.Count() > 0)
+                    if (rows1.Count() > 0 && null != rows1.First() && 0 < rows1.First().Value )
                     {
                         UpdateDuMeasurement(duMeasurement);
                         return duMeasurement.Id;
@@ -321,18 +321,18 @@ namespace SiamCross.Services
             {
                 if (ddin2Measurement.Id == 0)
                 {
-                    IEnumerable<int> idsColumn = _database.Query<int>(string.Format(
-                        "SELECT max(Id)+1 FROM Ddin2Measurement"));
-                    if (idsColumn.Count() > 0)
-                        ddin2Measurement.Id = idsColumn.First();
+                    var idsColumn = _database.Query<int?>(string.Format(
+                        "SELECT max(Id)+1 as 'Id' FROM Ddin2Measurement"));
+                    if (idsColumn.Count() > 0 && null != idsColumn.First())
+                        ddin2Measurement.Id = idsColumn.First().Value;
                     else
                         ddin2Measurement.Id = 1;
                 }
                 {
-                    var rows2 = _database.Query<int>(string.Format(
+                    var rows2 = _database.Query<int?>(string.Format(
                         "SELECT COUNT(1) as 'Count' FROM Ddin2Measurement WHERE Id = '{0}'",
                         ddin2Measurement.Id));
-                    if (rows2.Count() > 0)
+                    if (rows2.Count() > 0 && null != rows2.First() && 0 < rows2.First().Value)
                     {
                         UpdateDdin2Measurement(ddin2Measurement);
                         return ddin2Measurement.Id;

@@ -30,13 +30,15 @@ namespace SiamCross.Droid
             FormsAppCompatActivity.ToolbarResource = Resource.Layout.Toolbar;
             FormsAppCompatActivity.TabLayoutResource = Resource.Layout.Tabbar;
             base.OnCreate(savedInstanceState);
-            await GetPermissionsAsync();
+            
 
             //Xamarin.Forms.Forms.SetFlags("Expander_Experimental");
             Xamarin.Forms.Forms.SetFlags("SwipeView_Experimental");
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
             CurrentActivity = this;
+
+            await GetPermissionsAsync();
             // Set it in the constructor
             LoadApplication(new App(new Setup()));
         }

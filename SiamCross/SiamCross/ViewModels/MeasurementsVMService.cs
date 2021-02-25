@@ -2,6 +2,7 @@
 using NLog;
 using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
+using SiamCross.Models;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Email;
@@ -108,7 +109,7 @@ namespace SiamCross.ViewModels
                             Name = m.Name,
                             Field = m.Field,
                             Date = m.DateTime,
-                            MeasurementType = Resource.Dynamogram,
+                            MeasureKindName = Resource.Dynamogram,
                             Comments = m.Comment
                         });
                 }
@@ -122,7 +123,7 @@ namespace SiamCross.ViewModels
                             Name = m.Name,
                             Field = m.Field,
                             Date = m.DateTime,
-                            MeasurementType = Resource.Echogram,
+                            MeasureKindName = Resource.Echogram,
                             Comments = m.Comment
                         });
                 }
@@ -335,16 +336,15 @@ namespace SiamCross.ViewModels
                     {
                         if (m is MeasurementView mv)
                         {
-                            if (mv.Name.Contains("DDIM")
-                                || mv.Name.Contains("DDIN")
-                                || mv.Name.Contains("SIDDOSA3M"))
+                            switch (mv.MeasureKind) // MeasurementIndex.Instance.
                             {
-                                DataRepository.Instance.RemoveDdin2Measurement(mv.Id);
-
-                            }
-                            else if (mv.Name.Contains("DU"))
-                            {
-                                DataRepository.Instance.RemoveDuMeasurement(mv.Id);
+                                default: break;
+                                case 0:
+                                    DataRepository.Instance.RemoveDdin2Measurement(mv.Id);
+                                    break;
+                                case 1:
+                                    DataRepository.Instance.RemoveDuMeasurement(mv.Id);
+                                    break;
                             }
                             Measurements.Remove(mv);
                         }
@@ -368,36 +368,31 @@ namespace SiamCross.ViewModels
 
             try
             {
-                if (selectedMeasurement.Name.Contains("DDIM")
-                    || selectedMeasurement.Name.Contains("DDIN")
-                    || selectedMeasurement.Name.Contains("SIDDOSA3M")
-                    )
+                switch (selectedMeasurement.MeasureKind) // MeasurementIndex.Instance.
                 {
-                    Ddin2Measurement measurement = _ddin2Measurements?
-                        .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
-                    if (measurement != null)
-                    {
-                        if (CanOpenPage(typeof(Ddin2MeasurementDonePage)))
-                        {
-                            App.NavigationPage.Navigation
-                            .PushAsync(
-                            new Ddin2MeasurementDonePage(measurement), true);
-                        }
-                    }
-                }
-                else if (selectedMeasurement.Name.Contains("DU"))
-                {
-                    DuMeasurement measurement = _duMeasurements?
-                        .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
-                    if (measurement != null)
-                    {
-                        if (CanOpenPage(typeof(DuMeasurementDonePage)))
-                        {
-                            App.NavigationPage.Navigation
+                    default: break;
+                    case 0:
+                        Ddin2Measurement ddin_meas = _ddin2Measurements?
+                            .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
+                        if (ddin_meas != null)
+                            if (CanOpenPage(typeof(Ddin2MeasurementDonePage)))
+                            {
+                                App.NavigationPage.Navigation
                                 .PushAsync(
-                                    new DuMeasurementDonePage(measurement), true);
-                        }
-                    }
+                                new Ddin2MeasurementDonePage(ddin_meas), true);
+                            }
+                        break;
+                    case 1:
+                        DuMeasurement du_meas = _duMeasurements?
+                            .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
+                        if (du_meas != null)
+                            if (CanOpenPage(typeof(DuMeasurementDonePage)))
+                            {
+                                App.NavigationPage.Navigation
+                                    .PushAsync(
+                                        new DuMeasurementDonePage(du_meas), true);
+                            }
+                        break;
                 }
             }
             catch (Exception ex)
@@ -417,21 +412,24 @@ namespace SiamCross.ViewModels
                     string file_name = null;
                     XDocument doc = null;
 
-                    if (mv.Name.Contains("DDIM") || mv.Name.Contains("DDIN") || mv.Name.Contains("SIDDOSA3M"))
+                    switch(mv.MeasureKind) // MeasurementIndex.Instance.
                     {
-                        Ddin2Measurement dnm = DataRepository.Instance.GetDdin2MeasurementById(mv.Id);
-                        file_name = CreateName(dnm.Name, dnm.DateTime);
-                        doc = xmlCreator.CreateDdin2Xml(dnm);
+                        default: break;
+                        case 0:
+                            Ddin2Measurement dnm = DataRepository.Instance.GetDdin2MeasurementById(mv.Id);
+                            file_name = CreateName(dnm.Name, dnm.DateTime);
+                            doc = xmlCreator.CreateDdin2Xml(dnm);
+                            paths[i] = await XmlSaver.SaveXml(file_name, doc);
+                            await MediaScannerService.Instance.Scan(paths[i]);
+                            break;
+                        case 1:
+                            DuMeasurement du = DataRepository.Instance.GetDuMeasurementById(mv.Id);
+                            file_name = CreateName(du.Name, du.DateTime);
+                            doc = xmlCreator.CreateDuXml(du);
+                            paths[i] = await XmlSaver.SaveXml(file_name, doc);
+                            await MediaScannerService.Instance.Scan(paths[i]);
+                            break;
                     }
-                    else if (mv.Name.Contains("DU"))
-                    {
-                        //Get siddos by id
-                        DuMeasurement du = DataRepository.Instance.GetDuMeasurementById(mv.Id);
-                        file_name = CreateName(du.Name, du.DateTime);
-                        doc = xmlCreator.CreateDuXml(du);
-                    }
-                    paths[i] = await XmlSaver.SaveXml(file_name, doc);
-                    await MediaScannerService.Instance.Scan(paths[i]);
                 }
             }
             //string mes_dir = EnvironmentService.Instance.GetDir_Measurements();
