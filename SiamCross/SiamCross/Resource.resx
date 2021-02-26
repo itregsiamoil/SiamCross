@@ -377,8 +377,7 @@ Pump rate is 60sec/300sec=0.2swg to 60sec/4sec=15swg!</value>
   </data>
   <data name="TextAboutCompany" xml:space="preserve">
     <value>The «SIAM» company has been operating since 1990, and has reached a leading position in the market of equipment and services for hydrodynamic and geological field research of wells. The company is part of the «Integra Group of Companies», which is rightfully considered the leading integrated oilfield services company in Russia and the CIS countries.
-Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» has been developing, producing equipment for well research. Over the years, many unique equipment has been created, some of which are protected by patents. Our equipment is well-respected by workers in the oil and gas industry.
-This software «SIAM SERVICE 2» is a «SIAM» software package designed for storing, transmitting, processing and interpreting data obtained during well testing via Bluetooth wireless data transmission from portable devices (dynamographs / level gauges).</value>
+Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» has been developing, producing equipment for well research. Over the years, many unique equipment has been created, some of which are protected by patents. Our equipment is well-respected by workers in the oil and gas industry.</value>
   </data>
   <data name="ToAddress" xml:space="preserve">
     <value>Destination address</value>
@@ -677,5 +676,11 @@ DB Siam can't import the files with the same identifiers.</value>
   </data>
   <data name="MaxDepth6000" xml:space="preserve">
     <value>Depth measurement up to 6000m</value>
+  </data>
+  <data name="AppChanges" xml:space="preserve">
+    <value>Changes in the version</value>
+  </data>
+  <data name="TextAboutApp" xml:space="preserve">
+    <value>Software «SIAM SERVICE» is a «SIAM» software package designed for storing, transmitting, processing and interpreting data obtained during well testing via Bluetooth wireless data transmission from portable devices (dynamographs / level gauges).</value>
   </data>
 </root>

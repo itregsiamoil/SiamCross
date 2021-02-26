@@ -151,6 +151,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Changes in the version.
+        /// </summary>
+        public static string AppChanges {
+            get {
+                return ResourceManager.GetString("AppChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Application version:.
         /// </summary>
         public static string AppVersion {
@@ -1561,6 +1570,15 @@ namespace SiamCross {
         public static string TemperatureMeasurement {
             get {
                 return ResourceManager.GetString("TemperatureMeasurement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Software «SIAM SERVICE» is a «SIAM» software package designed for storing, transmitting, processing and interpreting data obtained during well testing via Bluetooth wireless data transmission from portable devices (dynamographs / level gauges)..
+        /// </summary>
+        public static string TextAboutApp {
+            get {
+                return ResourceManager.GetString("TextAboutApp", resourceCulture);
             }
         }
         

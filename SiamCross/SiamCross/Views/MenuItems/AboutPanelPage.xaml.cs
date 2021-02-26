@@ -31,16 +31,16 @@ namespace SiamCross.Views.MenuItems
             _VersionClickCount++;
             if (_VersionClickCount > 5)
             {
-                if (ChangesLabel.Text.Length < 10)
-                    ChangesLabel.Text = GetVersionChanges();
+                ChangesView.IsVisible = true;
             }
             if (_VersionClickCount > 10)
             {
-                ChangesLabel.Text = "hidden";
+                ChangesView.IsVisible = false;
                 _VersionClickCount = 0;
             }
         }
 
+        public string VersionChanges => GetVersionChanges();
         public string GetVersionChanges()
         {
             //Получаем текущую сборку.
@@ -52,7 +52,7 @@ namespace SiamCross.Views.MenuItems
             bool isExistsResourceName = myAssembly.GetManifestResourceNames()
                 .Contains(fullResourceName); //уточняем существует этот ресурс в данной сборке.
 
-            string ret = "";
+            string ret = string.Empty;
             //byte[] result;
             //StringBuilder builder = new StringBuilder();
             //Если ресурс существует, то извлекаем его.

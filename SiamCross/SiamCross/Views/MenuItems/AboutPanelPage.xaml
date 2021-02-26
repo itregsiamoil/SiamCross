@@ -11,44 +11,32 @@
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand">
                 <TableRoot >
-                    <TableSection>
+                    <TableSection Title="{local:Translate AboutCompany}">
                         <ViewCell>
                             <StackLayout>
-                                <Label Text="{local:Translate Site}"/>
-                                <Label Text="http://www.siamoil.ru"/>
+                                <Label Text="{local:Translate TextAboutCompany}"/>
                             </StackLayout>
                         </ViewCell>
-                        <ViewCell>
-                        <StackLayout>
-                            <Label Text="{local:Translate AboutCompany}"/>
-                            <Label Text="{local:Translate TextAboutCompany}"/>
-                        </StackLayout>
-                        </ViewCell>
-                        <TextCell Text="{Binding Version}"
-                                  Command="{Binding CmdShowChanges}"
-                                  Detail="{local:Translate AppVersion}"  />
-                        <!--
-                        <TextCell Text="{Binding Build}"
-                                  Detail="Build number"  />
-                        -->
-                        <!--
-                        <TextCell x:Name="lblVersionNumber"
-                                  Detail="{local:Translate AppVersion}"  />
-                        <TextCell x:Name="lblBuildNumber"
-                                  Detail="Build number"  />
-                        <ViewCell>
-                            <StackLayout Orientation="Horizontal">
-                                <Label Text="{local:Translate AppVersion} "/>
-                                <Label Text="{Binding Version}" FontAttributes="Bold"/>
-                                <Label Text="&#10; build: " />
-                                <Label Text="{Binding Build}"/>
-                            </StackLayout>
-                        </ViewCell>
-                        -->
+                        <TextCell Text="{local:Translate Site}"
+                                  Detail="http://www.siamoil.ru"  />
                     </TableSection>
-                    <TableSection Title="VersionChanges">
+                    <TableSection Title="{local:Translate AboutTitle}">
                         <ViewCell>
-                            <Label x:Name="ChangesLabel" Text="" />
+                            <StackLayout>
+                                <Label Text="{local:Translate TextAboutApp}"/>
+                            </StackLayout>
+                        </ViewCell>
+                        <TextCell Text="{local:Translate AppVersion}"
+                                  Command="{Binding CmdShowChanges}"
+                                  Detail="{Binding Version}"  />
+                        <!--TextCell Text="{local:Translate AppChanges}" IsEnabled="False"/-->
+                        <ViewCell>
+                            <StackLayout x:Name="ChangesView" IsVisible="False">
+                                <Label Text="{local:Translate AppChanges}" 
+                                       TextColor="{StaticResource colorAccent}" 
+                                       Margin="20,5,5,5"/>
+                                <Label x:Name="ChangesLabel" Text="{Binding VersionChanges}" />
+                            </StackLayout>
                         </ViewCell>
                     </TableSection>
                 </TableRoot>
