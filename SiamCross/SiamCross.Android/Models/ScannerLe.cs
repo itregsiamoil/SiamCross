@@ -95,7 +95,8 @@ namespace SiamCross.Droid.Models
 
         public void OnScanResult(BLE.ScanResult result)
         {
-            if (BLE.DataStatus.Complete != result.DataStatus)
+            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+                if (BLE.DataStatus.Complete != result.DataStatus)
                 return;
 
             ScannedDeviceInfo sd = new ScannedDeviceInfo
@@ -106,13 +107,17 @@ namespace SiamCross.Droid.Models
                 Id = MacToGuid.Convert(result.Device.Address),
                 BondState = result.Device.BondState.ToString()
             };
-            sd.ProtocolData["PrimaryPhy"] = ((BluetoothPhy)result.PrimaryPhy).ToString();
-            sd.ProtocolData["SecondaryPhy"] = ((BluetoothPhy)result.SecondaryPhy).ToString();
+            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+            {
+                sd.ProtocolData["PrimaryPhy"] = ((BluetoothPhy)result.PrimaryPhy).ToString();
+                sd.ProtocolData["SecondaryPhy"] = ((BluetoothPhy)result.SecondaryPhy).ToString();
+
+                sd.ProtocolData["IsLegacy"] = result.IsLegacy.ToString();
+                sd.ProtocolData["IsConnectable"] = result.IsConnectable.ToString();
+                sd.ProtocolData["TxPower"] = (BLE.ScanResult.TxPowerNotPresent == (int)result.TxPower) ?
+                        "TxPowerNotPresent" : ((BLE.AdvertiseTxPower)result.TxPower).ToString();
+            }
             sd.ProtocolData["Rssi"] = result.Rssi.ToString();
-            sd.ProtocolData["IsLegacy"] = result.IsLegacy.ToString();
-            sd.ProtocolData["IsConnectable"] = result.IsConnectable.ToString();
-            sd.ProtocolData["TxPower"] = (BLE.ScanResult.TxPowerNotPresent == (int)result.TxPower) ?
-                    "TxPowerNotPresent" : ((BLE.AdvertiseTxPower)result.TxPower).ToString();
 
             bool HasSiamServiceUid = false;
             bool HasUriTag = false;
