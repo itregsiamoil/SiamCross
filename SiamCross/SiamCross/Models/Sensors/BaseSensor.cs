@@ -225,8 +225,7 @@ namespace SiamCross.Models.Sensors
                         {
                             if (false == await QuickReport(cancelToken))
                             {
-                                IsAlive = (ConnectionState.Connected == mConnection.State);
-                                await mConnection.Disconnect();
+                                IsAlive = false;
                                 continue;
                             }
                             if (rssi_update_period > rssi_update_curr++)
@@ -266,11 +265,12 @@ namespace SiamCross.Models.Sensors
         {
             ClearStatus();
             cancelToken.ThrowIfCancellationRequested();
-            bool connected = await mConnection.Connect();
-            if (!connected)
+            if(     !await mConnection.Disconnect() 
+                ||  !await mConnection.Connect()
+                ||  !await PostConnectInit(cancelToken))
+            {
                 return false;
-            if (!await PostConnectInit(cancelToken))
-                return false;
+            }
             SensorData.Status = Resource.ConnectedStatus;
             return true;
         }

@@ -59,54 +59,54 @@ namespace SiamCross.Models.Sensors.Dmg
             : base(conn, sensorData)
         {
             _Common = new MemStruct(0x00);
-            DeviceType = _Common.Add(new MemVarUInt16(), nameof(DeviceType));
-            MemoryModelVersion = _Common.Add(new MemVarUInt16(), nameof(MemoryModelVersion));
-            DeviceNameAddress = _Common.Add(new MemVarUInt32(), nameof(DeviceNameAddress));
-            DeviceNameSize = _Common.Add(new MemVarUInt16(), nameof(DeviceNameSize));
-            DeviceNumber = _Common.Add(new MemVarUInt32(), nameof(DeviceNumber));
+            DeviceType = _Common.Add(new MemValueUInt16(), nameof(DeviceType));
+            MemoryModelVersion = _Common.Add(new MemValueUInt16(), nameof(MemoryModelVersion));
+            DeviceNameAddress = _Common.Add(new MemValueUInt32(), nameof(DeviceNameAddress));
+            DeviceNameSize = _Common.Add(new MemValueUInt16(), nameof(DeviceNameSize));
+            DeviceNumber = _Common.Add(new MemValueUInt32(), nameof(DeviceNumber));
 
             _Info = new MemStruct(0x1000);
-            ProgrammVersionAddress = _Info.Add(new MemVarUInt32(), nameof(ProgrammVersionAddress));
-            ProgrammVersionSize = _Info.Add(new MemVarUInt16(), nameof(ProgrammVersionSize));
+            ProgrammVersionAddress = _Info.Add(new MemValueUInt32(), nameof(ProgrammVersionAddress));
+            ProgrammVersionSize = _Info.Add(new MemValueUInt16(), nameof(ProgrammVersionSize));
 
             _SurvayParam = new MemStruct(0x8000);
-            Rod = _SurvayParam.Add(new MemVarUInt16(), nameof(Rod));
-            DynPeriod = _SurvayParam.Add(new MemVarUInt32(), nameof(DynPeriod));
-            ApertNumber = _SurvayParam.Add(new MemVarUInt16(), nameof(ApertNumber));
-            Imtravel = _SurvayParam.Add(new MemVarUInt16(), nameof(Imtravel));
-            ModelPump = _SurvayParam.Add(new MemVarUInt16(), nameof(ModelPump));
+            Rod = _SurvayParam.Add(new MemValueUInt16(), nameof(Rod));
+            DynPeriod = _SurvayParam.Add(new MemValueUInt32(), nameof(DynPeriod));
+            ApertNumber = _SurvayParam.Add(new MemValueUInt16(), nameof(ApertNumber));
+            Imtravel = _SurvayParam.Add(new MemValueUInt16(), nameof(Imtravel));
+            ModelPump = _SurvayParam.Add(new MemValueUInt16(), nameof(ModelPump));
 
             _NonvolatileParam = new MemStruct(0x8100);
-            Nkp = _NonvolatileParam.Add(new MemVarFloat(), nameof(Nkp));
-            Rkp = _NonvolatileParam.Add(new MemVarFloat(), nameof(Rkp));
-            ZeroG = _NonvolatileParam.Add(new MemVarFloat(), nameof(ZeroG));
-            PositiveG = _NonvolatileParam.Add(new MemVarFloat(), nameof(PositiveG));
-            EnableInterval = _NonvolatileParam.Add(new MemVarUInt32(), nameof(EnableInterval));
-            ZeroOffset = _NonvolatileParam.Add(new MemVarFloat(), nameof(ZeroOffset));
-            SlopeRatio = _NonvolatileParam.Add(new MemVarFloat(), nameof(SlopeRatio));
-            NegativeG = _NonvolatileParam.Add(new MemVarFloat(), nameof(NegativeG));
-            SleepDisable = _NonvolatileParam.Add(new MemVarUInt16(), nameof(SleepDisable));
-            SleepTimeout = _NonvolatileParam.Add(new MemVarUInt16(), nameof(SleepTimeout));
+            Nkp = _NonvolatileParam.Add(new MemValueFloat(), nameof(Nkp));
+            Rkp = _NonvolatileParam.Add(new MemValueFloat(), nameof(Rkp));
+            ZeroG = _NonvolatileParam.Add(new MemValueFloat(), nameof(ZeroG));
+            PositiveG = _NonvolatileParam.Add(new MemValueFloat(), nameof(PositiveG));
+            EnableInterval = _NonvolatileParam.Add(new MemValueUInt32(), nameof(EnableInterval));
+            ZeroOffset = _NonvolatileParam.Add(new MemValueFloat(), nameof(ZeroOffset));
+            SlopeRatio = _NonvolatileParam.Add(new MemValueFloat(), nameof(SlopeRatio));
+            NegativeG = _NonvolatileParam.Add(new MemValueFloat(), nameof(NegativeG));
+            SleepDisable = _NonvolatileParam.Add(new MemValueUInt16(), nameof(SleepDisable));
+            SleepTimeout = _NonvolatileParam.Add(new MemValueUInt16(), nameof(SleepTimeout));
 
             _CurrentParam = new MemStruct(0x8400);
-            BatteryVoltage = _CurrentParam.Add(new MemVarUInt16(), nameof(BatteryVoltage));
-            Тemperature = _CurrentParam.Add(new MemVarInt16(), nameof(Тemperature));
-            LoadChanel = _CurrentParam.Add(new MemVarFloat(), nameof(LoadChanel));
-            AccelerationChanel = _CurrentParam.Add(new MemVarFloat(), nameof(AccelerationChanel));
+            BatteryVoltage = _CurrentParam.Add(new MemValueUInt16(), nameof(BatteryVoltage));
+            Тemperature = _CurrentParam.Add(new MemValueInt16(), nameof(Тemperature));
+            LoadChanel = _CurrentParam.Add(new MemValueFloat(), nameof(LoadChanel));
+            AccelerationChanel = _CurrentParam.Add(new MemValueFloat(), nameof(AccelerationChanel));
 
             _Operating = new MemStruct(0x8800);
-            CtrlReg = _Operating.Add(new MemVarUInt16(), nameof(CtrlReg));
-            StatReg = _Operating.Add(new MemVarUInt16(), nameof(StatReg));
-            ErrorReg = _Operating.Add(new MemVarUInt32(), nameof(ErrorReg));
+            CtrlReg = _Operating.Add(new MemValueUInt16(), nameof(CtrlReg));
+            StatReg = _Operating.Add(new MemValueUInt16(), nameof(StatReg));
+            ErrorReg = _Operating.Add(new MemValueUInt32(), nameof(ErrorReg));
 
             _Report = new MemStruct(0x80000000);
-            MaxWeight = _Report.Add(new MemVarUInt16(), nameof(MaxWeight));
-            MinWeight = _Report.Add(new MemVarUInt16(), nameof(MinWeight));
-            Travel = _Report.Add(new MemVarUInt16(), nameof(Travel));
-            Period = _Report.Add(new MemVarUInt16(), nameof(Period));
-            Step = _Report.Add(new MemVarUInt16(), nameof(Step));
-            WeightDiscr = _Report.Add(new MemVarUInt16(), nameof(WeightDiscr));
-            TimeDiscr = _Report.Add(new MemVarUInt16(), nameof(TimeDiscr));
+            MaxWeight = _Report.Add(new MemValueUInt16(), nameof(MaxWeight));
+            MinWeight = _Report.Add(new MemValueUInt16(), nameof(MinWeight));
+            Travel = _Report.Add(new MemValueUInt16(), nameof(Travel));
+            Period = _Report.Add(new MemValueUInt16(), nameof(Period));
+            Step = _Report.Add(new MemValueUInt16(), nameof(Step));
+            WeightDiscr = _Report.Add(new MemValueUInt16(), nameof(WeightDiscr));
+            TimeDiscr = _Report.Add(new MemValueUInt16(), nameof(TimeDiscr));
         }
 
         public async Task<bool> UpdateFirmware(CancellationToken cancelToken)
@@ -122,7 +122,7 @@ namespace SiamCross.Models.Sensors.Dmg
 
                 ret = await Connection.ReadAsync(_Common);
                 if (10 > MemoryModelVersion.Value)
-                    Connection.MaxReqLen = 40;
+                    Connection.MaxReqLen = 20;
                 else
                     Connection.MaxReqLen = 230;// 247 - 3(bt header) - 12(siam header)-2(crc)
 

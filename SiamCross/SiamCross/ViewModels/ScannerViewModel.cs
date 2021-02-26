@@ -67,11 +67,11 @@ namespace SiamCross.ViewModels
             SelectItemCommand = new Command(SelectItem);
             StartStopScanCommand = new Command(StartStopScan);
 
-            DeviceType = _Common.Add(new MemVarUInt16(), nameof(DeviceType));
-            MemoryModelVersion = _Common.Add(new MemVarUInt16(), nameof(MemoryModelVersion));
-            DeviceNameAddress = _Common.Add(new MemVarUInt32(), nameof(DeviceNameAddress));
-            DeviceNameSize = _Common.Add(new MemVarUInt16(), nameof(DeviceNameSize));
-            DeviceNumber = _Common.Add(new MemVarUInt32(), nameof(DeviceNumber));
+            DeviceType = _Common.Add(new MemValueUInt16(), nameof(DeviceType));
+            MemoryModelVersion = _Common.Add(new MemValueUInt16(), nameof(MemoryModelVersion));
+            DeviceNameAddress = _Common.Add(new MemValueUInt32(), nameof(DeviceNameAddress));
+            DeviceNameSize = _Common.Add(new MemValueUInt16(), nameof(DeviceNameSize));
+            DeviceNumber = _Common.Add(new MemValueUInt32(), nameof(DeviceNumber));
 
             //_Info = new MemStruct(0x1000);
             //ProgrammVersionAddress = _Info.Add(new MemVarUInt32(), nameof(ProgrammVersionAddress));
@@ -134,67 +134,82 @@ namespace SiamCross.ViewModels
 
         private async Task<Dictionary<string, SiamDeviceInfo>> GetDevice(ScannedDeviceInfo phy_item)
         {
-            _Detecting = true;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Detecting)));
-
+            IPhyConnection phy_conn = null;
             Dictionary<string, SiamDeviceInfo> dir = new Dictionary<string, SiamDeviceInfo>();
-            IPhyInterface phy_interface = null;
-            switch (phy_item.BluetoothType)
+            try
             {
-                default: break;
-                case BluetoothType.Le:
-                    phy_interface = FactoryBtLe.GetCurent(); break;
-                case BluetoothType.Classic:
-                    phy_interface = FactoryBt2.GetCurent(); break;
+                _Detecting = true;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Detecting)));
+                
+                IPhyInterface phy_interface = null;
+                switch (phy_item.BluetoothType)
+                {
+                    default: break;
+                    case BluetoothType.Le:
+                        phy_interface = FactoryBtLe.GetCurent(); break;
+                    case BluetoothType.Classic:
+                        phy_interface = FactoryBt2.GetCurent(); break;
+                }
+                phy_conn = phy_interface.MakeConnection(phy_item);
+                switch (phy_item.ProtocolKind)
+                {
+                    case 0: // ProtocolKind.Siam:
+                        IProtocolConnection connection = new SiamConnection(phy_conn);
+                        if (await connection.Connect() && RespResult.NormalPkg == await connection.ReadAsync(_Common))
+                        {
+                            UInt32 address = DeviceNameAddress.Value;
+                            UInt16 len = DeviceNameSize.Value;
+                            byte[] membuf = new byte[len];
+                            await connection.ReadMemAsync(address, len, membuf);
+                            string dvc_name;
+                            if (10 > MemoryModelVersion.Value)
+                                dvc_name = Encoding.GetEncoding(1251).GetString(membuf, 0, len);
+                            else
+                                dvc_name = Encoding.UTF8.GetString(membuf, 0, len);
+
+                            //await connection.ReadAsync(_Info);
+                            //address = ProgrammVersionAddress.Value;
+                            //len = ProgrammVersionSize.Value;
+                            //membuf = new byte[len];
+                            //await connection.ReadMemAsync(address, len, membuf);
+                            //string firmware;
+                            //if (10 > MemoryModelVersion.Value)
+                            //    firmware = Encoding.GetEncoding(1251).GetString(membuf, 0, len);
+                            //else
+                            //    firmware = Encoding.UTF8.GetString(membuf, 0, len);
+
+                            string label;
+                            label = $"{dvc_name} №{DeviceNumber.Value}"
+                                + $"\n{Resource.Address}: { phy_item.ProtocolAddress}"
+                                + $" {Resource.Type}: 0x" + DeviceType.Value.ToString("X2");
+
+                            SiamDeviceInfo siam_device = new SiamDeviceInfo(dvc_name
+                                , DeviceNumber.Value.ToString(), phy_item.ProtocolAddress, DeviceType.Value);
+
+                            dir.Add(label, siam_device);
+
+                        }
+                        await connection.Disconnect();
+                        break;
+                    default:
+                    case 1://ProtocolKind.Modbus: 
+                        break;
+                }
             }
-            IPhyConnection conn = phy_interface.MakeConnection(phy_item);
-            switch (phy_item.ProtocolKind)
+            catch (Exception ex)
             {
-                case 0: // ProtocolKind.Siam:
-                    IProtocolConnection connection = new SiamConnection(conn);
-                    if (await connection.Connect() && RespResult.NormalPkg == await connection.ReadAsync(_Common))
-                    {
-                        UInt32 address = DeviceNameAddress.Value;
-                        UInt16 len = DeviceNameSize.Value;
-                        byte[] membuf = new byte[len];
-                        await connection.ReadMemAsync(address, len, membuf);
-                        string dvc_name;
-                        if (10 > MemoryModelVersion.Value)
-                            dvc_name = Encoding.GetEncoding(1251).GetString(membuf, 0, len);
-                        else
-                            dvc_name = Encoding.UTF8.GetString(membuf, 0, len);
-
-                        //await connection.ReadAsync(_Info);
-                        //address = ProgrammVersionAddress.Value;
-                        //len = ProgrammVersionSize.Value;
-                        //membuf = new byte[len];
-                        //await connection.ReadMemAsync(address, len, membuf);
-                        //string firmware;
-                        //if (10 > MemoryModelVersion.Value)
-                        //    firmware = Encoding.GetEncoding(1251).GetString(membuf, 0, len);
-                        //else
-                        //    firmware = Encoding.UTF8.GetString(membuf, 0, len);
-
-                        string label;
-                        label = $"{dvc_name} №{DeviceNumber.Value}"
-                            + $"\n{Resource.Address}: { phy_item.ProtocolAddress}"
-                            + $" {Resource.Type}: 0x" + DeviceType.Value.ToString("X2");
-
-                        SiamDeviceInfo siam_device = new SiamDeviceInfo(dvc_name
-                            , DeviceNumber.Value.ToString(), phy_item.ProtocolAddress, DeviceType.Value);
-
-                        dir.Add(label, siam_device);
-
-                    }
-                    await connection.Disconnect();
-                    break;
-                default:
-                case 1://ProtocolKind.Modbus: 
-                    break;
+                _logger.Error(ex, "Exception in: "
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
             }
-            await conn.Disconnect();
-            _Detecting = false;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Detecting)));
+            finally
+            {
+                _Detecting = false;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Detecting)));
+                await phy_conn.Disconnect();
+            }
             return dir;
         }
 

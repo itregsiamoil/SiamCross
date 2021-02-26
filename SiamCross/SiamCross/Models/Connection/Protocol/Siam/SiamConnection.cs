@@ -372,20 +372,20 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             float sep_byte_cost = 1.0f / mem.Size;
             MemStruct vars = new MemStruct(0);
 
-            IReadOnlyDictionary<IMemItem, string> vdict = mem.GetVars();
-            IEnumerator<KeyValuePair<IMemItem, string>> enumerator = vdict.GetEnumerator();
+            var vdict = mem.GetVars();
+            var enumerator = vdict.GetEnumerator();
 
             bool has_next = enumerator.MoveNext();
 
             while (has_next)
             {
-                IMemItem curr = enumerator.Current.Key;
+                var curr = enumerator.Current;
                 vars.Reset(curr.Address);
-                while (has_next && vars.Size + curr.Size < MaxReqLen)
+                while (has_next && vars.Size + curr.Size <= MaxReqLen)
                 {
                     vars.Add(curr);
                     has_next = enumerator.MoveNext();
-                    curr = enumerator.Current.Key;
+                    curr = enumerator.Current;
                 }
                 //MakeReadRequest(vars.Address, vars.Size);
                 _TxBuf[3] = 0x01; //read
@@ -410,20 +410,20 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             float sep_byte_cost = 1.0f / mem.Size;
             MemStruct vars = new MemStruct(0);
 
-            IReadOnlyDictionary<IMemItem, string> vdict = mem.GetVars();
-            IEnumerator<KeyValuePair<IMemItem, string>> enumerator = vdict.GetEnumerator();
+            var vdict = mem.GetVars();
+            var enumerator = vdict.GetEnumerator();
 
             bool has_next = enumerator.MoveNext();
 
             while (has_next)
             {
-                IMemItem curr = enumerator.Current.Key;
+                var curr = enumerator.Current;
                 vars.Reset(curr.Address);
-                while (has_next && vars.Size + curr.Size < MaxReqLen)
+                while (has_next && vars.Size + curr.Size <= MaxReqLen)
                 {
                     vars.Add(curr);
                     has_next = enumerator.MoveNext();
-                    curr = enumerator.Current.Key;
+                    curr = enumerator.Current;
                 }
                 //MakeReadRequest(vars.Address, vars.Size);
                 _TxBuf[3] = 0x02; //write
