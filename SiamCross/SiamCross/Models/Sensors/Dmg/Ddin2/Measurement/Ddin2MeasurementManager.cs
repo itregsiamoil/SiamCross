@@ -13,11 +13,11 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
         private DmgBaseMeasureReport _report;
         private readonly DmgBaseSensor mSensor;
         private readonly IProtocolConnection _Connection;
+        Stopwatch _PerfCounter = new Stopwatch();
 
         public SensorData SensorData => mSensor.SensorData;
         public ISensor Sensor => mSensor;
         public UInt32 ErrorCode { get; private set; }
-        public DmgMeasureStatus MeasurementStatus { get; set; }
 
         private readonly byte[] _currentDynGraph = new byte[1000 * 2];
         private readonly byte[] _currentAccelerationGraph = new byte[1000 * 2];
@@ -32,12 +32,24 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
         public async Task<object> RunMeasurement()
         {
+            _PerfCounter.Restart();
             MeasureState error = MeasureState.Ok;
+            DmgMeasureStatus MeasurementStatus = DmgMeasureStatus.Empty;
             Ddin2MeasurementData report;
             try
             {
                 await SendParameters();
-                MeasurementStatus = await ExecuteMeasurement();
+                bool started = await Start();
+                if (started)
+                {
+                    while (DmgMeasureStatus.Ready != MeasurementStatus
+                        && _PerfCounter.ElapsedMilliseconds < 300 * 1000)
+                    {
+                        _progress = 1;
+                        MeasurementStatus = await ExecuteMeasurement();
+                    }
+                }
+
                 if (DmgMeasureStatus.Ready != MeasurementStatus)
                 {
                     ErrorCode = await ReadErrorCode();
@@ -107,9 +119,6 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
         private async Task<DmgMeasureStatus> ExecuteMeasurement()
         {
-            bool started = await Start();
-            if (!started)
-                return await GetStatus();
 
             DmgMeasureStatus status = DmgMeasureStatus.Empty;
             UInt32 dyn_period = mSensor.DynPeriod.Value;
@@ -189,8 +198,6 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                 _progress = global_progress_start + progress * global_progress_left;
                 UpdateProgress(_progress);
             };
-            Stopwatch _PerfCounter = new Stopwatch();
-            _PerfCounter.Restart();
 
             RespResult ret = await _Connection.ReadMemAsync(0x81000000, 1000 * 2, _currentDynGraph
                 , 0, StepProgress);

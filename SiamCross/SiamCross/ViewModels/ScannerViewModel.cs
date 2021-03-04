@@ -67,11 +67,11 @@ namespace SiamCross.ViewModels
             SelectItemCommand = new Command(SelectItem);
             StartStopScanCommand = new Command(StartStopScan);
 
-            DeviceType = _Common.Add(new MemValueUInt16(), nameof(DeviceType));
-            MemoryModelVersion = _Common.Add(new MemValueUInt16(), nameof(MemoryModelVersion));
-            DeviceNameAddress = _Common.Add(new MemValueUInt32(), nameof(DeviceNameAddress));
-            DeviceNameSize = _Common.Add(new MemValueUInt16(), nameof(DeviceNameSize));
-            DeviceNumber = _Common.Add(new MemValueUInt32(), nameof(DeviceNumber));
+            DeviceType = _Common.Add(new MemVarUInt16(nameof(DeviceType)) );
+            MemoryModelVersion = _Common.Add(new MemVarUInt16(nameof(MemoryModelVersion)));
+            DeviceNameAddress = _Common.Add(new MemVarUInt32(nameof(DeviceNameAddress)));
+            DeviceNameSize = _Common.Add(new MemVarUInt16(nameof(DeviceNameSize)));
+            DeviceNumber = _Common.Add(new MemVarUInt32(nameof(DeviceNumber)));
 
             //_Info = new MemStruct(0x1000);
             //ProgrammVersionAddress = _Info.Add(new MemVarUInt32(), nameof(ProgrammVersionAddress));

@@ -383,7 +383,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 vars.Reset(curr.Address);
                 while (has_next && vars.Size + curr.Size <= MaxReqLen)
                 {
-                    vars.Add(curr);
+                    vars.Add(new MemVar(curr.Data));
                     has_next = enumerator.MoveNext();
                     curr = enumerator.Current;
                 }
@@ -421,7 +421,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 vars.Reset(curr.Address);
                 while (has_next && vars.Size + curr.Size <= MaxReqLen)
                 {
-                    vars.Add(curr);
+                    vars.Add(new MemVar(curr.Data));
                     has_next = enumerator.MoveNext();
                     curr = enumerator.Current;
                 }

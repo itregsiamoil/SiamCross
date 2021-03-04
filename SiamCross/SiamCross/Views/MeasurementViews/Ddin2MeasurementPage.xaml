@@ -70,7 +70,7 @@
                                    Keyboard="Numeric"
                                    Grid.Column="1" Grid.Row="1">
                             </Entry>
-                            <Button Text="&#x23F2;" FontSize="50"
+                            <Button Text="&#x23F1;" FontSize="50"
                                     Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"
                                     Clicked="StopwatchButton_Clicked"/>
                         </Grid>

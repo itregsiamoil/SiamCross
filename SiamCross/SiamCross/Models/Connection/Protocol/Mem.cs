@@ -87,8 +87,8 @@ namespace SiamCross.Models.Connection.Protocol
 
     public interface IMemItem
     {
-        UInt32 Address { get; }
-        string Name { get; }
+        UInt32 Address { get; set; }
+        string Name { get; set; }
         IMemValue Data{ get; }
         UInt32 Size { get; }
     }
@@ -96,21 +96,20 @@ namespace SiamCross.Models.Connection.Protocol
     public class MemVar: IMemItem , IMemValue
     {
         readonly protected IMemValue _Data;
-        readonly private MemStruct _Parent;
-        readonly private string _Name;
+        private UInt32 _Address;
+        private string _Name;
 
-        public MemStruct Parent => _Parent;
+        public UInt32 Address { get => _Address; set => _Address = value; }
+        public string Name { get => _Name; set => _Name = value; }
         public IMemValue Data => _Data;
-        public string Name => _Name;
         public UInt32 Size => _Data.Size;
 
-        public MemVar(MemStruct parent, IMemValue data, string name = null)
+        public MemVar(IMemValue data, string name = null, UInt32 addr=0)
         {
             _Data = data;
             _Name = name;
-            _Parent = parent;
+            _Address = addr;
         }
-        public UInt32 Address => (null == _Parent) ? 0 : _Parent.GetOffset(this) + _Parent.Address;
 
         
         public byte[] ToArray()
@@ -130,8 +129,8 @@ namespace SiamCross.Models.Connection.Protocol
 
     public class MemVarUInt32: MemVar
     {
-        public MemVarUInt32(MemStruct parent, MemValueUInt32 data, string name = null)
-            : base(parent, data, name)
+        public MemVarUInt32(string name = null, UInt32 addr = 0, MemValueUInt32 data=null)
+            : base((null == data) ? new MemValueUInt32() : data, name, addr)
         { }
         public UInt32 Value
         {
@@ -150,8 +149,8 @@ namespace SiamCross.Models.Connection.Protocol
     }
     public class MemVarUInt16 : MemVar
     {
-        public MemVarUInt16(MemStruct parent, MemValueUInt16 data, string name = null)
-            : base(parent, data, name)
+        public MemVarUInt16(string name = null, UInt32 addr = 0, MemValueUInt16 data = null)
+            : base((null == data) ? new MemValueUInt16() : data, name, addr)
         { }
         public UInt16 Value
         {
@@ -170,8 +169,8 @@ namespace SiamCross.Models.Connection.Protocol
     }
     public class MemVarInt16 : MemVar
     {
-        public MemVarInt16(MemStruct parent, MemValueInt16 data, string name = null)
-            : base(parent, data, name)
+        public MemVarInt16(string name = null, UInt32 addr = 0, MemValueInt16 data = null)
+            : base((null == data) ? new MemValueInt16() : data, name, addr)
         { }
         public Int16 Value
         {
@@ -190,8 +189,8 @@ namespace SiamCross.Models.Connection.Protocol
     }
     public class MemVarFloat : MemVar
     {
-        public MemVarFloat(MemStruct parent, MemValueFloat data, string name = null)
-            : base(parent, data, name)
+        public MemVarFloat(string name = null, UInt32 addr = 0, MemValueFloat data = null)
+            : base((null == data) ? new MemValueFloat() : data, name, addr)
         { }
         public float Value
         {
@@ -235,43 +234,17 @@ namespace SiamCross.Models.Connection.Protocol
         }
 
 
-        public MemVarUInt32 Add(MemValueUInt32 item, string name = null)
+        public T Add<T>(T item)
         {
-            var mv = new MemVarUInt32(this, item, name);
-            _Store.Add(mv);
-            _Size += item.Size;
-            return mv;
+            if(item is MemVar mv)
+            {
+                _Store.Add(mv);
+                mv.Address = _Address + _Size;
+                _Size += mv.Size;
+                return item;
+            }
+            return default(T);
         }
-        public MemVarUInt16 Add(MemValueUInt16 item, string name = null)
-        {
-            var mv = new MemVarUInt16(this, item, name);
-            _Store.Add(mv);
-            _Size += item.Size;
-            return mv;
-        }
-        public MemVarInt16 Add(MemValueInt16 item, string name = null)
-        {
-            var mv = new MemVarInt16(this, item, name);
-            _Store.Add(mv);
-            _Size += item.Size;
-            return mv;
-        }
-        public MemVarFloat Add(MemValueFloat item, string name = null)
-        {
-            var mv = new MemVarFloat(this, item, name);
-            _Store.Add(mv);
-            _Size += item.Size;
-            return mv;
-        }
-        public MemVar Add(MemVar item, string name = null)
-        {
-            var mv = new MemVar(this, item.Data, name);
-            _Store.Add(mv);
-            _Size += item.Size;
-            return mv;
-        }
-
-
 
         public void Reset(UInt32 address)
         {
