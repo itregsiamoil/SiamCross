@@ -103,7 +103,7 @@ namespace SiamCross.ViewModels
                 if (item == null)
                     return;
 
-                Dictionary<string, SiamDeviceInfo> devices = await GetDevice(item);
+                Dictionary<string, ScannedDeviceInfo> devices = await GetDevice(item);
                 if (null == devices || 0 == devices.Count)
                     return;
                 string action = await Application.Current.MainPage
@@ -111,18 +111,10 @@ namespace SiamCross.ViewModels
                     , "Cancel", null, devices.Keys.AsEnumerable().ToArray());
                 if (action == "Cancel")
                     return;
-                if (!devices.TryGetValue(action, out SiamDeviceInfo siam_device))
+                if (!devices.TryGetValue(action, out ScannedDeviceInfo siam_device))
                     return;
 
-                item.Name = $"{siam_device.Name} №{siam_device.Num}";
-                item.Name = item.Name.Replace("\0", string.Empty);
-                item.Name = item.Name.Replace("\r", string.Empty);
-                item.Name = item.Name.Replace("\n", string.Empty);
-                item.Name = item.Name.Replace("\t", string.Empty);
-                item.ProtocolAddress = siam_device.Address;
-                item.Kind = siam_device.Kind;
-
-                SensorService.Instance.AddSensor(item);
+                SensorService.Instance.AddSensor(siam_device);
                 await App.NavigationPage.Navigation.PopToRootAsync();
                 App.MenuIsPresented = false;
             }
@@ -132,17 +124,17 @@ namespace SiamCross.ViewModels
             }
         }
 
-        private async Task<Dictionary<string, SiamDeviceInfo>> GetDevice(ScannedDeviceInfo phy_item)
+        private async Task<Dictionary<string, ScannedDeviceInfo>> GetDevice(ScannedDeviceInfo scanDevice)
         {
             IPhyConnection phy_conn = null;
-            Dictionary<string, SiamDeviceInfo> dir = new Dictionary<string, SiamDeviceInfo>();
+            Dictionary<string, ScannedDeviceInfo> dir = new Dictionary<string, ScannedDeviceInfo>();
             try
             {
                 _Detecting = true;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Detecting)));
                 
                 IPhyInterface phy_interface = null;
-                switch (phy_item.BluetoothType)
+                switch ((BluetoothType)scanDevice.Device.PhyId)
                 {
                     default: break;
                     case BluetoothType.Le:
@@ -150,8 +142,8 @@ namespace SiamCross.ViewModels
                     case BluetoothType.Classic:
                         phy_interface = FactoryBt2.GetCurent(); break;
                 }
-                phy_conn = phy_interface.MakeConnection(phy_item);
-                switch (phy_item.ProtocolKind)
+                phy_conn = phy_interface.MakeConnection(scanDevice);
+                switch (scanDevice.Device.ProtocolId)
                 {
                     case 0: // ProtocolKind.Siam:
                         IProtocolConnection connection = new SiamConnection(phy_conn);
@@ -178,13 +170,25 @@ namespace SiamCross.ViewModels
                             //else
                             //    firmware = Encoding.UTF8.GetString(membuf, 0, len);
 
+                            string addressStr="";
+                            if (scanDevice.Device.ProtocolData.TryGetValue("Address", out object addressObj))
+                                if (addressObj is string str)
+                                    addressStr = str;
+
+                            ScannedDeviceInfo siam_device = new ScannedDeviceInfo();
+                            siam_device.Device = (Models.DeviceInfo)scanDevice.Device.Clone();
+                            siam_device.Device.Kind = DeviceType.Value;
+                            siam_device.Device.Number = DeviceNumber.Value.ToString();
+                            siam_device.Device.Name = $"{dvc_name} №{DeviceNumber.Value}";
+                            siam_device.Device.Name = siam_device.Device.Name.Replace("\0", string.Empty);
+                            siam_device.Device.Name = siam_device.Device.Name.Replace("\r", string.Empty);
+                            siam_device.Device.Name = siam_device.Device.Name.Replace("\n", string.Empty);
+                            siam_device.Device.Name = siam_device.Device.Name.Replace("\t", string.Empty);
+
                             string label;
                             label = $"{dvc_name} №{DeviceNumber.Value}"
-                                + $"\n{Resource.Address}: { phy_item.ProtocolAddress}"
+                                + $"\n{Resource.Address}: {addressStr}"
                                 + $" {Resource.Type}: 0x" + DeviceType.Value.ToString("X2");
-
-                            SiamDeviceInfo siam_device = new SiamDeviceInfo(dvc_name
-                                , DeviceNumber.Value.ToString(), phy_item.ProtocolAddress, DeviceType.Value);
 
                             dir.Add(label, siam_device);
 

@@ -111,7 +111,7 @@ namespace SiamCross.ViewModels
             if (!CanOpenMeasurement(sensorData))
                 return;
 
-            switch (sensor.ScannedDeviceInfo.Kind)
+            switch (sensor.ScannedDeviceInfo.Device.Kind)
             {
                 case 0x1301: case 0x1302: case 0x1303:
                 case 0x1401: case 0x1402: case 0x1403:

@@ -99,25 +99,25 @@ namespace SiamCross.Droid.Models
                 if (BLE.DataStatus.Complete != result.DataStatus)
                 return;
 
-            ScannedDeviceInfo sd = new ScannedDeviceInfo
-            {
-                BluetoothType = BluetoothType.Le,
-                Name = result.Device.Name,
-                Mac = result.Device.Address,
-                Id = MacToGuid.Convert(result.Device.Address),
-                BondState = result.Device.BondState.ToString()
-            };
+            ScannedDeviceInfo sd = new ScannedDeviceInfo();
+            var guid = MacToGuid.Convert(result.Device.Address);
+            sd.Device.Name = "";
+            sd.Device.PhyId = (uint)BluetoothType.Le;
+            sd.Device.PhyData.Add("Name", result.Device.Name);
+            sd.Device.PhyData.Add("Mac", result.Device.Address);
+            sd.Device.PhyData.Add("Guid", guid.ToString());
+            sd.Device.PhyData.Add("BondState", result.Device.BondState.ToString());
+
             if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
             {
-                sd.ProtocolData["PrimaryPhy"] = ((BluetoothPhy)result.PrimaryPhy).ToString();
-                sd.ProtocolData["SecondaryPhy"] = ((BluetoothPhy)result.SecondaryPhy).ToString();
-
-                sd.ProtocolData["IsLegacy"] = result.IsLegacy.ToString();
-                sd.ProtocolData["IsConnectable"] = result.IsConnectable.ToString();
-                sd.ProtocolData["TxPower"] = (BLE.ScanResult.TxPowerNotPresent == (int)result.TxPower) ?
-                        "TxPowerNotPresent" : ((BLE.AdvertiseTxPower)result.TxPower).ToString();
+                sd.Device.PhyData.Add("PrimaryPhy", ((BluetoothPhy)result.PrimaryPhy).ToString());
+                sd.Device.PhyData.Add("SecondaryPhy", ((BluetoothPhy)result.SecondaryPhy).ToString());
+                sd.Device.PhyData.Add("IsLegacy", result.IsLegacy.ToString());
+                sd.Device.PhyData.Add("IsConnectable", result.IsConnectable.ToString());
+                sd.Device.PhyData.Add("TxPower", (BLE.ScanResult.TxPowerNotPresent == (int)result.TxPower) ?
+                        "TxPowerNotPresent" : ((BLE.AdvertiseTxPower)result.TxPower).ToString());
             }
-            sd.ProtocolData["Rssi"] = result.Rssi.ToString();
+            sd.Device.PhyData.Add("Rssi", result.Rssi.ToString());
 
             bool HasSiamServiceUid = false;
             bool HasUriTag = false;
@@ -180,7 +180,7 @@ namespace SiamCross.Droid.Models
 
             if (IsFilterEnabled)
             {
-                if (sd.Id != null && (HasSiamServiceUid || HasUriTag || IsSiamSensor(sd.Name)))
+                if (guid != null && (HasSiamServiceUid || HasUriTag || IsSiamSensor(result.Device.Name)))
                     DoNotifyDevice(sd);
             }
             else
@@ -196,18 +196,18 @@ namespace SiamCross.Droid.Models
             {
                 if (BluetoothDeviceType.Le != device.Type)
                     continue;
-                ScannedDeviceInfo sd = new ScannedDeviceInfo
-                {
-                    Name = device.Name,
-                    Mac = device.Address,
-                    Id = MacToGuid.Convert(device.Address),
-                    BluetoothType = BluetoothType.Le,
-                };
-                sd.ProtocolData["BondState"] = device.BondState.ToString();
+                ScannedDeviceInfo sd = new ScannedDeviceInfo();
+                var guid = MacToGuid.Convert(device.Address);
+                sd.Device.Name = "";
+                sd.Device.PhyId = (uint)BluetoothType.Le;
+                sd.Device.PhyData.Add("Name", device.Name);
+                sd.Device.PhyData.Add("Mac", device.Address);
+                sd.Device.PhyData.Add("Guid", guid.ToString());
+                sd.Device.PhyData.Add("BondState", device.BondState.ToString());
 
                 if (IsFilterEnabled)
                 {
-                    if (sd.Id != null && IsSiamSensor(sd.Name))
+                    if (guid != null && IsSiamSensor(device.Name))
                         DoNotifyDevice(sd);
                 }
                 else

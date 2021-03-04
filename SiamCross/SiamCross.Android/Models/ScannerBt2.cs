@@ -63,17 +63,18 @@ namespace SiamCross.Droid.Models
             {
                 if (BluetoothDeviceType.Classic != device.Type)
                     continue;
-                ScannedDeviceInfo sd = new ScannedDeviceInfo
-                {
-                    Name = device.Name,
-                    Mac = device.Address,
-                    Id = MacToGuid.Convert(device.Address),
-                    BluetoothType = BluetoothType.Classic,
-                    BondState = device.BondState.ToString()
-                };
+                ScannedDeviceInfo sd = new ScannedDeviceInfo();
+                var guid = MacToGuid.Convert(device.Address);
+                sd.Device.Name = "";
+                sd.Device.PhyId = (uint)BluetoothType.Classic;
+                sd.Device.PhyData.Add("Name", device.Name);
+                sd.Device.PhyData.Add("Mac", device.Address);
+                sd.Device.PhyData.Add("Guid", guid.ToString() );
+                sd.Device.PhyData.Add("BondState", device.BondState.ToString());
+
                 if (IsFilterEnabled)
                 {
-                    if (sd.Id != null && IsSiamSensor(sd.Name))
+                    if (guid != null && IsSiamSensor(device.Name))
                         DoNotifyDevice(sd);
                 }
                 else

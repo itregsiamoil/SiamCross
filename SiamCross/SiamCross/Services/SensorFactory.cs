@@ -19,7 +19,7 @@ namespace SiamCross.Services
         {
             IPhyInterface phy_interface = null;
 
-            switch (deviceInfo.BluetoothType)
+            switch ((BluetoothType)deviceInfo.Device.PhyId)
             {
                 default: break;
                 case BluetoothType.Le:
@@ -32,12 +32,12 @@ namespace SiamCross.Services
             IPhyConnection conn = phy_interface.MakeConnection(deviceInfo);
             IProtocolConnection connection = new SiamConnection(conn);
 
-            switch (deviceInfo.Kind)
+            switch (deviceInfo.Device.Kind)
             {
                 case 0x1301: case 0x1302: case 0x1303: 
                 case 0x1401: case 0x1402: case 0x1403:
                     {
-                        SensorData sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.DynamographSensorType, "");
+                        SensorData sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Device.Name, Resource.DynamographSensorType, "");
                         Ddin2Sensor sensor = new Ddin2Sensor(connection, sens_data);
                         sensor.ScannedDeviceInfo = deviceInfo;
                         return sensor;
@@ -45,7 +45,7 @@ namespace SiamCross.Services
                 case 0x1101:
                     {
                         IProtocolConnection connection_old = new SiamProtocolConnection(conn);
-                        SensorData sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Name, Resource.LevelGaugeSensorType, "");
+                        SensorData sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Device.Name, Resource.LevelGaugeSensorType, "");
                         DuSensor sensor = new DuSensor(connection_old, sens_data);
                         sensor.ScannedDeviceInfo = deviceInfo;
                         return sensor;

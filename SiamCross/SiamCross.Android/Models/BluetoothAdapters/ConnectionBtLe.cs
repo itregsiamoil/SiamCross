@@ -115,7 +115,7 @@ namespace SiamCross.Droid.Models
         public void SetDeviceInfo(ScannedDeviceInfo deviceInfo)
         {
             _deviceInfo = deviceInfo;
-            _deviceGuid = (Guid)deviceInfo.Id;
+            _deviceGuid = Guid.Parse(deviceInfo.Id);
         }
 
         public override async Task<bool> Connect()

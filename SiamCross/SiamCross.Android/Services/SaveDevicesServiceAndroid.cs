@@ -1,11 +1,13 @@
 ﻿using Android.Runtime;
 using Newtonsoft.Json;
 using SiamCross.Droid.Services;
+using SiamCross.Models;
 using SiamCross.Models.Scanners;
 using SiamCross.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml.Serialization;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(SaveDevicesServiceAndroid))]
@@ -54,20 +56,20 @@ namespace SiamCross.Droid.Services
 
                         switch (item)
                         {
-                            case SavedDevice readDevice:
+                            case SavedDevice read:
                                 Guid id = new Guid();
-                                Guid.TryParse(readDevice.Id, out id);
+                                Guid.TryParse(read.Id, out id);
 
-                                ScannedDeviceInfo sd = new ScannedDeviceInfo
-                                {
-                                    Name = readDevice.DeviceName,
-                                    Mac = readDevice.Mac,
-                                    Id = id,
-                                    BluetoothType = readDevice.BluetoothType,
-                                    Kind = readDevice.Kind
-                                };
-                                sd.ProtocolKind = readDevice.ProtocolId;
-                                sd.ProtocolAddress = readDevice.ProtocolAddress;
+                                ScannedDeviceInfo sd = new ScannedDeviceInfo();
+                                sd.Device.Kind = read.Kind;
+                                sd.Device.Name = read.DeviceName;
+                                
+                                sd.Device.PhyId = (uint)read.BluetoothType;
+                                sd.Device.PhyData["Mac"]= read.Mac;
+                                sd.Device.PhyData["Guid"]= read.Id;
+
+                                sd.Device.ProtocolId = read.ProtocolId;
+                                sd.Device.ProtocolData["Address"] = read.ProtocolAddress.ToString();
 
                                 devicesInfo.Add(sd);
                                 break;
@@ -93,18 +95,28 @@ namespace SiamCross.Droid.Services
             {
                 using (StreamWriter file = File.CreateText(backingFile))
                 {
-                    foreach (ScannedDeviceInfo device in devices)
+                    foreach (ScannedDeviceInfo sd in devices)
                     {
-                        SavedDevice savedDevice = new SavedDevice
-                        {
-                            Id = device.Id.ToString(),
-                            Mac = device.Mac,
-                            DeviceName = device.Name,
-                            BluetoothType = device.BluetoothType,
-                            Kind = device.Kind,
-                            ProtocolId = device.ProtocolKind,
-                            ProtocolAddress = device.ProtocolAddress
-                        };
+                        SavedDevice savedDevice = new SavedDevice();
+
+                        if(sd.Device.PhyData.TryGetValue("Guid", out object guidObj))
+                            if (guidObj is string str)
+                                savedDevice.Id = str;
+
+                        if (sd.Device.PhyData.TryGetValue("Mac", out object macObj))
+                            if (macObj is string str)
+                                savedDevice.Mac = str;
+                        
+                        savedDevice.DeviceName = sd.Device.Name;
+                        savedDevice.BluetoothType = (BluetoothType)sd.Device.PhyId;
+                        savedDevice.Kind = (ushort)sd.Device.Kind;
+                        savedDevice.ProtocolId = sd.Device.ProtocolId;
+
+                        if (sd.Device.ProtocolData.TryGetValue("Address", out object protAddressObj))
+                            if (protAddressObj is string str)
+                                if (byte.TryParse(str, out byte addr))
+                                    savedDevice.ProtocolAddress = addr;
+
                         string jsonString = JsonConvert.SerializeObject(
                             savedDevice, _settings);
 
