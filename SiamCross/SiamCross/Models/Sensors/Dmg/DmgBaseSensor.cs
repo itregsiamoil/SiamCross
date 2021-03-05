@@ -59,26 +59,26 @@ namespace SiamCross.Models.Sensors.Dmg
             : base(conn, sensorData)
         {
             _Common = new MemStruct(0x00);
-            DeviceType = _Common.Add(new MemVarUInt16(nameof(DeviceType)) );
-            MemoryModelVersion = _Common.Add(new MemVarUInt16(nameof(MemoryModelVersion)) );
-            DeviceNameAddress = _Common.Add(new MemVarUInt32(nameof(DeviceNameAddress)) );
-            DeviceNameSize = _Common.Add(new MemVarUInt16(nameof(DeviceNameSize)) );
-            DeviceNumber = _Common.Add(new MemVarUInt32(nameof(DeviceNumber)) );
+            DeviceType = _Common.Add(new MemVarUInt16(nameof(DeviceType)));
+            MemoryModelVersion = _Common.Add(new MemVarUInt16(nameof(MemoryModelVersion)));
+            DeviceNameAddress = _Common.Add(new MemVarUInt32(nameof(DeviceNameAddress)));
+            DeviceNameSize = _Common.Add(new MemVarUInt16(nameof(DeviceNameSize)));
+            DeviceNumber = _Common.Add(new MemVarUInt32(nameof(DeviceNumber)));
 
             _Info = new MemStruct(0x1000);
-            ProgrammVersionAddress = _Info.Add(new MemVarUInt32(nameof(ProgrammVersionAddress)) );
-            ProgrammVersionSize = _Info.Add(new MemVarUInt16(nameof(ProgrammVersionSize)) );
+            ProgrammVersionAddress = _Info.Add(new MemVarUInt32(nameof(ProgrammVersionAddress)));
+            ProgrammVersionSize = _Info.Add(new MemVarUInt16(nameof(ProgrammVersionSize)));
 
             _SurvayParam = new MemStruct(0x8000);
-            Rod = _SurvayParam.Add(new MemVarUInt16(nameof(Rod)) );
-            DynPeriod = _SurvayParam.Add(new MemVarUInt32(nameof(DynPeriod)) );
-            ApertNumber = _SurvayParam.Add(new MemVarUInt16(nameof(ApertNumber)) );
-            Imtravel = _SurvayParam.Add(new MemVarUInt16(nameof(Imtravel)) );
-            ModelPump = _SurvayParam.Add(new MemVarUInt16(nameof(ModelPump)) );
+            Rod = _SurvayParam.Add(new MemVarUInt16(nameof(Rod)));
+            DynPeriod = _SurvayParam.Add(new MemVarUInt32(nameof(DynPeriod)));
+            ApertNumber = _SurvayParam.Add(new MemVarUInt16(nameof(ApertNumber)));
+            Imtravel = _SurvayParam.Add(new MemVarUInt16(nameof(Imtravel)));
+            ModelPump = _SurvayParam.Add(new MemVarUInt16(nameof(ModelPump)));
 
             _NonvolatileParam = new MemStruct(0x8100);
-            Nkp = _NonvolatileParam.Add(new MemVarFloat(nameof(Nkp)) );
-            Rkp = _NonvolatileParam.Add(new MemVarFloat(nameof(Rkp)) );
+            Nkp = _NonvolatileParam.Add(new MemVarFloat(nameof(Nkp)));
+            Rkp = _NonvolatileParam.Add(new MemVarFloat(nameof(Rkp)));
             ZeroG = _NonvolatileParam.Add(new MemVarFloat(nameof(ZeroG)));
             PositiveG = _NonvolatileParam.Add(new MemVarFloat(nameof(PositiveG)));
             EnableInterval = _NonvolatileParam.Add(new MemVarUInt32(nameof(EnableInterval)));

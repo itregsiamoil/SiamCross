@@ -69,7 +69,7 @@ namespace SiamCross.Droid.Models
                 sd.Device.PhyId = (uint)BluetoothType.Classic;
                 sd.Device.PhyData.Add("Name", device.Name);
                 sd.Device.PhyData.Add("Mac", device.Address);
-                sd.Device.PhyData.Add("Guid", guid.ToString() );
+                sd.Device.PhyData.Add("Guid", guid.ToString());
                 sd.Device.PhyData.Add("BondState", device.BondState.ToString());
 
                 if (IsFilterEnabled)

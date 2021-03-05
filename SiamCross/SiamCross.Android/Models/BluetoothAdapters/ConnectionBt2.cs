@@ -187,7 +187,7 @@ namespace SiamCross.Droid.Models
                 if (_socket == null)
                 {
                     System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile.Connect "
-                        + _scannedDeviceInfo.Name + ": _socket was null!");
+                        + _scannedDeviceInfo.PhyName + ": _socket was null!");
                     return false;
                 }
                 if (!_socket.IsConnected)
@@ -205,19 +205,19 @@ namespace SiamCross.Droid.Models
             catch (Java.IO.IOException e)
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile.Connect "
-                    + _scannedDeviceInfo.Name + ": " + e.Message);
+                    + _scannedDeviceInfo.PhyName + ": " + e.Message);
                 await Disconnect();
             }
             catch (ObjectDisposedException e)
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile.Connect "
-                    + _scannedDeviceInfo.Name + ": " + e.Message);
+                    + _scannedDeviceInfo.PhyName + ": " + e.Message);
                 await Disconnect();
             }
             catch (Java.Lang.NullPointerException e)
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile.Connect "
-                    + _scannedDeviceInfo.Name + ": " + e.Message);
+                    + _scannedDeviceInfo.PhyName + ": " + e.Message);
                 await Disconnect();
             }
             return false;

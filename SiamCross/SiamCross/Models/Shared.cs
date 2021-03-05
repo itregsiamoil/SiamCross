@@ -58,9 +58,9 @@ namespace SiamCross.Models
     }
 
     [Serializable]
-    public class DeviceInfo: ICloneable
+    public class DeviceInfo : ICloneable
     {
-        public uint   Kind;
+        public uint Kind;
         public string Number;
         public string Name;
         public uint ProtocolId;
@@ -72,7 +72,7 @@ namespace SiamCross.Models
 
         [XmlArray("ProtocolData")]
         [XmlArrayItem("Item")]
-        public KeyVal[] ProtocolDataArray 
+        public KeyVal[] ProtocolDataArray
         {
             get => KeyVal.ToArray(ProtocolData);
             set => KeyVal.FromArray(value, ProtocolData);
@@ -84,12 +84,12 @@ namespace SiamCross.Models
             get => KeyVal.ToArray(PhyData);
             set => KeyVal.FromArray(value, PhyData);
         }
-        
+
         public DeviceInfo()
         {
             Kind = 0;
             Number = string.Empty;
-            Name= string.Empty;
+            Name = string.Empty;
             ProtocolId = 0;
             PhyId = 0;
             ProtocolData = new Dictionary<string, object>();
@@ -103,13 +103,13 @@ namespace SiamCross.Models
             ret.Number = Number;
             ret.ProtocolId = ProtocolId;
             ret.PhyId = PhyId;
-            ret.PhyDataArray = this.PhyDataArray;
-            ret.ProtocolDataArray = this.ProtocolDataArray;
+            ret.PhyDataArray = PhyDataArray;
+            ret.ProtocolDataArray = ProtocolDataArray;
             return ret;
         }
     }
     [Serializable]
-    public struct GeoLocation
+    public class GeoLocation
     {
         public double Latitude;
         public double Longitude;
@@ -117,38 +117,40 @@ namespace SiamCross.Models
         public double Accuracy;
     }
     [Serializable]
-    public struct PositionInfo
+    public class PositionInfo
     {
         public int Id;
         public string Field;
         public string Well;
         public string Bush;
         public string Shop;
-        public GeoLocation Location;
+        public GeoLocation Location = new GeoLocation();
     }
     [Serializable]
-    public struct MeasurementInfo
+    public class MeasurementInfo
     {
         public uint Kind;
         public DateTime BeginTimestamp;
         public DateTime EndTimestamp;
-        public Dictionary<string, object> Data;
+        public string Comment;
+        public Dictionary<string, object> Data = new Dictionary<string, object>();
+
     }
     [Serializable]
-    public struct DistributionInfo
+    public class DistributionInfo
     {
         public DateTime Timestamp;
         public string Destination;
     }
     [Serializable]
-    public struct SurveyInfo
+    public class SurveyInfo
     {
-        public int Id;
-        public PositionInfo Position;
-        public DeviceInfo Device;
-        public MeasurementInfo Measure;
-        public DistributionInfo MailDistribution;
-        public DistributionInfo FileDistribution;
-        public string Comment;
+        public int Id = 0;
+        public PositionInfo Position = new PositionInfo();
+        public DeviceInfo Device = new DeviceInfo();
+        public MeasurementInfo Measure = new MeasurementInfo();
+        public DistributionInfo MailDistribution = new DistributionInfo();
+        public DistributionInfo FileDistribution = new DistributionInfo();
+
     }
 }

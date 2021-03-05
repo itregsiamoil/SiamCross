@@ -2,11 +2,9 @@
 using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Models.Scanners;
-using SiamCross.Services;
 using SiamCross.Services.Logging;
 using SiamCross.ViewModels;
 using System;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -50,9 +48,9 @@ namespace SiamCross.Views.MenuItems.SearchPanel
                 {
                     if (e.SelectedItem is ScannedDeviceInfo dev)
                     {
-                        SensorService.Instance.AddSensor(dev);
-                        App.NavigationPage.Navigation.PopToRootAsync();
-                        App.MenuIsPresented = false;
+                        //await SensorService.Instance.AddSensorAsync(dev);
+                        //await App.NavigationPage.Navigation.PopToRootAsync();
+                        //App.MenuIsPresented = false;
                     }
                 }
             }

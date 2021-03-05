@@ -97,7 +97,7 @@ namespace SiamCross.Droid.Models
         {
             if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
                 if (BLE.DataStatus.Complete != result.DataStatus)
-                return;
+                    return;
 
             ScannedDeviceInfo sd = new ScannedDeviceInfo();
             var guid = MacToGuid.Convert(result.Device.Address);

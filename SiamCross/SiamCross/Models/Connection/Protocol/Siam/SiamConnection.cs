@@ -2,7 +2,6 @@
 using SiamCross.Models.Connection.Phy;
 using SiamCross.Models.Tools;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;

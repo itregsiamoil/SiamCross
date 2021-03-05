@@ -265,9 +265,9 @@ namespace SiamCross.Models.Sensors
         {
             ClearStatus();
             cancelToken.ThrowIfCancellationRequested();
-            if(     !await mConnection.Disconnect() 
-                ||  !await mConnection.Connect()
-                ||  !await PostConnectInit(cancelToken))
+            if (!await mConnection.Disconnect()
+                || !await mConnection.Connect()
+                || !await PostConnectInit(cancelToken))
             {
                 return false;
             }

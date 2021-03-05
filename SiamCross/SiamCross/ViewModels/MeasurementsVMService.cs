@@ -135,7 +135,6 @@ namespace SiamCross.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "GetMeasurementFromDb method" + "\n");
-                throw;
             }
         }
         public bool OnBackButton()
@@ -335,8 +334,11 @@ namespace SiamCross.ViewModels
                     {
                         if (m is MeasurementView mv)
                         {
-                            DataRepository.Instance.RemoveDdin2Measurement(mv.Id);
-                            DataRepository.Instance.RemoveDuMeasurement(mv.Id);
+                            switch (mv.MeasureKind)
+                            {
+                                case 0: DataRepository.Instance.RemoveDdin2Measurement(mv.Id); break;
+                                case 1: DataRepository.Instance.RemoveDuMeasurement(mv.Id); break;
+                            }
                             Measurements.Remove(mv);
                         }
                     }
@@ -400,9 +402,8 @@ namespace SiamCross.ViewModels
             {
                 if (meas[i] is MeasurementView mv)
                 {
-                    string file_name = null;
-                    XDocument doc = null;
-
+                    XDocument doc;
+                    string file_name;
                     switch (mv.MeasureKind) // MeasurementIndex.Instance.
                     {
                         default: break;

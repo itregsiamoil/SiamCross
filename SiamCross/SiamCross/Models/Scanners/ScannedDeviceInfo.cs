@@ -9,6 +9,11 @@ namespace SiamCross.Models.Scanners
         private static readonly IReadOnlyList<string> _proto_list = ProtocolIndex.Instance.GetNames().ToList();
         public IReadOnlyList<string> ProtocolNames => _proto_list;
         public DeviceInfo Device { get; set; }
+
+        public ScannedDeviceInfo(DeviceInfo dvcInfo)
+        {
+            Device = dvcInfo;
+        }
         public ScannedDeviceInfo()
         {
             Device = new DeviceInfo
@@ -21,7 +26,7 @@ namespace SiamCross.Models.Scanners
         {
             get
             {
-                if (ProtocolIndex.Instance.TryGetName(Device.ProtocolId , out string name))
+                if (ProtocolIndex.Instance.TryGetName(Device.ProtocolId, out string name))
                     return name;
                 return string.Empty;
             }
@@ -48,7 +53,10 @@ namespace SiamCross.Models.Scanners
             return Mac == other.Mac;
         }
 
-        public string Name
+        public string Title => $"{Device.Name} №{Device.Number}";
+
+
+        public string PhyName
         {
             get
             {
@@ -61,7 +69,7 @@ namespace SiamCross.Models.Scanners
 
         public string ProtocolAddress
         {
-            get 
+            get
             {
                 string address = string.Empty;
                 if (Device.ProtocolData.TryGetValue("Address", out object pi_addr))

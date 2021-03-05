@@ -187,7 +187,7 @@ namespace SiamCross.Droid.Models
                 if (_device == null)
                 {
                     Debug.WriteLine("BluetoothLeAdapterMobile.Connect"
-                        + _deviceInfo.Name + "ошибка соединения BLE - _device был null");
+                        + _deviceInfo.PhyName + "ошибка соединения BLE - _device был null");
                     //ConnectFailed();
                     await Disconnect();
                     //_isFirstConnectionTry = false;
@@ -203,7 +203,7 @@ namespace SiamCross.Droid.Models
             catch (Exception e)
             {
                 Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения по Guid "
-                    + _deviceInfo.Name + ": " + e.Message);
+                    + _deviceInfo.PhyName + ": " + e.Message);
                 await Disconnect();
                 //_isFirstConnectionTry = false;
             }
@@ -268,7 +268,7 @@ namespace SiamCross.Droid.Models
             catch (Exception e)
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect "
-                    + _deviceInfo.Name + " ошибка инициализации: " + e.Message);
+                    + _deviceInfo.PhyName + " ошибка инициализации: " + e.Message);
                 await Disconnect();
                 //_isFirstConnectionTry = false;
             }

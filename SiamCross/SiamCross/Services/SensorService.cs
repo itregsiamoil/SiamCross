@@ -3,11 +3,13 @@ using SiamCross.Models;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
 using SiamCross.Models.Sensors.Du.Measurement;
+using SiamCross.Models.Tools;
 using SiamCross.Views;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -18,38 +20,27 @@ namespace SiamCross.Services
         private static readonly Lazy<SensorService> _instance =
             new Lazy<SensorService>(() => new SensorService());
 
-        private static readonly object _lock = new object();
+        private readonly SemaphoreSlim _lockAsync = new SemaphoreSlim(1);
 
-        public int SensorsCount
-        {
-            get
-            {
-                lock (_lock)
-                {
-                    return _sensors.Count;
-                }
-            }
-        }
-
+        public int SensorsCount => _sensors.Count;
+        private readonly List<ISensor> _sensors = new List<ISensor>();
         private SensorService()
         {
-            _sensors = new List<ISensor>();
         }
 
         public static SensorService Instance => _instance.Value;
 
-        private readonly List<ISensor> _sensors;
 
         public IEnumerable<ISensor> Sensors => _sensors;
 
         public event Action<ISensor> SensorAdded;
         public event Action<ISensor> SensorDeleting;
 
-        public void Initinalize()
+        public async Task InitinalizeAsync()
         {
-            lock (_lock)
+            using (await _lockAsync.UseWaitAsync())
             {
-                IEnumerable<ScannedDeviceInfo> savedSensors = SensorsSaverService.Instance.ReadSavedSensors();
+                IEnumerable<ScannedDeviceInfo> savedSensors = await SensorsSaverService.Instance.ReadSavedSensorsAsync();
 
                 _sensors.Clear();
 
@@ -66,9 +57,9 @@ namespace SiamCross.Services
             }
         }
 
-        public void AddSensor(ScannedDeviceInfo deviceInfo)
+        public async Task AddSensorAsync(ScannedDeviceInfo deviceInfo)
         {
-            lock (_lock)
+            using (await _lockAsync.UseWaitAsync())
             {
                 foreach (ISensor sensor in Sensors)
                 {
@@ -94,10 +85,10 @@ namespace SiamCross.Services
                 Debug.WriteLine("AddSensor");
             }
         }
-        public void DeleteSensor(Guid id)
+        public async Task DeleteSensorAsync(Guid id)
         {
             ISensor sensor;
-            lock (_lock)
+            using (await _lockAsync.UseWaitAsync())
             {
                 sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
                 if (sensor == null)

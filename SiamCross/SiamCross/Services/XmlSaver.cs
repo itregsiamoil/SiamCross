@@ -35,6 +35,7 @@ namespace SiamCross.Services
             System.Xml.XmlWriter writer = System.Xml.XmlWriter.Create(fs, settings);
             xml.Save(writer);
             //MediaScannerConnection.ScanFile(Android.App.Application.Context, new String[] { fullPath }, null, null);
+            await writer?.FlushAsync();
             await fs.FlushAsync();
             writer?.Dispose();
             fs.Dispose();

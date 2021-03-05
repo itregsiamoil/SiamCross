@@ -13,7 +13,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
         private DmgBaseMeasureReport _report;
         private readonly DmgBaseSensor mSensor;
         private readonly IProtocolConnection _Connection;
-        Stopwatch _PerfCounter = new Stopwatch();
+        private readonly Stopwatch _PerfCounter = new Stopwatch();
 
         public SensorData SensorData => mSensor.SensorData;
         public ISensor Sensor => mSensor;

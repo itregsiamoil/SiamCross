@@ -89,13 +89,13 @@ namespace SiamCross.Models.Connection.Protocol
     {
         UInt32 Address { get; set; }
         string Name { get; set; }
-        IMemValue Data{ get; }
+        IMemValue Data { get; }
         UInt32 Size { get; }
     }
 
-    public class MemVar: IMemItem , IMemValue
+    public class MemVar : IMemItem, IMemValue
     {
-        readonly protected IMemValue _Data;
+        protected readonly IMemValue _Data;
         private UInt32 _Address;
         private string _Name;
 
@@ -104,14 +104,13 @@ namespace SiamCross.Models.Connection.Protocol
         public IMemValue Data => _Data;
         public UInt32 Size => _Data.Size;
 
-        public MemVar(IMemValue data, string name = null, UInt32 addr=0)
+        public MemVar(IMemValue data, string name = null, UInt32 addr = 0)
         {
             _Data = data;
             _Name = name;
             _Address = addr;
         }
 
-        
         public byte[] ToArray()
         {
             return _Data.ToArray();
@@ -127,9 +126,9 @@ namespace SiamCross.Models.Connection.Protocol
     }
 
 
-    public class MemVarUInt32: MemVar
+    public class MemVarUInt32 : MemVar
     {
-        public MemVarUInt32(string name = null, UInt32 addr = 0, MemValueUInt32 data=null)
+        public MemVarUInt32(string name = null, UInt32 addr = 0, MemValueUInt32 data = null)
             : base((null == data) ? new MemValueUInt32() : data, name, addr)
         { }
         public UInt32 Value
@@ -197,7 +196,7 @@ namespace SiamCross.Models.Connection.Protocol
             set
             {
                 if (_Data is MemValueFloat dd)
-                    dd.Value=value;
+                    dd.Value = value;
             }
             get
             {
@@ -236,7 +235,7 @@ namespace SiamCross.Models.Connection.Protocol
 
         public T Add<T>(T item)
         {
-            if(item is MemVar mv)
+            if (item is MemVar mv)
             {
                 _Store.Add(mv);
                 mv.Address = _Address + _Size;

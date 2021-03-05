@@ -4,7 +4,7 @@
              xmlns:xct="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
              xmlns:dm="clr-namespace:SiamCross.Models.Scanners"
              xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
-             x:Class="SiamCross.Views.MenuItems.SearchPanel.ScanningTab"
+             x:Class="SiamCross.Views.MenuItems.SearchPanel.ScanningView"
              x:Name="ScanningTabView"
              Title="{Binding Scanner.Phy.Name , Mode=OneWay}">
     <ContentPage.Content>
@@ -97,7 +97,7 @@
                                                     -->
                                             <Label.FormattedText>
                                                 <FormattedString >
-                                                    <Span Text="{Binding Name}" FontAttributes="Bold" FontSize="Medium" />
+                                                    <Span Text="{Binding PhyName}" FontAttributes="Bold" FontSize="Medium" />
                                                     <Span Text="&#10;" />
                                                     <Span Text="{Binding Description}" FontAttributes="Italic" FontSize="Micro" />
                                                 </FormattedString>

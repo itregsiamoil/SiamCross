@@ -7,7 +7,7 @@ namespace SiamCross.ViewModels
 {
     public class MeasurementView : INotifyPropertyChanged
     {
-        private SurveyInfo _Survey;
+        private readonly SurveyInfo _Survey = new SurveyInfo();
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void ChangeNotify([CallerMemberName] string prop = "")
@@ -22,7 +22,7 @@ namespace SiamCross.ViewModels
         public string Field
         { get => _Survey.Position.Field; set { _Survey.Position.Field = value; ChangeNotify(); } }
         public string Comments
-        { get => _Survey.Comment; set { _Survey.Comment = value; ChangeNotify(); } }
+        { get => _Survey.Measure.Comment; set { _Survey.Measure.Comment = value; ChangeNotify(); } }
         public DateTime Date
         { get => _Survey.Measure.EndTimestamp; set { _Survey.Measure.EndTimestamp = value; ChangeNotify(); } }
         public uint MeasureKind

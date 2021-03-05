@@ -126,7 +126,6 @@
     <Compile Include="Services\StdDialog\FileOpenDialog.cs" />
     <Compile Include="Services\NLogLoggerAndroid.cs" />
     <Compile Include="Services\NLogManagerAndroid.cs" />
-    <Compile Include="Services\SaveDevicesServiceAndroid.cs" />
     <Compile Include="Services\SettingsSaverAndroid.cs" />
     <Compile Include="Services\Toast\Toast.cs" />
     <Compile Include="Setup.cs" />

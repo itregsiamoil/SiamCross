@@ -67,7 +67,7 @@ namespace SiamCross.ViewModels
             SelectItemCommand = new Command(SelectItem);
             StartStopScanCommand = new Command(StartStopScan);
 
-            DeviceType = _Common.Add(new MemVarUInt16(nameof(DeviceType)) );
+            DeviceType = _Common.Add(new MemVarUInt16(nameof(DeviceType)));
             MemoryModelVersion = _Common.Add(new MemVarUInt16(nameof(MemoryModelVersion)));
             DeviceNameAddress = _Common.Add(new MemVarUInt32(nameof(DeviceNameAddress)));
             DeviceNameSize = _Common.Add(new MemVarUInt16(nameof(DeviceNameSize)));
@@ -114,7 +114,7 @@ namespace SiamCross.ViewModels
                 if (!devices.TryGetValue(action, out ScannedDeviceInfo siam_device))
                     return;
 
-                SensorService.Instance.AddSensor(siam_device);
+                await SensorService.Instance.AddSensorAsync(siam_device);
                 await App.NavigationPage.Navigation.PopToRootAsync();
                 App.MenuIsPresented = false;
             }
@@ -132,7 +132,6 @@ namespace SiamCross.ViewModels
             {
                 _Detecting = true;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Detecting)));
-                
                 IPhyInterface phy_interface = null;
                 switch ((BluetoothType)scanDevice.Device.PhyId)
                 {
@@ -170,7 +169,7 @@ namespace SiamCross.ViewModels
                             //else
                             //    firmware = Encoding.UTF8.GetString(membuf, 0, len);
 
-                            string addressStr="";
+                            string addressStr = "";
                             if (scanDevice.Device.ProtocolData.TryGetValue("Address", out object addressObj))
                                 if (addressObj is string str)
                                     addressStr = str;
@@ -179,7 +178,7 @@ namespace SiamCross.ViewModels
                             siam_device.Device = (Models.DeviceInfo)scanDevice.Device.Clone();
                             siam_device.Device.Kind = DeviceType.Value;
                             siam_device.Device.Number = DeviceNumber.Value.ToString();
-                            siam_device.Device.Name = $"{dvc_name} №{DeviceNumber.Value}";
+                            siam_device.Device.Name = $"{dvc_name}";
                             siam_device.Device.Name = siam_device.Device.Name.Replace("\0", string.Empty);
                             siam_device.Device.Name = siam_device.Device.Name.Replace("\r", string.Empty);
                             siam_device.Device.Name = siam_device.Device.Name.Replace("\n", string.Empty);

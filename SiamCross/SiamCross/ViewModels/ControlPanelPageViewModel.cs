@@ -11,6 +11,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -30,8 +31,7 @@ namespace SiamCross.ViewModels
 
             SensorService.Instance.SensorAdded += SensorAdded;
             SensorService.Instance.SensorDeleting += SensorDeleted;
-
-            SensorService.Instance.Initinalize();
+            Task.Run(() => SensorService.Instance.InitinalizeAsync());
         }
         public ICommand RecentMeasurementCommand => new Command<Guid>(RecentMeasurement);
         public ICommand DeleteSensorCommand => new Command<Guid>(DeleteSensorHandler);
@@ -57,7 +57,7 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
-        private void DeleteSensorHandler(Guid id)
+        private async void DeleteSensorHandler(Guid id)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace SiamCross.ViewModels
                 {
                     if (!sensor.IsMeasurement)
                     {
-                        SensorService.Instance.DeleteSensor(id);
+                        await SensorService.Instance.DeleteSensorAsync(id);
                     }
                 }
             }
@@ -113,8 +113,12 @@ namespace SiamCross.ViewModels
 
             switch (sensor.ScannedDeviceInfo.Device.Kind)
             {
-                case 0x1301: case 0x1302: case 0x1303:
-                case 0x1401: case 0x1402: case 0x1403:
+                case 0x1301:
+                case 0x1302:
+                case 0x1303:
+                case 0x1401:
+                case 0x1402:
+                case 0x1403:
                     if (!CanOpenPage(typeof(Ddin2MeasurementPage)))
                         return;
                     App.NavigationPage.Navigation.PushAsync(
