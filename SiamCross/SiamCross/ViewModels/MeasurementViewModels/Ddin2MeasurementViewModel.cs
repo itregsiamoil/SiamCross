@@ -124,7 +124,7 @@ namespace SiamCross.ViewModels
                 Well = _measurement.Well;
                 Bush = _measurement.Bush;
                 Shop = _measurement.Shop;
-                BufferPressure = _measurement.BufferPressure;
+                _BufferPressure = _measurement.BufferPressure;
                 Comments = _measurement.Comment;
                 Rod = _measurement.Rod.ToString("N3", CultureInfo.InvariantCulture);
                 ApertNumber = _measurement.ApertNumber.ToString();
@@ -164,7 +164,7 @@ namespace SiamCross.ViewModels
                     Well,
                     Bush,
                     Shop,
-                    BufferPressure,
+                    _BufferPressure,
                     Comments,
                     _sensorData.Battery,
                     _sensorData.Temperature,

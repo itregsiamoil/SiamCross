@@ -46,7 +46,7 @@ namespace SiamCross.ViewModels
             set => _measurement.Shop = value;
         }
         public string Date { get; }
-        public string BufferPressure
+        public double BufferPressure
         {
             get => _measurement.BufferPressure;
             set => _measurement.BufferPressure = value;

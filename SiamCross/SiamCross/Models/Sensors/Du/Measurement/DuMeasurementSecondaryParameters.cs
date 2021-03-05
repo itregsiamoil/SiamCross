@@ -18,7 +18,7 @@
             string name, string measurementType,
             string field, string well,
             string bush, string shop,
-            string bufferPressure, string comment,
+            double bufferPressure, string comment,
             string battery,
             string temperature,
             string mainfirmware,

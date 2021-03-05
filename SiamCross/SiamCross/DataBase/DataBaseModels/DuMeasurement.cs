@@ -30,7 +30,7 @@ namespace SiamCross.DataBase.DataBaseModels
         { get => MeasData.SecondaryParameters.Bush; set => MeasData.SecondaryParameters.Bush = value; }
         public string Shop
         { get => MeasData.SecondaryParameters.Shop; set => MeasData.SecondaryParameters.Shop = value; }
-        public string BufferPressure
+        public double BufferPressure
         { get => MeasData.SecondaryParameters.BufferPressure; set => MeasData.SecondaryParameters.BufferPressure = value; }
         public string Comment
         { get => MeasData.SecondaryParameters.Comment; set => MeasData.SecondaryParameters.Comment = value; }

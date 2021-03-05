@@ -29,7 +29,7 @@ namespace SiamCross.DataBase.DataBaseModels
         public string Well { get; set; }
         public string Bush { get; set; }
         public string Shop { get; set; }
-        public string BufferPressure { get; set; }
+        public double BufferPressure { get; set; }
         public string Comment { get; set; }
         public string Name { get; set; }
         public string BatteryVolt { get; set; }

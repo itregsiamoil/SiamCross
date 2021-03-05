@@ -16,7 +16,7 @@
             string well = "",
             string bush = "",
             string shop = "",
-            string bufferPressure = "",
+            double bufferPressure = 0.0,
             string comment = "",
             string battery = "0.0",
             string temperature = "0.0",
@@ -44,7 +44,7 @@
         public string Well { get; set; }
         public string Bush { get; set; }
         public string Shop { get; set; }
-        public string BufferPressure { get; set; }
+        public double BufferPressure { get; set; }
         public string Comment { get; set; }
         public string BatteryVolt { get; set; }
         public string Temperature { get; set; }

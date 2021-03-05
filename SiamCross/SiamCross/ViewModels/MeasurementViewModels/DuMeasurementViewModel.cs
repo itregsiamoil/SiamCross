@@ -178,7 +178,7 @@ namespace SiamCross.ViewModels
                     Well,
                     Bush,
                     Shop,
-                    BufferPressure,
+                    _BufferPressure,
                     Comments,
                     _sensorData.Battery,
                     _sensorData.Temperature,
@@ -222,7 +222,7 @@ namespace SiamCross.ViewModels
                 Well = _measurement.Well;
                 Bush = _measurement.Bush;
                 Shop = _measurement.Shop;
-                BufferPressure = _measurement.BufferPressure;
+                _BufferPressure = _measurement.BufferPressure;
                 _PumpDepth = _measurement.PumpDepth;
                 Comments = _measurement.Comment;
                 SelectedResearchType = _measurement.MeasurementType;

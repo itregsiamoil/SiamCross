@@ -15,7 +15,7 @@ using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
-    public abstract class BaseSensorMeasurementViewModel<T> : INotifyPropertyChanged, IHaveSecondaryParameters
+    public abstract class BaseSensorMeasurementViewModel<T> : INotifyPropertyChanged
         where T : class
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
@@ -28,7 +28,7 @@ namespace SiamCross.ViewModels
         public string Bush { get; set; }
         public string Shop { get; set; }
 
-        private double _BufferPressure = 0.0;
+        protected double _BufferPressure = 0.0;
         public string BufferPressure
         {
             get => _BufferPressure.ToString();
@@ -137,7 +137,7 @@ namespace SiamCross.ViewModels
             Well = Constants.DefaultWell.ToString();
             Bush = Constants.DefaultBush.ToString();
             Shop = Constants.DefaultShop.ToString();
-            BufferPressure = Constants.DefaultBufferPressure.ToString();
+            _BufferPressure = Constants.DefaultBufferPressure;
             Comments = Resource.NoСomment;
 
             InitMeasurementStartParameters();

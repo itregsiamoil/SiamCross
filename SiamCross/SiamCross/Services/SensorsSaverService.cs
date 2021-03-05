@@ -14,8 +14,14 @@ namespace SiamCross.Services
 {
     public sealed class SensorsSaverService
     {
+#if DEBUG
         private static readonly string SavedDevicesFilePath = Path.Combine(
             EnvironmentService.Instance.GetDir_Downloads(), "SavedDevices.xml");
+#else
+        private static readonly string SavedDevicesFilePath = Path.Combine(
+            System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "SavedDevices.xml");
+#endif
+
         private readonly SemaphoreSlim _lock = new SemaphoreSlim(1);
 
         private static readonly Lazy<SensorsSaverService> _instance =

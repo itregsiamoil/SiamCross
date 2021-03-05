@@ -29,21 +29,7 @@ namespace SiamCross.ViewModels
         public string Shop => _measurement.Shop;
         public string Date => _measurement.DateTime.ToString();
 
-        public string BufferPressure
-        {
-            get
-            {
-                string group_sep = CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator;
-                string ret = _measurement.BufferPressure.Replace(group_sep, string.Empty);
-                string cur_sep = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-                string inv_sep = CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator;
-                ret = ret.Replace(cur_sep, inv_sep);
-
-                if (double.TryParse(ret, NumberStyles.Any, CultureInfo.InvariantCulture, out double val))
-                    return val.ToString("F3", CultureInfo.InvariantCulture);
-                return "";
-            }
-        }
+        public string BufferPressure => _measurement.BufferPressure.ToString("F3", CultureInfo.InvariantCulture);
         public string PumpDepth => _measurement.PumpDepth.ToString("F3", CultureInfo.InvariantCulture);
         public string Comments => _measurement.Comment;
         public string DeviceName => _measurement.Name;

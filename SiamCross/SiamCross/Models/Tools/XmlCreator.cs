@@ -11,7 +11,7 @@ namespace SiamCross.Models.Tools
     {
         private static string ExtractName(string str)
         {
-            int pos = str.IndexOf('_', 0);
+            int pos = str.IndexOf('№', 0);
             if (0 < pos)
                 return str.Substring(0, pos);
 
@@ -29,7 +29,7 @@ namespace SiamCross.Models.Tools
 
         private static string ExtractNumber(string str)
         {
-            int pos = str.IndexOf('_', 0);
+            int pos = str.IndexOf('№', 0);
             if (0 < pos)
                 return str.Substring(pos + 1, str.Length - pos - 1);
 
@@ -124,9 +124,11 @@ namespace SiamCross.Models.Tools
                                         new XAttribute("MESDEVICEWELLCLUSTERID", dbDdinModel.Bush.ToString()),
                                         new XAttribute("MESDEVICEWELLID", dbDdinModel.Well.ToString()),
                                         new XAttribute("MESDEVICEDEPARTMENTID", dbDdinModel.Shop.ToString()),
-                                        new XAttribute("MESDEVICEBUFFERPRESSUREID", dbDdinModel.BufferPressure.ToString())),
 
                                     new XElement("Value_List",
+                                        new XElement("Value",
+                                            new XAttribute("MSVDOUBLE", dbDdinModel.BufferPressure.ToString("F3")),
+                                            new XAttribute("MSVDICTIONARYID", "bufferpressure"))),
 
                                         new XElement("Value",
                                             new XAttribute("MSVDICTIONARYID", "dynmovement"),
@@ -262,7 +264,7 @@ namespace SiamCross.Models.Tools
                 new XElement("Device_List",
                     new XElement("Device",
 
-                        new XAttribute("DEVTID", "siddos01"),
+                        new XAttribute("DEVTID", "sudos01"),
                         new XAttribute("DSTID", name),
                         new XAttribute("DEVSERIALNUMBER", number),
 
@@ -276,10 +278,12 @@ namespace SiamCross.Models.Tools
                                         new XAttribute("MESDEVICEWELLCLUSTERID", dbDuModel.Bush.ToString()),
                                         new XAttribute("MESDEVICEWELLID", dbDuModel.Well.ToString()),
                                         new XAttribute("MESDEVICEDEPARTMENTID", dbDuModel.Shop.ToString()),
-                                        new XAttribute("MESDEVICEBUFFERPRESSUREID", dbDuModel.BufferPressure.ToString())),
 
                                     new XElement("Value_List",
 
+                                    new XElement("Value",
+                                            new XAttribute("MSVDOUBLE", dbDuModel.BufferPressure.ToString("F3")),
+                                            new XAttribute("MSVDICTIONARYID", "bufferpressure"))),
                                     new XElement("Value",
                                             new XAttribute("MSVDOUBLE", dbDuModel.PumpDepth.ToString("N3")),
                                             new XAttribute("MSVDICTIONARYID", "pumpdepth")),
