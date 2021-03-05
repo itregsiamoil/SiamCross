@@ -61,27 +61,11 @@ namespace SiamCross.ViewModels
             }
         }
 
-        private double _PumpDepth = 0.0;
+        private string _PumpDepth = "0.0";
         public string PumpDepth
         {
-            get => _PumpDepth.ToString();
-            set
-            {
-                string group_sep = CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator;
-                string ret = value.Replace(group_sep, string.Empty);
-                string cur_sep = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-                string inv_sep = CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator;
-                ret = ret.Replace(cur_sep, inv_sep);
-
-                if (double.TryParse(ret, NumberStyles.Any, CultureInfo.InvariantCulture, out double val))
-                {
-                    if (_PumpDepth != val)
-                    {
-                        _PumpDepth = val;
-                        NotifyPropertyChanged(nameof(PumpDepth));
-                    }
-                }
-            }
+            get => _PumpDepth;
+            set => _PumpDepth = value;
         }
         public ICommand StartMeasurementCommand { get; set; }
         public ICommand ValveTestCommand { get; set; }
@@ -171,6 +155,11 @@ namespace SiamCross.ViewModels
                     _soundSpeed = "";
                 }
 
+                if (!TryToDouble(_BufferPressure, out double buff_pressure))
+                    buff_pressure = 0.0;
+                if (!TryToDouble(_PumpDepth, out double pumpDepth))
+                    pumpDepth = 0.0;
+
                 DuMeasurementSecondaryParameters secondaryParameters = new DuMeasurementSecondaryParameters(
                     _sensorData.Name,
                     SelectedResearchType,
@@ -178,7 +167,7 @@ namespace SiamCross.ViewModels
                     Well,
                     Bush,
                     Shop,
-                    _BufferPressure,
+                    buff_pressure,
                     Comments,
                     _sensorData.Battery,
                     _sensorData.Temperature,
@@ -189,7 +178,7 @@ namespace SiamCross.ViewModels
                     _soundSpeed);
 
                 DuMeasurementStartParameters measurementParams = new DuMeasurementStartParameters(Amplification,
-                    Inlet, Depth6000, secondaryParameters, _PumpDepth);
+                    Inlet, Depth6000, secondaryParameters, pumpDepth);
 
                 await App.Navigation.PopAsync();
                 await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);
@@ -208,7 +197,7 @@ namespace SiamCross.ViewModels
             SelectedSoundSpeedCorrection = "";
             SelectedResearchType = "";
             SensorName = _sensorData.Name;
-            _PumpDepth = 0.0;
+            _PumpDepth = "0.0";
 
             IEnumerable<DuMeasurement> mes
                 = DataRepository.Instance.GetDuMeasurements().
@@ -222,8 +211,8 @@ namespace SiamCross.ViewModels
                 Well = _measurement.Well;
                 Bush = _measurement.Bush;
                 Shop = _measurement.Shop;
-                _BufferPressure = _measurement.BufferPressure;
-                _PumpDepth = _measurement.PumpDepth;
+                _BufferPressure = _measurement.BufferPressure.ToString();
+                _PumpDepth = _measurement.PumpDepth.ToString();
                 Comments = _measurement.Comment;
                 SelectedResearchType = _measurement.MeasurementType;
                 SelectedSoundSpeedCorrection = _measurement.SoundSpeedCorrection;
@@ -239,7 +228,8 @@ namespace SiamCross.ViewModels
             base.ValidateParameterForEmtpiness(Well, Resource.WellChoiceText);
             base.ValidateParameterForEmtpiness(Bush, Resource.BushChoiceText);
             base.ValidateParameterForEmtpiness(Shop, Resource.ShopChoiceText);
-            base.ValidateParameterForEmtpiness(BufferPressure, Resource.BufferPressureChoiceText);
+            base.ValidateParameterForDouble(BufferPressure, Resource.BufferPressureChoiceText);
+            base.ValidateParameterForDouble(_PumpDepth, Resource.BufferPressureChoiceText);
             base.ValidateParameterForEmtpiness(Comments, Resource.CommentsChoiceText);
             base.ValidateParameterForEmtpiness(SelectedResearchType, Resource.SelectedReasearchTypeChoice);
 

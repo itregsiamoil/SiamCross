@@ -124,7 +124,7 @@ namespace SiamCross.ViewModels
                 Well = _measurement.Well;
                 Bush = _measurement.Bush;
                 Shop = _measurement.Shop;
-                _BufferPressure = _measurement.BufferPressure;
+                _BufferPressure = _measurement.BufferPressure.ToString();
                 Comments = _measurement.Comment;
                 Rod = _measurement.Rod.ToString("N3", CultureInfo.InvariantCulture);
                 ApertNumber = _measurement.ApertNumber.ToString();
@@ -157,6 +157,9 @@ namespace SiamCross.ViewModels
                     return;
                 }
 
+                if (!TryToDouble(_BufferPressure, out double buff_pressure))
+                    buff_pressure = 0.0;
+
                 MeasurementSecondaryParameters secondaryParameters = new MeasurementSecondaryParameters(
                     _sensorData.Name,
                     Resource.Dynamogram,
@@ -164,7 +167,7 @@ namespace SiamCross.ViewModels
                     Well,
                     Bush,
                     Shop,
-                    _BufferPressure,
+                    buff_pressure,
                     Comments,
                     _sensorData.Battery,
                     _sensorData.Temperature,
@@ -250,7 +253,7 @@ namespace SiamCross.ViewModels
             ValidateParameterForEmtpiness(Well, Resource.WellChoiceText);
             ValidateParameterForEmtpiness(Bush, Resource.BushChoiceText);
             ValidateParameterForEmtpiness(Shop, Resource.ShopChoiceText);
-            ValidateParameterForEmtpiness(BufferPressure, Resource.BufferPressureChoiceText);
+            ValidateParameterForDouble(BufferPressure, Resource.BufferPressureChoiceText);
             ValidateParameterForEmtpiness(Comments, Resource.CommentsChoiceText);
             ValidateParameterForEmtpiness(DynPeriod, Resource.DynPeriodChoiceText);
             ValidateParameterForEmtpiness(PumpRate, Resource.DynPeriodChoiceText);

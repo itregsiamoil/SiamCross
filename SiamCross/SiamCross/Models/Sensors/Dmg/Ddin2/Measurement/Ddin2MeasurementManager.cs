@@ -34,7 +34,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
         {
             _PerfCounter.Restart();
             MeasureState error = MeasureState.Ok;
-            DmgMeasureStatus MeasurementStatus = DmgMeasureStatus.Empty;
+            DmgMeasureStatus MeasurementStatus = DmgMeasureStatus.Busy;
             Ddin2MeasurementData report;
             try
             {
@@ -42,8 +42,10 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                 bool started = await Start();
                 if (started)
                 {
-                    while (DmgMeasureStatus.Ready != MeasurementStatus
-                        && _PerfCounter.ElapsedMilliseconds < 300 * 1000)
+                    while (_PerfCounter.ElapsedMilliseconds < 300 * 1000
+                        && DmgMeasureStatus.Ready != MeasurementStatus 
+                        && DmgMeasureStatus.Error != MeasurementStatus
+                        && DmgMeasureStatus.Empty != MeasurementStatus)
                     {
                         _progress = 1;
                         MeasurementStatus = await ExecuteMeasurement();

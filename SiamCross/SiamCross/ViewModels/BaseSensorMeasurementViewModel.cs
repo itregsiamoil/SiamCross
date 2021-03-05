@@ -28,27 +28,11 @@ namespace SiamCross.ViewModels
         public string Bush { get; set; }
         public string Shop { get; set; }
 
-        protected double _BufferPressure = 0.0;
+        protected string _BufferPressure = "0.0";
         public string BufferPressure
         {
-            get => _BufferPressure.ToString();
-            set
-            {
-                string group_sep = CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator;
-                string ret = value.Replace(group_sep, string.Empty);
-                string cur_sep = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-                string inv_sep = CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator;
-                ret = ret.Replace(cur_sep, inv_sep);
-
-                if (double.TryParse(ret, NumberStyles.Any, CultureInfo.InvariantCulture, out double val))
-                {
-                    if (_BufferPressure != val)
-                    {
-                        _BufferPressure = val;
-                        NotifyPropertyChanged(nameof(BufferPressure));
-                    }
-                }
-            }
+            get => _BufferPressure;
+            set => _BufferPressure = value;
         }
 
 
@@ -137,7 +121,7 @@ namespace SiamCross.ViewModels
             Well = Constants.DefaultWell.ToString();
             Bush = Constants.DefaultBush.ToString();
             Shop = Constants.DefaultShop.ToString();
-            _BufferPressure = Constants.DefaultBufferPressure;
+            _BufferPressure = Constants.DefaultBufferPressure.ToString();
             Comments = Resource.NoСomment;
 
             InitMeasurementStartParameters();
@@ -147,6 +131,24 @@ namespace SiamCross.ViewModels
         protected abstract bool ValidateForEmptinessEveryParameter();
         protected abstract bool ValidateMeasurementParameters(T measurementParameters);
 
+        protected bool TryToDouble(string text, out double val)
+        {
+            string group_sep = CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator;
+            string ret = text.Replace(group_sep, string.Empty);
+            string cur_sep = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+            string inv_sep = CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator;
+            ret = ret.Replace(cur_sep, inv_sep);
+            return double.TryParse(ret, NumberStyles.Any, CultureInfo.InvariantCulture, out val);
+        }
+
+
+        protected void ValidateParameterForDouble(string text, string errorMessage)
+        {
+            if (!TryToDouble(text, out _))
+            {
+                _errorList.Add(errorMessage);
+            }
+        }
         protected void ValidateParameterForEmtpiness(string text, string errorMessage)
         {
             if (string.IsNullOrEmpty(text) || text == ".")
