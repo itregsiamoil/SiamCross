@@ -123,12 +123,12 @@ namespace SiamCross.Models.Tools
                                         new XAttribute("MESDEVICEFIELDID", field),
                                         new XAttribute("MESDEVICEWELLCLUSTERID", dbDdinModel.Bush.ToString()),
                                         new XAttribute("MESDEVICEWELLID", dbDdinModel.Well.ToString()),
-                                        new XAttribute("MESDEVICEDEPARTMENTID", dbDdinModel.Shop.ToString()),
+                                        new XAttribute("MESDEVICEDEPARTMENTID", dbDdinModel.Shop.ToString())),
 
                                     new XElement("Value_List",
                                         new XElement("Value",
                                             new XAttribute("MSVDOUBLE", dbDdinModel.BufferPressure.ToString("F3")),
-                                            new XAttribute("MSVDICTIONARYID", "bufferpressure"))),
+                                            new XAttribute("MSVDICTIONARYID", "bufferpressure")),
 
                                         new XElement("Value",
                                             new XAttribute("MSVDICTIONARYID", "dynmovement"),
@@ -277,13 +277,13 @@ namespace SiamCross.Models.Tools
                                         new XAttribute("MESDEVICEFIELDID", field),
                                         new XAttribute("MESDEVICEWELLCLUSTERID", dbDuModel.Bush.ToString()),
                                         new XAttribute("MESDEVICEWELLID", dbDuModel.Well.ToString()),
-                                        new XAttribute("MESDEVICEDEPARTMENTID", dbDuModel.Shop.ToString()),
+                                        new XAttribute("MESDEVICEDEPARTMENTID", dbDuModel.Shop.ToString())),
 
                                     new XElement("Value_List",
 
                                     new XElement("Value",
                                             new XAttribute("MSVDOUBLE", dbDuModel.BufferPressure.ToString("F3")),
-                                            new XAttribute("MSVDICTIONARYID", "bufferpressure"))),
+                                            new XAttribute("MSVDICTIONARYID", "bufferpressure")),
                                     new XElement("Value",
                                             new XAttribute("MSVDOUBLE", dbDuModel.PumpDepth.ToString("N3")),
                                             new XAttribute("MSVDICTIONARYID", "pumpdepth")),
