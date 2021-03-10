@@ -3,6 +3,7 @@ using NLog;
 using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
+using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
@@ -11,7 +12,6 @@ using SiamCross.Services.Toast;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -106,7 +106,7 @@ namespace SiamCross.ViewModels
             set;
         }
 
-        public DuMeasurementViewModel(SensorData sensorData) : base(sensorData)
+        public DuMeasurementViewModel(ScannedDeviceInfo sensorData) : base(sensorData)
         {
             try
             {
@@ -160,8 +160,12 @@ namespace SiamCross.ViewModels
                 if (!TryToDouble(_PumpDepth, out double pumpDepth))
                     pumpDepth = 0.0;
 
+                string battery = (_sensorData.Device.DeviceData["Battery"] is string str_batt) ? str_batt : string.Empty;
+                string temperature = (_sensorData.Device.DeviceData["Temperature"] is string str_temp) ? str_temp : string.Empty;
+                string firmware = (_sensorData.Device.DeviceData["Firmware"] is string str_fw) ? str_fw : string.Empty;
+
                 DuMeasurementSecondaryParameters secondaryParameters = new DuMeasurementSecondaryParameters(
-                    _sensorData.Name,
+                    _sensorData.Title,
                     SelectedResearchType,
                     SelectedField,
                     Well,
@@ -169,10 +173,10 @@ namespace SiamCross.ViewModels
                     Shop,
                     buff_pressure,
                     Comments,
-                    _sensorData.Battery,
-                    _sensorData.Temperature,
-                    _sensorData.Firmware,
-                    _sensorData.RadioFirmware,
+                    battery,
+                    temperature,
+                    firmware,
+                    string.Empty,
                     SelectedResearchType,
                     _selectedSoundSpeedCorrection,
                     _soundSpeed);
@@ -181,7 +185,7 @@ namespace SiamCross.ViewModels
                     Inlet, Depth6000, secondaryParameters, pumpDepth);
 
                 await App.Navigation.PopAsync();
-                await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Id, measurementParams);
+                await SensorService.Instance.StartMeasurementOnSensor(_sensorData.Guid, measurementParams);
             }
             catch (Exception ex)
             {
@@ -196,7 +200,7 @@ namespace SiamCross.ViewModels
             SoundSpeed = "";
             SelectedSoundSpeedCorrection = "";
             SelectedResearchType = "";
-            SensorName = _sensorData.Name;
+            SensorName = _sensorData.Title;
             _PumpDepth = "0.0";
 
             IEnumerable<DuMeasurement> mes

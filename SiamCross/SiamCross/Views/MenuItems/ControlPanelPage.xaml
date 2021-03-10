@@ -62,7 +62,7 @@
                                                         BackgroundColor="LightPink"
                                                         Command="{Binding Path=BindingContext.DeleteSensorCommand, 
                                                             Source={x:Reference ControlPanel}}"
-                                                        CommandParameter="{Binding SensorData.Id}" >
+                                                        CommandParameter="{Binding Id}" >
                                                 </SwipeItem>
                                             </SwipeItems>
                                         </SwipeView.RightItems>
@@ -94,7 +94,7 @@
                                                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                                                     </Grid.ColumnDefinitions>
 
-                                                    <Label Text="{Binding SensorData.Name}" x:Name="NameLabel"
+                                                    <Label Text="{Binding Name}" x:Name="NameLabel"
                                                         Grid.Row="0" Grid.Column="0"
                                                         FontSize="Medium" FontAttributes="Bold" >
                                                     </Label>
@@ -102,7 +102,7 @@
                                                         Grid.Row="1" Grid.Column="0" >
                                                         <Label.FormattedText>
                                                             <FormattedString >
-                                                                <Span Text="{Binding SensorData.Type}" />
+                                                                <Span Text="{Binding Type}" />
                                                                 <Span Text=" " />
                                                                 <Span Text="{Binding Connection.PhyConnection.PhyInterface.Name}" />
                                                                 <Span Text=" " />
@@ -162,11 +162,11 @@
                                                         <Label.FormattedText>
                                                             <FormattedString >
                                                                 <Span Text="&#x2756;"  />
-                                                                <Span Text="{Binding SensorData.Firmware}" FontSize="Micro" />
+                                                                <Span Text="{Binding Firmware}" FontSize="Micro" />
                                                                 <!--Span Text="&#13;&#10;" />
                                                             <Span Text="&#x2756;"  />
                                                             <Span Text=" "  />
-                                                            <Span Text="{Binding SensorData.RadioFirmware}" FontSize="Micro" /-->
+                                                            <Span Text="{Binding RadioFirmware}" FontSize="Micro" /-->
                                                             </FormattedString>
                                                         </Label.FormattedText>
                                                     </Label>
@@ -176,7 +176,7 @@
                                                         <Label.FormattedText>
                                                             <FormattedString >
                                                                 <Span Text="&#x1F50B;" />
-                                                                <Span Text="{Binding SensorData.Battery}" />
+                                                                <Span Text="{Binding Battery}" />
                                                                 <Span Text="{local:Translate VoltsUnits}" />
                                                             </FormattedString>
                                                         </Label.FormattedText>
@@ -187,7 +187,7 @@
                                                         <Label.FormattedText>
                                                             <FormattedString >
                                                                 <Span Text="&#x1F321;" />
-                                                                <Span Text="{Binding SensorData.Temperature}" />
+                                                                <Span Text="{Binding Temperature}" />
                                                                 <Span Text="{local:Translate DegCentigradeUnits}" />
                                                             </FormattedString>
                                                         </Label.FormattedText>
@@ -226,7 +226,7 @@
                                                     HorizontalOptions ="Start" VerticalOptions ="Start">
                                                         <Label.FormattedText Margin="0">
                                                             <FormattedString >
-                                                                <Span Text="{Binding SensorData.Status}" />
+                                                                <Span Text="{Binding Status}" />
                                                             </FormattedString>
                                                         </Label.FormattedText>
                                                     </Label>
@@ -264,7 +264,7 @@
                                                     BackgroundColor="Transparent"
                                                     Command="{Binding Path=BindingContext.GotoMeasurementPageCommand, 
                                                         Source={x:Reference ControlPanel}}"
-                                                    CommandParameter="{Binding SensorData.Id}">
+                                                    CommandParameter="{Binding Id}">
                                                         <Button.Triggers>
                                                             <DataTrigger TargetType="Button" Binding="{Binding IsMeasurement}" Value="true" >
                                                                 <Setter Property="IsVisible" Value="false"  />

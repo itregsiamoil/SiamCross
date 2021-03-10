@@ -1,4 +1,5 @@
 ﻿using SiamCross.Models;
+using SiamCross.Models.Scanners;
 using SiamCross.ViewModels;
 
 using Xamarin.Forms;
@@ -10,7 +11,7 @@ namespace SiamCross.Views
     public partial class DuMeasurementPage : ContentPage
     {
         private readonly DuMeasurementViewModel _vm;
-        public DuMeasurementPage(SensorData sensorData)
+        public DuMeasurementPage(ScannedDeviceInfo sensorData)
         {
             ViewModelWrap<DuMeasurementViewModel> vm = new ViewModelWrap<DuMeasurementViewModel>(sensorData);
             _vm = vm.ViewModel;

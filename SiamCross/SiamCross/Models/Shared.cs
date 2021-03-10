@@ -23,6 +23,23 @@ namespace SiamCross.Models
         }
     }
 
+    public static class DeviceIndex
+    {
+        public static readonly KeyKeyCollection<string> Instance = new KeyKeyCollection<string>();
+        static DeviceIndex()
+        {
+            Instance.Add(0x1101, Resource.LevelGaugeSensorType + " 0x1101");
+            Instance.Add(0x1301, Resource.DynamographSensorType + " 0x1301");
+            Instance.Add(0x1302, Resource.DynamographSensorType + " 0x1302");
+            Instance.Add(0x1303, Resource.DynamographSensorType + " 0x1303");
+            Instance.Add(0x1401, Resource.DynamographSensorType + " 0x1401");
+            Instance.Add(0x1402, Resource.DynamographSensorType + " 0x1402");
+            Instance.Add(0x1403, Resource.DynamographSensorType + " 0x1403");
+        }
+    }
+
+
+
     [Serializable]
     public class KeyVal
     {
@@ -65,10 +82,13 @@ namespace SiamCross.Models
         public string Name;
         public uint ProtocolId;
         [XmlIgnore]
-        public Dictionary<string, object> ProtocolData;
+        public Dictionary<string, object> ProtocolData= new Dictionary<string, object>();
         public uint PhyId;
         [XmlIgnore]
-        public Dictionary<string, object> PhyData;
+        public Dictionary<string, object> PhyData = new Dictionary<string, object>();
+        [XmlIgnore]
+        public Dictionary<string, object> DeviceData = new Dictionary<string, object>();
+
 
         [XmlArray("ProtocolData")]
         [XmlArrayItem("Item")]
@@ -92,8 +112,6 @@ namespace SiamCross.Models
             Name = string.Empty;
             ProtocolId = 0;
             PhyId = 0;
-            ProtocolData = new Dictionary<string, object>();
-            PhyData = new Dictionary<string, object>();
         }
 
         public object Clone()

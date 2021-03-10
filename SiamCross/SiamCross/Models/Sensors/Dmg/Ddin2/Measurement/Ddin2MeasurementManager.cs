@@ -15,7 +15,6 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
         private readonly IProtocolConnection _Connection;
         private readonly Stopwatch _PerfCounter = new Stopwatch();
 
-        public SensorData SensorData => mSensor.SensorData;
         public ISensor Sensor => mSensor;
         public UInt32 ErrorCode { get; private set; }
 
@@ -43,7 +42,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                 if (started)
                 {
                     while (_PerfCounter.ElapsedMilliseconds < 300 * 1000
-                        && DmgMeasureStatus.Ready != MeasurementStatus 
+                        && DmgMeasureStatus.Ready != MeasurementStatus
                         && DmgMeasureStatus.Error != MeasurementStatus
                         && DmgMeasureStatus.Empty != MeasurementStatus)
                     {
@@ -88,7 +87,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
         private void UpdateProgress(float pos, string text)
         {
-            SensorData.Status = Resource.Survey + ": " + text;
+            Sensor.Status = Resource.Survey + ": " + text;
             UpdateProgress(pos);
         }
         private float _progress = 0;

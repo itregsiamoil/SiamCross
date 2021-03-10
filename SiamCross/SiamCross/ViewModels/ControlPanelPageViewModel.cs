@@ -41,7 +41,7 @@ namespace SiamCross.ViewModels
             try
             {
                 ISensor sensor = SensorService.Instance.Sensors
-                    .SingleOrDefault(s => s.SensorData.Id == id);
+                    .SingleOrDefault(s => s.Id == id);
                 if (sensor != null)
                 {
                     if (CanOpenPage(typeof(MeasurementsPage)))
@@ -62,7 +62,7 @@ namespace SiamCross.ViewModels
             try
             {
                 ISensor sensor = SensorService.Instance.Sensors
-                    .SingleOrDefault(s => s.SensorData.Id == id);
+                    .SingleOrDefault(s => s.Id == id);
                 if (sensor != null)
                 {
                     if (!sensor.IsMeasurement)
@@ -102,13 +102,13 @@ namespace SiamCross.ViewModels
         private void GotoMeasurementPage(Guid id)
         {
             ISensor sensor = SensorService.Instance.Sensors
-                .SingleOrDefault(s => s.SensorData.Id == id);
+                .SingleOrDefault(s => s.Id == id);
             if (sensor == null)
                 return;
-            SensorData sensorData = sensor.SensorData as SensorData;
+            var sensorData = sensor.ScannedDeviceInfo;
             if (sensorData == null)
                 return;
-            if (!CanOpenMeasurement(sensorData))
+            if (!CanOpenMeasurement(sensor))
                 return;
 
             switch (sensor.ScannedDeviceInfo.Device.Kind)
@@ -134,11 +134,11 @@ namespace SiamCross.ViewModels
             }
 
         }
-        private bool CanOpenMeasurement(SensorData sensorData)
+        private bool CanOpenMeasurement(ISensor sensorata)
         {
             bool result = true;
             ISensor sensor = SensorService.Instance.Sensors.SingleOrDefault(
-                                s => s.SensorData.Id == sensorData.Id);
+                                s => s.Id == sensorata.Id);
             if (sensor != null)
             {
                 if (sensor.IsAlive)

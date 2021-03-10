@@ -2,6 +2,7 @@
 using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
+using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
 using SiamCross.ViewModels;
 
@@ -19,12 +20,12 @@ namespace SiamCross.Views
             }
         }
 
-        public ViewModelWrap(SensorData sensorData)
+        public ViewModelWrap(ScannedDeviceInfo sensorData)
         {
             using (ILifetimeScope scope = AppContainer.Container.BeginLifetimeScope())
             {
                 ViewModel = AppContainer.Container.Resolve<T>(
-                    new TypedParameter(typeof(SensorData), sensorData));
+                    new TypedParameter(typeof(ScannedDeviceInfo), sensorData));
             }
         }
 

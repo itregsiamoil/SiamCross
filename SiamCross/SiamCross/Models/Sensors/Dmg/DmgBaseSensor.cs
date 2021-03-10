@@ -1,4 +1,5 @@
 ﻿using SiamCross.Models.Connection.Protocol;
+using SiamCross.Models.Scanners;
 using System;
 using System.Diagnostics;
 using System.Text;
@@ -55,8 +56,8 @@ namespace SiamCross.Models.Sensors.Dmg
         public readonly MemVarUInt16 TimeDiscr;
 
 
-        public DmgBaseSensor(IProtocolConnection conn, SensorData sensorData)
-            : base(conn, sensorData)
+        public DmgBaseSensor(IProtocolConnection conn, ScannedDeviceInfo dev_info)
+            : base(conn, dev_info)
         {
             _Common = new MemStruct(0x00);
             DeviceType = _Common.Add(new MemVarUInt16(nameof(DeviceType)));
@@ -131,7 +132,10 @@ namespace SiamCross.Models.Sensors.Dmg
                 UInt16 fw_size = ProgrammVersionSize.Value;
                 byte[] membuf = new byte[fw_size];
                 ret = await Connection.ReadMemAsync(fw_address, fw_size, membuf);
-                SensorData.Firmware = Encoding.UTF8.GetString(membuf, 0, fw_size);
+                Firmware = Encoding.UTF8.GetString(membuf, 0, fw_size);
+                
+                ChangeNotify(nameof(Firmware));
+                ScannedDeviceInfo.Device.DeviceData["Firmware"] = Firmware;
                 return true;
             }
             catch (ProtocolException)
@@ -155,12 +159,19 @@ namespace SiamCross.Models.Sensors.Dmg
                 cancelToken.ThrowIfCancellationRequested();
                 RespResult ret = await Connection.ReadAsync(_CurrentParam);
 
-                SensorData.Battery = (BatteryVoltage.Value / 10.0).ToString();
-                SensorData.Temperature = (Тemperature.Value / 10.0).ToString();
+                Battery = (BatteryVoltage.Value / 10.0).ToString();
+                Temperature = (Тemperature.Value / 10.0).ToString();
                 //_reportBuilder.Load = LoadChanel.Value.ToString();
                 //_reportBuilder.Acceleration = AccelerationChanel.Value.ToString();
                 //SensorData.Status = _reportBuilder.GetReport();
-                SensorData.Status = GetLoadSting() + "\n" + GetAccelerationSting();
+                Status = GetLoadSting() + "\n" + GetAccelerationSting();
+
+                ChangeNotify(nameof(Battery));
+                ChangeNotify(nameof(Temperature));
+                ChangeNotify(nameof(Status));
+                ScannedDeviceInfo.Device.DeviceData["Battery"] = Battery;
+                ScannedDeviceInfo.Device.DeviceData["Temperature"] = Temperature;
+                ScannedDeviceInfo.Device.DeviceData["Status"] = Status;
                 return true;
             }
             catch (ProtocolException)
@@ -205,7 +216,7 @@ namespace SiamCross.Models.Sensors.Dmg
         public override async Task<bool> PostConnectInit(CancellationToken cancelToken)
         {
             await Connection.Connect();
-            SensorData.Status = Resource.ConnectedStatus;
+            Status = Resource.ConnectedStatus;
             return (await UpdateFirmware(cancelToken) && await KillosParametersQuery(cancelToken));
         }
 

@@ -41,16 +41,14 @@ namespace SiamCross.Services
                 case 0x1402:
                 case 0x1403:
                     {
-                        SensorData sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Title, Resource.DynamographSensorType, "");
-                        Ddin2Sensor sensor = new Ddin2Sensor(connection, sens_data);
+                        Ddin2Sensor sensor = new Ddin2Sensor(connection, deviceInfo);
                         sensor.ScannedDeviceInfo = deviceInfo;
                         return sensor;
                     }
                 case 0x1101:
                     {
                         IProtocolConnection connection_old = new SiamProtocolConnection(conn);
-                        SensorData sens_data = new SensorData(Guid.NewGuid(), deviceInfo.Title, Resource.LevelGaugeSensorType, "");
-                        DuSensor sensor = new DuSensor(connection_old, sens_data);
+                        DuSensor sensor = new DuSensor(connection_old, deviceInfo);
                         sensor.ScannedDeviceInfo = deviceInfo;
                         return sensor;
                     }

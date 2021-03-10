@@ -1,4 +1,5 @@
 ﻿using SiamCross.Models.Connection.Protocol;
+using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
 using SiamCross.Services;
 using System;
@@ -10,8 +11,8 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
     {
         private Ddin2MeasurementManager _measurementManager;
 
-        public Ddin2Sensor(IProtocolConnection conn, SensorData sensorData)
-            : base(conn, sensorData)
+        public Ddin2Sensor(IProtocolConnection conn, ScannedDeviceInfo dev_info)
+            : base(conn, dev_info)
         {
         }
         public override async Task StartMeasurement(object measurementParameters)
@@ -19,7 +20,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
             object report = null;
             try
             {
-                SensorData.Status = Resource.Survey;
+                Status = Resource.Survey;
                 IsMeasurement = true;
                 Ddin2MeasurementStartParameters startParams = (Ddin2MeasurementStartParameters)measurementParameters;
                 _measurementManager = new Ddin2MeasurementManager(this, startParams);
@@ -34,11 +35,11 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
                 if (null != report)
                 {
                     SensorService.MeasurementHandler(report);
-                    SensorData.Status = Resource.Survey + ": complete";
+                    Status = Resource.Survey + ": complete";
                 }
                 else
                 {
-                    SensorData.Status = Resource.Survey + ": " + Resource.Error;
+                    Status = Resource.Survey + ": " + Resource.Error;
                 }
                 await Task.Delay(2000);
                 IsMeasurement = false;

@@ -63,7 +63,7 @@ namespace SiamCross.Services
             {
                 foreach (ISensor sensor in Sensors)
                 {
-                    if (sensor.SensorData.Name == deviceInfo.Device.Name)
+                    if (sensor.Name == deviceInfo.Device.Name)
                     {
                         return;
                     }
@@ -90,7 +90,7 @@ namespace SiamCross.Services
             ISensor sensor;
             using (await _lockAsync.UseWaitAsync())
             {
-                sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
+                sensor = _sensors.FirstOrDefault(s => s.Id == id);
                 if (sensor == null)
                     return;
                 SensorDeleting(sensor);
@@ -102,7 +102,7 @@ namespace SiamCross.Services
         }
         public async Task StartMeasurementOnSensor(Guid id, object parameters)
         {
-            ISensor sensor = _sensors.FirstOrDefault(s => s.SensorData.Id == id);
+            ISensor sensor = _sensors.FirstOrDefault(s => s.Id == id);
             if (sensor != null)
             {
                 await sensor.StartMeasurement(parameters);

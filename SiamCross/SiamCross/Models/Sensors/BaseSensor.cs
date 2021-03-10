@@ -6,6 +6,7 @@ using SiamCross.Models.Tools;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,11 +18,17 @@ namespace SiamCross.Models.Sensors
         #endregion
         #region Constructors & Destructors
         //TaskScheduler _uiScheduler;
-        protected BaseSensor(IProtocolConnection conn, SensorData sensorData)
+        protected BaseSensor(IProtocolConnection conn, ScannedDeviceInfo dev_info)
         {
+            ScannedDeviceInfo = dev_info;
+            Firmware = "";
+            Battery = "";
+            Temperature = "";
+            RadioFirmware = "";
+            Status = "";
+
             mConnection = conn;
             IsAlive = false;
-            SensorData = sensorData;
             IsMeasurement = false;
             // Получение планировщика UI для потока, который создал форму:
             //_uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
@@ -29,7 +36,7 @@ namespace SiamCross.Models.Sensors
             {
                 if (null == a || "State" != a.PropertyName)
                     return;
-                OnPropChange(new PropertyChangedEventArgs("ConnStateStr"));
+                ChangeNotify(nameof(ConnStateStr));
             };
             //mConnection.PropertyChanged += PropertyChanged;
         }
@@ -47,9 +54,9 @@ namespace SiamCross.Models.Sensors
         public int MeasureProgressP => (int)(mMeasureProgress * 100);
 
         private float mMeasureProgress = 0;
-        public void OnPropChange(PropertyChangedEventArgs arg)
+        public void ChangeNotify([CallerMemberName] string prop = "")
         {
-            PropertyChanged?.Invoke(this, arg);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
         public float MeasureProgress
         {
@@ -57,8 +64,8 @@ namespace SiamCross.Models.Sensors
             set
             {
                 mMeasureProgress = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("MeasureProgress"));
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("MeasureProgressP"));
+                ChangeNotify(nameof(MeasureProgress));
+                ChangeNotify(nameof(MeasureProgressP));
             }
         }
         public IProtocolConnection Connection => mConnection;
@@ -70,7 +77,7 @@ namespace SiamCross.Models.Sensors
             protected set
             {
                 mIsAlive = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsAlive"));
+                ChangeNotify();
             }
         }
 
@@ -81,10 +88,9 @@ namespace SiamCross.Models.Sensors
             protected set
             {
                 mIsMeasurement = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsMeasurement"));
+                ChangeNotify();
             }
         }
-        public SensorData SensorData { get; }
         public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
         public abstract Task<bool> QuickReport(CancellationToken cancellationToken);
         //public virtual Task<bool> UpdateRssi(CancellationToken cancellationToken);
@@ -115,14 +121,14 @@ namespace SiamCross.Models.Sensors
                         //mLiveTaskCompleated = new TaskCompletionSource<bool>();
                         _cancellToken = ct;
                         _activated = true;
-                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
+                        ChangeNotify(nameof(Activate));
                         await ExecuteAsync(_cancellToken.Token);
                     }, ct.Token);
                     await _liveTask;
                 }
                 catch (OperationCanceledException)
                 {
-                    SensorData.Status = "close connection";
+                    Status = "close connection";
                     Debug.WriteLine($"Cancel liveupdate");
                 }
                 catch (Exception ex)
@@ -149,7 +155,7 @@ namespace SiamCross.Models.Sensors
                     //_cancellToken?.Dispose();
                     _cancellToken = null;
                     _activated = false;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
+                    ChangeNotify(nameof(Activate));
                     ClearStatus();
                     //mLiveTaskCompleated.TrySetResult(true);
                 }//finally
@@ -175,7 +181,7 @@ namespace SiamCross.Models.Sensors
                     if (_activated)
                     {
                         _activated = false;
-                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Activate"));
+                        ChangeNotify(nameof(Activate));
                         ClearStatus();
                     }
                 }
@@ -211,6 +217,34 @@ namespace SiamCross.Models.Sensors
                 }
             }
         }
+
+        public string Name => ScannedDeviceInfo.Device.Name;
+
+        public string Type
+        {
+            get
+            {
+                if (DeviceIndex.Instance.TryGetName(ScannedDeviceInfo.Device.Kind, out string str))
+                    return str;
+                return string.Empty;
+            } 
+        }
+
+
+        public string Firmware { get; protected set; }
+
+        public string Battery { get; protected set; }
+
+        public string Temperature { get; protected set; }
+
+        public string RadioFirmware { get; protected set; }
+
+
+        string _status;
+        public string Status { get=> _status; set { _status = value;  ChangeNotify(); } }
+
+        public Guid Id => ScannedDeviceInfo.Guid;
+
         private async Task ExecuteAsync(CancellationToken cancelToken)
         {
             const int rssi_update_period = 2;
@@ -251,12 +285,12 @@ namespace SiamCross.Models.Sensors
                 catch (IOTimeoutException)
                 {
                     IsAlive = false;
-                    SensorData.Status = "IOEx_Timeout";
+                    Status = "IOEx_Timeout";
                 }
                 catch (IOErrPkgException)
                 {
                     IsAlive = false;
-                    SensorData.Status = "IOEx_ErrorResponse";
+                    Status = "IOEx_ErrorResponse";
                 }
             }// while (true)
         }// ExecuteAsync(CancellationToken cancelToken)
@@ -271,7 +305,7 @@ namespace SiamCross.Models.Sensors
             {
                 return false;
             }
-            SensorData.Status = Resource.ConnectedStatus;
+            Status = Resource.ConnectedStatus;
             return true;
         }
 
@@ -282,11 +316,11 @@ namespace SiamCross.Models.Sensors
         protected void ClearStatus()
         {
             //IsAlive = false;
-            SensorData.Temperature = "";
-            SensorData.Battery = "";
-            SensorData.Firmware = "";
-            SensorData.RadioFirmware = "";
-            SensorData.Status = "";
+            Temperature = "";
+            Battery = "";
+            Firmware = "";
+            RadioFirmware = "";
+            Status = "";
             IsAlive = false;
         }
 

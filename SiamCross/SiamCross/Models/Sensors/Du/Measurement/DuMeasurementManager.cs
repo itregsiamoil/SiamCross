@@ -19,7 +19,6 @@ namespace SiamCross.Models.Sensors.Du.Measurement
         private readonly CommandGenerator _commandGenerator;
         private readonly ISensor mSensor;
 
-        public SensorData SensorData => mSensor.SensorData;
         public ISensor Sensor => mSensor;
 
         public DuMeasurementStatus MeasurementStatus { get; set; }
@@ -320,7 +319,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
         }
         private void UpdateProgress(float pos, string text)
         {
-            SensorData.Status = Resource.Survey + ": " + text;
+            Sensor.Status = Resource.Survey + ": " + text;
             UpdateProgress(pos);
         }
         private float _progress = 0;

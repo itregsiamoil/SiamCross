@@ -89,6 +89,19 @@ namespace SiamCross.Models.Scanners
                 return string.Empty;
             }
         }
+
+
+        public Guid Guid
+        {
+            get
+            {
+                if (Device.PhyData.TryGetValue("Guid", out object objVal))
+                    if (objVal is string str)
+                        if (Guid.TryParse(str, out Guid guid))
+                            return guid;
+                return new Guid();
+            }
+        }
         public string Id
         {
             get

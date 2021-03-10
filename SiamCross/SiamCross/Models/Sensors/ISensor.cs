@@ -21,7 +21,18 @@ namespace SiamCross.Models
         float MeasureProgress { get; set; }
         Task<bool> QuickReport(CancellationToken cancelToken);
         Task StartMeasurement(object measurementParameters);
-        SensorData SensorData { get; }
         ScannedDeviceInfo ScannedDeviceInfo { get; }
+
+
+        string Name { get; }
+        string Type { get; }
+        string Firmware { get; }
+        string Battery { get; }
+        string Temperature { get; }
+        string RadioFirmware { get; }
+        string Status { get; set; }
+        Guid Id { get; }
+
+
     }
 }

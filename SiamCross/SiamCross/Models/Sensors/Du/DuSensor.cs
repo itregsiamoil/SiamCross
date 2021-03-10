@@ -1,4 +1,5 @@
 ﻿using SiamCross.Models.Connection.Protocol;
+using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
@@ -14,8 +15,8 @@ namespace SiamCross.Models.Sensors.Du
         private DuMeasurementManager _measurementManager;
         private readonly DuQuickReportBuilder _reportBuilder = new DuQuickReportBuilder();
 
-        public DuSensor(IProtocolConnection conn, SensorData sensorData)
-            : base(conn, sensorData)
+        public DuSensor(IProtocolConnection conn, ScannedDeviceInfo deviceInfo)
+            : base(conn, deviceInfo)
         {
         }
         public async Task<bool> UpdateFirmware(CancellationToken cancelToken)
@@ -49,7 +50,7 @@ namespace SiamCross.Models.Sensors.Du
             dataValue = GetStringPayload(resp);
             if (null == dataValue || 0 == dataValue.Length)
                 return false;
-            SensorData.Firmware = dataValue;
+            Firmware = dataValue;
             return true;
         }
         public override async Task<bool> QuickReport(CancellationToken cancelToken)
@@ -61,7 +62,7 @@ namespace SiamCross.Models.Sensors.Du
             byte[] resp = await Connection.Exchange(req);
             if (14 > resp.Length)
                 return false;
-            SensorData.Battery = (((float)BitConverter.ToInt16(resp, 12)) / 10).ToString();
+            Battery = (((float)BitConverter.ToInt16(resp, 12)) / 10).ToString();
 
             cancelToken.ThrowIfCancellationRequested();
             req = DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure];
@@ -83,7 +84,7 @@ namespace SiamCross.Models.Sensors.Du
             */
             //await mConnection.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Voltage]);
             //await mConnection.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure]);
-            SensorData.Status = _reportBuilder.GetReport();
+            Status = _reportBuilder.GetReport();
             return true;
 
         }
@@ -145,7 +146,7 @@ namespace SiamCross.Models.Sensors.Du
             object report = null;
             try
             {
-                SensorData.Status = Resource.Survey;
+                Status = Resource.Survey;
                 IsMeasurement = true;
                 DuMeasurementStartParameters startParams = (DuMeasurementStartParameters)measurementParameters;
                 _measurementManager = new DuMeasurementManager(this, startParams);
@@ -161,11 +162,11 @@ namespace SiamCross.Models.Sensors.Du
                 if (null != report)
                 {
                     SensorService.MeasurementHandler(report);
-                    SensorData.Status = Resource.Survey + ": complete";
+                    Status = Resource.Survey + ": complete";
                 }
                 else
                 {
-                    SensorData.Status = Resource.Survey + ": " + Resource.Error;
+                    Status = Resource.Survey + ": " + Resource.Error;
                 }
                 await Task.Delay(2000);
                 IsMeasurement = false;

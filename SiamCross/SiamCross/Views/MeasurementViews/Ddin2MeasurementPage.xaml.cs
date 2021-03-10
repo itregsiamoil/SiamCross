@@ -1,4 +1,5 @@
 ﻿using SiamCross.Models;
+using SiamCross.Models.Scanners;
 using SiamCross.ViewModels;
 using System;
 using System.Diagnostics;
@@ -14,7 +15,7 @@ namespace SiamCross.Views
     {
         private readonly Stopwatch _stopwatch;
 
-        public Ddin2MeasurementPage(SensorData sensorData)
+        public Ddin2MeasurementPage(ScannedDeviceInfo sensorData)
         {
             ViewModelWrap<Ddin2MeasurementViewModel> vm = new ViewModelWrap<Ddin2MeasurementViewModel>(sensorData);
             BindingContext = vm.ViewModel;

@@ -2,6 +2,7 @@
 using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Models;
+using SiamCross.Models.Scanners;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using SiamCross.Views;
@@ -19,7 +20,7 @@ namespace SiamCross.ViewModels
         where T : class
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
-        protected SensorData _sensorData;
+        protected ScannedDeviceInfo _sensorData;
         protected List<string> _errorList;
 
         public ObservableCollection<string> Fields { get; set; }
@@ -43,7 +44,7 @@ namespace SiamCross.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public BaseSensorMeasurementViewModel(SensorData sensorData)
+        public BaseSensorMeasurementViewModel(ScannedDeviceInfo sensorData)
         {
             _sensorData = sensorData;
             _errorList = new List<string>();
