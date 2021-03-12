@@ -1,6 +1,6 @@
 ﻿using SiamCross.DataBase.DataBaseModels;
-using SiamCross.Models;
 using SiamCross.Models.Scanners;
+using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
 using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Models.Tools;

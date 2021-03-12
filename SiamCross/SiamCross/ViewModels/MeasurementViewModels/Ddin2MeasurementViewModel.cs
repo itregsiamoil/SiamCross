@@ -27,8 +27,8 @@ namespace SiamCross.ViewModels
 
         public string Rod { get; set; }
 
-        private string mStrDynPeriod = Constants.DefaultDynPeriod.ToString("N3", CultureInfo.InvariantCulture);
-        private string mStrPumpRate = (60.0f / Constants.DefaultDynPeriod).ToString("N3", CultureInfo.InvariantCulture);
+        private string mStrDynPeriod = Constants.DefaultDynPeriod.ToString("N3");
+        private string mStrPumpRate = (60.0f / Constants.DefaultDynPeriod).ToString("N3");
         public float GetPeriodFloatVal(string str)
         {
             float tmp_value = 999999;
@@ -58,7 +58,7 @@ namespace SiamCross.ViewModels
                     return;
                 float tmp_value = GetPeriodFloatVal(value);
                 mStrDynPeriod = value;
-                mStrPumpRate = tmp_value.ToString("N3", CultureInfo.InvariantCulture);
+                mStrPumpRate = tmp_value.ToString("N3");
                 NotifyPropertyChanged("PumpRate");
             }
         }
@@ -71,7 +71,7 @@ namespace SiamCross.ViewModels
                     return;
                 float tmp_value = GetPeriodFloatVal(value);
                 mStrPumpRate = value;
-                mStrDynPeriod = tmp_value.ToString("N3", CultureInfo.InvariantCulture);
+                mStrDynPeriod = tmp_value.ToString("N3");
                 NotifyPropertyChanged("DynPeriod");
             }
         }
@@ -127,10 +127,10 @@ namespace SiamCross.ViewModels
                 Shop = _measurement.Shop;
                 _BufferPressure = _measurement.BufferPressure.ToString();
                 Comments = _measurement.Comment;
-                Rod = _measurement.Rod.ToString("N3", CultureInfo.InvariantCulture);
+                Rod = _measurement.Rod.ToString("N3");
                 ApertNumber = _measurement.ApertNumber.ToString();
-                Imtravel = _measurement.TravelLength.ToString("N3", CultureInfo.InvariantCulture);
-                DynPeriod = (60.0f / _measurement.SwingCount).ToString("N3", CultureInfo.InvariantCulture);
+                Imtravel = _measurement.TravelLength.ToString("N3");
+                DynPeriod = (60.0f / _measurement.SwingCount).ToString("N3");
                 switch (_measurement.ModelPump)
                 {
                     case 0:
@@ -180,10 +180,10 @@ namespace SiamCross.ViewModels
                     string.Empty);
 
                 Ddin2MeasurementStartParameters measurementParams = new Ddin2MeasurementStartParameters(
-                    float.Parse(Rod, CultureInfo.InvariantCulture),
-                    float.Parse(DynPeriod, CultureInfo.InvariantCulture),
+                    float.Parse(Rod),
+                    float.Parse(DynPeriod),
                     int.Parse(ApertNumber),
-                    float.Parse(Imtravel, CultureInfo.InvariantCulture),
+                    float.Parse(Imtravel),
                     GetModelPump(),
                     secondaryParameters);
 

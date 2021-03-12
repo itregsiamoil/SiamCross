@@ -42,7 +42,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private static readonly int _Retry = 3;
         private static readonly int _ResponseRetry = Pkg.MAX_PKG_SIZE;
 
-        private static readonly int mAdditioonTime = 600;
+        
         private static readonly int mMinSpeed = 9600; ///bit per second
         private static readonly float multipler = 1000.0f / (mMinSpeed / (8 + 1 + 1));
         private static int GetTime(int bytes)
@@ -56,7 +56,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         }
         private static int GetRequestTimeout(int len)
         {
-            return GetTime(len) + mAdditioonTime;
+            return GetTime(len);
         }
         private static int GetResponseTimeout(byte[] rq)
         {
@@ -95,7 +95,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         }
         private async Task<bool> RequestAsync()
         {
-            int write_timeout = GetRequestTimeout(_EndTxBuf);
+            int write_timeout = GetRequestTimeout(_EndTxBuf) + mAdditioonTime;
             CancellationTokenSource ctSrc = new CancellationTokenSource(write_timeout);
             bool sent_ok = false;
             for (int i = 0; i < _Retry && !sent_ok; ++i)

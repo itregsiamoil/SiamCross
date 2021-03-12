@@ -29,7 +29,6 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         public const int mResponseRetry = 256;
 #endif
 
-        private const int mAdditioonTime = 600;
         private const int mMinSpeed = 9600; ///bit per second
         private const float multipler = 1000.0f / (mMinSpeed / (8 + 1 + 1));
         private static int GetTime(int bytes)
@@ -43,7 +42,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         }
         public static int GetRequestTimeout(int len)
         {
-            return GetTime(len) + mAdditioonTime;
+            return GetTime(len);
         }
         public static int GetResponseTimeout(byte[] rq)
         {
@@ -87,7 +86,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
 
         private async Task<bool> RequestAsync(byte[] data, int len)
         {
-            int write_timeout = GetRequestTimeout(len);
+            int write_timeout = GetRequestTimeout(len) + mAdditioonTime;
             CancellationTokenSource ctSrc = new CancellationTokenSource(write_timeout);
             bool sent_ok = false;
             for (int i = 0; i < mRequestRetry && !sent_ok; ++i)

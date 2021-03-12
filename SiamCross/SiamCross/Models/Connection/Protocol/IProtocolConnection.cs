@@ -21,6 +21,7 @@ namespace SiamCross.Models.Connection.Protocol
 
         Task<byte[]> Exchange(byte[] req);
 
+        int AdditioonalTimeout { get; set; }
         ushort MaxReqLen { get; set; }
         byte Address { get; set; }
 

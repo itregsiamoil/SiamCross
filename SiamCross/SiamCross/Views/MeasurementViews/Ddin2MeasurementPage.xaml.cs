@@ -38,7 +38,7 @@ namespace SiamCross.Views
                     () =>
                     {
                         double dyn_period = _stopwatch.Elapsed.TotalSeconds;
-                        txtDynPeriod.Text = dyn_period.ToString("N3", CultureInfo.InvariantCulture);
+                        txtDynPeriod.Text = dyn_period.ToString("N3");
 
                         if (!_stopwatch.IsRunning)
                             return false;

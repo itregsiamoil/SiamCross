@@ -1,7 +1,8 @@
 ﻿using Autofac;
 using NLog;
 using SiamCross.AppObjects;
-using SiamCross.Models;
+using SiamCross.Models.Sensors;
+using SiamCross.Models.Sensors.Dua;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
@@ -36,6 +37,8 @@ namespace SiamCross.ViewModels
         public ICommand RecentMeasurementCommand => new Command<Guid>(RecentMeasurement);
         public ICommand DeleteSensorCommand => new Command<Guid>(DeleteSensorHandler);
         public ICommand GotoMeasurementPageCommand => new Command<Guid>(GotoMeasurementPage);
+        //public ICommand EnableQickInfoAllCommand => new Command(EnableQickInfoAll);
+        //public ICommand DisableQickInfoAllCommand => new Command(DisableQickInfoAll);
         private void RecentMeasurement(Guid id)
         {
             try
@@ -98,7 +101,6 @@ namespace SiamCross.ViewModels
                 Sensor.Add(sensor);
             }
         }
-
         private void GotoMeasurementPage(Guid id)
         {
             ISensor sensor = SensorService.Instance.Sensors
@@ -130,6 +132,12 @@ namespace SiamCross.ViewModels
                     App.NavigationPage.Navigation.PushAsync(
                         new DuMeasurementPage(sensorData));
                     break;
+                case 0x1201:
+                    if (!CanOpenPage(typeof(SensorDetailsView)))
+                        return;
+                    App.NavigationPage.Navigation.PushAsync(
+                        new SensorDetailsView(sensorData));
+                    break;
                 default: break;
             }
 
@@ -150,6 +158,16 @@ namespace SiamCross.ViewModels
             }
 
             return result;
+        }
+        public void EnableQickInfoAll()
+        {
+            foreach (var sensor in Sensor)
+                sensor.IsEnableQickInfo = true;
+        }
+        public void DisableQickInfoAll()
+        {
+            foreach (var sensor in Sensor)
+                sensor.IsEnableQickInfo = false;
         }
         private bool CanOpenModalPage(Type type)
         {

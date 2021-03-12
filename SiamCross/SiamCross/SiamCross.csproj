@@ -58,6 +58,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Models\Sensors\Dua\SensorDetailsView.xaml.cs">
+      <DependentUpon>SensorDetailsView.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Resource.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -78,6 +81,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Models\Sensors\Dua\SensorDetailsView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>

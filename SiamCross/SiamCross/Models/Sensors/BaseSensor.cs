@@ -4,6 +4,7 @@ using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -88,6 +89,16 @@ namespace SiamCross.Models.Sensors
             protected set
             {
                 mIsMeasurement = value;
+                ChangeNotify();
+            }
+        }
+        private bool _IsEnableQickInfo = true;
+        public bool IsEnableQickInfo 
+        { 
+            get => _IsEnableQickInfo; 
+            set
+            {
+                _IsEnableQickInfo = value;
                 ChangeNotify();
             }
         }
@@ -218,7 +229,7 @@ namespace SiamCross.Models.Sensors
             }
         }
 
-        public string Name => ScannedDeviceInfo.Device.Name;
+        public string Name => ScannedDeviceInfo.Title;
 
         public string Type
         {
@@ -255,7 +266,7 @@ namespace SiamCross.Models.Sensors
                 {
                     if (IsAlive)
                     {
-                        if (false == IsMeasurement)
+                        if (IsEnableQickInfo && !IsMeasurement)
                         {
                             if (false == await QuickReport(cancelToken))
                             {
@@ -313,6 +324,8 @@ namespace SiamCross.Models.Sensors
         public abstract Task<bool> PostConnectInit(CancellationToken cancellationToken);
         #endregion
 
+        protected readonly List<MemStruct> _Memory = new List<MemStruct>();
+        public List<MemStruct> Memory => _Memory;
         protected void ClearStatus()
         {
             //IsAlive = false;

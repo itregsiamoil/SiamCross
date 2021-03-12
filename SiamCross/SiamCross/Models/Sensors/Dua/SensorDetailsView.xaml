@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
+             x:Class="SiamCross.Models.Sensors.Dua.SensorDetailsView">
+    <ContentPage.Content>
+        <StackLayout>
+            <Frame Margin="5" Padding="5" CornerRadius="4" HasShadow="True">
+                <StackLayout>
+                    <Label Text="&#x2699; Параметры датчика" FontSize="Title"/>
+                    <Label Text="конфигурация всех параметров датчика"/>
+
+                </StackLayout>
+            </Frame>
+            <Frame Margin="5" Padding="5" CornerRadius="4" HasShadow="True">
+                <StackLayout>
+                    <Label FontSize="Title">
+                        <Label.FormattedText Margin="0">
+                            <FormattedString >
+                                <Span Text="&#x1F310; " />
+                                <Span Text="{local1:Translate LocationInfo}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label LineBreakMode="WordWrap" >
+                        <Label.FormattedText Margin="0">
+                            <FormattedString >
+                                <Span Text="{local1:Translate Field}" />
+                                <Span Text=" " />
+                                <Span Text="{Binding SelectedField, Mode=OneWay }" Font="Bold" TextColor="Black"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label LineBreakMode="WordWrap" >
+                        <Label.FormattedText Margin="0">
+                            <FormattedString >
+                                <Span Text="{local1:Translate Well} " />
+                                <Span Text=" " />
+                                <Span Text="{Binding Well}" Font="Bold" TextColor="Black"/>
+                                <Span Text=" " />
+                                <Span Text="{local1:Translate Bush}" />
+                                <Span Text=" " />
+                                <Span Text="{Binding Bush}" Font="Bold" TextColor="Black"/>
+                                <Span Text=" " />
+                                <Span Text="{local1:Translate Shop}" />
+                                <Span Text=" " />
+                                <Span Text="{Binding Shop}" Font="Bold" TextColor="Black"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>                    
+                </StackLayout>
+            </Frame>
+            <Frame Margin="5" Padding="5" CornerRadius="4" HasShadow="True">
+                <StackLayout>
+                    <Label Text="&#x1F4C8; Исследование" FontSize="Title"/>
+                    <Label Text="Запуск исследования с одним измерением"/>
+
+                </StackLayout>
+            </Frame>
+
+            <Frame Margin="5" Padding="5" CornerRadius="4" HasShadow="True">
+                <StackLayout>
+                    <Label Text="&#x1F4D1; Сценарии" FontSize="Title"/>
+                    <Label Text="Запуск сценария исследования нескольких измерений"/>
+
+                </StackLayout>
+            </Frame>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

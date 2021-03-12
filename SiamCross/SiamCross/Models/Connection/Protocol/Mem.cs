@@ -84,6 +84,57 @@ namespace SiamCross.Models.Connection.Protocol
             return true;
         }
     }
+    public class MemValueByteArray : IMemValue
+    {
+        private readonly UInt32 _Size;
+        public UInt32 Size => _Size;
+        public byte[] Value=new byte[] { };
+
+        public MemValueByteArray(UInt32 size)
+        {
+            _Size = size;
+        }
+
+
+        public void ToArray(byte[] dst, int start = 0)
+        {
+            Value.CopyTo(dst, 0);
+        }
+        public byte[] ToArray()
+        {
+            var clone = new byte[_Size];
+            Value.CopyTo(clone,0);
+            return clone;
+        }
+        public bool FromArray(byte[] array, UInt32 start)
+        {
+            var len = array.Length - start;
+            if (len > Value.Length)
+                len = Value.Length;
+            Array.Copy(array, start, Value, 0, len);
+            return true;
+        }
+    }
+    public class MemValueUInt8 : IMemValue
+    {
+        public UInt32 Size => sizeof(byte);
+        public byte Value;
+        public void ToArray(byte[] dst, int start = 0)
+        {
+            dst[start] = Value;
+        }
+        public byte[] ToArray()
+        {
+            return new byte[] { Value };
+        }
+        public bool FromArray(byte[] array, UInt32 start)
+        {
+            Value = array[start];
+            return true;
+        }
+    }
+
+
 
     public interface IMemItem
     {
@@ -124,8 +175,6 @@ namespace SiamCross.Models.Connection.Protocol
             return _Data.FromArray(array, start);
         }
     }
-
-
     public class MemVarUInt32 : MemVar
     {
         public MemVarUInt32(string name = null, UInt32 addr = 0, MemValueUInt32 data = null)
@@ -206,7 +255,46 @@ namespace SiamCross.Models.Connection.Protocol
             }
         }
     }
-
+    public class MemVarByteArray : MemVar
+    {
+        public MemVarByteArray(string name = null, UInt32 addr = 0, MemValueByteArray data = null)
+            : base((null == data) ? new MemValueByteArray(0) : data, name, addr)
+        { }
+        public byte[] Value
+        {
+            set
+            {
+                if (_Data is MemValueByteArray dd)
+                    dd.Value = value;
+            }
+            get
+            {
+                if (_Data is MemValueByteArray dd)
+                    return dd.Value;
+                return default;
+            }
+        }
+    }
+    public class MemVarUInt8 : MemVar
+    {
+        public MemVarUInt8(string name = null, UInt32 addr = 0, MemValueUInt8 data = null)
+            : base((null == data) ? new MemValueUInt8() : data, name, addr)
+        { }
+        public byte Value
+        {
+            set
+            {
+                if (_Data is MemVarUInt8 dd)
+                    dd.Value = value;
+            }
+            get
+            {
+                if (_Data is MemVarUInt8 dd)
+                    return dd.Value;
+                return default;
+            }
+        }
+    }
 
 
 
@@ -222,8 +310,11 @@ namespace SiamCross.Models.Connection.Protocol
         }
         private readonly MemVarStore _Store = new MemVarStore();
 
+        private string _Name;
         protected UInt32 _Address = 0;
         protected UInt32 _Size = 0;
+
+        public string Name { get => _Name; set => _Name = value; }
         public UInt32 Size => _Size;
         public UInt32 Address => _Address;
 

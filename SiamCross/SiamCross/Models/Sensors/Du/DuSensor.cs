@@ -51,6 +51,7 @@ namespace SiamCross.Models.Sensors.Du
             if (null == dataValue || 0 == dataValue.Length)
                 return false;
             Firmware = dataValue;
+            ChangeNotify(nameof(Firmware));
             return true;
         }
         public override async Task<bool> QuickReport(CancellationToken cancelToken)
@@ -85,6 +86,10 @@ namespace SiamCross.Models.Sensors.Du
             //await mConnection.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Voltage]);
             //await mConnection.SendData(DuCommands.FullCommandDictionary[DuCommandsEnum.Pressure]);
             Status = _reportBuilder.GetReport();
+            ChangeNotify(nameof(Battery));
+            ChangeNotify(nameof(Temperature));
+            ChangeNotify(nameof(Status));
+
             return true;
 
         }

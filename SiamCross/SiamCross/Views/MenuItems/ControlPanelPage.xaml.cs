@@ -10,10 +10,12 @@ namespace SiamCross.Views.MenuItems
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ControlPanelPage : ContentPage
     {
+        ControlPanelPageViewModel _vm;
         public ControlPanelPage()
         {
             ViewModelWrap<ControlPanelPageViewModel> vm = new ViewModelWrap<ControlPanelPageViewModel>();
-            BindingContext = vm.ViewModel;
+            _vm = vm.ViewModel;
+            BindingContext = _vm;
             InitializeComponent();
         }
 
@@ -42,6 +44,12 @@ namespace SiamCross.Views.MenuItems
         {
             base.OnAppearing();
             StartRequestEnableBuetooth();
+            _vm.EnableQickInfoAll();
+        }
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            _vm.DisableQickInfoAll();
         }
 
 

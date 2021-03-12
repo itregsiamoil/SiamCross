@@ -5,8 +5,10 @@ using SiamCross.Models.Connection.Phy;
 using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Connection.Protocol.Siam;
 using SiamCross.Models.Scanners;
+using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Dmg.Ddin2;
 using SiamCross.Models.Sensors.Du;
+using SiamCross.Models.Sensors.Dua;
 using System;
 
 namespace SiamCross.Services
@@ -42,14 +44,17 @@ namespace SiamCross.Services
                 case 0x1403:
                     {
                         Ddin2Sensor sensor = new Ddin2Sensor(connection, deviceInfo);
-                        sensor.ScannedDeviceInfo = deviceInfo;
                         return sensor;
                     }
                 case 0x1101:
                     {
                         IProtocolConnection connection_old = new SiamProtocolConnection(conn);
                         DuSensor sensor = new DuSensor(connection_old, deviceInfo);
-                        sensor.ScannedDeviceInfo = deviceInfo;
+                        return sensor;
+                    }
+                case 0x1201:
+                    {
+                        var sensor = new DuaSensor(connection, deviceInfo);
                         return sensor;
                     }
                 default:

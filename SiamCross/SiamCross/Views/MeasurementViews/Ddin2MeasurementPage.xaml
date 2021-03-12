@@ -7,11 +7,19 @@
              xmlns:local="clr-namespace:SiamCross.Views"
              xmlns:local2="clr-namespace:SiamCross.Views.ValidationBehavior"
              xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              x:Class="SiamCross.Views.Ddin2MeasurementPage"
              Title="{Binding SensorName}">
     <ContentPage.Resources>
         <Style TargetType="{x:Type Entry}" ApplyToDerivedTypes="True">
             <Setter Property="TextColor" Value="Black" />
+        </Style>
+
+        <Style x:Key="InvalidEntryStyle" TargetType="Entry">
+            <Setter Property="TextColor" Value="Red" />
+        </Style>
+        <Style x:Key="InvalidEntryStyleCE" TargetType="local2:CustomEntry">
+            <Setter Property="TextColor" Value="Red" />
         </Style>
     </ContentPage.Resources >
 
@@ -33,7 +41,17 @@
                                 <Label Text="{local1:Translate Rod}"></Label>
                                 <local2:CustomEntry Text="{Binding Rod}" 
                                                 Keyboard="Numeric">
-                                </local2:CustomEntry>
+                                <local2:CustomEntry.Behaviors>
+                                    <xct:NumericValidationBehavior Flags="ValidateOnValueChanging"
+                                        InvalidStyle="{StaticResource InvalidEntryStyleCE}"
+                                        MinimumValue="12"
+                                        MaximumValue="40"/>
+                                    
+                                </local2:CustomEntry.Behaviors>
+                                <local2:CustomEntry.Effects>
+                                    <xct:RemoveBorderEffect/>
+                                </local2:CustomEntry.Effects>
+                            </local2:CustomEntry>
                             </StackLayout>
                         </ViewCell>
                         <ViewCell>
@@ -62,6 +80,10 @@
                                    Text="{Binding DynPeriod , Mode=TwoWay}" 
                                    Keyboard="Numeric"
                                    Grid.Column="0" Grid.Row="1">
+                                <Entry.Behaviors>
+                                    <xct:NumericValidationBehavior Flags="ValidateOnValueChanging"
+                                                                   InvalidStyle="{StaticResource InvalidEntryStyle}"/>
+                                </Entry.Behaviors>
                             </Entry>
                             <Label Text="{local1:Translate PumpRate}"
                                    Grid.Column="1" Grid.Row="0"/>
@@ -69,6 +91,10 @@
                                    Text="{Binding PumpRate, Mode=TwoWay }" 
                                    Keyboard="Numeric"
                                    Grid.Column="1" Grid.Row="1">
+                                <Entry.Behaviors>
+                                    <xct:NumericValidationBehavior Flags="ValidateOnValueChanging"
+                                                                   InvalidStyle="{StaticResource InvalidEntryStyle}"/>
+                                </Entry.Behaviors>
                             </Entry>
                             <Button Text="&#x23F1;" FontSize="50"
                                     Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"

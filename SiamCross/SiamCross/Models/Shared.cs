@@ -29,6 +29,7 @@ namespace SiamCross.Models
         static DeviceIndex()
         {
             Instance.Add(0x1101, Resource.LevelGaugeSensorType + " 0x1101");
+            Instance.Add(0x1201, Resource.LevelGaugeSensorType + " 0x1201");
             Instance.Add(0x1301, Resource.DynamographSensorType + " 0x1301");
             Instance.Add(0x1302, Resource.DynamographSensorType + " 0x1302");
             Instance.Add(0x1303, Resource.DynamographSensorType + " 0x1303");
