@@ -2,8 +2,6 @@
 using NLog;
 using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
-using SiamCross.Models;
-using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
 using SiamCross.Services;
@@ -81,12 +79,12 @@ namespace SiamCross.ViewModels
         public string SelectedModelPump { get; set; }
         public ICommand StartMeasurementCommand { get; set; }
         public ICommand ValveTestCommand { get; set; }
-        public Ddin2MeasurementViewModel(ScannedDeviceInfo sensorData)
-            : base(sensorData)
+        public Ddin2MeasurementViewModel(ISensor sensor)
+            : base(sensor)
         {
             try
             {
-                SensorName = _sensorData.Title;
+                SensorName = _Sensor.Name;
                 ModelPump = new ObservableCollection<string>()
                 {
                     Resource.BalancedModelPump,
@@ -111,7 +109,7 @@ namespace SiamCross.ViewModels
             ApertNumber = Constants.DefaultApertNumber.ToString();
             Imtravel = Constants.DefaultImtravel.ToString();
             SelectedModelPump = Resource.BalancedModelPump;
-            SensorName = _sensorData.Title;
+            SensorName = _Sensor.Name;
 
             IEnumerable<Ddin2Measurement> mes
                 = DataRepository.Instance.GetDdin2Measurements().
@@ -161,12 +159,8 @@ namespace SiamCross.ViewModels
                 if (!TryToDouble(_BufferPressure, out double buff_pressure))
                     buff_pressure = 0.0;
 
-                string battery = (_sensorData.Device.DeviceData["Battery"] is string str_batt) ? str_batt : string.Empty;
-                string temperature = (_sensorData.Device.DeviceData["Temperature"] is string str_temp) ? str_temp : string.Empty;
-                string firmware = (_sensorData.Device.DeviceData["Firmware"] is string str_fw) ? str_fw : string.Empty;
-
                 MeasurementSecondaryParameters secondaryParameters = new MeasurementSecondaryParameters(
-                    _sensorData.Title,
+                    _Sensor.Name,
                     Resource.Dynamogram,
                     SelectedField,
                     Well,
@@ -174,9 +168,9 @@ namespace SiamCross.ViewModels
                     Shop,
                     buff_pressure,
                     Comments,
-                    battery,
-                    temperature,
-                    firmware,
+                    _Sensor.Battery,
+                    _Sensor.Temperature,
+                    _Sensor.Firmware,
                     string.Empty);
 
                 Ddin2MeasurementStartParameters measurementParams = new Ddin2MeasurementStartParameters(
@@ -194,7 +188,7 @@ namespace SiamCross.ViewModels
 
                 await App.Navigation.PopAsync();
                 await SensorService.Instance
-                    .StartMeasurementOnSensor(_sensorData.Guid, measurementParams);
+                    .StartMeasurementOnSensor(_Sensor.Id, measurementParams);
             }
             catch (Exception ex)
             {

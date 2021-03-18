@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross" 
+             xmlns:models="clr-namespace:SiamCross.ViewModels"
+             x:Class="SiamCross.Views.PositionEditView"
+             x:DataType="models:PositionInfoVM" >
+
+    <NavigationPage.TitleView >
+        <StackLayout>
+            <Label Text="{local1:Translate LocationInfo}" FontSize="Title" TextColor="White" />
+            <!--Label Text="{Binding Sensor.Name}" TextColor="White" /-->
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+
+    <ContentPage.Content>
+        <StackLayout Spacing="0" Margin="10">
+            <Grid RowSpacing="0" ColumnSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Text="{local1:Translate Field}" Grid.Row="0" Grid.Column="0" />
+                <Picker ItemsSource="{Binding Fields}" SelectedItem="{Binding Field}"
+                                    Grid.Row="1" Grid.Column="0" />
+                <Button Text="&#x002B;" FontSize="30"
+                                    Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+                                    Command="{Binding Path=AddField}" 
+                                    CommandParameter="Image1" />
+            </Grid>
+            <Label Text="{local1:Translate Well}" />
+            <Entry Text="{Binding Well}"
+                        Keyboard="Numeric">
+                <Entry.Behaviors>
+                    <xct:NumericValidationBehavior/>
+                </Entry.Behaviors>
+                <Entry.Effects>
+                    <xct:SelectAllTextEffect/>
+                </Entry.Effects>
+            </Entry>
+            <Label Text="{local1:Translate Bush}" />
+            <Entry Text="{Binding Bush}"
+                        Keyboard="Numeric">
+                <Entry.Behaviors>
+                    <xct:NumericValidationBehavior/>
+                </Entry.Behaviors>
+                <Entry.Effects>
+                    <xct:SelectAllTextEffect/>
+                </Entry.Effects>
+            </Entry>
+            <Label Text="{local1:Translate Shop}"/>
+            <Entry Text="{Binding Shop}"
+                        Keyboard="Numeric">
+                <Entry.Behaviors>
+                    <xct:NumericValidationBehavior/>
+                </Entry.Behaviors>
+                <Entry.Effects>
+                    <xct:SelectAllTextEffect/>
+                </Entry.Effects>
+            </Entry>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

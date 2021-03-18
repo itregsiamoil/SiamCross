@@ -83,7 +83,7 @@ namespace SiamCross.Models
         public string Name;
         public uint ProtocolId;
         [XmlIgnore]
-        public Dictionary<string, object> ProtocolData= new Dictionary<string, object>();
+        public Dictionary<string, object> ProtocolData = new Dictionary<string, object>();
         public uint PhyId;
         [XmlIgnore]
         public Dictionary<string, object> PhyData = new Dictionary<string, object>();
@@ -128,7 +128,7 @@ namespace SiamCross.Models
         }
     }
     [Serializable]
-    public class GeoLocation
+    public struct GeoLocation
     {
         public double Latitude;
         public double Longitude;
@@ -136,14 +136,25 @@ namespace SiamCross.Models
         public double Accuracy;
     }
     [Serializable]
-    public class PositionInfo
+    public struct PositionInfo
     {
         public int Id;
         public string Field;
         public string Well;
         public string Bush;
         public string Shop;
-        public GeoLocation Location = new GeoLocation();
+        public GeoLocation Location;
+        public PositionInfo(int id = 0
+            , string field = "", string well = ""
+            , string bush = "", string shop = "")
+        {
+            Id = id;
+            Field = field;
+            Well = well;
+            Bush = bush;
+            Shop = shop;
+            Location = new GeoLocation();
+        }
     }
     [Serializable]
     public class MeasurementInfo

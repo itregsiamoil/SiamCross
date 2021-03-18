@@ -3,10 +3,14 @@ using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
+using SiamCross.ViewModels.MeasurementViewModels;
+using SiamCross.Views;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors.Du
 {
@@ -18,6 +22,18 @@ namespace SiamCross.Models.Sensors.Du
         public DuSensor(IProtocolConnection conn, ScannedDeviceInfo deviceInfo)
             : base(conn, deviceInfo)
         {
+            var surveys = new List<SurveyVM>();
+            Surveys = surveys;
+            var sur1 = new SurveyVM(this
+                , "Статический уровень"
+                , "long long description"
+                , new DuMeasurementPage(this));
+            surveys.Add(sur1);
+
+            var sur2 = new SurveyVM(this
+                , "Динамический уровень"
+                , "long long description");
+            surveys.Add(sur2);
         }
         public async Task<bool> UpdateFirmware(CancellationToken cancelToken)
         {
@@ -93,8 +109,6 @@ namespace SiamCross.Models.Sensors.Du
             return true;
 
         }
-
-
 
         private async Task<DuMeasurementStatus> GetStatus(CancellationToken cancelToken)
         {

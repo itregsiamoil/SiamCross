@@ -1,10 +1,7 @@
-﻿using SiamCross.Models;
-using SiamCross.Models.Scanners;
+﻿using SiamCross.Models.Sensors;
 using SiamCross.ViewModels;
 using System;
 using System.Diagnostics;
-using System.Globalization;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,9 +12,9 @@ namespace SiamCross.Views
     {
         private readonly Stopwatch _stopwatch;
 
-        public Ddin2MeasurementPage(ScannedDeviceInfo sensorData)
+        public Ddin2MeasurementPage(ISensor sensor)
         {
-            ViewModelWrap<Ddin2MeasurementViewModel> vm = new ViewModelWrap<Ddin2MeasurementViewModel>(sensorData);
+            ViewModelWrap<Ddin2MeasurementViewModel> vm = new ViewModelWrap<Ddin2MeasurementViewModel>(sensor);
             BindingContext = vm.ViewModel;
             _stopwatch = new Stopwatch();
             InitializeComponent();

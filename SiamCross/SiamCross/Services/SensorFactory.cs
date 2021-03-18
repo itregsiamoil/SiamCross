@@ -9,7 +9,6 @@ using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Dmg.Ddin2;
 using SiamCross.Models.Sensors.Du;
 using SiamCross.Models.Sensors.Dua;
-using System;
 
 namespace SiamCross.Services
 {

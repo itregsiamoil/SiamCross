@@ -58,10 +58,10 @@ namespace SiamCross.Models.Connection.Protocol
         }
 
         protected int mAdditioonTime = 2000;
-        public int AdditioonalTimeout 
-        { 
-            get => mAdditioonTime; 
-            set => mAdditioonTime=value; 
+        public int AdditioonalTimeout
+        {
+            get => mAdditioonTime;
+            set => mAdditioonTime = value;
         }
         public BaseProtocol(IPhyConnection base_conn, byte address)
         {

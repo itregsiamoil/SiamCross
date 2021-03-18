@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SiamCross.Views.Dua.SurveyConfigView">
+    <ContentPage.Resources>
+        <Style TargetType="{x:Type StackLayout}">
+            <Setter Property="Spacing" Value="0" />
+        </Style>
+    </ContentPage.Resources >
+    <NavigationPage.TitleView >
+        <StackLayout>
+            <Label Text="{Binding Name}" Font="Bold" TextColor="White" />
+            <Label Text="Настройки измерения" Font="Bold" TextColor="White" />
+        </StackLayout>
+    </NavigationPage.TitleView>
+    
+    <ContentPage.Content>
+        <ScrollView BackgroundColor="WhiteSmoke">
+            <StackLayout>
+                <Frame Style="{StaticResource GroupingFrameStyle}" >
+                    <StackLayout >
+                        <Label Text="Пьезодатчик" 
+                               Style="{StaticResource GroupingFrameTitleStyle}"/>
+                        <Grid Padding="0,10,0,10">
+                            <Label Text="Максимальная глубина 3000м./6000м."/>
+                            <Switch />
+                        </Grid>
+                        <Grid Padding="0,10,0,10">
+                            <Label Text="Дополнительное усиление"/>
+                            <Switch />
+                        </Grid>
+
+                    </StackLayout>
+                </Frame>
+                <Frame Style="{StaticResource GroupingFrameStyle}" >
+                    <StackLayout >
+                        <Label Text="Автоматический клапан" 
+                               Style="{StaticResource GroupingFrameTitleStyle}"/>
+                        <Grid Padding="0,10,0,10">
+                            <Label Text="Направление газа впуск/выпуск"/>
+                            <Switch />
+                        </Grid>
+                        <Grid Padding="0,10,0,10">
+                            <Label Text="Длительность срабатывания 0,2/0,05"/>
+                            <Switch />
+                        </Grid>
+                        <Grid Padding="0,10,0,10">
+                            <Label Text="Разрешение срабатывания 0,2/0,05"/>
+                            <Switch />
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+
+                <Frame Style="{StaticResource GroupingFrameStyle}" >
+                    <StackLayout >
+                        <Label Text="Скорость звука" 
+                               Style="{StaticResource GroupingFrameTitleStyle}"/>
+                        <Label Text="текущее значение"/>
+                        <Entry Text="" />
+                        <Label Text="таблица поправок"/>
+                        <Entry Text="" />
+                    </StackLayout>
+                </Frame>
+
+                <StackLayout Spacing="0" Orientation="Horizontal" >
+                    <Button Text="назад" HorizontalOptions="FillAndExpand" 
+                            BackgroundColor="{StaticResource colorPrimaryLight}" />
+                    <Button Text="сохранить" HorizontalOptions="FillAndExpand" 
+                            BackgroundColor="{StaticResource colorSecondaryLight}" />
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

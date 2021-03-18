@@ -1,8 +1,7 @@
 ﻿using Autofac;
 using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
-using SiamCross.Models;
-using SiamCross.Models.Scanners;
+using SiamCross.Models.Sensors;
 using SiamCross.Models.Tools;
 using SiamCross.ViewModels;
 
@@ -20,12 +19,12 @@ namespace SiamCross.Views
             }
         }
 
-        public ViewModelWrap(ScannedDeviceInfo sensorData)
+        public ViewModelWrap(ISensor sensor)
         {
             using (ILifetimeScope scope = AppContainer.Container.BeginLifetimeScope())
             {
                 ViewModel = AppContainer.Container.Resolve<T>(
-                    new TypedParameter(typeof(ScannedDeviceInfo), sensorData));
+                    new TypedParameter(typeof(ISensor), sensor));
             }
         }
 

@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             x:Class="SiamCross.Views.SensorDetailsView"
+             xmlns:models="clr-namespace:SiamCross.Models.Sensors"
+             x:DataType="models:ISensor" 
+             >
+    <NavigationPage.TitleView >
+        <Grid RowSpacing="0" ColumnSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="50"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Label Text="{Binding Name}" 
+                   Grid.Row="0" Grid.Column="0"
+                   Font="Bold" TextColor="{StaticResource colorTextPale}" />
+            <Label 
+                Grid.Row="1" Grid.Column="0"
+                TextColor="{StaticResource colorTextPale}">
+                <Label.FormattedText>
+                    <FormattedString >
+                        <Span Text="{Binding Type}" />
+                        <Span Text=" " />
+                        <Span Text="{Binding Connection.PhyConnection.PhyInterface.Name}" />
+                        <Span Text=" " />
+                        <Span Text="{Binding ConnStateStr}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Switch IsToggled="{Binding Activate}" 
+                    Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" />
+        </Grid>
+    </NavigationPage.TitleView>
+
+    <ContentPage.Resources>
+
+    </ContentPage.Resources >    
+    
+
+
+    <ContentPage.Content>
+        <ScrollView BackgroundColor="{StaticResource colorBackgroundLight}" >
+            <StackLayout Spacing="0">
+                <Frame Style="{StaticResource MenuItemStyle}" >
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ShowFactoryConfigViewCommand}" />
+                    </Frame.GestureRecognizers>
+                    <StackLayout>
+                        <Label Text="&#x26A0; Заводские настройки" Style="{StaticResource TitleLabel}" />
+                        <Label Text="Калибровки, коэффициентыи и т.п."/>
+                    </StackLayout>
+                </Frame>
+                <Frame Style="{StaticResource MenuItemStyle}" >
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ShowUserConfigViewCommand}" />
+                    </Frame.GestureRecognizers>
+                    <StackLayout>
+                        <Label Text="&#x1F6E0; Настройки" Style="{StaticResource TitleLabel}" />
+                        <Label Text="Общие пользовательские настройки"/>
+                    </StackLayout>
+                </Frame>                
+                <Frame Style="{StaticResource MenuItemStyle}" >
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ShowStateViewCommand}" />
+                    </Frame.GestureRecognizers>
+                    <StackLayout>
+                        <Label Text="&#x1F4AC; Состояние" Style="{StaticResource TitleLabel}" />
+                        <Label Text="Cтатус прибора, текущие показания датчиков, информация"/>
+                    </StackLayout>
+                </Frame>
+                <Frame Style="{StaticResource MenuItemStyle}" >
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ShowSurveysViewCommand}" />
+                    </Frame.GestureRecognizers>
+                    <StackLayout>
+                        <Label Text="&#x1F4C8; Исследование" Style="{StaticResource TitleLabel}"/>
+                        <Label Text="Установка праметров, запуск и остановка исследования "/>
+                    </StackLayout>
+                </Frame>
+                <Frame Style="{StaticResource MenuItemStyle}" >
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ShowDownloadsViewCommand}" />
+                    </Frame.GestureRecognizers>
+                    <StackLayout>
+                        <Label Text="&#x1F4BE; Считывание" Style="{StaticResource TitleLabel}"/>
+                        <Label Text="Запуск считывания из памяти прибора одного или нескольких измерений"/>
+                    </StackLayout>
+                </Frame>
+                
+                <!--
+                <Frame Style="{StaticResource MenuItemStyle}" >
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ShowSurveyConfigViewCommand}" />
+                    </Frame.GestureRecognizers>
+                    <StackLayout>
+                        <Label Text="&#x2139; Дополнительная информация" Style="{StaticResource TitleLabel}"/>
+                        <Label Text="Общие настройки и калибровки"/>
+
+                    </StackLayout>
+                </Frame>                
+                
+                
+                
+                <Frame Style="{StaticResource MenuItemStyle}" >
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Position.EditCommand}" />
+                    </Frame.GestureRecognizers>
+                    <StackLayout>
+                        <Label Style="{StaticResource TitleLabel}" >
+                            <Label.FormattedText Margin="0">
+                                <FormattedString >
+                                    <Span Text="&#x1F310; " />
+                                    <Span Text="{local1:Translate LocationInfo}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label LineBreakMode="WordWrap" >
+                            <Label.FormattedText Margin="0">
+                                <FormattedString >
+                                    <Span Text="{local1:Translate Field}" />
+                                    <Span Text=" " />
+                                    <Span Text="{Binding Position.Field, Mode=OneWay }" Font="Bold" TextColor="Black"/>
+                                    <Span Text="&#10;" />
+                                    <Span Text="{local1:Translate Well} " />
+                                    <Span Text=" " />
+                                    <Span Text="{Binding Position.Well}" Font="Bold" TextColor="Black"/>
+                                    <Span Text=" " />
+                                    <Span Text="{local1:Translate Bush}" />
+                                    <Span Text=" " />
+                                    <Span Text="{Binding Position.Bush}" Font="Bold" TextColor="Black"/>
+                                    <Span Text=" " />
+                                    <Span Text="{local1:Translate Shop}" />
+                                    <Span Text=" " />
+                                    <Span Text="{Binding Position.Shop}" Font="Bold" TextColor="Black"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </StackLayout>
+                </Frame>                
+                -->
+
+            </StackLayout>
+        </ScrollView>
+
+    </ContentPage.Content>
+</ContentPage>

@@ -3,6 +3,9 @@ using SiamCross.Models.Connection;
 using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
+using SiamCross.ViewModels;
+using SiamCross.ViewModels.MeasurementViewModels;
+using SiamCross.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +13,8 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors
 {
@@ -40,6 +45,13 @@ namespace SiamCross.Models.Sensors
                 ChangeNotify(nameof(ConnStateStr));
             };
             //mConnection.PropertyChanged += PropertyChanged;
+            ShowDetailViewCommand = new AsyncCommand(
+                () => App.NavigationPage.Navigation.PushAsync(new SensorDetailsView(this))
+                , (Func<object, bool>)null, null, false, false);
+            ShowSurveysViewCommand = new AsyncCommand(
+                () => App.NavigationPage.Navigation.PushAsync(new SurveysCollectionnView(this))
+            , (Func<object, bool>)null, null, false, false);
+
         }
         public async void Dispose()
         {
@@ -55,6 +67,8 @@ namespace SiamCross.Models.Sensors
         public int MeasureProgressP => (int)(mMeasureProgress * 100);
 
         private float mMeasureProgress = 0;
+
+        public event PropertyChangedEventHandler PropertyChanged;
         public void ChangeNotify([CallerMemberName] string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
@@ -93,15 +107,32 @@ namespace SiamCross.Models.Sensors
             }
         }
         private bool _IsEnableQickInfo = true;
-        public bool IsEnableQickInfo 
-        { 
-            get => _IsEnableQickInfo; 
+        public bool IsEnableQickInfo
+        {
+            get => _IsEnableQickInfo;
             set
             {
                 _IsEnableQickInfo = value;
                 ChangeNotify();
             }
         }
+        PositionInfoVM _Position = new PositionInfoVM();
+        public PositionInfoVM Position
+        {
+            get => _Position;
+            set => _Position = value;
+        }
+        public ICommand ShowDetailViewCommand { get; set; }
+        public ICommand ShowFactoryConfigViewCommand { get; set; }
+        public ICommand ShowUserConfigViewCommand { get; set; }
+
+        public ICommand ShowSurveysViewCommand { get; set; }
+
+        public ICommand ShowStateViewCommand { get; set; }
+        public ICommand ShowDownloadsViewCommand { get; set; }
+
+        public IReadOnlyCollection<SurveyVM> Surveys { get; set; }
+
         public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
         public abstract Task<bool> QuickReport(CancellationToken cancellationToken);
         //public virtual Task<bool> UpdateRssi(CancellationToken cancellationToken);
@@ -110,7 +141,7 @@ namespace SiamCross.Models.Sensors
         #endregion
         #region Activate implementation
         #region Variables
-        public event PropertyChangedEventHandler PropertyChanged;
+
         private CancellationTokenSource _cancellToken = null;
 
         //TaskCompletionSource<bool> mLiveTaskCompleated=null;
@@ -238,7 +269,7 @@ namespace SiamCross.Models.Sensors
                 if (DeviceIndex.Instance.TryGetName(ScannedDeviceInfo.Device.Kind, out string str))
                     return str;
                 return string.Empty;
-            } 
+            }
         }
 
 
@@ -252,7 +283,7 @@ namespace SiamCross.Models.Sensors
 
 
         string _status;
-        public string Status { get=> _status; set { _status = value;  ChangeNotify(); } }
+        public string Status { get => _status; set { _status = value; ChangeNotify(); } }
 
         public Guid Id => ScannedDeviceInfo.Guid;
 

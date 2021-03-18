@@ -2,7 +2,6 @@
 using NLog;
 using SiamCross.AppObjects;
 using SiamCross.Models.Sensors;
-using SiamCross.Models.Sensors.Dua;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
@@ -65,7 +64,7 @@ namespace SiamCross.ViewModels
             try
             {
                 ISensor sensor = SensorService.Instance.Sensors
-                    .SingleOrDefault(s => s.Id == id);
+                    .FirstOrDefault(s => s.Id == id);
                 if (sensor != null)
                 {
                     if (!sensor.IsMeasurement)
@@ -77,7 +76,8 @@ namespace SiamCross.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "DeleteSensorHandler" + "\n");
-                throw;
+
+                //throw;
             }
         }
         private void SensorDeleted(ISensor sensor)
@@ -89,7 +89,7 @@ namespace SiamCross.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "DeleteSensorHandler" + "\n");
-                throw;
+                //throw;
             }
         }
         private void SensorAdded(ISensor sensor)
@@ -107,9 +107,6 @@ namespace SiamCross.ViewModels
                 .SingleOrDefault(s => s.Id == id);
             if (sensor == null)
                 return;
-            var sensorData = sensor.ScannedDeviceInfo;
-            if (sensorData == null)
-                return;
             if (!CanOpenMeasurement(sensor))
                 return;
 
@@ -124,19 +121,19 @@ namespace SiamCross.ViewModels
                     if (!CanOpenPage(typeof(Ddin2MeasurementPage)))
                         return;
                     App.NavigationPage.Navigation.PushAsync(
-                        new Ddin2MeasurementPage(sensorData));
+                        new Ddin2MeasurementPage(sensor));
                     break;
                 case 0x1101:
                     if (!CanOpenPage(typeof(DuMeasurementPage)))
                         return;
                     App.NavigationPage.Navigation.PushAsync(
-                        new DuMeasurementPage(sensorData));
+                        new DuMeasurementPage(sensor));
                     break;
                 case 0x1201:
                     if (!CanOpenPage(typeof(SensorDetailsView)))
                         return;
                     App.NavigationPage.Navigation.PushAsync(
-                        new SensorDetailsView(sensorData));
+                        new SensorDetailsView(sensor));
                     break;
                 default: break;
             }

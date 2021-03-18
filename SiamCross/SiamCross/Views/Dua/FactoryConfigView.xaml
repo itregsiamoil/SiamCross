@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SiamCross.Views.Dua.FactoryConfigView">
+
+    <ContentPage.Resources>
+        <Style TargetType="{x:Type StackLayout}">
+            <Setter Property="Spacing" Value="0" />
+        </Style>
+    </ContentPage.Resources >
+
+    <NavigationPage.TitleView >
+        <StackLayout Orientation="Vertical" >
+            <Label Text="Заводские настройки" FontSize="Title" TextColor="{StaticResource colorTextPale}"/>
+            <Label Text="{Binding Name}" TextColor="{StaticResource colorTextPale}" />
+
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="{StaticResource colorBackground}">
+            <Frame Style="{StaticResource GroupingFrameStyle}" >
+                <StackLayout>
+                    <Label Text="Термокоэффициены давления" 
+                               Style="{StaticResource GroupingFrameTitleStyle}"/>
+
+                    <Grid ColumnSpacing="0" RowSpacing="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Text="Сопротивление 1" Grid.Column="0" Grid.Row="0"/>
+                        <Entry Text="" Grid.Column="0" Grid.Row="1"/>
+                        <Label Text="Сопротивление 2" Grid.Column="0" Grid.Row="2"/>
+                        <Entry Text="" Grid.Column="0" Grid.Row="3"/>
+                        <Label Text="Сопротивление 3" Grid.Column="0" Grid.Row="4"/>
+                        <Entry Text="" Grid.Column="0" Grid.Row="5"/>
+                        <Label Text="Давление 1" Grid.Column="1" Grid.Row="0"/>
+                        <Entry Text="" Grid.Column="1" Grid.Row="1"/>
+                        <Label Text="Давление 2" Grid.Column="1" Grid.Row="2"/>
+                        <Entry Text="" Grid.Column="1" Grid.Row="3"/>
+                        <Label Text="Давление 3" Grid.Column="1" Grid.Row="4"/>
+                        <Entry Text="" Grid.Column="1" Grid.Row="5"/>
+                    </Grid>
+
+                </StackLayout>
+            </Frame>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

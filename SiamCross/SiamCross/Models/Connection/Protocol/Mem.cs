@@ -88,7 +88,7 @@ namespace SiamCross.Models.Connection.Protocol
     {
         private readonly UInt32 _Size;
         public UInt32 Size => _Size;
-        public byte[] Value=new byte[] { };
+        public byte[] Value = new byte[] { };
 
         public MemValueByteArray(UInt32 size)
         {
@@ -103,7 +103,7 @@ namespace SiamCross.Models.Connection.Protocol
         public byte[] ToArray()
         {
             var clone = new byte[_Size];
-            Value.CopyTo(clone,0);
+            Value.CopyTo(clone, 0);
             return clone;
         }
         public bool FromArray(byte[] array, UInt32 start)

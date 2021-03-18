@@ -84,6 +84,10 @@
                                                     Margin="0" Padding="0,0,0,0" >
                                                 <Grid x:Name="HeadBox" FlexLayout.AlignSelf="Center" FlexLayout.Basis="300" FlexLayout.Grow="40" 
                                                     RowSpacing="0" ColumnSpacing="0" >
+                                                    <Grid.GestureRecognizers>
+                                                        <TapGestureRecognizer 
+                                                            Command="{Binding ShowDetailViewCommand}" />
+                                                    </Grid.GestureRecognizers>
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition Height="Auto"></RowDefinition>
                                                         <RowDefinition Height="*"></RowDefinition>

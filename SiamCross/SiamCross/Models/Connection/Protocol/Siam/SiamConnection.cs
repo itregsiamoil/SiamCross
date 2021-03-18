@@ -42,7 +42,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private static readonly int _Retry = 3;
         private static readonly int _ResponseRetry = Pkg.MAX_PKG_SIZE;
 
-        
+
         private static readonly int mMinSpeed = 9600; ///bit per second
         private static readonly float multipler = 1000.0f / (mMinSpeed / (8 + 1 + 1));
         private static int GetTime(int bytes)

@@ -1,7 +1,6 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
@@ -20,7 +19,7 @@ namespace SiamCross.Models.Sensors
         public readonly MemStruct _Info;
         public readonly MemVarUInt32 ProgrammVersionAddress;
         public readonly MemVarUInt16 ProgrammVersionSize;
-        
+
 
 
         public BaseSensor2(IProtocolConnection conn, ScannedDeviceInfo dev_info)

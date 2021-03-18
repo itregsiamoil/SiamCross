@@ -1,10 +1,13 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
+using SiamCross.ViewModels.MeasurementViewModels;
+using SiamCross.Views;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors.Dmg
 {
@@ -88,6 +91,26 @@ namespace SiamCross.Models.Sensors.Dmg
             Step = _Report.Add(new MemVarUInt16(nameof(Step)));
             WeightDiscr = _Report.Add(new MemVarUInt16(nameof(WeightDiscr)));
             TimeDiscr = _Report.Add(new MemVarUInt16(nameof(TimeDiscr)));
+
+            var surveys = new List<SurveyVM>();
+            Surveys = surveys;
+
+            var sur1 = new SurveyVM(this
+                , "Динамограмма"
+                , "long long description"
+                , new Ddin2MeasurementPage(this));
+            surveys.Add(sur1);
+
+            var sur2 = new SurveyVM(this
+                , "Тест клапанов"
+                , "long long description");
+            surveys.Add(sur2);
+
+            var sur3 = new SurveyVM(this
+                , "Вес штанг"
+                , "кривая восстановления уровня");
+            surveys.Add(sur3);
+
         }
 
         public override async Task<bool> QuickReport(CancellationToken cancelToken)

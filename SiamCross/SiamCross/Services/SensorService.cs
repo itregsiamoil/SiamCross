@@ -63,7 +63,7 @@ namespace SiamCross.Services
             {
                 foreach (ISensor sensor in Sensors)
                 {
-                    if (sensor.Name == deviceInfo.Device.Name)
+                    if (sensor.Name == deviceInfo.Title)
                     {
                         return;
                     }

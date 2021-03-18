@@ -1,15 +1,32 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
+using SiamCross.ViewModels;
+using SiamCross.ViewModels.MeasurementViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace SiamCross.Models.Sensors
 {
     public interface ISensor : IDisposable, INotifyPropertyChanged
     {
+        ICommand ShowDetailViewCommand { get; set; }
+        ICommand ShowUserConfigViewCommand { get; set; }
+        ICommand ShowFactoryConfigViewCommand { get; set; }
+        ICommand ShowSurveysViewCommand { get; set; }
+
+        ICommand ShowStateViewCommand { get; set; }
+        ICommand ShowDownloadsViewCommand { get; set; }
+
+
+        IReadOnlyCollection<SurveyVM> Surveys { get; set; }
+
+
+
+        PositionInfoVM Position { get; set; }
         IProtocolConnection Connection { get; }
 
         List<MemStruct> Memory { get; }
