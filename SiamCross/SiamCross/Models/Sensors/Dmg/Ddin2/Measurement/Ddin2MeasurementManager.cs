@@ -62,12 +62,12 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
                 await SetStatusEmpty();
 
             }
-            catch (ProtocolException)
+            catch (ProtocolException ex)
             {
                 Debug.WriteLine("RunMeasurement IO Error");
                 error = MeasureState.IOError;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Debug.WriteLine("RunMeasurement Unknown Error");
                 error = MeasureState.UnknownError;

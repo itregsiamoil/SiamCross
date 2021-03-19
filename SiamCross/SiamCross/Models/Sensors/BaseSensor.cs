@@ -3,11 +3,13 @@ using SiamCross.Models.Connection;
 using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
+using SiamCross.Services;
 using SiamCross.ViewModels;
 using SiamCross.ViewModels.MeasurementViewModels;
 using SiamCross.Views;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -15,6 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Sensors
 {
@@ -48,11 +51,37 @@ namespace SiamCross.Models.Sensors
             ShowDetailViewCommand = new AsyncCommand(
                 () => App.NavigationPage.Navigation.PushAsync(new SensorDetailsView(this))
                 , (Func<object, bool>)null, null, false, false);
+            
             ShowSurveysViewCommand = new AsyncCommand(
-                () => App.NavigationPage.Navigation.PushAsync(new SurveysCollectionnView(this))
+                ShowSurveysCollection
             , (Func<object, bool>)null, null, false, false);
 
         }
+        private async Task ShowSurveysCollection()
+        {
+            var type = typeof(SurveysCollectionnViewModel);
+
+
+            var view = ViewFactoryService.Get(type) as SurveysCollectionnView;
+            if (null == view)
+            {
+                view = new SurveysCollectionnView();
+                ViewFactoryService.Register(type, view);
+            }
+
+            var surveys = new ObservableCollection<SurveyVM>();
+            Surveys.ForEach(o => surveys.Add(o));
+            var ctx = new SurveysCollectionnViewModel()
+            {
+                Sensor = this,
+                SurveysCollection = surveys
+            };
+            view = ViewFactoryService.Get<SurveysCollectionnView>(type, ctx);
+
+
+            await App.NavigationPage.Navigation.PushAsync(view);
+        }
+
         public async void Dispose()
         {
             await Deactivate();

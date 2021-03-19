@@ -3,7 +3,9 @@ using SiamCross.ViewModels;
 using SiamCross.ViewModels.MeasurementViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,16 +17,10 @@ namespace SiamCross.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SurveyView : ContentPage
     {
-        public ISensor Sensor { get; private set; }
-        public SurveyVM Survey { get; private set; }
-        public PositionInfoVM Position => Sensor.Position;
-
-        public SurveyView(ISensor sensor, SurveyVM surveyVM)
+        public SurveyView()
         {
-            Sensor = sensor;
-            Survey = surveyVM;
-            BindingContext = this;
             InitializeComponent();
         }
+
     }
 }

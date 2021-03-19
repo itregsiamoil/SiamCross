@@ -10,7 +10,7 @@ namespace SiamCross.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SurveysCollectionnView : ContentPage
     {
-        public ISensor Sensor { get; private set; }
+        public ISensor Sensor { get; set; }
         public ObservableCollection<SurveyVM> SurveysCollection { get; set; }
 
         public SurveysCollectionnView(ISensor sensor)
@@ -25,15 +25,10 @@ namespace SiamCross.Views
 
         }
 
-        async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
+        public SurveysCollectionnView()
         {
-            if (e.Item == null)
-                return;
-
-            await DisplayAlert("Item Tapped", "An item was tapped.", "OK");
-
-            //Deselect Item
-            ((ListView)sender).SelectedItem = null;
+            InitializeComponent();
         }
+
     }
 }

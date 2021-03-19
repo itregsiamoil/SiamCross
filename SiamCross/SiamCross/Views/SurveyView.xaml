@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
+             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross" 
+             xmlns:vm="clr-namespace:SiamCross.ViewModels.MeasurementViewModels"
+             x:DataType="vm:SurveyViewModel"
              x:Class="SiamCross.Views.SurveyView">
     <ContentPage.Resources>
         <Style TargetType="{x:Type StackLayout}">
@@ -21,7 +23,7 @@
                 <StackLayout>
                     <Frame Style="{StaticResource MenuItemStyle}" >
                         <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Position.EditCommand}" />
+                            <TapGestureRecognizer Command="{Binding Sensor.Position.EditCommand}" />
                         </Frame.GestureRecognizers>
                         <StackLayout>
                             <Label Style="{StaticResource TitleLabel}" >
@@ -37,19 +39,19 @@
                                     <FormattedString >
                                         <Span Text="{local1:Translate Field}" />
                                         <Span Text=" " />
-                                        <Span Text="{Binding Position.Field, Mode=OneWay }" Font="Bold" TextColor="Black"/>
+                                        <Span Text="{Binding Sensor.Position.Field, Mode=OneWay }" Font="Bold" TextColor="Black"/>
                                         <Span Text="&#10;" />
                                         <Span Text="{local1:Translate Well} " />
                                         <Span Text=" " />
-                                        <Span Text="{Binding Position.Well}" Font="Bold" TextColor="Black"/>
+                                        <Span Text="{Binding Sensor.Position.Well}" Font="Bold" TextColor="Black"/>
                                         <Span Text=" " />
                                         <Span Text="{local1:Translate Bush}" />
                                         <Span Text=" " />
-                                        <Span Text="{Binding Position.Bush}" Font="Bold" TextColor="Black"/>
+                                        <Span Text="{Binding Sensor.Position.Bush}" Font="Bold" TextColor="Black"/>
                                         <Span Text=" " />
                                         <Span Text="{local1:Translate Shop}" />
                                         <Span Text=" " />
-                                        <Span Text="{Binding Position.Shop}" Font="Bold" TextColor="Black"/>
+                                        <Span Text="{Binding Sensor.Position.Shop}" Font="Bold" TextColor="Black"/>
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
@@ -57,7 +59,7 @@
                     </Frame>
                     <Frame Style="{StaticResource MenuItemStyle}" >
                         <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ShowInfoViewCommand}" />
+                            <TapGestureRecognizer Command="{Binding Survey.ShowInfoViewCommand}" />
                         </Frame.GestureRecognizers>
                         <StackLayout>
                             <Label Text="&#x2139; Информационные параметры" Style="{StaticResource TitleLabel}" />
@@ -66,7 +68,7 @@
                     </Frame>
                     <Frame Style="{StaticResource MenuItemStyle}" >
                         <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ShowConfigViewCommand}" />
+                            <TapGestureRecognizer Command="{Binding Survey.ShowConfigViewCommand}" />
                         </Frame.GestureRecognizers>
                         <StackLayout>
                             <Label Text="&#x1F4D0; Параметры измерения" Style="{StaticResource TitleLabel}" />
