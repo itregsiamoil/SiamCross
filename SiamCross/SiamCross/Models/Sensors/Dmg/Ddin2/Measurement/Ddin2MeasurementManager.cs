@@ -75,6 +75,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
             finally
             {
                 report = MakeReport(error);
+                Debug.WriteLine("Measurement elapsed=" + _PerfCounter.ElapsedMilliseconds.ToString());
             }
             return report;
         }
@@ -202,9 +203,6 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
 
             RespResult ret = await _Connection.ReadMemAsync(0x81000000, 1000 * 2, _currentDynGraph
                 , 0, StepProgress);
-
-            Debug.WriteLine(" elapsed=" + _PerfCounter.ElapsedMilliseconds.ToString());
-
 
             /*
             UpdateProgress(_progress, "Read axgm");

@@ -95,21 +95,35 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         }
         private async Task<bool> RequestAsync()
         {
-            int write_timeout = GetRequestTimeout(_EndTxBuf) + mAdditioonTime;
-            CancellationTokenSource ctSrc = new CancellationTokenSource(write_timeout);
             bool sent_ok = false;
-            for (int i = 0; i < _Retry && !sent_ok; ++i)
+            try
             {
-                ctSrc.Token.ThrowIfCancellationRequested();
-                int sent = await mPhyConn.WriteAsync(_TxBuf, 0, _EndTxBuf, ctSrc.Token);
-                if (_EndTxBuf == sent)
-                    sent_ok = true;
-                DebugLog.WriteLine("Sent " + _EndTxBuf.ToString()
-                    + " elapsed=" + _PerfCounter.ElapsedMilliseconds.ToString()
-                    + ": [" + BitConverter.ToString(_TxBuf, 0, _EndTxBuf) + "]\n");
+                int write_timeout = GetRequestTimeout(_EndTxBuf);
+                CancellationTokenSource ctSrc = new CancellationTokenSource(write_timeout);
+
+                for (int i = 0; i < _Retry && !sent_ok; ++i)
+                {
+                    ctSrc.Token.ThrowIfCancellationRequested();
+                    int sent = await mPhyConn.WriteAsync(_TxBuf, 0, _EndTxBuf, ctSrc.Token);
+                    if (_EndTxBuf == sent)
+                        sent_ok = true;
+                    DebugLog.WriteLine("Sent " + _EndTxBuf.ToString()
+                        + " elapsed=" + _PerfCounter.ElapsedMilliseconds.ToString()
+                        + ": [" + BitConverter.ToString(_TxBuf, 0, _EndTxBuf) + "]\n");
+                }
+                //if (!sent)
+                //    ConnectFailed?.Invoke();
             }
-            //if (!sent)
-            //    ConnectFailed?.Invoke();
+            catch (Exception ex)
+            {
+                DebugLog.WriteLine("EXCEPTION in write"
+                    + " elapsed=" + _PerfCounter.ElapsedMilliseconds.ToString()
+                    + ": [" + BitConverter.ToString(_RxBuf, 0, _EndRxBuf) + "]\n"
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
+            }
             return sent_ok;
         }
 
@@ -211,11 +225,11 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             {
                 default:
                 case RespResult.ErrorUnknown:
-                case RespResult.ErrorSending:
                 case RespResult.ErrorConnection:
                 case RespResult.ErrorPkg:
                 case RespResult.NormalPkg: return false;
 
+                case RespResult.ErrorSending:
                 case RespResult.ErrorTimeout:
                 case RespResult.ErrorCrc: return true;
             }
@@ -226,8 +240,12 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             for (int i = 0; i < retry && NeedRetry(ret); ++i)
             {
                 DebugLog.WriteLine("START transaction, try " + i.ToString());
-                if (State != ConnectionState.Connected)
-                    return RespResult.ErrorConnection;
+                if (PhyConnection.State != ConnectionState.Connected)
+                {
+                    //ret = RespResult.ErrorConnection;
+                    await Connect();
+                }
+                    
                 ret = await SingleExchangeAsync();
                 DebugLog.WriteLine("END transaction, try " + i.ToString());
             }
