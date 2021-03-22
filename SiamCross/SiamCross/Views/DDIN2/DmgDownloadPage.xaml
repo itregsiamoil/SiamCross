@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SiamCross.Views.DDIN2.DmgDownloadPage">
+    <ContentPage.Resources>
+        <Style TargetType="{x:Type StackLayout}">
+            <Setter Property="Spacing" Value="0" />
+        </Style>
+    </ContentPage.Resources >
+    <NavigationPage.TitleView >
+        <StackLayout>
+            <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
+            <Label Text="Считывание"
+                   FontSize="Medium" FontAttributes="Bold" 
+                   LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+    <ContentPage.ToolbarItems >
+        <ToolbarItem Text="&#x21BA; " 
+                     Command="{Binding LoadFromDeviceCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
+            <ScrollView VerticalOptions="StartAndExpand">
+                <Frame Style="{StaticResource GroupingFrameStyle}" >
+                    <StackLayout>
+                        <Label Text="Измерения" 
+                               Style="{StaticResource GroupingFrameTitleStyle}"/>
+                        <Label Text="Измерений в памяти 1/1" Margin="10"/>
+                        <ProgressBar Progress="0.33" Margin="10,0,10,10"/>
+                        
+                        <Label Text="Параметры считывания" 
+                               Style="{StaticResource GroupingFrameTitleStyle}"/>
+
+                        <Label Text="Начальное измерение" />
+                        <Entry Text="1" />
+                        <Label Text="Конечное измерение" />
+                        <Entry Text="1" />
+                        <Grid Padding="0,10,0,10">
+                            <Label Text="Показать считанное"/>
+                            <Switch />
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+            </ScrollView>
+
+            <StackLayout Orientation="Horizontal" >
+                <Button Text="Считать все" HorizontalOptions="FillAndExpand"
+                        BackgroundColor="{StaticResource colorSecondaryLight}"
+                        Command="StartDownloadCommand"/>
+            </StackLayout>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

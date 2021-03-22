@@ -23,7 +23,7 @@ using Xamarin.Forms.Internals;
 namespace SiamCross.ViewModels
 {
     [Preserve(AllMembers = true)]
-    public class MeasurementsVMService : BaseViewModel, IViewModel
+    public class MeasurementsVMService : BaseVM
     {
         private static readonly Lazy<MeasurementsVMService> _instance =
             new Lazy<MeasurementsVMService>(() => new MeasurementsVMService());
@@ -42,7 +42,7 @@ namespace SiamCross.ViewModels
             set
             {
                 _selectMode = value;
-                NotifyPropertyChanged(nameof(SelectMode));
+                ChangeNotify(nameof(SelectMode));
             }
         }
         public string Title
@@ -51,8 +51,8 @@ namespace SiamCross.ViewModels
             set
             {
                 _title = value;
-                NotifyPropertyChanged(nameof(Title));
-                NotifyPropertyChanged(nameof(SelCount));
+                ChangeNotify(nameof(Title));
+                ChangeNotify(nameof(SelCount));
             }
         }
         public int SelCount => SelectedMeasurements.Count;

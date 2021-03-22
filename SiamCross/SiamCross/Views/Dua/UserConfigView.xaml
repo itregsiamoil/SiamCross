@@ -11,55 +11,62 @@
     
     <NavigationPage.TitleView >
         <StackLayout Orientation="Vertical" >
-            <Label Text="Настройки" FontSize="Title" TextColor="{StaticResource colorTextPale}"/>
             <Label Text="{Binding Name}" TextColor="{StaticResource colorTextPale}" />
-            
+            <Label Text="Настройки"
+                   FontSize="Medium" FontAttributes="Bold" 
+                   LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
         </StackLayout>
-    </NavigationPage.TitleView>    
-    
+    </NavigationPage.TitleView>
 
+    <ContentPage.ToolbarItems >
+        <ToolbarItem Text="&#x21BA; " 
+                     Command="{Binding LoadFromDeviceCommand}"/>
+    </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
-        <ScrollView BackgroundColor="{StaticResource colorBackground}">
-            <StackLayout >
-                <Frame Style="{StaticResource GroupingFrameStyle}" >
-                    <StackLayout>
-                        <Label Text="Датчик давления" 
+        <StackLayout BackgroundColor="{StaticResource colorBackground}">
+            <ScrollView VerticalOptions="StartAndExpand">
+                <StackLayout >
+                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                        <StackLayout>
+                            <Label Text="Датчик давления" 
                                Style="{StaticResource GroupingFrameTitleStyle}"/>
-                        <Label Text="Чувствительность"/>
-                        <Entry Text="" />
-                        <Label Text="Смещение нуля"/>
-                        <Entry Text="" />
+                            <Label Text="Чувствительность"/>
+                            <Entry Text="" />
+                            <Label Text="Смещение нуля"/>
+                            <Entry Text="" />
 
-                    </StackLayout>
-                </Frame>
-                <Frame Style="{StaticResource GroupingFrameStyle}" >
-                    <StackLayout >
-                        <Label Text="Пьезодатчик" 
+                        </StackLayout>
+                    </Frame>
+                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                        <StackLayout >
+                            <Label Text="Пьезодатчик" 
                                Style="{StaticResource GroupingFrameTitleStyle}"/>
-                        <Label Text="Чувствительность"/>
-                        <Entry Text="" />
-                        <Label Text="Смещение нуля канала усиления"/>
-                        <Entry Text="" />
-                    </StackLayout>
-                </Frame>
-                <Frame Style="{StaticResource GroupingFrameStyle}" >
-                    <StackLayout >
-                        <Label Text="Разное" 
+                            <Label Text="Чувствительность"/>
+                            <Entry Text="" />
+                            <Label Text="Смещение нуля канала усиления"/>
+                            <Entry Text="" />
+                        </StackLayout>
+                    </Frame>
+                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                        <StackLayout >
+                            <Label Text="Разное" 
                                Style="{StaticResource GroupingFrameTitleStyle}"/>
-                        <Grid Padding="0,10,0,10">
-                            <Label Text="Сервисный режим"/>
-                            <Switch />
-                        </Grid>
-                    </StackLayout>
-                </Frame>
-                <StackLayout Spacing="0" Orientation="Horizontal" >
-                    <Button Text="назад" HorizontalOptions="FillAndExpand" 
-                            BackgroundColor="{StaticResource colorPrimaryLight}" />
-                    <Button Text="сохранить" HorizontalOptions="FillAndExpand" 
-                            BackgroundColor="{StaticResource colorSecondaryLight}" />
+                            <Grid Padding="0,10,0,10">
+                                <Label Text="Сервисный режим"/>
+                                <Switch />
+                            </Grid>
+                        </StackLayout>
+                    </Frame>
                 </StackLayout>
+            </ScrollView>
+            <StackLayout Orientation="Horizontal" >
+                <Button Text="Сохранить в приборе" HorizontalOptions="FillAndExpand" 
+                            BackgroundColor="{StaticResource colorSecondaryLight}" />
             </StackLayout>
-        </ScrollView>
+        </StackLayout>
+
+
+        
     </ContentPage.Content>
 </ContentPage>

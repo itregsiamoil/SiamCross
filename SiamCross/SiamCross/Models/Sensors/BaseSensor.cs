@@ -48,39 +48,36 @@ namespace SiamCross.Models.Sensors
                 ChangeNotify(nameof(ConnStateStr));
             };
             //mConnection.PropertyChanged += PropertyChanged;
-            ShowDetailViewCommand = new AsyncCommand(
-                () => App.NavigationPage.Navigation.PushAsync(new SensorDetailsView(this))
+            ShowDetailViewCommand = new AsyncCommand(ShowShowDetails
                 , (Func<object, bool>)null, null, false, false);
             
-            ShowSurveysViewCommand = new AsyncCommand(
-                ShowSurveysCollection
-            , (Func<object, bool>)null, null, false, false);
 
         }
-        private async Task ShowSurveysCollection()
+
+
+        private async Task ShowShowDetails()
         {
-            var type = typeof(SurveysCollectionnViewModel);
+            var type = typeof(SensorDetailsViewModel);
 
 
-            var view = ViewFactoryService.Get(type) as SurveysCollectionnView;
+            var view = ViewFactoryService.Get(type) as SensorDetailsView;
             if (null == view)
             {
-                view = new SurveysCollectionnView();
+                view = new SensorDetailsView();
                 ViewFactoryService.Register(type, view);
             }
 
-            var surveys = new ObservableCollection<SurveyVM>();
-            Surveys.ForEach(o => surveys.Add(o));
-            var ctx = new SurveysCollectionnViewModel()
+            var ctx = new SensorDetailsViewModel()
             {
-                Sensor = this,
-                SurveysCollection = surveys
+                Sensor = this
             };
-            view = ViewFactoryService.Get<SurveysCollectionnView>(type, ctx);
-
-
+            view = ViewFactoryService.Get<SensorDetailsView>(type, ctx);
             await App.NavigationPage.Navigation.PushAsync(view);
         }
+
+
+
+
 
         public async void Dispose()
         {

@@ -13,13 +13,13 @@ using Xamarin.Forms;
 namespace SiamCross.ViewModels.MeasurementViewModels
 {
 
-    public class SurveysCollectionnViewModel : BaseView
+    public class SurveysCollectionnViewModel : BaseVM
     {
         public ISensor Sensor { get; set; }
         public ObservableCollection<SurveyVM> SurveysCollection { get; set; }
     }
 
-    public class SurveyViewModel : BaseView
+    public class SurveyViewModel : BaseVM
     {
         public ISensor Sensor { get; set; }
         public SurveyVM Survey { get; set; }
@@ -27,7 +27,7 @@ namespace SiamCross.ViewModels.MeasurementViewModels
     
 
 
-    public class SurveyVM : BaseView
+    public class SurveyVM : BaseVM
     {
         private async Task Show()
         {

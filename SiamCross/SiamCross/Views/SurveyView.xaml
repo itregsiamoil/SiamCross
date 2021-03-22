@@ -12,8 +12,10 @@
     </ContentPage.Resources >
     <NavigationPage.TitleView >
         <StackLayout>
-            <Label Text="{Binding Survey.Name}" FontSize="Title" TextColor="White" LineBreakMode="TailTruncation" />
-            <Label Text="{Binding Sensor.Name}" Font="Bold" TextColor="White" />
+            <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
+            <Label Text="{Binding Survey.Name}"
+                   FontSize="Medium" FontAttributes="Bold" 
+                   LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
         </StackLayout>
     </NavigationPage.TitleView>
     

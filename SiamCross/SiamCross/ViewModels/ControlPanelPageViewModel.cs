@@ -19,7 +19,7 @@ using Xamarin.Forms.Internals;
 namespace SiamCross.ViewModels
 {
     [Preserve(AllMembers = true)]
-    public class ControlPanelPageViewModel : BaseViewModel, IViewModel
+    public class ControlPanelPageViewModel : BaseVM
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
         public ObservableCollection<ISensor> Sensor { get; }
@@ -130,10 +130,7 @@ namespace SiamCross.ViewModels
                         new DuMeasurementPage(sensor));
                     break;
                 case 0x1201:
-                    if (!CanOpenPage(typeof(SensorDetailsView)))
-                        return;
-                    App.NavigationPage.Navigation.PushAsync(
-                        new SensorDetailsView(sensor));
+                    sensor.ShowDetailViewCommand.Execute(this);
                     break;
                 default: break;
             }

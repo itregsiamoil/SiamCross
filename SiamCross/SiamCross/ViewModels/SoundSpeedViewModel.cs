@@ -13,7 +13,7 @@ using Xamarin.Forms.Internals;
 namespace SiamCross.ViewModels
 {
     [Preserve(AllMembers = true)]
-    public class SoundSpeedViewModel : BaseViewModel, IViewModel
+    public class SoundSpeedViewModel : BaseVM
     {
         public ObservableCollection<SoundSpeedModel> SoundSpeedList { get; set; }
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();

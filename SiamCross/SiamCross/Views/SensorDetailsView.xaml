@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              x:Class="SiamCross.Views.SensorDetailsView"
-             xmlns:models="clr-namespace:SiamCross.Models.Sensors"
-             x:DataType="models:ISensor" 
+             xmlns:vm="clr-namespace:SiamCross.ViewModels"
+             x:DataType="vm:SensorDetailsViewModel" 
              >
     <NavigationPage.TitleView >
         <Grid RowSpacing="0" ColumnSpacing="0">
@@ -17,7 +17,7 @@
                 <ColumnDefinition Width="50"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
-            <Label Text="{Binding Name}" 
+            <Label Text="{Binding Sensor.Name}" 
                    Grid.Row="0" Grid.Column="0"
                    Font="Bold" TextColor="{StaticResource colorTextPale}" />
             <Label 
@@ -25,15 +25,15 @@
                 TextColor="{StaticResource colorTextPale}">
                 <Label.FormattedText>
                     <FormattedString >
-                        <Span Text="{Binding Type}" />
+                        <Span Text="{Binding Sensor.Type}" />
                         <Span Text=" " />
-                        <Span Text="{Binding Connection.PhyConnection.PhyInterface.Name}" />
+                        <Span Text="{Binding Sensor.Connection.PhyConnection.PhyInterface.Name}" />
                         <Span Text=" " />
-                        <Span Text="{Binding ConnStateStr}" />
+                        <Span Text="{Binding Sensor.ConnStateStr}" />
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
-            <Switch IsToggled="{Binding Activate}" 
+            <Switch IsToggled="{Binding Sensor.Activate}" 
                     Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" />
         </Grid>
     </NavigationPage.TitleView>

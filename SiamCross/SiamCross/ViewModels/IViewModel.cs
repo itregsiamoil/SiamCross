@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace SiamCross.ViewModels
 {
@@ -9,4 +10,6 @@ namespace SiamCross.ViewModels
     public interface IViewModel : INotifyPropertyChanged
     {
     }
+
+
 }

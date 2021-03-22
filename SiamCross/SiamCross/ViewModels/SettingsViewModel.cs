@@ -4,7 +4,7 @@ using Xamarin.Forms.Internals;
 namespace SiamCross.ViewModels
 {
     [Preserve(AllMembers = true)]
-    public class SettingsViewModel : BaseViewModel, IViewModel
+    public class SettingsViewModel : BaseVM
     {
         private string _fromAddress;
         private string _toAddress;

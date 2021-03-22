@@ -1,7 +1,10 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
+using SiamCross.Services;
+using SiamCross.ViewModels.Dmg;
 using SiamCross.ViewModels.MeasurementViewModels;
 using SiamCross.Views;
+using SiamCross.Views.DDIN2;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -111,6 +114,33 @@ namespace SiamCross.Models.Sensors.Dmg
                 , "кривая восстановления уровня");
             surveys.Add(sur3);
 
+
+
+            ShowDownloadsViewCommand = new AsyncCommand(ShowDownloadsPage
+                , (Func<object, bool>)null, null, false, false);
+
+            
+
+        }
+
+        private async Task ShowDownloadsPage()
+        {
+            var type = typeof(DmgDownloadViewModel);
+
+
+            var view = ViewFactoryService.Get(type) as DmgDownloadPage;
+            if (null == view)
+            {
+                view = new DmgDownloadPage();
+                ViewFactoryService.Register(type, view);
+            }
+
+            var ctx = new DmgDownloadViewModel()
+            {
+                Sensor = this
+            };
+            view = ViewFactoryService.Get<DmgDownloadPage>(type, ctx);
+            await App.NavigationPage.Navigation.PushAsync(view);
         }
 
         public override async Task<bool> QuickReport(CancellationToken cancelToken)

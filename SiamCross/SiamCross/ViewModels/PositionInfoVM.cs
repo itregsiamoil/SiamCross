@@ -12,16 +12,7 @@ using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
-    public abstract class BaseView : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void ChangeNotify([CallerMemberName] string prop = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
-    }
-
-    public class GeoLocationVM : BaseView
+    public class GeoLocationVM : BaseVM
     {
         public GeoLocation _Model;
         public GeoLocation Model => _Model;
@@ -84,7 +75,7 @@ namespace SiamCross.ViewModels
     }
 
 
-    public class PositionInfoVM : BaseView
+    public class PositionInfoVM : BaseVM
     {
         protected PositionInfo _Model = new PositionInfo();
         public PositionInfo Model => _Model;

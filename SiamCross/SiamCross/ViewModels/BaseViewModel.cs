@@ -1,13 +1,14 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace SiamCross.ViewModels
 {
-    public class BaseViewModel : INotifyPropertyChanged
+    public abstract class BaseVM : IViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void NotifyPropertyChanged(string propertyName)
+        public void ChangeNotify([CallerMemberName] string prop = "")
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
 }

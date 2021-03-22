@@ -12,7 +12,7 @@ using Xamarin.Forms.Internals;
 namespace SiamCross.ViewModels
 {
     [Preserve(AllMembers = true)]
-    public class AddFieldViewModel : BaseViewModel, IViewModel
+    public class AddFieldViewModel : BaseVM
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 
