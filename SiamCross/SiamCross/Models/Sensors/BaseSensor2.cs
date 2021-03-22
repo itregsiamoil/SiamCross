@@ -37,6 +37,11 @@ namespace SiamCross.Models.Sensors
             ProgrammVersionSize = _Info.Add(new MemVarUInt16(nameof(ProgrammVersionSize)));
 
             _Memory.Add(_Common);
+
+            if (ScannedDeviceInfo.Device.PhyData.TryGetValue("ModemVersion", out object _))
+                Connection.MaxReqLen = 230;// 247 - 3(bt header) - 12(siam header)-2(crc)
+            else
+                Connection.MaxReqLen = 40;
         }
 
         public async Task<bool> UpdateFirmware(CancellationToken cancelToken)
@@ -51,11 +56,6 @@ namespace SiamCross.Models.Sensors
                 //ret = await ProtConn.WriteAsync(ms);
 
                 ret = await Connection.ReadAsync(_Common);
-                if (10 > MemoryModelVersion.Value)
-                    Connection.MaxReqLen = 40;
-                else
-                    Connection.MaxReqLen = 230;// 247 - 3(bt header) - 12(siam header)-2(crc)
-
                 ret = await Connection.ReadAsync(_Info);
                 UInt32 fw_address = ProgrammVersionAddress.Value;
                 UInt16 fw_size = ProgrammVersionSize.Value;

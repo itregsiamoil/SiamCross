@@ -170,7 +170,11 @@ namespace SiamCross.Droid.Models
                     if (bytesUtf8.Contains("СИАМ") || bytesUtf8.Contains("SIAM"))
                     {
                         HasUriTag = true;
-                        break;
+                        if(0x16 == data_block_type)
+                        {
+                            sd.Device.PhyData.Add("ModemVersion", 2);
+                            break;
+                        }
                     }
                 }
                 //var v = new { Len = data_block_len , Type = data_block_type, Data = data_block_data };
