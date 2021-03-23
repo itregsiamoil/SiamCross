@@ -119,7 +119,7 @@ namespace SiamCross.Models.Sensors.Dmg
             ShowDownloadsViewCommand = new AsyncCommand(ShowDownloadsPage
                 , (Func<object, bool>)null, null, false, false);
 
-            
+            Downloader = new DmgMesurementsDownloader(this);
 
         }
 

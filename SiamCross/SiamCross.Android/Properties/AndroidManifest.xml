@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="2.6.0" package="com.siam" android:installLocation="auto" android:versionCode="1">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="2.7.0rc0" package="com.siam" android:installLocation="auto" android:versionCode="1">
 	<uses-sdk android:targetSdkVersion="29" android:minSdkVersion="24" />
 	<application android:label="SIAM SERVICE" android:icon="@mipmap/main_icon" android:roundIcon="@mipmap/main_ricon" android:theme="@style/MainTheme" android:noHistory="true" android:finishOnTaskLaunch="true" android:requestLegacyExternalStorage="true"></application>
 	<uses-permission android:name="android.permission.BLUETOOTH" />

@@ -1,12 +1,12 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace SiamCross.Views
+namespace SiamCross.Views.Dua
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class SurveysCollectionnView : ContentPage
+    public partial class DuaDownloadPage : ContentPage
     {
-        public SurveysCollectionnView()
+        public DuaDownloadPage()
         {
             InitializeComponent();
         }

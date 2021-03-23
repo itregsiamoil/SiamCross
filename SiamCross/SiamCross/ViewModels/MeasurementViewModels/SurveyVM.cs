@@ -3,8 +3,6 @@ using SiamCross.Services;
 using SiamCross.Views;
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
@@ -24,7 +22,7 @@ namespace SiamCross.ViewModels.MeasurementViewModels
         public ISensor Sensor { get; set; }
         public SurveyVM Survey { get; set; }
     }
-    
+
 
 
     public class SurveyVM : BaseVM
@@ -55,7 +53,7 @@ namespace SiamCross.ViewModels.MeasurementViewModels
                 () => App.NavigationPage.Navigation.PushAsync(cfgPage)
                 , (Func<object, bool>)null, null, false, false);
         }
-        public SurveyVM(ISensor sensor, string name, string description, Page cfgPage=null)
+        public SurveyVM(ISensor sensor, string name, string description, Page cfgPage = null)
         {
             Sensor = sensor;
             Name = name;
@@ -70,11 +68,11 @@ namespace SiamCross.ViewModels.MeasurementViewModels
         }
         public string Name { get; private set; }
         public string Description { get; private set; }
-        
+
         public ISensor Sensor { get; private set; }
 
         public ICommand ShowViewCommand { get; private set; }
-        
+
         public ICommand ShowInfoViewCommand { get; set; }
         public ICommand ShowConfigViewCommand { get; set; }
         /*

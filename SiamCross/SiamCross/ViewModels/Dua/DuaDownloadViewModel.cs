@@ -1,4 +1,5 @@
 ﻿using SiamCross.Models.Sensors;
+using SiamCross.Models.Sensors.Dua;
 using SiamCross.Services;
 using SiamCross.Services.Toast;
 using System;
@@ -7,24 +8,27 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
 
-namespace SiamCross.ViewModels.Dmg
+namespace SiamCross.ViewModels.Dua
 {
-    public class DmgDownloadViewModel : BaseVM
+    public class DuaDownloadViewModel : BaseVM
     {
         ISensor _Sensor;
+        DuaMesurementsDownloader _Downloader;
 
         bool _IsDownloading;
         float _Progress;
         string _ProgressInfo;
-        string _Aviable;
+        string _AviableRep;
+        string _AviableEcho;
 
         public ISensor Sensor
         {
             get => _Sensor;
             set 
             { 
-                _Sensor = value; 
-                ChangeNotify();
+                _Sensor = value;
+                _Downloader = _Sensor.Downloader as DuaMesurementsDownloader;
+                ChangeNotify(); 
             }
         }
         public bool IsDownloading
@@ -45,9 +49,16 @@ namespace SiamCross.ViewModels.Dmg
         }
         public string Aviable
         {
-            get => _Aviable;
-            set { _Aviable = value; ChangeNotify(); }
+            get => _AviableRep;
+            set { _AviableRep = value; ChangeNotify(); }
         }
+        public string AviableEcho
+        {
+            get => _AviableEcho;
+            set { _AviableEcho = value; ChangeNotify(); }
+        }
+
+
 
         public bool OpenOnDownload { get; set; }
 
@@ -57,7 +68,7 @@ namespace SiamCross.ViewModels.Dmg
 
         public ICommand StartDownloadCommand { get; set; }
 
-        public DmgDownloadViewModel()
+        public DuaDownloadViewModel()
         {
             StartDownloadCommand = new AsyncCommand(StartDownload
                 , (Func<object, bool>)null, null, false, false);
@@ -73,8 +84,9 @@ namespace SiamCross.ViewModels.Dmg
             IsDownloading = true;
             Progress = 0.1f;
             await _Sensor.Downloader.Update();
-            Progress = 0.8f;
-            Aviable = _Sensor.Downloader.Aviable().ToString();
+            Progress = 0.5f;
+            Aviable = _Downloader.Aviable().ToString();
+            AviableEcho = _Downloader.AviableEcho().ToString();
             Progress = 0.9f;
             IsDownloading = false;
             Progress = 1.0f;

@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:vm="clr-namespace:SiamCross.ViewModels.Dua"
+             x:DataType="vm:DuaDownloadViewModel"
+             x:Class="SiamCross.Views.Dua.DuaDownloadPage">
+    <ContentPage.Resources>
+        <Style TargetType="{x:Type StackLayout}">
+            <Setter Property="Spacing" Value="0" />
+        </Style>
+    </ContentPage.Resources >
+    <NavigationPage.TitleView >
+        <StackLayout>
+            <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
+            <Label Text="Считывание"
+                   FontSize="Medium" FontAttributes="Bold" 
+                   LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+    <ContentPage.ToolbarItems >
+        <ToolbarItem Text="&#x21BA; " 
+                     Command="{Binding LoadFromDeviceCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
+            <ScrollView VerticalOptions="StartAndExpand">
+                <StackLayout>
+                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                        <StackLayout>
+                            <Label Text="Измерения" 
+                               Style="{StaticResource GroupingFrameTitleStyle}"/>
+                            <Label >
+                                <Label.FormattedText>
+                                    <FormattedString >
+                                        <Span Text="Измерений: " />
+                                        <Span Text="{Binding Aviable}" />
+                                        <Span Text=" с эхограммами: " />
+                                        <Span Text="{Binding AviableEcho}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Text="Всего: 3318"/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                        <StackLayout>
+                            <Label Text="Параметры считывания" 
+                               Style="{StaticResource GroupingFrameTitleStyle}"/>
+
+                            <Grid Padding="0,10,0,0">
+                                <Label Text="Считывать эхограммы"/>
+                                <Switch IsToggled="{Binding OpenOnDownload}"/>
+                            </Grid>
+
+                            <Grid RowSpacing="0">
+                                <Grid.RowDefinitions>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60*"/>
+                                    <ColumnDefinition Width="40*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Text="Начальное измерение" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
+                                <Entry Text="1" Grid.Column="1" Grid.Row="0"/>
+                                <Label Text="Количество" Grid.Column="0" Grid.Row="1" VerticalTextAlignment="Center"/>
+                                <Entry Text="1" Grid.Column="1" Grid.Row="1"/>
+
+                            </Grid>
+
+                            <Grid Padding="0,10,0,10">
+                                <Label Text="Открыть считанное"/>
+                                <Switch IsToggled="{Binding OpenOnDownload}"/>
+                            </Grid>
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+
+
+
+                
+            </ScrollView>
+
+
+            <StackLayout IsVisible="false">
+                <StackLayout.Triggers>
+                    <DataTrigger TargetType="StackLayout" Binding="{Binding IsDownloading}" Value="true" >
+                        <Setter Property="IsVisible" Value="true"  />
+                    </DataTrigger>
+                </StackLayout.Triggers>
+                <Label Text="{Binding ProgressInfo}" Margin="10" />
+                <ProgressBar Progress="{Binding Progress}" />
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" >
+                <Button Text="Считать" HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorSecondaryLight}"
+                        Command="{Binding StartDownloadCommand}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsDownloading}" Value="true" >
+                            <Setter Property="IsEnabled" Value="false"  />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+            </StackLayout>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

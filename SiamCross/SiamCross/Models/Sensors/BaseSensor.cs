@@ -9,7 +9,6 @@ using SiamCross.ViewModels.MeasurementViewModels;
 using SiamCross.Views;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -17,7 +16,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
-using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Sensors
 {
@@ -50,7 +48,6 @@ namespace SiamCross.Models.Sensors
             //mConnection.PropertyChanged += PropertyChanged;
             ShowDetailViewCommand = new AsyncCommand(ShowShowDetails
                 , (Func<object, bool>)null, null, false, false);
-            
 
         }
 
@@ -149,6 +146,7 @@ namespace SiamCross.Models.Sensors
             set => _Position = value;
         }
         public ICommand ShowDetailViewCommand { get; set; }
+        public IMeasurementsDownloader Downloader { get; set; }
         public ICommand ShowFactoryConfigViewCommand { get; set; }
         public ICommand ShowUserConfigViewCommand { get; set; }
 

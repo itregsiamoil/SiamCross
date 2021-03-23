@@ -1,19 +1,14 @@
 ﻿using SiamCross.Models.Sensors;
 using SiamCross.Services;
-using SiamCross.ViewModels.MeasurementViewModels;
 using SiamCross.Views;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
-using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
-    public class SensorDetailsViewModel: BaseVM
+    public class SensorDetailsViewModel : BaseVM
     {
         public ICommand ShowUserConfigViewCommand { get; set; }
         public ICommand ShowFactoryConfigViewCommand { get; set; }

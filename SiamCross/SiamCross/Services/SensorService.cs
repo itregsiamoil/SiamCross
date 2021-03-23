@@ -109,7 +109,7 @@ namespace SiamCross.Services
             }
         }
 
-        public static async void MeasurementHandler(object measurementArgs)
+        public static async Task MeasurementHandler(object measurementArgs, bool show = true)
         {
             int addId;
             switch (measurementArgs)
@@ -119,15 +119,18 @@ namespace SiamCross.Services
                     addId = DataRepository.Instance.SaveDdin2Measurement(dbModelDdin2);
                     Ddin2Measurement dbObj = DataRepository.Instance.GetDdin2MeasurementById(addId);
 
-                    await App.NavigationPage.Navigation.PushAsync(
+                    if (show)
+                        await App.NavigationPage.Navigation.PushAsync(
                            new Ddin2MeasurementDonePage(dbObj), true);
                     break;
                 case DuMeasurementData duData:
                     DuMeasurement dbModelDu = new DuMeasurement(duData);
                     addId = DataRepository.Instance.SaveDuMeasurement(dbModelDu);
-                    await App.NavigationPage.Navigation.PushAsync(
-                        new DuMeasurementDonePage(DataRepository.Instance.GetDuMeasurementById(addId)),
-                        true);
+
+                    if (show)
+                        await App.NavigationPage.Navigation.PushAsync(
+                            new DuMeasurementDonePage(
+                                DataRepository.Instance.GetDuMeasurementById(addId)), true);
                     break;
                 default:
                     break;

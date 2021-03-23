@@ -1,7 +1,8 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
+using SiamCross.Services;
+using SiamCross.ViewModels.Dua;
 using SiamCross.ViewModels.MeasurementViewModels;
-using SiamCross.Views;
 using SiamCross.Views.Dua;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,6 @@ namespace SiamCross.Models.Sensors.Dua
         public readonly MemVarUInt16 BatteryVoltage;
         public readonly MemVarUInt16 ТempC;
         public readonly MemVarInt16 Pressure;
-
         public readonly MemVarByteArray Time;
         public readonly MemVarUInt16 Emak;
         public readonly MemVarUInt16 Rdav;
@@ -88,13 +88,6 @@ namespace SiamCross.Models.Sensors.Dua
             Urov = _Report.Add(new MemVarUInt16(nameof(Urov)));
             Otr = _Report.Add(new MemVarUInt16(nameof(Otr)));
 
-            ShowFactoryConfigViewCommand = new AsyncCommand(
-                () => App.NavigationPage.Navigation.PushAsync(new FactoryConfigView(this))
-                , (Func<object, bool>)null, null, false, false);
-            ShowUserConfigViewCommand = new AsyncCommand(
-                () => App.NavigationPage.Navigation.PushAsync(new UserConfigView(this))
-                , (Func<object, bool>)null, null, false, false);
-
             var surveys = new List<SurveyVM>();
             Surveys = surveys;
 
@@ -124,7 +117,41 @@ namespace SiamCross.Models.Sensors.Dua
                 , "автоматическая регистрация давления");
             surveys.Add(sur5);
 
+            ShowFactoryConfigViewCommand = new AsyncCommand(
+                () => App.NavigationPage.Navigation.PushAsync(new FactoryConfigView(this))
+                , (Func<object, bool>)null, null, false, false);
+            ShowUserConfigViewCommand = new AsyncCommand(
+                () => App.NavigationPage.Navigation.PushAsync(new UserConfigView(this))
+                , (Func<object, bool>)null, null, false, false);
+
+            ShowDownloadsViewCommand = new AsyncCommand(ShowDownloadsPage
+                , (Func<object, bool>)null, null, false, false);
+
+            Downloader = new DuaMesurementsDownloader(this);
+
         }
+
+        private async Task ShowDownloadsPage()
+        {
+            var type = typeof(DuaDownloadViewModel);
+
+
+            var view = ViewFactoryService.Get(type) as DuaDownloadPage;
+            if (null == view)
+            {
+                view = new DuaDownloadPage();
+                ViewFactoryService.Register(type, view);
+            }
+
+            var ctx = new DuaDownloadViewModel()
+            {
+                Sensor = this
+            };
+            view = ViewFactoryService.Get<DuaDownloadPage>(type, ctx);
+            await App.NavigationPage.Navigation.PushAsync(view);
+        }
+
+
 
         public override async Task<bool> QuickReport(CancellationToken cancelToken)
         {

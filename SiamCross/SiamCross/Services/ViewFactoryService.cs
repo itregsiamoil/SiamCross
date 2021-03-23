@@ -1,13 +1,10 @@
-﻿using SiamCross.ViewModels.MeasurementViewModels;
-using SiamCross.Views;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Xamarin.Forms;
 
 namespace SiamCross.Services
 {
-    
+
     static public class ViewFactoryService
     {
         static Dictionary<Type, Func<ContentPage>> _Factory = new Dictionary<Type, Func<ContentPage>>();
@@ -33,7 +30,7 @@ namespace SiamCross.Services
             var view = Get(type) as T;
             if (null == view)
                 return null;
-            
+
             view.BindingContext = bindingContext;
             return view;
         }

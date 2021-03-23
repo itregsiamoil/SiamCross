@@ -13,6 +13,7 @@ namespace SiamCross.Models.Sensors
 {
     public interface ISensor : IDisposable, INotifyPropertyChanged
     {
+        IMeasurementsDownloader Downloader { get; set; }
         ICommand ShowDetailViewCommand { get; set; }
         ICommand ShowUserConfigViewCommand { get; set; }
         ICommand ShowFactoryConfigViewCommand { get; set; }

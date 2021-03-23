@@ -1,6 +1,4 @@
-﻿using SiamCross.Models.Sensors;
-using System.Linq;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace SiamCross.Views

@@ -245,7 +245,6 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                     //ret = RespResult.ErrorConnection;
                     await Connect();
                 }
-                    
                 ret = await SingleExchangeAsync();
                 DebugLog.WriteLine("END transaction, try " + i.ToString());
             }

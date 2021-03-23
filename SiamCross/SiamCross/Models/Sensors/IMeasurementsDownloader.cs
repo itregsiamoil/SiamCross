@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors
 {
     public interface IMeasurementsDownloader
     {
+        Task Clear();
+        Task Update();
         int Aviable();
-        void Download(int begin, int end);
+        Task<object> Download(int begin, int end
+            , Action<float> onStepProgress = null, Action<string> onStepInfo = null);
     }
 }

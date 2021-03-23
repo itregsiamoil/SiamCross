@@ -60,7 +60,6 @@
                       SeparatorVisibility="None"
                       ItemTapped="ListView_ItemTapped"
                       BackgroundColor="{StaticResource colorCtrlBg}"
-                      CachingStrategy="RecycleElementAndDataTemplate"
                       Margin ="0" >
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="local:MeasurementView">

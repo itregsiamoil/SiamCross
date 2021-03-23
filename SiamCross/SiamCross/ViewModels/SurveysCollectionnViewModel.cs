@@ -1,9 +1,6 @@
 ﻿using SiamCross.Models.Sensors;
 using SiamCross.ViewModels.MeasurementViewModels;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
