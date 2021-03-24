@@ -1,4 +1,5 @@
-﻿using SiamCross.Models.Sensors;
+﻿using SiamCross.Models.Connection.Protocol;
+using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Dua;
 using SiamCross.Services;
 using SiamCross.Services.Toast;
@@ -17,18 +18,24 @@ namespace SiamCross.ViewModels.Dua
 
         bool _IsDownloading;
         float _Progress;
+        string _Info;
         string _ProgressInfo;
+        string _Aviable;
         string _AviableRep;
         string _AviableEcho;
+        string _StartRep;
+        string _CountRep;
+        string _StartEcho;
+        string _CountEcho;
 
         public ISensor Sensor
         {
             get => _Sensor;
-            set 
-            { 
+            set
+            {
                 _Sensor = value;
                 _Downloader = _Sensor.Downloader as DuaMesurementsDownloader;
-                ChangeNotify(); 
+                ChangeNotify();
             }
         }
         public bool IsDownloading
@@ -41,13 +48,17 @@ namespace SiamCross.ViewModels.Dua
             get => _Progress;
             set { _Progress = value; ChangeNotify(); }
         }
-        string _Info;
         public string ProgressInfo
         {
             get => _ProgressInfo;
             set { _ProgressInfo = value; ChangeNotify(); }
         }
         public string Aviable
+        {
+            get => _Aviable;
+            set { _Aviable = value; ChangeNotify(); }
+        }
+        public string AviableRep
         {
             get => _AviableRep;
             set { _AviableRep = value; ChangeNotify(); }
@@ -57,19 +68,37 @@ namespace SiamCross.ViewModels.Dua
             get => _AviableEcho;
             set { _AviableEcho = value; ChangeNotify(); }
         }
-
-
-
-        public bool OpenOnDownload { get; set; }
-
-
+        public string StartRep
+        {
+            get => _StartRep;
+            set { _StartRep = value; ChangeNotify(); }
+        }
+        public string CountRep
+        {
+            get => _CountRep;
+            set { _CountRep = value; ChangeNotify(); }
+        }
+        public string StartEcho
+        {
+            get => _StartEcho;
+            set { _StartEcho = value; ChangeNotify(); }
+        }
+        public string CountEcho
+        {
+            get => _CountEcho;
+            set { _CountEcho = value; ChangeNotify(); }
+        }
 
         public ICommand LoadFromDeviceCommand { get; set; }
-
         public ICommand StartDownloadCommand { get; set; }
 
         public DuaDownloadViewModel()
         {
+            StartRep = "0";
+            CountRep = "1";
+            StartEcho = "0";
+            CountEcho = "1";
+
             StartDownloadCommand = new AsyncCommand(StartDownload
                 , (Func<object, bool>)null, null, false, false);
 
@@ -80,22 +109,33 @@ namespace SiamCross.ViewModels.Dua
 
         private async Task LoadFromDevice()
         {
-            ProgressInfo = "получение информации с прибора";
             IsDownloading = true;
+            ProgressInfo = "получение информации с прибора";
             Progress = 0.1f;
-            await _Sensor.Downloader.Update();
+
+            if (RespResult.NormalPkg != await _Downloader.Update())
+            {
+                Progress = 1.0f;
+                ProgressInfo = "не удалось получить информация с прибора";
+                return;
+            }
             Progress = 0.5f;
             Aviable = _Downloader.Aviable().ToString();
+            AviableRep = _Downloader.AviableRep().ToString();
             AviableEcho = _Downloader.AviableEcho().ToString();
-            Progress = 0.9f;
-            IsDownloading = false;
             Progress = 1.0f;
+            IsDownloading = false;
         }
 
         private async Task StartDownload()
         {
             Stopwatch _PerfCounter = new Stopwatch();
             _PerfCounter.Restart();
+
+            if (!uint.TryParse(StartRep, out uint startRep))
+                return;
+            if (!uint.TryParse(CountRep, out uint countRep))
+                return;
 
             ProgressInfo = "Считывание с прибора";
             IsDownloading = true;
@@ -112,13 +152,13 @@ namespace SiamCross.ViewModels.Dua
                 ProgressInfo = $"[{(100.0 * Progress).ToString("N2")}%] " + info;
             };
 
-            var measurement = await _Sensor.Downloader.Download(1, 1, StepProgress, InfoProgress);
+            var measurements = await _Downloader.Download(startRep, countRep, StepProgress, InfoProgress);
 
             IsDownloading = false;
             ToastService.Instance.LongAlert($"Elapsed {_PerfCounter.ElapsedMilliseconds}");
-            await SensorService.MeasurementHandler(measurement, OpenOnDownload);
 
-
+            foreach (var m in measurements)
+                await SensorService.MeasurementHandler(m, false);
         }
     }
 }

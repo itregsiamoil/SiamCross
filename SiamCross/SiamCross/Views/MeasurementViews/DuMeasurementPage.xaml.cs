@@ -11,10 +11,10 @@ namespace SiamCross.Views
         private readonly DuMeasurementViewModel _vm;
         public DuMeasurementPage(ISensor sensor)
         {
+            InitializeComponent();
             ViewModelWrap<DuMeasurementViewModel> vm = new ViewModelWrap<DuMeasurementViewModel>(sensor);
             _vm = vm.ViewModel;
             BindingContext = _vm;
-            InitializeComponent();
         }
 
         private void AmplificationCheckboxChanged(object sender, CheckedChangedEventArgs e)

@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:vm="clr-namespace:SiamCross.ViewModels.Dua"
              x:DataType="vm:DuaDownloadViewModel"
              x:Class="SiamCross.Views.Dua.DuaDownloadPage">
@@ -12,7 +13,7 @@
     <NavigationPage.TitleView >
         <StackLayout>
             <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
-            <Label Text="Считывание"
+            <Label Text="Считывание измерений"
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
         </StackLayout>
@@ -25,34 +26,26 @@
 
     <ContentPage.Content>
         <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
+            <StackLayout.Triggers>
+                <DataTrigger TargetType="StackLayout" Binding="{Binding IsDownloading}" Value="true" >
+                    <Setter Property="IsEnabled" Value="false"  />
+                </DataTrigger>
+            </StackLayout.Triggers>
+            
             <ScrollView VerticalOptions="StartAndExpand">
                 <StackLayout>
                     <Frame Style="{StaticResource GroupingFrameStyle}" >
                         <StackLayout>
-                            <Label Text="Измерения" 
-                               Style="{StaticResource GroupingFrameTitleStyle}"/>
-                            <Label >
+                            <Label Style="{StaticResource GroupingFrameTitleStyle}">
                                 <Label.FormattedText>
                                     <FormattedString >
-                                        <Span Text="Измерений: " />
-                                        <Span Text="{Binding Aviable}" />
-                                        <Span Text=" с эхограммами: " />
-                                        <Span Text="{Binding AviableEcho}" />
+                                        <Span Text="Измерения без эхограмм" />
+                                        <Span Text="&#10;" />
+                                        <Span Text="{Binding AviableRep}"  />
+                                        <Span Text=" из 3008"  />
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
-                            <Label Text="Всего: 3318"/>
-                        </StackLayout>
-                    </Frame>
-                    <Frame Style="{StaticResource GroupingFrameStyle}" >
-                        <StackLayout>
-                            <Label Text="Параметры считывания" 
-                               Style="{StaticResource GroupingFrameTitleStyle}"/>
-
-                            <Grid Padding="0,10,0,0">
-                                <Label Text="Считывать эхограммы"/>
-                                <Switch IsToggled="{Binding OpenOnDownload}"/>
-                            </Grid>
 
                             <Grid RowSpacing="0">
                                 <Grid.RowDefinitions>
@@ -62,23 +55,55 @@
                                     <ColumnDefinition Width="40*"/>
                                 </Grid.ColumnDefinitions>
                                 <Label Text="Начальное измерение" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
-                                <Entry Text="1" Grid.Column="1" Grid.Row="0"/>
+                                <Entry Text="{Binding StartRep}" Keyboard="Numeric"
+                                       Grid.Column="1" Grid.Row="0">
+                                    <Entry.Effects>
+                                        <xct:SelectAllTextEffect/>
+                                    </Entry.Effects>
+                                </Entry>
                                 <Label Text="Количество" Grid.Column="0" Grid.Row="1" VerticalTextAlignment="Center"/>
-                                <Entry Text="1" Grid.Column="1" Grid.Row="1"/>
+                                <Entry Text="{Binding CountRep}" Keyboard="Numeric"
+                                       Grid.Column="1" Grid.Row="1">
+                                    <Entry.Effects>
+                                        <xct:SelectAllTextEffect/>
+                                    </Entry.Effects>
+                                </Entry>
 
-                            </Grid>
-
-                            <Grid Padding="0,10,0,10">
-                                <Label Text="Открыть считанное"/>
-                                <Switch IsToggled="{Binding OpenOnDownload}"/>
                             </Grid>
                         </StackLayout>
                     </Frame>
+                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                        <StackLayout>
+                            <Label Style="{StaticResource GroupingFrameTitleStyle}">
+                                <Label.FormattedText>
+                                    <FormattedString >
+                                        <Span Text="Измерения с эхограммами" />
+                                        <Span Text="&#10;" />
+                                        <Span Text="{Binding AviableEcho}"  />
+                                        <Span Text=" из 310"  />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <Grid RowSpacing="0">
+                                <Grid.RowDefinitions>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60*"/>
+                                    <ColumnDefinition Width="40*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Text="Начальное измерение" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
+                                <Entry Text="{Binding StartEcho}" Keyboard="Numeric"
+                                       Grid.Column="1" Grid.Row="0"/>
+                                <Label Text="Количество" Grid.Column="0" Grid.Row="1" VerticalTextAlignment="Center"/>
+                                <Entry Text="{Binding CountEcho}" Keyboard="Numeric"
+                                       Grid.Column="1" Grid.Row="1"/>
+
+                            </Grid>
+
+                        </StackLayout>
+                    </Frame>
                 </StackLayout>
-
-
-
-                
             </ScrollView>
 
 

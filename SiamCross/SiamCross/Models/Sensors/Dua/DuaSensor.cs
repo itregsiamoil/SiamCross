@@ -147,8 +147,10 @@ namespace SiamCross.Models.Sensors.Dua
             {
                 Sensor = this
             };
+
             view = ViewFactoryService.Get<DuaDownloadPage>(type, ctx);
             await App.NavigationPage.Navigation.PushAsync(view);
+            ctx.LoadFromDeviceCommand.Execute(this);
         }
 
 

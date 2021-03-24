@@ -1,4 +1,5 @@
-﻿using SiamCross.Models.Sensors;
+﻿using SiamCross.Models.Connection.Protocol;
+using SiamCross.Models.Sensors;
 using SiamCross.Services;
 using SiamCross.Services.Toast;
 using System;
@@ -21,9 +22,9 @@ namespace SiamCross.ViewModels.Dmg
         public ISensor Sensor
         {
             get => _Sensor;
-            set 
-            { 
-                _Sensor = value; 
+            set
+            {
+                _Sensor = value;
                 ChangeNotify();
             }
         }
@@ -72,7 +73,12 @@ namespace SiamCross.ViewModels.Dmg
             ProgressInfo = "получение информации с прибора";
             IsDownloading = true;
             Progress = 0.1f;
-            await _Sensor.Downloader.Update();
+            if (RespResult.NormalPkg != await _Sensor.Downloader.Update())
+            {
+                Progress = 1.0f;
+                ProgressInfo = "не удалось получить информация с прибора";
+                return;
+            }
             Progress = 0.8f;
             Aviable = _Sensor.Downloader.Aviable().ToString();
             Progress = 0.9f;
@@ -100,11 +106,11 @@ namespace SiamCross.ViewModels.Dmg
                 ProgressInfo = $"[{(100.0 * Progress).ToString("N2")}%] " + info;
             };
 
-            var measurement = await _Sensor.Downloader.Download(1, 1, StepProgress, InfoProgress);
+            var measurements = await _Sensor.Downloader.Download(1, 1, StepProgress, InfoProgress);
 
             IsDownloading = false;
             ToastService.Instance.LongAlert($"Elapsed {_PerfCounter.ElapsedMilliseconds}");
-            await SensorService.MeasurementHandler(measurement, OpenOnDownload);
+            await SensorService.MeasurementHandler(measurements[0], OpenOnDownload);
 
 
         }

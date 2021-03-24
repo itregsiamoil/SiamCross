@@ -1,6 +1,7 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -66,9 +67,9 @@ namespace SiamCross.Models.Sensors.Dmg
             CtrlReg.Value = 0x02;
             await _Connection.ReadAsync(StatReg);
         }
-        public async Task Update()
+        public Task<RespResult> Update()
         {
-            await _Connection.ReadAsync(StatReg);
+            return _Connection.ReadAsync(StatReg);
         }
 
         public int Aviable()
@@ -80,7 +81,7 @@ namespace SiamCross.Models.Sensors.Dmg
                 case 0x05: return 1;
             }
         }
-        public async Task<object> Download(int begin, int end
+        public async Task<IReadOnlyList<object>> Download(uint begin, uint end
             , Action<float> onStepProgress = null, Action<string> onStepInfo = null)
         {
             onStepProgress?.Invoke(0.01f);
@@ -138,7 +139,9 @@ namespace SiamCross.Models.Sensors.Dmg
             //    measurement.Report.Step, measurement.Report.WeightDiscr);
             //measurement.DynGraphPoints = dynGraphPoints;
 
-            return measurement;
+            var data_list = new List<Ddin2MeasurementData>();
+            data_list.Add(measurement);
+            return data_list;
         }
     }
 }

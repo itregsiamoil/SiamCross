@@ -88,13 +88,13 @@ namespace SiamCross.Models.Connection.Protocol
     {
         private readonly UInt32 _Size;
         public UInt32 Size => _Size;
-        public byte[] Value = new byte[] { };
+        public byte[] Value;
 
-        public MemValueByteArray(UInt32 size)
+        public MemValueByteArray(UInt32 size = 0)
         {
+            Value = new byte[size];
             _Size = size;
         }
-
 
         public void ToArray(byte[] dst, int start = 0)
         {
@@ -316,7 +316,21 @@ namespace SiamCross.Models.Connection.Protocol
 
         public string Name { get => _Name; set => _Name = value; }
         public UInt32 Size => _Size;
-        public UInt32 Address => _Address;
+        public UInt32 Address
+        {
+            get => _Address;
+            set
+            {
+                _Address = value;
+                var offset = _Address;
+                foreach (var v in _Store)
+                {
+                    v.Address = offset;
+                    offset += v.Size;
+                }
+            }
+        }
+
 
         public MemStruct(UInt32 address)
         {
