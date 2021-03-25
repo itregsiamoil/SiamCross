@@ -1,15 +1,14 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
-using SiamCross.Services;
+using SiamCross.ViewModels;
 using SiamCross.ViewModels.Dua;
+using SiamCross.ViewModels.Dua.Survey;
 using SiamCross.ViewModels.MeasurementViewModels;
-using SiamCross.Views.Dua;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors.Dua
 {
@@ -91,10 +90,9 @@ namespace SiamCross.Models.Sensors.Dua
             var surveys = new List<SurveyVM>();
             Surveys = surveys;
 
-            var sur1 = new SurveyVM(this
+            var sur1 = new StaticLevelVM(this
                 , "Статический уровень"
-                , "long long description"
-                , new SurveyConfigView(this));
+                , "long long description");
             surveys.Add(sur1);
 
             var sur2 = new SurveyVM(this
@@ -117,40 +115,15 @@ namespace SiamCross.Models.Sensors.Dua
                 , "автоматическая регистрация давления");
             surveys.Add(sur5);
 
-            ShowFactoryConfigViewCommand = new AsyncCommand(
-                () => App.NavigationPage.Navigation.PushAsync(new FactoryConfigView(this))
-                , (Func<object, bool>)null, null, false, false);
-            ShowUserConfigViewCommand = new AsyncCommand(
-                () => App.NavigationPage.Navigation.PushAsync(new UserConfigView(this))
-                , (Func<object, bool>)null, null, false, false);
-
-            ShowDownloadsViewCommand = new AsyncCommand(ShowDownloadsPage
-                , (Func<object, bool>)null, null, false, false);
-
             Downloader = new DuaMesurementsDownloader(this);
 
-        }
+            DownloaderVM = new DuaDownloadViewModel(this);
+            FactoryConfigVM = new FactoryConfigVM(this);
+            UserConfigVM = new UserConfigVM(this);
+            StateVM = new StateVM(this);
 
-        private async Task ShowDownloadsPage()
-        {
-            var type = typeof(DuaDownloadViewModel);
+            SurveysVM = new SurveysCollectionVM(this);
 
-
-            var view = ViewFactoryService.Get(type) as DuaDownloadPage;
-            if (null == view)
-            {
-                view = new DuaDownloadPage();
-                ViewFactoryService.Register(type, view);
-            }
-
-            var ctx = new DuaDownloadViewModel()
-            {
-                Sensor = this
-            };
-
-            view = ViewFactoryService.Get<DuaDownloadPage>(type, ctx);
-            await App.NavigationPage.Navigation.PushAsync(view);
-            ctx.LoadFromDeviceCommand.Execute(this);
         }
 
 

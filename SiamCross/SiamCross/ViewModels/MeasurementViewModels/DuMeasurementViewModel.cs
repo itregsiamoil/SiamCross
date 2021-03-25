@@ -19,7 +19,7 @@ using Xamarin.Forms.Internals;
 namespace SiamCross.ViewModels
 {
     [Preserve(AllMembers = true)]
-    public class DuMeasurementViewModel : BaseSensorMeasurementViewModel<DuMeasurementStartParameters>, IViewModel
+    public class DuMeasurementViewModel : BaseSensorMeasurementViewModel<DuMeasurementStartParameters>
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
         private readonly List<SoundSpeedModel> _soundSpeedModels;
@@ -34,7 +34,7 @@ namespace SiamCross.ViewModels
             set
             {
                 mAmplification = value;
-                NotifyPropertyChanged(nameof(Amplification));
+                ChangeNotify();
             }
         }
 
@@ -45,7 +45,7 @@ namespace SiamCross.ViewModels
             set
             {
                 mInlet = value;
-                NotifyPropertyChanged(nameof(Inlet));
+                ChangeNotify();
             }
         }
 
@@ -56,7 +56,7 @@ namespace SiamCross.ViewModels
             set
             {
                 mDepth6000 = value;
-                NotifyPropertyChanged(nameof(Depth6000));
+                ChangeNotify();
             }
         }
 
@@ -77,10 +77,10 @@ namespace SiamCross.ViewModels
                 if (!string.IsNullOrEmpty(_soundSpeed))
                 {
                     _soundSpeed = null;
-                    NotifyPropertyChanged(nameof(SoundSpeed));
+                    ChangeNotify(nameof(SoundSpeed));
                 }
                 _selectedSoundSpeedCorrection = value;
-                NotifyPropertyChanged(nameof(SelectedSoundSpeedCorrection));
+                ChangeNotify(nameof(SelectedSoundSpeedCorrection));
             }
         }
         private string _soundSpeed;
@@ -92,10 +92,10 @@ namespace SiamCross.ViewModels
                 if (!string.IsNullOrEmpty(SelectedSoundSpeedCorrection) && !string.IsNullOrEmpty(value))
                 {
                     _selectedSoundSpeedCorrection = null;
-                    NotifyPropertyChanged(nameof(SelectedSoundSpeedCorrection));
+                    ChangeNotify(nameof(SelectedSoundSpeedCorrection));
                 }
                 _soundSpeed = value;
-                NotifyPropertyChanged(nameof(SoundSpeed));
+                ChangeNotify(nameof(SoundSpeed));
             }
         }
 
@@ -105,7 +105,8 @@ namespace SiamCross.ViewModels
             set;
         }
 
-        public DuMeasurementViewModel(ISensor sensor) : base(sensor)
+        public DuMeasurementViewModel(ISensor sensor)
+            : base(sensor, string.Empty, string.Empty)
         {
             try
             {
@@ -159,12 +160,12 @@ namespace SiamCross.ViewModels
                 if (!TryToDouble(_PumpDepth, out double pumpDepth))
                     pumpDepth = 0.0;
 
-                string battery = _Sensor.Battery;
-                string temperature = _Sensor.Temperature;
-                string firmware = _Sensor.Firmware;
+                string battery = Sensor.Battery;
+                string temperature = Sensor.Temperature;
+                string firmware = Sensor.Firmware;
 
                 DuMeasurementSecondaryParameters secondaryParameters = new DuMeasurementSecondaryParameters(
-                    _Sensor.Name,
+                    Sensor.Name,
                     SelectedResearchType,
                     SelectedField,
                     Well,
@@ -184,7 +185,7 @@ namespace SiamCross.ViewModels
                     Inlet, Depth6000, secondaryParameters, pumpDepth);
 
                 await App.Navigation.PopAsync();
-                await SensorService.Instance.StartMeasurementOnSensor(_Sensor.Id, measurementParams);
+                await SensorService.Instance.StartMeasurementOnSensor(Sensor.Id, measurementParams);
             }
             catch (Exception ex)
             {
@@ -199,7 +200,7 @@ namespace SiamCross.ViewModels
             SoundSpeed = "";
             SelectedSoundSpeedCorrection = "";
             SelectedResearchType = "";
-            SensorName = _Sensor.Name;
+            SensorName = Sensor.Name;
             _PumpDepth = "0.0";
 
             IEnumerable<DuMeasurement> mes

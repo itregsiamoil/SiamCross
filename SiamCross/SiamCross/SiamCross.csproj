@@ -48,27 +48,33 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.1.0" />
     <PackageReference Include="Dapper" Version="2.0.78" />
-    <PackageReference Include="MailKit" Version="2.11.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="NLog" Version="4.7.8" />
+    <PackageReference Include="MailKit" Version="2.11.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NLog" Version="4.7.9" />
     <PackageReference Include="SkiaSharp.Views.Forms" Version="2.80.2" />
-    <PackageReference Include="Xamarin.CommunityToolkit" Version="1.0.3" />
+    <PackageReference Include="Xamarin.CommunityToolkit" Version="1.1.0" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\Dua\UserConfigView.xaml.cs">
-      <DependentUpon>UserConfigView.xaml</DependentUpon>
+    <Compile Update="Views\Dmg\Surveys\DynamogrammPage.xaml.cs">
+      <DependentUpon>DynamogrammPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\SurveyView.xaml.cs">
-      <DependentUpon>SurveyView.xaml</DependentUpon>
+    <Compile Update="Views\Dua\FactoryConfigPage.xaml.cs">
+      <DependentUpon>FactoryConfigPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\SurveysCollectionnView.xaml.cs">
-      <DependentUpon>SurveysCollectionnView.xaml</DependentUpon>
+    <Compile Update="Views\Dua\Surveys\StaticLevelPage.xaml.cs">
+      <DependentUpon>StaticLevelPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\SensorDetailsView.xaml.cs">
-      <DependentUpon>SensorDetailsView.xaml</DependentUpon>
+    <Compile Update="Views\Dua\UserConfigPage.xaml.cs">
+      <DependentUpon>UserConfigPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SurveysCollectionPage.xaml.cs">
+      <DependentUpon>SurveysCollectionPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SensorDetailsPage.xaml.cs">
+      <DependentUpon>SensorDetailsPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Resource.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -87,34 +93,31 @@
     <Compile Update="Views\MenuItems\MeasurementsPageService.xaml.cs">
       <DependentUpon>MeasurementsPageService.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\PositionEditView.xaml.cs">
-      <DependentUpon>PositionEditView.xaml</DependentUpon>
+    <Compile Update="Views\PositionEditPage.xaml.cs">
+      <DependentUpon>PositionEditPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\DDIN2\DmgDownloadPage.xaml">
+    <EmbeddedResource Update="Views\Dmg\DmgDownloadPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Dua\DuaDownloadPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Dua\FactoryConfigView.xaml">
+    <EmbeddedResource Update="Views\Dua\FactoryConfigPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Dua\UserConfigView.xaml">
+    <EmbeddedResource Update="Views\Dua\UserConfigPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Dua\SurveyConfigView.xaml">
+    <EmbeddedResource Update="Views\Dua\Surveys\StaticLevelPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\SurveyView.xaml">
+    <EmbeddedResource Update="Views\SurveysCollectionPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\SurveysCollectionnView.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\SensorDetailsView.xaml">
+    <EmbeddedResource Update="Views\SensorDetailsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resource.resx">
@@ -124,10 +127,10 @@
     <EmbeddedResource Update="Views\AddFieldPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\MeasurementViews\Ddin2MeasurementDonePage.xaml">
+    <EmbeddedResource Update="Views\Dmg\Ddin2MeasurementDonePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\MeasurementViews\Ddin2MeasurementPage.xaml">
+    <EmbeddedResource Update="Views\Dmg\Surveys\DynamogrammPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MeasurementViews\DuMeasurementDonePage.xaml">
@@ -172,7 +175,7 @@
     <EmbeddedResource Update="Views\MenuPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\PositionEditView.xaml">
+    <EmbeddedResource Update="Views\PositionEditPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\RootPage.xaml">

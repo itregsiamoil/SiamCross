@@ -13,21 +13,28 @@ namespace SiamCross.Models.Sensors
 {
     public interface ISensor : IDisposable, INotifyPropertyChanged
     {
+        IViewModel DownloaderVM { get; set; }
+        IViewModel FactoryConfigVM { get; set; }
+        IViewModel UserConfigVM { get; set; }
+        IViewModel StateVM { get; set; }
+        IViewModel SurveysVM { get; set; }
+        PositionInfoVM PositionVM { get; set; }
+
+
         IMeasurementsDownloader Downloader { get; set; }
+        IStateData StateData { get; set; }
+
+
+
         ICommand ShowDetailViewCommand { get; set; }
-        ICommand ShowUserConfigViewCommand { get; set; }
-        ICommand ShowFactoryConfigViewCommand { get; set; }
         ICommand ShowSurveysViewCommand { get; set; }
+        ICommand ShowInfoViewCommand { get; set; }
 
-        ICommand ShowStateViewCommand { get; set; }
-        ICommand ShowDownloadsViewCommand { get; set; }
-
-
-        IReadOnlyCollection<SurveyVM> Surveys { get; set; }
+        IReadOnlyList<SurveyVM> Surveys { get; set; }
 
 
 
-        PositionInfoVM Position { get; set; }
+
         IProtocolConnection Connection { get; }
 
         List<MemStruct> Memory { get; }

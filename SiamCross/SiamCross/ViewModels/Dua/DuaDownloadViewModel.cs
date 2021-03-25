@@ -20,7 +20,6 @@ namespace SiamCross.ViewModels.Dua
         float _Progress;
         string _Info;
         string _ProgressInfo;
-        string _Aviable;
         string _AviableRep;
         string _AviableEcho;
         string _StartRep;
@@ -52,11 +51,6 @@ namespace SiamCross.ViewModels.Dua
         {
             get => _ProgressInfo;
             set { _ProgressInfo = value; ChangeNotify(); }
-        }
-        public string Aviable
-        {
-            get => _Aviable;
-            set { _Aviable = value; ChangeNotify(); }
         }
         public string AviableRep
         {
@@ -92,6 +86,11 @@ namespace SiamCross.ViewModels.Dua
         public ICommand LoadFromDeviceCommand { get; set; }
         public ICommand StartDownloadCommand { get; set; }
 
+        public DuaDownloadViewModel(ISensor sensor)
+            : this()
+        {
+            Sensor = sensor;
+        }
         public DuaDownloadViewModel()
         {
             StartRep = "0";
@@ -120,7 +119,6 @@ namespace SiamCross.ViewModels.Dua
                 return;
             }
             Progress = 0.5f;
-            Aviable = _Downloader.Aviable().ToString();
             AviableRep = _Downloader.AviableRep().ToString();
             AviableEcho = _Downloader.AviableEcho().ToString();
             Progress = 1.0f;

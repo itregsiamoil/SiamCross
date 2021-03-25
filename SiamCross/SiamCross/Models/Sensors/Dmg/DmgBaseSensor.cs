@@ -1,16 +1,14 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
-using SiamCross.Services;
+using SiamCross.ViewModels;
 using SiamCross.ViewModels.Dmg;
+using SiamCross.ViewModels.Dmg.Survey;
 using SiamCross.ViewModels.MeasurementViewModels;
-using SiamCross.Views;
-using SiamCross.Views.DDIN2;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors.Dmg
 {
@@ -98,10 +96,9 @@ namespace SiamCross.Models.Sensors.Dmg
             var surveys = new List<SurveyVM>();
             Surveys = surveys;
 
-            var sur1 = new SurveyVM(this
+            var sur1 = new DynamogrammVM(this
                 , "Динамограмма"
-                , "long long description"
-                , new Ddin2MeasurementPage(this));
+                , "long long description");
             surveys.Add(sur1);
 
             var sur2 = new SurveyVM(this
@@ -111,37 +108,22 @@ namespace SiamCross.Models.Sensors.Dmg
 
             var sur3 = new SurveyVM(this
                 , "Вес штанг"
-                , "кривая восстановления уровня");
+                , "long long description");
             surveys.Add(sur3);
 
 
-
-            ShowDownloadsViewCommand = new AsyncCommand(ShowDownloadsPage
-                , (Func<object, bool>)null, null, false, false);
-
             Downloader = new DmgMesurementsDownloader(this);
+            DownloaderVM = new DmgDownloadViewModel(this);
+
+            //FactoryConfigVM = new FactoryConfigVM(this);
+            //UserConfigVM = new UserConfigVM(this);
+            //StateVM = new StateVM(this);
+
+            SurveysVM = new SurveysCollectionVM(this);
 
         }
 
-        private async Task ShowDownloadsPage()
-        {
-            var type = typeof(DmgDownloadViewModel);
 
-
-            var view = ViewFactoryService.Get(type) as DmgDownloadPage;
-            if (null == view)
-            {
-                view = new DmgDownloadPage();
-                ViewFactoryService.Register(type, view);
-            }
-
-            var ctx = new DmgDownloadViewModel()
-            {
-                Sensor = this
-            };
-            view = ViewFactoryService.Get<DmgDownloadPage>(type, ctx);
-            await App.NavigationPage.Navigation.PushAsync(view);
-        }
 
         public override async Task<bool> QuickReport(CancellationToken cancelToken)
         {

@@ -4,22 +4,21 @@ using SiamCross.AppObjects;
 using SiamCross.Models.Sensors;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
+using SiamCross.ViewModels.MeasurementViewModels;
 using SiamCross.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
-    public abstract class BaseSensorMeasurementViewModel<T> : INotifyPropertyChanged
+    public abstract class BaseSensorMeasurementViewModel<T> : SurveyVM
         where T : class
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
-        protected ISensor _Sensor;
         protected List<string> _errorList;
 
         public ObservableCollection<string> Fields { get; set; }
@@ -34,18 +33,13 @@ namespace SiamCross.ViewModels
             get => _BufferPressure;
             set => _BufferPressure = value;
         }
-
-
-
         public string Comments { get; set; }
-
         public ICommand AddField { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        public BaseSensorMeasurementViewModel(ISensor sensor)
+        public BaseSensorMeasurementViewModel(ISensor sensor, string name, string description)
+            : base(sensor, name, description)
         {
-            _Sensor = sensor;
             _errorList = new List<string>();
             Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
             AddField = new Command(AddNewField);
@@ -173,9 +167,5 @@ namespace SiamCross.ViewModels
             }
         }
 
-        protected void NotifyPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

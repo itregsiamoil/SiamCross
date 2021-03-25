@@ -8,8 +8,7 @@
              xmlns:local2="clr-namespace:SiamCross.Views.ValidationBehavior"
              xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-             x:Class="SiamCross.Views.Ddin2MeasurementPage"
-             Title="{Binding SensorName}">
+             x:Class="SiamCross.Views.DynamogrammPage">
     <ContentPage.Resources>
         <Style TargetType="{x:Type Entry}" ApplyToDerivedTypes="True">
             <Setter Property="TextColor" Value="Black" />
@@ -23,9 +22,23 @@
         </Style>
     </ContentPage.Resources >
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="{local1:Translate ValveTest}" Order="Secondary" Command="{Binding ValveTestCommand}"/>
-    </ContentPage.ToolbarItems>
+    <NavigationPage.TitleView >
+        <StackLayout>
+            <Label TextColor="{StaticResource colorTextPale}" LineBreakMode="TailTruncation">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="{Binding Sensor.Name}"/>
+                        <Span Text="&#x2190;"/>
+                        <Span Text="Исследования"/>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label Text="{Binding Name}"
+                   FontSize="Medium" FontAttributes="Bold" 
+                   LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
+        </StackLayout>
+    </NavigationPage.TitleView>
+    
 
     <ScrollView x:Name="ScrollView">
         <TableView x:Name="TableView"

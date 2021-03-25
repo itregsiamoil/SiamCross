@@ -6,12 +6,9 @@ using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.ViewModels;
 using SiamCross.ViewModels.MeasurementViewModels;
-using SiamCross.Views;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -19,7 +16,7 @@ using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors
 {
-    public abstract class BaseSensor : ISensor
+    public abstract class BaseSensor : BaseVM, ISensor
     {
         #region TmpVariables
         #endregion
@@ -46,29 +43,47 @@ namespace SiamCross.Models.Sensors
                 ChangeNotify(nameof(ConnStateStr));
             };
             //mConnection.PropertyChanged += PropertyChanged;
-            ShowDetailViewCommand = new AsyncCommand(ShowShowDetails
-                , (Func<object, bool>)null, null, false, false);
+
+
+            ShowDetailViewCommand = CreateAsyncCommand(new SensorDetailsVM(this));
 
         }
+        static public AsyncCommand CreateAsyncCommand(Func<IViewModel> fnGetVM)
+        {
+            Func<Task> exec = () =>
+            {
+                var vm = fnGetVM();
+                if (null == vm)
+                    return Task.CompletedTask;
+                var page = ViewFactoryService.Get(vm);
+                if (null == page)
+                    return Task.CompletedTask;
+                return App.NavigationPage.Navigation.PushAsync(page);
+            };
+            return new AsyncCommand(exec
+                , (Func<object, bool>)null, null, false, false);
+        }
+        static public AsyncCommand CreateAsyncCommand(IViewModel vm)
+        {
+            Func<Task> exec = () =>
+            {
+                if (null == vm)
+                    return Task.CompletedTask;
+                var page = ViewFactoryService.Get(vm);
+                if (null == page)
+                    return Task.CompletedTask;
+                return App.NavigationPage.Navigation.PushAsync(page);
+            };
+            return new AsyncCommand(exec
+                , (Func<object, bool>)null, null, false, false);
+        }
+
 
 
         private async Task ShowShowDetails()
         {
-            var type = typeof(SensorDetailsViewModel);
-
-
-            var view = ViewFactoryService.Get(type) as SensorDetailsView;
-            if (null == view)
-            {
-                view = new SensorDetailsView();
-                ViewFactoryService.Register(type, view);
-            }
-
-            var ctx = new SensorDetailsViewModel()
-            {
-                Sensor = this
-            };
-            view = ViewFactoryService.Get<SensorDetailsView>(type, ctx);
+            var ctx = new SensorDetailsVM(this);
+            var view = ViewFactoryService.Get(ctx);
             await App.NavigationPage.Navigation.PushAsync(view);
         }
 
@@ -91,11 +106,6 @@ namespace SiamCross.Models.Sensors
 
         private float mMeasureProgress = 0;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void ChangeNotify([CallerMemberName] string prop = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
         public float MeasureProgress
         {
             get => mMeasureProgress;
@@ -140,22 +150,26 @@ namespace SiamCross.Models.Sensors
             }
         }
         PositionInfoVM _Position = new PositionInfoVM();
-        public PositionInfoVM Position
+        public PositionInfoVM PositionVM
         {
             get => _Position;
             set => _Position = value;
         }
         public ICommand ShowDetailViewCommand { get; set; }
+        public ICommand ShowInfoViewCommand { get; set; }
+
+        public IViewModel DownloaderVM { get; set; }
+        public IViewModel FactoryConfigVM { get; set; }
+        public IViewModel UserConfigVM { get; set; }
+        public IViewModel StateVM { get; set; }
+        public IViewModel SurveysVM { get; set; }
+
         public IMeasurementsDownloader Downloader { get; set; }
-        public ICommand ShowFactoryConfigViewCommand { get; set; }
-        public ICommand ShowUserConfigViewCommand { get; set; }
+        public IStateData StateData { get; set; }
 
         public ICommand ShowSurveysViewCommand { get; set; }
 
-        public ICommand ShowStateViewCommand { get; set; }
-        public ICommand ShowDownloadsViewCommand { get; set; }
-
-        public IReadOnlyCollection<SurveyVM> Surveys { get; set; }
+        public IReadOnlyList<SurveyVM> Surveys { get; set; }
 
         public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
         public abstract Task<bool> QuickReport(CancellationToken cancellationToken);

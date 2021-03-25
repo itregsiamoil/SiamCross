@@ -2,9 +2,10 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-             x:Class="SiamCross.Views.SensorDetailsView"
+             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross" 
+             x:Class="SiamCross.Views.SensorDetailsPage"
              xmlns:vm="clr-namespace:SiamCross.ViewModels"
-             x:DataType="vm:SensorDetailsViewModel" 
+             x:DataType="vm:SensorDetailsVM" 
              >
     <NavigationPage.TitleView >
         <Grid RowSpacing="0" ColumnSpacing="0">
@@ -49,6 +50,51 @@
             <StackLayout Spacing="0">
                 <Frame Style="{StaticResource MenuItemStyle}" >
                     <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Sensor.PositionVM.EditCommand}" />
+                    </Frame.GestureRecognizers>
+                    <StackLayout>
+                        <Label Style="{StaticResource TitleLabel}" >
+                            <Label.FormattedText Margin="0">
+                                <FormattedString >
+                                    <Span Text="&#x1F310; " />
+                                    <Span Text="{local:Translate LocationInfo}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label LineBreakMode="WordWrap" >
+                            <Label.FormattedText Margin="0">
+                                <FormattedString >
+                                    <Span Text="{local:Translate Field}" />
+                                    <Span Text=" " />
+                                    <Span Text="{Binding Sensor.PositionVM.Field, Mode=OneWay }" Font="Bold" TextColor="Black"/>
+                                    <Span Text="&#10;" />
+                                    <Span Text="{local:Translate Well} " />
+                                    <Span Text=" " />
+                                    <Span Text="{Binding Sensor.PositionVM.Well}" Font="Bold" TextColor="Black"/>
+                                    <Span Text=" " />
+                                    <Span Text="{local:Translate Bush}" />
+                                    <Span Text=" " />
+                                    <Span Text="{Binding Sensor.PositionVM.Bush}" Font="Bold" TextColor="Black"/>
+                                    <Span Text=" " />
+                                    <Span Text="{local:Translate Shop}" />
+                                    <Span Text=" " />
+                                    <Span Text="{Binding Sensor.PositionVM.Shop}" Font="Bold" TextColor="Black"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </StackLayout>
+                </Frame>
+                <Frame Style="{StaticResource MenuItemStyle}" >
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ShowInfoViewCommand}" />
+                    </Frame.GestureRecognizers>
+                    <StackLayout>
+                        <Label Text="&#x2139; Информация" Style="{StaticResource TitleLabel}" />
+                        <Label Text="Дополнительные информационные данные"/>
+                    </StackLayout>
+                </Frame>
+                <Frame Style="{StaticResource MenuItemStyle}" >
+                    <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ShowFactoryConfigViewCommand}" />
                     </Frame.GestureRecognizers>
                     <StackLayout>
@@ -79,7 +125,7 @@
                         <TapGestureRecognizer Command="{Binding ShowSurveysViewCommand}" />
                     </Frame.GestureRecognizers>
                     <StackLayout>
-                        <Label Text="&#x1F4C8; Исследование" Style="{StaticResource TitleLabel}"/>
+                        <Label Text="&#x1F4C8; Исследования" Style="{StaticResource TitleLabel}"/>
                         <Label Text="Установка праметров, запуск и остановка исследования "/>
                     </StackLayout>
                 </Frame>
@@ -92,58 +138,6 @@
                         <Label Text="Запуск считывания из памяти прибора одного или нескольких измерений"/>
                     </StackLayout>
                 </Frame>
-                
-                <!--
-                <Frame Style="{StaticResource MenuItemStyle}" >
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ShowSurveyConfigViewCommand}" />
-                    </Frame.GestureRecognizers>
-                    <StackLayout>
-                        <Label Text="&#x2139; Дополнительная информация" Style="{StaticResource TitleLabel}"/>
-                        <Label Text="Общие настройки и калибровки"/>
-
-                    </StackLayout>
-                </Frame>                
-                
-                
-                
-                <Frame Style="{StaticResource MenuItemStyle}" >
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding Position.EditCommand}" />
-                    </Frame.GestureRecognizers>
-                    <StackLayout>
-                        <Label Style="{StaticResource TitleLabel}" >
-                            <Label.FormattedText Margin="0">
-                                <FormattedString >
-                                    <Span Text="&#x1F310; " />
-                                    <Span Text="{local1:Translate LocationInfo}" />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                        <Label LineBreakMode="WordWrap" >
-                            <Label.FormattedText Margin="0">
-                                <FormattedString >
-                                    <Span Text="{local1:Translate Field}" />
-                                    <Span Text=" " />
-                                    <Span Text="{Binding Position.Field, Mode=OneWay }" Font="Bold" TextColor="Black"/>
-                                    <Span Text="&#10;" />
-                                    <Span Text="{local1:Translate Well} " />
-                                    <Span Text=" " />
-                                    <Span Text="{Binding Position.Well}" Font="Bold" TextColor="Black"/>
-                                    <Span Text=" " />
-                                    <Span Text="{local1:Translate Bush}" />
-                                    <Span Text=" " />
-                                    <Span Text="{Binding Position.Bush}" Font="Bold" TextColor="Black"/>
-                                    <Span Text=" " />
-                                    <Span Text="{local1:Translate Shop}" />
-                                    <Span Text=" " />
-                                    <Span Text="{Binding Position.Shop}" Font="Bold" TextColor="Black"/>
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                    </StackLayout>
-                </Frame>                
-                -->
 
             </StackLayout>
         </ScrollView>

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SiamCross.Views.Dua.SurveyConfigView">
+             x:Class="SiamCross.Views.Dua.StaticLevelPage">
     <ContentPage.Resources>
         <Style TargetType="{x:Type StackLayout}">
             <Setter Property="Spacing" Value="0" />
@@ -9,8 +9,16 @@
     </ContentPage.Resources >
     <NavigationPage.TitleView >
         <StackLayout>
-            <Label Text="{Binding Name}" TextColor="{StaticResource colorTextPale}" />
-            <Label Text="Параметры измерения"
+            <Label TextColor="{StaticResource colorTextPale}" LineBreakMode="TailTruncation">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="{Binding Sensor.Name}"/>
+                        <Span Text="&#x2190;"/>
+                        <Span Text="Исследования"/>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label Text="{Binding Name}"
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
         </StackLayout>

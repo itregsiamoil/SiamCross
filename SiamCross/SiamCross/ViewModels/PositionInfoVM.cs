@@ -1,11 +1,14 @@
 ﻿using SiamCross.Models;
+using SiamCross.Models.Sensors;
 using SiamCross.Services;
 using SiamCross.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
@@ -78,6 +81,9 @@ namespace SiamCross.ViewModels
         protected PositionInfo _Model = new PositionInfo();
         public PositionInfo Model => _Model;
 
+        public ICommand EditCommand { get; set; }
+        public ICommand AddFieldCommand { get; set; }
+
         public PositionInfoVM()
             : this(new PositionInfo())
         {
@@ -85,13 +91,29 @@ namespace SiamCross.ViewModels
         public PositionInfoVM(PositionInfo position)
         {
             _Model = position;
-            EditCommand = new Command(DoEditCommand);
+            EditCommand = BaseSensor.CreateAsyncCommand(() => this);
+            AddFieldCommand = new AsyncCommand(DoAddNewFieldCommand
+                , (Func<object, bool>)null, null, false, false);
+
             Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
-            AddField = new Command(DoAddNewFieldCommand);
+            MessagingCenter.Subscribe<AddFieldViewModel>(this,
+                    "Refresh", (sender) => UpdateFields());
+
         }
 
-        public ObservableCollection<string> Fields { get; set; }
-        public ICommand AddField { get; set; }
+        public ObservableCollection<string> Fields { get; private set; }
+
+        private void UpdateFields()
+        {
+            try
+            {
+                Fields.Clear();
+                IEnumerable<string> fieldList = HandbookData.Instance.GetFieldList();
+                foreach (string field in fieldList)
+                    Fields.Add(field);
+            }
+            catch (Exception) { }
+        }
 
 
         public string Field
@@ -119,30 +141,11 @@ namespace SiamCross.ViewModels
             get => new GeoLocationVM(_Model.Location);
             set { _Model.Location = value._Model; ChangeNotify(); }
         }
-
-        public ICommand EditCommand { get; set; }
-        private void DoEditCommand()
-        {
-            App.NavigationPage.Navigation
-                .PushAsync(new PositionEditView(this));
-        }
-
-        protected void DoAddNewFieldCommand()
+        protected async Task DoAddNewFieldCommand()
         {
             try
             {
-                IReadOnlyList<Page> stack = App.NavigationPage.Navigation.ModalStack;
-                if (stack.Count > 0)
-                {
-                    if (stack[stack.Count - 1].GetType() != typeof(AddFieldPage))
-                    {
-                        App.NavigationPage.Navigation.PushModalAsync(new AddFieldPage());
-                    }
-                }
-                else
-                {
-                    App.NavigationPage.Navigation.PushModalAsync(new AddFieldPage());
-                }
+                await App.NavigationPage.Navigation.PushModalAsync(new AddFieldPage());
             }
             catch (Exception ex)
             {

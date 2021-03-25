@@ -67,9 +67,34 @@ namespace SiamCross.Models.Sensors.Dmg
             CtrlReg.Value = 0x02;
             await _Connection.ReadAsync(StatReg);
         }
-        public Task<RespResult> Update()
+
+        bool NeedRetry(RespResult result)
         {
-            return _Connection.ReadAsync(StatReg);
+            switch (result)
+            {
+                case RespResult.ErrorPkg:
+                case RespResult.NormalPkg: return false;
+                default:
+                case RespResult.ErrorUnknown:
+                case RespResult.ErrorConnection:
+                case RespResult.ErrorSending:
+                case RespResult.ErrorTimeout:
+                case RespResult.ErrorCrc:
+                    return true;
+            }
+        }
+        public async Task<RespResult> Update()
+        {
+            if (!_Sensor.Activate)
+                _Sensor.Activate = true;
+            RespResult ret = RespResult.ErrorTimeout;
+            for (int i = 0; i < 3; ++i)
+            {
+                ret = await _Connection.TryReadAsync(StatReg);
+                if (!NeedRetry(ret))
+                    break;
+            }
+            return ret;
         }
 
         public int Aviable()
@@ -111,10 +136,10 @@ namespace SiamCross.Models.Sensors.Dmg
             var sp = new MeasurementSecondaryParameters(
                 _Sensor.Name
                 , Resource.Dynamogram
-                , _Sensor.Position.Field
-                , _Sensor.Position.Well
-                , _Sensor.Position.Bush
-                , _Sensor.Position.Shop
+                , string.IsNullOrEmpty(_Sensor.PositionVM.Field) ? "0" : _Sensor.PositionVM.Field
+                , string.IsNullOrEmpty(_Sensor.PositionVM.Well) ? "0" : _Sensor.PositionVM.Well
+                , string.IsNullOrEmpty(_Sensor.PositionVM.Bush) ? "0" : _Sensor.PositionVM.Bush
+                , string.IsNullOrEmpty(_Sensor.PositionVM.Shop) ? "0" : _Sensor.PositionVM.Shop
                 , 0.0
                 , string.Empty
                 , _Sensor.Battery

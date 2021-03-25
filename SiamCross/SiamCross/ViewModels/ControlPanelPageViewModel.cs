@@ -118,10 +118,16 @@ namespace SiamCross.ViewModels
                 case 0x1401:
                 case 0x1402:
                 case 0x1403:
-                    if (!CanOpenPage(typeof(Ddin2MeasurementPage)))
+                    if (!CanOpenPage(typeof(DynamogrammPage)))
                         return;
-                    App.NavigationPage.Navigation.PushAsync(
-                        new Ddin2MeasurementPage(sensor));
+
+                    var vm = sensor.Surveys[0];
+                    if (null == vm)
+                        return;
+                    var page = ViewFactoryService.Get(vm);
+                    if (null == page)
+                        return;
+                    App.NavigationPage.Navigation.PushAsync(page);
                     break;
                 case 0x1101:
                     if (!CanOpenPage(typeof(DuMeasurementPage)))

@@ -28,24 +28,18 @@
             <ScrollView VerticalOptions="StartAndExpand">
                 <Frame Style="{StaticResource GroupingFrameStyle}" >
                     <StackLayout>
-                        <Label Text="Измерения" 
-                               Style="{StaticResource GroupingFrameTitleStyle}"/>
-                        <Label Padding="5,10,5,20">
+                        <Label Style="{StaticResource GroupingFrameTitleStyle}">
                             <Label.FormattedText>
                                 <FormattedString >
-                                    <Span Text="Несчитанных измерений " />
-                                    <Span Text="{Binding Aviable}" />
+                                    <Span Text="Измерения" />
+                                    <Span Text="&#10;" />
+                                    <Span Text="не считаны: " />
+                                    <Span Text="{Binding Aviable}"  />
+                                    <Span Text=" из 1"  />
                                 </FormattedString>
                             </Label.FormattedText>
                         </Label>
-                        
-                        <Label Text="Параметры считывания" 
-                               Style="{StaticResource GroupingFrameTitleStyle}"/>
 
-                        <Label Text="Начальное измерение" />
-                        <Entry Text="1" IsEnabled="False" />
-                        <Label Text="Конечное измерение" />
-                        <Entry Text="1" IsEnabled="False"/>
                         <Grid Padding="0,10,0,10">
                             <Label Text="Показать считанное"/>
                             <Switch IsToggled="{Binding OpenOnDownload}"/>

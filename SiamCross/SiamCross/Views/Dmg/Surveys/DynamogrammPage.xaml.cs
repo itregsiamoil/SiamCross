@@ -1,6 +1,4 @@
-﻿using SiamCross.Models.Sensors;
-using SiamCross.ViewModels;
-using System;
+﻿using System;
 using System.Diagnostics;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -8,15 +6,12 @@ using Xamarin.Forms.Xaml;
 namespace SiamCross.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class Ddin2MeasurementPage : ContentPage
+    public partial class DynamogrammPage : ContentPage
     {
-        private readonly Stopwatch _stopwatch;
+        private readonly Stopwatch _stopwatch = new Stopwatch();
 
-        public Ddin2MeasurementPage(ISensor sensor)
+        public DynamogrammPage()
         {
-            ViewModelWrap<Ddin2MeasurementViewModel> vm = new ViewModelWrap<Ddin2MeasurementViewModel>(sensor);
-            BindingContext = vm.ViewModel;
-            _stopwatch = new Stopwatch();
             InitializeComponent();
         }
 

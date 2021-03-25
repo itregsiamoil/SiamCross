@@ -4,7 +4,6 @@ using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.ViewModels.MeasurementViewModels;
-using SiamCross.Views;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,8 +24,7 @@ namespace SiamCross.Models.Sensors.Du
             Surveys = surveys;
             var sur1 = new SurveyVM(this
                 , "Статический уровень"
-                , "long long description"
-                , new DuMeasurementPage(this));
+                , "long long description");
             surveys.Add(sur1);
 
             var sur2 = new SurveyVM(this
@@ -179,7 +177,7 @@ namespace SiamCross.Models.Sensors.Du
             {
                 if (null != report)
                 {
-                    SensorService.MeasurementHandler(report);
+                    await SensorService.MeasurementHandler(report);
                     Status = Resource.Survey + ": complete";
                 }
                 else

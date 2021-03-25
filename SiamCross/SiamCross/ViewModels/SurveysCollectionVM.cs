@@ -5,7 +5,7 @@ using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
-    public class SurveysCollectionnViewModel : BaseVM
+    public class SurveysCollectionVM : BaseVM
     {
         ISensor _Sensor;
         public ObservableCollection<SurveyVM> SurveysCollection { get; set; }
@@ -15,13 +15,14 @@ namespace SiamCross.ViewModels
             set
             {
                 _Sensor = value;
-                SurveysCollection = new ObservableCollection<SurveyVM>();
-                Sensor.Surveys.ForEach(o => SurveysCollection.Add(o));
                 ChangeNotify();
             }
         }
-        public SurveysCollectionnViewModel()
+        public SurveysCollectionVM(ISensor sensor)
         {
+            _Sensor = sensor;
+            SurveysCollection = new ObservableCollection<SurveyVM>();
+            Sensor.Surveys.ForEach(o => SurveysCollection.Add(o));
 
         }
     }

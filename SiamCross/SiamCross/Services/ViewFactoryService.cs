@@ -25,6 +25,18 @@ namespace SiamCross.Services
             _Factory[type] = createFunc;
         }
 
+        public static ContentPage Get(object bindingContext)
+        {
+            var type = bindingContext.GetType();
+            var view = Get(type);
+            if (null == view)
+                return null;
+
+            view.BindingContext = bindingContext;
+            return view;
+        }
+
+
         public static T Get<T>(Type type, object bindingContext) where T : ContentPage
         {
             var view = Get(type) as T;

@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Sensors;
+using SiamCross.Models.Sensors.Dmg;
 using SiamCross.Services;
 using SiamCross.Services.Toast;
 using System;
@@ -13,7 +14,7 @@ namespace SiamCross.ViewModels.Dmg
     public class DmgDownloadViewModel : BaseVM
     {
         ISensor _Sensor;
-
+        DmgMesurementsDownloader _Downloader;
         bool _IsDownloading;
         float _Progress;
         string _ProgressInfo;
@@ -25,6 +26,7 @@ namespace SiamCross.ViewModels.Dmg
             set
             {
                 _Sensor = value;
+                _Downloader = _Sensor.Downloader as DmgMesurementsDownloader;
                 ChangeNotify();
             }
         }
@@ -58,8 +60,10 @@ namespace SiamCross.ViewModels.Dmg
 
         public ICommand StartDownloadCommand { get; set; }
 
-        public DmgDownloadViewModel()
+        public DmgDownloadViewModel(ISensor sensor)
         {
+            Sensor = sensor;
+
             StartDownloadCommand = new AsyncCommand(StartDownload
                 , (Func<object, bool>)null, null, false, false);
 
@@ -80,7 +84,7 @@ namespace SiamCross.ViewModels.Dmg
                 return;
             }
             Progress = 0.8f;
-            Aviable = _Sensor.Downloader.Aviable().ToString();
+            Aviable = _Downloader.Aviable().ToString();
             Progress = 0.9f;
             IsDownloading = false;
             Progress = 1.0f;
@@ -106,7 +110,7 @@ namespace SiamCross.ViewModels.Dmg
                 ProgressInfo = $"[{(100.0 * Progress).ToString("N2")}%] " + info;
             };
 
-            var measurements = await _Sensor.Downloader.Download(1, 1, StepProgress, InfoProgress);
+            var measurements = await _Downloader.Download(1, 1, StepProgress, InfoProgress);
 
             IsDownloading = false;
             ToastService.Instance.LongAlert($"Elapsed {_PerfCounter.ElapsedMilliseconds}");

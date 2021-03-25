@@ -16,10 +16,10 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
-namespace SiamCross.ViewModels
+namespace SiamCross.ViewModels.Dmg.Survey
 {
     [Preserve(AllMembers = true)]
-    public class Ddin2MeasurementViewModel : BaseSensorMeasurementViewModel<Ddin2MeasurementStartParameters>, IViewModel
+    public class DynamogrammVM : BaseSensorMeasurementViewModel<Ddin2MeasurementStartParameters>
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
 
@@ -57,7 +57,7 @@ namespace SiamCross.ViewModels
                 float tmp_value = GetPeriodFloatVal(value);
                 mStrDynPeriod = value;
                 mStrPumpRate = tmp_value.ToString("N3");
-                NotifyPropertyChanged("PumpRate");
+                ChangeNotify(nameof(PumpRate));
             }
         }
         public string PumpRate
@@ -70,7 +70,7 @@ namespace SiamCross.ViewModels
                 float tmp_value = GetPeriodFloatVal(value);
                 mStrPumpRate = value;
                 mStrDynPeriod = tmp_value.ToString("N3");
-                NotifyPropertyChanged("DynPeriod");
+                ChangeNotify(nameof(DynPeriod));
             }
         }
         public string ApertNumber { get; set; }
@@ -79,12 +79,12 @@ namespace SiamCross.ViewModels
         public string SelectedModelPump { get; set; }
         public ICommand StartMeasurementCommand { get; set; }
         public ICommand ValveTestCommand { get; set; }
-        public Ddin2MeasurementViewModel(ISensor sensor)
-            : base(sensor)
+        public DynamogrammVM(ISensor sensor, string name, string description)
+            : base(sensor, name, description)
         {
             try
             {
-                SensorName = _Sensor.Name;
+                SensorName = Sensor.Name;
                 ModelPump = new ObservableCollection<string>()
                 {
                     Resource.BalancedModelPump,
@@ -109,7 +109,7 @@ namespace SiamCross.ViewModels
             ApertNumber = Constants.DefaultApertNumber.ToString();
             Imtravel = Constants.DefaultImtravel.ToString();
             SelectedModelPump = Resource.BalancedModelPump;
-            SensorName = _Sensor.Name;
+            SensorName = Sensor.Name;
 
             IEnumerable<Ddin2Measurement> mes
                 = DataRepository.Instance.GetDdin2Measurements().
@@ -160,7 +160,7 @@ namespace SiamCross.ViewModels
                     buff_pressure = 0.0;
 
                 MeasurementSecondaryParameters secondaryParameters = new MeasurementSecondaryParameters(
-                    _Sensor.Name,
+                    Sensor.Name,
                     Resource.Dynamogram,
                     SelectedField,
                     Well,
@@ -168,9 +168,9 @@ namespace SiamCross.ViewModels
                     Shop,
                     buff_pressure,
                     Comments,
-                    _Sensor.Battery,
-                    _Sensor.Temperature,
-                    _Sensor.Firmware,
+                    Sensor.Battery,
+                    Sensor.Temperature,
+                    Sensor.Firmware,
                     string.Empty);
 
                 Ddin2MeasurementStartParameters measurementParams = new Ddin2MeasurementStartParameters(
@@ -188,7 +188,7 @@ namespace SiamCross.ViewModels
 
                 await App.Navigation.PopAsync();
                 await SensorService.Instance
-                    .StartMeasurementOnSensor(_Sensor.Id, measurementParams);
+                    .StartMeasurementOnSensor(Sensor.Id, measurementParams);
             }
             catch (Exception ex)
             {

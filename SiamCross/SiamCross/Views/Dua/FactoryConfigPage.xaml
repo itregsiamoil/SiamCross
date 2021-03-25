@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SiamCross.Views.Dua.FactoryConfigView">
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:dua="clr-namespace:SiamCross.ViewModels.Dua"
+             x:DataType="dua:FactoryConfigVM"
+             x:Class="SiamCross.Views.Dua.FactoryConfigPage">
 
     <ContentPage.Resources>
         <Style TargetType="{x:Type StackLayout}">
@@ -11,7 +13,7 @@
 
     <NavigationPage.TitleView >
         <StackLayout Orientation="Vertical" >
-            <Label Text="{Binding Name}" TextColor="{StaticResource colorTextPale}" />
+            <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
             <Label Text="Заводские настройки" 
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>

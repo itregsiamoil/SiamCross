@@ -86,11 +86,11 @@ namespace SiamCross.Models.Sensors.Dua
             urov = ReportHeader.Add(new MemVarUInt16());
             pressure = ReportHeader.Add(new MemVarInt16());
         }
-        public async Task Clear()
+        public Task Clear()
         {
             MemStruct _CurrentAviable = new MemStruct(0x8418);
 
-
+            return Task.CompletedTask;
             //CtrlReg.Value = 0x02;
             //await _Connection.ReadAsync(_CurrentAviable);
         }
@@ -118,7 +118,7 @@ namespace SiamCross.Models.Sensors.Dua
             }
             return res;
         }
-        async Task<bool> NeedRetry(RespResult result)
+        bool NeedRetry(RespResult result)
         {
             switch (result)
             {
@@ -130,25 +130,21 @@ namespace SiamCross.Models.Sensors.Dua
                 case RespResult.ErrorSending:
                 case RespResult.ErrorTimeout:
                 case RespResult.ErrorCrc:
-                    await _Connection.Disconnect();
-                    await _Connection.Connect();
                     return true;
             }
         }
         public async Task<RespResult> Update()
         {
+            if (!_Sensor.Activate)
+                _Sensor.Activate = true;
             RespResult ret = RespResult.ErrorTimeout;
             for (int i = 0; i < 3; ++i)
             {
                 ret = await SingleUpdate();
-                if (!await NeedRetry(ret))
+                if (!NeedRetry(ret))
                     break;
             }
             return ret;
-        }
-        public int Aviable()
-        {
-            return AviableRep() + AviableEcho();
         }
         public int AviableRep()
         {
@@ -186,8 +182,8 @@ namespace SiamCross.Models.Sensors.Dua
                     _Sensor.Name
                     , Resource.Echogram
                     , field.Value.ToString()
-                    , well
-                    , bush
+                    , string.IsNullOrEmpty(well) ? "0" : well
+                    , string.IsNullOrEmpty(bush) ? "0" : bush
                     , shop.Value.ToString()
                     , 0.0
                     , string.Empty

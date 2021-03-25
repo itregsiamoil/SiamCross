@@ -4,9 +4,9 @@ using Xamarin.Forms.Xaml;
 namespace SiamCross.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class SensorDetailsView : ContentPage
+    public partial class SurveysCollectionPage : ContentPage
     {
-        public SensorDetailsView()
+        public SurveysCollectionPage()
         {
             InitializeComponent();
         }
