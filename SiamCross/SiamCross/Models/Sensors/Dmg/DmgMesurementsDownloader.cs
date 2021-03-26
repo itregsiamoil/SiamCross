@@ -109,14 +109,15 @@ namespace SiamCross.Models.Sensors.Dmg
         public async Task<IReadOnlyList<object>> Download(uint begin, uint end
             , Action<float> onStepProgress = null, Action<string> onStepInfo = null)
         {
+            if (!_Sensor.Activate)
+                _Sensor.Activate = true;
+
             onStepProgress?.Invoke(0.01f);
             onStepInfo?.Invoke("Download SurvayParam");
             await _Connection.ReadAsync(_SurvayParam);
 
-            onStepProgress?.Invoke(0.02f);
             onStepInfo?.Invoke("DownloadHeader start");
             await _Connection.ReadAsync(_Report);
-            onStepProgress?.Invoke(0.05f);
 
             onStepInfo?.Invoke("DownloadMeasurement ");
             RespResult ret = await _Connection.ReadMemAsync(0x81000000

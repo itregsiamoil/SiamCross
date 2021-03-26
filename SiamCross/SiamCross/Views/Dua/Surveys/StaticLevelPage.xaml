@@ -25,60 +25,64 @@
     </NavigationPage.TitleView>
     
     <ContentPage.Content>
-        <ScrollView BackgroundColor="WhiteSmoke">
-            <StackLayout>
-                <Frame Style="{StaticResource GroupingFrameStyle}" >
-                    <StackLayout >
-                        <Label Text="Пьезодатчик" 
+        <StackLayout>
+            <ScrollView VerticalOptions="StartAndExpand" BackgroundColor="WhiteSmoke">
+                <StackLayout>
+                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                        <StackLayout >
+                            <Label Text="Автоматический клапан" 
                                Style="{StaticResource GroupingFrameTitleStyle}"/>
-                        <Grid Padding="0,10,0,10">
-                            <Label Text="Максимальная глубина 3000м./6000м."/>
-                            <Switch />
-                        </Grid>
-                        <Grid Padding="0,10,0,10">
-                            <Label Text="Дополнительное усиление"/>
-                            <Switch />
-                        </Grid>
-
-                    </StackLayout>
-                </Frame>
-                <Frame Style="{StaticResource GroupingFrameStyle}" >
-                    <StackLayout >
-                        <Label Text="Автоматический клапан" 
+                            <Grid Padding="0,10,0,10">
+                                <Label Text="Разрешение срабатывания"/>
+                                <Switch />
+                            </Grid>
+                            <Grid Padding="0,10,0,10">
+                                <Label Text="Длительность срабатывания 0,2/0,05"/>
+                                <Switch />
+                            </Grid>
+                            <Grid Padding="0,10,0,10">
+                                <Label Text="Направление газа впуск/выпуск"/>
+                                <Switch />
+                            </Grid>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                        <StackLayout >
+                            <Label Text="Пьезодатчик" 
                                Style="{StaticResource GroupingFrameTitleStyle}"/>
-                        <Grid Padding="0,10,0,10">
-                            <Label Text="Направление газа впуск/выпуск"/>
-                            <Switch />
-                        </Grid>
-                        <Grid Padding="0,10,0,10">
-                            <Label Text="Длительность срабатывания 0,2/0,05"/>
-                            <Switch />
-                        </Grid>
-                        <Grid Padding="0,10,0,10">
-                            <Label Text="Разрешение срабатывания 0,2/0,05"/>
-                            <Switch />
-                        </Grid>
-                    </StackLayout>
-                </Frame>
+                            <Grid Padding="0,10,0,10">
+                                <Label Text="Максимальная глубина 3000м./6000м."/>
+                                <Switch />
+                            </Grid>
+                            <Grid Padding="0,10,0,10">
+                                <Label Text="Дополнительное усиление"/>
+                                <Switch />
+                            </Grid>
 
-                <Frame Style="{StaticResource GroupingFrameStyle}" >
-                    <StackLayout >
-                        <Label Text="Скорость звука" 
+                        </StackLayout>
+                    </Frame>
+                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                        <StackLayout >
+                            <Label Text="Скорость звука" 
                                Style="{StaticResource GroupingFrameTitleStyle}"/>
-                        <Label Text="текущее значение"/>
-                        <Entry Text="" />
-                        <Label Text="таблица поправок"/>
-                        <Entry Text="" />
-                    </StackLayout>
-                </Frame>
 
-                <StackLayout Spacing="0" Orientation="Horizontal" >
-                    <Button Text="назад" HorizontalOptions="FillAndExpand" 
-                            BackgroundColor="{StaticResource colorPrimaryLight}" />
-                    <Button Text="сохранить" HorizontalOptions="FillAndExpand" 
-                            BackgroundColor="{StaticResource colorSecondaryLight}" />
+                            <Grid RowSpacing="0">
+                                <RadioButton Content="Значение" FontSize="Default" TextColor="Gray"
+                                         Grid.Row="0" Grid.Column="0"/>
+                                <RadioButton Content="Таблица" FontSize="Default" TextColor="Gray"
+                                         Grid.Row="0" Grid.Column="1"/>
+
+                                <Entry Text=""
+                                   Grid.Row="1" Grid.Column="0"/>
+                                <Picker 
+                                   Grid.Row="1" Grid.Column="1"/>
+                            </Grid>
+                        </StackLayout>
+                    </Frame>
                 </StackLayout>
-            </StackLayout>
-        </ScrollView>
+            </ScrollView>
+            <Button Text="сохранить" HorizontalOptions="FillAndExpand"
+                    BackgroundColor="{StaticResource colorSecondaryLight}" />
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -20,6 +20,18 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             _TxBuf[2] = base.Address;
         }
 
+        public async override Task<bool> Connect()
+        {
+            using (await _semaphore.UseWaitAsync())
+                return await base.Connect();
+        }
+        public async override Task<bool> Disconnect()
+        {
+            using (await _semaphore.UseWaitAsync())
+                return await base.Disconnect();
+        }
+
+
         public override byte Address
         {
             get => base.Address;
@@ -243,7 +255,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 if (PhyConnection.State != ConnectionState.Connected)
                 {
                     //ret = RespResult.ErrorConnection;
-                    await Connect();
+                    await base.Connect();
                 }
                 ret = await SingleExchangeAsync();
                 DebugLog.WriteLine("END transaction, try " + i.ToString());

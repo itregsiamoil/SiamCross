@@ -379,13 +379,15 @@ namespace SiamCross.Models.Sensors
         {
             ClearStatus();
             cancelToken.ThrowIfCancellationRequested();
-            if (!await mConnection.Disconnect()
-                || !await mConnection.Connect()
+            if (//!await mConnection.Disconnect() ||
+                   !await mConnection.Connect()
                 || !await PostConnectInit(cancelToken))
             {
+                Debug.WriteLine("StartAlive FAILED");
                 return false;
             }
             Status = Resource.ConnectedStatus;
+            Debug.WriteLine("StartAlive OK");
             return true;
         }
 

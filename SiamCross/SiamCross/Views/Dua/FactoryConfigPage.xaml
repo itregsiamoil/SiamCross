@@ -64,8 +64,8 @@
                     </Frame>
                 </StackLayout>
             </ScrollView>
-            <Button Text="Сохранить в приборе" HorizontalOptions="FillAndExpand" 
-                            BackgroundColor="{StaticResource colorSecondaryLight}" />
+            <Button Text="Сохранить в приборе" HorizontalOptions="FillAndExpand"
+                    BackgroundColor="{StaticResource colorSecondaryLight}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

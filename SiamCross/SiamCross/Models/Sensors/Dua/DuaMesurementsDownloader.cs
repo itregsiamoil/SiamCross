@@ -157,10 +157,13 @@ namespace SiamCross.Models.Sensors.Dua
         public async Task<IReadOnlyList<object>> Download(uint begin, uint qty
             , Action<float> onStepProgress = null, Action<string> onStepInfo = null)
         {
+            if (!_Sensor.Activate)
+                _Sensor.Activate = true;
+
             onStepProgress?.Invoke(0.01f);
             onStepInfo?.Invoke("Скачивание измерений");
             // оценка количества байт для скачивания
-            uint total_bytes = qty * (ReportHeader.Size + _EchoSize);
+            uint total_bytes = qty * (ReportHeader.Size );
             uint readed_bytes = 0;
 
             var data_list = new List<DuMeasurementData>();
@@ -172,7 +175,7 @@ namespace SiamCross.Models.Sensors.Dua
                 await _Connection.ReadAsync(ReportHeader);
 
                 readed_bytes += ReportHeader.Size;
-                onStepProgress?.Invoke(readed_bytes / total_bytes);
+                onStepProgress?.Invoke((float)readed_bytes / total_bytes);
 
 
                 var well = Encoding.UTF8.GetString(skv.Value, 0, skv.Value.Length);
