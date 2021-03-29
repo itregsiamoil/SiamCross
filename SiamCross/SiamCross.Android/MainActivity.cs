@@ -39,7 +39,9 @@ namespace SiamCross.Droid
 
             await GetPermissionsAsync();
             // Set it in the constructor
-            LoadApplication(new App(new Setup()));
+            var setup = new Setup();
+            LoadApplication(new App(setup));
+            await setup.Init();
         }
         public async Task GetPermissionsAsync()
         {

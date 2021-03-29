@@ -155,8 +155,8 @@ namespace SiamCross.ViewModels.Dua
             IsDownloading = false;
             ToastService.Instance.LongAlert($"Elapsed {_PerfCounter.ElapsedMilliseconds}");
 
-            foreach (var m in measurements)
-                await SensorService.MeasurementHandler(m, false);
+            //foreach (var m in measurements)
+            //    await SensorService.MeasurementHandler(m, false);
         }
     }
 }

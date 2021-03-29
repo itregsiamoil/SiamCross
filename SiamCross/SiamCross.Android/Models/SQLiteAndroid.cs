@@ -1,6 +1,7 @@
 ﻿using Android.Runtime;
 using SiamCross.DataBase;
 using SiamCross.Droid.Models;
+using SiamCross.Services.Environment;
 using System.IO;
 using Xamarin.Forms;
 
@@ -13,9 +14,14 @@ namespace SiamCross.Droid.Models
         public SQLiteAndroid() { }
         public string GetDatabasePath(string sqliteFilename)
         {
+#if DEBUG
+            string path = Path.Combine(
+            EnvironmentService.Instance.GetDir_Downloads(), sqliteFilename);
+#else
             string documentsPath =
                 System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
             string path = Path.Combine(documentsPath, sqliteFilename);
+#endif
             return path;
         }
     }

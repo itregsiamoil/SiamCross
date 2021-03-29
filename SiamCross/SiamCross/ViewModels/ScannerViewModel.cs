@@ -177,7 +177,7 @@ namespace SiamCross.ViewModels
                             ScannedDeviceInfo siam_device = new ScannedDeviceInfo();
                             siam_device.Device = (Models.DeviceInfo)scanDevice.Device.Clone();
                             siam_device.Device.Kind = DeviceType.Value;
-                            siam_device.Device.Number = DeviceNumber.Value.ToString();
+                            siam_device.Device.Number = DeviceNumber.Value;
                             siam_device.Device.Name = $"{dvc_name}";
                             siam_device.Device.Name = siam_device.Device.Name.Replace("\0", string.Empty);
                             siam_device.Device.Name = siam_device.Device.Name.Replace("\r", string.Empty);

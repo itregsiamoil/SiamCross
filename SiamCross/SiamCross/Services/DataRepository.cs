@@ -4,12 +4,18 @@ using NLog;
 using SiamCross.AppObjects;
 using SiamCross.DataBase;
 using SiamCross.DataBase.DataBaseModels;
+using SiamCross.Models;
 using SiamCross.Services.Logging;
+using SiamCross.Services.RepositoryTables;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace SiamCross.Services
 {
@@ -22,10 +28,68 @@ namespace SiamCross.Services
         private static readonly object _locker = new object();
         private readonly string _databasePart;
 
+        private readonly IDbConnection _siamServiceDB;
+
+
         private static readonly Logger _logger =
             AppContainer.Container.Resolve<ILogManager>().GetLog();
 
+
+        public DataDictionary DataDictionary { get; protected set; }
+        public DataInt DataInt { get; protected set; }
+        public DataFloat DataFloat { get; protected set; }
+        public DataString DataString { get; protected set; }
+        public DataBlob DataBlob { get; protected set; }
+
+        public MeasureTable MeasureTable { get; protected set; }
+
+
+
+        public async Task Init()
+        {
+            var tr = _siamServiceDB.BeginTransaction(IsolationLevel.Serializable);
+            await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("DropTables.sql"), tr);
+            await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("CreateDataBase.sql"), tr);
+            await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("AppendData.sql"), tr);
+            await DataDictionary.Load();
+            tr.Commit();
+        }
+
+        private DataRepository(string filename)
+        {
+            string path="";
+            try
+            {
+                path = AppContainer.Container.Resolve<ISQLite>()
+                    .GetDatabasePath(filename);
+
+                if (!File.Exists(path))
+                {
+                    AppContainer.Container.Resolve<IDatabaseCreator>().CreateDatabase(path);
+                }
+
+                _siamServiceDB = AppContainer.Container
+                    .Resolve<IDbConnection>(new TypedParameter(typeof(string),
+                        (string.Format("Data Source={0};Version=3;", path))));
+                _siamServiceDB.Open();
+                DataDictionary = new DataDictionary(_siamServiceDB);
+                DataInt = new DataInt(_siamServiceDB);
+                DataFloat = new DataFloat(_siamServiceDB);
+                DataString = new DataString(_siamServiceDB);
+                DataBlob = new DataBlob(_siamServiceDB);
+                MeasureTable = new MeasureTable(_siamServiceDB);
+
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, $"Database creation error! Database path: {path}" + "\n");
+                throw;
+            }
+        }
+
+
         private DataRepository()
+            :this("siamservicedb.sqlite")
         {
             try
             {
@@ -270,7 +334,7 @@ namespace SiamCross.Services
                 throw;
             }
         }
-        public void RemoveDuMeasurement(int removebleId)
+        public void RemoveDuMeasurement(long removebleId)
         {
             NonQueryCheck();
             try
@@ -301,7 +365,7 @@ namespace SiamCross.Services
                 throw;
             }
         }
-        public DuMeasurement GetDuMeasurementById(int id)
+        public DuMeasurement GetDuMeasurementById(long id)
         {
             NonQueryCheck();
             try
@@ -460,7 +524,7 @@ namespace SiamCross.Services
                 throw;
             }
         }
-        public void RemoveDdin2Measurement(int removebleId)
+        public void RemoveDdin2Measurement(long removebleId)
         {
             NonQueryCheck();
 
@@ -489,7 +553,7 @@ namespace SiamCross.Services
                 throw;
             }
         }
-        public Ddin2Measurement GetDdin2MeasurementById(int id)
+        public Ddin2Measurement GetDdin2MeasurementById(long id)
         {
             NonQueryCheck();
             try
@@ -504,6 +568,96 @@ namespace SiamCross.Services
             }
         }
 
+        private string GetCreateDataBaseScript(string resourceName)
+        {
+            //Получаем текущую сборку.
+            Assembly myAssembly = Assembly.GetExecutingAssembly();
+            string fullResourceName = $"{myAssembly.GetName().Name}.{resourceName.Replace('\\', '.')}";
+            bool isExistsResourceName = myAssembly.GetManifestResourceNames()
+                .Contains(fullResourceName); //уточняем существует этот ресурс в данной сборке.
+            string ret = string.Empty;
+            if (isExistsResourceName)
+            {
+                Stream stream = myAssembly.GetManifestResourceStream(fullResourceName);
+                StreamReader reader = new StreamReader(stream);
+                ret = reader.ReadToEnd();
+            }
+            return ret;
+        }
+
+        public async Task<IEnumerable<MeasureTableItem>> GetMeasurements()
+        {
+            NonQueryCheck();
+            try
+            {
+                var v = await  MeasureTable.GetMeasurements();
+                return v;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex, "EXCEPTION " 
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
+            }
+            //return Task.FromResult<IEnumerable<MeasureTableItem>>(new List<MeasureTableItem>());
+            return new List<MeasureTableItem>();
+        }
+        public async Task<long> SaveMeasurement(MeasureData survey)
+        {
+            NonQueryCheck();
+            IDbTransaction tr = null; ;
+            try
+            {
+                tr = _siamServiceDB.BeginTransaction(IsolationLevel.Serializable);
+                long measureId = await MeasureTable.Save(new MeasureTableItem(survey));
+                await DataInt.Save(measureId, survey.Measure.DataInt);
+                await DataFloat.Save(measureId, survey.Measure.DataFloat);
+                await DataString.Save(measureId, survey.Measure.DataString);
+                await DataBlob.Save(measureId, survey.Measure.DataBlob);
+                tr.Commit();
+                return measureId;
+
+            }
+            catch (Exception ex)
+            {
+                tr?.Rollback();
+                Debug.WriteLine("EXCEPTION "
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
+            }
+
+            return -1;
+        }
+
+        /*
+        static string SerilizeXMLString(object obj)
+        {
+            if (null == obj)
+                return null;
+            XmlSerializer formatter = new XmlSerializer(obj.GetType());
+            using (StringWriter stream = new StringWriter())
+            {
+                formatter.Serialize(stream, obj);
+                return stream.ToString();
+            }
+        }
+
+        static byte[] SerilizeXMLBlob(object obj)
+        {
+            if (null == obj)
+                return null;
+            XmlSerializer formatter = new XmlSerializer(obj.GetType());
+            using (MemoryStream stream = new MemoryStream())
+            {
+                formatter.Serialize(stream, obj);
+                return stream.ToArray();
+            }
+        }
+        */
     }
 }
 

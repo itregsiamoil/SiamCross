@@ -22,7 +22,6 @@ namespace SiamCross.Models
             Instance.Add(1, Resource.Echogram);
         }
     }
-
     public static class DeviceIndex
     {
         public static readonly KeyKeyCollection<string> Instance = new KeyKeyCollection<string>();
@@ -38,8 +37,6 @@ namespace SiamCross.Models
             Instance.Add(0x1403, Resource.DynamographSensorType + " 0x1403");
         }
     }
-
-
 
     [Serializable]
     public class KeyVal
@@ -79,7 +76,7 @@ namespace SiamCross.Models
     public class DeviceInfo : ICloneable
     {
         public uint Kind;
-        public string Number;
+        public uint Number;
         public string Name;
         public uint ProtocolId;
         [XmlIgnore]
@@ -109,7 +106,7 @@ namespace SiamCross.Models
         public DeviceInfo()
         {
             Kind = 0;
-            Number = string.Empty;
+            Number = 0;
             Name = string.Empty;
             ProtocolId = 0;
             PhyId = 0;
@@ -128,7 +125,7 @@ namespace SiamCross.Models
         }
     }
     [Serializable]
-    public struct GeoLocation
+    public class GeoLocation
     {
         public double Latitude;
         public double Longitude;
@@ -136,19 +133,17 @@ namespace SiamCross.Models
         public double Accuracy;
     }
     [Serializable]
-    public struct PositionInfo
+    public class PositionInfo
     {
-        public int Id;
-        public string Field;
-        public string Well;
-        public string Bush;
-        public string Shop;
+        public uint Field;
+        public uint Well;
+        public uint Bush;
+        public uint Shop;
         public GeoLocation Location;
         public PositionInfo(int id = 0
-            , string field = "", string well = ""
-            , string bush = "", string shop = "")
+            , uint field = 0, uint well = 0
+            , uint bush = 0, uint shop = 0)
         {
-            Id = id;
             Field = field;
             Well = well;
             Bush = bush;
@@ -163,9 +158,39 @@ namespace SiamCross.Models
         public DateTime BeginTimestamp;
         public DateTime EndTimestamp;
         public string Comment;
-        public Dictionary<string, object> Data = new Dictionary<string, object>();
 
+        public Dictionary<string, long>   DataInt = new Dictionary<string, long>();
+        public Dictionary<string, double> DataFloat = new Dictionary<string, double>();
+        public Dictionary<string, string> DataString = new Dictionary<string, string>();
+        public Dictionary<string, byte[]> DataBlob = new Dictionary<string, byte[]>();
+
+
+        [XmlIgnore]
+        public Dictionary<string, object> Data = new Dictionary<string, object>();
+        [XmlArray("Data")]
+        [XmlArrayItem("Item")]
+        public KeyVal[] DataArray
+        {
+            get => KeyVal.ToArray(Data);
+            set => KeyVal.FromArray(value, Data);
+        }
     }
+
+    [Serializable]
+    public class CommonInfo
+    {
+        [XmlIgnore]
+        public Dictionary<string, object> Data = new Dictionary<string, object>();
+        [XmlArray("Info")]
+        [XmlArrayItem("Item")]
+        public KeyVal[] DataArray
+        {
+            get => KeyVal.ToArray(Data);
+            set => KeyVal.FromArray(value, Data);
+        }
+    }
+
+
     [Serializable]
     public class DistributionInfo
     {
@@ -173,14 +198,29 @@ namespace SiamCross.Models
         public string Destination;
     }
     [Serializable]
-    public class SurveyInfo
+    public class MeasureData
     {
-        public int Id = 0;
+        public long Id = 0;
         public PositionInfo Position = new PositionInfo();
         public DeviceInfo Device = new DeviceInfo();
+        public CommonInfo Info = new CommonInfo();
         public MeasurementInfo Measure = new MeasurementInfo();
-        public DistributionInfo MailDistribution = new DistributionInfo();
-        public DistributionInfo FileDistribution = new DistributionInfo();
+        public DistributionInfo MailDistribution;
+        public DistributionInfo FileDistribution;
 
+        public MeasureData(PositionInfo pos
+            , DeviceInfo dev
+            , CommonInfo info
+            , MeasurementInfo measure
+            , DistributionInfo mail=null
+            , DistributionInfo file=null)
+        {
+            Position = pos;
+            Device = dev;
+            Info = info;
+            Measure = measure;
+            MailDistribution = (null== mail)? new DistributionInfo(): mail;
+            FileDistribution = (null == file) ? new DistributionInfo() : mail;
+        }
     }
 }

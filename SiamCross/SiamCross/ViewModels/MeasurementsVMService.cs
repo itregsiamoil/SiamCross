@@ -89,7 +89,7 @@ namespace SiamCross.ViewModels
             OnItemLongPressCommand = new Command(obj => OnItemLongPress(obj as MeasurementView));
 
         }
-        public void ReloadMeasurementsFromDb()
+        public async void ReloadMeasurementsFromDb()
         {
             try
             {
@@ -98,6 +98,23 @@ namespace SiamCross.ViewModels
                 ObservableCollection<MeasurementView> meas = new ObservableCollection<MeasurementView>();
                 _ddin2Measurements = DataRepository.Instance.GetDdin2Measurements().ToList();
                 _duMeasurements = DataRepository.Instance.GetDuMeasurements().ToList();
+
+                var measurements = (await DataRepository.Instance.GetMeasurements()).ToList();
+
+                foreach (var m in measurements)
+                {
+                    meas.Add(
+                        new MeasurementView
+                        {
+                            Id = m.Id,
+                            Name = m.DeviceName,
+                            Field = m.Field.ToString(),
+                            Date = m.MeasureEndTimestamp,
+                            MeasureKindName = Resource.Echogram,
+                            Comments = m.MeasureComment
+                        });
+                }
+
 
                 foreach (Ddin2Measurement m in _ddin2Measurements)
                 {

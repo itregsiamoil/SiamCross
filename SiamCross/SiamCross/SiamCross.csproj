@@ -26,8 +26,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="AppendData.sql" />
+    <None Remove="CreateDataBase.sql" />
     <None Remove="DefaultSoundSpeedResources\langepas" />
     <None Remove="DefaultSoundSpeedResources\tataria" />
+    <None Remove="DropTables.sql" />
     <None Remove="images\battery.png" />
     <None Remove="images\recent.png" />
     <None Remove="images\start.png" />
@@ -36,8 +39,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="AppendData.sql" />
+    <EmbeddedResource Include="CreateDataBase.sql" />
     <EmbeddedResource Include="DefaultSoundSpeedResources\langepas" />
     <EmbeddedResource Include="DefaultSoundSpeedResources\tataria" />
+    <EmbeddedResource Include="DropTables.sql" />
     <EmbeddedResource Include="images\battery.png" />
     <EmbeddedResource Include="images\recent.png" />
     <EmbeddedResource Include="images\start.png" />

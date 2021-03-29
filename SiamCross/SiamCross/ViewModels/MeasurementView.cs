@@ -7,7 +7,11 @@ namespace SiamCross.ViewModels
 {
     public class MeasurementView : INotifyPropertyChanged
     {
-        private readonly SurveyInfo _Survey = new SurveyInfo();
+        private readonly MeasureData _Survey = new MeasureData(
+            new PositionInfo()
+            , new DeviceInfo()
+            , new CommonInfo()
+            , new MeasurementInfo() );
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void ChangeNotify([CallerMemberName] string prop = "")
@@ -15,12 +19,22 @@ namespace SiamCross.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
-        public int Id
+        public long Id
         { get => _Survey.Id; set { _Survey.Id = value; ChangeNotify(); } }
         public string Name
         { get => _Survey.Device.Name; set { _Survey.Device.Name = value; ChangeNotify(); } }
         public string Field
-        { get => _Survey.Position.Field; set { _Survey.Position.Field = value; ChangeNotify(); } }
+        { 
+            get => _Survey.Position.Field.ToString(); 
+            set
+            {
+                if (uint.TryParse(value, out uint val))
+                {
+                    _Survey.Position.Field = val;
+                    ChangeNotify();
+                }
+            }
+        }
         public string Comments
         { get => _Survey.Measure.Comment; set { _Survey.Measure.Comment = value; ChangeNotify(); } }
         public DateTime Date

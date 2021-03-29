@@ -118,23 +118,51 @@ namespace SiamCross.ViewModels
 
         public string Field
         {
-            get => _Model.Field;
-            set { _Model.Field = value; ChangeNotify(); }
+            get => _Model.Field.ToString();
+            set 
+            { 
+                if(uint.TryParse(value, out uint val))
+                {
+                    _Model.Field = val;
+                    ChangeNotify();
+                }
+            }
         }
         public string Well
         {
-            get => _Model.Well;
-            set { _Model.Well = value; ChangeNotify(); }
+            get => _Model.Well.ToString();
+            set
+            {
+                if (uint.TryParse(value, out uint val))
+                {
+                    _Model.Well = val;
+                    ChangeNotify();
+                }
+            }
         }
         public string Bush
         {
-            get => _Model.Bush;
-            set { _Model.Bush = value; ChangeNotify(); }
+            get => _Model.Bush.ToString();
+            set
+            {
+                if (uint.TryParse(value, out uint val))
+                {
+                    _Model.Bush = val;
+                    ChangeNotify();
+                }
+            }
         }
         public string Shop
         {
-            get => _Model.Shop;
-            set { _Model.Shop = value; ChangeNotify(); }
+            get => _Model.Shop.ToString();
+            set
+            {
+                if (uint.TryParse(value, out uint val))
+                {
+                    _Model.Shop = val;
+                    ChangeNotify();
+                }
+            }
         }
         public GeoLocationVM GeoLocation
         {

@@ -7,6 +7,7 @@ using SiamCross.ViewModels.Dua;
 using SiamCross.Views;
 using SiamCross.Views.DDIN2;
 using SiamCross.Views.Dua;
+using System.Threading.Tasks;
 using Xamarin.Forms.Internals;
 
 namespace SiamCross.AppObjects
@@ -60,6 +61,11 @@ namespace SiamCross.AppObjects
             cb.RegisterType<DuMeasurementViewModel>().AsSelf();
             cb.RegisterType<SoundSpeedViewModel>().AsSelf();
             cb.RegisterType<SoundSpeedViewViewModel>().AsSelf();
+        }
+
+        public async Task Init()
+        {
+            await DataRepository.Instance.Init();
         }
     }
 }

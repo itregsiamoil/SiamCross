@@ -1,5 +1,5 @@
 ﻿using SiamCross.Models.Connection.Protocol;
-using SiamCross.Models.Sensors.Du.Measurement;
+using SiamCross.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -48,6 +48,8 @@ namespace SiamCross.Models.Sensors.Dua
         readonly MemVarUInt16 urov;
         readonly MemVarInt16 pressure;
 
+        readonly MemVarByteArray Echo;
+
         public DuaMesurementsDownloader(ISensor sensor)
         {
             _Sensor = sensor;
@@ -85,6 +87,8 @@ namespace SiamCross.Models.Sensors.Dua
             kolotr = ReportHeader.Add(new MemVarUInt16());
             urov = ReportHeader.Add(new MemVarUInt16());
             pressure = ReportHeader.Add(new MemVarInt16());
+
+            Echo = new MemVarByteArray(null, 0, new MemValueByteArray(_EchoSize));
         }
         public Task Clear()
         {
@@ -166,7 +170,7 @@ namespace SiamCross.Models.Sensors.Dua
             uint total_bytes = qty * (ReportHeader.Size );
             uint readed_bytes = 0;
 
-            var data_list = new List<DuMeasurementData>();
+            var data_list = new List<MeasureData>();
 
 
             for (UInt32 rec = 0; rec < qty; ++rec)
@@ -177,47 +181,64 @@ namespace SiamCross.Models.Sensors.Dua
                 readed_bytes += ReportHeader.Size;
                 onStepProgress?.Invoke((float)readed_bytes / total_bytes);
 
+                _Connection.AdditioonalTimeout = 9000;
+                Echo.Address = 0x84000000 + _EchoSize * rec;
+                await _Connection.ReadMemAsync(Echo.Address, Echo.Size, Echo.Value);
 
-                var well = Encoding.UTF8.GetString(skv.Value, 0, skv.Value.Length);
-                var bush = Encoding.UTF8.GetString(kust.Value);
+                if (!uint.TryParse(Encoding.UTF8.GetString(skv.Value), out uint well))
+                    well = 0;
+                if (!uint.TryParse(Encoding.UTF8.GetString(kust.Value), out uint bush))
+                    bush = 0;
 
-                var secp = new DuMeasurementSecondaryParameters(
-                    _Sensor.Name
-                    , Resource.Echogram
-                    , field.Value.ToString()
-                    , string.IsNullOrEmpty(well) ? "0" : well
-                    , string.IsNullOrEmpty(bush) ? "0" : bush
-                    , shop.Value.ToString()
-                    , 0.0
-                    , string.Empty
-                    , _Sensor.Battery
-                    , _Sensor.Temperature
-                    , _Sensor.Firmware
-                    , string.Empty
-                    , "0", "0", "0"
-                    );
 
-                var startp = new DuMeasurementStartParameters(false, false, false, secp, 0.0);
+                var pos = new PositionInfo(field.Value, well, bush, shop.Value);
 
-                var echogramm = new MemVarByteArray(null, 0, new MemValueByteArray(_EchoSize));
 
-                byte[] _currentEchogram = new byte[3000];
+                var mi = new MeasurementInfo()
+                {
+                    Kind = 1,
+                    BeginTimestamp = GetTimestamp(),
+                    EndTimestamp = GetTimestamp(),
+                    Comment = string.Empty,
+                };
 
-                DuMeasurementData data = new DuMeasurementData(DateTime.Now
-                    , startp
-                    , pressure.Value
-                    , urov.Value
-                    , kolotr.Value
-                    , _currentEchogram
-                    , MeasureState.Ok);
+                mi.DataInt.Add("sudresearchtype", vissl.Value);
+                mi.DataFloat.Add("lgsoundspeed", vzvuk.Value / 10.0);
+                mi.DataInt.Add("sudcorrectiontype", ntpop.Value);
+                mi.DataInt.Add("lgreflectioncount", kolotr.Value);
+                mi.DataFloat.Add("lglevel", urov.Value);
+                mi.DataFloat.Add("sudpressure", pressure.Value / 10.0);
+                mi.DataFloat.Add("lgtimediscrete", 0.00585938);
+                mi.DataBlob.Add("lgechogram", Echo.Value);
 
-                data_list.Add(data);
+                MeasureData survey = new MeasureData(
+                     pos
+                    , _Sensor.ScannedDeviceInfo.Device
+                    , _Sensor.Info
+                    , mi );
+                await DataRepository.Instance.SaveMeasurement(survey);
+
             }
 
 
 
             return data_list;
         }
+
+        DateTime GetTimestamp()
+        {
+            try
+            {
+                return new DateTime(year.Value, month.Value, date.Value
+                            , hour.Value, min.Value, sec.Value);
+            }
+            catch(Exception)
+            {
+
+            }
+            return DateTime.Now;
+        }
+
 
 
     }

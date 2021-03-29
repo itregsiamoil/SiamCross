@@ -167,6 +167,8 @@ namespace SiamCross.Models.Sensors
         public IMeasurementsDownloader Downloader { get; set; }
         public IStateData StateData { get; set; }
 
+        public CommonInfo Info { get; }
+
         public ICommand ShowSurveysViewCommand { get; set; }
 
         public IReadOnlyList<SurveyVM> Surveys { get; set; }
