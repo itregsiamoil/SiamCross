@@ -49,7 +49,11 @@ namespace SiamCross.Droid.Models.BluetoothAdapters
 
         public void Enable()
         {
-            mBt2 = BluetoothAdapter.DefaultAdapter;
+            if (null == mBt2)
+                mBt2 = BluetoothAdapter.DefaultAdapter;
+            if (null == mBt2)
+                return;
+            mBt2.Enable();
         }
 
         public IBluetoothScanner GetScanner()

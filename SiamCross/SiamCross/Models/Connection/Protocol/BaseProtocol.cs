@@ -1,5 +1,4 @@
 ﻿using SiamCross.Models.Connection.Phy;
-using SiamCross.Models.Connection.Protocol.Siam;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -35,8 +34,11 @@ namespace SiamCross.Models.Connection.Protocol
             get => _MaxReqLen;
             set
             {
-                if (value + 12 + 2 > Pkg.MAX_PKG_SIZE)
-                    _MaxReqLen = Pkg.MAX_PKG_SIZE - 12 - 2;
+                var new_val = value + Constants.SIAM_PKG_CRC_SIZE + Constants.SIAM_PKG_HDR_SIZE;
+
+                if (new_val > Constants.MAX_PKG_SIZE)
+                    _MaxReqLen = Constants.MAX_PKG_SIZE
+                        - Constants.SIAM_PKG_CRC_SIZE - Constants.SIAM_PKG_HDR_SIZE;
                 else
                     _MaxReqLen = value;
                 OnPropChange(new PropertyChangedEventArgs(nameof(MaxReqLen)));
@@ -56,6 +58,9 @@ namespace SiamCross.Models.Connection.Protocol
                 }
             }
         }
+
+        private int _Retry = 3;
+        public int Retry { get => _Retry; set => _Retry = value; }
 
         protected int mAdditioonTime = 2000;
         public int AdditioonalTimeout

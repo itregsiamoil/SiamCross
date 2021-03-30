@@ -159,7 +159,7 @@ namespace SiamCross.Models
         public DateTime EndTimestamp;
         public string Comment;
 
-        public Dictionary<string, long>   DataInt = new Dictionary<string, long>();
+        public Dictionary<string, long> DataInt = new Dictionary<string, long>();
         public Dictionary<string, double> DataFloat = new Dictionary<string, double>();
         public Dictionary<string, string> DataString = new Dictionary<string, string>();
         public Dictionary<string, byte[]> DataBlob = new Dictionary<string, byte[]>();
@@ -212,14 +212,14 @@ namespace SiamCross.Models
             , DeviceInfo dev
             , CommonInfo info
             , MeasurementInfo measure
-            , DistributionInfo mail=null
-            , DistributionInfo file=null)
+            , DistributionInfo mail = null
+            , DistributionInfo file = null)
         {
             Position = pos;
             Device = dev;
             Info = info;
             Measure = measure;
-            MailDistribution = (null== mail)? new DistributionInfo(): mail;
+            MailDistribution = (null == mail) ? new DistributionInfo() : mail;
             FileDistribution = (null == file) ? new DistributionInfo() : mail;
         }
     }

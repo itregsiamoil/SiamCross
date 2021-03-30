@@ -76,9 +76,6 @@ namespace SiamCross.Views
                     StrokeWidth = 2
                 };
 
-                DuMeasurementDoneViewModel vm =
-                   (DuMeasurementDoneViewModel)BindingContext;
-
                 const float yReserve = 5;
                 double dx = (canvWidth) / (maxX - minX);
                 double dy = (canvHeight - yReserve) / (maxY - minY);

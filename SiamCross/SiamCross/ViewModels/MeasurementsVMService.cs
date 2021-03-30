@@ -2,6 +2,9 @@
 using NLog;
 using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
+using SiamCross.Models;
+using SiamCross.Models.Sensors;
+using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Email;
@@ -33,6 +36,9 @@ namespace SiamCross.ViewModels
         private string _title;
         private List<Ddin2Measurement> _ddin2Measurements;
         private List<DuMeasurement> _duMeasurements;
+        private List<MeasureData> _Measurements = new List<MeasureData>();
+
+
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
         private bool _selectMode = false;
 
@@ -101,18 +107,11 @@ namespace SiamCross.ViewModels
 
                 var measurements = (await DataRepository.Instance.GetMeasurements()).ToList();
 
+                _Measurements.Clear();
                 foreach (var m in measurements)
                 {
-                    meas.Add(
-                        new MeasurementView
-                        {
-                            Id = m.Id,
-                            Name = m.DeviceName,
-                            Field = m.Field.ToString(),
-                            Date = m.MeasureEndTimestamp,
-                            MeasureKindName = Resource.Echogram,
-                            Comments = m.MeasureComment
-                        });
+                    _Measurements.Add(m.MeasureData);
+                    meas.Add(new MeasurementView(m.MeasureData));
                 }
 
 
@@ -189,7 +188,7 @@ namespace SiamCross.ViewModels
                 item.IsSelected = !item.IsSelected;
             }
             else
-                PushPage(item);
+                PushPageAsync(item);
         }
         private void OnItemLongPress(MeasurementView item)
         {
@@ -354,7 +353,9 @@ namespace SiamCross.ViewModels
                             switch (mv.MeasureKind)
                             {
                                 case 0: DataRepository.Instance.RemoveDdin2Measurement(mv.Id); break;
-                                case 1: DataRepository.Instance.RemoveDuMeasurement(mv.Id); break;
+                                case 1:   DataRepository.Instance.RemoveDuMeasurement(mv.Id);
+                                    await DataRepository.Instance.DeleteMeasurement(mv.Id);
+                                    break;
                             }
                             Measurements.Remove(mv);
                         }
@@ -370,7 +371,7 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
-        public void PushPage(MeasurementView selectedMeasurement)
+        public async Task PushPageAsync(MeasurementView selectedMeasurement)
         {
             if (null == selectedMeasurement)
                 return;
@@ -387,18 +388,59 @@ namespace SiamCross.ViewModels
                         if (ddin_meas != null)
                             if (CanOpenPage(typeof(Ddin2MeasurementDonePage)))
                             {
-                                App.NavigationPage.Navigation
-                                .PushAsync(
-                                new Ddin2MeasurementDonePage(ddin_meas), true);
+                                await App.NavigationPage.Navigation
+                                    .PushAsync(
+                                        new Ddin2MeasurementDonePage(ddin_meas), true);
                             }
                         break;
                     case 1:
                         DuMeasurement du_meas = _duMeasurements?
                             .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
+                        if (null == du_meas)
+                        {
+                            var mData = _Measurements?
+                                .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
+
+                            await DataRepository.Instance.GetValues(mData);
+
+                            if (!mData.Measure.DataFloat.TryGetValue("bufferpressure", out double bufferpressure))
+                                bufferpressure = 0.0;
+
+                            var secp = new DuMeasurementSecondaryParameters(
+                                            mData.Device.Name
+                                            , Resource.Echogram
+                                            , mData.Position.Field.ToString()
+                                            , mData.Position.Well.ToString()
+                                            , mData.Position.Bush.ToString()
+                                            , mData.Position.Shop.ToString()
+                                            , bufferpressure
+                                            , mData.Measure.Comment
+                                            , "0.0"//_Sensor.Battery
+                                            , "0.0"//_Sensor.Temperature
+                                            , "0.0"//_Sensor.Firmware
+                                            , "0.0"//_Sensor.RadioFirmware
+                                            , mData.Measure.DataInt["sudresearchtype"].ToString()
+                                            , mData.Measure.DataInt["sudcorrectiontype"].ToString()
+                                            , mData.Measure.DataFloat["lgsoundspeed"].ToString()
+                                            );
+
+                            var startp = new DuMeasurementStartParameters(false, false, false, secp, 0.0);
+
+                            DuMeasurementData data = new DuMeasurementData(DateTime.Now
+                                , startp
+                                , (float)mData.Measure.DataFloat["sudpressure"]
+                                , (ushort)mData.Measure.DataFloat["lglevel"]
+                                , (ushort)mData.Measure.DataInt["lgreflectioncount"]
+                                , mData.Measure.DataBlob["lgechogram"]
+                                , MeasureState.Ok);
+
+                            du_meas = new DuMeasurement(data);
+                        }
+
                         if (du_meas != null)
                             if (CanOpenPage(typeof(DuMeasurementDonePage)))
                             {
-                                App.NavigationPage.Navigation
+                                await App.NavigationPage.Navigation
                                     .PushAsync(
                                         new DuMeasurementDonePage(du_meas), true);
                             }

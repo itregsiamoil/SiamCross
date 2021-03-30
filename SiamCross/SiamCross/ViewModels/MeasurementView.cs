@@ -1,51 +1,52 @@
 ﻿using SiamCross.Models;
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace SiamCross.ViewModels
 {
-    public class MeasurementView : INotifyPropertyChanged
+    public class MeasurementView : BaseVM
     {
-        private readonly MeasureData _Survey = new MeasureData(
-            new PositionInfo()
-            , new DeviceInfo()
-            , new CommonInfo()
-            , new MeasurementInfo() );
+        public MeasureData MeasureData { get; private set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void ChangeNotify([CallerMemberName] string prop = "")
+        public MeasurementView(MeasureData data)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+            MeasureData = data;
+        }
+        public MeasurementView()
+        {
+            MeasureData = new MeasureData(
+                new PositionInfo()
+                , new DeviceInfo()
+                , new CommonInfo()
+                , new MeasurementInfo());
         }
 
         public long Id
-        { get => _Survey.Id; set { _Survey.Id = value; ChangeNotify(); } }
+        { get => MeasureData.Id; set { MeasureData.Id = value; ChangeNotify(); } }
         public string Name
-        { get => _Survey.Device.Name; set { _Survey.Device.Name = value; ChangeNotify(); } }
+        { get => MeasureData.Device.Name; set { MeasureData.Device.Name = value; ChangeNotify(); } }
         public string Field
-        { 
-            get => _Survey.Position.Field.ToString(); 
+        {
+            get => MeasureData.Position.Field.ToString();
             set
             {
                 if (uint.TryParse(value, out uint val))
                 {
-                    _Survey.Position.Field = val;
+                    MeasureData.Position.Field = val;
                     ChangeNotify();
                 }
             }
         }
         public string Comments
-        { get => _Survey.Measure.Comment; set { _Survey.Measure.Comment = value; ChangeNotify(); } }
+        { get => MeasureData.Measure.Comment; set { MeasureData.Measure.Comment = value; ChangeNotify(); } }
         public DateTime Date
-        { get => _Survey.Measure.EndTimestamp; set { _Survey.Measure.EndTimestamp = value; ChangeNotify(); } }
+        { get => MeasureData.Measure.EndTimestamp; set { MeasureData.Measure.EndTimestamp = value; ChangeNotify(); } }
         public uint MeasureKind
-        { get => _Survey.Measure.Kind; set { _Survey.Measure.Kind = value; ChangeNotify(); } }
+        { get => MeasureData.Measure.Kind; set { MeasureData.Measure.Kind = value; ChangeNotify(); } }
         public string MeasureKindName
         {
             get
             {
-                if (MeasurementIndex.Instance.TryGetName(_Survey.Measure.Kind, out string name))
+                if (MeasurementIndex.Instance.TryGetName(MeasureData.Measure.Kind, out string name))
                     return name;
                 return string.Empty;
             }
@@ -55,14 +56,14 @@ namespace SiamCross.ViewModels
                 {
                     if (MeasurementIndex.Instance.TryGetName(idx, out string name))
                     {
-                        _Survey.Measure.Kind = idx;
+                        MeasureData.Measure.Kind = idx;
                         ChangeNotify();
                     }
                     return;
                 }
                 if (MeasurementIndex.Instance.TryGetId(value, out uint idxx))
                 {
-                    _Survey.Measure.Kind = idxx;
+                    MeasureData.Measure.Kind = idxx;
                     ChangeNotify();
                 }
             }
@@ -70,24 +71,24 @@ namespace SiamCross.ViewModels
 
         public string LastSentTimestamp
         {
-            get => DateTime.MinValue == _Survey.MailDistribution.Timestamp ? string.Empty : _Survey.MailDistribution.Timestamp.ToString();
-            set { DateTime.TryParse(value, out _Survey.MailDistribution.Timestamp); ChangeNotify(); }
+            get => DateTime.MinValue == MeasureData.MailDistribution.Timestamp ? string.Empty : MeasureData.MailDistribution.Timestamp.ToString();
+            set { DateTime.TryParse(value, out MeasureData.MailDistribution.Timestamp); ChangeNotify(); }
         }
         public string LastSentRecipient
         {
-            get => _Survey.MailDistribution.Destination;
-            set { _Survey.MailDistribution.Destination = value; ChangeNotify(); }
+            get => MeasureData.MailDistribution.Destination;
+            set { MeasureData.MailDistribution.Destination = value; ChangeNotify(); }
         }
 
         public string LastSaveTimestamp
         {
-            get => DateTime.MinValue == _Survey.FileDistribution.Timestamp ? string.Empty : _Survey.FileDistribution.Timestamp.ToString();
-            set { DateTime.TryParse(value, out _Survey.FileDistribution.Timestamp); ChangeNotify(); }
+            get => DateTime.MinValue == MeasureData.FileDistribution.Timestamp ? string.Empty : MeasureData.FileDistribution.Timestamp.ToString();
+            set { DateTime.TryParse(value, out MeasureData.FileDistribution.Timestamp); ChangeNotify(); }
         }
         public string LastSaveFolder
         {
-            get => _Survey.FileDistribution.Destination;
-            set { _Survey.FileDistribution.Destination = value; ChangeNotify(); }
+            get => MeasureData.FileDistribution.Destination;
+            set { MeasureData.FileDistribution.Destination = value; ChangeNotify(); }
         }
 
         // view info 

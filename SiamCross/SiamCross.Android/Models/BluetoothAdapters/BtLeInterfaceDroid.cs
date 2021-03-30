@@ -1,4 +1,5 @@
 ﻿//using SiamCross.Models.Adapters;
+using Android.Bluetooth;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using SiamCross.Models.Adapters.PhyInterface;
@@ -48,7 +49,11 @@ namespace SiamCross.Droid.Models.BluetoothAdapters
 
         public void Enable()
         {
-            mBle = CrossBluetoothLE.Current;
+            if (null == mBle)
+                mBle = CrossBluetoothLE.Current;
+            if (null == mBle)
+                return;
+            BluetoothAdapter.DefaultAdapter.Enable();
         }
 
         public IBluetoothScanner GetScanner()

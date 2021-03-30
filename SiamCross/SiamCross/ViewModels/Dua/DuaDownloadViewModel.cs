@@ -1,7 +1,6 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Dua;
-using SiamCross.Services;
 using SiamCross.Services.Toast;
 using System;
 using System.Diagnostics;

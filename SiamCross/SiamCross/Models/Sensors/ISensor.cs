@@ -41,6 +41,7 @@ namespace SiamCross.Models.Sensors
 
         //Task ActivateAsync();
         //Task DeactivateAsync();
+        Task<bool> DoActivate();
 
         string ConnStateStr { get; }
         bool Activate { get; set; }

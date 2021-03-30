@@ -18,7 +18,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private TaskCompletionSource<bool> mExecTcs;
         private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
-        private readonly byte[] mRxBuf = new byte[Pkg.MAX_PKG_SIZE * 2];
+        private readonly byte[] mRxBuf = new byte[Constants.MAX_PKG_SIZE * 2];
 
         private readonly DataBuffer mBuf = new DataBuffer();
 

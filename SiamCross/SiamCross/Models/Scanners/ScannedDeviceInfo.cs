@@ -22,6 +22,24 @@ namespace SiamCross.Models.Scanners
             };
             Device.ProtocolData["Address"] = "1";
         }
+
+        public ushort GetPrefferedPkgSize()
+        {
+            if ((uint)BluetoothType.Le == Device.PhyId)
+            {
+                if (Device.PhyData.TryGetValue("ModemVersion", out object _))
+                    return Constants.BTLE_PKG_MAX_SIZE - Constants.BTLE_PKG_HDR_SIZE
+                        - Constants.SIAM_PKG_CRC_SIZE - Constants.SIAM_PKG_HDR_SIZE;
+                else
+                    return Constants.SIAM_PKG_DEFAULT_DATA_SIZE;
+            }
+            //else if ((uint)BluetoothType.Classic == ScannedDeviceInfo.Device.PhyId)
+            {
+                return Constants.MAX_PKG_SIZE
+                    - Constants.SIAM_PKG_CRC_SIZE - Constants.SIAM_PKG_HDR_SIZE;
+            }
+        }
+
         public string ProtocolKindStr
         {
             get

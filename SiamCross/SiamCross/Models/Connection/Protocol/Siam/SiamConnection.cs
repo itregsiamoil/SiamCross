@@ -30,8 +30,6 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             using (await _semaphore.UseWaitAsync())
                 return await base.Disconnect();
         }
-
-
         public override byte Address
         {
             get => base.Address;
@@ -42,17 +40,15 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             }
         }
 
-
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
-        private readonly byte[] _RxBuf = new byte[Pkg.MAX_PKG_SIZE * 2];
+        private readonly byte[] _RxBuf = new byte[Constants.MAX_PKG_SIZE * 2];
         private int _BeginRxBuf = 0;
         private int _EndRxBuf = 0;
-        private readonly byte[] _TxBuf = new byte[Pkg.MAX_PKG_SIZE];
+        private readonly byte[] _TxBuf = new byte[Constants.MAX_PKG_SIZE];
         private int _EndTxBuf = 0;
 
-        private static readonly int _Retry = 3;
-        private static readonly int _ResponseRetry = Pkg.MAX_PKG_SIZE;
+        private static readonly int _ResponseRetry = Constants.MAX_PKG_SIZE;
 
 
         private static readonly int mMinSpeed = 9600; ///bit per second
@@ -97,7 +93,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             if (0 >= empty_space)
                 throw new System.IO.InternalBufferOverflowException();
 
-            if (Pkg.MAX_PKG_SIZE > empty_space)
+            if (Constants.MAX_PKG_SIZE > empty_space)
             {
                 DebugLog.WriteLine($"MemMove in buffer begin={_BeginRxBuf} end={_EndRxBuf}");
                 Span<byte> dst_buf = _RxBuf;
@@ -113,13 +109,13 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 int write_timeout = GetRequestTimeout(_EndTxBuf);
                 CancellationTokenSource ctSrc = new CancellationTokenSource(write_timeout);
 
-                for (int i = 0; i < _Retry && !sent_ok; ++i)
+                for (int i = 0; i < Retry && !sent_ok; ++i)
                 {
                     ctSrc.Token.ThrowIfCancellationRequested();
                     int sent = await mPhyConn.WriteAsync(_TxBuf, 0, _EndTxBuf, ctSrc.Token);
                     if (_EndTxBuf == sent)
                         sent_ok = true;
-                    DebugLog.WriteLine("Sent " + _EndTxBuf.ToString()
+                    DebugLog.WriteLine("SENT " + _EndTxBuf.ToString()
                         + " elapsed=" + _PerfCounter.ElapsedMilliseconds.ToString()
                         + ": [" + BitConverter.ToString(_TxBuf, 0, _EndTxBuf) + "]\n");
                 }
@@ -157,7 +153,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
 
             _BeginRxBuf = 0;
             _EndRxBuf = 0;
-            int need = Pkg.MIN_PKG_SIZE;
+            int need = Constants.MIN_PKG_SIZE;
             bool is_ok = false;
             try
             {
@@ -178,7 +174,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                         case -2:
                         case -1: _BeginRxBuf = 0; goto case 0;
                         case 0:
-                            DebugLog.WriteLine($"GET response " + ((RespResult)need).ToString()
+                            DebugLog.WriteLine($"GET response {_EndRxBuf - _BeginRxBuf} " + ((RespResult)need).ToString()
                                 + $" expected={pf_delay}"
                                 + $" elapsed={_PerfCounter.ElapsedMilliseconds}/{read_timeout}"
                                 + ": [" + BitConverter.ToString(_RxBuf, _BeginRxBuf, _EndRxBuf - _BeginRxBuf) + "]\n"
@@ -289,7 +285,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 byte[] crc = CrcModbusCalculator.ModbusCrc(_TxBuf, 2, 8);
                 crc.CopyTo(_TxBuf.AsSpan(10, 2)); //crc
                 _EndTxBuf = 12;
-                RespResult ret = await ExchangeAsync(_Retry);
+                RespResult ret = await ExchangeAsync(Retry);
                 if (RespResult.NormalPkg != ret)
                     return ret;
 
@@ -338,7 +334,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
 
                 _EndTxBuf = 12 + curr_len + 2;
 
-                RespResult ret = await ExchangeAsync(_Retry);
+                RespResult ret = await ExchangeAsync(Retry);
                 if (RespResult.NormalPkg != ret)
                     return ret;
 
@@ -422,7 +418,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 CrcModbusCalculator.ModbusCrc(_TxBuf, 2, 8).CopyTo(_TxBuf.AsSpan(10, 2)); //crc
                 _EndTxBuf = 12;
 
-                RespResult ret = await ExchangeAsync(_Retry);
+                RespResult ret = await ExchangeAsync(Retry);
                 if (RespResult.NormalPkg != ret)
                     return ret;
                 vars.FromArray(_RxBuf, (UInt32)_BeginRxBuf + 12);
@@ -464,7 +460,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 CrcModbusCalculator.ModbusCrc(_TxBuf, 12, (int)vars.Size).CopyTo(_TxBuf.AsSpan(12 + (int)vars.Size, 2)); //crc
                 _EndTxBuf = 12 + (int)vars.Size + 2;
 
-                RespResult ret = await ExchangeAsync(_Retry);
+                RespResult ret = await ExchangeAsync(Retry);
                 if (RespResult.NormalPkg != ret)
                     return ret;
 

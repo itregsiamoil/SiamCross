@@ -15,7 +15,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace SiamCross.Services
 {
@@ -57,7 +56,7 @@ namespace SiamCross.Services
 
         private DataRepository(string filename)
         {
-            string path="";
+            string path = "";
             try
             {
                 path = AppContainer.Container.Resolve<ISQLite>()
@@ -89,7 +88,7 @@ namespace SiamCross.Services
 
 
         private DataRepository()
-            :this("siamservicedb.sqlite")
+            : this("siamservicedb.sqlite")
         {
             try
             {
@@ -585,17 +584,30 @@ namespace SiamCross.Services
             return ret;
         }
 
+        public async Task GetValues(MeasureData m)
+        {
+            using (var tr = _siamServiceDB.BeginTransaction(IsolationLevel.Serializable))
+            {
+                m.Measure.DataInt = await DataInt.Load(m.Id);
+                m.Measure.DataFloat = await DataFloat.Load(m.Id);
+                m.Measure.DataString = await DataString.Load(m.Id);
+                m.Measure.DataBlob = await DataBlob.Load(m.Id);
+                tr.Commit();
+            }
+        }
+
+
         public async Task<IEnumerable<MeasureTableItem>> GetMeasurements()
         {
             NonQueryCheck();
             try
             {
-                var v = await  MeasureTable.GetMeasurements();
+                var v = await MeasureTable.GetMeasurements();
                 return v;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex, "EXCEPTION " 
+                Debug.WriteLine(ex, "EXCEPTION "
                     + System.Reflection.MethodBase.GetCurrentMethod().Name
                     + "\n msg=" + ex.Message
                     + "\n type=" + ex.GetType()
@@ -618,7 +630,6 @@ namespace SiamCross.Services
                 await DataBlob.Save(measureId, survey.Measure.DataBlob);
                 tr.Commit();
                 return measureId;
-
             }
             catch (Exception ex)
             {
@@ -629,10 +640,30 @@ namespace SiamCross.Services
                     + "\n type=" + ex.GetType()
                     + "\n stack=" + ex.StackTrace + "\n");
             }
-
             return -1;
         }
 
+
+        public async Task DeleteMeasurement(long measureId)
+        {
+            NonQueryCheck();
+            IDbTransaction tr = null; ;
+            try
+            {
+                tr = _siamServiceDB.BeginTransaction(IsolationLevel.Serializable);
+                await MeasureTable.Delete(measureId);
+                tr.Commit();
+            }
+            catch (Exception ex)
+            {
+                tr?.Rollback();
+                Debug.WriteLine("EXCEPTION "
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
+            }
+        }
         /*
         static string SerilizeXMLString(object obj)
         {

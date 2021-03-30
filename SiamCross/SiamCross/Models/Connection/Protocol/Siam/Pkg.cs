@@ -12,8 +12,6 @@ namespace SiamCross.Models.Connection.Protocol.Siam
           , Write = 0x02
         }
 
-        public const int MAX_PKG_SIZE = 256;
-        public const int MIN_PKG_SIZE = 12;
         private static readonly bool CHECK_RESPONSE_CRC = false;
         private static readonly byte[] begin_marker = { 0x0D, 0x0A };
         public static int GetDataLen(ReadOnlySpan<byte> req)
@@ -90,7 +88,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             int marker_pos;
             int rest = res_span.Length - begin;
 
-            while (MIN_PKG_SIZE <= rest)
+            while (Constants.MIN_PKG_SIZE <= rest)
             {
                 ReadOnlySpan<byte> pkg_hdr = res_span.Slice(begin, 12);
                 if (IsNormalPkgHeader(pkg_hdr, req))
@@ -118,12 +116,12 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 if (-1 == marker_pos)
                 {
                     begin = res_span.Length - 1;
-                    return MIN_PKG_SIZE - 1;
+                    return Constants.MIN_PKG_SIZE - 1;
                 }
                 begin += marker_pos;
                 rest = res_span.Length - begin;
             }
-            return MIN_PKG_SIZE - rest;
+            return Constants.MIN_PKG_SIZE - rest;
         }
         /// <summary>
         /// 
@@ -189,16 +187,16 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         {
             byte[] trash_rs = { 0xFD, 0xFA, 0xF1, 0xF1, 0xFD, 0xFA, 0x00, 0x00, 0x04, 0x00, 0x52, 0x04 };
             int begin = 0;
-            int need = MIN_PKG_SIZE;
+            int need = Constants.MIN_PKG_SIZE;
             trash_rs.CopyTo(rx_buf, 0);
             Extract(rq, rx_buf, ref begin, trash_rs.Length, ref need);
-            return MIN_PKG_SIZE - 1 == need && trash_rs.Length - 1 == begin;
+            return Constants.MIN_PKG_SIZE - 1 == need && trash_rs.Length - 1 == begin;
         }
         private static bool Test_TrashPkg2()
         {
             byte[] trash_rs = { 0x0D, 0x0A, 0xF1, 0xF1, 0xFD, 0xFA, 0x0D, 0x0A, 0x04, 0x00, 0x52, 0x0D };
             int begin = 0;
-            int need = MIN_PKG_SIZE;
+            int need = Constants.MIN_PKG_SIZE;
             trash_rs.CopyTo(rx_buf, 0);
             Extract(rq, rx_buf, ref begin, trash_rs.Length, ref need);
             return 1 == need && 1 == begin;
@@ -207,7 +205,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         {
             byte[] trash_rs = { 0x0D, 0x0A, 0xF1, 0xF1, 0xFD, 0xFA, 0xDD, 0xDA, 0x04, 0x00, 0x52, 0x01, 0x0D };
             int begin = 0;
-            int need = MIN_PKG_SIZE;
+            int need = Constants.MIN_PKG_SIZE;
             trash_rs.CopyTo(rx_buf, 0);
             Extract(rq, rx_buf, ref begin, trash_rs.Length, ref need);
             return 11 == need && 12 == begin;
@@ -216,7 +214,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private static bool Test_ErrorPkg_no_CRC()
         {
             int begin = 0;
-            int need = MIN_PKG_SIZE;
+            int need = Constants.MIN_PKG_SIZE;
             byte[] err_rs = { 0x0D, 0x0A, 0x0D, 0x0A, 0x01, 0x81, 0x00, 0x10, 0x00, 0x00, 0x04, 0x00 };
             err_rs.CopyTo(rx_buf, 0);
             Extract(rq, rx_buf, ref begin, err_rs.Length, ref need);
@@ -226,7 +224,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private static bool Test_ErrorPkg_with_wrong_CRC()
         {
             int begin = 0;
-            int need = MIN_PKG_SIZE;
+            int need = Constants.MIN_PKG_SIZE;
             byte[] err_rs = { 0x0D, 0x0A, 0x01, 0x81, 0x00, 0x10, 0x00, 0x00, 0x04, 0x00, 0xFF, 0xFF };
             err_rs.CopyTo(rx_buf, 0);
             Extract(rq, rx_buf, ref begin, err_rs.Length, ref need);
@@ -236,7 +234,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private static bool Test_ErrorPkg()
         {
             int begin = 0;
-            int need = MIN_PKG_SIZE;
+            int need = Constants.MIN_PKG_SIZE;
             byte[] err_rs = { 0x0D, 0x0A, 0x0D, 0x0A, 0x01, 0x81, 0x00, 0x10, 0x00, 0x00, 0x04, 0x00, 0xD3, 0xCC };
             err_rs.CopyTo(rx_buf, 0);
             Extract(rq, rx_buf, ref begin, err_rs.Length, ref need);
@@ -246,7 +244,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private static bool Test_Pkg_wrong_len()
         {
             int begin = 0;
-            int need = MIN_PKG_SIZE;
+            int need = Constants.MIN_PKG_SIZE;
             rs.AsSpan(0, 5).CopyTo(rx_buf.AsSpan());
             Extract(rq, rx_buf, ref begin, 5, ref need);
             return 12 - 5 == need && 0 == begin;
@@ -255,7 +253,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private static bool Test_Pkg_no_hdr_CRC()
         {
             int begin = 0;
-            int need = MIN_PKG_SIZE;
+            int need = Constants.MIN_PKG_SIZE;
 
             int trash_qty = 2;
             rs.AsSpan(0, 10).CopyTo(rx_buf.AsSpan(trash_qty));
@@ -268,7 +266,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private static bool Test_Pkg_wrong_hdr_CRC()
         {
             int begin = 0;
-            int need = MIN_PKG_SIZE;
+            int need = Constants.MIN_PKG_SIZE;
 
             int trash_qty = 2;
             rs.AsSpan(0, 12).CopyTo(rx_buf.AsSpan(trash_qty));
@@ -282,7 +280,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private static bool Test_Pkg_no_CRC_in_data()
         {
             int begin = 0;
-            int need = MIN_PKG_SIZE;
+            int need = Constants.MIN_PKG_SIZE;
 
             int trash_qty = 2;
             rs.AsSpan().CopyTo(rx_buf.AsSpan(trash_qty));
@@ -294,7 +292,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private static bool Test_Pkg_wrong_CRC_in_data()
         {
             int begin = 0;
-            int need = MIN_PKG_SIZE;
+            int need = Constants.MIN_PKG_SIZE;
             int trash_qty = 2;
             rs.AsSpan().CopyTo(rx_buf.AsSpan(trash_qty));
             rx_buf[trash_qty + rs.Length - 2] = 0xFF;
@@ -306,7 +304,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private static bool Test_Pkg()
         {
             int begin = 0;
-            int need = MIN_PKG_SIZE;
+            int need = Constants.MIN_PKG_SIZE;
             int trash_qty = 2;
             rs.CopyTo(rx_buf, trash_qty);
             Extract(rq, rx_buf, ref begin, rs.Length + trash_qty, ref need);
@@ -317,7 +315,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private static bool Test_Pkg1()
         {
             int begin = 0;
-            int need = MIN_PKG_SIZE;
+            int need = Constants.MIN_PKG_SIZE;
             byte[] req = { 0x0D, 0x0A, 0x01, 0x01, 0x00, 0x10, 0x00, 0x00, 0x04, 0x00, 0x52, 0x04 };
             byte[] res = { 0x6E, 0x61, 0x6D, 0x65, 0x73, 0x65, 0x74, 0x20, 0x53, 0x49, 0x44, 0x44, 0x0D, 0x0A, 0x01, 0x01, 0x00, 0x10, 0x00, 0x00, 0x04, 0x00, 0x52 };
 

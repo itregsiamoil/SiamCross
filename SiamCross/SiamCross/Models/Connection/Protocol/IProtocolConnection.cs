@@ -25,6 +25,8 @@ namespace SiamCross.Models.Connection.Protocol
         ushort MaxReqLen { get; set; }
         byte Address { get; set; }
 
+        int Retry { get; set; }
+
         Task<RespResult> TryReadMemoryAsync(uint addr, uint len
             , byte[] dst, int dst_start = 0
             , Action<float> onStepProgress = null, CancellationToken cancellationToken = default);

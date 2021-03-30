@@ -38,10 +38,6 @@ namespace SiamCross.Models.Sensors
 
             _Memory.Add(_Common);
 
-            if (ScannedDeviceInfo.Device.PhyData.TryGetValue("ModemVersion", out object _))
-                Connection.MaxReqLen = 230;// 247 - 3(bt header) - 12(siam header)-2(crc)
-            else
-                Connection.MaxReqLen = 40;
         }
 
         public async Task<bool> UpdateFirmware(CancellationToken cancelToken)

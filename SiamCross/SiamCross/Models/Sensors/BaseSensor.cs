@@ -44,8 +44,13 @@ namespace SiamCross.Models.Sensors
             };
             //mConnection.PropertyChanged += PropertyChanged;
 
+            Connection.MaxReqLen = ScannedDeviceInfo.GetPrefferedPkgSize();
 
-            ShowDetailViewCommand = CreateAsyncCommand(new SensorDetailsVM(this));
+            ShowDetailViewCommand = CreateAsyncCommand(() =>
+            {
+                this.Activate = true;
+                return new SensorDetailsVM(this);
+            });
 
         }
         static public AsyncCommand CreateAsyncCommand(Func<IViewModel> fnGetVM)
@@ -67,12 +72,25 @@ namespace SiamCross.Models.Sensors
         {
             Func<Task> exec = () =>
             {
-                if (null == vm)
-                    return Task.CompletedTask;
-                var page = ViewFactoryService.Get(vm);
-                if (null == page)
-                    return Task.CompletedTask;
-                return App.NavigationPage.Navigation.PushAsync(page);
+                try
+                {
+                    if (null == vm)
+                        return Task.CompletedTask;
+                    var page = ViewFactoryService.Get(vm);
+                    if (null == page)
+                        return Task.CompletedTask;
+                    return App.NavigationPage.Navigation.PushAsync(page);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex, "EXCEPTION "
+                        + System.Reflection.MethodBase.GetCurrentMethod().Name
+                        + "\n msg=" + ex.Message
+                        + "\n type=" + ex.GetType()
+                        + "\n stack=" + ex.StackTrace + "\n");
+
+                }
+                return Task.CompletedTask;
             };
             return new AsyncCommand(exec
                 , (Func<object, bool>)null, null, false, false);
@@ -189,6 +207,17 @@ namespace SiamCross.Models.Sensors
         private bool _activated = false;
         private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
         #endregion
+
+        public async Task<bool> DoActivate()
+        {
+            bool connected = false;
+            for (int i = 0; i < Connection.Retry && !connected; ++i)
+                connected = await Connection.Connect();
+            if (connected && !Activate)
+                Activate = true;
+            return connected;
+        }
+
         private async Task AsyncActivate()
         {
             using (await semaphore.UseWaitAsync())
@@ -381,11 +410,11 @@ namespace SiamCross.Models.Sensors
         {
             ClearStatus();
             cancelToken.ThrowIfCancellationRequested();
-            if (//!await mConnection.Disconnect() ||
-                   !await mConnection.Connect()
+            if (!await Connection.Connect()
                 || !await PostConnectInit(cancelToken))
             {
                 Debug.WriteLine("StartAlive FAILED");
+                await mConnection.Disconnect();
                 return false;
             }
             Status = Resource.ConnectedStatus;

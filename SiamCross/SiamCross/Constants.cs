@@ -2,6 +2,16 @@
 {
     public static class Constants
     {
+        public const int BTLE_PKG_HDR_SIZE = 3;
+        public const int BTLE_PKG_MAX_SIZE = 247;
+
+        public const int SIAM_PKG_CRC_SIZE = 2;
+        public const int SIAM_PKG_HDR_SIZE = 12;
+        public const int SIAM_PKG_DEFAULT_DATA_SIZE = 40;
+
+        public const int MIN_PKG_SIZE = 12;
+        public const int MAX_PKG_SIZE = 256;
+
         public const int ShortDelay = 50;
 
         public const int LongDelay = 300;

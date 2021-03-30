@@ -2,6 +2,7 @@
 using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -85,8 +86,9 @@ namespace SiamCross.Models.Sensors.Dmg
         }
         public async Task<RespResult> Update()
         {
-            if (!_Sensor.Activate)
-                _Sensor.Activate = true;
+            if (!await _Sensor.DoActivate())
+                return await Task.FromResult(RespResult.ErrorConnection);
+
             RespResult ret = RespResult.ErrorTimeout;
             for (int i = 0; i < 3; ++i)
             {
@@ -106,12 +108,32 @@ namespace SiamCross.Models.Sensors.Dmg
                 case 0x05: return 1;
             }
         }
-        public async Task<IReadOnlyList<object>> Download(uint begin, uint end
+
+        public async Task<IReadOnlyList<object>> Download(uint begin, uint qty
+        , Action<float> onStepProgress = null, Action<string> onStepInfo = null)
+        {
+            try
+            {
+                onStepInfo?.Invoke("Подключение...");
+                if (!await _Sensor.DoActivate())
+                    throw new Exception("can`t connect");
+                return await DoDownload(begin, qty, onStepProgress, onStepInfo);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex, "EXCEPTION "
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
+
+            }
+            onStepInfo?.Invoke("Ошибка подключения");
+            return new List<object>();
+        }
+        protected async Task<IReadOnlyList<object>> DoDownload(uint begin, uint end
             , Action<float> onStepProgress = null, Action<string> onStepInfo = null)
         {
-            if (!_Sensor.Activate)
-                _Sensor.Activate = true;
-
             onStepProgress?.Invoke(0.01f);
             onStepInfo?.Invoke("Download SurvayParam");
             await _Connection.ReadAsync(_SurvayParam);

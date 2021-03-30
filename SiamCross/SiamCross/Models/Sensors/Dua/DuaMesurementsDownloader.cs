@@ -139,8 +139,9 @@ namespace SiamCross.Models.Sensors.Dua
         }
         public async Task<RespResult> Update()
         {
-            if (!_Sensor.Activate)
-                _Sensor.Activate = true;
+            if (!await _Sensor.DoActivate())
+                return await Task.FromResult(RespResult.ErrorConnection);
+
             RespResult ret = RespResult.ErrorTimeout;
             for (int i = 0; i < 3; ++i)
             {
@@ -158,16 +159,36 @@ namespace SiamCross.Models.Sensors.Dua
         {
             return Ukex.Value;
         }
+
         public async Task<IReadOnlyList<object>> Download(uint begin, uint qty
             , Action<float> onStepProgress = null, Action<string> onStepInfo = null)
         {
-            if (!_Sensor.Activate)
-                _Sensor.Activate = true;
+            try
+            {
+                if (!await _Sensor.DoActivate())
+                    throw new Exception("can`t connect");
+                return await DoDownload(begin, qty, onStepProgress, onStepInfo);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex, "EXCEPTION "
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
 
+            }
+            onStepInfo?.Invoke("Ошибка подключения");
+            return new List<object>();
+        }
+
+        protected async Task<IReadOnlyList<object>> DoDownload(uint begin, uint qty
+            , Action<float> onStepProgress, Action<string> onStepInfo)
+        {
             onStepProgress?.Invoke(0.01f);
             onStepInfo?.Invoke("Скачивание измерений");
             // оценка количества байт для скачивания
-            uint total_bytes = qty * (ReportHeader.Size );
+            uint total_bytes = qty * (ReportHeader.Size);
             uint readed_bytes = 0;
 
             var data_list = new List<MeasureData>();
@@ -215,7 +236,7 @@ namespace SiamCross.Models.Sensors.Dua
                      pos
                     , _Sensor.ScannedDeviceInfo.Device
                     , _Sensor.Info
-                    , mi );
+                    , mi);
                 await DataRepository.Instance.SaveMeasurement(survey);
 
             }
@@ -232,7 +253,7 @@ namespace SiamCross.Models.Sensors.Dua
                 return new DateTime(year.Value, month.Value, date.Value
                             , hour.Value, min.Value, sec.Value);
             }
-            catch(Exception)
+            catch (Exception)
             {
 
             }

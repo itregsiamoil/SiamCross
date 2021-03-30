@@ -284,12 +284,12 @@ namespace SiamCross.Models.Connection.Protocol
         {
             set
             {
-                if (_Data is MemVarUInt8 dd)
+                if (_Data is MemValueUInt8 dd)
                     dd.Value = value;
             }
             get
             {
-                if (_Data is MemVarUInt8 dd)
+                if (_Data is MemValueUInt8 dd)
                     return dd.Value;
                 return default;
             }

@@ -119,9 +119,9 @@ namespace SiamCross.ViewModels
         public string Field
         {
             get => _Model.Field.ToString();
-            set 
-            { 
-                if(uint.TryParse(value, out uint val))
+            set
+            {
+                if (uint.TryParse(value, out uint val))
                 {
                     _Model.Field = val;
                     ChangeNotify();

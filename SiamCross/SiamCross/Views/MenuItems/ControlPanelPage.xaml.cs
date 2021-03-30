@@ -2,6 +2,7 @@
 using SiamCross.Models.Adapters.PhyInterface;
 using SiamCross.ViewModels;
 using System.Threading.Tasks;
+using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -13,43 +14,64 @@ namespace SiamCross.Views.MenuItems
         ControlPanelPageViewModel _vm;
         public ControlPanelPage()
         {
+            InitializeComponent();
             ViewModelWrap<ControlPanelPageViewModel> vm = new ViewModelWrap<ControlPanelPageViewModel>();
             _vm = vm.ViewModel;
             BindingContext = _vm;
-            InitializeComponent();
         }
 
-        protected static async Task RequestEnableBuetooth()
+        protected async void RequestEnableBuetooth()
         {
+            while (0 > this.Height)
+                await Task.Delay(1000);
             IPhyInterface defaultAdapter = FactoryBt2.GetCurent();
-
-            if (!defaultAdapter.IsEnbaled)
+            if (null == defaultAdapter)
             {
-                bool result = await Application.Current.MainPage.DisplayAlert(
-                    Resource.BluetoothIsDisable,
-                    Resource.EnableBluetooth,
-                    Resource.YesButton,
-                    Resource.NotButton);
-                if (result)
-                {
-                    defaultAdapter.Enable();
-                }
+                await this.DisplayToastAsync("There are no Bluetooth module");
+                return;
             }
+            if (defaultAdapter.IsEnbaled)
+                return;
+            bool result = await Application.Current.MainPage.DisplayAlert(
+                            Resource.BluetoothIsDisable,
+                            Resource.EnableBluetooth,
+                            Resource.YesButton,
+                            Resource.NotButton);
+            if (!result)
+                return;
+            defaultAdapter.Enable();
         }
-        protected static async void StartRequestEnableBuetooth()
-        {
-            await Task.Run(RequestEnableBuetooth);
-        }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            StartRequestEnableBuetooth();
+            RequestEnableBuetooth();
             _vm.EnableQickInfoAll();
         }
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
             _vm.DisableQickInfoAll();
+        }
+
+
+        protected Task ExecuteExit()
+        {
+            //while (0 > this.Height)
+            //    await Task.Delay(1000);
+            //System.Environment.Exit(0);
+            System.Diagnostics.Process.GetCurrentProcess().CloseMainWindow();
+            System.Diagnostics.Process.GetCurrentProcess().Close();
+            return Task.CompletedTask;
+        }
+        protected async void RequestExit()
+        {
+            bool _ExitCmd = await this.DisplaySnackBarAsync("Exit app?", "Yes", ExecuteExit);
+        }
+        protected override bool OnBackButtonPressed()
+        {
+            RequestExit();
+            return true;
         }
 
 
