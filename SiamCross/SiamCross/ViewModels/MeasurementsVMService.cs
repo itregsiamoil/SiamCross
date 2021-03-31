@@ -353,7 +353,8 @@ namespace SiamCross.ViewModels
                             switch (mv.MeasureKind)
                             {
                                 case 0: DataRepository.Instance.RemoveDdin2Measurement(mv.Id); break;
-                                case 1:   DataRepository.Instance.RemoveDuMeasurement(mv.Id);
+                                case 1:
+                                    DataRepository.Instance.RemoveDuMeasurement(mv.Id);
                                     await DataRepository.Instance.DeleteMeasurement(mv.Id);
                                     break;
                             }

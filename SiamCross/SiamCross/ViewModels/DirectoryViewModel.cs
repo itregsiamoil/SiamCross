@@ -5,6 +5,7 @@ using SiamCross.Services;
 using SiamCross.Services.Logging;
 using SiamCross.Views;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -37,8 +38,8 @@ namespace SiamCross.ViewModels
             try
             {
                 Fields.Clear();
-                System.Collections.Generic.Dictionary<string, int> fieldDict = HandbookData.Instance.GetFieldDictionary();
-                foreach (System.Collections.Generic.KeyValuePair<string, int> field in fieldDict)
+                Dictionary<string, long> fieldDict = HandbookData.Instance.GetFieldDictionary();
+                foreach (KeyValuePair<string, long> field in fieldDict)
                 {
                     Fields.Add(new FieldPair(field.Key, field.Value.ToString()));
                 }

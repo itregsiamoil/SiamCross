@@ -42,7 +42,7 @@ namespace SiamCross.ViewModels
         {
             _errorList = new List<string>();
             Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
-            AddField = new Command(AddNewField);
+            AddField = new Command(AddNewFieldAsync);
             InitParametersWithDefaultValues();
             MessagingCenter
                 .Subscribe<AddFieldViewModel>(
@@ -80,7 +80,7 @@ namespace SiamCross.ViewModels
             }
         }
 
-        protected void AddNewField()
+        protected async void AddNewFieldAsync()
         {
             try
             {
@@ -89,12 +89,12 @@ namespace SiamCross.ViewModels
                 {
                     if (stack[stack.Count - 1].GetType() != typeof(AddFieldPage))
                     {
-                        App.NavigationPage.Navigation.PushModalAsync(new AddFieldPage());
+                        await App.NavigationPage.Navigation.PushModalAsync(new AddFieldPage());
                     }
                 }
                 else
                 {
-                    App.NavigationPage.Navigation.PushModalAsync(new AddFieldPage());
+                    await App.NavigationPage.Navigation.PushModalAsync(new AddFieldPage());
                 }
             }
             catch (Exception ex)

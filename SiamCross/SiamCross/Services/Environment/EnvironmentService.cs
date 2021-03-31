@@ -21,5 +21,9 @@ namespace SiamCross.Services.Environment
         {
             return _object.GetDir_Measurements(); ;
         }
+        public string GetDir_LocalApplicationData()
+        {
+            return _object.GetDir_LocalApplicationData(); ;
+        }
     }
 }

@@ -119,7 +119,6 @@
     <Compile Include="Models\EventHandlerExtensions.cs" />
     <Compile Include="Services\Environment\Environment.cs" />
     <Compile Include="Models\HandbookManagerAndroid.cs" />
-    <Compile Include="Models\SQLiteAndroid.cs" />
     <Compile Include="Services\MediaScanner\MediaScanner.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

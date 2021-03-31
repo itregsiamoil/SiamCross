@@ -25,5 +25,10 @@ namespace SiamCross.Droid.Utils.FileSystem
             //return Path.Combine(GetDir_Downloads(), "SiamServiceMeasurement");
         }
 
+        public string GetDir_LocalApplicationData()
+        {
+            string p = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData);
+            return p;
+        }
     }
 }

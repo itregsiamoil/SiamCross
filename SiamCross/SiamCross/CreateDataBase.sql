@@ -33,7 +33,6 @@ CREATE TABLE IF NOT EXISTS Measurement (
 	FileDistributionDateTime DATETIME DEFAULT NULL,
 	FileDistributionDestination TEXT DEFAULT NULL
 
-	,FOREIGN KEY(Field) REFERENCES FieldDictionary(Id) ON DELETE RESTRICT ON UPDATE RESTRICT
 	);
 
 CREATE TABLE IF NOT EXISTS DataDictionary(

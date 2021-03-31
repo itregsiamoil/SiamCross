@@ -5,6 +5,7 @@ using SiamCross.AppObjects;
 using SiamCross.DataBase;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
+using SiamCross.Services.Environment;
 using SiamCross.Services.Logging;
 using SiamCross.Services.RepositoryTables;
 using System;
@@ -25,7 +26,6 @@ namespace SiamCross.Services
         public static DataRepository Instance => _instance.Value;
         private readonly IDbConnection _database;
         private static readonly object _locker = new object();
-        private readonly string _databasePart;
 
         private readonly IDbConnection _siamServiceDB;
 
@@ -34,6 +34,9 @@ namespace SiamCross.Services
             AppContainer.Container.Resolve<ILogManager>().GetLog();
 
 
+        public int UserDbVersion = 2;
+
+        public FieldDictionary FieldDictionary { get; protected set; }
         public DataDictionary DataDictionary { get; protected set; }
         public DataInt DataInt { get; protected set; }
         public DataFloat DataFloat { get; protected set; }
@@ -44,33 +47,76 @@ namespace SiamCross.Services
 
 
 
+        protected static IDbConnection CreateDb(string dbFileName)
+        {
+            string dbPath = string.Empty;
+            try
+            {
+                //const string dbFileName = "siamservicedb.sqlite";
+#if DEBUG
+                dbPath = Path.Combine(
+                    EnvironmentService.Instance.GetDir_Downloads(), dbFileName);
+#else
+                string dbPath = Path.Combine(
+                    EnvironmentService.Instance.GetDir_LocalApplicationData(), dbFileName);
+#endif
+                if (!File.Exists(dbPath))
+                    AppContainer.Container.Resolve<IDatabaseCreator>().CreateDatabase(dbPath);
+
+                IDbConnection db = AppContainer.Container
+                    .Resolve<IDbConnection>(new TypedParameter(typeof(string)
+                    , $"Data Source={dbPath};Version=3;"));
+                db.Open();
+                db.Execute("PRAGMA foreign_keys = ON");
+                var sql_version = db.ExecuteScalar<string>("select sqlite_version()");
+                var sqlFk = db.Query<int?>("PRAGMA foreign_keys").AsList();
+                if (1 > sqlFk.Count || !sqlFk[0].HasValue || 0 == sqlFk[0].Value)
+                    throw new Exception($"Database Sqlite version:{sql_version} does not support foreign keys");
+                return db;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("EXCEPTION "
+                    + System.Reflection.MethodBase.GetCurrentMethod().Name
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n");
+                _logger.Error(ex, $"Database creation error! Database path: {dbPath}" + "\n");
+                throw;
+            }
+        }
+
+
+
         public async Task Init()
         {
             var tr = _siamServiceDB.BeginTransaction(IsolationLevel.Serializable);
-            await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("DropTables.sql"), tr);
-            await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("CreateDataBase.sql"), tr);
-            await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("AppendData.sql"), tr);
+            var userVersionRec = _siamServiceDB.Query<int?>("PRAGMA user_version").AsList();
+            if (1 > userVersionRec.Count || !userVersionRec[0].HasValue || UserDbVersion != userVersionRec[0].Value)
+            {
+                await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("DropTables.sql"), tr);
+                await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("CreateDataBase.sql"), tr);
+                await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("AppendData.sql"), tr);
+                await _siamServiceDB.ExecuteAsync($"PRAGMA user_version = {UserDbVersion}", tr);
+            }
             await DataDictionary.Load();
             tr.Commit();
         }
 
         private DataRepository(string filename)
         {
-            string path = "";
+
+            //var sql_fk = _siamServiceDB.ExecuteScalar<int>("PRAGMA foreign_keys");
+
+
+        }
+        private DataRepository()
+        {
+            _database = CreateDb("Db.sqlite");
+            _siamServiceDB = CreateDb("SiamServiceDB.sqlite");
             try
             {
-                path = AppContainer.Container.Resolve<ISQLite>()
-                    .GetDatabasePath(filename);
-
-                if (!File.Exists(path))
-                {
-                    AppContainer.Container.Resolve<IDatabaseCreator>().CreateDatabase(path);
-                }
-
-                _siamServiceDB = AppContainer.Container
-                    .Resolve<IDbConnection>(new TypedParameter(typeof(string),
-                        (string.Format("Data Source={0};Version=3;", path))));
-                _siamServiceDB.Open();
+                FieldDictionary = new FieldDictionary(_siamServiceDB);
                 DataDictionary = new DataDictionary(_siamServiceDB);
                 DataInt = new DataInt(_siamServiceDB);
                 DataFloat = new DataFloat(_siamServiceDB);
@@ -78,41 +124,6 @@ namespace SiamCross.Services
                 DataBlob = new DataBlob(_siamServiceDB);
                 MeasureTable = new MeasureTable(_siamServiceDB);
 
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e, $"Database creation error! Database path: {path}" + "\n");
-                throw;
-            }
-        }
-
-
-        private DataRepository()
-            : this("siamservicedb.sqlite")
-        {
-            try
-            {
-                _databasePart = AppContainer.Container.Resolve<ISQLite>()
-                    .GetDatabasePath("Db.sqlite");
-
-                if (!File.Exists(_databasePart))
-                {
-                    AppContainer.Container.Resolve<IDatabaseCreator>().CreateDatabase(_databasePart);
-                }
-
-                _database = AppContainer.Container
-                    .Resolve<IDbConnection>(new TypedParameter(typeof(string),
-                        (string.Format("Data Source={0};Version=3;", _databasePart))));
-                _database.Open();
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e, $"Database creation error! Database path: {_databasePart}" + "\n");
-                throw;
-            }
-
-            try
-            {
                 CreateDdin2Table();
                 CreateDuTable();
             }
@@ -122,7 +133,6 @@ namespace SiamCross.Services
                 throw;
             }
         }
-
         private void NonQueryCheck()
         {
             // Ensure we have a connection

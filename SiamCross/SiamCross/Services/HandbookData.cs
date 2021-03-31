@@ -3,6 +3,7 @@ using SiamCross.AppObjects;
 using SiamCross.Models.Tools;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SiamCross.Services
 {
@@ -14,19 +15,25 @@ namespace SiamCross.Services
         public static HandbookData Instance => _instance.Value;
         private readonly IHandbookManager _handbookManager;
 
-        private Dictionary<string, int> _fieldDictionary;
+        readonly private Dictionary<string, long> _fieldDictionary = new Dictionary<string, long>();
         private List<SoundSpeedModel> _soundSpeedList;
 
         private HandbookData()
         {
             _handbookManager = AppContainer.Container.Resolve<IHandbookManager>();
         }
+        public async Task Init()
+        {
+            var values = await DataRepository.Instance.FieldDictionary.Load();
+            foreach (var v in values)
+                _fieldDictionary.Add(v.Title, v.Id);
+        }
 
         public void Dispose()
         {
             if (_fieldDictionary != null)
             {
-                _handbookManager.SaveFields(_fieldDictionary);
+                //await _handbookManager.SaveFieldsAsync(_fieldDictionary);
             }
 
             if (_soundSpeedList != null)
@@ -36,29 +43,22 @@ namespace SiamCross.Services
         }
 
         #region Fields
-        public Dictionary<string, int> GetFieldDictionary()
+        public Dictionary<string, long> GetFieldDictionary()
         {
-            if (_fieldDictionary == null)
-            {
-                _fieldDictionary = _handbookManager.LoadFields();
-            }
-
             return _fieldDictionary;
         }
 
         public IEnumerable<string> GetFieldList()
         {
-            Dictionary<string, int> fieldDictionay = GetFieldDictionary();
             List<string> fieldList = new List<string>();
-            foreach (KeyValuePair<string, int> field in fieldDictionay)
+            foreach (KeyValuePair<string, long> field in _fieldDictionary)
             {
                 fieldList.Add(field.Key + ": " + field.Value);
             }
-
             return fieldList;
         }
 
-        public void AddField(string fieldKey, int fieldValue)
+        public async void AddField(string fieldKey, long fieldValue)
         {
             if (_fieldDictionary != null)
             {
@@ -71,22 +71,23 @@ namespace SiamCross.Services
                     _fieldDictionary.Remove(fieldKey);
                     _fieldDictionary.Add(fieldKey, fieldValue);
                 }
-
-                _handbookManager.SaveFields(_fieldDictionary);
+                await DataRepository.Instance.FieldDictionary.Save(fieldKey, fieldValue);
             }
         }
 
-        public void RemoveField(string key)
+        public async void RemoveField(string key)
         {
             if (_fieldDictionary != null)
             {
                 if (_fieldDictionary.ContainsKey(key))
                 {
-                    _fieldDictionary.Remove(key);
+                    if (_fieldDictionary.TryGetValue(key, out long val))
+                    {
+                        await DataRepository.Instance.FieldDictionary.Delete(val);
+                        _fieldDictionary.Remove(key);
+                    }
                 }
             }
-
-            _handbookManager.SaveFields(_fieldDictionary);
         }
 
         #endregion

@@ -4,5 +4,6 @@
     {
         string GetDir_Downloads();
         string GetDir_Measurements();
+        string GetDir_LocalApplicationData();
     }
 }

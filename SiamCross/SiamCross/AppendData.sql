@@ -1,6 +1,5 @@
 ﻿INSERT INTO FieldDictionary(Id, Title)VALUES(0, 'UNKNOWN');
 
-
 INSERT INTO DataDictionary(Title, Kind)VALUES('sudcorrectiontype', 1);
 INSERT INTO DataDictionary(Title, Kind)VALUES('sudcorrectiontypeud', 1);
 INSERT INTO DataDictionary(Title, Kind)VALUES('sudresearchtype', 1);
