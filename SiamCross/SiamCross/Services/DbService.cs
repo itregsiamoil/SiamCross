@@ -19,34 +19,17 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Services
 {
-    public class DataRepository
+    public class DbService
     {
-        private static readonly Lazy<DataRepository> _instance =
-            new Lazy<DataRepository>(() => new DataRepository());
-        public static DataRepository Instance => _instance.Value;
-        private readonly IDbConnection _database;
-        private static readonly object _locker = new object();
-
-        private readonly IDbConnection _siamServiceDB;
-
-
         private static readonly Logger _logger =
             AppContainer.Container.Resolve<ILogManager>().GetLog();
 
+        private static readonly Lazy<DbService> _instance =
+            new Lazy<DbService>(() => new DbService());
+        public static DbService Instance => _instance.Value;
 
-        public int UserDbVersion = 2;
-
-        public FieldDictionary FieldDictionary { get; protected set; }
-        public DataDictionary DataDictionary { get; protected set; }
-        public DataInt DataInt { get; protected set; }
-        public DataFloat DataFloat { get; protected set; }
-        public DataString DataString { get; protected set; }
-        public DataBlob DataBlob { get; protected set; }
-
-        public MeasureTable MeasureTable { get; protected set; }
-
-
-
+        private readonly IDbConnection _database;
+        private readonly IDbConnection _siamServiceDB;
         protected static IDbConnection CreateDb(string dbFileName)
         {
             string dbPath = string.Empty;
@@ -57,7 +40,7 @@ namespace SiamCross.Services
                 dbPath = Path.Combine(
                     EnvironmentService.Instance.GetDir_Downloads(), dbFileName);
 #else
-                string dbPath = Path.Combine(
+                dbPath = Path.Combine(
                     EnvironmentService.Instance.GetDir_LocalApplicationData(), dbFileName);
 #endif
                 if (!File.Exists(dbPath))
@@ -86,37 +69,38 @@ namespace SiamCross.Services
             }
         }
 
-
+        public int UserDbVersion = 2;
+        public FieldDictionaryTable FieldDictionary { get; protected set; }
+        public DataDictionary DataDictionary { get; protected set; }
+        public DataInt DataInt { get; protected set; }
+        public DataFloat DataFloat { get; protected set; }
+        public DataString DataString { get; protected set; }
+        public DataBlob DataBlob { get; protected set; }
+        public MeasureTable MeasureTable { get; protected set; }
 
         public async Task Init()
         {
-            var tr = _siamServiceDB.BeginTransaction(IsolationLevel.Serializable);
-            var userVersionRec = _siamServiceDB.Query<int?>("PRAGMA user_version").AsList();
-            if (1 > userVersionRec.Count || !userVersionRec[0].HasValue || UserDbVersion != userVersionRec[0].Value)
+            using (var tr = _siamServiceDB.BeginTransaction(IsolationLevel.Serializable))
             {
-                await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("DropTables.sql"), tr);
-                await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("CreateDataBase.sql"), tr);
-                await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("AppendData.sql"), tr);
-                await _siamServiceDB.ExecuteAsync($"PRAGMA user_version = {UserDbVersion}", tr);
+                var userVersionRec = _siamServiceDB.Query<int?>("PRAGMA user_version").AsList();
+                if (1 > userVersionRec.Count || !userVersionRec[0].HasValue || UserDbVersion != userVersionRec[0].Value)
+                {
+                    await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("DropTables.sql"), tr);
+                    await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("CreateDataBase.sql"), tr);
+                    await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("AppendData.sql"), tr);
+                    await _siamServiceDB.ExecuteAsync($"PRAGMA user_version = {UserDbVersion}", tr);
+                }
+                await DataDictionary.Load();
+                tr.Commit();
             }
-            await DataDictionary.Load();
-            tr.Commit();
         }
-
-        private DataRepository(string filename)
-        {
-
-            //var sql_fk = _siamServiceDB.ExecuteScalar<int>("PRAGMA foreign_keys");
-
-
-        }
-        private DataRepository()
+        private DbService()
         {
             _database = CreateDb("Db.sqlite");
             _siamServiceDB = CreateDb("SiamServiceDB.sqlite");
             try
             {
-                FieldDictionary = new FieldDictionary(_siamServiceDB);
+                FieldDictionary = new FieldDictionaryTable(_siamServiceDB);
                 DataDictionary = new DataDictionary(_siamServiceDB);
                 DataInt = new DataInt(_siamServiceDB);
                 DataFloat = new DataFloat(_siamServiceDB);
@@ -652,8 +636,6 @@ namespace SiamCross.Services
             }
             return -1;
         }
-
-
         public async Task DeleteMeasurement(long measureId)
         {
             NonQueryCheck();

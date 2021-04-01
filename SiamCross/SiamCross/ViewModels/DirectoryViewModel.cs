@@ -7,7 +7,9 @@ using SiamCross.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -22,8 +24,12 @@ namespace SiamCross.ViewModels
         {
             Fields = new ObservableCollection<FieldPair>();
             Update();
-            AddField = new Command(OpenAddFieldsPage);
-            Remove = new Command(RemoveField);
+            AddCommand = new AsyncCommand(OpenAddFieldsPageAsync
+                , (Func<object, bool>)null, null, false, false);
+            RemoveCommand = new AsyncCommand(RemoveFieldAsync
+                , (Func<object, bool>)null, null, false, false);
+
+
             MessagingCenter.Subscribe<AddFieldViewModel>(
                 this,
                 "Refresh",
@@ -38,11 +44,8 @@ namespace SiamCross.ViewModels
             try
             {
                 Fields.Clear();
-                Dictionary<string, long> fieldDict = HandbookData.Instance.GetFieldDictionary();
-                foreach (KeyValuePair<string, long> field in fieldDict)
-                {
+                foreach (var field in Repo.FieldDir.DictByTitle)
                     Fields.Add(new FieldPair(field.Key, field.Value.ToString()));
-                }
             }
             catch (Exception ex)
             {
@@ -54,16 +57,16 @@ namespace SiamCross.ViewModels
         public ObservableCollection<FieldPair> Fields { get; set; }
         public object SelectedField { get; set; }
 
-        public ICommand AddField { get; set; }
-        public ICommand Remove { get; set; }
+        public ICommand AddCommand { get; set; }
+        public ICommand RemoveCommand { get; set; }
 
-        private void RemoveField()
+        private async Task RemoveFieldAsync()
         {
             try
             {
                 if (SelectedField != null)
                 {
-                    HandbookData.Instance.RemoveField((SelectedField as FieldPair).Key);
+                    await Repo.FieldDir.DeleteAsync((SelectedField as FieldPair).Key);
                     Update();
                 }
             }
@@ -73,21 +76,21 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
-        private void OpenAddFieldsPage()
+        private async Task OpenAddFieldsPageAsync()
         {
             try
             {
-                System.Collections.Generic.IReadOnlyList<Page> stack = App.NavigationPage.Navigation.ModalStack;
+                IReadOnlyList<Page> stack = App.NavigationPage.Navigation.ModalStack;
                 if (stack.Count > 0)
                 {
                     if (stack[stack.Count - 1].GetType() != typeof(AddFieldPage))
                     {
-                        App.NavigationPage.Navigation.PushModalAsync(new AddFieldPage());
+                        await App.NavigationPage.Navigation.PushModalAsync(new AddFieldPage());
                     }
                 }
                 else
                 {
-                    App.NavigationPage.Navigation.PushModalAsync(new AddFieldPage());
+                    await App.NavigationPage.Navigation.PushModalAsync(new AddFieldPage());
                 }
             }
             catch (Exception ex)

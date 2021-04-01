@@ -116,7 +116,7 @@ namespace SiamCross.Views
             try
             {
                 base.OnDisappearing();
-                DataRepository.Instance.SaveDuMeasurement(_measurement);
+                DbService.Instance.SaveDuMeasurement(_measurement);
                 MessagingCenter
                     .Send(this, "Refresh measurement", _measurement);
             }

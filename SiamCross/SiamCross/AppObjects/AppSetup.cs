@@ -65,8 +65,8 @@ namespace SiamCross.AppObjects
 
         public async Task Init()
         {
-            await DataRepository.Instance.Init();
-            await HandbookData.Instance.Init();
+            await DbService.Instance.Init();
+            await Repo.Init();
         }
     }
 }

@@ -22,7 +22,7 @@ namespace SiamCross.ViewModels
 
         private readonly DuMeasurement _measurement;
 
-        public ObservableCollection<string> Fields { get; set; }
+        public ObservableCollection<string> Fields => Repo.FieldDir.TitleList;
         public string SelectedField => _measurement.Field;
         public string Well => _measurement.Well;
         public string Bush => _measurement.Bush;
@@ -49,7 +49,6 @@ namespace SiamCross.ViewModels
         public DuMeasurementDoneViewModel(DuMeasurement measurement)
         {
             _measurement = measurement;
-            Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
             SoundSpeedCorrections = new ObservableCollection<string>();
             foreach (SoundSpeedModel elem in HandbookData.Instance.GetSoundSpeedList())
             {

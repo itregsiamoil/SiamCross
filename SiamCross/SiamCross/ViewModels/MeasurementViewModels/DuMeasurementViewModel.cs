@@ -204,7 +204,7 @@ namespace SiamCross.ViewModels
             _PumpDepth = "0.0";
 
             IEnumerable<DuMeasurement> mes
-                = DataRepository.Instance.GetDuMeasurements().
+                = DbService.Instance.GetDuMeasurements().
                 Where(m => m.Name == SensorName).Select(m => m);
 
             if (mes.Any())

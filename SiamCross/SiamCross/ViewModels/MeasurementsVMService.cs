@@ -102,10 +102,10 @@ namespace SiamCross.ViewModels
                 SelectedMeasurements.Clear();
                 Measurements.Clear();
                 ObservableCollection<MeasurementView> meas = new ObservableCollection<MeasurementView>();
-                _ddin2Measurements = DataRepository.Instance.GetDdin2Measurements().ToList();
-                _duMeasurements = DataRepository.Instance.GetDuMeasurements().ToList();
+                _ddin2Measurements = DbService.Instance.GetDdin2Measurements().ToList();
+                _duMeasurements = DbService.Instance.GetDuMeasurements().ToList();
 
-                var measurements = (await DataRepository.Instance.GetMeasurements()).ToList();
+                var measurements = (await DbService.Instance.GetMeasurements()).ToList();
 
                 _Measurements.Clear();
                 foreach (var m in measurements)
@@ -177,7 +177,7 @@ namespace SiamCross.ViewModels
             }
             Title = $"{Resource.SelectedMeasurements}: {SelCount}";
         }
-        public void OnItemTapped(MeasurementView item)
+        public async void OnItemTapped(MeasurementView item)
         {
             if (SelectMode)
             {
@@ -188,7 +188,7 @@ namespace SiamCross.ViewModels
                 item.IsSelected = !item.IsSelected;
             }
             else
-                PushPageAsync(item);
+                await PushPageAsync(item);
         }
         private void OnItemLongPress(MeasurementView item)
         {
@@ -352,10 +352,10 @@ namespace SiamCross.ViewModels
                         {
                             switch (mv.MeasureKind)
                             {
-                                case 0: DataRepository.Instance.RemoveDdin2Measurement(mv.Id); break;
+                                case 0: DbService.Instance.RemoveDdin2Measurement(mv.Id); break;
                                 case 1:
-                                    DataRepository.Instance.RemoveDuMeasurement(mv.Id);
-                                    await DataRepository.Instance.DeleteMeasurement(mv.Id);
+                                    DbService.Instance.RemoveDuMeasurement(mv.Id);
+                                    await DbService.Instance.DeleteMeasurement(mv.Id);
                                     break;
                             }
                             Measurements.Remove(mv);
@@ -402,7 +402,7 @@ namespace SiamCross.ViewModels
                             var mData = _Measurements?
                                 .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
 
-                            await DataRepository.Instance.GetValues(mData);
+                            await DbService.Instance.GetValues(mData);
 
                             if (!mData.Measure.DataFloat.TryGetValue("bufferpressure", out double bufferpressure))
                                 bufferpressure = 0.0;
@@ -468,14 +468,14 @@ namespace SiamCross.ViewModels
                     {
                         default: break;
                         case 0:
-                            Ddin2Measurement dnm = DataRepository.Instance.GetDdin2MeasurementById(mv.Id);
+                            Ddin2Measurement dnm = DbService.Instance.GetDdin2MeasurementById(mv.Id);
                             file_name = CreateName(dnm.Name, dnm.DateTime);
                             doc = xmlCreator.CreateDdin2Xml(dnm);
                             paths[i] = await XmlSaver.SaveXml(file_name, doc);
                             await MediaScannerService.Instance.Scan(paths[i]);
                             break;
                         case 1:
-                            DuMeasurement du = DataRepository.Instance.GetDuMeasurementById(mv.Id);
+                            DuMeasurement du = DbService.Instance.GetDuMeasurementById(mv.Id);
                             file_name = CreateName(du.Name, du.DateTime);
                             doc = xmlCreator.CreateDuXml(du);
                             paths[i] = await XmlSaver.SaveXml(file_name, doc);

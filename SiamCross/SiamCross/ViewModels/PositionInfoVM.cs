@@ -3,13 +3,11 @@ using SiamCross.Models.Sensors;
 using SiamCross.Services;
 using SiamCross.Views;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
-using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
@@ -84,6 +82,8 @@ namespace SiamCross.ViewModels
         public ICommand EditCommand { get; set; }
         public ICommand AddFieldCommand { get; set; }
 
+        public ObservableCollection<string> Fields => Repo.FieldDir.TitleList;
+
         public PositionInfoVM()
             : this(new PositionInfo())
         {
@@ -94,36 +94,21 @@ namespace SiamCross.ViewModels
             EditCommand = BaseSensor.CreateAsyncCommand(() => this);
             AddFieldCommand = new AsyncCommand(DoAddNewFieldCommand
                 , (Func<object, bool>)null, null, false, false);
-
-            Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
-            MessagingCenter.Subscribe<AddFieldViewModel>(this,
-                    "Refresh", (sender) => UpdateFields());
-
         }
-
-        public ObservableCollection<string> Fields { get; private set; }
-
-        private void UpdateFields()
-        {
-            try
-            {
-                Fields.Clear();
-                IEnumerable<string> fieldList = HandbookData.Instance.GetFieldList();
-                foreach (string field in fieldList)
-                    Fields.Add(field);
-            }
-            catch (Exception) { }
-        }
-
-
         public string Field
         {
-            get => _Model.Field.ToString();
+            get
+            {
+                if (Repo.FieldDir.DictById
+                    .TryGetValue(_Model.Field, out string title))
+                    return title;
+                return $"_no_title [{_Model.Field}]";
+            }
             set
             {
-                if (uint.TryParse(value, out uint val))
+                if (Repo.FieldDir.DictByTitle.TryGetValue(value, out uint id))
                 {
-                    _Model.Field = val;
+                    _Model.Field = id;
                     ChangeNotify();
                 }
             }

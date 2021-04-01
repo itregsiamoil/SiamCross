@@ -116,8 +116,8 @@ namespace SiamCross.Services
             {
                 case Ddin2MeasurementData ddin2Data:
                     Ddin2Measurement dbModelDdin2 = new Ddin2Measurement(ddin2Data);
-                    addId = DataRepository.Instance.SaveDdin2Measurement(dbModelDdin2);
-                    Ddin2Measurement dbObj = DataRepository.Instance.GetDdin2MeasurementById(addId);
+                    addId = DbService.Instance.SaveDdin2Measurement(dbModelDdin2);
+                    Ddin2Measurement dbObj = DbService.Instance.GetDdin2MeasurementById(addId);
 
                     if (show)
                         await App.NavigationPage.Navigation.PushAsync(
@@ -125,12 +125,12 @@ namespace SiamCross.Services
                     break;
                 case DuMeasurementData duData:
                     DuMeasurement dbModelDu = new DuMeasurement(duData);
-                    addId = DataRepository.Instance.SaveDuMeasurement(dbModelDu);
+                    addId = DbService.Instance.SaveDuMeasurement(dbModelDu);
 
                     if (show)
                         await App.NavigationPage.Navigation.PushAsync(
                             new DuMeasurementDonePage(
-                                DataRepository.Instance.GetDuMeasurementById(addId)), true);
+                                DbService.Instance.GetDuMeasurementById(addId)), true);
                     break;
                 default:
                     break;

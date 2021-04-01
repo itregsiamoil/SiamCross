@@ -21,7 +21,7 @@ namespace SiamCross.ViewModels
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
         protected List<string> _errorList;
 
-        public ObservableCollection<string> Fields { get; set; }
+        public ObservableCollection<string> Fields => Repo.FieldDir.TitleList;
         public string SelectedField { get; set; }
         public string Well { get; set; }
         public string Bush { get; set; }
@@ -41,43 +41,9 @@ namespace SiamCross.ViewModels
             : base(sensor, name, description)
         {
             _errorList = new List<string>();
-            Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
             AddField = new Command(AddNewFieldAsync);
             InitParametersWithDefaultValues();
-            MessagingCenter
-                .Subscribe<AddFieldViewModel>(
-                    this,
-                    "Refresh",
-                    (sender) =>
-                    {
-                        try
-                        {
-                            UpdateFields();
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.Error(ex, "Refresh fields BaseSensorMeasurementViewModel" + "\n");
-                        }
-                    }
-                );
-        }
 
-        private void UpdateFields()
-        {
-            try
-            {
-                Fields.Clear();
-                IEnumerable<string> fieldList = HandbookData.Instance.GetFieldList();
-                foreach (string field in fieldList)
-                {
-                    Fields.Add(field);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Update method" + "\n");
-                throw;
-            }
         }
 
         protected async void AddNewFieldAsync()

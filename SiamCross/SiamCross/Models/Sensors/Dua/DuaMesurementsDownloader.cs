@@ -237,7 +237,7 @@ namespace SiamCross.Models.Sensors.Dua
                     , _Sensor.ScannedDeviceInfo.Device
                     , _Sensor.Info
                     , mi);
-                await DataRepository.Instance.SaveMeasurement(survey);
+                await DbService.Instance.SaveMeasurement(survey);
 
             }
 

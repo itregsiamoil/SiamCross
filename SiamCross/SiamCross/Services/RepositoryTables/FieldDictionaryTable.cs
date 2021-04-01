@@ -7,10 +7,10 @@ namespace SiamCross.Services.RepositoryTables
 {
     public class FieldItem
     {
-        public long Id { get; set; }
+        public uint Id { get; set; }
         public string Title { get; set; }
     }
-    public class FieldDictionary
+    public class FieldDictionaryTable
     {
         private readonly IDbConnection _db;
 
@@ -26,10 +26,10 @@ namespace SiamCross.Services.RepositoryTables
 
         private readonly string delete_by_id
             = $"DELETE FROM {table} WHERE Id=@Id";
-        public FieldDictionary()
+        public FieldDictionaryTable()
         {
         }
-        public FieldDictionary(IDbConnection db)
+        public FieldDictionaryTable(IDbConnection db)
         {
             _db = db;
         }
@@ -96,5 +96,8 @@ namespace SiamCross.Services.RepositoryTables
                 return await Load(tr);
             }
         }
+
+
+
     }
 }

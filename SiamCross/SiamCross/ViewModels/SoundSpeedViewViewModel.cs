@@ -3,7 +3,6 @@ using SiamCross.Services;
 using SiamCross.Services.Toast;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -11,7 +10,7 @@ using Xamarin.Forms.Internals;
 namespace SiamCross.ViewModels
 {
     [Preserve(AllMembers = true)]
-    public class SoundSpeedViewViewModel : IViewModel
+    public class SoundSpeedViewViewModel : BaseVM
     {
         public SoundSpeedViewViewModel(SoundSpeedModel soundSpeed)
         {
@@ -137,6 +136,5 @@ namespace SiamCross.ViewModels
             return max;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

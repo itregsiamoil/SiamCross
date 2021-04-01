@@ -179,7 +179,7 @@ namespace SiamCross.Views
             try
             {
                 base.OnDisappearing();
-                DataRepository.Instance.SaveDdin2Measurement(_measurement);
+                DbService.Instance.SaveDdin2Measurement(_measurement);
                 MessagingCenter
                     .Send<Ddin2MeasurementDonePage, Ddin2Measurement>(
                     this, "Refresh measurement", _measurement);

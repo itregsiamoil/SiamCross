@@ -1,7 +1,9 @@
 ﻿using SiamCross.Services;
 using SiamCross.Services.Toast;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -12,7 +14,8 @@ namespace SiamCross.ViewModels
     {
         public AddFieldViewModel()
         {
-            Add = new Command(SaveFieldAsync);
+            Add = new AsyncCommand(SaveFieldAsync
+                , (Func<object, bool>)null, null, false, false);
         }
 
         public string FieldName { get; set; }
@@ -20,7 +23,7 @@ namespace SiamCross.ViewModels
 
         public ICommand Add { get; set; }
 
-        private async void SaveFieldAsync()
+        private async Task SaveFieldAsync()
         {
             if (FieldName == null || FieldCode == null || FieldName == "" || FieldCode == "")
             {
@@ -38,7 +41,8 @@ namespace SiamCross.ViewModels
 
             try
             {
-                HandbookData.Instance.AddField(FieldName, int.Parse(FieldCode));
+
+                await Repo.FieldDir.AddAsync(FieldName, uint.Parse(FieldCode));
                 MessagingCenter.Send<AddFieldViewModel>(this, "Refresh");
                 await App.NavigationPage.Navigation.PopModalAsync();
             }

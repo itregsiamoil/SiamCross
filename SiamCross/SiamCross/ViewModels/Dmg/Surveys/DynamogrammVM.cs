@@ -112,7 +112,7 @@ namespace SiamCross.ViewModels.Dmg.Survey
             SensorName = Sensor.Name;
 
             IEnumerable<Ddin2Measurement> mes
-                = DataRepository.Instance.GetDdin2Measurements().
+                = DbService.Instance.GetDdin2Measurements().
                 Where(m => m.Name == SensorName).Select(m => m);
 
             if (mes.Any())

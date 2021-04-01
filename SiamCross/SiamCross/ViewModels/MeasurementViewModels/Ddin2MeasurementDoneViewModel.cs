@@ -24,7 +24,7 @@ namespace SiamCross.ViewModels
 
         private readonly Ddin2Measurement _measurement;
 
-        public ObservableCollection<string> Fields { get; set; }
+        public ObservableCollection<string> Fields => Repo.FieldDir.TitleList;
         public string SelectedField
         {
             get => _measurement.Field;
@@ -94,7 +94,6 @@ namespace SiamCross.ViewModels
             try
             {
                 _measurement = measurement;
-                Fields = new ObservableCollection<string>(HandbookData.Instance.GetFieldList());
 
                 InitMaxMixGraphValue(_measurement.DynGraph.ToList(),
                     _measurement.Step, _measurement.WeightDiscr);
