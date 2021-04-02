@@ -38,12 +38,20 @@ namespace SiamCross.Services.RepositoryTables
         {
             await tr.Connection.ExecuteAsync(delete_by_id, new { Id = id });
         }
-        public async Task Save(IDbTransaction tr, string title, long id = 0)
+        public async Task<FieldItem> Save(IDbTransaction tr, string title, uint id = 0)
         {
+            var item = new FieldItem()
+            {
+                Id = id,
+                Title = title
+            };
+            int affectedrow = 0;
             if (0 == id)
-                await tr.Connection.ExecuteAsync(insert_with_default_id, new { Title = title });
+                affectedrow = await tr.Connection.ExecuteAsync(insert_with_default_id, item);
             else
-                await tr.Connection.ExecuteAsync(insert_with_user_id, new { Title = title, Id = id });
+                affectedrow = await tr.Connection.ExecuteAsync(insert_with_user_id, item);
+
+            return (0 < affectedrow) ? item : null;
         }
         public async Task<List<FieldItem>> Load(IDbTransaction tr, long id)
         {
@@ -68,14 +76,15 @@ namespace SiamCross.Services.RepositoryTables
                 tr.Commit();
             }
         }
-        public async Task Save(string title, long id = 0)
+        public async Task<FieldItem> Save(string title, uint id = 0)
         {
             if (null == _db)
-                return;
+                return null;
             using (var tr = _db.BeginTransaction(IsolationLevel.Serializable))
             {
-                await Save(tr, title, id);
+                var val = await Save(tr, title, id);
                 tr.Commit();
+                return val;
             }
         }
         public async Task<List<FieldItem>> Load(long id)

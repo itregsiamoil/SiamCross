@@ -159,7 +159,7 @@ namespace SiamCross.Models.Sensors.Dmg
             var sp = new MeasurementSecondaryParameters(
                 _Sensor.Name
                 , Resource.Dynamogram
-                , string.IsNullOrEmpty(_Sensor.PositionVM.Field) ? "0" : _Sensor.PositionVM.Field
+                , string.IsNullOrEmpty(_Sensor.PositionVM.FieldName) ? "0" : _Sensor.PositionVM.FieldName
                 , string.IsNullOrEmpty(_Sensor.PositionVM.Well) ? "0" : _Sensor.PositionVM.Well
                 , string.IsNullOrEmpty(_Sensor.PositionVM.Bush) ? "0" : _Sensor.PositionVM.Bush
                 , string.IsNullOrEmpty(_Sensor.PositionVM.Shop) ? "0" : _Sensor.PositionVM.Shop

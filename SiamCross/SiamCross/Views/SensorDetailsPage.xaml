@@ -66,7 +66,10 @@
                                 <FormattedString >
                                     <Span Text="{local:Translate Field}" />
                                     <Span Text=" " />
-                                    <Span Text="{Binding Sensor.PositionVM.Field, Mode=OneWay }" Font="Bold" TextColor="Black"/>
+                                    <Span Text="{Binding Sensor.PositionVM.FieldName, Mode=OneWay }" Font="Bold" TextColor="Black"/>
+                                    <Span Text="[" Font="Bold" TextColor="Black"/>
+                                    <Span Text="{Binding Sensor.PositionVM.FieldId, Mode=OneWay }" Font="Bold" TextColor="Black"/>
+                                    <Span Text="]" Font="Bold" TextColor="Black"/>
                                     <Span Text="&#10;" />
                                     <Span Text="{local:Translate Well} " />
                                     <Span Text=" " />

@@ -24,7 +24,6 @@ namespace SiamCross.ViewModels
 
         private readonly Ddin2Measurement _measurement;
 
-        public ObservableCollection<string> Fields => Repo.FieldDir.TitleList;
         public string SelectedField
         {
             get => _measurement.Field;

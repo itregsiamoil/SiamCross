@@ -22,7 +22,6 @@ namespace SiamCross.ViewModels
 
         private readonly DuMeasurement _measurement;
 
-        public ObservableCollection<string> Fields => Repo.FieldDir.TitleList;
         public string SelectedField => _measurement.Field;
         public string Well => _measurement.Well;
         public string Bush => _measurement.Bush;

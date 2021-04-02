@@ -44,8 +44,8 @@ namespace SiamCross.ViewModels
             try
             {
                 Fields.Clear();
-                foreach (var field in Repo.FieldDir.DictByTitle)
-                    Fields.Add(new FieldPair(field.Key, field.Value.ToString()));
+                Repo.FieldDir.FieldList.ForEach(o =>
+                    Fields.Add(new FieldPair(o.Title, o.Id.ToString())));
             }
             catch (Exception ex)
             {
@@ -64,11 +64,10 @@ namespace SiamCross.ViewModels
         {
             try
             {
-                if (SelectedField != null)
-                {
-                    await Repo.FieldDir.DeleteAsync((SelectedField as FieldPair).Key);
-                    Update();
-                }
+                if (!(SelectedField is FieldPair item))
+                    return;
+                await Repo.FieldDir.DeleteAsync(item.Key);
+                Update();
             }
             catch (Exception ex)
             {

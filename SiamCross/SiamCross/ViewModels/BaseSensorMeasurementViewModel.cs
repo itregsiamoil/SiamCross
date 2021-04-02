@@ -9,9 +9,11 @@ using SiamCross.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
@@ -21,7 +23,8 @@ namespace SiamCross.ViewModels
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
         protected List<string> _errorList;
 
-        public ObservableCollection<string> Fields => Repo.FieldDir.TitleList;
+        private readonly ObservableCollection<string> _Fields = new ObservableCollection<string>();
+        public ObservableCollection<string> Fields => _Fields;
         public string SelectedField { get; set; }
         public string Well { get; set; }
         public string Bush { get; set; }
@@ -43,9 +46,15 @@ namespace SiamCross.ViewModels
             _errorList = new List<string>();
             AddField = new Command(AddNewFieldAsync);
             InitParametersWithDefaultValues();
-
+            Repo.FieldDir.FieldList.ForEach(o => _Fields.Add(o.Title));
+            Repo.FieldDir.FieldList.CollectionChanged += FieldList_CollectionChanged;
         }
-
+        private void FieldList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            _Fields.Clear();
+            Repo.FieldDir.FieldList.ForEach(o => _Fields.Add(o.Title));
+            ChangeNotify(nameof(SelectedField));
+        }
         protected async void AddNewFieldAsync()
         {
             try

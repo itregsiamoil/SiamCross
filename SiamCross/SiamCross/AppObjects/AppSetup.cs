@@ -67,6 +67,7 @@ namespace SiamCross.AppObjects
         {
             await DbService.Instance.Init();
             await Repo.Init();
+            await SensorService.Instance.InitinalizeAsync();
         }
     }
 }

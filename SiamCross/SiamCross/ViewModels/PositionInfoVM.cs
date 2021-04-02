@@ -1,13 +1,16 @@
 ﻿using SiamCross.Models;
 using SiamCross.Models.Sensors;
 using SiamCross.Services;
+using SiamCross.Services.RepositoryTables;
 using SiamCross.Views;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
@@ -74,6 +77,15 @@ namespace SiamCross.ViewModels
     }
 
 
+    public class FieldsCollection : ObservableCollection<string>
+    {
+        public FieldsCollection()
+        { }
+    }
+
+
+
+
     public class PositionInfoVM : BaseVM
     {
         protected PositionInfo _Model = new PositionInfo();
@@ -82,8 +94,14 @@ namespace SiamCross.ViewModels
         public ICommand EditCommand { get; set; }
         public ICommand AddFieldCommand { get; set; }
 
-        public ObservableCollection<string> Fields => Repo.FieldDir.TitleList;
-
+        ObservableCollection<FieldItem> _Fields = new ObservableCollection<FieldItem>();
+        public ObservableCollection<FieldItem> Fields => _Fields;
+        private void FieldList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            _Fields.Clear();
+            Repo.FieldDir.FieldList.ForEach(o => _Fields.Add(o));
+            ChangeNotify(nameof(SelectedField));
+        }
         public PositionInfoVM()
             : this(new PositionInfo())
         {
@@ -94,25 +112,55 @@ namespace SiamCross.ViewModels
             EditCommand = BaseSensor.CreateAsyncCommand(() => this);
             AddFieldCommand = new AsyncCommand(DoAddNewFieldCommand
                 , (Func<object, bool>)null, null, false, false);
+
+            Repo.FieldDir.FieldList.ForEach(o => _Fields.Add(o));
+            Repo.FieldDir.FieldList.CollectionChanged += FieldList_CollectionChanged;
         }
-        public string Field
+        public FieldItem SelectedField
         {
             get
             {
-                if (Repo.FieldDir.DictById
-                    .TryGetValue(_Model.Field, out string title))
-                    return title;
-                return $"_no_title [{_Model.Field}]";
+                if (Repo.FieldDir.DictById.TryGetValue(_Model.Field, out FieldItem item))
+                    return item;
+                return null;
             }
             set
             {
-                if (Repo.FieldDir.DictByTitle.TryGetValue(value, out uint id))
-                {
-                    _Model.Field = id;
-                    ChangeNotify();
-                }
+                if (null == value)
+                    return;
+                if (!Repo.FieldDir.DictByTitle.TryGetValue(value.Title, out FieldItem item))
+                    return;
+                if (_Model.Field == item.Id)
+                    return;
+                _Model.Field = item.Id;
+                ChangeNotify();
+                ChangeNotify(nameof(FieldId));
+                ChangeNotify(nameof(FieldName));
             }
         }
+        public string FieldId
+        {
+            get => _Model.Field.ToString();
+            set
+            {
+                if (string.IsNullOrEmpty(value) || !uint.TryParse(value, out uint id))
+                    return;
+                _Model.Field = id;
+                ChangeNotify();
+                ChangeNotify(nameof(FieldName));
+                ChangeNotify(nameof(SelectedField));
+            }
+        }
+        public string FieldName
+        {
+            get
+            {
+                if (Repo.FieldDir.DictById.TryGetValue(_Model.Field, out FieldItem item))
+                    return item.Title;
+                return string.Empty;
+            }
+        }
+
         public string Well
         {
             get => _Model.Well.ToString();

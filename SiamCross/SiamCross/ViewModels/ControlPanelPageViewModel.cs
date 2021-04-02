@@ -11,7 +11,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -31,7 +30,6 @@ namespace SiamCross.ViewModels
 
             SensorService.Instance.SensorAdded += SensorAdded;
             SensorService.Instance.SensorDeleting += SensorDeleted;
-            Task.Run(() => SensorService.Instance.InitinalizeAsync());
         }
         public ICommand RecentMeasurementCommand => new Command<Guid>(RecentMeasurement);
         public ICommand DeleteSensorCommand => new Command<Guid>(DeleteSensorHandler);
