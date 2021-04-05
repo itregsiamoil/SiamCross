@@ -13,7 +13,7 @@ namespace SiamCross.Models.Sensors
 {
     public interface ISensor : IDisposable, INotifyPropertyChanged
     {
-        IViewModel DownloaderVM { get; set; }
+        BaseMeasurementsDownloaderVM DownloaderVM { get; set; }
         IViewModel FactoryConfigVM { get; set; }
         IViewModel UserConfigVM { get; set; }
         IViewModel StateVM { get; set; }
@@ -22,7 +22,7 @@ namespace SiamCross.Models.Sensors
 
 
         IMeasurementsDownloader Downloader { get; set; }
-        IStateData StateData { get; set; }
+        TaskManagerVM TaskManager { get; set; }
 
 
 
@@ -41,7 +41,7 @@ namespace SiamCross.Models.Sensors
 
         //Task ActivateAsync();
         //Task DeactivateAsync();
-        Task<bool> DoActivate();
+        Task<bool> DoActivate(CancellationToken token = default);
 
         string ConnStateStr { get; }
         bool Activate { get; set; }

@@ -1,4 +1,5 @@
 ﻿using SiamCross.Models.Sensors;
+using SiamCross.Services;
 using System.Windows.Input;
 
 namespace SiamCross.ViewModels.MeasurementViewModels
@@ -12,7 +13,7 @@ namespace SiamCross.ViewModels.MeasurementViewModels
             Name = name;
             Description = description;
 
-            ShowConfigViewCommand = BaseSensor.CreateAsyncCommand(() => this);
+            ShowConfigViewCommand = PageNavigator.CreateAsyncCommand(() => this);
 
         }
         public string Name { get; private set; }

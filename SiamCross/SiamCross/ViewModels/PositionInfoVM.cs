@@ -1,5 +1,4 @@
 ﻿using SiamCross.Models;
-using SiamCross.Models.Sensors;
 using SiamCross.Services;
 using SiamCross.Services.RepositoryTables;
 using SiamCross.Views;
@@ -109,7 +108,7 @@ namespace SiamCross.ViewModels
         public PositionInfoVM(PositionInfo position)
         {
             _Model = position;
-            EditCommand = BaseSensor.CreateAsyncCommand(() => this);
+            EditCommand = PageNavigator.CreateAsyncCommand(() => this);
             AddFieldCommand = new AsyncCommand(DoAddNewFieldCommand
                 , (Func<object, bool>)null, null, false, false);
 

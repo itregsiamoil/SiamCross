@@ -112,6 +112,7 @@
     <Compile Include="Models\BluetoothAdapters\ConnectionBt2.cs" />
     <Compile Include="Models\BluetoothAdapters\ConnectionBtLe.cs" />
     <Compile Include="Models\BluetoothAdapters\Bt2InterfaceDroid.cs" />
+    <Compile Include="Models\BluetoothBroadcastReceiver.cs" />
     <Compile Include="Models\ScannerLe.cs" />
     <Compile Include="Models\ScannerBt2.cs" />
     <Compile Include="Models\VersionAndBuild_Android.cs" />

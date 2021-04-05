@@ -4,6 +4,7 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
 using Android.Widget;
+using SiamCross.Droid.Models;
 using SiamCross.Models.Connection.Protocol.Siam;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -104,6 +105,18 @@ namespace SiamCross.Droid
                 }
             }
             mAllPermOkExecTcs?.TrySetResult(all_granted);
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+            BtBroadcastReceiver.Register();
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
+            BtBroadcastReceiver.Unregister();
         }
     }
 }

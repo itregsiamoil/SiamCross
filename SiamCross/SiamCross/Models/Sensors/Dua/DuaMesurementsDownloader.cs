@@ -4,11 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dua
 {
-    class DuaMesurementsDownloader : IMeasurementsDownloader
+    public class DuaMesurementsDownloader : IMeasurementsDownloader
     {
         private ISensor _Sensor;
         private IProtocolConnection _Connection;
@@ -98,7 +99,7 @@ namespace SiamCross.Models.Sensors.Dua
             //CtrlReg.Value = 0x02;
             //await _Connection.ReadAsync(_CurrentAviable);
         }
-        async Task<RespResult> SingleUpdate()
+        async Task<RespResult> SingleUpdate(CancellationToken token = default)
         {
             RespResult res = RespResult.ErrorUnknown;
             try
@@ -109,7 +110,7 @@ namespace SiamCross.Models.Sensors.Dua
 
                 var tmp = _Connection.AdditioonalTimeout;
                 _Connection.AdditioonalTimeout = 2000;
-                res = await _Connection.ReadAsync(aviable);
+                res = await _Connection.ReadAsync(aviable, null, token);
                 _Connection.AdditioonalTimeout = tmp;
             }
             catch (Exception ex)
@@ -137,16 +138,16 @@ namespace SiamCross.Models.Sensors.Dua
                     return true;
             }
         }
-        public async Task<RespResult> Update()
+        public async Task<RespResult> Update(CancellationToken token = default)
         {
-            if (!await _Sensor.DoActivate())
+            if (!await _Sensor.DoActivate(token))
                 return await Task.FromResult(RespResult.ErrorConnection);
 
             RespResult ret = RespResult.ErrorTimeout;
             for (int i = 0; i < 3; ++i)
             {
                 ret = await SingleUpdate();
-                if (!NeedRetry(ret))
+                if (!NeedRetry(ret) || token.IsCancellationRequested)
                     break;
             }
             return ret;

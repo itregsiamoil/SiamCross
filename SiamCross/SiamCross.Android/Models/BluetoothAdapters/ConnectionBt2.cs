@@ -80,8 +80,15 @@ namespace SiamCross.Droid.Models
     }
     */
 
+    [Android.Runtime.Preserve(AllMembers = true)]
     public class ConnectionBt2 : IConnectionBt2
     {
+        private async void OnDisconected(BluetoothDevice dvc)
+        {
+            if (dvc.Equals(_bluetoothDevice))
+                await Disconnect();
+        }
+
         private readonly IPhyInterface mInterface;
         public override IPhyInterface PhyInterface => mInterface;
 
@@ -200,6 +207,7 @@ namespace SiamCross.Droid.Models
                     () => RxThreadFunctionAsync(_socket.InputStream, CtRxSource.Token)
                     , CtRxSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
 
+                BtBroadcastReceiver.OnDisconectedEvent += OnDisconected;
                 return true;
             }
             catch (Java.IO.IOException e)
@@ -229,6 +237,7 @@ namespace SiamCross.Droid.Models
             {
                 await RxThreadCancelAsync();
                 _bluetoothDevice?.Dispose();
+                BtBroadcastReceiver.OnDisconectedEvent -= OnDisconected;
                 //mInterface.Disable();
             }
             catch (Exception)

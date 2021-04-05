@@ -48,6 +48,42 @@
     <ContentPage.Content>
         <ScrollView BackgroundColor="{StaticResource colorBackgroundLight}" >
             <StackLayout Spacing="0">
+                <Grid ColumnSpacing="0" RowSpacing="0" Margin="5" HeightRequest="50">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height ="35" />
+                        <RowDefinition Height="15" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="40" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Text="{Binding Sensor.TaskManager.Info}" 
+                           Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3">
+                    </Label>
+
+                    <Button Text="&#x274C;" TextColor="Red" 
+                        Grid.Column="2" Grid.Row="0"
+                        Command="{Binding Sensor.TaskManager.CancelCmd}" 
+                        IsVisible="{Binding Sensor.TaskManager.IsBusy, Mode=OneWay}"
+                        IsEnabled="{Binding Sensor.TaskManager.IsBusy, Mode=OneWay}"/>
+
+                    <Label 
+                           Grid.Column="0" Grid.Row="1" >
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{Binding Sensor.TaskManager.ProgressInt}" />
+                                <Span Text="%" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+
+                    <ProgressBar Progress="{Binding Sensor.TaskManager.Progress}" 
+                                 Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"/>
+                </Grid>
+
+
                 <Frame Style="{StaticResource MenuItemStyle}" >
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding Sensor.PositionVM.EditCommand}" />

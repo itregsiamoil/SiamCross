@@ -11,7 +11,7 @@ using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.ViewModels.Dmg
 {
-    public class DmgDownloadViewModel : BaseVM
+    public class DmgDownloadViewModel : BaseMeasurementsDownloaderVM
     {
         ISensor _Sensor;
         DmgMesurementsDownloader _Downloader;
@@ -51,13 +51,7 @@ namespace SiamCross.ViewModels.Dmg
             get => _Aviable;
             set { _Aviable = value; ChangeNotify(); }
         }
-
         public bool OpenOnDownload { get; set; }
-
-
-
-        public ICommand LoadFromDeviceCommand { get; set; }
-
         public ICommand StartDownloadCommand { get; set; }
 
         public DmgDownloadViewModel(ISensor sensor)

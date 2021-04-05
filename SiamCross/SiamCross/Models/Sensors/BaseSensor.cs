@@ -12,7 +12,6 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors
 {
@@ -46,68 +45,15 @@ namespace SiamCross.Models.Sensors
 
             Connection.MaxReqLen = ScannedDeviceInfo.GetPrefferedPkgSize();
 
-            ShowDetailViewCommand = CreateAsyncCommand(() =>
+            ShowDetailViewCommand = PageNavigator.CreateAsyncCommand(() =>
             {
-                this.Activate = true;
+                //this.Activate = true;
                 return new SensorDetailsVM(this);
             });
 
+            TaskManager = new TaskManagerVM(new TaskManager());
+
         }
-        static public AsyncCommand CreateAsyncCommand(Func<IViewModel> fnGetVM)
-        {
-            Func<Task> exec = () =>
-            {
-                var vm = fnGetVM();
-                if (null == vm)
-                    return Task.CompletedTask;
-                var page = ViewFactoryService.Get(vm);
-                if (null == page)
-                    return Task.CompletedTask;
-                return App.NavigationPage.Navigation.PushAsync(page);
-            };
-            return new AsyncCommand(exec
-                , (Func<object, bool>)null, null, false, false);
-        }
-        static public AsyncCommand CreateAsyncCommand(IViewModel vm)
-        {
-            Func<Task> exec = () =>
-            {
-                try
-                {
-                    if (null == vm)
-                        return Task.CompletedTask;
-                    var page = ViewFactoryService.Get(vm);
-                    if (null == page)
-                        return Task.CompletedTask;
-                    return App.NavigationPage.Navigation.PushAsync(page);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex, "EXCEPTION "
-                        + System.Reflection.MethodBase.GetCurrentMethod().Name
-                        + "\n msg=" + ex.Message
-                        + "\n type=" + ex.GetType()
-                        + "\n stack=" + ex.StackTrace + "\n");
-
-                }
-                return Task.CompletedTask;
-            };
-            return new AsyncCommand(exec
-                , (Func<object, bool>)null, null, false, false);
-        }
-
-
-
-        private async Task ShowShowDetails()
-        {
-            var ctx = new SensorDetailsVM(this);
-            var view = ViewFactoryService.Get(ctx);
-            await App.NavigationPage.Navigation.PushAsync(view);
-        }
-
-
-
-
 
         public async void Dispose()
         {
@@ -176,14 +122,14 @@ namespace SiamCross.Models.Sensors
         public ICommand ShowDetailViewCommand { get; set; }
         public ICommand ShowInfoViewCommand { get; set; }
 
-        public IViewModel DownloaderVM { get; set; }
+        public BaseMeasurementsDownloaderVM DownloaderVM { get; set; }
         public IViewModel FactoryConfigVM { get; set; }
         public IViewModel UserConfigVM { get; set; }
         public IViewModel StateVM { get; set; }
         public IViewModel SurveysVM { get; set; }
 
         public IMeasurementsDownloader Downloader { get; set; }
-        public IStateData StateData { get; set; }
+        public TaskManagerVM TaskManager { get; set; }
 
         public CommonInfo Info { get; }
 
@@ -208,10 +154,12 @@ namespace SiamCross.Models.Sensors
         private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
         #endregion
 
-        public async Task<bool> DoActivate()
+        public async Task<bool> DoActivate(CancellationToken token = default)
         {
             bool connected = false;
-            for (int i = 0; i < Connection.Retry && !connected; ++i)
+            for (int i = 0; i < Connection.Retry
+                            && !connected
+                            && !token.IsCancellationRequested; ++i)
                 connected = await Connection.Connect();
             if (connected && !Activate)
                 Activate = true;

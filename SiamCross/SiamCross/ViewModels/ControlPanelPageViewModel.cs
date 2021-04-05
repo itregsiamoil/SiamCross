@@ -122,7 +122,7 @@ namespace SiamCross.ViewModels
                     var vm = sensor.Surveys[0];
                     if (null == vm)
                         return;
-                    var page = ViewFactoryService.Get(vm);
+                    var page = PageNavigator.Get(vm);
                     if (null == page)
                         return;
                     App.NavigationPage.Navigation.PushAsync(page);

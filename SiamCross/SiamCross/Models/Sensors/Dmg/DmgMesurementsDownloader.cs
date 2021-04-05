@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dmg
@@ -84,7 +85,7 @@ namespace SiamCross.Models.Sensors.Dmg
                     return true;
             }
         }
-        public async Task<RespResult> Update()
+        public async Task<RespResult> Update(CancellationToken token = default)
         {
             if (!await _Sensor.DoActivate())
                 return await Task.FromResult(RespResult.ErrorConnection);
@@ -92,8 +93,8 @@ namespace SiamCross.Models.Sensors.Dmg
             RespResult ret = RespResult.ErrorTimeout;
             for (int i = 0; i < 3; ++i)
             {
-                ret = await _Connection.TryReadAsync(StatReg);
-                if (!NeedRetry(ret))
+                ret = await _Connection.TryReadAsync(StatReg, null, token);
+                if (!NeedRetry(ret) || token.IsCancellationRequested)
                     break;
             }
             return ret;
