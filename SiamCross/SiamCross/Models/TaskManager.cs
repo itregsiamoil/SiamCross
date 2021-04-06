@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.Threading;
+using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,86 +8,83 @@ namespace SiamCross.Models
 {
     public class TaskManager
     {
-        ReaderWriterLockSlim _QueueLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
-        //Queue<ITask> _Tasks = new Queue<ITask>();
-        //SemaphoreSlim semaphore = new SemaphoreSlim(1);
+        readonly bool IsBackground = Thread.CurrentThread.IsBackground;
+        readonly int ThreadId = Thread.CurrentThread.ManagedThreadId;
+        ITask CurrentTask = null;
+        readonly AsyncReaderWriterLock _Lock;
+        readonly Progress<ITask> _Task = new Progress<ITask>();
+        readonly Progress<string> _Info = new Progress<string>();
+        readonly Progress<float> _Progress = new Progress<float>();
 
-        public ITask CurrentTask { get; protected set; }
-
-        public event Action<TaskManager> OnChangeManager;
-        public event Action<string> OnChangeInfo;
-        public event Action<float> OnChangeProgress;
-
-        protected void Subscribe(ITask task)
+        public TaskManager()
         {
-            CurrentTask = task;
-            CurrentTask.OnChangeManager += OnChangeManager;
-            CurrentTask.OnChangeInfo += OnChangeInfo;
-            CurrentTask.OnChangeProgress += OnChangeProgress;
+            var taskContext = new JoinableTaskContext();
+            var taskCollection = new JoinableTaskCollection(taskContext);
+            JoinableTaskFactory taskFactory = taskContext.CreateFactory(taskCollection);
+            _Lock = new AsyncReaderWriterLock(taskContext);
         }
-        protected void Unsubscribe()
+        public IProgress<ITask> Task => _Task;
+        public IProgress<string> Info => _Info;
+        public IProgress<float> Progress => _Progress;
+        public Progress<ITask> OnChangeTask => _Task;
+        public Progress<string> OnChangeInfo => _Info;
+        public Progress<float> OnChangeProgress => _Progress;
+        protected async Task Subscribe(ITask task)
         {
-            CurrentTask.OnChangeManager -= OnChangeManager;
-            CurrentTask.OnChangeInfo -= OnChangeInfo;
-            CurrentTask.OnChangeProgress -= OnChangeProgress;
-            CurrentTask = null;
+            using (await _Lock.WriteLockAsync())
+            {
+                CurrentTask = task;
+                Task.Report(task);
+            }
         }
-
+        protected async Task Unsubscribe()
+        {
+            using (await _Lock.WriteLockAsync())
+            {
+                if (null == CurrentTask)
+                    return;
+                Task.Report(null);
+                CurrentTask = null;
+            }
+        }
         public async Task<bool> Execute(ITask task)
         {
+            bool ret = false;
             if (null == task)
-                return false;
-            bool res = false;
-            _QueueLock.EnterUpgradeableReadLock();
+                return ret;
             try
             {
-                if (null != CurrentTask)
-                    return false;
-
-                _QueueLock.EnterWriteLock();
-                try
+                using (await _Lock.UpgradeableReadLockAsync())
                 {
-                    Subscribe(task);
-                    res = await task.Execute(this);
-                    if (res)
-                        OnChangeInfo?.Invoke($"\u2713 {task.Info}");
-                    else
-                        OnChangeInfo?.Invoke($"\u2716 {task.Info}");
-                    return res;
+                    if (null != CurrentTask)
+                        return false;
+                    await Subscribe(task).ConfigureAwait(false);
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine("EXCEPTION Execute task"
-                    + ex.Message + " "
-                    + ex.GetType() + " "
-                    + ex.StackTrace + "\n");
-                }
-                finally
-                {
-                    Unsubscribe();
-                    _QueueLock.ExitWriteLock();
-                }
+                ret = await task.Execute(this).ConfigureAwait(false);
+                await Unsubscribe().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("EXCEPTION Execute lock"
-                    + ex.Message + " "
-                    + ex.GetType() + " "
+                    + ex.Message + " " + ex.GetType() + "\n"
                     + ex.StackTrace + "\n");
-                res = false;
+                ret = false;
             }
-            finally
-            {
-                _QueueLock.ExitUpgradeableReadLock();
-            }
-            return res;
-            //using (await semaphore.UseWaitAsync())
+            if (ret)
+                Info?.Report($"\u2713 {task.Info}");
+            else
+                Info?.Report($"\u2716 {task.Info}");
+            return ret;
         }
         public async Task Cancel()
         {
-            _QueueLock.EnterReadLock();
-            await CurrentTask?.Cancel();
+            using (await _Lock.ReadLockAsync())
+                await CurrentTask?.Cancel();
         }
-
+        public async Task RefreshTask()
+        {
+            using (await _Lock.ReadLockAsync())
+                Task.Report(CurrentTask);
+        }
     }
 }

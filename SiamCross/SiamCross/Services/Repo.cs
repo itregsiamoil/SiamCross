@@ -2,14 +2,14 @@
 
 namespace SiamCross.Services
 {
-    static public class Repo
+    public static class Repo
     {
         static readonly FieldDir _FieldDir = new FieldDir();
 
-        static public FieldDir FieldDir => _FieldDir;
+        public static FieldDir FieldDir => _FieldDir;
 
 
-        static public async Task Init()
+        public static async Task Init()
         {
             await FieldDir.Init();
         }

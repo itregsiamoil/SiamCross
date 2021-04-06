@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,10 +7,6 @@ namespace SiamCross.Models
 {
     public interface ITask
     {
-        event Action<TaskManager> OnChangeManager;
-        event Action<string> OnChangeInfo;
-        event Action<float> OnChangeProgress;
-
         TaskManager Manager { get; }
         string Info { get; }
         float Progress { get; }
@@ -25,18 +22,10 @@ namespace SiamCross.Models
         string _Info;
         float _Progress;
 
-        public event Action<TaskManager> OnChangeManager;
-        public event Action<string> OnChangeInfo;
-        public event Action<float> OnChangeProgress;
-
         public TaskManager Manager
         {
             get => _Mgr;
-            protected set
-            {
-                _Mgr = value;
-                OnChangeManager?.Invoke(_Mgr);
-            }
+            protected set => _Mgr = value;//_Mgr?.Manager.Report(_Mgr);
         }
         public string Info
         {
@@ -44,7 +33,7 @@ namespace SiamCross.Models
             set
             {
                 _Info = value;
-                OnChangeInfo?.Invoke(_Info);
+                _Mgr?.Info.Report(_Info);
             }
         }
         public float Progress
@@ -64,30 +53,32 @@ namespace SiamCross.Models
                         return;
                     _Progress = value;
                 }
-                OnChangeProgress?.Invoke(_Progress);
+                _Mgr?.Progress.Report(_Progress);
             }
 
         }
         public async Task<bool> Execute(TaskManager mgr)
         {
+            bool ret = false;
             try
             {
                 _Cts = new CancellationTokenSource();
                 Manager = mgr;
-                return await DoExecute();
+                ret = await DoExecute();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Debug.WriteLine("EXCEPTION Execute lock"
+                    + ex.Message + " " + ex.GetType() + "\n"
+                    + ex.StackTrace + "\n");
+                ret = true;
             }
             finally
             {
                 _Cts.Dispose();
-                _Cts = null;
-                //Progress = 1;
-                //Info = "End";
                 Manager = null;
             }
-            return false;
+            return ret;
         }
         public async Task Cancel()
         {

@@ -85,7 +85,7 @@ namespace SiamCross.Models.Sensors.Dmg
                     return true;
             }
         }
-        public async Task<RespResult> Update(CancellationToken token = default)
+        public async Task<RespResult> Update(CancellationToken token = default, IProgress<string> progress = null)
         {
             if (!await _Sensor.DoActivate())
                 return await Task.FromResult(RespResult.ErrorConnection);

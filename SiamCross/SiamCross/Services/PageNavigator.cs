@@ -14,7 +14,7 @@ using Xamarin.Forms;
 namespace SiamCross.Services
 {
 
-    static public class PageNavigator
+    public static class PageNavigator
     {
         static Dictionary<Type, Func<ContentPage>> _Factory = new Dictionary<Type, Func<ContentPage>>();
         static Dictionary<Type, ContentPage> _Views = new Dictionary<Type, ContentPage>();
@@ -23,7 +23,7 @@ namespace SiamCross.Services
         {
             //Register(typeof(SurveyVM), ()=> new SurveyView());
         }
-        static public Task Init()
+        public static Task Init()
         {
             PageNavigator.Register(typeof(PositionInfoVM), () => new PositionEditPage());
             PageNavigator.Register(typeof(SensorDetailsVM), () => new SensorDetailsPage());
@@ -81,7 +81,7 @@ namespace SiamCross.Services
             _Views[type] = view;
             return view;
         }
-        static public AsyncCommand CreateAsyncCommand(Func<IViewModel> fnGetVM)
+        public static AsyncCommand CreateAsyncCommand(Func<IViewModel> fnGetVM)
         {
             Func<Task> exec = () =>
             {
@@ -96,7 +96,7 @@ namespace SiamCross.Services
             return new AsyncCommand(exec
                 , (Func<object, bool>)null, null, false, false);
         }
-        static public AsyncCommand CreateAsyncCommand(IViewModel vm)
+        public static AsyncCommand CreateAsyncCommand(IViewModel vm)
         {
             Func<Task> exec = () =>
             {

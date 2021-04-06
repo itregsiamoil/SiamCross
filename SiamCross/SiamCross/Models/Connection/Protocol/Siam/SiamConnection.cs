@@ -20,12 +20,12 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             _TxBuf[2] = base.Address;
         }
 
-        public async override Task<bool> Connect()
+        public override async Task<bool> Connect()
         {
             using (await _semaphore.UseWaitAsync())
                 return await base.Connect();
         }
-        public async override Task<bool> Disconnect()
+        public override async Task<bool> Disconnect()
         {
             using (await _semaphore.UseWaitAsync())
                 return await base.Disconnect();

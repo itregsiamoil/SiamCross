@@ -73,7 +73,7 @@ namespace SiamCross.Models.Connection.Protocol
             _Address = address;
             mPhyConn = base_conn;
         }
-        public async virtual Task<bool> Connect()
+        public virtual async Task<bool> Connect()
         {
             if (ConnectionState.Connected == mPhyConn.State)
             {
@@ -113,7 +113,7 @@ namespace SiamCross.Models.Connection.Protocol
             }
             return result;
         }
-        public async virtual Task<bool> Disconnect()
+        public virtual async Task<bool> Disconnect()
         {
             if (ConnectionState.Disconnected == mPhyConn.State)
             {

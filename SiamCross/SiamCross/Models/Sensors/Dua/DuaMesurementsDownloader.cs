@@ -138,11 +138,16 @@ namespace SiamCross.Models.Sensors.Dua
                     return true;
             }
         }
-        public async Task<RespResult> Update(CancellationToken token = default)
+        public async Task<RespResult> Update(CancellationToken token = default, IProgress<string> progress=null)
         {
+            progress.Report("Получение информации о количестве измерений: подключение");
             if (!await _Sensor.DoActivate(token))
+            {
+                progress.Report("не удалось подключиться к прибору");
                 return await Task.FromResult(RespResult.ErrorConnection);
-
+            }
+                
+            progress.Report("Получение информации о количестве измерений: чтение");
             RespResult ret = RespResult.ErrorTimeout;
             for (int i = 0; i < 3; ++i)
             {
@@ -150,6 +155,7 @@ namespace SiamCross.Models.Sensors.Dua
                 if (!NeedRetry(ret) || token.IsCancellationRequested)
                     break;
             }
+            progress.Report("Ошибка получения информации о количестве измерений!");
             return ret;
         }
         public int AviableRep()

@@ -19,20 +19,15 @@ namespace SiamCross.Models.Sensors.Dua
 
         public override async Task<bool> DoExecute()
         {
-            if (null == _Downloader)
+            if (null == _Downloader || null==Manager)
                 return false;
 
             bool ret = false;
             Progress = 0.01f;
             using (var timer = new Timer(new TimerCallback(Count), null, 0, RefreshPriod))
             {
-                Info = "получение информации с прибора";
-                ret = RespResult.NormalPkg == await _Downloader.Update(_Cts.Token);
+                ret = RespResult.NormalPkg == await _Downloader.Update(_Cts.Token, Manager.Info);
             }
-            if (!ret)
-                Info = "не удалось получить информация с прибора";
-            else
-                Info = "Завершено получение информации с прибора";
             Progress = 1f;
             return ret;
         }

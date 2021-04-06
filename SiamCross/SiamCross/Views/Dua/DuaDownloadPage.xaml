@@ -21,16 +21,15 @@
 
     <ContentPage.ToolbarItems >
         <ToolbarItem Text="&#x21BA; "
-                     IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}"
                      Command="{Binding LoadFromDeviceCommand}"/>
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
         <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
-            <Grid ColumnSpacing="0" RowSpacing="0" Margin="5" HeightRequest="50">
+            <Grid ColumnSpacing="0" RowSpacing="0" Margin="5" HeightRequest="60" >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height ="35" />
-                    <RowDefinition Height="15" />
+                    <RowDefinition Height ="40" />
+                    <RowDefinition Height="20" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="40" />
@@ -38,28 +37,25 @@
                     <ColumnDefinition Width="40" />
                 </Grid.ColumnDefinitions>
 
-                <Label Text="{Binding Sensor.TaskManager.Info}" 
-                           Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3">
-                </Label>
-
-                <Button Text="&#x274C;" TextColor="Red" 
+                <Label Text="{Binding Sensor.TaskManager.Info}"
+                       Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
+                <Button Text="&#x274C;" TextColor="Red" BackgroundColor="LightPink"
                         Grid.Column="2" Grid.Row="0"
                         Command="{Binding Sensor.TaskManager.CancelCmd}" 
                         IsVisible="{Binding Sensor.TaskManager.IsBusy, Mode=OneWay}"
                         IsEnabled="{Binding Sensor.TaskManager.IsBusy, Mode=OneWay}"/>
-
                 <Label 
-                           Grid.Column="0" Grid.Row="1" >
+                    Grid.Column="0" Grid.Row="1" >
                     <Label.FormattedText>
                         <FormattedString>
-                            <Span Text="{Binding Sensor.TaskManager.ProgressInt}" />
+                            <Span Text="{Binding Sensor.TaskManager.ProgressInt}"/>
                             <Span Text="%" />
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-
                 <ProgressBar Progress="{Binding Sensor.TaskManager.Progress}" 
-                                 Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"/>
+                             VerticalOptions="Center"
+                             Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"/>
             </Grid>
             <ScrollView VerticalOptions="StartAndExpand">
                 <StackLayout>

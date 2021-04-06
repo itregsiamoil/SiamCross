@@ -7,9 +7,9 @@ namespace SiamCross.Services
 {
     public class FieldDir
     {
-        readonly public Dictionary<string, FieldItem> DictByTitle = new Dictionary<string, FieldItem>();
-        readonly public Dictionary<uint, FieldItem> DictById = new Dictionary<uint, FieldItem>();
-        readonly public ObservableCollection<FieldItem> FieldList = new ObservableCollection<FieldItem>();
+        public readonly Dictionary<string, FieldItem> DictByTitle = new Dictionary<string, FieldItem>();
+        public readonly Dictionary<uint, FieldItem> DictById = new Dictionary<uint, FieldItem>();
+        public readonly ObservableCollection<FieldItem> FieldList = new ObservableCollection<FieldItem>();
 
         public async Task Init()
         {

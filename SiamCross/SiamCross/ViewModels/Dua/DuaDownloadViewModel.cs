@@ -82,7 +82,7 @@ namespace SiamCross.ViewModels.Dua
             Func<Task> tas = () => Sensor.TaskManager.GetModel()
                 .Execute(new TaskUpdateDownloads(_Downloader));
             LoadFromDeviceCommand = new AsyncCommand(tas
-                , () => null == Sensor.TaskManager.GetModel().CurrentTask
+                , () => Sensor.TaskManager.IsFree
                 , null, false, false);
         }
 
