@@ -28,11 +28,11 @@ namespace SiamCross.Services
             PageNavigator.Register(typeof(PositionInfoVM), () => new PositionEditPage());
             PageNavigator.Register(typeof(SensorDetailsVM), () => new SensorDetailsPage());
 
-            PageNavigator.Register(typeof(DmgDownloadViewModel), () => new DmgDownloadPage());
+            PageNavigator.Register(typeof(DmgStorageVM), () => new DmgDownloadPage());
             PageNavigator.Register(typeof(ViewModels.Dmg.Survey.DynamogrammVM)
                 , () => new DynamogrammPage());
 
-            PageNavigator.Register(typeof(DuaDownloadViewModel), () => new DuaDownloadPage());
+            PageNavigator.Register(typeof(DuaStorageVM), () => new DuaDownloadPage());
             PageNavigator.Register(typeof(FactoryConfigVM), () => new FactoryConfigPage());
             PageNavigator.Register(typeof(UserConfigVM), () => new UserConfigPage());
             //ViewFactoryService.Register(typeof(StateVM), () => new StatePage());

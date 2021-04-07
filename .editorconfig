@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# VSTHRD200: Использование суффикса "Async" в асинхронных методах
+dotnet_diagnostic.VSTHRD200.severity = none

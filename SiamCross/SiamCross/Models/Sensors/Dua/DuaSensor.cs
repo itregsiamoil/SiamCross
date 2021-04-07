@@ -115,9 +115,14 @@ namespace SiamCross.Models.Sensors.Dua
                 , "автоматическая регистрация давления");
             surveys.Add(sur5);
 
-            Downloader = new DuaMesurementsDownloader(this);
+            Model.Storage = new DuaStorage(this);
 
-            DownloaderVM = new DuaDownloadViewModel(this);
+
+
+
+            StorageVM = new DuaStorageVM(this);
+
+
             FactoryConfigVM = new FactoryConfigVM(this);
             UserConfigVM = new UserConfigVM(this);
             StateVM = new StateVM(this);

@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dmg
 {
-    public class DmgMesurementsDownloader : IMeasurementsDownloader
+    public class DmgStorage : BaseStorage
     {
-        private ISensor _Sensor;
-        private IProtocolConnection _Connection;
+        private readonly ISensor _Sensor;
+        private readonly IProtocolConnection _Connection;
 
         readonly byte[] _currentDynGraph = new byte[1000 * 2];
         readonly byte[] _currentAccelerationGraph = new byte[1000 * 2];
@@ -37,7 +37,9 @@ namespace SiamCross.Models.Sensors.Dmg
         readonly MemVarUInt16 Step;
         readonly MemVarUInt16 WeightDiscr;
         readonly MemVarUInt16 TimeDiscr;
-        public DmgMesurementsDownloader(ISensor sensor)
+
+        public bool OpenOnDownload;
+        public DmgStorage(ISensor sensor)
         {
             _Sensor = sensor;
             _Connection = sensor.Connection;
@@ -191,6 +193,35 @@ namespace SiamCross.Models.Sensors.Dmg
             var data_list = new List<Ddin2MeasurementData>();
             data_list.Add(measurement);
             return data_list;
+        }
+        private async Task StartDownload()
+        {
+            /*
+            Stopwatch _PerfCounter = new Stopwatch();
+            _PerfCounter.Restart();
+
+            ProgressInfo = "Считывание с прибора";
+            IsDownloading = true;
+            float global_progress_start = 0.00f;
+            float global_progress_left = 1.0f;
+            Action<float> StepProgress = (float progress) =>
+            {
+                Progress = global_progress_start + progress * global_progress_left;
+                ProgressInfo = $"[{(100.0 * Progress).ToString("N2")}%] " + _Info;
+            };
+            Action<string> InfoProgress = (string info) =>
+            {
+                _Info = info;
+                ProgressInfo = $"[{(100.0 * Progress).ToString("N2")}%] " + info;
+            };
+
+            var measurements = await _Downloader.Download(1, 1, StepProgress, InfoProgress);
+
+            IsDownloading = false;
+            ToastService.Instance.LongAlert($"Elapsed {_PerfCounter.ElapsedMilliseconds}");
+            await SensorService.MeasurementHandler(measurements[0], OpenOnDownload);
+            */
+
         }
     }
 }

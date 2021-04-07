@@ -60,12 +60,12 @@ namespace SiamCross.Models
                         return false;
                     await Subscribe(task).ConfigureAwait(false);
                 }
-                ret = await task.Execute(this).ConfigureAwait(false);
+                ret = await task.ExecAsync(this).ConfigureAwait(false);
                 await Unsubscribe().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("EXCEPTION Execute lock"
+                Debug.WriteLine("EXCEPTION "
                     + ex.Message + " " + ex.GetType() + "\n"
                     + ex.StackTrace + "\n");
                 ret = false;
@@ -79,7 +79,7 @@ namespace SiamCross.Models
         public async Task Cancel()
         {
             using (await _Lock.ReadLockAsync())
-                await CurrentTask?.Cancel();
+                await CurrentTask?.CancelAsync();
         }
         public async Task RefreshTask()
         {

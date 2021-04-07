@@ -43,13 +43,13 @@ namespace SiamCross.ViewModels
 
         private async Task ShowDownloads()
         {
-            var ctx = _Sensor.DownloaderVM;
+            var ctx = _Sensor.StorageVM;
             var view = PageNavigator.Get(ctx);
             await App.NavigationPage.Navigation.PushAsync(view);
             var mgr = Sensor.TaskManager.GetModel();
 
-            if (ctx is BaseMeasurementsDownloaderVM dvm)
-                dvm.LoadFromDeviceCommand.Execute(this);
+            if (ctx is BaseStorageVM dvm)
+                dvm.CmdUpdateStorageInfo.Execute(this);
         }
 
     }//public class SensorDetailsViewModel : BaseVM

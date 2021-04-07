@@ -10,8 +10,8 @@ namespace SiamCross.Models
         TaskManager Manager { get; }
         string Info { get; }
         float Progress { get; }
-        Task<bool> Execute(TaskManager mgr);
-        Task Cancel();
+        Task<bool> ExecAsync(TaskManager mgr);
+        Task CancelAsync();
 
     }
 
@@ -21,12 +21,17 @@ namespace SiamCross.Models
         TaskManager _Mgr = null;
         string _Info;
         float _Progress;
+        private string _Name;
 
         public TaskManager Manager
         {
             get => _Mgr;
             protected set => _Mgr = value;//_Mgr?.Manager.Report(_Mgr);
         }
+
+        protected string Name { get => _Name; set => _Name = value; }
+        public string InfoEx { set => Info = $"{Name}:\n{value}"; }
+
         public string Info
         {
             get => _Info;
@@ -57,41 +62,45 @@ namespace SiamCross.Models
             }
 
         }
-        public async Task<bool> Execute(TaskManager mgr)
+
+
+        public async Task<bool> ExecAsync(TaskManager mgr)
         {
+            if (null == mgr)
+                return false;
             bool ret = false;
+            _Cts = new CancellationTokenSource();
             try
             {
-                _Cts = new CancellationTokenSource();
+                Progress = 0f;
                 Manager = mgr;
                 ret = await DoExecute();
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("EXCEPTION Execute lock"
+                Debug.WriteLine("EXCEPTION "
                     + ex.Message + " " + ex.GetType() + "\n"
                     + ex.StackTrace + "\n");
-                ret = true;
+                ret = false;
             }
             finally
             {
-                _Cts.Dispose();
+                Progress = 1f;
+                _Cts?.Dispose();
                 Manager = null;
             }
             return ret;
         }
-        public async Task Cancel()
-        {
-            _Cts?.Cancel();
-            await DoCancel();
-            //return Task.CompletedTask;
-        }
-
-
         public abstract Task<bool> DoExecute();
-        public virtual Task DoCancel()
+
+        public virtual Task DoBeforeCancelAsync()
         {
             return Task.CompletedTask;
+        }
+        public async Task CancelAsync()
+        {
+            await DoBeforeCancelAsync();
+            _Cts?.Cancel();
         }
 
     }

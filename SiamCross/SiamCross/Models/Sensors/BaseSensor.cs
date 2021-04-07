@@ -17,6 +17,8 @@ namespace SiamCross.Models.Sensors
 {
     public abstract class BaseSensor : BaseVM, ISensor
     {
+        SensorModel _Model = new SensorModel();
+        public SensorModel Model => _Model;
         #region TmpVariables
         #endregion
         #region Constructors & Destructors
@@ -50,9 +52,7 @@ namespace SiamCross.Models.Sensors
                 //this.Activate = true;
                 return new SensorDetailsVM(this);
             });
-
-            TaskManager = new TaskManagerVM(new TaskManager());
-
+            TaskManager = new TaskManagerVM(_Model.Manager);
         }
 
         public async void Dispose()
@@ -122,13 +122,13 @@ namespace SiamCross.Models.Sensors
         public ICommand ShowDetailViewCommand { get; set; }
         public ICommand ShowInfoViewCommand { get; set; }
 
-        public BaseMeasurementsDownloaderVM DownloaderVM { get; set; }
+        public BaseStorageVM StorageVM { get; set; }
         public IViewModel FactoryConfigVM { get; set; }
         public IViewModel UserConfigVM { get; set; }
         public IViewModel StateVM { get; set; }
         public IViewModel SurveysVM { get; set; }
 
-        public IMeasurementsDownloader Downloader { get; set; }
+
         public TaskManagerVM TaskManager { get; set; }
 
         public CommonInfo Info { get; }

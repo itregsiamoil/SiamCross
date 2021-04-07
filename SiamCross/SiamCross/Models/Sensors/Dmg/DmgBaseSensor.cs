@@ -112,8 +112,8 @@ namespace SiamCross.Models.Sensors.Dmg
             surveys.Add(sur3);
 
 
-            Downloader = new DmgMesurementsDownloader(this);
-            DownloaderVM = new DmgDownloadViewModel(this);
+            Model.Storage = new DmgStorage(this);
+            StorageVM = new DmgStorageVM(this);
 
             //FactoryConfigVM = new FactoryConfigVM(this);
             //UserConfigVM = new UserConfigVM(this);

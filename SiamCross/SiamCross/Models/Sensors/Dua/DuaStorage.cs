@@ -1,18 +1,19 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Services;
+using SiamCross.Services.Toast;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors.Dua
 {
-    public class DuaMesurementsDownloader : IMeasurementsDownloader
+    public class DuaStorage : BaseStorage
     {
-        private ISensor _Sensor;
-        private IProtocolConnection _Connection;
+        private readonly ISensor _Sensor;
+        private readonly IProtocolConnection _Connection;
 
         const uint _EchoSize = 3000;
 
@@ -51,7 +52,16 @@ namespace SiamCross.Models.Sensors.Dua
 
         readonly MemVarByteArray Echo;
 
-        public DuaMesurementsDownloader(ISensor sensor)
+
+        public uint StartRep;
+        public uint CountRep;
+        public uint StartEcho;
+        public uint CountEcho;
+
+        public uint AviableRep;
+        public uint AviableEcho;
+
+        public DuaStorage(ISensor sensor)
         {
             _Sensor = sensor;
             _Connection = sensor.Connection;
@@ -90,6 +100,15 @@ namespace SiamCross.Models.Sensors.Dua
             pressure = ReportHeader.Add(new MemVarInt16());
 
             Echo = new MemVarByteArray(null, 0, new MemValueByteArray(_EchoSize));
+
+            var manager = _Sensor.Model.Manager;
+            var task = new TaskUpdateStorage(this, _Sensor);
+
+            CmdUpdateStorageInfo = new AsyncCommand(
+                () => manager.Execute(task),
+                () => _Sensor.TaskManager.IsFree,
+                null, false, false);
+
         }
         public Task Clear()
         {
@@ -98,73 +117,6 @@ namespace SiamCross.Models.Sensors.Dua
             return Task.CompletedTask;
             //CtrlReg.Value = 0x02;
             //await _Connection.ReadAsync(_CurrentAviable);
-        }
-        async Task<RespResult> SingleUpdate(CancellationToken token = default)
-        {
-            RespResult res = RespResult.ErrorUnknown;
-            try
-            {
-                var aviable = new MemStruct(0x8418);
-                aviable.Add(new MemVarUInt16(nameof(Uksh), 0, Uksh.Data as MemValueUInt16));
-                aviable.Add(new MemVarUInt16(nameof(Ukex), 0, Ukex.Data as MemValueUInt16));
-
-                var tmp = _Connection.AdditioonalTimeout;
-                _Connection.AdditioonalTimeout = 2000;
-                res = await _Connection.ReadAsync(aviable, null, token);
-                _Connection.AdditioonalTimeout = tmp;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("EXCEPTION in write"
-                    + System.Reflection.MethodBase.GetCurrentMethod().Name
-                    + "\n msg=" + ex.Message
-                    + "\n type=" + ex.GetType()
-                    + "\n stack=" + ex.StackTrace + "\n");
-            }
-            return res;
-        }
-        bool NeedRetry(RespResult result)
-        {
-            switch (result)
-            {
-                case RespResult.ErrorPkg:
-                case RespResult.NormalPkg: return false;
-                default:
-                case RespResult.ErrorUnknown:
-                case RespResult.ErrorConnection:
-                case RespResult.ErrorSending:
-                case RespResult.ErrorTimeout:
-                case RespResult.ErrorCrc:
-                    return true;
-            }
-        }
-        public async Task<RespResult> Update(CancellationToken token = default, IProgress<string> progress=null)
-        {
-            progress.Report("Получение информации о количестве измерений: подключение");
-            if (!await _Sensor.DoActivate(token))
-            {
-                progress.Report("не удалось подключиться к прибору");
-                return await Task.FromResult(RespResult.ErrorConnection);
-            }
-                
-            progress.Report("Получение информации о количестве измерений: чтение");
-            RespResult ret = RespResult.ErrorTimeout;
-            for (int i = 0; i < 3; ++i)
-            {
-                ret = await SingleUpdate();
-                if (!NeedRetry(ret) || token.IsCancellationRequested)
-                    break;
-            }
-            progress.Report("Ошибка получения информации о количестве измерений!");
-            return ret;
-        }
-        public int AviableRep()
-        {
-            return Uksh.Value;
-        }
-        public int AviableEcho()
-        {
-            return Ukex.Value;
         }
 
         public async Task<IReadOnlyList<object>> Download(uint begin, uint qty
@@ -192,6 +144,10 @@ namespace SiamCross.Models.Sensors.Dua
         protected async Task<IReadOnlyList<object>> DoDownload(uint begin, uint qty
             , Action<float> onStepProgress, Action<string> onStepInfo)
         {
+            Stopwatch _PerfCounter = new Stopwatch();
+            _PerfCounter.Restart();
+
+
             onStepProgress?.Invoke(0.01f);
             onStepInfo?.Invoke("Скачивание измерений");
             // оценка количества байт для скачивания
@@ -249,7 +205,7 @@ namespace SiamCross.Models.Sensors.Dua
             }
 
 
-
+            ToastService.Instance.LongAlert($"Elapsed {_PerfCounter.ElapsedMilliseconds}");
             return data_list;
         }
 
@@ -266,8 +222,6 @@ namespace SiamCross.Models.Sensors.Dua
             }
             return DateTime.Now;
         }
-
-
 
     }
 }

@@ -11,13 +11,13 @@ namespace SiamCross.Services
         public readonly Dictionary<uint, FieldItem> DictById = new Dictionary<uint, FieldItem>();
         public readonly ObservableCollection<FieldItem> FieldList = new ObservableCollection<FieldItem>();
 
-        public async Task Init()
+        public async Task InitAsync()
         {
             DictByTitle.Clear();
             DictById.Clear();
             FieldList.Clear();
 
-            var values = await DbService.Instance.FieldDictionary.Load();
+            var values = await DbService.Instance.FieldDictionary.LoadAsync();
             foreach (var v in values)
             {
                 DictByTitle.Add(v.Title, v);
@@ -29,7 +29,7 @@ namespace SiamCross.Services
         {
             await DeleteAsync(id);
             await DeleteAsync(title);
-            var val = await DbService.Instance.FieldDictionary.Save(title, id);
+            var val = await DbService.Instance.FieldDictionary.SaveAsync(title, id);
             DictByTitle.Add(title, val);
             DictById.Add(id, val);
             FieldList.Add(val);
@@ -38,7 +38,7 @@ namespace SiamCross.Services
         {
             if (!DictByTitle.TryGetValue(title, out FieldItem val))
                 return null;
-            await DbService.Instance.FieldDictionary.Delete(val.Id);
+            await DbService.Instance.FieldDictionary.DeleteAsync(val.Id);
             DictByTitle.Remove(title);
             DictById.Remove(val.Id);
             FieldList.Remove(val);
@@ -48,7 +48,7 @@ namespace SiamCross.Services
         {
             if (!DictById.TryGetValue(id, out FieldItem val))
                 return null;
-            await DbService.Instance.FieldDictionary.Delete(id);
+            await DbService.Instance.FieldDictionary.DeleteAsync(id);
             DictByTitle.Remove(val.Title);
             DictById.Remove(id);
             FieldList.Remove(val);

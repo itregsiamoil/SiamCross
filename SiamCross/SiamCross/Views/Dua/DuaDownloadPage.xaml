@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:vm="clr-namespace:SiamCross.ViewModels.Dua"
-             x:DataType="vm:DuaDownloadViewModel"
+             x:DataType="vm:DuaStorageVM"
              x:Class="SiamCross.Views.Dua.DuaDownloadPage">
     <ContentPage.Resources>
         <Style TargetType="{x:Type StackLayout}">
@@ -21,7 +21,7 @@
 
     <ContentPage.ToolbarItems >
         <ToolbarItem Text="&#x21BA; "
-                     Command="{Binding LoadFromDeviceCommand}"/>
+                     Command="{Binding CmdUpdateStorageInfo}"/>
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
@@ -142,7 +142,7 @@
             <StackLayout Orientation="Vertical" >
                 <Button Text="Считать" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorSecondaryLight}"
-                        Command="{Binding StartDownloadCommand}"
+                        Command="{Binding CmdDownload}"
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >
                 </Button>
             </StackLayout>

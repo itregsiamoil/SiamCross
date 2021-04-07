@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:dmg="clr-namespace:SiamCross.ViewModels.Dmg"
-             x:DataType="dmg:DmgDownloadViewModel"
+             x:DataType="dmg:DmgStorageVM"
              x:Class="SiamCross.Views.DDIN2.DmgDownloadPage">
     <ContentPage.Resources>
         <Style TargetType="{x:Type StackLayout}">
@@ -20,7 +20,7 @@
 
     <ContentPage.ToolbarItems >
         <ToolbarItem Text="&#x21BA; " 
-                     Command="{Binding LoadFromDeviceCommand}"/>
+                     Command="{Binding CmdUpdateStorageInfo}"/>
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
@@ -48,21 +48,10 @@
                 </Frame>
             </ScrollView>
 
-
-            <StackLayout IsVisible="false">
-                <StackLayout.Triggers>
-                    <DataTrigger TargetType="StackLayout" Binding="{Binding IsDownloading}" Value="true" >
-                        <Setter Property="IsVisible" Value="true"  />
-                    </DataTrigger>
-                </StackLayout.Triggers>
-                <Label Text="{Binding ProgressInfo}" Margin="10" />
-                <ProgressBar Progress="{Binding Progress}" />
-            </StackLayout>
-
             <StackLayout Orientation="Horizontal" >
                 <Button Text="Считать все" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorSecondaryLight}"
-                        Command="{Binding StartDownloadCommand}">
+                        Command="{Binding CmdDownload}">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button" Binding="{Binding IsDownloading}" Value="true" >
                             <Setter Property="IsEnabled" Value="false"  />

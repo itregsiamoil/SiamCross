@@ -34,11 +34,11 @@ namespace SiamCross.Services.RepositoryTables
             _db = db;
         }
 
-        public async Task Delete(IDbTransaction tr, long id)
+        public async Task DeleteAsync(IDbTransaction tr, long id)
         {
             await tr.Connection.ExecuteAsync(delete_by_id, new { Id = id });
         }
-        public async Task<FieldItem> Save(IDbTransaction tr, string title, uint id = 0)
+        public async Task<FieldItem> SaveAsync(IDbTransaction tr, string title, uint id = 0)
         {
             var item = new FieldItem()
             {
@@ -53,56 +53,56 @@ namespace SiamCross.Services.RepositoryTables
 
             return (0 < affectedrow) ? item : null;
         }
-        public async Task<List<FieldItem>> Load(IDbTransaction tr, long id)
+        public async Task<List<FieldItem>> LoadAsync(IDbTransaction tr, long id)
         {
             var values = await tr.Connection
                 .QueryAsync<FieldItem>(select_by_id, new { Id = id });
             return values.AsList();
         }
-        public async Task<List<FieldItem>> Load(IDbTransaction tr)
+        public async Task<List<FieldItem>> LoadAsync(IDbTransaction tr)
         {
             var values = await tr.Connection
                 .QueryAsync<FieldItem>(select_all);
             return values.AsList();
         }
 
-        public async Task Delete(long id)
+        public async Task DeleteAsync(long id)
         {
             if (null == _db)
                 return;
             using (var tr = _db.BeginTransaction(IsolationLevel.Serializable))
             {
-                await Delete(tr, id);
+                await DeleteAsync(tr, id);
                 tr.Commit();
             }
         }
-        public async Task<FieldItem> Save(string title, uint id = 0)
+        public async Task<FieldItem> SaveAsync(string title, uint id = 0)
         {
             if (null == _db)
                 return null;
             using (var tr = _db.BeginTransaction(IsolationLevel.Serializable))
             {
-                var val = await Save(tr, title, id);
+                var val = await SaveAsync(tr, title, id);
                 tr.Commit();
                 return val;
             }
         }
-        public async Task<List<FieldItem>> Load(long id)
+        public async Task<List<FieldItem>> LoadAsync(long id)
         {
             if (null == _db)
                 return new List<FieldItem>();
             using (var tr = _db.BeginTransaction(IsolationLevel.Serializable))
             {
-                return await Load(tr, id);
+                return await LoadAsync(tr, id);
             }
         }
-        public async Task<List<FieldItem>> Load()
+        public async Task<List<FieldItem>> LoadAsync()
         {
             if (null == _db)
                 return new List<FieldItem>();
             using (var tr = _db.BeginTransaction(IsolationLevel.Serializable))
             {
-                return await Load(tr);
+                return await LoadAsync(tr);
             }
         }
 

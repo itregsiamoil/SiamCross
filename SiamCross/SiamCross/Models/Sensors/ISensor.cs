@@ -11,9 +11,18 @@ using System.Windows.Input;
 
 namespace SiamCross.Models.Sensors
 {
+    public class SensorModel
+    {
+        public readonly TaskManager Manager = new TaskManager();
+        public IStorage Storage { get; set; }
+    }
+
+
     public interface ISensor : IDisposable, INotifyPropertyChanged
     {
-        BaseMeasurementsDownloaderVM DownloaderVM { get; set; }
+        SensorModel Model { get; }
+
+        BaseStorageVM StorageVM { get; set; }
         IViewModel FactoryConfigVM { get; set; }
         IViewModel UserConfigVM { get; set; }
         IViewModel StateVM { get; set; }
@@ -21,7 +30,7 @@ namespace SiamCross.Models.Sensors
         PositionInfoVM PositionVM { get; set; }
 
 
-        IMeasurementsDownloader Downloader { get; set; }
+
         TaskManagerVM TaskManager { get; set; }
 
 

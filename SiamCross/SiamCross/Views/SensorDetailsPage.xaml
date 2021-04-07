@@ -129,6 +129,7 @@
                         <Label Text="Дополнительные информационные данные"/>
                     </StackLayout>
                 </Frame>
+                <!--
                 <Frame Style="{StaticResource MenuItemStyle}" >
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ShowFactoryConfigViewCommand}" />
@@ -156,6 +157,7 @@
                         <Label Text="Cтатус прибора, текущие показания датчиков, информация"/>
                     </StackLayout>
                 </Frame>
+                -->
                 <Frame Style="{StaticResource MenuItemStyle}" >
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ShowSurveysViewCommand}" />
@@ -170,8 +172,8 @@
                         <TapGestureRecognizer Command="{Binding ShowDownloadsViewCommand}" />
                     </Frame.GestureRecognizers>
                     <StackLayout>
-                        <Label Text="&#x1F4BE; Считывание" Style="{StaticResource TitleLabel}"/>
-                        <Label Text="Запуск считывания из памяти прибора одного или нескольких измерений"/>
+                        <Label Text="&#x1F4BE; Хранилище" Style="{StaticResource TitleLabel}"/>
+                        <Label Text="Получение из памяти прибора одного или нескольких измерений"/>
                     </StackLayout>
                 </Frame>
 

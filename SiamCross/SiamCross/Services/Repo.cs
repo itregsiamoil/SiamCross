@@ -9,9 +9,9 @@ namespace SiamCross.Services
         public static FieldDir FieldDir => _FieldDir;
 
 
-        public static async Task Init()
+        public static async Task InitAsync()
         {
-            await FieldDir.Init();
+            await FieldDir.InitAsync();
         }
     }
 }
