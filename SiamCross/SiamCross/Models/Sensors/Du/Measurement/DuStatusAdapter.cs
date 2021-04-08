@@ -13,6 +13,7 @@
                     case "2": return DuMeasurementStatus.WaitingForClick;
                     case "3": return DuMeasurementStatus.EсhoMeasurement;
                     case "4": return DuMeasurementStatus.Сompleted;
+                    case "5": return DuMeasurementStatus.ValvePreparation;
                 }
             }
 
@@ -30,6 +31,7 @@
                     case "2": return Resource.Stat_ClickWait;
                     case "3": return Resource.Stat_Meas;
                     case "4": return Resource.Stat_Complete;
+                    case "5": return Resource.Stat_ValvePreparation;
                 }
             }
 
@@ -46,6 +48,7 @@
                 case DuMeasurementStatus.WaitingForClick: return Resource.Stat_ClickWait;
                 case DuMeasurementStatus.EсhoMeasurement: return Resource.Stat_Meas;
                 case DuMeasurementStatus.Сompleted: return Resource.Stat_Complete;
+                case DuMeasurementStatus.ValvePreparation: return Resource.Stat_ValvePreparation;
             }
             return Resource.Stat_Free; //stub
         }

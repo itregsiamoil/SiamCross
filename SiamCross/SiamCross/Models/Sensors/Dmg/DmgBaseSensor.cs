@@ -93,14 +93,13 @@ namespace SiamCross.Models.Sensors.Dmg
             WeightDiscr = _Report.Add(new MemVarUInt16(nameof(WeightDiscr)));
             TimeDiscr = _Report.Add(new MemVarUInt16(nameof(TimeDiscr)));
 
-            var surveys = new List<SurveyVM>();
-            Surveys = surveys;
+            //var dynamogramm = (ISurvey)null;
+            //Model.Surveys.Add(staticLevelModel);
 
-            var sur1 = new DynamogrammVM(this
-                , "Динамограмма"
-                , "long long description");
-            surveys.Add(sur1);
+            var dynamogrammVM = new DynamogrammVM(this);
+            SurveysVM.SurveysCollection.Add(dynamogrammVM);
 
+            /*
             var sur2 = new SurveyVM(this
                 , "Тест клапанов"
                 , "long long description");
@@ -110,7 +109,7 @@ namespace SiamCross.Models.Sensors.Dmg
                 , "Вес штанг"
                 , "long long description");
             surveys.Add(sur3);
-
+            */
 
             Model.Storage = new DmgStorage(this);
             StorageVM = new DmgStorageVM(this);
@@ -119,7 +118,6 @@ namespace SiamCross.Models.Sensors.Dmg
             //UserConfigVM = new UserConfigVM(this);
             //StateVM = new StateVM(this);
 
-            SurveysVM = new SurveysCollectionVM(this);
 
         }
 

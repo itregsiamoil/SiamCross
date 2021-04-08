@@ -6,6 +6,7 @@
         NoiseMeasurement,
         WaitingForClick,
         EсhoMeasurement,
-        Сompleted
+        Сompleted,
+        ValvePreparation
     }
 }

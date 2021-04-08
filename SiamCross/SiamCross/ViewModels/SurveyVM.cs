@@ -1,25 +1,37 @@
 ﻿using SiamCross.Models.Sensors;
 using SiamCross.Services;
+using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.ViewModels.MeasurementViewModels
 {
-    public class SurveyVM : BaseVM
+    public class SurveyVM : BaseSurveyVM
     {
-        public SurveyVM(ISensor sensor, string name, string description)
+        public SurveyVM(ISensor sensor, ISurvey survey, string name, string description)
+            : base(survey)
         {
             //Page cfgPage = null;
             Sensor = sensor;
             Name = name;
             Description = description;
 
-            ShowConfigViewCommand = PageNavigator.CreateAsyncCommand(() => this);
+            ShowConfigViewCommand = new AsyncCommand(Show
+                , (Func<object, bool>)null, null, false, true);
 
         }
-        public string Name { get; private set; }
-        public string Description { get; private set; }
+        private async Task Show()
+        {
+            var ctx = this;
+            var view = PageNavigator.Get(ctx);
+            await App.NavigationPage.Navigation.PushAsync(view);
+            CmdUpdate.Execute(this);
+        }
+        public string Name { get; }
+        public string Description { get; }
 
-        public ISensor Sensor { get; private set; }
+        public ISensor Sensor { get;  }
 
         public ICommand ShowConfigViewCommand { get; set; }
     }

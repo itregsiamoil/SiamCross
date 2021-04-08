@@ -15,6 +15,8 @@ namespace SiamCross.Models.Sensors
     {
         public readonly TaskManager Manager = new TaskManager();
         public IStorage Storage { get; set; }
+
+        public readonly List<ISurvey> Surveys = new List<ISurvey>();
     }
 
 
@@ -26,7 +28,7 @@ namespace SiamCross.Models.Sensors
         IViewModel FactoryConfigVM { get; set; }
         IViewModel UserConfigVM { get; set; }
         IViewModel StateVM { get; set; }
-        IViewModel SurveysVM { get; set; }
+        SurveysCollectionVM SurveysVM { get; }
         PositionInfoVM PositionVM { get; set; }
 
 
@@ -39,7 +41,7 @@ namespace SiamCross.Models.Sensors
         ICommand ShowSurveysViewCommand { get; set; }
         ICommand ShowInfoViewCommand { get; set; }
 
-        IReadOnlyList<SurveyVM> Surveys { get; set; }
+        //IReadOnlyList<SurveyVM> Surveys { get; set; }
 
 
 

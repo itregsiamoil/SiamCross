@@ -119,7 +119,7 @@ namespace SiamCross.ViewModels
                     if (!CanOpenPage(typeof(DynamogrammPage)))
                         return;
 
-                    var vm = sensor.Surveys[0];
+                    var vm = sensor.SurveysVM.SurveysCollection[0];
                     if (null == vm)
                         return;
                     var page = PageNavigator.Get(vm);

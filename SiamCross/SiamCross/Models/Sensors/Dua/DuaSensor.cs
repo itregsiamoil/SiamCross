@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
+using SiamCross.Models.Sensors.Dua.Surveys;
 using SiamCross.ViewModels;
 using SiamCross.ViewModels.Dua;
 using SiamCross.ViewModels.Dua.Survey;
@@ -87,47 +88,47 @@ namespace SiamCross.Models.Sensors.Dua
             Urov = _Report.Add(new MemVarUInt16(nameof(Urov)));
             Otr = _Report.Add(new MemVarUInt16(nameof(Otr)));
 
-            var surveys = new List<SurveyVM>();
-            Surveys = surveys;
+            var staticLevelModel = new StaticLevel(this);
+            Model.Surveys.Add(staticLevelModel);
 
-            var sur1 = new StaticLevelVM(this
-                , "Статический уровень"
-                , "long long description");
-            surveys.Add(sur1);
+            var staticLevelVM = new StaticLevelVM(this, staticLevelModel);
+            SurveysVM.SurveysCollection.Add(staticLevelVM);
 
-            var sur2 = new SurveyVM(this
+            var dynamicLevelModel = (ISurvey)null;
+            //Model.Surveys.Add(dynamicLevelModel);
+
+            var dynamicLevelVM = new SurveyVM(this, dynamicLevelModel
                 , "Динамический уровень"
                 , "long long description");
-            surveys.Add(sur2);
+            SurveysVM.SurveysCollection.Add(dynamicLevelVM);
 
-            var sur3 = new SurveyVM(this
+            /*
+            Model.Surveys.Add(new SurveyVM(this, null
+                , "Динамический уровень"
+                , "long long description"));
+
+            Model.Surveys.Add(new SurveyVM(this, null
                 , "КВУ"
-                , "кривая восстановления уровня");
-            surveys.Add(sur3);
+                , "кривая восстановления уровня"));
 
-            var sur4 = new SurveyVM(this
+            Model.Surveys.Add(new SurveyVM(this, null
                 , "КВД"
-                , "кривая восстановления давления");
-            surveys.Add(sur4);
+                , "кривая восстановления давления"));
 
-            var sur5 = new SurveyVM(this
+            Model.Surveys.Add(new SurveyVM(this, null
                 , "АРД"
-                , "автоматическая регистрация давления");
-            surveys.Add(sur5);
+                , "автоматическая регистрация давления"));
+            */
 
             Model.Storage = new DuaStorage(this);
-
-
-
-
             StorageVM = new DuaStorageVM(this);
 
 
-            FactoryConfigVM = new FactoryConfigVM(this);
-            UserConfigVM = new UserConfigVM(this);
-            StateVM = new StateVM(this);
+            //FactoryConfigVM = new FactoryConfigVM(this);
+            //UserConfigVM = new UserConfigVM(this);
+            //StateVM = new StateVM(this);
 
-            SurveysVM = new SurveysCollectionVM(this);
+            
 
         }
 

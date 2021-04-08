@@ -45,9 +45,6 @@ namespace SiamCross.ViewModels.Dua
 
             _StorageModel.PropertyChanged += StorageModel_PropertyChanged;
 
-            CmdUpdateStorageInfo = Model.CmdUpdateStorageInfo;
-            CmdDownload = Model.CmdDownload;
-            CmdClearStorage = Model.CmdClearStorage;
         }
 
         private void StorageModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

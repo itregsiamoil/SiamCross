@@ -1475,6 +1475,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Automatic valve preparation.
+        /// </summary>
+        public static string Stat_ValvePreparation {
+            get {
+                return ResourceManager.GetString("Stat_ValvePreparation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на connected.
         /// </summary>
         public static string StatConn_Connected {

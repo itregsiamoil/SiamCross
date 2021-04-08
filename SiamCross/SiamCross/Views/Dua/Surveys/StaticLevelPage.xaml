@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SiamCross.Views.Dua.StaticLevelPage">
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:survey="clr-namespace:SiamCross.ViewModels.Dua.Survey"
+             x:Class="SiamCross.Views.Dua.StaticLevelPage"
+             x:DataType="survey:StaticLevelVM"
+             >
     <ContentPage.Resources>
         <Style TargetType="{x:Type StackLayout}">
             <Setter Property="Spacing" Value="0" />
@@ -23,10 +26,44 @@
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
         </StackLayout>
     </NavigationPage.TitleView>
-    
+    <ContentPage.ToolbarItems >
+        <ToolbarItem Text="&#x21BA; "
+                     Command="{Binding CmdUpdate}"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout>
-            <ScrollView VerticalOptions="StartAndExpand" BackgroundColor="WhiteSmoke">
+        <StackLayout  BackgroundColor="{StaticResource colorBackgroundLight}">
+            <Grid ColumnSpacing="0" RowSpacing="0" Margin="5" HeightRequest="60"  BackgroundColor="{StaticResource colorBackground}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height ="40" />
+                    <RowDefinition Height="20" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="40" />
+                </Grid.ColumnDefinitions>
+
+                <Label Text="{Binding Sensor.TaskManager.Info}"
+                       Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
+                <Button Text="&#x274C;" TextColor="Red" BackgroundColor="LightPink"
+                        Grid.Column="2" Grid.Row="0"
+                        Command="{Binding Sensor.TaskManager.CancelCmd}" 
+                        IsVisible="{Binding Sensor.TaskManager.IsBusy, Mode=OneWay}"
+                        IsEnabled="{Binding Sensor.TaskManager.IsBusy, Mode=OneWay}"/>
+                <Label 
+                    Grid.Column="0" Grid.Row="1" >
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding Sensor.TaskManager.ProgressInt}"/>
+                            <Span Text="%" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <ProgressBar Progress="{Binding Sensor.TaskManager.Progress}" 
+                             VerticalOptions="Center"
+                             Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"/>
+            </Grid>
+            <ScrollView VerticalOptions="StartAndExpand">
                 <StackLayout>
                     <Frame Style="{StaticResource GroupingFrameStyle}" >
                         <StackLayout >
@@ -34,15 +71,15 @@
                                Style="{StaticResource GroupingFrameTitleStyle}"/>
                             <Grid Padding="0,10,0,10">
                                 <Label Text="Разрешение срабатывания"/>
-                                <Switch />
+                                <Switch IsToggled="{Binding IsValveAutomaticEnabled}"/>
                             </Grid>
                             <Grid Padding="0,10,0,10">
                                 <Label Text="Длительность срабатывания 0,2/0,05"/>
-                                <Switch />
+                                <Switch IsToggled="{Binding IsValveDurationShort}"/>
                             </Grid>
                             <Grid Padding="0,10,0,10">
                                 <Label Text="Направление газа впуск/выпуск"/>
-                                <Switch />
+                                <Switch IsToggled="{Binding IsValveDirectionInput}"/>
                             </Grid>
                         </StackLayout>
                     </Frame>
@@ -52,11 +89,11 @@
                                Style="{StaticResource GroupingFrameTitleStyle}"/>
                             <Grid Padding="0,10,0,10">
                                 <Label Text="Максимальная глубина 3000м./6000м."/>
-                                <Switch />
+                                <Switch IsToggled="{Binding IsPiezoDepthMax}"/>
                             </Grid>
                             <Grid Padding="0,10,0,10">
                                 <Label Text="Дополнительное усиление"/>
-                                <Switch />
+                                <Switch IsToggled="{Binding IsPiezoAdditionalGain}"/>
                             </Grid>
 
                         </StackLayout>
@@ -68,21 +105,31 @@
 
                             <Grid RowSpacing="0">
                                 <RadioButton Content="Значение" FontSize="Default" TextColor="Gray"
+                                             IsChecked="{Binding IsSoundSpeedCustom}"
                                          Grid.Row="0" Grid.Column="0"/>
                                 <RadioButton Content="Таблица" FontSize="Default" TextColor="Gray"
-                                         Grid.Row="0" Grid.Column="1"/>
+                                             IsChecked="{Binding IsSoundSpeedTable}"
+                                             Grid.Row="0" Grid.Column="1"/>
 
-                                <Entry Text=""
+                                <Entry Text="{Binding SoundSpeedFixed}"
                                    Grid.Row="1" Grid.Column="0"/>
-                                <Picker 
+                                <Entry Text="{Binding SoundSpeedTableId}"
                                    Grid.Row="1" Grid.Column="1"/>
+                                <!--
+                                <Picker 
+                                   SelectedIndex="{Binding SoundSpeedTableId}"
+                                   Grid.Row="1" Grid.Column="1"/>
+                                -->
                             </Grid>
                         </StackLayout>
                     </Frame>
                 </StackLayout>
             </ScrollView>
-            <Button Text="сохранить" HorizontalOptions="FillAndExpand"
-                    BackgroundColor="{StaticResource colorSecondaryLight}" />
+            <Button Text="Запустить" HorizontalOptions="FillAndExpand"
+                    BackgroundColor="{StaticResource colorSecondaryLight}" 
+                    Command="{Binding CmdStart}"
+                    IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" 
+                />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

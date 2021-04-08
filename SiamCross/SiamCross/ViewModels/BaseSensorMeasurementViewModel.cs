@@ -41,7 +41,7 @@ namespace SiamCross.ViewModels
 
 
         public BaseSensorMeasurementViewModel(ISensor sensor, string name, string description)
-            : base(sensor, name, description)
+            : base(sensor, null,name, description)
         {
             _errorList = new List<string>();
             AddField = new Command(AddNewFieldAsync);

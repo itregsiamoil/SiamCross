@@ -18,10 +18,6 @@ namespace SiamCross.ViewModels.Dmg
         {
             Sensor = sensor;
             _StorageModel = Model as DmgStorage;
-
-            CmdUpdateStorageInfo = Model.CmdUpdateStorageInfo;
-            CmdDownload = Model.CmdDownload;
-            CmdClearStorage = Model.CmdClearStorage;
         }
     }
 }

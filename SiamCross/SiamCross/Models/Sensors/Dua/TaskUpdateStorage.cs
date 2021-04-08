@@ -52,11 +52,12 @@ namespace SiamCross.Models.Sensors.Dua
 
         public async Task<bool> Update()
         {
-            if (!await CheckConnectionAsync())
-                return false;
-
-            InfoEx = "чтение";
-            bool ret = await RetryExecAsync(3, SingleUpdate);
+            bool ret = false;
+            if (await CheckConnectionAsync())
+            {
+                InfoEx = "чтение";
+                ret = await RetryExecAsync(3, SingleUpdate);
+            }
 
             if (ret)
             {

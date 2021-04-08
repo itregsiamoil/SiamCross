@@ -27,6 +27,9 @@ namespace SiamCross.Models.Sensors
         public BaseStorageVM(IStorage model)
         {
             Model = model;
+            CmdUpdateStorageInfo = Model?.CmdUpdateStorageInfo;
+            CmdDownload = Model?.CmdDownload;
+            CmdClearStorage = Model?.CmdClearStorage;
         }
     }
 }

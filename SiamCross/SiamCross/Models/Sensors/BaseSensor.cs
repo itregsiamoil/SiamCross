@@ -53,7 +53,9 @@ namespace SiamCross.Models.Sensors
                 return new SensorDetailsVM(this);
             });
             TaskManager = new TaskManagerVM(_Model.Manager);
-        }
+
+            SurveysVM = new SurveysCollectionVM(this);
+    }
 
         public async void Dispose()
         {
@@ -126,7 +128,7 @@ namespace SiamCross.Models.Sensors
         public IViewModel FactoryConfigVM { get; set; }
         public IViewModel UserConfigVM { get; set; }
         public IViewModel StateVM { get; set; }
-        public IViewModel SurveysVM { get; set; }
+        public SurveysCollectionVM SurveysVM { get; }
 
 
         public TaskManagerVM TaskManager { get; set; }
@@ -135,7 +137,7 @@ namespace SiamCross.Models.Sensors
 
         public ICommand ShowSurveysViewCommand { get; set; }
 
-        public IReadOnlyList<SurveyVM> Surveys { get; set; }
+        //public IReadOnlyList<SurveyVM> Surveys { get; set; }
 
         public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
         public abstract Task<bool> QuickReport(CancellationToken cancellationToken);
