@@ -46,7 +46,6 @@ namespace SiamCross.ViewModels
             var ctx = _Sensor.StorageVM;
             var view = PageNavigator.Get(ctx);
             await App.NavigationPage.Navigation.PushAsync(view);
-            var mgr = Sensor.TaskManager.GetModel();
 
             if (ctx is BaseStorageVM dvm)
                 dvm.CmdUpdateStorageInfo.Execute(this);

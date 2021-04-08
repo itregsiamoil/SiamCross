@@ -13,7 +13,7 @@ namespace SiamCross.Services
     }
     public class DataDictionary
     {
-        ObservableCollection<DataDictionaryItem> _Values = new ObservableCollection<DataDictionaryItem>();
+        readonly ObservableCollection<DataDictionaryItem> _Values = new ObservableCollection<DataDictionaryItem>();
         public ObservableCollection<DataDictionaryItem> Values => _Values;
 
         private readonly IDbConnection _db;

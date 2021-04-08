@@ -103,7 +103,7 @@ namespace SiamCross.Services.RepositoryTables
             int affectedRows = await _db.ExecuteAsync(sql, item);
 
             var rec_id = await _db.QueryAsync<long?>("SELECT last_insert_rowid()");
-            if (rec_id.Count() == 0 || null == rec_id.First())
+            if (affectedRows < 1 || rec_id.Count() == 0 || null == rec_id.First())
                 throw new Exception("can`t get last_insert_rowid ");
 
             return rec_id.First().Value;

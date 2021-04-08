@@ -17,7 +17,7 @@ namespace SiamCross.Models.Sensors
 {
     public abstract class BaseSensor : BaseVM, ISensor
     {
-        SensorModel _Model = new SensorModel();
+        readonly SensorModel _Model = new SensorModel();
         public SensorModel Model => _Model;
         #region TmpVariables
         #endregion

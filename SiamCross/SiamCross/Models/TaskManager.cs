@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Threading;
+﻿using SiamCross.Models.Tools;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -11,17 +11,13 @@ namespace SiamCross.Models
         readonly bool IsBackground = Thread.CurrentThread.IsBackground;
         readonly int ThreadId = Thread.CurrentThread.ManagedThreadId;
         ITask CurrentTask = null;
-        readonly AsyncReaderWriterLock _Lock;
+        private readonly SemaphoreSlim _Lock = new SemaphoreSlim(1);
         readonly Progress<ITask> _Task = new Progress<ITask>();
         readonly Progress<string> _Info = new Progress<string>();
         readonly Progress<float> _Progress = new Progress<float>();
 
         public TaskManager()
         {
-            var taskContext = new JoinableTaskContext();
-            var taskCollection = new JoinableTaskCollection(taskContext);
-            JoinableTaskFactory taskFactory = taskContext.CreateFactory(taskCollection);
-            _Lock = new AsyncReaderWriterLock(taskContext);
         }
         public IProgress<ITask> Task => _Task;
         public IProgress<string> Info => _Info;
@@ -29,23 +25,18 @@ namespace SiamCross.Models
         public Progress<ITask> OnChangeTask => _Task;
         public Progress<string> OnChangeInfo => _Info;
         public Progress<float> OnChangeProgress => _Progress;
-        protected async Task Subscribe(ITask task)
+        protected void Subscribe(ITask task)
         {
-            using (await _Lock.WriteLockAsync())
-            {
-                CurrentTask = task;
-                Task.Report(task);
-            }
+            CurrentTask = task;
+            Task.Report(task);
         }
-        protected async Task Unsubscribe()
+
+        protected void Unsubscribe()
         {
-            using (await _Lock.WriteLockAsync())
-            {
-                if (null == CurrentTask)
-                    return;
-                Task.Report(null);
-                CurrentTask = null;
-            }
+            if (null == CurrentTask)
+                return;
+            Task.Report(null);
+            CurrentTask = null;
         }
         public async Task<bool> Execute(ITask task)
         {
@@ -54,14 +45,15 @@ namespace SiamCross.Models
                 return ret;
             try
             {
-                using (await _Lock.UpgradeableReadLockAsync())
+                using (await _Lock.UseWaitAsync())
                 {
                     if (null != CurrentTask)
                         return false;
-                    await Subscribe(task).ConfigureAwait(false);
+                    Subscribe(task);
                 }
                 ret = await task.ExecAsync(this).ConfigureAwait(false);
-                await Unsubscribe().ConfigureAwait(false);
+                using (await _Lock.UseWaitAsync())
+                    Unsubscribe();
             }
             catch (Exception ex)
             {
@@ -78,12 +70,12 @@ namespace SiamCross.Models
         }
         public async Task Cancel()
         {
-            using (await _Lock.ReadLockAsync())
+            using (await _Lock.UseWaitAsync())
                 await CurrentTask?.CancelAsync();
         }
         public async Task RefreshTask()
         {
-            using (await _Lock.ReadLockAsync())
+            using (await _Lock.UseWaitAsync())
                 Task.Report(CurrentTask);
         }
     }

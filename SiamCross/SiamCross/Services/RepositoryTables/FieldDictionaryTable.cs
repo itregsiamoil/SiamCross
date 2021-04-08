@@ -45,7 +45,7 @@ namespace SiamCross.Services.RepositoryTables
                 Id = id,
                 Title = title
             };
-            int affectedrow = 0;
+            int affectedrow;
             if (0 == id)
                 affectedrow = await tr.Connection.ExecuteAsync(insert_with_default_id, item);
             else

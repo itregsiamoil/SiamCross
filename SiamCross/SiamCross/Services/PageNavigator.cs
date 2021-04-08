@@ -16,8 +16,8 @@ namespace SiamCross.Services
 
     public static class PageNavigator
     {
-        static Dictionary<Type, Func<ContentPage>> _Factory = new Dictionary<Type, Func<ContentPage>>();
-        static Dictionary<Type, ContentPage> _Views = new Dictionary<Type, ContentPage>();
+        static readonly Dictionary<Type, Func<ContentPage>> _Factory = new Dictionary<Type, Func<ContentPage>>();
+        static readonly Dictionary<Type, ContentPage> _Views = new Dictionary<Type, ContentPage>();
 
         static PageNavigator()
         {
@@ -62,8 +62,7 @@ namespace SiamCross.Services
         }
         public static T Get<T>(Type type, object bindingContext) where T : ContentPage
         {
-            var view = Get(type) as T;
-            if (null == view)
+            if (!(Get(type) is T view))
                 return null;
 
             view.BindingContext = bindingContext;
@@ -83,7 +82,7 @@ namespace SiamCross.Services
         }
         public static AsyncCommand CreateAsyncCommand(Func<IViewModel> fnGetVM)
         {
-            Func<Task> exec = () =>
+            Task exec()
             {
                 var vm = fnGetVM();
                 if (null == vm)
@@ -92,13 +91,13 @@ namespace SiamCross.Services
                 if (null == page)
                     return Task.CompletedTask;
                 return App.NavigationPage.Navigation.PushAsync(page);
-            };
+            }
             return new AsyncCommand(exec
                 , (Func<object, bool>)null, null, false, false);
         }
         public static AsyncCommand CreateAsyncCommand(IViewModel vm)
         {
-            Func<Task> exec = () =>
+            Task exec()
             {
                 try
                 {
@@ -119,7 +118,7 @@ namespace SiamCross.Services
 
                 }
                 return Task.CompletedTask;
-            };
+            }
             return new AsyncCommand(exec
                 , (Func<object, bool>)null, null, false, false);
         }

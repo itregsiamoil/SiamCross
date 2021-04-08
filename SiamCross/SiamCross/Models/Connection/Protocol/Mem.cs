@@ -178,7 +178,7 @@ namespace SiamCross.Models.Connection.Protocol
     public class MemVarUInt32 : MemVar
     {
         public MemVarUInt32(string name = null, UInt32 addr = 0, MemValueUInt32 data = null)
-            : base((null == data) ? new MemValueUInt32() : data, name, addr)
+            : base(data ?? new MemValueUInt32(), name, addr)
         { }
         public UInt32 Value
         {
@@ -198,7 +198,7 @@ namespace SiamCross.Models.Connection.Protocol
     public class MemVarUInt16 : MemVar
     {
         public MemVarUInt16(string name = null, UInt32 addr = 0, MemValueUInt16 data = null)
-            : base((null == data) ? new MemValueUInt16() : data, name, addr)
+            : base(data ?? new MemValueUInt16(), name, addr)
         { }
         public UInt16 Value
         {
@@ -218,7 +218,7 @@ namespace SiamCross.Models.Connection.Protocol
     public class MemVarInt16 : MemVar
     {
         public MemVarInt16(string name = null, UInt32 addr = 0, MemValueInt16 data = null)
-            : base((null == data) ? new MemValueInt16() : data, name, addr)
+            : base(data ?? new MemValueInt16(), name, addr)
         { }
         public Int16 Value
         {
@@ -238,7 +238,7 @@ namespace SiamCross.Models.Connection.Protocol
     public class MemVarFloat : MemVar
     {
         public MemVarFloat(string name = null, UInt32 addr = 0, MemValueFloat data = null)
-            : base((null == data) ? new MemValueFloat() : data, name, addr)
+            : base(data ?? new MemValueFloat(), name, addr)
         { }
         public float Value
         {
@@ -258,7 +258,7 @@ namespace SiamCross.Models.Connection.Protocol
     public class MemVarByteArray : MemVar
     {
         public MemVarByteArray(string name = null, UInt32 addr = 0, MemValueByteArray data = null)
-            : base((null == data) ? new MemValueByteArray(0) : data, name, addr)
+            : base(data ?? new MemValueByteArray(0), name, addr)
         { }
         public byte[] Value
         {
@@ -278,7 +278,7 @@ namespace SiamCross.Models.Connection.Protocol
     public class MemVarUInt8 : MemVar
     {
         public MemVarUInt8(string name = null, UInt32 addr = 0, MemValueUInt8 data = null)
-            : base((null == data) ? new MemValueUInt8() : data, name, addr)
+            : base(data ?? new MemValueUInt8(), name, addr)
         { }
         public byte Value
         {
@@ -347,7 +347,7 @@ namespace SiamCross.Models.Connection.Protocol
                 _Size += mv.Size;
                 return item;
             }
-            return default(T);
+            return default;
         }
 
         public void Reset(UInt32 address)

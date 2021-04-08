@@ -8,7 +8,7 @@ namespace SiamCross.Models.Tools
     {
         public static async Task<IDisposable> UseWaitAsync(
             this SemaphoreSlim semaphore,
-            CancellationToken cancelToken = default(CancellationToken))
+            CancellationToken cancelToken = default)
         {
             await semaphore.WaitAsync(cancelToken).ConfigureAwait(false);
             return new ReleaseWrapper(semaphore);

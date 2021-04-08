@@ -47,8 +47,10 @@ namespace SiamCross.Services.Email
             m.To.Add(receiver);
             m.Subject = subject;
 
-            BodyBuilder builder = new BodyBuilder();
-            builder.TextBody = text;
+            BodyBuilder builder = new BodyBuilder
+            {
+                TextBody = text
+            };
 
             foreach (string path in filenames)
             {

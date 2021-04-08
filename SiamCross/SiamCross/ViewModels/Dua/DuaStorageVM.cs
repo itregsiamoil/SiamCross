@@ -43,14 +43,14 @@ namespace SiamCross.ViewModels.Dua
             Sensor = sensor;
             _StorageModel = Model as DuaStorage;
 
-            _StorageModel.PropertyChanged += _StorageModel_PropertyChanged;
+            _StorageModel.PropertyChanged += StorageModel_PropertyChanged;
 
             CmdUpdateStorageInfo = Model.CmdUpdateStorageInfo;
             CmdDownload = Model.CmdDownload;
             CmdClearStorage = Model.CmdClearStorage;
         }
 
-        private void _StorageModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void StorageModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (sender != Model)
                 return;

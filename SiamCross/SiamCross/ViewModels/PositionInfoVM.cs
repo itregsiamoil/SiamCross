@@ -93,7 +93,7 @@ namespace SiamCross.ViewModels
         public ICommand EditCommand { get; set; }
         public ICommand AddFieldCommand { get; set; }
 
-        ObservableCollection<FieldItem> _Fields = new ObservableCollection<FieldItem>();
+        readonly ObservableCollection<FieldItem> _Fields = new ObservableCollection<FieldItem>();
         public ObservableCollection<FieldItem> Fields => _Fields;
         private void FieldList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {

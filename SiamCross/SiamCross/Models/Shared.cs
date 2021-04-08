@@ -114,13 +114,15 @@ namespace SiamCross.Models
 
         public object Clone()
         {
-            var ret = new DeviceInfo();
-            ret.Kind = Kind;
-            ret.Number = Number;
-            ret.ProtocolId = ProtocolId;
-            ret.PhyId = PhyId;
-            ret.PhyDataArray = PhyDataArray;
-            ret.ProtocolDataArray = ProtocolDataArray;
+            var ret = new DeviceInfo
+            {
+                Kind = Kind,
+                Number = Number,
+                ProtocolId = ProtocolId,
+                PhyId = PhyId,
+                PhyDataArray = PhyDataArray,
+                ProtocolDataArray = ProtocolDataArray
+            };
             return ret;
         }
     }
@@ -140,8 +142,8 @@ namespace SiamCross.Models
         public uint Bush;
         public uint Shop;
         public GeoLocation Location;
-        public PositionInfo(int id = 0
-            , uint field = 0, uint well = 0
+        public PositionInfo(
+              uint field = 0, uint well = 0
             , uint bush = 0, uint shop = 0)
         {
             Field = field;
@@ -219,8 +221,8 @@ namespace SiamCross.Models
             Device = dev;
             Info = info;
             Measure = measure;
-            MailDistribution = (null == mail) ? new DistributionInfo() : mail;
-            FileDistribution = (null == file) ? new DistributionInfo() : mail;
+            MailDistribution = mail ?? new DistributionInfo();
+            FileDistribution = file ?? new DistributionInfo();
         }
     }
 }
