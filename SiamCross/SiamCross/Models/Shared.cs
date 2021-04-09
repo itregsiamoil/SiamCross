@@ -138,13 +138,13 @@ namespace SiamCross.Models
     public class PositionInfo
     {
         public uint Field;
-        public uint Well;
-        public uint Bush;
+        public string Well;
+        public string Bush;
         public uint Shop;
         public GeoLocation Location;
         public PositionInfo(
-              uint field = 0, uint well = 0
-            , uint bush = 0, uint shop = 0)
+              uint field = 0, string well = default
+            , string bush = default, uint shop = 0)
         {
             Field = field;
             Well = well;

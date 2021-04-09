@@ -162,26 +162,19 @@ namespace SiamCross.ViewModels
 
         public string Well
         {
-            get => _Model.Well.ToString();
+            get => _Model.Well;
             set
             {
-                if (uint.TryParse(value, out uint val))
-                {
-                    _Model.Well = val;
-                    ChangeNotify();
-                }
+                 _Model.Well = value;
+                 ChangeNotify();
             }
         }
         public string Bush
         {
-            get => _Model.Bush.ToString();
+            get => _Model.Bush;
             set
             {
-                if (uint.TryParse(value, out uint val))
-                {
-                    _Model.Bush = val;
-                    ChangeNotify();
-                }
+                 _Model.Bush = value;
             }
         }
         public string Shop

@@ -31,8 +31,8 @@ namespace SiamCross.Services.RepositoryTables
         public long Id { get => MeasureData.Id; set => MeasureData.Id = value; }
 
         public uint Field { get => MeasureData.Position.Field; set => MeasureData.Position.Field = value; }
-        public uint Well { get => MeasureData.Position.Well; set => MeasureData.Position.Well = value; }
-        public uint Bush { get => MeasureData.Position.Bush; set => MeasureData.Position.Bush = value; }
+        public string Well { get => MeasureData.Position.Well; set => MeasureData.Position.Well = value; }
+        public string Bush { get => MeasureData.Position.Bush; set => MeasureData.Position.Bush = value; }
         public uint Shop { get => MeasureData.Position.Shop; set => MeasureData.Position.Shop = value; }
 
         public uint DeviceKind { get => MeasureData.Device.Kind; set => MeasureData.Device.Kind = value; }

@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dua
 {
-    public class TaskUpdateStorage : BaseSensorTask
+    public class TaskStorageUpdate : BaseSensorTask
     {
         readonly DuaStorage _Storage;
         readonly MemVarUInt16 Uksh = new MemVarUInt16();
         readonly MemVarUInt16 Ukex = new MemVarUInt16();
         readonly MemStruct Aviable = new MemStruct(0x8418);
 
-        public TaskUpdateStorage(DuaStorage model, ISensor sensor)
+        public TaskStorageUpdate(DuaStorage model, ISensor sensor)
             : base(sensor, "Опрос хранилища")
         {
             if (model is DuaStorage storage)
