@@ -25,7 +25,7 @@
                 ItemsSource="{Binding SurveysCollection}" 
                 SelectionMode="None">
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="dm:SurveyVM" >
+                <DataTemplate x:DataType="dm:BaseSurveyVM" >
                     <StackLayout>
                         <Frame Style="{StaticResource MenuItemStyle}">
                             <Frame.GestureRecognizers>

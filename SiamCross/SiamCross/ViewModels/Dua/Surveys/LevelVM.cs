@@ -5,9 +5,9 @@ using System;
 
 namespace SiamCross.ViewModels.Dua.Survey
 {
-    public class StaticLevelVM : SurveyVM
+    public class LevelVM : BaseSurveyVM
     {
-        private readonly StaticLevel _Model;
+        private readonly Level _Model;
 
         public bool IsValveAutomaticEnabled
         {
@@ -68,17 +68,11 @@ namespace SiamCross.ViewModels.Dua.Survey
             }
         }
 
-        public StaticLevelVM(ISensor sensor, StaticLevel model)
-            : base(sensor, model, "Статический уровень", "long long description")
+        public LevelVM(ISensor sensor, Level model)
+            : base(sensor, model)
         {
             _Model = model;
-            _Model.PropertyChanged += StorageModel_PropertyChanged;
         }
-        private void StorageModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (sender != Model)
-                return;
-            ChangeNotify(e.PropertyName);
-        }
+
     }
 }

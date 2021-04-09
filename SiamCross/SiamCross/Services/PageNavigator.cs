@@ -25,21 +25,21 @@ namespace SiamCross.Services
         }
         public static Task Init()
         {
-            PageNavigator.Register(typeof(PositionInfoVM), () => new PositionEditPage());
-            PageNavigator.Register(typeof(SensorDetailsVM), () => new SensorDetailsPage());
+            Register(typeof(PositionInfoVM), () => new PositionEditPage());
+            Register(typeof(SensorDetailsVM), () => new SensorDetailsPage());
 
-            PageNavigator.Register(typeof(DmgStorageVM), () => new DmgDownloadPage());
-            PageNavigator.Register(typeof(ViewModels.Dmg.Survey.DynamogrammVM)
+            Register(typeof(DmgStorageVM), () => new DmgDownloadPage());
+            Register(typeof(ViewModels.Dmg.Survey.DynamogrammVM)
                 , () => new DynamogrammPage());
 
-            PageNavigator.Register(typeof(DuaStorageVM), () => new DuaDownloadPage());
-            PageNavigator.Register(typeof(FactoryConfigVM), () => new FactoryConfigPage());
-            PageNavigator.Register(typeof(UserConfigVM), () => new UserConfigPage());
+            Register(typeof(DuaStorageVM), () => new DuaDownloadPage());
+            Register(typeof(FactoryConfigVM), () => new FactoryConfigPage());
+            Register(typeof(UserConfigVM), () => new UserConfigPage());
             //ViewFactoryService.Register(typeof(StateVM), () => new StatePage());
-            PageNavigator.Register(typeof(SurveysCollectionVM), () => new SurveysCollectionPage());
+            Register(typeof(SurveysCollectionVM), () => new SurveysCollectionPage());
 
-            PageNavigator.Register(typeof(ViewModels.Dua.Survey.StaticLevelVM)
-                , () => new StaticLevelPage());
+            Register(typeof(ViewModels.Dua.Survey.LevelVM)
+                , () => new LevelPage());
             return Task.CompletedTask;
         }
         public static void Register(Type type, ContentPage view)

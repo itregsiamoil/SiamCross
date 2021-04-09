@@ -42,10 +42,7 @@ namespace SiamCross.Models.Sensors.Dua
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("EXCEPTION in "
-                    + System.Reflection.MethodBase.GetCurrentMethod().Name
-                    + "\n type=" + ex.GetType() + ": msg=" + ex.Message
-                    + "\n stack=" + ex.StackTrace + "\n");
+                LogException(ex);
             }
             return RespResult.NormalPkg == ret;
         }

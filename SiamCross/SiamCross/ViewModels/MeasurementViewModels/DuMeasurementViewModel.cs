@@ -106,7 +106,7 @@ namespace SiamCross.ViewModels
         }
 
         public DuMeasurementViewModel(ISensor sensor)
-            : base(sensor, string.Empty, string.Empty)
+            : base(sensor, null)
         {
             try
             {

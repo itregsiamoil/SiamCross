@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-             xmlns:vm="clr-namespace:SiamCross.ViewModels.Dua"
+             xmlns:vm="clr-namespace:SiamCross.ViewModels.Dua" xmlns:views="clr-namespace:SiamCross.Views"
              x:DataType="vm:DuaStorageVM"
              x:Class="SiamCross.Views.Dua.DuaDownloadPage">
     <ContentPage.Resources>
@@ -26,37 +26,7 @@
 
     <ContentPage.Content>
         <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
-            <Grid ColumnSpacing="0" RowSpacing="0" Margin="5" HeightRequest="60" >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height ="40" />
-                    <RowDefinition Height="20" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="40" />
-                </Grid.ColumnDefinitions>
-
-                <Label Text="{Binding Sensor.TaskManager.Info}"
-                       Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
-                <Button Text="&#x274C;" TextColor="Red" BackgroundColor="LightPink"
-                        Grid.Column="2" Grid.Row="0"
-                        Command="{Binding Sensor.TaskManager.CancelCmd}" 
-                        IsVisible="{Binding Sensor.TaskManager.IsBusy, Mode=OneWay}"
-                        IsEnabled="{Binding Sensor.TaskManager.IsBusy, Mode=OneWay}"/>
-                <Label 
-                    Grid.Column="0" Grid.Row="1" >
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="{Binding Sensor.TaskManager.ProgressInt}"/>
-                            <Span Text="%" />
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
-                <ProgressBar Progress="{Binding Sensor.TaskManager.Progress}" 
-                             VerticalOptions="Center"
-                             Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"/>
-            </Grid>
+            <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}" />
             <ScrollView VerticalOptions="StartAndExpand">
                 <StackLayout>
                     <StackLayout.Triggers>
@@ -66,14 +36,12 @@
                     </StackLayout.Triggers>
 
 
-
+                    <Label Text="Измерения без эхограмм" Style="{StaticResource SectionLabel}" />
                     <Frame Style="{StaticResource GroupingFrameStyle}" >
                         <StackLayout>
-                            <Label Style="{StaticResource GroupingFrameTitleStyle}">
+                            <Label >
                                 <Label.FormattedText>
                                     <FormattedString >
-                                        <Span Text="Измерения без эхограмм" />
-                                        <Span Text="&#10;" />
                                         <Span Text="{Binding AviableRep}"  />
                                         <Span Text=" из 3008"  />
                                     </FormattedString>
@@ -105,13 +73,13 @@
                             </Grid>
                         </StackLayout>
                     </Frame>
+
+                    <Label Text="Измерения с эхограммами" Style="{StaticResource SectionLabel}" />
                     <Frame Style="{StaticResource GroupingFrameStyle}" >
                         <StackLayout>
-                            <Label Style="{StaticResource GroupingFrameTitleStyle}">
+                            <Label>
                                 <Label.FormattedText>
                                     <FormattedString >
-                                        <Span Text="Измерения с эхограммами" />
-                                        <Span Text="&#10;" />
                                         <Span Text="{Binding AviableEcho}"  />
                                         <Span Text=" из 310"  />
                                     </FormattedString>
@@ -134,6 +102,7 @@
 
                             </Grid>
 
+
                         </StackLayout>
                     </Frame>
                 </StackLayout>
@@ -141,7 +110,7 @@
 
             <StackLayout Orientation="Vertical" >
                 <Button Text="Считать" HorizontalOptions="FillAndExpand" 
-                        BackgroundColor="{StaticResource colorSecondaryLight}"
+                        BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdDownload}"
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >
                 </Button>

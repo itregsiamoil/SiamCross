@@ -11,9 +11,9 @@ namespace SiamCross.Models
         public ISensor Sensor;
         public IProtocolConnection Connection;
 
-        uint ProgressTime;
-        static readonly uint RefreshPeriod = 500;
-        uint TimerRetry => ProgressTime / RefreshPeriod;
+        int ProgressTime;
+        static readonly int RefreshPeriod = 500;
+        int TimerRetry => ProgressTime / RefreshPeriod;
 
         public BaseSensorTask(ISensor sensor, string name)
         {
@@ -22,7 +22,7 @@ namespace SiamCross.Models
             Name = name;
         }
 
-        protected Timer CreateProgressTimer(uint ms)
+        protected Timer CreateProgressTimer(int ms)
         {
             ProgressTime = ms;
             return new Timer(new TimerCallback(OnTimer), null, 0, RefreshPeriod);
@@ -48,12 +48,10 @@ namespace SiamCross.Models
         public async Task<bool> CheckConnectionAsync()
         {
             InfoEx = Resource.StatConn_PendingConnect;
-            if (!await Sensor.DoActivate(_Cts.Token))
-            {
-                InfoEx = "не удалось подключиться к прибору";
-                return false;
-            }
-            return true;
+            if (await Sensor.DoActivate(_Cts.Token))
+                return true;
+            InfoEx = "не удалось подключиться к прибору";
+            return false;
         }
     }
 }

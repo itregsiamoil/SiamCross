@@ -78,9 +78,7 @@ namespace SiamCross.Models
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("EXCEPTION "
-                    + ex.Message + " " + ex.GetType() + "\n"
-                    + ex.StackTrace + "\n");
+                LogException(ex);
                 ret = false;
             }
             finally
@@ -99,8 +97,25 @@ namespace SiamCross.Models
         }
         public async Task CancelAsync()
         {
-            await DoBeforeCancelAsync();
-            _Cts?.Cancel();
+            try
+            {
+                await DoBeforeCancelAsync();
+            }
+            catch (Exception ex)
+            {
+                LogException(ex);
+            }
+            finally
+            {
+                _Cts?.Cancel();
+            }
+        }
+        static public void LogException(Exception ex)
+        {
+            Debug.WriteLine("EXCEPTION: "
+                + "\n TYPE=" + ex.GetType() 
+                + "\n MESSAGE=" + ex.Message
+                + "\n STACK=" + ex.StackTrace + "\n");
         }
 
     }

@@ -50,8 +50,8 @@
             <Color x:Key="colorCtrlBg">#F0F0F0</Color>
 
             <Style x:Key="GroupingFrameStyle" TargetType="{x:Type Frame}">
-                <Setter Property="Margin" Value="5" />
-                <Setter Property="Padding" Value="5" />
+                <Setter Property="Margin" Value="4" />
+                <Setter Property="Padding" Value="4" />
                 <Setter Property="CornerRadius" Value="4" />
                 <Setter Property="HasShadow" Value="True" />
                 <Setter Property="BackgroundColor" Value="{StaticResource colorBackgroundPale}" />
@@ -64,7 +64,14 @@
                 <Setter Property="TextColor" Value="{StaticResource colorTextLight}" />
                 <Setter Property="BackgroundColor" Value="{StaticResource colorPrimaryDark}"  />
             </Style>
-            
+
+            <Style x:Key="SectionLabel" TargetType="{x:Type Label}">
+                <Setter Property="Padding" Value="10,0,10,-5" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="FontSize" Value="Medium" />
+                <Setter Property="TextColor" Value="{StaticResource colorText}" />
+            </Style>
+
             <Style x:Key="MenuItemStyle" TargetType="{x:Type Frame}">
                 <Setter Property="Margin" Value="5" />
                 <Setter Property="Padding" Value="5" />

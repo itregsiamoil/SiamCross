@@ -17,7 +17,7 @@ using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
-    public abstract class BaseSensorMeasurementViewModel<T> : SurveyVM
+    public abstract class BaseSensorMeasurementViewModel<T> : BaseSurveyVM
         where T : class
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
@@ -40,8 +40,8 @@ namespace SiamCross.ViewModels
         public ICommand AddField { get; set; }
 
 
-        public BaseSensorMeasurementViewModel(ISensor sensor, string name, string description)
-            : base(sensor, null,name, description)
+        public BaseSensorMeasurementViewModel(ISensor sensor, BaseSurvey model)
+            : base(sensor, model)
         {
             _errorList = new List<string>();
             AddField = new Command(AddNewFieldAsync);

@@ -67,6 +67,8 @@ namespace SiamCross.Models.Sensors.Dua
         public DuaSensor(IProtocolConnection conn, ScannedDeviceInfo dev_info)
             : base(conn, dev_info)
         {
+            Connection.AdditioonalTimeout = 2000;
+
             _SurvayParam = new MemStruct(0x8000);
             Chdav = _SurvayParam.Add(new MemVarUInt16(nameof(Chdav)));
             Chpiezo = _SurvayParam.Add(new MemVarUInt16(nameof(Chpiezo)));
@@ -88,19 +90,22 @@ namespace SiamCross.Models.Sensors.Dua
             Urov = _Report.Add(new MemVarUInt16(nameof(Urov)));
             Otr = _Report.Add(new MemVarUInt16(nameof(Otr)));
 
-            var staticLevelModel = new StaticLevel(this);
-            Model.Surveys.Add(staticLevelModel);
+            var levelModel = new Level(this, 1
+                , "Статический уровень"
+                ,"long long description");
+            Model.Surveys.Add(levelModel);
+            var levelVM = new LevelVM(this, levelModel);
+            SurveysVM.SurveysCollection.Add(levelVM);
 
-            var staticLevelVM = new StaticLevelVM(this, staticLevelModel);
-            SurveysVM.SurveysCollection.Add(staticLevelVM);
+            var dynamicModel = new Level(this, 2
+                ,"Динамический уровень"
+                ,"long long description");
+            Model.Surveys.Add(dynamicModel);
 
-            var dynamicLevelModel = (ISurvey)null;
-            //Model.Surveys.Add(dynamicLevelModel);
-
-            var dynamicLevelVM = new SurveyVM(this, dynamicLevelModel
-                , "Динамический уровень"
-                , "long long description");
+            var dynamicLevelVM = new LevelVM(this, dynamicModel);
             SurveysVM.SurveysCollection.Add(dynamicLevelVM);
+
+
 
             /*
             Model.Surveys.Add(new SurveyVM(this, null

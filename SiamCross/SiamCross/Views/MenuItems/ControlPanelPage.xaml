@@ -56,15 +56,13 @@
                                        HasShadow="True"  >
                                     <SwipeView x:Name="swipeView2" >
                                         <SwipeView.RightItems>
-                                            <SwipeItems>
-                                                <SwipeItem Text="{local:Translate Delete}"
-                                                        IconImageSource="trashcan.png"
-                                                        BackgroundColor="LightPink"
-                                                        Command="{Binding Path=BindingContext.DeleteSensorCommand, 
-                                                            Source={x:Reference ControlPanel}}"
-                                                        CommandParameter="{Binding Id}" >
-                                                </SwipeItem>
-                                            </SwipeItems>
+                                            <SwipeItem Text="{local:Translate Delete}"
+                                                    IconImageSource="trashcan.png"
+                                                    BackgroundColor="LightPink"
+                                                    Command="{Binding Path=BindingContext.DeleteSensorCommand, 
+                                                        Source={x:Reference ControlPanel}}"
+                                                    CommandParameter="{Binding Id}" >
+                                            </SwipeItem>
                                         </SwipeView.RightItems>
                                         <SwipeView.Triggers>
                                             <DataTrigger TargetType="SwipeView" Binding="{Binding IsMeasurement}" Value="true" >

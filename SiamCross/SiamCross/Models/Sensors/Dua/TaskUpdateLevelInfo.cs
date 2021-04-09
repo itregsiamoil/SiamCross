@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dua
 {
-    public class TaskUpdateStaticLevelInfo : BaseSensorTask
+    public class TaskUpdateLevelInfo : BaseSensorTask
     {
-        readonly StaticLevel _Model;
+        readonly Level _Model;
 
         public readonly MemStruct SurvayParam = new MemStruct(0x8000);
         public readonly MemVarUInt16 Chdav = new MemVarUInt16();
@@ -27,7 +27,7 @@ namespace SiamCross.Models.Sensors.Dua
         public readonly MemVarUInt16 Vzvuk = new MemVarUInt16();
         public readonly MemVarUInt16 Ntpop = new MemVarUInt16();
 
-        public TaskUpdateStaticLevelInfo(StaticLevel model, ISensor sensor)
+        public TaskUpdateLevelInfo(Level model, ISensor sensor)
             : base(sensor, "Опрос параметров измерения")
         {
             _Model = model;
@@ -66,10 +66,7 @@ namespace SiamCross.Models.Sensors.Dua
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("EXCEPTION in "
-                    + System.Reflection.MethodBase.GetCurrentMethod().Name
-                    + "\n type=" + ex.GetType() + ": msg=" + ex.Message
-                    + "\n stack=" + ex.StackTrace + "\n");
+                LogException(ex);
             }
             return RespResult.NormalPkg == ret;
         }
@@ -103,7 +100,7 @@ namespace SiamCross.Models.Sensors.Dua
                 _Model.IsValveDirectionInput = default;
                 _Model.IsPiezoDepthMax = default;
                 _Model.IsPiezoAdditionalGain = default;
-                _Model.SoundSpeedFixed = StaticLevel.DefaultSoundSpeedFixed;
+                _Model.SoundSpeedFixed = Level.DefaultSoundSpeedFixed;
                 _Model.SoundSpeedTableId = default;
             }
 

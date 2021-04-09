@@ -70,8 +70,8 @@
     <Compile Update="Views\Dua\FactoryConfigPage.xaml.cs">
       <DependentUpon>FactoryConfigPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\Dua\Surveys\StaticLevelPage.xaml.cs">
-      <DependentUpon>StaticLevelPage.xaml</DependentUpon>
+    <Compile Update="Views\Dua\Surveys\LevelPage.xaml.cs">
+      <DependentUpon>LevelPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\Dua\UserConfigPage.xaml.cs">
       <DependentUpon>UserConfigPage.xaml</DependentUpon>
@@ -117,7 +117,7 @@
     <EmbeddedResource Update="Views\Dua\UserConfigPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Dua\Surveys\StaticLevelPage.xaml">
+    <EmbeddedResource Update="Views\Dua\Surveys\LevelPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\SurveysCollectionPage.xaml">
@@ -188,6 +188,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\ScannerPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\TaskManagerView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

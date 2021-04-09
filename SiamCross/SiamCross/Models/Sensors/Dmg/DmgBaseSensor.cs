@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
+using SiamCross.Models.Sensors.Dmg.Surveys;
 using SiamCross.ViewModels;
 using SiamCross.ViewModels.Dmg;
 using SiamCross.ViewModels.Dmg.Survey;
@@ -93,11 +94,15 @@ namespace SiamCross.Models.Sensors.Dmg
             WeightDiscr = _Report.Add(new MemVarUInt16(nameof(WeightDiscr)));
             TimeDiscr = _Report.Add(new MemVarUInt16(nameof(TimeDiscr)));
 
-            //var dynamogramm = (ISurvey)null;
-            //Model.Surveys.Add(staticLevelModel);
+            var dmgModel = new Dynamogramm(this)
+            {
+                 Name = "Динамограмма"
+                ,Description = "long long description"
+            };
+            Model.Surveys.Add(dmgModel);
 
-            var dynamogrammVM = new DynamogrammVM(this);
-            SurveysVM.SurveysCollection.Add(dynamogrammVM);
+            var dmgVM = new DynamogrammVM(this, dmgModel);
+            SurveysVM.SurveysCollection.Add(dmgVM);
 
             /*
             var sur2 = new SurveyVM(this
