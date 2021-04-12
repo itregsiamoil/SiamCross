@@ -248,10 +248,10 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             for (int i = 0; i < retry && NeedRetry(ret); ++i)
             {
                 DebugLog.WriteLine("START transaction, try " + i.ToString());
-                if (PhyConnection.State != ConnectionState.Connected)
+                //if (PhyConnection.State != ConnectionState.Connected)
                 {
                     //ret = RespResult.ErrorConnection;
-                    await base.Connect();
+                    //await base.Connect();
                 }
                 ret = await SingleExchangeAsync();
                 DebugLog.WriteLine("END transaction, try " + i.ToString());

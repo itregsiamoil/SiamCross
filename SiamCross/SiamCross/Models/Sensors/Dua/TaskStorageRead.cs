@@ -48,7 +48,6 @@ namespace SiamCross.Models.Sensors.Dua
 
         readonly MemVarByteArray Echo;
 
-
         public TaskStorageRead(DuaStorage model, ISensor sensor)
             : base(sensor, "Опрос хранилища")
         {
@@ -90,7 +89,6 @@ namespace SiamCross.Models.Sensors.Dua
 
             Echo = new MemVarByteArray(null, 0, new MemValueByteArray(_EchoSize));
         }
-
 
         uint _BytesTotal;
         uint _BytesReaded;

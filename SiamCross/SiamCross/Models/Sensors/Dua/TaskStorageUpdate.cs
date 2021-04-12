@@ -35,9 +35,7 @@ namespace SiamCross.Models.Sensors.Dua
             try
             {
                 var tmp = Connection.AdditioonalTimeout;
-                Connection.AdditioonalTimeout = 2000;
                 ret = await Connection.ReadAsync(Aviable, null, _Cts.Token);
-                Connection.AdditioonalTimeout = tmp;
             }
             catch (Exception ex)
             {

@@ -2,18 +2,15 @@
 using SiamCross.Models.Sensors.Dua.Surveys;
 using System;
 using System.Threading.Tasks;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Sensors.Dua
 {
-    public class TaskUpdateLevelInfo : BaseSensorTask
+    public class TaskLoadSurveyInfo : BaseSensorTask
     {
         readonly Level _Model;
 
-        public readonly MemStruct SurvayParam = new MemStruct(0x8000);
-        public readonly MemVarUInt16 Chdav = new MemVarUInt16();
-        public readonly MemVarUInt16 Chpiezo = new MemVarUInt16();
-        public readonly MemVarUInt16 Noldav = new MemVarUInt16();
-        public readonly MemVarUInt16 Nolexo = new MemVarUInt16();
+        public readonly MemStruct SurvayParam = new MemStruct(0x8008);
         public readonly MemVarUInt16 Revbit = new MemVarUInt16();
         public readonly MemVarUInt8 Vissl = new MemVarUInt8();
         public readonly MemVarByteArray Kust = new MemVarByteArray(null, 0, new MemValueByteArray(5));
@@ -23,15 +20,15 @@ namespace SiamCross.Models.Sensors.Dua
         public readonly MemVarUInt16 Operator = new MemVarUInt16();
         public readonly MemVarUInt16 Vzvuk = new MemVarUInt16();
         public readonly MemVarUInt16 Ntpop = new MemVarUInt16();
+        public readonly MemVarUInt8 PerP = new MemVarUInt8();
+        public readonly MemVarUInt8 KolP = new MemVarUInt8();
+        public readonly MemVarByteArray PerU = new MemVarByteArray(null, 0, new MemValueByteArray(5));
+        public readonly MemVarByteArray KolUr = new MemVarByteArray(null, 0, new MemValueByteArray(5));
 
-        public TaskUpdateLevelInfo(Level model, ISensor sensor)
+        public TaskLoadSurveyInfo(Level model, ISensor sensor)
             : base(sensor, "Опрос параметров измерения")
         {
             _Model = model;
-            SurvayParam.Add(Chdav);
-            SurvayParam.Add(Chpiezo);
-            SurvayParam.Add(Noldav);
-            SurvayParam.Add(Nolexo);
             SurvayParam.Add(Revbit);
             SurvayParam.Add(Vissl);
             SurvayParam.Add(Kust);
@@ -41,6 +38,10 @@ namespace SiamCross.Models.Sensors.Dua
             SurvayParam.Add(Operator);
             SurvayParam.Add(Vzvuk);
             SurvayParam.Add(Ntpop);
+            SurvayParam.Add(PerP);
+            SurvayParam.Add(KolP);
+            SurvayParam.Add(PerU);
+            SurvayParam.Add(KolUr);
         }
 
         public override async Task<bool> DoExecute()
@@ -53,44 +54,50 @@ namespace SiamCross.Models.Sensors.Dua
 
         async Task<bool> SingleUpdate()
         {
-            RespResult ret = RespResult.ErrorUnknown;
-            try
-            {
-                var tmp = Connection.AdditioonalTimeout;
-                Connection.AdditioonalTimeout = 2000;
-                ret = await Connection.ReadAsync(SurvayParam, null, _Cts.Token);
-                Connection.AdditioonalTimeout = tmp;
-            }
-            catch (Exception ex)
-            {
-                LogException(ex);
-            }
+            RespResult ret = await Connection.TryReadAsync(SurvayParam, null, _Cts.Token);
             return RespResult.NormalPkg == ret;
         }
 
         public async Task<bool> Update()
         {
             bool ret = false;
-            if (await CheckConnectionAsync())
+            //if(_Model.Synched)
+            //    ret = true;
+            //else
             {
-                InfoEx = "чтение";
-                ret = await RetryExecAsync(3, SingleUpdate);
+                if (await CheckConnectionAsync())
+                {
+                    InfoEx = "чтение";
+                    ret = await RetryExecAsync(3, SingleUpdate);
+                }
             }
+
+            _Model.Synched = ret;
 
             if (ret)
             {
                 //await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                _Model.IsValveAutomaticEnabled = 0 < (Revbit.Value & 1 << 1);
-                _Model.IsValveDurationShort = 0 < (Revbit.Value & 1 << 2);
-                _Model.IsValveDirectionInput = 0 < (Revbit.Value & 1 << 0);
-                _Model.IsPiezoDepthMax = 0 < (Revbit.Value & 1 << 6);
-                _Model.IsPiezoAdditionalGain = 0 < (Revbit.Value & 1 << 9);
+                _Model.IsAutoswitchToAPR = 0 < (Revbit.Value & (1 << 5));
+                _Model.IsValveAutomaticEnabled = 0 < (Revbit.Value & (1 << 1));
+                _Model.IsValveDurationShort = 0 < (Revbit.Value & (1 << 2));
+                _Model.IsValveDirectionInput = 0 < (Revbit.Value & (1 << 0));
+                _Model.IsPiezoDepthMax = 0 < (Revbit.Value & (1 << 6));
+                _Model.IsPiezoAdditionalGain = 0 < (Revbit.Value & (1 << 9));
                 _Model.SoundSpeedFixed = 0.1d * Vzvuk.Value;
                 _Model.SoundSpeedTableId = Ntpop.Value;
+
+                _Model.PressurePeriodIndex = PerP.Value;
+                _Model.PressureDelayIndex = KolP.Value;
+
+                PerU.Value.CopyTo(_Model.LevelPeriodIndex, 0);
+                KolUr.Value.CopyTo(_Model.LevelDelayIndex, 0);
+
                 InfoEx = "успешно выполнено";
+                
             }
             else
             {
+                _Model.IsAutoswitchToAPR = default;
                 _Model.IsValveAutomaticEnabled = default;
                 _Model.IsValveDurationShort = default;
                 _Model.IsValveDirectionInput = default;
@@ -98,8 +105,13 @@ namespace SiamCross.Models.Sensors.Dua
                 _Model.IsPiezoAdditionalGain = default;
                 _Model.SoundSpeedFixed = Level.DefaultSoundSpeedFixed;
                 _Model.SoundSpeedTableId = default;
+                _Model.PressurePeriodIndex = default;
+                _Model.PressureDelayIndex = default;
+                _Model.LevelPeriodIndex.ForEach( (item)=> item=0);
+                _Model.LevelDelayIndex.ForEach((item) => item = 0);
             }
 
+            _Model.ChangeNotify(nameof(_Model.IsAutoswitchToAPR));
             _Model.ChangeNotify(nameof(_Model.IsValveAutomaticEnabled));
             _Model.ChangeNotify(nameof(_Model.IsValveDurationShort));
             _Model.ChangeNotify(nameof(_Model.IsValveDirectionInput));
@@ -107,7 +119,10 @@ namespace SiamCross.Models.Sensors.Dua
             _Model.ChangeNotify(nameof(_Model.IsPiezoAdditionalGain));
             _Model.ChangeNotify(nameof(_Model.SoundSpeedFixed));
             _Model.ChangeNotify(nameof(_Model.SoundSpeedTableId));
-
+            _Model.ChangeNotify(nameof(_Model.PressurePeriodIndex));
+            _Model.ChangeNotify(nameof(_Model.PressureDelayIndex));
+            _Model.ChangeNotify(nameof(_Model.LevelPeriodIndex));
+            _Model.ChangeNotify(nameof(_Model.LevelDelayIndex));
             return ret;
         }
 

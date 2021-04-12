@@ -142,10 +142,7 @@ namespace SiamCross.Models.Sensors.Dua
             {
                 cancelToken.ThrowIfCancellationRequested();
 
-                Connection.AdditioonalTimeout = 2000;
                 RespResult ret = await Connection.ReadAsync(_CurrentParam);
-                Connection.AdditioonalTimeout = 500;
-
 
                 Battery = (BatteryVoltage.Value / 10.0).ToString();
                 Temperature = (ТempC.Value / 10.0).ToString();

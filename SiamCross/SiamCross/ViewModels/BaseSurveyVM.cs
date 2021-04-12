@@ -15,16 +15,16 @@ namespace SiamCross.ViewModels.MeasurementViewModels
 
         public BaseSurvey Model { get; }
         public ICommand CmdStart { get; set; }
-        public ICommand CmdCancel { get; set; }
-        public ICommand CmdUpdate { get; set; }
+        public ICommand CmdSaveParam { get; set; }
+        public ICommand CmdLoadParam { get; set; }
         public ICommand ShowConfigViewCommand { get; set; }
         public BaseSurveyVM(ISensor sensor, BaseSurvey model)
         {
             Sensor = sensor;
             Model = model;
             CmdStart = Model?.CmdStart;
-            CmdCancel = Model?.CmdCancel;
-            CmdUpdate = Model?.CmdUpdate;
+            CmdSaveParam = Model?.CmdSaveParam;
+            CmdLoadParam = Model?.CmdLoadParam;
             Model.PropertyChanged += StorageModel_PropertyChanged;
 
             ShowConfigViewCommand = new AsyncCommand(Show
@@ -44,7 +44,7 @@ namespace SiamCross.ViewModels.MeasurementViewModels
                 if (null != view)
                 {
                     await App.NavigationPage.Navigation.PushAsync(view);
-                    CmdUpdate?.Execute(this);
+                    CmdLoadParam?.Execute(this);
                 }
             }
             catch (Exception)

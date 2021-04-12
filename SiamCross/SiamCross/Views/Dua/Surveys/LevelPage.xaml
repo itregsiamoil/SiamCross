@@ -27,8 +27,8 @@
         </StackLayout>
     </NavigationPage.TitleView>
     <ContentPage.ToolbarItems >
-        <ToolbarItem Text="&#x21BA; "
-                     Command="{Binding CmdUpdate}"/>
+        <ToolbarItem Text="&#x21BA; " Command="{Binding CmdLoadParam}"/>
+        <ToolbarItem Text="&#x1F4BE; " Command="{Binding CmdSaveParam}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout  BackgroundColor="{StaticResource colorBackgroundLight}" >
