@@ -110,10 +110,10 @@ namespace SiamCross.Models
                 _Cts?.Cancel();
             }
         }
-        static public void LogException(Exception ex)
+        public static void LogException(Exception ex)
         {
             Debug.WriteLine("EXCEPTION: "
-                + "\n TYPE=" + ex.GetType() 
+                + "\n TYPE=" + ex.GetType()
                 + "\n MESSAGE=" + ex.Message
                 + "\n STACK=" + ex.StackTrace + "\n");
         }

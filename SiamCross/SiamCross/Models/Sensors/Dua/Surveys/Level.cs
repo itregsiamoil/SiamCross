@@ -1,12 +1,9 @@
 ﻿using SiamCross.Models.Connection.Protocol;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors.Dua.Surveys
 {
-    public class Level: BaseSurvey
+    public class Level : BaseSurvey
     {
         private readonly ISensor _Sensor;
         private readonly IProtocolConnection _Connection;
@@ -21,7 +18,7 @@ namespace SiamCross.Models.Sensors.Dua.Surveys
 
         public static readonly double DefaultSoundSpeedFixed = 320;
 
-        public Level(ISensor sensor, byte levelMode, string name, string description )
+        public Level(ISensor sensor, byte levelMode, string name, string description)
         {
             Name = name;
             Description = description;
@@ -36,7 +33,7 @@ namespace SiamCross.Models.Sensors.Dua.Surveys
                 () => _Sensor.TaskManager.IsFree,
                 null, false, false);
 
-            string taskName = Name+"-измерение";
+            string taskName = Name + "-измерение";
 
             var taskSurvey = new TaskSurveyLevel(this, _Sensor, taskName, levelMode);
             CmdStart = new AsyncCommand(

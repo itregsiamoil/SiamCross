@@ -1,9 +1,6 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Sensors.Dua.Surveys;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dua
@@ -90,7 +87,6 @@ namespace SiamCross.Models.Sensors.Dua
                 _Model.IsPiezoAdditionalGain = 0 < (Revbit.Value & 1 << 9);
                 _Model.SoundSpeedFixed = 0.1d * Vzvuk.Value;
                 _Model.SoundSpeedTableId = Ntpop.Value;
-        
                 InfoEx = "успешно выполнено";
             }
             else

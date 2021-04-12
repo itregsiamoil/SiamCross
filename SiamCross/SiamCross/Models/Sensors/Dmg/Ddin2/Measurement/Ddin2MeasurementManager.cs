@@ -18,7 +18,9 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
         public ISensor Sensor => mSensor;
         public UInt32 ErrorCode { get; private set; }
 
-        private readonly byte[] _currentDynGraph = new byte[1000 * 2];
+        public static readonly uint DmgSize = 2000;
+
+        private readonly byte[] _currentDynGraph = new byte[DmgSize];
         private readonly byte[] _currentAccelerationGraph = new byte[1000 * 2];
 
         public Ddin2MeasurementManager(ISensor sensor,
@@ -193,15 +195,20 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
             UpdateProgress(_progress, Resource.Downloading);
 
 
+            uint readedDmg = 0;
             float global_progress_start = _progress;
             float global_progress_left = (100f - _progress);
-            Action<float> StepProgress = (float progress) =>
+
+
+            Action<uint> StepProgress = (uint readed) =>
             {
+                readedDmg += readed;
+                float progress = ((float)readedDmg) / DmgSize;
                 _progress = global_progress_start + progress * global_progress_left;
                 UpdateProgress(_progress);
             };
 
-            RespResult ret = await _Connection.ReadMemAsync(0x81000000, 1000 * 2, _currentDynGraph
+            RespResult ret = await _Connection.ReadMemAsync(0x81000000, DmgSize, _currentDynGraph
                 , 0, StepProgress);
 
             /*

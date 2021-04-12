@@ -54,7 +54,7 @@ namespace SiamCross.ViewModels.Dua.Survey
             get => 0 == _Model.SoundSpeedTableId;
             set
             {
-                _Model.SoundSpeedTableId = (UInt16)(value? 0 : 1);
+                _Model.SoundSpeedTableId = (UInt16)(value ? 0 : 1);
                 ChangeNotify(nameof(SoundSpeedTableId));
             }
         }

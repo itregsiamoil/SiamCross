@@ -1,6 +1,5 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dua

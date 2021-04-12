@@ -1,7 +1,6 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
 using SiamCross.ViewModels;
-using SiamCross.ViewModels.MeasurementViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

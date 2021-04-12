@@ -165,17 +165,14 @@ namespace SiamCross.ViewModels
             get => _Model.Well;
             set
             {
-                 _Model.Well = value;
-                 ChangeNotify();
+                _Model.Well = value;
+                ChangeNotify();
             }
         }
         public string Bush
         {
             get => _Model.Bush;
-            set
-            {
-                 _Model.Bush = value;
-            }
+            set => _Model.Bush = value;
         }
         public string Shop
         {

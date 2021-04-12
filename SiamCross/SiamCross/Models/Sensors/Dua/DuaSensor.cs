@@ -1,12 +1,9 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Dua.Surveys;
-using SiamCross.ViewModels;
 using SiamCross.ViewModels.Dua;
 using SiamCross.ViewModels.Dua.Survey;
-using SiamCross.ViewModels.MeasurementViewModels;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -92,14 +89,14 @@ namespace SiamCross.Models.Sensors.Dua
 
             var levelModel = new Level(this, 1
                 , "Статический уровень"
-                ,"long long description");
+                , "long long description");
             Model.Surveys.Add(levelModel);
             var levelVM = new LevelVM(this, levelModel);
             SurveysVM.SurveysCollection.Add(levelVM);
 
             var dynamicModel = new Level(this, 2
-                ,"Динамический уровень"
-                ,"long long description");
+                , "Динамический уровень"
+                , "long long description");
             Model.Surveys.Add(dynamicModel);
 
             var dynamicLevelVM = new LevelVM(this, dynamicModel);
@@ -133,7 +130,7 @@ namespace SiamCross.Models.Sensors.Dua
             //UserConfigVM = new UserConfigVM(this);
             //StateVM = new StateVM(this);
 
-            
+
 
         }
 

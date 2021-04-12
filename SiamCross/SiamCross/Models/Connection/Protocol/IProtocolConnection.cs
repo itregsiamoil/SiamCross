@@ -29,37 +29,37 @@ namespace SiamCross.Models.Connection.Protocol
 
         Task<RespResult> TryReadMemoryAsync(uint addr, uint len
             , byte[] dst, int dst_start = 0
-            , Action<float> onStepProgress = null, CancellationToken cancellationToken = default);
+            , Action<uint> onStepProgress = null, CancellationToken cancellationToken = default);
         Task<RespResult> TryWriteMemoryAsync(uint addr, uint len
             , byte[] src, int src_start = 0
-            , Action<float> onStepProgress = null, CancellationToken cancellationToken = default);
+            , Action<uint> onStepProgress = null, CancellationToken cancellationToken = default);
         Task<RespResult> ReadMemAsync(uint addr, uint len
             , byte[] dst, int dst_start = 0
-            , Action<float> onStepProgress = null, CancellationToken cancellationToken = default);
+            , Action<uint> onStepProgress = null, CancellationToken cancellationToken = default);
         Task<RespResult> WriteMemAsync(uint addr, uint len
             , byte[] src, int src_start = 0
-            , Action<float> onStepProgress = null, CancellationToken cancellationToken = default);
+            , Action<uint> onStepProgress = null, CancellationToken cancellationToken = default);
 
 
         Task<RespResult> TryReadAsync(MemStruct var
-            , Action<float> onStep = null, CancellationToken ct = default);
+            , Action<uint> onStep = null, CancellationToken ct = default);
         Task<RespResult> TryWriteAsync(MemStruct var
-            , Action<float> onStep = null, CancellationToken ct = default);
+            , Action<uint> onStep = null, CancellationToken ct = default);
         Task<RespResult> ReadAsync(MemStruct var
-            , Action<float> onStep = null, CancellationToken ct = default);
+            , Action<uint> onStep = null, CancellationToken ct = default);
         Task<RespResult> WriteAsync(MemStruct var
-            , Action<float> onStep = null, CancellationToken ct = default);
+            , Action<uint> onStep = null, CancellationToken ct = default);
 
 
         Task<RespResult> TryReadAsync(MemVar var
-            , Action<float> onStep = null, CancellationToken ct = default);
+            , Action<uint> onStep = null, CancellationToken ct = default);
         Task<RespResult> TryWriteAsync(MemVar var
-            , Action<float> onStep = null, CancellationToken ct = default);
+            , Action<uint> onStep = null, CancellationToken ct = default);
 
         Task<RespResult> ReadAsync(MemVar var
-            , Action<float> onStep = null, CancellationToken ct = default);
+            , Action<uint> onStep = null, CancellationToken ct = default);
         Task<RespResult> WriteAsync(MemVar var
-            , Action<float> onStep = null, CancellationToken ct = default);
+            , Action<uint> onStep = null, CancellationToken ct = default);
 
     }
 

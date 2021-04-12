@@ -1,11 +1,8 @@
 ﻿using SiamCross.Models.Connection.Protocol;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SiamCross.Models.Sensors.Dmg.Surveys
 {
-    public class Dynamogramm: BaseSurvey
+    public class Dynamogramm : BaseSurvey
     {
         private readonly ISensor _Sensor;
         private readonly IProtocolConnection _Connection;

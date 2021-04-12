@@ -38,18 +38,18 @@ namespace SiamCross.ViewModels.MeasurementViewModels
         }
         private async Task Show()
         {
-            try 
+            try
             {
                 var view = PageNavigator.Get(this);
-                if(null!= view)
+                if (null != view)
                 {
                     await App.NavigationPage.Navigation.PushAsync(view);
                     CmdUpdate?.Execute(this);
                 }
             }
-            catch(Exception)
-            { 
-            
+            catch (Exception)
+            {
+
             }
         }
     }

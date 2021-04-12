@@ -7,7 +7,7 @@ namespace SiamCross.Models.Sensors
     {
         ICommand CmdStart { get; set; }
         ICommand CmdCancel { get; set; }
-        ICommand CmdUpdate{ get; set; }
+        ICommand CmdUpdate { get; set; }
     }
     public class BaseSurvey : BaseVM, ISurvey
     {
@@ -17,5 +17,5 @@ namespace SiamCross.Models.Sensors
         public ICommand CmdCancel { get; set; }
         public ICommand CmdUpdate { get; set; }
     }
-    
+
 }

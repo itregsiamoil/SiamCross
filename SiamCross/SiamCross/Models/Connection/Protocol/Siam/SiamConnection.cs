@@ -260,13 +260,10 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         }
         private async Task<RespResult> DoReadMemoryAsync(uint addr_offset, uint mem_size
             , byte[] dst, int dst_start
-            , Action<float> onStepProgress, CancellationToken cancellationToken)
+            , Action<uint> onStepProgress, CancellationToken cancellationToken)
         {
             if (null == dst || dst.Length < (int)mem_size)
                 return RespResult.ErrorUnknown;
-            uint step_count = mem_size / MaxReqLen + 1;
-            float sep_cost = 1.0f / step_count;
-            float progress = 0.0f;
             //_TxBuf[0] = 0x0D;
             //_TxBuf[1] = 0x0A;
             //_TxBuf[2] = Address;
@@ -293,21 +290,17 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                     .CopyTo(dst.AsSpan(dst_start + (int)curr_addr, curr_len));
                 curr_addr += curr_len;
 
-                progress += sep_cost;
-                onStepProgress?.Invoke(progress);
+                onStepProgress?.Invoke(curr_len);
             }
             return RespResult.NormalPkg;
         }
         private async Task<RespResult> DoWriteMemoryAsync(uint addr_offset, uint mem_size
             , byte[] src, int src_start = 0
-            , Action<float> onStepProgress = null, CancellationToken cancellationToken = default)
+            , Action<uint> onStepProgress = null, CancellationToken cancellationToken = default)
         {
             if (null == src || src.Length < (int)mem_size)
                 return RespResult.ErrorUnknown;
             //throw new Exception("dst is too short");
-            uint step_count = mem_size / MaxReqLen + 1;
-            float sep_cost = 1.0f / step_count;
-            float progress = 0.0f;
             //_TxBuf[0] = 0x0D;
             //_TxBuf[1] = 0x0A;
             //_TxBuf[2] = Address;
@@ -340,14 +333,13 @@ namespace SiamCross.Models.Connection.Protocol.Siam
 
                 curr_addr += curr_len;
 
-                progress += sep_cost;
-                onStepProgress?.Invoke(progress);
+                onStepProgress?.Invoke(curr_len);
             }
             return RespResult.NormalPkg;
         }
         public override async Task<RespResult> TryReadMemoryAsync(uint start_addr, uint mem_size
             , byte[] dst, int dst_start
-            , Action<float> onStepProgress, CancellationToken cancellationToken)
+            , Action<uint> onStepProgress, CancellationToken cancellationToken)
         {
             try
             {
@@ -369,7 +361,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         }
         public override async Task<RespResult> TryWriteMemoryAsync(uint start_addr, uint mem_size
             , byte[] src, int src_start = 0
-            , Action<float> onStepProgress = null, CancellationToken cancellationToken = default)
+            , Action<uint> onStepProgress = null, CancellationToken cancellationToken = default)
         {
             using (await _semaphore.UseWaitAsync())
             {
@@ -391,7 +383,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         }
 
         private async Task<RespResult> DoReadVarAsync(MemStruct mem
-            , Action<float> onStepProgress, CancellationToken ct)
+            , Action<uint> onStepProgress, CancellationToken ct)
         {
             float sep_byte_cost = 1.0f / mem.Size;
             MemStruct vars = new MemStruct(0);
@@ -423,13 +415,13 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                     return ret;
                 vars.FromArray(_RxBuf, (UInt32)_BeginRxBuf + 12);
 
-                onStepProgress?.Invoke(vars.Size * sep_byte_cost);
+                onStepProgress?.Invoke(vars.Size);
 
             }
             return RespResult.NormalPkg;
         }
         private async Task<RespResult> DoWriteVarAsync(MemStruct mem
-            , Action<float> onStepProgress, CancellationToken ct)
+            , Action<uint> onStepProgress, CancellationToken ct)
         {
             float sep_byte_cost = 1.0f / mem.Size;
             MemStruct vars = new MemStruct(0);
@@ -464,14 +456,14 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 if (RespResult.NormalPkg != ret)
                     return ret;
 
-                onStepProgress?.Invoke(vars.Size * sep_byte_cost);
+                onStepProgress?.Invoke(vars.Size);
 
             }
             return RespResult.NormalPkg;
         }
 
         public override async Task<RespResult> TryReadAsync(MemStruct var
-            , Action<float> onStepProgress, CancellationToken ct)
+            , Action<uint> onStepProgress, CancellationToken ct)
         {
             using (await _semaphore.UseWaitAsync())
             {
@@ -491,7 +483,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             }
         }
         public override async Task<RespResult> TryWriteAsync(MemStruct var
-                , Action<float> onStepProgress, CancellationToken ct)
+                , Action<uint> onStepProgress, CancellationToken ct)
         {
             using (await _semaphore.UseWaitAsync())
             {

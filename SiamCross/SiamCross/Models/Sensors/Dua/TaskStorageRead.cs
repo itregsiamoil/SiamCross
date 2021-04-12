@@ -1,8 +1,6 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Services;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -108,7 +106,7 @@ namespace SiamCross.Models.Sensors.Dua
             if (null == _Storage || null == Connection || null == Sensor)
                 return false;
 
-            uint bytesEcho = _Storage.CountEcho * (ReportHeader.Size+ _EchoSize);
+            uint bytesEcho = _Storage.CountEcho * (ReportHeader.Size + _EchoSize);
             uint bytesSym = _Storage.CountRep * (ReportHeader.Size);
             _BytesTotal = bytesEcho + bytesSym;
             _BytesReaded = 0;
@@ -125,31 +123,30 @@ namespace SiamCross.Models.Sensors.Dua
             return true;
         }
 
-
-        void OnEchoStep(float p)
+        void OnEchoStep(uint readed)
         {
-            SetProgressBytes( (uint)(p * _EchoSize));
+            SetProgressBytes(readed);
         }
 
         protected async Task<bool> DoReadEcho()
         {
             var begin = _Storage.StartEcho;
             var qty = _Storage.CountEcho;
-            
+
 
             for (UInt32 rec = 0; rec < qty; ++rec)
             {
-                InfoEx = $"чтение {rec} измерения с эхограммой";
+                InfoEx = $"чтение {rec + 1} измерения с эхограммой";
 
                 ReportHeader.Address = 0x82000000 + ReportHeader.Size * (begin + rec);
-                await Connection.ReadAsync(ReportHeader,null,_Cts.Token);
+                await Connection.ReadAsync(ReportHeader, null, _Cts.Token);
                 SetProgressBytes(ReportHeader.Size);
 
                 Connection.AdditioonalTimeout = 9000;
                 Echo.Address = 0x84000000 + _EchoSize * rec;
 
                 await Connection.ReadMemAsync(Echo.Address, Echo.Size, Echo.Value, 0, OnEchoStep, _Cts.Token);
-                
+
 
                 var well = Encoding.UTF8.GetString(skv.Value);
                 var bush = Encoding.UTF8.GetString(kust.Value);

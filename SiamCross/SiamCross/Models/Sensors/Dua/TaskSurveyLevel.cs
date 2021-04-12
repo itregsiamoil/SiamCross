@@ -2,10 +2,7 @@
 using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Models.Sensors.Dua.Surveys;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dua
@@ -26,13 +23,13 @@ namespace SiamCross.Models.Sensors.Dua
         public readonly MemVarUInt16 Timeawt = new MemVarUInt16(null, 0x8416);
 
 
-        readonly static int _TimeoutValvePrepare = 120000;
-        readonly static int _TimeoutSurvay3000 = 20000;
-        readonly static int _TimeoutSurvay6000 = 2* _TimeoutSurvay3000;
-        readonly static int _ReadTime = 40000;
+        static readonly int _TimeoutValvePrepare = 120000;
+        static readonly int _TimeoutSurvay3000 = 20000;
+        static readonly int _TimeoutSurvay6000 = 2 * _TimeoutSurvay3000;
+        static readonly int _ReadTime = 40000;
         int _SurveyTime = 0;
 
-        public TaskSurveyLevel(Level model, ISensor sensor,string name, byte levelMode)
+        public TaskSurveyLevel(Level model, ISensor sensor, string name, byte levelMode)
             : base(sensor, name)
         {
             _Model = model;
@@ -95,7 +92,7 @@ namespace SiamCross.Models.Sensors.Dua
         {
             Timeawt.Value = 120;
             DuMeasurementStatus status = DuMeasurementStatus.Empty;
-            for (uint i = 0; i < _SurveyTime && DuMeasurementStatus.Сompleted!= status; i+= Constants.SecondDelay)
+            for (uint i = 0; i < _SurveyTime && DuMeasurementStatus.Сompleted != status; i += Constants.SecondDelay)
             {
                 await Task.Delay(Constants.SecondDelay, _Cts.Token);
                 await UpdateStatus();

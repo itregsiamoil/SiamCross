@@ -5,7 +5,6 @@ using SiamCross.Models.Scanners;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.ViewModels;
-using SiamCross.ViewModels.MeasurementViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -55,7 +54,7 @@ namespace SiamCross.Models.Sensors
             TaskManager = new TaskManagerVM(_Model.Manager);
 
             SurveysVM = new SurveysCollectionVM(this);
-    }
+        }
 
         public async void Dispose()
         {

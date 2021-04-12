@@ -161,13 +161,13 @@ namespace SiamCross.Models.Connection.Protocol
 
         public abstract Task<RespResult> TryReadMemoryAsync(uint addr, uint len
             , byte[] dst, int dst_start
-            , Action<float> onStepProgress, CancellationToken cancellationToken);
+            , Action<uint> onStepProgress, CancellationToken cancellationToken);
         public abstract Task<RespResult> TryWriteMemoryAsync(uint addr, uint len
             , byte[] src, int src_start
-            , Action<float> onStepProgress, CancellationToken cancellationToken);
+            , Action<uint> onStepProgress, CancellationToken cancellationToken);
         public async Task<RespResult> ReadMemAsync(uint addr, uint len
             , byte[] dst, int dst_start
-            , Action<float> onStep, CancellationToken ct)
+            , Action<uint> onStep, CancellationToken ct)
         {
             RespResult ret = await TryReadMemoryAsync(addr, len, dst, dst_start, onStep, ct);
             ThrowOnError(ret);
@@ -175,7 +175,7 @@ namespace SiamCross.Models.Connection.Protocol
         }
         public async Task<RespResult> WriteMemAsync(uint addr, uint len
             , byte[] src, int src_start
-            , Action<float> onStep, CancellationToken ct)
+            , Action<uint> onStep, CancellationToken ct)
         {
             RespResult ret = await WriteMemAsync(addr, len, src, src_start, onStep, ct);
             ThrowOnError(ret);
@@ -184,24 +184,24 @@ namespace SiamCross.Models.Connection.Protocol
 
 
         public virtual Task<RespResult> TryReadAsync(MemStruct var
-            , Action<float> onStep, CancellationToken ct)
+            , Action<uint> onStep, CancellationToken ct)
         {
             throw new NotImplementedException();
         }
         public virtual Task<RespResult> TryWriteAsync(MemStruct var
-            , Action<float> onStep, CancellationToken ct)
+            , Action<uint> onStep, CancellationToken ct)
         {
             throw new NotImplementedException();
         }
         public async Task<RespResult> ReadAsync(MemStruct var
-            , Action<float> onStep, CancellationToken ct)
+            , Action<uint> onStep, CancellationToken ct)
         {
             RespResult ret = await TryReadAsync(var, onStep, ct);
             ThrowOnError(ret);
             return ret;
         }
         public async Task<RespResult> WriteAsync(MemStruct var
-            , Action<float> onStep, CancellationToken ct)
+            , Action<uint> onStep, CancellationToken ct)
         {
             RespResult ret = await TryWriteAsync(var, onStep, ct);
             ThrowOnError(ret);
@@ -210,28 +210,28 @@ namespace SiamCross.Models.Connection.Protocol
 
 
         public Task<RespResult> TryReadAsync(MemVar var
-            , Action<float> onStep, CancellationToken ct)
+            , Action<uint> onStep, CancellationToken ct)
         {
             MemStruct tmp_struct = new MemStruct(var.Address);
             tmp_struct.Add(var);
             return TryReadAsync(tmp_struct, onStep, ct);
         }
         public Task<RespResult> TryWriteAsync(MemVar var
-            , Action<float> onStep, CancellationToken ct)
+            , Action<uint> onStep, CancellationToken ct)
         {
             MemStruct tmp_struct = new MemStruct(var.Address);
             tmp_struct.Add(var);
             return TryWriteAsync(tmp_struct, onStep, ct);
         }
         public Task<RespResult> ReadAsync(MemVar var
-            , Action<float> onStep, CancellationToken ct)
+            , Action<uint> onStep, CancellationToken ct)
         {
             MemStruct tmp_struct = new MemStruct(var.Address);
             tmp_struct.Add(var);
             return ReadAsync(tmp_struct, onStep, ct);
         }
         public Task<RespResult> WriteAsync(MemVar var
-            , Action<float> onStep, CancellationToken ct)
+            , Action<uint> onStep, CancellationToken ct)
         {
             MemStruct tmp_struct = new MemStruct(var.Address);
             tmp_struct.Add(var);

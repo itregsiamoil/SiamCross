@@ -258,12 +258,16 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             return ret;
         }
 
-        public override Task<RespResult> TryReadMemoryAsync(uint addr, uint len, byte[] dst, int dst_start = 0, Action<float> onStepProgress = null, CancellationToken cancellationToken = default)
+        public override Task<RespResult> TryReadMemoryAsync(uint addr, uint len
+            , byte[] dst, int dst_start = 0
+            , Action<uint> onStepProgress = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public override Task<RespResult> TryWriteMemoryAsync(uint addr, uint len, byte[] src, int src_start = 0, Action<float> onStepProgress = null, CancellationToken cancellationToken = default)
+        public override Task<RespResult> TryWriteMemoryAsync(uint addr, uint len
+            , byte[] src, int src_start = 0
+            , Action<uint> onStepProgress = null, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

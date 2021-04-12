@@ -113,7 +113,7 @@ namespace SiamCross.Models.Sensors.Dmg
         }
 
         public async Task<IReadOnlyList<object>> Download(uint begin, uint qty
-        , Action<float> onStepProgress = null, Action<string> onStepInfo = null)
+        , Action<uint> onStepProgress = null, Action<string> onStepInfo = null)
         {
             try
             {
@@ -135,9 +135,8 @@ namespace SiamCross.Models.Sensors.Dmg
             return new List<object>();
         }
         protected async Task<IReadOnlyList<object>> DoDownload(uint begin, uint end
-            , Action<float> onStepProgress = null, Action<string> onStepInfo = null)
+            , Action<uint> onStepProgress = null, Action<string> onStepInfo = null)
         {
-            onStepProgress?.Invoke(0.01f);
             onStepInfo?.Invoke("Download SurvayParam");
             await _Connection.ReadAsync(_SurvayParam);
 

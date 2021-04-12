@@ -1,12 +1,9 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Dmg.Surveys;
-using SiamCross.ViewModels;
 using SiamCross.ViewModels.Dmg;
 using SiamCross.ViewModels.Dmg.Survey;
-using SiamCross.ViewModels.MeasurementViewModels;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -96,8 +93,9 @@ namespace SiamCross.Models.Sensors.Dmg
 
             var dmgModel = new Dynamogramm(this)
             {
-                 Name = "Динамограмма"
-                ,Description = "long long description"
+                Name = "Динамограмма"
+                ,
+                Description = "long long description"
             };
             Model.Surveys.Add(dmgModel);
 

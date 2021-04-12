@@ -1,9 +1,4 @@
 ﻿using SiamCross.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -18,13 +13,13 @@ namespace SiamCross.Views
         public TaskManagerVM TaskManager
         {
             get => (TaskManagerVM)GetValue(TaskManagerProperty);
-            set=> SetValue(TaskManagerProperty, value);
+            set => SetValue(TaskManagerProperty, value);
         }
 
         public TaskManagerView()
         {
             InitializeComponent();
-            
+
         }
     }
 }
