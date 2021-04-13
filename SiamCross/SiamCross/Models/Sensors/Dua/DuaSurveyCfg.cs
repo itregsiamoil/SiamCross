@@ -8,13 +8,6 @@ namespace SiamCross.Models.Sensors.Dua
     {
         private readonly ISensor _Sensor;
 
-        public static readonly double DefaultSoundSpeedFixed = 320;
-        public static readonly UInt16[] Periods = new UInt16[]
-            {1,2,3,4,5,7,10,15,20,30,40,60,90,120,180,240,300,420,600,720 };
-        public static readonly UInt16[] Delays = new UInt16[]
-            {0,1,2,3,4,5,7,10,15,20,30,40,50,70,100,150,200,300,400,500,600,700,800,900,0xFFFF };
-
-
         public bool Synched = false;
 
         public bool IsAutoswitchToAPR;
@@ -27,9 +20,9 @@ namespace SiamCross.Models.Sensors.Dua
         public ushort SoundSpeedTableId;
 
         public byte PressurePeriodIndex;
-        public byte PressureDelayIndex;
+        public byte PressureQuantityIndex;
         public readonly byte[] LevelPeriodIndex = new byte[5];
-        public readonly byte[] LevelDelayIndex = new byte[5];
+        public readonly byte[] LevelQuantityIndex = new byte[5];
 
         async Task DoSave()
         {

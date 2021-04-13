@@ -11,6 +11,7 @@ namespace SiamCross.Models
         public ISensor Sensor;
         public IProtocolConnection Connection;
 
+        float ProgressRemain;
         int ProgressTime;
         static readonly int RefreshPeriod = 500;
         int TimerRetry => ProgressTime / RefreshPeriod;
@@ -22,15 +23,18 @@ namespace SiamCross.Models
             Name = name;
         }
 
-        protected Timer CreateProgressTimer(int ms)
+        protected Timer CreateProgressTimer(int ms, float progressStart=0.0f)
         {
+            Progress = progressStart;
+            ProgressRemain = 1f - progressStart;
             ProgressTime = ms;
             return new Timer(new TimerCallback(OnTimer), null, 0, RefreshPeriod);
         }
 
         protected void OnTimer(object obj)
         {
-            Progress += 1f / TimerRetry;
+            var currenProgress = 1f / TimerRetry;
+            Progress += currenProgress* ProgressRemain;
         }
 
         public async Task<bool> RetryExecAsync(uint retry, Func<Task<bool>> fn)

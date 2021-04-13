@@ -55,8 +55,9 @@ namespace SiamCross.Models.Sensors.Dua
             if (null == _Model || null == Connection || null == Sensor)
                 return false;
 
-            _BytesTotal = SurvayParam.Size;
+            Progress = 0;
             _BytesProgress = 0;
+            _BytesTotal = SurvayParam.Size;
             _Cts.CancelAfter(20000);
             return await Update();
         }
@@ -96,10 +97,10 @@ namespace SiamCross.Models.Sensors.Dua
                 _Model.SoundSpeedTableId = Ntpop.Value;
 
                 _Model.PressurePeriodIndex = PerP.Value;
-                _Model.PressureDelayIndex = KolP.Value;
+                _Model.PressureQuantityIndex = KolP.Value;
 
                 PerU.Value.CopyTo(_Model.LevelPeriodIndex, 0);
-                KolUr.Value.CopyTo(_Model.LevelDelayIndex, 0);
+                KolUr.Value.CopyTo(_Model.LevelQuantityIndex, 0);
 
                 InfoEx = "успешно выполнено";
                 _Model.Synched = readed;
@@ -115,9 +116,9 @@ namespace SiamCross.Models.Sensors.Dua
                 _Model.SoundSpeedFixed = Constants.DefaultSoundSpeedFixed;
                 _Model.SoundSpeedTableId = default;
                 _Model.PressurePeriodIndex = default;
-                _Model.PressureDelayIndex = default;
+                _Model.PressureQuantityIndex = default;
                 _Model.LevelPeriodIndex.ForEach((item) => item = 0);
-                _Model.LevelDelayIndex.ForEach((item) => item = 0);
+                _Model.LevelQuantityIndex.ForEach((item) => item = 0);
                 InfoEx = "set default";
             }
 
@@ -130,9 +131,9 @@ namespace SiamCross.Models.Sensors.Dua
             _Model.ChangeNotify(nameof(_Model.SoundSpeedFixed));
             _Model.ChangeNotify(nameof(_Model.SoundSpeedTableId));
             _Model.ChangeNotify(nameof(_Model.PressurePeriodIndex));
-            _Model.ChangeNotify(nameof(_Model.PressureDelayIndex));
+            _Model.ChangeNotify(nameof(_Model.PressureQuantityIndex));
             _Model.ChangeNotify(nameof(_Model.LevelPeriodIndex));
-            _Model.ChangeNotify(nameof(_Model.LevelDelayIndex));
+            _Model.ChangeNotify(nameof(_Model.LevelQuantityIndex));
             return _Model.Synched;
         }
 

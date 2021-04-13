@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-             xmlns:survey="clr-namespace:SiamCross.ViewModels.Dua.Survey"
+             xmlns:survey="clr-namespace:SiamCross.ViewModels.Dua.Survey" 
+             xmlns:views="clr-namespace:SiamCross.Views"
+             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross" 
              x:Class="SiamCross.Views.Dua.LevelPage"
              x:DataType="survey:SurveyVM"
              >
@@ -27,47 +29,93 @@
         </StackLayout>
     </NavigationPage.TitleView>
     <ContentPage.ToolbarItems >
+        <ToolbarItem Text="&#x2713; " Command="{Binding CmdSaveParam}"/>
         <ToolbarItem Text="&#x21BA; " Command="{Binding CmdLoadParam}"/>
-        <ToolbarItem Text="&#x1F4BE; " Command="{Binding CmdSaveParam}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout  BackgroundColor="{StaticResource colorBackgroundLight}" >
-            <Frame Style="{StaticResource GroupingFrameStyle}" Padding="0" >
-                <Grid ColumnSpacing="0" RowSpacing="0" Padding="5" BackgroundColor="{StaticResource colorPrimaryPale}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height ="Auto" />
-                        <RowDefinition Height="20" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="40" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="40" />
-                    </Grid.ColumnDefinitions>
-
-                    <Label Text="{Binding Sensor.TaskManager.Info}" 
-                       Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
-                    <Button Text="&#x274C;" TextColor="Red" BackgroundColor="LightPink"
-                        Grid.Column="2" Grid.Row="0"
-                        Command="{Binding Sensor.TaskManager.CancelCmd}" 
-                        IsVisible="{Binding Sensor.TaskManager.IsBusy, Mode=OneWay}"
-                        IsEnabled="{Binding Sensor.TaskManager.IsBusy, Mode=OneWay}"/>
-                    <Label 
-                    Grid.Column="0" Grid.Row="1" >
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{Binding Sensor.TaskManager.ProgressInt}"/>
-                                <Span Text="%" />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <ProgressBar Progress="{Binding Sensor.TaskManager.Progress}" 
-                             VerticalOptions="Center"
-                             Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"/>
-                </Grid>
-            </Frame>
+            <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}" />
 
             <ScrollView VerticalOptions="StartAndExpand">
-                <StackLayout>
+                <StackLayout >
+                    <Label Text="График измерения" Style="{StaticResource SectionLabel}" />
+                    <Frame Style="{StaticResource GroupingFrameStyle}" 
+                           IsVisible="{Binding IsVisiblePressureSheduler}">
+                        <StackLayout >
+                            <Grid Padding="0,10,0,10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50*" />
+                                    <ColumnDefinition Width="50*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Text="Количество" Grid.Column="0" Grid.Row="0"/>
+                                <Label Text="Период (мин)" Grid.Column="1" Grid.Row="0"/>
+
+                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
+                                        SelectedIndex="{Binding PressureQuantityIndex}"
+                                        Grid.Column="0" Grid.Row="1"/>
+                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
+                                        SelectedIndex="{Binding PressurePeriodIndex}"
+                                        Grid.Column="1" Grid.Row="1"/>
+                            </Grid>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Style="{StaticResource GroupingFrameStyle}"
+                           IsVisible="{Binding IsVisibleLevelSheduler}">
+                        <StackLayout >
+                            <Grid Padding="0,10,0,10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50*" />
+                                    <ColumnDefinition Width="50*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Text="Количество" Grid.Column="0" Grid.Row="0"/>
+                                <Label Text="Период (мин)" Grid.Column="1" Grid.Row="0"/>
+
+                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
+                                        SelectedIndex="{Binding LevelQuantityIndex0}"
+                                        Grid.Column="0" Grid.Row="1"/>
+                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
+                                        SelectedIndex="{Binding LevelPeriodIndex0}"
+                                        Grid.Column="1" Grid.Row="1"/>
+                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
+                                        SelectedIndex="{Binding LevelQuantityIndex1}"
+                                        Grid.Column="0" Grid.Row="2"/>
+                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
+                                        SelectedIndex="{Binding LevelPeriodIndex1}"
+                                        Grid.Column="1" Grid.Row="2"/>
+                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
+                                        SelectedIndex="{Binding LevelQuantityIndex2}"
+                                        Grid.Column="0" Grid.Row="3"/>
+                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
+                                        SelectedIndex="{Binding LevelPeriodIndex2}"
+                                        Grid.Column="1" Grid.Row="3"/>
+                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
+                                        SelectedIndex="{Binding LevelQuantityIndex3}"
+                                        Grid.Column="0" Grid.Row="4"/>
+                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
+                                        SelectedIndex="{Binding LevelPeriodIndex3}"
+                                        Grid.Column="1" Grid.Row="4"/>
+                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
+                                        SelectedIndex="{Binding LevelQuantityIndex4}"
+                                        Grid.Column="0" Grid.Row="5"/>
+                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
+                                        SelectedIndex="{Binding LevelPeriodIndex4}"
+                                        Grid.Column="1" Grid.Row="5"/>
+
+                            </Grid>
+                        </StackLayout>
+                    </Frame>
                     <Label Text="Автоматический клапан" Style="{StaticResource SectionLabel}" />
                     <Frame Style="{StaticResource GroupingFrameStyle}" >
                         <StackLayout >

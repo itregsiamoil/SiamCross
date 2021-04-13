@@ -42,12 +42,11 @@ namespace SiamCross.Models.Sensors.Dua
             if (null == _Model || null == Connection || null == Sensor)
                 return false;
 
-            _Cts.CancelAfter(20000);
-
+            Progress = 0;
             _BytesTotal = 0;
             _BytesProgress = 0;
             Reg.ForEach((r) => _BytesTotal += r.Size);
-
+            _Cts.CancelAfter(20000);
             return await DoSave();
         }
         public async Task<bool> DoSave()
@@ -82,10 +81,10 @@ namespace SiamCross.Models.Sensors.Dua
                 Ntpop.Value = _Model.SoundSpeedTableId;
 
                 PerP.Value = _Model.PressurePeriodIndex;
-                KolP.Value = _Model.PressureDelayIndex;
+                KolP.Value = _Model.PressureQuantityIndex;
 
                 _Model.LevelPeriodIndex.CopyTo(PerU.Value, 0);
-                _Model.LevelDelayIndex.CopyTo(KolUr.Value, 0);
+                _Model.LevelQuantityIndex.CopyTo(KolUr.Value, 0);
 
                 ret = await RetryExecAsync(3, DoSaveSingle);
             }

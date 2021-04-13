@@ -79,10 +79,10 @@ namespace SiamCross.ViewModels.Dua.Survey
             get => _ModelCfg.PressurePeriodIndex;
             set => _ModelCfg.PressurePeriodIndex = value;
         }
-        public byte PressureDelayIndex
+        public byte PressureQuantityIndex
         {
-            get => _ModelCfg.PressureDelayIndex;
-            set => _ModelCfg.PressureDelayIndex = value;
+            get => _ModelCfg.PressureQuantityIndex;
+            set => _ModelCfg.PressureQuantityIndex = value;
         }
 
         public byte LevelPeriodIndex0
@@ -110,32 +110,35 @@ namespace SiamCross.ViewModels.Dua.Survey
             get => _ModelCfg.LevelPeriodIndex[4];
             set => _ModelCfg.LevelPeriodIndex[4] = value;
         }
-        public byte LevelDelayIndex0
+        public byte LevelQuantityIndex0
         {
-            get => _ModelCfg.LevelDelayIndex[0];
-            set => _ModelCfg.LevelDelayIndex[0] = value;
+            get => _ModelCfg.LevelQuantityIndex[0];
+            set => _ModelCfg.LevelQuantityIndex[0] = value;
         }
-        public byte LevelDelayIndex1
+        public byte LevelQuantityIndex1
         {
-            get => _ModelCfg.LevelDelayIndex[1];
-            set => _ModelCfg.LevelDelayIndex[1] = value;
+            get => _ModelCfg.LevelQuantityIndex[1];
+            set => _ModelCfg.LevelQuantityIndex[1] = value;
         }
-        public byte LevelDelayIndex2
+        public byte LevelQuantityIndex2
         {
-            get => _ModelCfg.LevelDelayIndex[2];
-            set => _ModelCfg.LevelDelayIndex[2] = value;
+            get => _ModelCfg.LevelQuantityIndex[2];
+            set => _ModelCfg.LevelQuantityIndex[2] = value;
         }
-        public byte LevelDelayIndex3
+        public byte LevelQuantityIndex3
         {
-            get => _ModelCfg.LevelDelayIndex[3];
-            set => _ModelCfg.LevelDelayIndex[3] = value;
+            get => _ModelCfg.LevelQuantityIndex[3];
+            set => _ModelCfg.LevelQuantityIndex[3] = value;
         }
-        public byte LevelDelayIndex4
+        public byte LevelQuantityIndex4
         {
-            get => _ModelCfg.LevelDelayIndex[4];
-            set => _ModelCfg.LevelDelayIndex[4] = value;
+            get => _ModelCfg.LevelQuantityIndex[4];
+            set => _ModelCfg.LevelQuantityIndex[4] = value;
         }
         public byte SurveyType => _ModelSurvey.SurveyType;
+
+        public bool IsVisiblePressureSheduler => 5==_ModelSurvey.SurveyType;
+        public bool IsVisibleLevelSheduler => (3 == _ModelSurvey.SurveyType || 4 == _ModelSurvey.SurveyType);
 
         public SurveyVM(ISensor sensor, DuaSurvey model)
             : base(sensor, model)

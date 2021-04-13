@@ -91,36 +91,44 @@ namespace SiamCross.Models.Sensors.Dua
 
             {
                 var model = new DuaSurvey(this, Model.SurveyCfg
-                    , "Статический уровень", "long long description", 1);
+                    , "Статический уровень"
+                    , "уровень жидкости в спокойном состоянии", 1);
                 Model.Surveys.Add(model);
                 var vm = new SurveyVM(this, model);
                 SurveysVM.SurveysCollection.Add(vm);
             }
             {
                 var model = new DuaSurvey(this, Model.SurveyCfg
-                    , "Динамический уровень", "long long description", 2);
+                    , "Динамический уровень"
+                    , "уровень жидкости, наблюдаемый при откачке", 2);
                 Model.Surveys.Add(model);
                 var vm = new SurveyVM(this, model);
                 SurveysVM.SurveysCollection.Add(vm);
             }
-
-            /*
-            Model.Surveys.Add(new SurveyVM(this, null
-                , "Динамический уровень"
-                , "long long description"));
-
-            Model.Surveys.Add(new SurveyVM(this, null
-                , "КВУ"
-                , "кривая восстановления уровня"));
-
-            Model.Surveys.Add(new SurveyVM(this, null
-                , "КВД"
-                , "кривая восстановления давления"));
-
-            Model.Surveys.Add(new SurveyVM(this, null
-                , "АРД"
-                , "автоматическая регистрация давления"));
-            */
+            {
+                var model = new DuaSurvey(this, Model.SurveyCfg
+                    , "КВУ"
+                    , "кривая восстановления уровня", 3);
+                Model.Surveys.Add(model);
+                var vm = new SurveyVM(this, model);
+                SurveysVM.SurveysCollection.Add(vm);
+            }
+            {
+                var model = new DuaSurvey(this, Model.SurveyCfg
+                    , "КПУ"
+                    , "кривая падения уровня", 4);
+                Model.Surveys.Add(model);
+                var vm = new SurveyVM(this, model);
+                SurveysVM.SurveysCollection.Add(vm);
+            }
+            {
+                var model = new DuaSurvey(this, Model.SurveyCfg
+                    , "АРД"
+                    , "автоматическая регистрация давления", 5);
+                Model.Surveys.Add(model);
+                var vm = new SurveyVM(this, model);
+                SurveysVM.SurveysCollection.Add(vm);
+            }
 
             Model.Storage = new DuaStorage(this);
             StorageVM = new DuaStorageVM(this);
