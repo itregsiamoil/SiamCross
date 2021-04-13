@@ -1,11 +1,10 @@
-﻿using SiamCross.Models.Connection.Protocol;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Xamarin.CommunityToolkit.ObjectModel;
 
-namespace SiamCross.Models.Sensors.Dua.Surveys
+namespace SiamCross.Models.Sensors.Dua
 {
-    public class Level : BaseSurvey
+    public class DuaSurveyCfg : BaseSurveyCfg
     {
         private readonly ISensor _Sensor;
 
@@ -15,6 +14,7 @@ namespace SiamCross.Models.Sensors.Dua.Surveys
         public static readonly UInt16[] Delays = new UInt16[]
             {0,1,2,3,4,5,7,10,15,20,30,40,50,70,100,150,200,300,400,500,600,700,800,900,0xFFFF };
 
+
         public bool Synched = false;
 
         public bool IsAutoswitchToAPR;
@@ -23,27 +23,13 @@ namespace SiamCross.Models.Sensors.Dua.Surveys
         public bool IsValveDirectionInput;
         public bool IsPiezoDepthMax;
         public bool IsPiezoAdditionalGain;
-        public double SoundSpeedFixed = DefaultSoundSpeedFixed;
+        public double SoundSpeedFixed = Constants.DefaultSoundSpeedFixed;
         public ushort SoundSpeedTableId;
-        public byte SurveyType;
 
         public byte PressurePeriodIndex;
         public byte PressureDelayIndex;
-        readonly public byte[] LevelPeriodIndex = new byte[5];
-        readonly public byte[] LevelDelayIndex = new byte[5];
-
-
-        async Task DoSurvey()
-        {
-            var manager = _Sensor.Model.Manager;
-            var taskSaveInfo = new TaskSaveSurveyInfo(this, _Sensor);
-            if (!await manager.Execute(taskSaveInfo))
-                return;
-
-            string taskName = Name + "-измерение";
-            var taskSurvey = new TaskSurveyLevel(this, _Sensor, taskName);
-            await manager.Execute(taskSurvey);
-        }
+        public readonly byte[] LevelPeriodIndex = new byte[5];
+        public readonly byte[] LevelDelayIndex = new byte[5];
 
         async Task DoSave()
         {
@@ -51,7 +37,6 @@ namespace SiamCross.Models.Sensors.Dua.Surveys
             var taskSaveInfo = new TaskSaveSurveyInfo(this, _Sensor);
             await manager.Execute(taskSaveInfo);
         }
-
         async Task DoLoad()
         {
             var manager = _Sensor.Model.Manager;
@@ -59,17 +44,12 @@ namespace SiamCross.Models.Sensors.Dua.Surveys
             await manager.Execute(taskUpdate);
         }
 
-
-
-        public Level(ISensor sensor, byte mode, string name, string description)
+        public DuaSurveyCfg(ISensor sensor)
         {
             _Sensor = sensor;
-            Name = name;
-            Description = description;
-            SurveyType = mode;
 
             var manager = _Sensor.Model.Manager;
-            
+
             CmdLoadParam = new AsyncCommand(DoLoad,
                 () => _Sensor.TaskManager.IsFree,
                 null, false, false);
@@ -78,9 +58,9 @@ namespace SiamCross.Models.Sensors.Dua.Surveys
                 () => _Sensor.TaskManager.IsFree,
                 null, false, false);
 
-            CmdStart = new AsyncCommand(DoSurvey,
-                () => _Sensor.TaskManager.IsFree,
-                null, false, false);
+            //CmdShow = new AsyncCommand(DoShow,
+            //    (Func<bool>)null,
+            //    null, false, false);
         }
     }
 }

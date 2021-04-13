@@ -29,7 +29,7 @@
                     <StackLayout>
                         <Frame Style="{StaticResource MenuItemStyle}">
                             <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ShowConfigViewCommand}" />
+                                <TapGestureRecognizer Command="{Binding CmdShow}" />
                             </Frame.GestureRecognizers>
                             <StackLayout>
                                 <Label Text="{Binding Name}" Style="{StaticResource TitleLabel}" />

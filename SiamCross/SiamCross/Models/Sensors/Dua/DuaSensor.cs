@@ -87,22 +87,22 @@ namespace SiamCross.Models.Sensors.Dua
             Urov = _Report.Add(new MemVarUInt16(nameof(Urov)));
             Otr = _Report.Add(new MemVarUInt16(nameof(Otr)));
 
-            var levelModel = new Level(this, 1
-                , "Статический уровень"
-                , "long long description");
-            Model.Surveys.Add(levelModel);
-            var levelVM = new LevelVM(this, levelModel);
-            SurveysVM.SurveysCollection.Add(levelVM);
+            Model.SurveyCfg = new DuaSurveyCfg(this);
 
-            var dynamicModel = new Level(this, 2
-                , "Динамический уровень"
-                , "long long description");
-            Model.Surveys.Add(dynamicModel);
-
-            var dynamicLevelVM = new LevelVM(this, dynamicModel);
-            SurveysVM.SurveysCollection.Add(dynamicLevelVM);
-
-
+            {
+                var model = new DuaSurvey(this, Model.SurveyCfg
+                    , "Статический уровень", "long long description", 1);
+                Model.Surveys.Add(model);
+                var vm = new SurveyVM(this, model);
+                SurveysVM.SurveysCollection.Add(vm);
+            }
+            {
+                var model = new DuaSurvey(this, Model.SurveyCfg
+                    , "Динамический уровень", "long long description", 2);
+                Model.Surveys.Add(model);
+                var vm = new SurveyVM(this, model);
+                SurveysVM.SurveysCollection.Add(vm);
+            }
 
             /*
             Model.Surveys.Add(new SurveyVM(this, null

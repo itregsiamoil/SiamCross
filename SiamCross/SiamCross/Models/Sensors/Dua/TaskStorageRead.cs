@@ -58,10 +58,10 @@ namespace SiamCross.Models.Sensors.Dua
             BatteryVoltage = _CurrentParam.Add(new MemVarUInt16(nameof(BatteryVoltage)));
             ТempC = _CurrentParam.Add(new MemVarUInt16(nameof(ТempC)));
             Pressure = _CurrentParam.Add(new MemVarInt16(nameof(Pressure)));
-            Time = _CurrentParam.Add(new MemVarByteArray(nameof(Time), 0, new MemValueByteArray(8)));
+            Time = _CurrentParam.Add(new MemVarByteArray(0, new MemValueByteArray(8), nameof(Time)));
             Emak = _CurrentParam.Add(new MemVarUInt16(nameof(Emak)));
             Rdav = _CurrentParam.Add(new MemVarUInt16(nameof(Rdav)));
-            TimeRequre = _CurrentParam.Add(new MemVarByteArray(nameof(TimeRequre), 0, new MemValueByteArray(3)));
+            TimeRequre = _CurrentParam.Add(new MemVarByteArray(0, new MemValueByteArray(3), nameof(TimeRequre)));
             Interv = _CurrentParam.Add(new MemVarUInt8(nameof(Interv)));
             Kolt = _CurrentParam.Add(new MemVarUInt16(nameof(Kolt)));
             Timeawt = _CurrentParam.Add(new MemVarUInt16(nameof(Timeawt)));
@@ -70,8 +70,8 @@ namespace SiamCross.Models.Sensors.Dua
 
             ReportHeader = new MemStruct(0x82000000);
             vissl = ReportHeader.Add(new MemVarUInt8());
-            kust = ReportHeader.Add(new MemVarByteArray(null, 0, new MemValueByteArray(5)));
-            skv = ReportHeader.Add(new MemVarByteArray(null, 0, new MemValueByteArray(6)));
+            kust = ReportHeader.Add(new MemVarByteArray(0, new MemValueByteArray(5)));
+            skv = ReportHeader.Add(new MemVarByteArray(0, new MemValueByteArray(6)));
             field = ReportHeader.Add(new MemVarUInt16());
             shop = ReportHeader.Add(new MemVarUInt16());
             user = ReportHeader.Add(new MemVarUInt16());
@@ -87,7 +87,7 @@ namespace SiamCross.Models.Sensors.Dua
             urov = ReportHeader.Add(new MemVarUInt16());
             pressure = ReportHeader.Add(new MemVarInt16());
 
-            Echo = new MemVarByteArray(null, 0, new MemValueByteArray(_EchoSize));
+            Echo = new MemVarByteArray(0, new MemValueByteArray(_EchoSize));
         }
 
         uint _BytesTotal;
@@ -121,11 +121,6 @@ namespace SiamCross.Models.Sensors.Dua
             return true;
         }
 
-        void OnEchoStep(uint readed)
-        {
-            SetProgressBytes(readed);
-        }
-
         protected async Task<bool> DoReadEcho()
         {
             var begin = _Storage.StartEcho;
@@ -143,7 +138,7 @@ namespace SiamCross.Models.Sensors.Dua
                 Connection.AdditioonalTimeout = 9000;
                 Echo.Address = 0x84000000 + _EchoSize * rec;
 
-                await Connection.ReadMemAsync(Echo.Address, Echo.Size, Echo.Value, 0, OnEchoStep, _Cts.Token);
+                await Connection.ReadMemAsync(Echo.Address, Echo.Size, Echo.Value, 0, SetProgressBytes, _Cts.Token);
 
 
                 var well = Encoding.UTF8.GetString(skv.Value);

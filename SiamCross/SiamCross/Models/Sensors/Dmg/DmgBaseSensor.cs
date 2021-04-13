@@ -91,12 +91,7 @@ namespace SiamCross.Models.Sensors.Dmg
             WeightDiscr = _Report.Add(new MemVarUInt16(nameof(WeightDiscr)));
             TimeDiscr = _Report.Add(new MemVarUInt16(nameof(TimeDiscr)));
 
-            var dmgModel = new Dynamogramm(this)
-            {
-                Name = "Динамограмма"
-                ,
-                Description = "long long description"
-            };
+            var dmgModel = new Dynamogramm(this);
             Model.Surveys.Add(dmgModel);
 
             var dmgVM = new DynamogrammVM(this, dmgModel);

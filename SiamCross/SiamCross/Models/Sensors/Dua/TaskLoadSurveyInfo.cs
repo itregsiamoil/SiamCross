@@ -1,6 +1,4 @@
 ﻿using SiamCross.Models.Connection.Protocol;
-using SiamCross.Models.Sensors.Dua.Surveys;
-using System;
 using System.Threading.Tasks;
 using Xamarin.Forms.Internals;
 
@@ -8,13 +6,13 @@ namespace SiamCross.Models.Sensors.Dua
 {
     public class TaskLoadSurveyInfo : BaseSensorTask
     {
-        readonly Level _Model;
+        readonly DuaSurveyCfg _Model;
 
         public readonly MemStruct SurvayParam = new MemStruct(0x8008);
         public readonly MemVarUInt16 Revbit = new MemVarUInt16();
         public readonly MemVarUInt8 Vissl = new MemVarUInt8();
-        public readonly MemVarByteArray Kust = new MemVarByteArray(null, 0, new MemValueByteArray(5));
-        public readonly MemVarByteArray Skv = new MemVarByteArray(null, 0, new MemValueByteArray(6));
+        public readonly MemVarByteArray Kust = new MemVarByteArray(0, new MemValueByteArray(5));
+        public readonly MemVarByteArray Skv = new MemVarByteArray(0, new MemValueByteArray(6));
         public readonly MemVarUInt16 Field = new MemVarUInt16();
         public readonly MemVarUInt16 Shop = new MemVarUInt16();
         public readonly MemVarUInt16 Operator = new MemVarUInt16();
@@ -22,10 +20,18 @@ namespace SiamCross.Models.Sensors.Dua
         public readonly MemVarUInt16 Ntpop = new MemVarUInt16();
         public readonly MemVarUInt8 PerP = new MemVarUInt8();
         public readonly MemVarUInt8 KolP = new MemVarUInt8();
-        public readonly MemVarByteArray PerU = new MemVarByteArray(null, 0, new MemValueByteArray(5));
-        public readonly MemVarByteArray KolUr = new MemVarByteArray(null, 0, new MemValueByteArray(5));
+        public readonly MemVarByteArray PerU = new MemVarByteArray(0, new MemValueByteArray(5));
+        public readonly MemVarByteArray KolUr = new MemVarByteArray(0, new MemValueByteArray(5));
 
-        public TaskLoadSurveyInfo(Level model, ISensor sensor)
+        uint _BytesTotal;
+        uint _BytesProgress;
+        void SetProgressBytes(uint bytes)
+        {
+            _BytesProgress += bytes;
+            Progress = ((float)_BytesProgress / _BytesTotal);
+        }
+
+        public TaskLoadSurveyInfo(DuaSurveyCfg model, ISensor sensor)
             : base(sensor, "Опрос параметров измерения")
         {
             _Model = model;
@@ -48,33 +54,36 @@ namespace SiamCross.Models.Sensors.Dua
         {
             if (null == _Model || null == Connection || null == Sensor)
                 return false;
-            using (var timer = CreateProgressTimer(25000))
-                return await Update();
+
+            _BytesTotal = SurvayParam.Size;
+            _BytesProgress = 0;
+            _Cts.CancelAfter(20000);
+            return await Update();
         }
 
         async Task<bool> SingleUpdate()
         {
-            RespResult ret = await Connection.TryReadAsync(SurvayParam, null, _Cts.Token);
+            RespResult ret = await Connection.TryReadAsync(SurvayParam, SetProgressBytes, _Cts.Token);
             return RespResult.NormalPkg == ret;
         }
 
         public async Task<bool> Update()
         {
-            bool ret = false;
-            //if(_Model.Synched)
-            //    ret = true;
-            //else
+            bool readed = false;
+
+            if (!_Model.Synched)
             {
                 if (await CheckConnectionAsync())
                 {
                     InfoEx = "чтение";
-                    ret = await RetryExecAsync(3, SingleUpdate);
+                    readed = await RetryExecAsync(3, SingleUpdate);
+
                 }
             }
+            else
+                InfoEx = "обновлено";
 
-            _Model.Synched = ret;
-
-            if (ret)
+            if (readed)
             {
                 //await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 _Model.IsAutoswitchToAPR = 0 < (Revbit.Value & (1 << 5));
@@ -93,9 +102,9 @@ namespace SiamCross.Models.Sensors.Dua
                 KolUr.Value.CopyTo(_Model.LevelDelayIndex, 0);
 
                 InfoEx = "успешно выполнено";
-                
+                _Model.Synched = readed;
             }
-            else
+            else if (!_Model.Synched)
             {
                 _Model.IsAutoswitchToAPR = default;
                 _Model.IsValveAutomaticEnabled = default;
@@ -103,12 +112,13 @@ namespace SiamCross.Models.Sensors.Dua
                 _Model.IsValveDirectionInput = default;
                 _Model.IsPiezoDepthMax = default;
                 _Model.IsPiezoAdditionalGain = default;
-                _Model.SoundSpeedFixed = Level.DefaultSoundSpeedFixed;
+                _Model.SoundSpeedFixed = Constants.DefaultSoundSpeedFixed;
                 _Model.SoundSpeedTableId = default;
                 _Model.PressurePeriodIndex = default;
                 _Model.PressureDelayIndex = default;
-                _Model.LevelPeriodIndex.ForEach( (item)=> item=0);
+                _Model.LevelPeriodIndex.ForEach((item) => item = 0);
                 _Model.LevelDelayIndex.ForEach((item) => item = 0);
+                InfoEx = "set default";
             }
 
             _Model.ChangeNotify(nameof(_Model.IsAutoswitchToAPR));
@@ -123,7 +133,7 @@ namespace SiamCross.Models.Sensors.Dua
             _Model.ChangeNotify(nameof(_Model.PressureDelayIndex));
             _Model.ChangeNotify(nameof(_Model.LevelPeriodIndex));
             _Model.ChangeNotify(nameof(_Model.LevelDelayIndex));
-            return ret;
+            return _Model.Synched;
         }
 
     }

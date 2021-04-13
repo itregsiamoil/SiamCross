@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:survey="clr-namespace:SiamCross.ViewModels.Dua.Survey"
              x:Class="SiamCross.Views.Dua.LevelPage"
-             x:DataType="survey:LevelVM"
+             x:DataType="survey:SurveyVM"
              >
     <ContentPage.Resources>
         <Style TargetType="{x:Type StackLayout}">

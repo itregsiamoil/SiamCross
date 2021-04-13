@@ -38,7 +38,7 @@ namespace SiamCross.Services
             //ViewFactoryService.Register(typeof(StateVM), () => new StatePage());
             Register(typeof(SurveysCollectionVM), () => new SurveysCollectionPage());
 
-            Register(typeof(ViewModels.Dua.Survey.LevelVM)
+            Register(typeof(ViewModels.Dua.Survey.SurveyVM)
                 , () => new LevelPage());
             return Task.CompletedTask;
         }

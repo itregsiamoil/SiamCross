@@ -7,36 +7,47 @@ using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.ViewModels.MeasurementViewModels
 {
-    public class BaseSurveyVM : BaseVM, ISurvey
+    public class BaseSurveyVM : BaseVM, ISurvey, ISurveyCfg
     {
-        public ISensor Sensor { get; }
-        public string Name { get => Model.Name; set => Model.Name = value; }
-        public string Description { get => Model.Description; set => Model.Description = value; }
+        public string Name => Model.Name;
+        public string Description => Model.Description;
 
-        public BaseSurvey Model { get; }
+        public ISensor Sensor { get; }
+        public ISurvey Model { get; }
+        public ISurveyCfg Config { get; }
+
+        public ICommand CmdSaveParam { get; }
+        public ICommand CmdLoadParam { get; }
+        public ICommand CmdShow { get; }
         public ICommand CmdStart { get; set; }
-        public ICommand CmdSaveParam { get; set; }
-        public ICommand CmdLoadParam { get; set; }
-        public ICommand ShowConfigViewCommand { get; set; }
-        public BaseSurveyVM(ISensor sensor, BaseSurvey model)
+        public BaseSurveyVM(ISensor sensor, ISurvey model)
         {
             Sensor = sensor;
             Model = model;
-            CmdStart = Model?.CmdStart;
-            CmdSaveParam = Model?.CmdSaveParam;
-            CmdLoadParam = Model?.CmdLoadParam;
-            Model.PropertyChanged += StorageModel_PropertyChanged;
+            Config = Model?.Config;
 
-            ShowConfigViewCommand = new AsyncCommand(Show
-                , (Func<object, bool>)null, null, false, true);
+            CmdSaveParam = Config?.CmdSaveParam;
+            CmdLoadParam = Config?.CmdLoadParam;
+            //CmdShow = Config?.CmdShow;
+            CmdStart = Model?.CmdStart;
+
+            CmdShow = new AsyncCommand(DoShow,
+                (Func<bool>)null,
+                null, false, false);
+
+
+            if (null != Config)
+                Config.PropertyChanged += StorageModel_PropertyChanged;
+
         }
         private void StorageModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (sender != Model)
+            if (sender != Model.Config)
                 return;
             ChangeNotify(e.PropertyName);
         }
-        private async Task Show()
+
+        async Task DoShow()
         {
             try
             {

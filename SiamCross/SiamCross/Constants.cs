@@ -2,6 +2,8 @@
 {
     public static class Constants
     {
+        public static readonly double DefaultSoundSpeedFixed = 320;
+
         public const int BTLE_PKG_HDR_SIZE = 3;
         public const int BTLE_PKG_MAX_SIZE = 247;
 

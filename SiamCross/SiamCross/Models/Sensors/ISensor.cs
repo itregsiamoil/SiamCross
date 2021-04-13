@@ -14,6 +14,7 @@ namespace SiamCross.Models.Sensors
     {
         public readonly TaskManager Manager = new TaskManager();
         public IStorage Storage { get; set; }
+        public ISurveyCfg SurveyCfg { get; set; }
 
         public readonly List<ISurvey> Surveys = new List<ISurvey>();
     }

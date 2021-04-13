@@ -1,20 +1,17 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Sensors.Du.Measurement;
-using SiamCross.Models.Sensors.Dua.Surveys;
 using System;
-using System.Collections.Specialized;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dua
 {
-    public class TaskSurveyLevel : BaseSensorTask
+    public class TaskSurvey : BaseSensorTask
     {
-        readonly Level _Model;
-
         //public readonly MemStruct Operating = new MemStruct(0x8800);
-        public readonly MemVarUInt8 OpReg = new MemVarUInt8(null, 0x8800);
-        public readonly MemVarUInt16 StatusReg = new MemVarUInt16(null, 0x8802);
-        public readonly MemVarUInt16 Timeawt = new MemVarUInt16(null, 0x8416);
+        public readonly MemVarUInt8 OpReg = new MemVarUInt8(0x8800);
+        public readonly MemVarUInt16 StatusReg = new MemVarUInt16(0x8802);
+        public readonly MemVarUInt16 Timeawt = new MemVarUInt16(0x8416);
+        public readonly MemVarUInt8 Vissl = new MemVarUInt8(0x800A);
 
         static readonly int _TimeoutValvePrepare = 120000;
         static readonly int _TimeoutSurvay3000 = 20000;
@@ -22,18 +19,21 @@ namespace SiamCross.Models.Sensors.Dua
 
         int _SurveyTime = 0;
 
-        public TaskSurveyLevel(Level model, ISensor sensor, string name)
+        public TaskSurvey(ISensor sensor, string name, byte type)
             : base(sensor, name)
         {
-            _Model = model;
+            Vissl.Value = type;
         }
 
         public override async Task<bool> DoExecute()
         {
-            if (null == _Model || null == Connection || null == Sensor)
+            if (1 > Vissl.Value || 5 < Vissl.Value)
+                return false;
+            if (null == Connection || null == Sensor)
                 return false;
 
-            _SurveyTime = _TimeoutValvePrepare + (_Model.IsPiezoDepthMax ? _TimeoutSurvay6000 : _TimeoutSurvay3000);
+            //_SurveyTime = _TimeoutValvePrepare + (_Model.IsPiezoDepthMax ? _TimeoutSurvay6000 : _TimeoutSurvay3000);
+            _SurveyTime = _TimeoutValvePrepare + _TimeoutSurvay6000;
             _Cts.CancelAfter(_SurveyTime * 2);
 
             using (var timer = CreateProgressTimer(_SurveyTime))
@@ -44,12 +44,10 @@ namespace SiamCross.Models.Sensors.Dua
         {
             if (!await CheckConnectionAsync())
                 return false;
-        
+            InfoEx = "инициализация";
+            await Connection.WriteAsync(Vissl, null, _Cts.Token);
+            InfoEx = "запуск";
             OpReg.Value = 1;
-
-            //await DoBeforeCancelAsync();
-
-            InfoEx = "запуск исследования";
             await Connection.WriteAsync(OpReg, null, _Cts.Token);
             await ProcessSurvey();
             return true;

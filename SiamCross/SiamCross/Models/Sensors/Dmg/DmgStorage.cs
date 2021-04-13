@@ -193,9 +193,10 @@ namespace SiamCross.Models.Sensors.Dmg
             data_list.Add(measurement);
             return data_list;
         }
+        /*
         private async Task StartDownload()
         {
-            /*
+            
             Stopwatch _PerfCounter = new Stopwatch();
             _PerfCounter.Restart();
 
@@ -219,8 +220,9 @@ namespace SiamCross.Models.Sensors.Dmg
             IsDownloading = false;
             ToastService.Instance.LongAlert($"Elapsed {_PerfCounter.ElapsedMilliseconds}");
             await SensorService.MeasurementHandler(measurements[0], OpenOnDownload);
-            */
+          
 
         }
+          */
     }
 }

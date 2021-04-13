@@ -5,17 +5,28 @@ namespace SiamCross.Models.Sensors
 {
     public interface ISurvey
     {
-        ICommand CmdStart { get; set; }
-        ICommand CmdSaveParam { get; set; }
-        ICommand CmdLoadParam { get; set; }
+        string Name { get; }
+        string Description { get; }
+
+
+        ISurveyCfg Config { get; }
+        ICommand CmdStart { get; }
     }
     public class BaseSurvey : BaseVM, ISurvey
     {
-        public string Name;
-        public string Description;
+        protected readonly ISensor _Sensor;
+        public string Name { get; }
+        public string Description { get; }
+        public ISurveyCfg Config { get; set; }
         public ICommand CmdStart { get; set; }
-        public ICommand CmdSaveParam { get; set; }
-        public ICommand CmdLoadParam { get; set; }
+
+        public BaseSurvey(ISensor sensor, ISurveyCfg cfg, string name, string description)
+        {
+            _Sensor = sensor;
+            Name = name;
+            Description = description;
+            Config = cfg;
+        }
     }
 
 }

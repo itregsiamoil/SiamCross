@@ -1,56 +1,54 @@
 ﻿using SiamCross.Models.Connection.Protocol;
-using SiamCross.Models.Sensors.Dua.Surveys;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
-using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Sensors.Dua
 {
     public class TaskSaveSurveyInfo : BaseSensorTask
     {
-        readonly Level _Model;
+        readonly DuaSurveyCfg _Model;
 
-        public readonly MemStruct SurvayParam = new MemStruct(0x8008);
-        public readonly MemVarUInt16 Revbit = new MemVarUInt16();
-        public readonly MemVarUInt8 Vissl = new MemVarUInt8();
-        public readonly MemVarByteArray Kust = new MemVarByteArray(null, 0, new MemValueByteArray(5));
-        public readonly MemVarByteArray Skv = new MemVarByteArray(null, 0, new MemValueByteArray(6));
-        public readonly MemVarUInt16 Field = new MemVarUInt16();
-        public readonly MemVarUInt16 Shop = new MemVarUInt16();
-        public readonly MemVarUInt16 Operator = new MemVarUInt16();
-        public readonly MemVarUInt16 Vzvuk = new MemVarUInt16();
-        public readonly MemVarUInt16 Ntpop = new MemVarUInt16();
-        public readonly MemVarUInt8 PerP = new MemVarUInt8();
-        public readonly MemVarUInt8 KolP = new MemVarUInt8();
-        public readonly MemVarByteArray PerU = new MemVarByteArray(null, 0, new MemValueByteArray(5));
-        public readonly MemVarByteArray KolUr = new MemVarByteArray(null, 0, new MemValueByteArray(5));
+        public readonly List<MemVar> Reg = new List<MemVar>();
 
-        public TaskSaveSurveyInfo(Level model, ISensor sensor)
+        public readonly MemVarUInt16 Revbit = new MemVarUInt16(0x8008);
+        public readonly MemVarUInt16 Vzvuk = new MemVarUInt16(0x801C);
+        public readonly MemVarUInt16 Ntpop = new MemVarUInt16(0x801E);
+        public readonly MemVarUInt8 PerP = new MemVarUInt8(0x8020);
+        public readonly MemVarUInt8 KolP = new MemVarUInt8(0x8021);
+        public readonly MemVarByteArray PerU = new MemVarByteArray(0x8022, new MemValueByteArray(5));
+        public readonly MemVarByteArray KolUr = new MemVarByteArray(0x8027, new MemValueByteArray(5));
+
+        uint _BytesTotal;
+        uint _BytesProgress;
+
+
+        public TaskSaveSurveyInfo(DuaSurveyCfg model, ISensor sensor)
             : base(sensor, "Запись параметров измерения")
         {
             _Model = model;
-            SurvayParam.Add(Revbit);
-            SurvayParam.Add(Vissl);
-            SurvayParam.Add(Kust);
-            SurvayParam.Add(Skv);
-            SurvayParam.Add(Field);
-            SurvayParam.Add(Shop);
-            SurvayParam.Add(Operator);
-            SurvayParam.Add(Vzvuk);
-            SurvayParam.Add(Ntpop);
-            SurvayParam.Add(PerP);
-            SurvayParam.Add(KolP);
-            SurvayParam.Add(PerU);
-            SurvayParam.Add(KolUr);
+            Reg.Add(Revbit);
+            Reg.Add(Vzvuk);
+            Reg.Add(Ntpop);
+            Reg.Add(PerP);
+            Reg.Add(KolP);
+            Reg.Add(PerU);
+            Reg.Add(KolUr);
         }
 
         public override async Task<bool> DoExecute()
         {
             if (null == _Model || null == Connection || null == Sensor)
                 return false;
-            using (var timer = CreateProgressTimer(25000))
-                return await DoSave();
+
+            _Cts.CancelAfter(20000);
+
+            _BytesTotal = 0;
+            _BytesProgress = 0;
+            Reg.ForEach((r) => _BytesTotal += r.Size);
+
+            return await DoSave();
         }
         public async Task<bool> DoSave()
         {
@@ -79,7 +77,7 @@ namespace SiamCross.Models.Sensors.Dua
                 myBV[bit9] = _Model.IsPiezoAdditionalGain;
 
                 Revbit.Value = (UInt16)myBV.Data;
-                Vissl.Value = _Model.SurveyType;
+
                 Vzvuk.Value = (UInt16)(_Model.SoundSpeedFixed * 10);
                 Ntpop.Value = _Model.SoundSpeedTableId;
 
@@ -96,20 +94,26 @@ namespace SiamCross.Models.Sensors.Dua
             if (ret)
             {
                 InfoEx = "успешно выполнено";
-                
+
             }
             return ret;
         }
         async Task<bool> DoSaveSingle()
         {
-            foreach(var p in SurvayParam.GetVars())
+            foreach (var r in Reg)
             {
                 RespResult ret
-                    = await Connection.TryWriteAsync(p, null, _Cts.Token);
+                    = await Connection.TryWriteAsync(r, SetProgressBytes, _Cts.Token);
                 if (RespResult.NormalPkg != ret)
                     return false;
             }
             return true;
+        }
+
+        void SetProgressBytes(uint bytes)
+        {
+            _BytesProgress += bytes;
+            Progress = ((float)_BytesProgress / _BytesTotal);
         }
     }
 }
