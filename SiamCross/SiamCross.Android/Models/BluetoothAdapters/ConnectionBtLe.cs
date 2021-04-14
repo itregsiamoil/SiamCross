@@ -118,10 +118,10 @@ namespace SiamCross.Droid.Models
             _deviceGuid = Guid.Parse(deviceInfo.Id);
         }
 
-        public override async Task<bool> Connect()
+        public override async Task<bool> Connect(CancellationToken ct)
         {
             SetState(ConnectionState.PendingConnect);
-            bool ret = await DoConnectAsync();
+            bool ret = await DoConnectAsync(ct);
             if (ret)
                 SetState(ConnectionState.Connected);
             else
@@ -137,9 +137,8 @@ namespace SiamCross.Droid.Models
             return ret;
         }
 
-        private async Task<bool> DoConnectAsync()
+        private async Task<bool> DoConnectAsync(CancellationToken ct)
         {
-            CancellationTokenSource cts = new CancellationTokenSource(mConnectTimeout);
             try
             {
                 if (null == mInterface)
@@ -160,14 +159,14 @@ namespace SiamCross.Droid.Models
                 _device = paired.Where(x => x.Id == _deviceGuid).FirstOrDefault();
                 if (null != _device)
                 {
-                    await Adapter.ConnectToDeviceAsync(_device, conn_param, cts.Token);
+                    await Adapter.ConnectToDeviceAsync(_device, conn_param, ct);
                 }
 
 
                 // try get NON paired
                 if (null == _device)
                 {
-                    _device = await Adapter.ConnectToKnownDeviceAsync(_deviceGuid, conn_param, cts.Token);
+                    _device = await Adapter.ConnectToKnownDeviceAsync(_deviceGuid, conn_param, ct);
                 }
 
                 /*
@@ -193,7 +192,7 @@ namespace SiamCross.Droid.Models
                     //_isFirstConnectionTry = false;
                     return false;
                 }
-                bool is_inited = await InitializeAsync(cts.Token);
+                bool is_inited = await InitializeAsync(ct);
                 if (!is_inited)
                     await Disconnect();
                 else
@@ -209,7 +208,6 @@ namespace SiamCross.Droid.Models
             }
             finally
             {
-                cts?.Dispose();
             }
             return false;
         }
@@ -387,6 +385,11 @@ namespace SiamCross.Droid.Models
                 sent += curr_count;
             }
             return sent;
+        }
+        public override async void Dispose()
+        {
+            await Disconnect();
+            mInterface.Disable();
         }
     }
 

@@ -73,7 +73,7 @@
                                                     BackgroundColor="{StaticResource colorCtrlBg}"
                                                     Padding="5" Margin="0" Spacing="0" >
                                             <StackLayout.Triggers>
-                                                <DataTrigger TargetType="StackLayout" Binding="{Binding IsAlive}" Value="true" >
+                                                <DataTrigger TargetType="StackLayout" Binding="{Binding Connection.State}" Value="Connected" >
                                                     <Setter Property="BackgroundColor" Value="{StaticResource colorCtrlNormal}"   />
                                                 </DataTrigger>
                                             </StackLayout.Triggers>

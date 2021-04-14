@@ -1,6 +1,4 @@
 ﻿using SiamCross.Models.Connection.Protocol;
-using SiamCross.Models.Sensors.Du.Measurement;
-using System;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dua
@@ -32,7 +30,6 @@ namespace SiamCross.Models.Sensors.Dua
             await Connection.WriteAsync(OpReg, null, _Cts.Token);
             return true;
         }
-        
     }
 }
 

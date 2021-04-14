@@ -7,22 +7,14 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models.Connection.Protocol
 {
-    public abstract class BaseProtocol : IProtocolConnection
+    public abstract class BaseProtocol : ViewModels.BaseVM, IProtocolConnection
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropChange(PropertyChangedEventArgs arg)
+        void OnConnectionChange(object sender, PropertyChangedEventArgs e)
         {
-            PropertyChanged?.Invoke(this, arg);
+            if (sender.Equals(mPhyConn) && e.PropertyName == nameof(Connection.IConnection.State))
+                ChangeNotify(nameof(State));
         }
-
-        private ConnectionState _ConnState = ConnectionState.Disconnected;
-        protected void SetState(ConnectionState state)
-        {
-            _ConnState = state;
-            OnPropChange(new PropertyChangedEventArgs(nameof(State)));
-        }
-
-        public ConnectionState State => _ConnState;
+        public ConnectionState State => mPhyConn.State;
 
 
         protected IPhyConnection mPhyConn = null;
@@ -41,7 +33,7 @@ namespace SiamCross.Models.Connection.Protocol
                         - Constants.SIAM_PKG_CRC_SIZE - Constants.SIAM_PKG_HDR_SIZE;
                 else
                     _MaxReqLen = value;
-                OnPropChange(new PropertyChangedEventArgs(nameof(MaxReqLen)));
+                ChangeNotify();
             }
         }
 
@@ -54,7 +46,7 @@ namespace SiamCross.Models.Connection.Protocol
                 if (0 < value && 128 > value)
                 {
                     _Address = value;
-                    OnPropChange(new PropertyChangedEventArgs(nameof(Address)));
+                    ChangeNotify();
                 }
             }
         }
@@ -72,74 +64,15 @@ namespace SiamCross.Models.Connection.Protocol
         {
             _Address = address;
             mPhyConn = base_conn;
+            mPhyConn.PropertyChanged += OnConnectionChange;
         }
-        public virtual async Task<bool> Connect()
+        public virtual Task<bool> Connect(CancellationToken ct)
         {
-            if (ConnectionState.Connected == mPhyConn.State)
-            {
-                SetState(ConnectionState.Connected);
-                return true;
-            }
-
-            bool result = false;
-            try
-            {
-                SetState(ConnectionState.PendingConnect);
-                result = await mPhyConn.Connect();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Exception in: "
-                    + System.Reflection.MethodBase.GetCurrentMethod().Name
-                    + "\n msg=" + ex.Message
-                    + "\n type=" + ex.GetType()
-                    + "\n stack=" + ex.StackTrace + "\n");
-                result = false;
-                await Disconnect();
-            }
-            finally
-            {
-                if (result)
-                {
-                    if (ConnectionState.Connected != State)
-                        SetState(ConnectionState.Connected);
-                }
-                else
-                {
-                    if (ConnectionState.Disconnected != State)
-                        SetState(ConnectionState.Disconnected);
-                }
-
-            }
-            return result;
+            return mPhyConn.Connect(ct);
         }
-        public virtual async Task<bool> Disconnect()
+        public virtual Task<bool> Disconnect()
         {
-            if (ConnectionState.Disconnected == mPhyConn.State)
-            {
-                SetState(ConnectionState.Disconnected);
-                return true;
-            }
-
-            bool ret = false;
-            try
-            {
-                SetState(ConnectionState.PendingDisconnect);
-                ret = await mPhyConn.Disconnect();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Exception in: "
-                    + System.Reflection.MethodBase.GetCurrentMethod().Name
-                    + "\n msg=" + ex.Message
-                    + "\n type=" + ex.GetType()
-                    + "\n stack=" + ex.StackTrace + "\n");
-            }
-            finally
-            {
-                SetState(ConnectionState.Disconnected);
-            }
-            return ret;
+            return mPhyConn.Disconnect();
         }
 
         private void ThrowOnError(RespResult ret)
@@ -238,5 +171,9 @@ namespace SiamCross.Models.Connection.Protocol
             return WriteAsync(tmp_struct, onStep, ct);
         }
 
+        public virtual void Dispose()
+        {
+            mPhyConn.PropertyChanged -= OnConnectionChange;
+        }
     }
 }

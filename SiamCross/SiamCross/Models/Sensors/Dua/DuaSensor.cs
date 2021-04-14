@@ -50,6 +50,7 @@ namespace SiamCross.Models.Sensors.Dua
 
         public readonly MemStruct _Operating;//0x8800
         public readonly MemVarUInt8 OpReg;
+        public readonly MemVarUInt8 Reserved;
         public readonly MemVarUInt16 StatusReg;
 
         public readonly MemStruct _Report;//0x80000000 
@@ -81,6 +82,7 @@ namespace SiamCross.Models.Sensors.Dua
 
             _Operating = new MemStruct(0x8800);
             OpReg = _Operating.Add(new MemVarUInt8(nameof(OpReg)));
+            Reserved = _Operating.Add(new MemVarUInt8(nameof(Reserved)));
             StatusReg = _Operating.Add(new MemVarUInt16(nameof(StatusReg)));
 
             _Report = new MemStruct(0x80000000);
@@ -184,6 +186,16 @@ namespace SiamCross.Models.Sensors.Dua
             return false;
         }
 
+
+        public override bool Activate
+        {
+            get => Model.ConnHolder.IsActivated;
+            set
+            {
+                Model.ConnHolder.IsActivated = value;
+                ChangeNotify(nameof(Activate));
+            }
+        }
 
     }//DuaSensor
 }

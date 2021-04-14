@@ -80,7 +80,7 @@ namespace SiamCross.Models.Sensors
 
         public override async Task<bool> PostConnectInit(CancellationToken cancelToken)
         {
-            await Connection.Connect();
+            await Connection.Connect(cancelToken);
             Status = Resource.ConnectedStatus;
             return (await UpdateFirmware(cancelToken));
         }

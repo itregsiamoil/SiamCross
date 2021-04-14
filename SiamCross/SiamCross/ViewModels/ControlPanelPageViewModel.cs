@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using NLog;
 using SiamCross.AppObjects;
+using SiamCross.Models.Connection;
 using SiamCross.Models.Sensors;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
@@ -147,7 +148,7 @@ namespace SiamCross.ViewModels
                                 s => s.Id == sensorata.Id);
             if (sensor != null)
             {
-                if (sensor.IsAlive)
+                if (ConnectionState.Connected == sensor.Connection.State)
                 {
                     if (sensor.IsMeasurement)
                         result = false;

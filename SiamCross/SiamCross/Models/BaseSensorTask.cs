@@ -23,7 +23,7 @@ namespace SiamCross.Models
             Name = name;
         }
 
-        protected Timer CreateProgressTimer(int ms, float progressStart=0.0f)
+        protected Timer CreateProgressTimer(int ms, float progressStart = 0.0f)
         {
             Progress = progressStart;
             ProgressRemain = 1f - progressStart;
@@ -34,7 +34,7 @@ namespace SiamCross.Models
         protected void OnTimer(object obj)
         {
             var currenProgress = 1f / TimerRetry;
-            Progress += currenProgress* ProgressRemain;
+            Progress += currenProgress * ProgressRemain;
         }
 
         public async Task<bool> RetryExecAsync(uint retry, Func<Task<bool>> fn)
@@ -51,6 +51,8 @@ namespace SiamCross.Models
 
         public async Task<bool> CheckConnectionAsync()
         {
+            if (Models.Connection.ConnectionState.Connected == Sensor.Connection.State)
+                return true;
             InfoEx = Resource.StatConn_PendingConnect;
             if (await Sensor.DoActivate(_Cts.Token))
                 return true;

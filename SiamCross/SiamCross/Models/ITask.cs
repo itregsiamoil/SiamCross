@@ -72,8 +72,8 @@ namespace SiamCross.Models
             _Cts = new CancellationTokenSource();
             try
             {
-                Progress = 0f;
                 Manager = mgr;
+                Progress = 0f;
                 ret = await DoExecute();
             }
             catch (Exception ex)

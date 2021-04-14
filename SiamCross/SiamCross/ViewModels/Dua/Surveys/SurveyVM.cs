@@ -137,7 +137,7 @@ namespace SiamCross.ViewModels.Dua.Survey
         }
         public byte SurveyType => _ModelSurvey.SurveyType;
 
-        public bool IsVisiblePressureSheduler => 5==_ModelSurvey.SurveyType;
+        public bool IsVisiblePressureSheduler => 5 == _ModelSurvey.SurveyType;
         public bool IsVisibleLevelSheduler => (3 == _ModelSurvey.SurveyType || 4 == _ModelSurvey.SurveyType);
 
         public SurveyVM(ISensor sensor, DuaSurvey model)

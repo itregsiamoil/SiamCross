@@ -16,6 +16,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -146,7 +147,10 @@ namespace SiamCross.ViewModels
                 {
                     case 0: // ProtocolKind.Siam:
                         IProtocolConnection connection = new SiamConnection(phy_conn);
-                        if (await connection.Connect() && RespResult.NormalPkg == await connection.ReadAsync(_Common))
+                        CancellationTokenSource cts = new CancellationTokenSource(10000);
+                        bool connected = await connection.Connect(cts.Token);
+                        cts.Dispose();
+                        if (connected && RespResult.NormalPkg == await connection.ReadAsync(_Common))
                         {
                             UInt32 address = DeviceNameAddress.Value;
                             UInt16 len = DeviceNameSize.Value;

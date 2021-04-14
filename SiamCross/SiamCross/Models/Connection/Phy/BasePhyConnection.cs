@@ -34,7 +34,8 @@ namespace SiamCross.Models.Connection.Phy
         public abstract void ClearTx();
         public abstract Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken);
         public abstract Task<int> WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken);
-        public abstract Task<bool> Connect();
+        public abstract Task<bool> Connect(CancellationToken ct);
         public abstract Task<bool> Disconnect();
+        public abstract void Dispose();
     }
 }

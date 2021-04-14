@@ -51,7 +51,7 @@ namespace SiamCross.Models
                         return false;
                     Subscribe(task);
                 }
-                ret = await task.ExecAsync(this).ConfigureAwait(false);
+                ret = await task.ExecAsync(this);
                 using (await _Lock.UseWaitAsync())
                     Unsubscribe();
             }

@@ -2,7 +2,6 @@
 using SiamCross.Models.Sensors.Du.Measurement;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dua
@@ -10,7 +9,7 @@ namespace SiamCross.Models.Sensors.Dua
     public class TaskWaitSurvey : BaseSensorTask
     {
         public readonly List<MemVar> Reg = new List<MemVar>();
-        
+
         public readonly MemVarUInt8 OpReg = new MemVarUInt8(0x8800);
         public readonly MemVarUInt16 StatusReg = new MemVarUInt16(0x8802);
 
@@ -21,7 +20,7 @@ namespace SiamCross.Models.Sensors.Dua
 
         public readonly MemVarUInt16 Revbit = new MemVarUInt16(0x8008);
         public readonly MemVarUInt8 Vissl = new MemVarUInt8(0x800A);
-        
+
         public readonly MemVarUInt8 PerP = new MemVarUInt8(0x8020);
         public readonly MemVarUInt8 KolP = new MemVarUInt8(0x8021);
         public readonly MemVarByteArray PerU = new MemVarByteArray(0x8022, new MemValueByteArray(5));
@@ -62,17 +61,14 @@ namespace SiamCross.Models.Sensors.Dua
         {
             if (null == Connection || null == Sensor)
                 return false;
-            if (!await CheckConnectionAsync())
-                return false;
-
             if (!await RetryExecAsync(3, LoadState))
                 return false;
             CalcSurveyTime();
-            _Cts.CancelAfter(_Remain);
 
             double progressStart = (double)_Remain.TotalMilliseconds / _Total.TotalMilliseconds;
             int totalmsec = (int)_Remain.TotalMilliseconds;
             InfoEx = "измерение";
+            _Cts.CancelAfter(_Remain);
             using (var timer = CreateProgressTimer(totalmsec, (float)progressStart))
                 return await ProcessSurvey();
         }
@@ -98,10 +94,10 @@ namespace SiamCross.Models.Sensors.Dua
                     case DuMeasurementStatus.WaitingForClick:
                     case DuMeasurementStatus.Empty:
                     case DuMeasurementStatus.NoiseMeasurement:
-                        InfoEx = $"{remain}\nклапан: {DuStatusAdapter.StatusToString(status)}";
+                        InfoEx = $"{remain}\n{DuStatusAdapter.StatusToString(status)}";
                         break;
                     case DuMeasurementStatus.ValvePreparation:
-                        InfoEx = $"{remain}\nклапан: {DuStatusAdapter.StatusToString(status)}, осталось { Timeawt.Value}сек.";
+                        InfoEx = $"{remain}\n{DuStatusAdapter.StatusToString(status)}, осталось { Timeawt.Value}сек.";
                         await UpdateValvePreparation();
                         break;
                 }
@@ -112,6 +108,10 @@ namespace SiamCross.Models.Sensors.Dua
         private async Task<bool> LoadState()
         {
             InfoEx = "инициализация";
+
+            if (!await CheckConnectionAsync())
+                return false;
+
             RespResult ret = RespResult.NormalPkg;
 
             ret = await Connection.TryReadAsync(StatusReg, null, _Cts.Token);
@@ -149,7 +149,7 @@ namespace SiamCross.Models.Sensors.Dua
             ret = await Connection.TryReadAsync(KolUr, null, _Cts.Token);
             if (RespResult.NormalPkg != ret)
                 return false;
-            
+
             /*
             foreach (var r in Reg)
             {
@@ -190,10 +190,10 @@ namespace SiamCross.Models.Sensors.Dua
         TimeSpan CalcSheduledLevelTotal()
         {
             int surveysTimeSec = 0;
-            for(int i=0; i< PerU.Value.Length; ++i)    
+            for (int i = 0; i < PerU.Value.Length; ++i)
             {
                 var survRemain = Constants.Quantitys[KolUr.Value[i]];
-                surveysTimeSec += survRemain * Constants.Periods[PerU.Value[i]];
+                surveysTimeSec += survRemain * (Constants.Periods[PerU.Value[i]] * 60 + (_TimeoutValvePrepare + _TimeoutSurvay6000)/1000);
             }
             var ts = TimeSpan.FromSeconds(surveysTimeSec);
             return ts;
@@ -201,7 +201,7 @@ namespace SiamCross.Models.Sensors.Dua
         TimeSpan CalcSheduledPressureTotal()
         {
             var survRemain = Constants.Quantitys[KolP.Value];
-            var surveysTimeSec = survRemain * Constants.Periods[PerP.Value];
+            var surveysTimeSec = survRemain * Constants.Periods[PerP.Value]*60;
             var ts = TimeSpan.FromSeconds(surveysTimeSec);
             return ts;
         }
@@ -210,7 +210,7 @@ namespace SiamCross.Models.Sensors.Dua
             DuMeasurementStatus status = (DuMeasurementStatus)StatusReg.Value;
             switch (status)
             {
-                default: 
+                default:
                 case DuMeasurementStatus.Сompleted:
                     break;
                 case DuMeasurementStatus.EсhoMeasurement:
@@ -220,30 +220,29 @@ namespace SiamCross.Models.Sensors.Dua
                 case DuMeasurementStatus.NoiseMeasurement:
                     return TimeSpan.FromMilliseconds(_TimeoutSurvay6000 + _TimeoutValvePrepare);
                 case DuMeasurementStatus.ValvePreparation:
-                    return TimeSpan.FromMilliseconds(_TimeoutSurvay6000 + Timeawt.Value*1000);
+                    return TimeSpan.FromMilliseconds(_TimeoutSurvay6000 + Timeawt.Value * 1000);
             }
             return TimeSpan.FromMilliseconds(1);
         }
         TimeSpan CalcSheduledLevelRemain()
         {
             int surveysTimeSec = 0;
-            var i = Interv.Value;
-            while(i< PerU.Value.Length)
+            for (int i= Interv.Value; i < PerU.Value.Length;++i)
             {
-                var survRemain  = (i == Interv.Value)? Kolt.Value : Constants.Quantitys[KolUr.Value[i]];
-                surveysTimeSec += survRemain * Constants.Periods[PerU.Value[i]];
+                var survRemain = (i == Interv.Value) ? Kolt.Value : Constants.Quantitys[KolUr.Value[i]];
+                surveysTimeSec += survRemain * (Constants.Periods[PerU.Value[i]] * 60 + (_TimeoutValvePrepare + _TimeoutSurvay6000) / 1000);
             }
 
             surveysTimeSec += Timeost.Value[0] * 3600 + Timeost.Value[1] * 60 + Timeost.Value[2];
 
             var ts = TimeSpan.FromSeconds(surveysTimeSec);
-            ts += CalcNonSheduledRemain();
+            //ts += CalcNonSheduledRemain();
             return ts;
         }
         TimeSpan CalcSheduledPressureRemain()
         {
             var survRemain = Constants.Quantitys[KolP.Value];
-            var surveysTimeSec = survRemain * Constants.Periods[PerP.Value];
+            var surveysTimeSec = survRemain * Constants.Periods[PerP.Value]*60;
             surveysTimeSec += Timeost.Value[0] * 3600 + Timeost.Value[1] * 60 + Timeost.Value[2];
 
             var ts = TimeSpan.FromSeconds(surveysTimeSec);

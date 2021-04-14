@@ -20,10 +20,10 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             _TxBuf[2] = base.Address;
         }
 
-        public override async Task<bool> Connect()
+        public override async Task<bool> Connect(CancellationToken ct)
         {
-            using (await _semaphore.UseWaitAsync())
-                return await base.Connect();
+            using (await _semaphore.UseWaitAsync(ct))
+                return await base.Connect(ct);
         }
         public override async Task<bool> Disconnect()
         {
@@ -247,12 +247,12 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             RespResult ret = RespResult.ErrorTimeout;
             for (int i = 0; i < retry && NeedRetry(ret); ++i)
             {
-                DebugLog.WriteLine("START transaction, try " + i.ToString());
-                //if (PhyConnection.State != ConnectionState.Connected)
+                if (PhyConnection.State != ConnectionState.Connected)
                 {
-                    //ret = RespResult.ErrorConnection;
+                    ret = RespResult.ErrorConnection;
                     //await base.Connect();
                 }
+                DebugLog.WriteLine("START transaction, try " + i.ToString());
                 ret = await SingleExchangeAsync();
                 DebugLog.WriteLine("END transaction, try " + i.ToString());
             }
@@ -346,7 +346,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
 #if DEBUG
                 _PerfCounter.Restart();
 #endif
-                using (await _semaphore.UseWaitAsync())
+                using (await _semaphore.UseWaitAsync(cancellationToken))
                 {
                     return await DoReadMemoryAsync(start_addr, mem_size
                         , dst, dst_start, onStepProgress, cancellationToken);
@@ -363,7 +363,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             , byte[] src, int src_start = 0
             , Action<uint> onStepProgress = null, CancellationToken cancellationToken = default)
         {
-            using (await _semaphore.UseWaitAsync())
+            using (await _semaphore.UseWaitAsync(cancellationToken))
             {
                 try
                 {
@@ -465,7 +465,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         public override async Task<RespResult> TryReadAsync(MemStruct var
             , Action<uint> onStepProgress, CancellationToken ct)
         {
-            using (await _semaphore.UseWaitAsync())
+            using (await _semaphore.UseWaitAsync(ct))
             {
                 try
                 {
@@ -485,7 +485,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         public override async Task<RespResult> TryWriteAsync(MemStruct var
                 , Action<uint> onStepProgress, CancellationToken ct)
         {
-            using (await _semaphore.UseWaitAsync())
+            using (await _semaphore.UseWaitAsync(ct))
             {
                 try
                 {

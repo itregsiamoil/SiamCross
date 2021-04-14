@@ -32,7 +32,6 @@ namespace SiamCross.Models.Sensors
             Status = "";
 
             mConnection = conn;
-            IsAlive = false;
             IsMeasurement = false;
             // Получение планировщика UI для потока, который создал форму:
             //_uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
@@ -54,12 +53,17 @@ namespace SiamCross.Models.Sensors
             TaskManager = new TaskManagerVM(_Model.Manager);
 
             SurveysVM = new SurveysCollectionVM(this);
+
+            Model.ConnHolder = new ConnectionHolder(
+                Model.Manager, Connection, QuickReport);
+
         }
 
-        public async void Dispose()
+        public virtual async void Dispose()
         {
             await Deactivate();
             await mConnection.Disconnect();
+            Model?.Dispose();
         }
         #endregion
         #region basic implementation
@@ -83,16 +87,7 @@ namespace SiamCross.Models.Sensors
         }
         public IProtocolConnection Connection => mConnection;
 
-        private bool mIsAlive = false;
-        public bool IsAlive
-        {
-            get => mIsAlive;
-            protected set
-            {
-                mIsAlive = value;
-                ChangeNotify();
-            }
-        }
+        private bool mIsAlive;
 
         private bool mIsMeasurement = false;
         public bool IsMeasurement
@@ -104,13 +99,12 @@ namespace SiamCross.Models.Sensors
                 ChangeNotify();
             }
         }
-        private bool _IsEnableQickInfo = true;
         public bool IsEnableQickInfo
         {
-            get => _IsEnableQickInfo;
+            get => Model.ConnHolder.IsQickInfo;
             set
             {
-                _IsEnableQickInfo = value;
+                Model.ConnHolder.IsQickInfo = value;
                 ChangeNotify();
             }
         }
@@ -155,13 +149,13 @@ namespace SiamCross.Models.Sensors
         private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
         #endregion
 
-        public async Task<bool> DoActivate(CancellationToken token = default)
+        public async Task<bool> DoActivate(CancellationToken ct = default)
         {
             bool connected = false;
             for (int i = 0; i < Connection.Retry
                             && !connected
-                            && !token.IsCancellationRequested; ++i)
-                connected = await Connection.Connect();
+                            && !ct.IsCancellationRequested; ++i)
+                connected = await Connection.Connect(ct);
             if (connected && !Activate)
                 Activate = true;
             return connected;
@@ -257,7 +251,7 @@ namespace SiamCross.Models.Sensors
             {
             }
         }
-        public bool Activate
+        public virtual bool Activate
         {
             get => _activated;
             set
@@ -278,32 +272,7 @@ namespace SiamCross.Models.Sensors
             }
         }
 
-        public string Name => ScannedDeviceInfo.Title;
 
-        public string Type
-        {
-            get
-            {
-                if (DeviceIndex.Instance.TryGetName(ScannedDeviceInfo.Device.Kind, out string str))
-                    return str;
-                return string.Empty;
-            }
-        }
-
-
-        public string Firmware { get; protected set; }
-
-        public string Battery { get; protected set; }
-
-        public string Temperature { get; protected set; }
-
-        public string RadioFirmware { get; protected set; }
-
-
-        string _status;
-        public string Status { get => _status; set { _status = value; ChangeNotify(); } }
-
-        public Guid Id => ScannedDeviceInfo.Guid;
 
         private async Task ExecuteAsync(CancellationToken cancelToken)
         {
@@ -313,13 +282,13 @@ namespace SiamCross.Models.Sensors
             {
                 try
                 {
-                    if (IsAlive)
+                    if (mIsAlive)
                     {
                         if (IsEnableQickInfo && !IsMeasurement)
                         {
                             if (false == await QuickReport(cancelToken))
                             {
-                                IsAlive = false;
+                                mIsAlive = false;
                                 continue;
                             }
                             if (rssi_update_period > rssi_update_curr++)
@@ -337,30 +306,30 @@ namespace SiamCross.Models.Sensors
                     }
                     else
                     {
-                        IsAlive = await StartAlive(cancelToken);
-                        if (!IsAlive)
+                        mIsAlive = await StartAlive(cancelToken);
+                        if (!mIsAlive)
                             await Task.Delay(2000, cancelToken);
                     }
                 }
                 catch (IOTimeoutException)
                 {
-                    IsAlive = false;
+                    mIsAlive = false;
                     Status = "IOEx_Timeout";
                 }
                 catch (IOErrPkgException)
                 {
-                    IsAlive = false;
+                    mIsAlive = false;
                     Status = "IOEx_ErrorResponse";
                 }
             }// while (true)
         }// ExecuteAsync(CancellationToken cancelToken)
 
-        private async Task<bool> StartAlive(CancellationToken cancelToken)
+        protected async Task<bool> StartAlive(CancellationToken ct)
         {
             ClearStatus();
-            cancelToken.ThrowIfCancellationRequested();
-            if (!await Connection.Connect()
-                || !await PostConnectInit(cancelToken))
+            ct.ThrowIfCancellationRequested();
+            if (!await Connection.Connect(ct)
+                || !await PostConnectInit(ct))
             {
                 Debug.WriteLine("StartAlive FAILED");
                 await mConnection.Disconnect();
@@ -375,6 +344,28 @@ namespace SiamCross.Models.Sensors
         public abstract Task<bool> PostConnectInit(CancellationToken cancellationToken);
         #endregion
 
+
+
+
+
+        public string Name => ScannedDeviceInfo.Title;
+        public string Type
+        {
+            get
+            {
+                if (DeviceIndex.Instance.TryGetName(ScannedDeviceInfo.Device.Kind, out string str))
+                    return str;
+                return string.Empty;
+            }
+        }
+        public string Firmware { get; protected set; }
+        public string Battery { get; protected set; }
+        public string Temperature { get; protected set; }
+        public string RadioFirmware { get; protected set; }
+        string _status;
+        public string Status { get => _status; set { _status = value; ChangeNotify(); } }
+        public Guid Id => ScannedDeviceInfo.Guid;
+
         protected readonly List<MemStruct> _Memory = new List<MemStruct>();
         public List<MemStruct> Memory => _Memory;
         protected void ClearStatus()
@@ -385,7 +376,7 @@ namespace SiamCross.Models.Sensors
             Firmware = "";
             RadioFirmware = "";
             Status = "";
-            IsAlive = false;
+            mIsAlive = false;
         }
 
 

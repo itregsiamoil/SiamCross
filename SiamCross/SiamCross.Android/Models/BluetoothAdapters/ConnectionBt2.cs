@@ -142,10 +142,10 @@ namespace SiamCross.Droid.Models
             _scannedDeviceInfo = deviceInfo;
         }
 
-        public override async Task<bool> Connect()
+        public override async Task<bool> Connect(CancellationToken ct)
         {
             SetState(ConnectionState.PendingConnect);
-            bool ret = await DoConnectAsync();
+            bool ret = await DoConnectAsync(ct);
             if (ret)
                 SetState(ConnectionState.Connected);
             else
@@ -161,16 +161,20 @@ namespace SiamCross.Droid.Models
             return ret;
         }
 
-        private async Task<bool> DoConnectAsync()
+        private async Task<bool> DoConnectAsync(CancellationToken ct)
         {
             try
             {
+                ct.ThrowIfCancellationRequested();
+
                 if (null == mInterface)
                     return false;
                 if (!mInterface.IsEnbaled)
                     mInterface.Enable();
                 if (!mInterface.IsEnbaled)
                     return false;
+
+                ct.ThrowIfCancellationRequested();
 
                 _bluetoothDevice = BluetoothAdapter.GetRemoteDevice(_scannedDeviceInfo.Mac);
                 if (null == _bluetoothDevice)
@@ -187,10 +191,11 @@ namespace SiamCross.Droid.Models
                 //var callback = new BluetoothGattCallbackExt(this);
                 //_bluetoothDevice.ConnectGatt(ctx, true, callback);
 
-
+                ct.ThrowIfCancellationRequested();
                 //_socket = _bluetoothDevice.CreateRfcommSocketToServiceRecord(UUID.FromString(_uuid));
                 _socket = _bluetoothDevice.CreateInsecureRfcommSocketToServiceRecord(UUID.FromString(_uuid));
 
+                ct.ThrowIfCancellationRequested();
                 if (_socket == null)
                 {
                     System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile.Connect "
@@ -208,6 +213,7 @@ namespace SiamCross.Droid.Models
                     , CtRxSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
 
                 BtBroadcastReceiver.OnDisconectedEvent += OnDisconected;
+                ct.ThrowIfCancellationRequested();
                 return true;
             }
             catch (Java.IO.IOException e)
@@ -226,6 +232,14 @@ namespace SiamCross.Droid.Models
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothClassicAdapterMobile.Connect "
                     + _scannedDeviceInfo.PhyName + ": " + e.Message);
+                await Disconnect();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("EXCEPTION: "
+                    + "\n TYPE=" + ex.GetType()
+                    + "\n MESSAGE=" + ex.Message
+                    + "\n STACK=" + ex.StackTrace + "\n");
                 await Disconnect();
             }
             return false;
@@ -410,6 +424,11 @@ namespace SiamCross.Droid.Models
             return count;
         }
 
+        public override async void Dispose()
+        {
+            await Disconnect();
+            mInterface.Disable();
+        }
     }
 
 }

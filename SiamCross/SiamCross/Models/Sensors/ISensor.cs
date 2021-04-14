@@ -10,13 +10,19 @@ using System.Windows.Input;
 
 namespace SiamCross.Models.Sensors
 {
-    public class SensorModel
+    public class SensorModel : IDisposable
     {
         public readonly TaskManager Manager = new TaskManager();
         public IStorage Storage { get; set; }
         public ISurveyCfg SurveyCfg { get; set; }
+        public ConnectionHolder ConnHolder { get; set; }
 
         public readonly List<ISurvey> Surveys = new List<ISurvey>();
+
+        public void Dispose()
+        {
+            ConnHolder?.Dispose();
+        }
     }
 
 
@@ -56,7 +62,6 @@ namespace SiamCross.Models.Sensors
 
         string ConnStateStr { get; }
         bool Activate { get; set; }
-        bool IsAlive { get; }
         bool IsMeasurement { get; }
         bool IsEnableQickInfo { get; set; }
         float MeasureProgress { get; set; }
