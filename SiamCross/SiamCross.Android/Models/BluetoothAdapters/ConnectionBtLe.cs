@@ -2,6 +2,7 @@
 
 using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
+using Plugin.BLE.Abstractions.EventArgs;
 using SiamCross.Droid.Models.BluetoothAdapters;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Adapters.PhyInterface;
@@ -22,12 +23,44 @@ namespace SiamCross.Droid.Models
 {
     public class ConnectionBtLe : IConnectionBtLe
     {
+        private async void OnDisconected(object obj, DeviceErrorEventArgs args)
+        {
+            if (args.Device == _device)
+            {
+                Debug.WriteLine("DeviceConnectionLost " + args.ErrorMessage);
+                await Disconnect();
+            }
+        }
+        private async void OnReceiveData(object obj, CharacteristicUpdatedEventArgs args)
+        {
+            //Debug.WriteLine("Recieved: " + BitConverter.ToString(args.Characteristic.Value) + "\n");
+            //DataReceived?.Invoke(args.Characteristic.Value);
+            if (args.Characteristic == _readCharacteristic)
+            {
+                //mDataNotyfy?.Invoke(args.Characteristic.Value);
+                try
+                {
+                    if (null != CtRxSource)
+                        await DoByteProcess(args.Characteristic.Value, CtRxSource.Token);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("ERROR"
+                        + System.Reflection.MethodBase.GetCurrentMethod().Name
+                        + "\n msg=" + ex.Message
+                        + "\n type=" + ex.GetType()
+                        + "\n stack=" + ex.StackTrace + "\n");
+                }
+
+            }
+        }
+
         private readonly IPhyInterface mInterface;
         public override IPhyInterface PhyInterface => mInterface;
 
         private int _Rssi = 0;
         public override int Rssi => _Rssi;
-        public override async void UpdateRssi()
+        public override async Task UpdateRssi()
         {
             try
             {
@@ -113,9 +146,12 @@ namespace SiamCross.Droid.Models
 
         public override async Task<bool> Connect(CancellationToken ct)
         {
-            SetState(ConnectionState.PendingConnect);
             using var ctSrc = new CancellationTokenSource(Constants.ConnectTimeout);
             using var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct);
+            using var slock = await semaphore.UseWaitAsync(linkTsc.Token);
+            if (State == ConnectionState.Connected)
+                return true;
+            SetState(ConnectionState.PendingConnect);
             bool ret = await DoConnectAsync(linkTsc.Token);
             if (ret)
                 SetState(ConnectionState.Connected);
@@ -125,6 +161,7 @@ namespace SiamCross.Droid.Models
         }
         public override async Task<bool> Disconnect()
         {
+            using var slock = await semaphore.UseWaitAsync(new CancellationTokenSource().Token);
             SetState(ConnectionState.PendingDisconnect);
             bool ret = await DoDisconnectAsync();
             if (ret)
@@ -183,13 +220,13 @@ namespace SiamCross.Droid.Models
                     Debug.WriteLine("BluetoothLeAdapterMobile.Connect"
                         + _deviceInfo.PhyName + "ошибка соединения BLE - _device был null");
                     //ConnectFailed();
-                    await Disconnect();
+                    await DoDisconnectAsync();
                     //_isFirstConnectionTry = false;
                     return false;
                 }
                 bool is_inited = await InitializeAsync(ct);
                 if (!is_inited)
-                    await Disconnect();
+                    await DoDisconnectAsync();
                 else
                     return true;
 
@@ -198,7 +235,7 @@ namespace SiamCross.Droid.Models
             {
                 Debug.WriteLine("BluetoothLeAdapterMobile.Connect ошибка подключения по Guid "
                     + _deviceInfo.PhyName + ": " + e.Message);
-                await Disconnect();
+                await DoDisconnectAsync();
                 //_isFirstConnectionTry = false;
             }
             finally
@@ -229,32 +266,16 @@ namespace SiamCross.Droid.Models
                 IReadOnlyList<ICharacteristic> serv = await _targetService.GetCharacteristicsAsync();
                 _writeCharacteristic = await _targetService.GetCharacteristicAsync(write_guid);
                 _readCharacteristic = await _targetService.GetCharacteristicAsync(read_guid);
-                _readCharacteristic.ValueUpdated += (o, args) =>
-                {
-                    //Debug.WriteLine("Recieved: " + BitConverter.ToString(args.Characteristic.Value) + "\n");
-                    //DataReceived?.Invoke(args.Characteristic.Value);
-                    if (args.Characteristic == _readCharacteristic)
-                    {
-                        //mDataNotyfy?.Invoke(args.Characteristic.Value);
-                        DoByteProcess(args.Characteristic.Value);
-                    }
-                };
+
+                CtRxSource = new CancellationTokenSource();
+                _readCharacteristic.ValueUpdated += OnReceiveData;
                 //tcs = new TaskCompletionSource<byte[]>();
                 //mDataNotyfy += DoByteProcess;
-
                 await _readCharacteristic.StartUpdatesAsync();
                 //_isFirstConnectionTry = true;
 
-                Adapter.DeviceConnectionLost += async (o, args) =>
-                {
-                    if (args.Device == _device)
-                    {
-                        Debug.WriteLine("DeviceConnectionLost " + args.ErrorMessage);
-                        await Disconnect();
-                    }
-                };
-
-
+                Adapter.DeviceConnectionLost += OnDisconected;
+                ct.ThrowIfCancellationRequested();
                 //ConnectSucceed?.Invoke();
                 inited = true;
             }
@@ -262,7 +283,7 @@ namespace SiamCross.Droid.Models
             {
                 System.Diagnostics.Debug.WriteLine("BluetoothLeAdapterMobile.Connect "
                     + _deviceInfo.PhyName + " ошибка инициализации: " + e.Message);
-                await Disconnect();
+                await DoDisconnectAsync();
                 //_isFirstConnectionTry = false;
             }
 
@@ -273,18 +294,30 @@ namespace SiamCross.Droid.Models
             bool ret = true;
             try
             {
-                if (null != Adapter && null != _device)
-                    await Adapter.DisconnectDeviceAsync(_device);
-                await Task.Delay(200);
-                //_writeCharacteristic.StopUpdatesAsync();
-                //_readCharacteristic.StopUpdatesAsync();
+                if (null != _readCharacteristic)
+                {
+                    await _readCharacteristic.StopUpdatesAsync();
+                    _readCharacteristic.ValueUpdated -= OnReceiveData;
+                }
                 _targetService?.Dispose();
-                _device?.Dispose();
+
+                if (null != Adapter)
+                {
+                    Adapter.DeviceConnectionLost -= OnDisconected;
+                    if (null != _device)
+                    {
+                        await Adapter.DisconnectDeviceAsync(_device);
+                        _device.Dispose();
+                    }
+                }
+                CtRxSource?.Cancel();
+                await Task.Delay(200);
+                CtRxSource?.Dispose();
                 //mInterface?.Disable();
             }
             catch (Exception ex)
             {
-                DebugLog.WriteLine("ERROR"
+                Debug.WriteLine("ERROR"
                     + System.Reflection.MethodBase.GetCurrentMethod().Name
                     + "\n msg=" + ex.Message
                     + "\n type=" + ex.GetType()
@@ -297,40 +330,42 @@ namespace SiamCross.Droid.Models
                 _readCharacteristic = null;
                 _device = null;
                 _targetService = null;
+                CtRxSource = null;
             }
             return ret;
         }
 
-        //public event Action<byte[]> DataReceived;
-        //public event Action ConnectSucceed;
-        //public event Action ConnectFailed;
-
         private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
         private TaskCompletionSource<bool> tcs;// = new TaskCompletionSource<byte[]>();
+        CancellationTokenSource CtRxSource;
         private readonly Stream mRxStream = new MemoryStream(512);
 
-        public override async void ClearRx()
+        public override async Task ClearRx()
         {
+            CheckConnection();
             using var ctSrc = new CancellationTokenSource(Constants.ConnectTimeout);
-            using (await semaphore.UseWaitAsync(ctSrc.Token))
+            using var slock = await semaphore.UseWaitAsync(ctSrc.Token);
             mRxStream.Flush();
             mRxStream.Position = 0;
             mRxStream.SetLength(0);
         }
-        public override void ClearTx()
+        public override Task ClearTx()
         {
+            CheckConnection();
+            return Task.CompletedTask;
         }
-        private async void DoByteProcess(byte[] inputBytes)
+        private async Task DoByteProcess(byte[] inputBytes, CancellationToken ct)
         {
-            using (await semaphore.UseWaitAsync()) //lock (lockObj)
+            using (await semaphore.UseWaitAsync(ct)) //lock (lockObj)
             {
-                await mRxStream.WriteAsync(inputBytes, 0, inputBytes.Length);
+                await mRxStream.WriteAsync(inputBytes, 0, inputBytes.Length, ct);
                 tcs?.TrySetResult(true);
             }
         }
 
         public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
+            CheckConnection();
             int readed = 0;
             ct.Register(() =>
             {
@@ -340,7 +375,7 @@ namespace SiamCross.Droid.Models
             while (0 == readed)
             {
                 ct.ThrowIfCancellationRequested();
-                using (await semaphore.UseWaitAsync())
+                using (await semaphore.UseWaitAsync(ct))
                 {
                     mRxStream.Position = 0;
                     readed = await mRxStream.ReadAsync(buffer, offset, count, ct);
@@ -358,10 +393,13 @@ namespace SiamCross.Droid.Models
         }
         public override async Task<int> WriteAsync(byte[] buffer, int offset, int count, CancellationToken ct)
         {
+            CheckConnection();
+            using var slock = await semaphore.UseWaitAsync(ct);
             int sent = 0;
             int curr_count;
             while (sent < count)
             {
+                ct.ThrowIfCancellationRequested();
                 curr_count = (sent + Mtu > count) ? (count - sent) : Mtu;
                 byte[] buf = buffer.AsSpan().Slice(offset + sent, curr_count).ToArray();
                 bool is_ok = await _writeCharacteristic.WriteAsync(buf, ct);

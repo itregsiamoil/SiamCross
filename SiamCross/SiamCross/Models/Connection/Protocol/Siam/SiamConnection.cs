@@ -186,22 +186,32 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         }
         private async Task<RespResult> SingleExchangeAsync(CancellationToken ct)
         {
-            RespResult ret = RespResult.ErrorUnknown;
             try
             {
-                mPhyConn.ClearRx();
-                mPhyConn.ClearTx();
+                if (PhyConnection.State != ConnectionState.Connected)
+                    if (!await base.Connect(ct))
+                        return RespResult.ErrorConnection;
+
+                await mPhyConn.ClearRx();
+                await mPhyConn.ClearTx();
                 bool sent = false;
                 using (var ctSrc = new CancellationTokenSource(GetRequestTimeout(_EndTxBuf)))
+                {
                     using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
+                    {
                         sent = await RequestAsync(linkTsc.Token);
-                
-                if (sent)
-                    using (var ctSrc = new CancellationTokenSource(GetResponseTimeout(_TxBuf)))
-                        using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
-                            ret = await ResponseAsync(linkTsc.Token);
-                else
-                    ret = RespResult.ErrorSending;
+                    }
+                }
+                if (!sent)
+                    return RespResult.ErrorSending;
+                using (var ctSrc = new CancellationTokenSource(GetResponseTimeout(_TxBuf)))
+                {
+                    using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
+                    {
+                        return await ResponseAsync(linkTsc.Token);
+                    }
+                }
+
             }
             catch (Exception ex)
             {
@@ -213,11 +223,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                     + "\n type=" + ex.GetType()
                     + "\n stack=" + ex.StackTrace + "\n");
             }
-            finally
-            {
-
-            }
-            return ret;
+            return RespResult.ErrorUnknown;
         }
         private static bool NeedRetry(RespResult result)
         {
@@ -225,10 +231,10 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             {
                 default:
                 case RespResult.ErrorUnknown:
-                case RespResult.ErrorConnection:
                 case RespResult.ErrorPkg:
                 case RespResult.NormalPkg: return false;
 
+                case RespResult.ErrorConnection:
                 case RespResult.ErrorSending:
                 case RespResult.ErrorTimeout:
                 case RespResult.ErrorCrc: return true;
@@ -237,13 +243,8 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private async Task<RespResult> ExchangeAsync(int retry, CancellationToken ct)
         {
             RespResult ret = RespResult.ErrorTimeout;
-            for (int i = 0; i < retry && NeedRetry(ret); ++i)
+            for (int i = 0; i < retry && NeedRetry(ret) && !ct.IsCancellationRequested; ++i)
             {
-                if (PhyConnection.State != ConnectionState.Connected)
-                {
-                    ret = RespResult.ErrorConnection;
-                    //await base.Connect();
-                }
                 DebugLog.WriteLine("START transaction, try " + i.ToString());
                 ret = await SingleExchangeAsync(ct);
                 DebugLog.WriteLine("END transaction, try " + i.ToString());
@@ -287,7 +288,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             return RespResult.NormalPkg;
         }
         private async Task<RespResult> DoWriteMemoryAsync(uint addr_offset, uint mem_size
-            , byte[] src, int src_start 
+            , byte[] src, int src_start
             , Action<uint> onStepProgress, CancellationToken ct)
         {
             if (null == src || src.Length < (int)mem_size)

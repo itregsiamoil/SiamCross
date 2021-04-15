@@ -227,11 +227,7 @@ namespace SiamCross.Models.Sensors
                 }
                 using (await semaphore.UseWaitAsync())
                 {
-                    if (null != mConnection)
-                    {
-                        if (ConnectionState.Disconnected != mConnection.State)
-                            await mConnection?.Disconnect();
-                    }
+                    await mConnection?.Disconnect();
                     if (_activated)
                     {
                         _activated = false;
@@ -294,7 +290,7 @@ namespace SiamCross.Models.Sensors
                             if (rssi_update_period > rssi_update_curr++)
                             {
                                 rssi_update_curr = 0;
-                                Connection.PhyConnection.UpdateRssi();
+                                await Connection.PhyConnection.UpdateRssi();
                             }
                         }
                         else

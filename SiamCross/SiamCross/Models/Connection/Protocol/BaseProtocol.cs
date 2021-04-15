@@ -1,7 +1,6 @@
 ﻿using SiamCross.Models.Connection.Phy;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
