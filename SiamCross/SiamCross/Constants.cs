@@ -2,6 +2,13 @@
 {
     public static class Constants
     {
+#if DEBUG
+        public static readonly int ConnectTimeout = 100000;
+#else
+        public static readonly int ConnectTimeout = 8000;
+#endif
+
+
         public static readonly ushort[] Periods = new ushort[]
             {1,2,3,4,5,7,10,15,20,30,40,60,90,120,180,240,300,420,600,720 };
         public static readonly ushort[] Quantitys = new ushort[]

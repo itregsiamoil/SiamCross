@@ -147,9 +147,9 @@ namespace SiamCross.ViewModels
                 {
                     case 0: // ProtocolKind.Siam:
                         IProtocolConnection connection = new SiamConnection(phy_conn);
-                        CancellationTokenSource cts = new CancellationTokenSource(10000);
-                        bool connected = await connection.Connect(cts.Token);
-                        cts.Dispose();
+                        bool connected = false;
+                        using (var cts = new CancellationTokenSource(Constants.ConnectTimeOut))
+                            connected = await connection.Connect(cts.Token);
                         if (connected && RespResult.NormalPkg == await connection.ReadAsync(_Common))
                         {
                             UInt32 address = DeviceNameAddress.Value;

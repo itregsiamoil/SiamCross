@@ -145,7 +145,9 @@ namespace SiamCross.Droid.Models
         public override async Task<bool> Connect(CancellationToken ct)
         {
             SetState(ConnectionState.PendingConnect);
-            bool ret = await DoConnectAsync(ct);
+            using var ctSrc = new CancellationTokenSource(Constants.ConnectTimeout);
+            using var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct);
+            bool ret = await DoConnectAsync(linkTsc.Token);
             if (ret)
                 SetState(ConnectionState.Connected);
             else
@@ -348,13 +350,11 @@ namespace SiamCross.Droid.Models
 
         public override async void ClearRx()
         {
-            using (await semaphore.UseWaitAsync())
-            {
-                mRxStream.Flush();
-                mRxStream.Position = 0;
-                mRxStream.SetLength(0);
-            }
-
+            using var ctSrc = new CancellationTokenSource(Constants.ConnectTimeout);
+            using (await semaphore.UseWaitAsync(ctSrc.Token))
+            mRxStream.Flush();
+            mRxStream.Position = 0;
+            mRxStream.SetLength(0);
         }
         public override void ClearTx()
         {

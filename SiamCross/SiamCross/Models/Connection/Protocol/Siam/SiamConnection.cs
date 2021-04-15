@@ -66,7 +66,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         {
             return GetTime(len);
         }
-        private static int GetResponseTimeout(byte[] rq)
+        private int GetResponseTimeout(byte[] rq)
         {
             int timeout = 0;
             if (null == rq)
@@ -82,7 +82,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                     timeout = GetTime(rq.Length);
                     break;
             }
-            return timeout;
+            return timeout + mAdditioonTime;
         }
 
         private readonly Stopwatch _PerfCounter = new Stopwatch();
@@ -101,26 +101,20 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 src_buf.CopyTo(dst_buf);
             }
         }
-        private async Task<bool> RequestAsync()
+        private async Task<bool> RequestAsync(CancellationToken ct)
         {
             bool sent_ok = false;
             try
             {
-                int write_timeout = GetRequestTimeout(_EndTxBuf);
-                CancellationTokenSource ctSrc = new CancellationTokenSource(write_timeout);
-
                 for (int i = 0; i < Retry && !sent_ok; ++i)
                 {
-                    ctSrc.Token.ThrowIfCancellationRequested();
-                    int sent = await mPhyConn.WriteAsync(_TxBuf, 0, _EndTxBuf, ctSrc.Token);
+                    int sent = await mPhyConn.WriteAsync(_TxBuf, 0, _EndTxBuf, ct);
                     if (_EndTxBuf == sent)
                         sent_ok = true;
                     DebugLog.WriteLine("SENT " + _EndTxBuf.ToString()
                         + " elapsed=" + _PerfCounter.ElapsedMilliseconds.ToString()
                         + ": [" + BitConverter.ToString(_TxBuf, 0, _EndTxBuf) + "]\n");
                 }
-                //if (!sent)
-                //    ConnectFailed?.Invoke();
             }
             catch (Exception ex)
             {
@@ -145,12 +139,9 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         /// -3  -   Timeout error
         /// -4  -   Sending error
         /// </returns>
-        private async Task<RespResult> ResponseAsync()
+        private async Task<RespResult> ResponseAsync(CancellationToken ct)
         {
-            int pf_delay = GetResponseTimeout(_TxBuf);
-            int read_timeout = GetResponseTimeout(_TxBuf) + mAdditioonTime;
-            CancellationTokenSource ctSrc = new CancellationTokenSource(read_timeout);
-
+            int read_timeout = GetResponseTimeout(_TxBuf);
             _BeginRxBuf = 0;
             _EndRxBuf = 0;
             int need = Constants.MIN_PKG_SIZE;
@@ -160,7 +151,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 for (int i = 0; i < _ResponseRetry && !is_ok; ++i)
                 {
                     CheckEmptySpace();
-                    int readed = await mPhyConn.ReadAsync(_RxBuf, _EndRxBuf, _RxBuf.Length - _EndRxBuf, ctSrc.Token);
+                    int readed = await mPhyConn.ReadAsync(_RxBuf, _EndRxBuf, _RxBuf.Length - _EndRxBuf, ct);
                     _EndRxBuf += readed;
                     DebugLog.WriteLine($"Appended bytes={readed} elapsed={_PerfCounter.ElapsedMilliseconds}/{read_timeout}"
                         + $" begin={_BeginRxBuf} end={_EndRxBuf}");
@@ -175,7 +166,6 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                         case -1: _BeginRxBuf = 0; goto case 0;
                         case 0:
                             DebugLog.WriteLine($"GET response {_EndRxBuf - _BeginRxBuf} " + ((RespResult)need).ToString()
-                                + $" expected={pf_delay}"
                                 + $" elapsed={_PerfCounter.ElapsedMilliseconds}/{read_timeout}"
                                 + ": [" + BitConverter.ToString(_RxBuf, _BeginRxBuf, _EndRxBuf - _BeginRxBuf) + "]\n"
                                 //+ ": [" + BitConverter.ToString(_RxBuf, 0, _EndRxBuf) + "]\n"
@@ -191,23 +181,25 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                     + " / " + read_timeout.ToString()
                     + ": [" + BitConverter.ToString(_RxBuf, 0, _EndRxBuf) + "]\n");
             }
-            finally
-            {
-                ctSrc.Dispose();
-            }
             return RespResult.ErrorTimeout;
 
         }
-        private async Task<RespResult> SingleExchangeAsync()
+        private async Task<RespResult> SingleExchangeAsync(CancellationToken ct)
         {
             RespResult ret = RespResult.ErrorUnknown;
             try
             {
                 mPhyConn.ClearRx();
                 mPhyConn.ClearTx();
-                bool sent = await RequestAsync();
+                bool sent = false;
+                using (var ctSrc = new CancellationTokenSource(GetRequestTimeout(_EndTxBuf)))
+                    using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
+                        sent = await RequestAsync(linkTsc.Token);
+                
                 if (sent)
-                    ret = await ResponseAsync();
+                    using (var ctSrc = new CancellationTokenSource(GetResponseTimeout(_TxBuf)))
+                        using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
+                            ret = await ResponseAsync(linkTsc.Token);
                 else
                     ret = RespResult.ErrorSending;
             }
@@ -242,7 +234,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 case RespResult.ErrorCrc: return true;
             }
         }
-        private async Task<RespResult> ExchangeAsync(int retry)
+        private async Task<RespResult> ExchangeAsync(int retry, CancellationToken ct)
         {
             RespResult ret = RespResult.ErrorTimeout;
             for (int i = 0; i < retry && NeedRetry(ret); ++i)
@@ -253,14 +245,14 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                     //await base.Connect();
                 }
                 DebugLog.WriteLine("START transaction, try " + i.ToString());
-                ret = await SingleExchangeAsync();
+                ret = await SingleExchangeAsync(ct);
                 DebugLog.WriteLine("END transaction, try " + i.ToString());
             }
             return ret;
         }
         private async Task<RespResult> DoReadMemoryAsync(uint addr_offset, uint mem_size
             , byte[] dst, int dst_start
-            , Action<uint> onStepProgress, CancellationToken cancellationToken)
+            , Action<uint> onStepProgress, CancellationToken ct)
         {
             if (null == dst || dst.Length < (int)mem_size)
                 return RespResult.ErrorUnknown;
@@ -282,7 +274,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 byte[] crc = CrcModbusCalculator.ModbusCrc(_TxBuf, 2, 8);
                 crc.CopyTo(_TxBuf.AsSpan(10, 2)); //crc
                 _EndTxBuf = 12;
-                RespResult ret = await ExchangeAsync(Retry);
+                RespResult ret = await ExchangeAsync(Retry, ct);
                 if (RespResult.NormalPkg != ret)
                     return ret;
 
@@ -295,8 +287,8 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             return RespResult.NormalPkg;
         }
         private async Task<RespResult> DoWriteMemoryAsync(uint addr_offset, uint mem_size
-            , byte[] src, int src_start = 0
-            , Action<uint> onStepProgress = null, CancellationToken cancellationToken = default)
+            , byte[] src, int src_start 
+            , Action<uint> onStepProgress, CancellationToken ct)
         {
             if (null == src || src.Length < (int)mem_size)
                 return RespResult.ErrorUnknown;
@@ -327,7 +319,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
 
                 _EndTxBuf = 12 + curr_len + 2;
 
-                RespResult ret = await ExchangeAsync(Retry);
+                RespResult ret = await ExchangeAsync(Retry, ct);
                 if (RespResult.NormalPkg != ret)
                     return ret;
 
@@ -410,7 +402,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 CrcModbusCalculator.ModbusCrc(_TxBuf, 2, 8).CopyTo(_TxBuf.AsSpan(10, 2)); //crc
                 _EndTxBuf = 12;
 
-                RespResult ret = await ExchangeAsync(Retry);
+                RespResult ret = await ExchangeAsync(Retry, ct);
                 if (RespResult.NormalPkg != ret)
                     return ret;
                 vars.FromArray(_RxBuf, (UInt32)_BeginRxBuf + 12);
@@ -452,7 +444,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 CrcModbusCalculator.ModbusCrc(_TxBuf, 12, (int)vars.Size).CopyTo(_TxBuf.AsSpan(12 + (int)vars.Size, 2)); //crc
                 _EndTxBuf = 12 + (int)vars.Size + 2;
 
-                RespResult ret = await ExchangeAsync(Retry);
+                RespResult ret = await ExchangeAsync(Retry, ct);
                 if (RespResult.NormalPkg != ret)
                     return ret;
 
