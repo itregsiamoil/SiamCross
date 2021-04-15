@@ -144,6 +144,12 @@ namespace SiamCross.Models.Sensors.Dua
 
         }
 
+        public override void OnConnect()
+        {
+            var manager = Model.Manager;
+            var taskWaitSurvey = new TaskWaitSurvey(this);
+            Task.Run(() => manager.Execute(taskWaitSurvey));
+        }
 
 
         public override async Task<bool> QuickReport(CancellationToken cancelToken)

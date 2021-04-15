@@ -77,8 +77,7 @@ namespace SiamCross.Models.Sensors.Dua
                 if (await CheckConnectionAsync())
                 {
                     InfoEx = "чтение";
-                    readed = await RetryExecAsync(3, SingleUpdate);
-
+                    readed = await SingleUpdate();
                 }
             }
             else
@@ -132,8 +131,11 @@ namespace SiamCross.Models.Sensors.Dua
             _Model.ChangeNotify(nameof(_Model.SoundSpeedTableId));
             _Model.ChangeNotify(nameof(_Model.PressurePeriodIndex));
             _Model.ChangeNotify(nameof(_Model.PressureQuantityIndex));
-            _Model.ChangeNotify(nameof(_Model.LevelPeriodIndex));
-            _Model.ChangeNotify(nameof(_Model.LevelQuantityIndex));
+            for (uint i = 0; i < _Model.LevelPeriodIndex.Length; ++i)
+            {
+                _Model.ChangeNotify($"LevelPeriodIndex{i}");
+                _Model.ChangeNotify($"LevelQuantityIndex{i}");
+            }
             return _Model.Synched;
         }
 

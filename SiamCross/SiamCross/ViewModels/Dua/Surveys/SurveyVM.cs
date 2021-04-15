@@ -136,9 +136,9 @@ namespace SiamCross.ViewModels.Dua.Survey
             set => _ModelCfg.LevelQuantityIndex[4] = value;
         }
         public byte SurveyType => _ModelSurvey.SurveyType;
-
         public bool IsVisiblePressureSheduler => 5 == _ModelSurvey.SurveyType;
         public bool IsVisibleLevelSheduler => (3 == _ModelSurvey.SurveyType || 4 == _ModelSurvey.SurveyType);
+        public bool IsVisibleLevelConfig => 5 != _ModelSurvey.SurveyType;
 
         public SurveyVM(ISensor sensor, DuaSurvey model)
             : base(sensor, model)

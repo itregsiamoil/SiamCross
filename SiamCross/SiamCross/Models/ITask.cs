@@ -52,6 +52,12 @@ namespace SiamCross.Models
                         return;
                     _Progress = 1.0f;
                 }
+                else if (0f > value)
+                {
+                    if (0f == _Progress)
+                        return;
+                    _Progress = 0f;
+                }
                 else
                 {
                     if (_Progress == value)
@@ -69,12 +75,14 @@ namespace SiamCross.Models
             if (null == mgr)
                 return false;
             bool ret = false;
-            _Cts = new CancellationTokenSource();
             try
             {
-                Manager = mgr;
-                Progress = 0f;
-                ret = await DoExecute();
+                using (_Cts = new CancellationTokenSource())
+                {
+                    Manager = mgr;
+                    Progress = 0f;
+                    ret = await DoExecute();
+                }
             }
             catch (Exception ex)
             {
@@ -84,7 +92,6 @@ namespace SiamCross.Models
             finally
             {
                 Progress = 1f;
-                _Cts?.Dispose();
                 Manager = null;
             }
             return ret;

@@ -25,7 +25,8 @@ namespace SiamCross.Models.Sensors.Dua
         {
             if (null == _Storage || null == Connection || null == Sensor)
                 return false;
-            using (var timer = CreateProgressTimer(25000))
+            _Cts.CancelAfter(30000);
+            using (var timer = CreateProgressTimer(30000))
                 return await Update();
         }
 
@@ -50,7 +51,7 @@ namespace SiamCross.Models.Sensors.Dua
             if (await CheckConnectionAsync())
             {
                 InfoEx = "чтение";
-                ret = await RetryExecAsync(3, SingleUpdate);
+                ret = await SingleUpdate();
             }
 
             if (ret)

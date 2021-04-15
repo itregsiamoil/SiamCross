@@ -116,8 +116,10 @@
                             </Grid>
                         </StackLayout>
                     </Frame>
-                    <Label Text="Автоматический клапан" Style="{StaticResource SectionLabel}" />
-                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                    <Label Text="Автоматический клапан" Style="{StaticResource SectionLabel}"
+                           IsVisible="{Binding IsVisibleLevelConfig}"/>
+                    <Frame Style="{StaticResource GroupingFrameStyle}" 
+                           IsVisible="{Binding IsVisibleLevelConfig}">
                         <StackLayout >
                             <Grid Padding="0,10,0,10">
                                 <Label Text="Разрешение срабатывания"/>
@@ -133,8 +135,10 @@
                             </Grid>
                         </StackLayout>
                     </Frame>
-                    <Label Text="Пьезодатчик" Style="{StaticResource SectionLabel}" />
-                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                    <Label Text="Пьезодатчик" Style="{StaticResource SectionLabel}"
+                           IsVisible="{Binding IsVisibleLevelConfig}"/>
+                    <Frame Style="{StaticResource GroupingFrameStyle}" 
+                           IsVisible="{Binding IsVisibleLevelConfig}">
                         <StackLayout >
                             <Grid Padding="0,10,0,10">
                                 <Label Text="Максимальная глубина 3000м./6000м."/>
@@ -144,11 +148,12 @@
                                 <Label Text="Дополнительное усиление"/>
                                 <Switch IsToggled="{Binding IsPiezoAdditionalGain}"/>
                             </Grid>
-
                         </StackLayout>
                     </Frame>
-                    <Label Text="Скорость звука" Style="{StaticResource SectionLabel}" />
-                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                    <Label Text="Скорость звука" Style="{StaticResource SectionLabel}"
+                           IsVisible="{Binding IsVisibleLevelConfig}"/>
+                    <Frame Style="{StaticResource GroupingFrameStyle}" 
+                           IsVisible="{Binding IsVisibleLevelConfig}">
                         <StackLayout >
                             <Grid RowSpacing="0">
                                 <RadioButton Content="Значение" FontSize="Default" TextColor="{StaticResource colorText}"

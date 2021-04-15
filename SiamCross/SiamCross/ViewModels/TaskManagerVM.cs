@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
@@ -9,6 +10,21 @@ namespace SiamCross.ViewModels
     public class TaskManagerVM : BaseVM, IDisposable
     {
         TaskManager _Model;
+        readonly Timer _VisibleTimer;
+        protected void OnTimer(object obj)
+        {
+            if (IsBusy)
+            {
+                IsHidden = false;
+                _VisibleTimer.Change(10000, 0);
+            }
+            else
+            {
+                IsHidden = true;
+                _VisibleTimer.Change(Timeout.Infinite, 0);
+            }
+            ChangeNotify(nameof(IsHidden));
+        }
         void SetInfo(object obj, string info)
         {
             Info = info;
@@ -26,6 +42,8 @@ namespace SiamCross.ViewModels
             IsBusy = !IsFree;
             ChangeNotify(nameof(IsFree));
             ChangeNotify(nameof(IsBusy));
+            if (IsBusy)
+                _VisibleTimer.Change(500, 0);
         }
         void Subscribe(TaskManager model)
         {
@@ -49,6 +67,7 @@ namespace SiamCross.ViewModels
         public bool IsBusy { get; protected set; }
         public bool IsFree { get; protected set; }
         public int ProgressInt => (int)(100 * Progress);
+        public bool IsHidden { get; protected set; }
 
         public ICommand CancelCmd { get; }
 
@@ -58,11 +77,14 @@ namespace SiamCross.ViewModels
         }
         public TaskManagerVM(TaskManager model)
         {
+            _VisibleTimer = new Timer(new TimerCallback(OnTimer), null, Timeout.Infinite, 0);
+            IsHidden = true;
             Subscribe(model);
             CancelCmd = new AsyncCommand(DoCancel, () => IsBusy, null, false, false);
         }
         public void Dispose()
         {
+            _VisibleTimer.Dispose();
             Unsubscribe();
         }
     }

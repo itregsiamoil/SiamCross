@@ -26,7 +26,7 @@
 
     <ContentPage.Content>
         <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
-            <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}" />
+            <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
             <ScrollView VerticalOptions="StartAndExpand">
                 <StackLayout>
                     <StackLayout.Triggers>

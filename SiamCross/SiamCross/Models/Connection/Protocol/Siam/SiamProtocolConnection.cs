@@ -172,8 +172,8 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             try
             {
                 mBuf.Clear();
-                mPhyConn.ClearRx();
-                mPhyConn.ClearTx();
+                await mPhyConn.ClearRx();
+                await mPhyConn.ClearTx();
                 bool sent = await RequestAsync(req);
                 if (sent)
                 {

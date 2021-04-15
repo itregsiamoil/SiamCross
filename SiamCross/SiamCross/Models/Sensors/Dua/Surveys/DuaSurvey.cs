@@ -9,17 +9,16 @@ namespace SiamCross.Models.Sensors.Dua.Surveys
 
         async Task DoSurvey()
         {
-            AsyncCommand cmdSaveParam = Config?.CmdSaveParam as AsyncCommand;
+            var manager = _Sensor.Model.Manager;
+
+            var cmdSaveParam = Config?.CmdSaveParam as AsyncCommand;
             await cmdSaveParam.ExecuteAsync();
 
-            var manager = _Sensor.Model.Manager;
-            string taskName = Name + "-измерение";
-            var taskSurvey = new TaskSurvey(_Sensor, taskName, SurveyType);
+            var taskSurvey = new TaskSurvey(_Sensor, Name, SurveyType);
             await manager.Execute(taskSurvey);
 
             var taskWaitSurvey = new TaskWaitSurvey(_Sensor);
             await manager.Execute(taskWaitSurvey);
-
         }
 
         public DuaSurvey(ISensor sensor, ISurveyCfg cfg, string name, string description, byte type)

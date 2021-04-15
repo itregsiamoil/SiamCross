@@ -90,6 +90,7 @@
                         </Label>
                     </StackLayout>
                 </Frame>
+                <!--
                 <Frame Style="{StaticResource MenuItemStyle}" >
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ShowInfoViewCommand}" />
@@ -99,7 +100,6 @@
                         <Label Text="Дополнительные информационные данные"/>
                     </StackLayout>
                 </Frame>
-                <!--
                 <Frame Style="{StaticResource MenuItemStyle}" >
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ShowFactoryConfigViewCommand}" />

@@ -7,6 +7,7 @@ using SiamCross.Services;
 using SiamCross.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,6 +23,19 @@ namespace SiamCross.Models.Sensors
         #endregion
         #region Constructors & Destructors
         //TaskScheduler _uiScheduler;
+
+        public virtual void OnConnect()
+        {
+
+        }
+        void OnConnectionChange(object sender, PropertyChangedEventArgs e)
+        {
+            if (null == sender || "State" != e.PropertyName)
+                return;
+            ChangeNotify(nameof(ConnStateStr));
+            if (ConnectionState.Connected == mConnection.State)
+                OnConnect();
+        }
         protected BaseSensor(IProtocolConnection conn, ScannedDeviceInfo dev_info)
         {
             ScannedDeviceInfo = dev_info;
@@ -35,12 +49,7 @@ namespace SiamCross.Models.Sensors
             IsMeasurement = false;
             // Получение планировщика UI для потока, который создал форму:
             //_uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            Connection.PropertyChanged += (obj, a) =>
-            {
-                if (null == a || "State" != a.PropertyName)
-                    return;
-                ChangeNotify(nameof(ConnStateStr));
-            };
+            Connection.PropertyChanged += OnConnectionChange;
             //mConnection.PropertyChanged += PropertyChanged;
 
             Connection.MaxReqLen = ScannedDeviceInfo.GetPrefferedPkgSize();

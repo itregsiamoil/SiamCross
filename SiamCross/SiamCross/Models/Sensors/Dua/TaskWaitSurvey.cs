@@ -1,34 +1,39 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Sensors.Du.Measurement;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dua
 {
     public class TaskWaitSurvey : BaseSensorTask
     {
-        public readonly List<MemVar> Reg = new List<MemVar>();
+        //public readonly MemStruct _Operating;//0x8800
+        readonly MemVarUInt8 OpReg = new MemVarUInt8(0x8800);
+        readonly MemVarUInt16 StatusReg = new MemVarUInt16(0x8802);
 
-        public readonly MemVarUInt8 OpReg = new MemVarUInt8(0x8800);
-        public readonly MemVarUInt16 StatusReg = new MemVarUInt16(0x8802);
+        readonly MemStruct _CurrentParam = new MemStruct(0x8410);
+        readonly MemVarByteArray Timeost = new MemVarByteArray(0x8410, new MemValueByteArray(3));
+        readonly MemVarUInt8 Interv = new MemVarUInt8(0x8413);
+        readonly MemVarUInt16 Kolt = new MemVarUInt16(0x8414);
+        readonly MemVarUInt16 Timeawt = new MemVarUInt16(0x8416);
 
-        public readonly MemVarByteArray Timeost = new MemVarByteArray(0x8410, new MemValueByteArray(3));
-        public readonly MemVarUInt8 Interv = new MemVarUInt8(0x8413);
-        public readonly MemVarUInt16 Kolt = new MemVarUInt16(0x8414);
-        public readonly MemVarUInt16 Timeawt = new MemVarUInt16(0x8416);
+        readonly MemStruct _SurvayParam1 = new MemStruct(0x8008);
+        readonly MemVarUInt16 Revbit = new MemVarUInt16(0x8008);
+        readonly MemVarUInt8 Vissl = new MemVarUInt8(0x800A);
 
-        public readonly MemVarUInt16 Revbit = new MemVarUInt16(0x8008);
-        public readonly MemVarUInt8 Vissl = new MemVarUInt8(0x800A);
-
-        public readonly MemVarUInt8 PerP = new MemVarUInt8(0x8020);
-        public readonly MemVarUInt8 KolP = new MemVarUInt8(0x8021);
-        public readonly MemVarByteArray PerU = new MemVarByteArray(0x8022, new MemValueByteArray(5));
-        public readonly MemVarByteArray KolUr = new MemVarByteArray(0x8027, new MemValueByteArray(5));
+        readonly MemStruct _SurvayParam2 = new MemStruct(0x8020);
+        readonly MemVarUInt8 PerP = new MemVarUInt8(0x8020);
+        readonly MemVarUInt8 KolP = new MemVarUInt8(0x8021);
+        readonly MemVarByteArray PerU = new MemVarByteArray(0x8022, new MemValueByteArray(5));
+        readonly MemVarByteArray KolUr = new MemVarByteArray(0x8027, new MemValueByteArray(5));
 
         static readonly int _TimeoutValvePrepare = 120000;
         static readonly int _TimeoutSurvay3000 = 20000;
         static readonly int _TimeoutSurvay6000 = 2 * _TimeoutSurvay3000;
+
+        int _SurvayTimeSec => 0 < (Revbit.Value & (1 << 6)) ? 36 : 18;
+        int _ValvePrepareTimeSec => 120;
+
 
         TimeSpan _Remain;
         TimeSpan _Total;
@@ -36,20 +41,19 @@ namespace SiamCross.Models.Sensors.Dua
         public TaskWaitSurvey(ISensor sensor)
             : base(sensor, "Ожидание измерения")
         {
-            Reg.Add(OpReg);
-            Reg.Add(StatusReg);
+            _CurrentParam.Add(Timeost);
+            _CurrentParam.Add(Interv);
+            _CurrentParam.Add(Kolt);
+            _CurrentParam.Add(Timeawt);
 
-            Reg.Add(Timeost);
-            Reg.Add(Interv);
-            Reg.Add(Kolt);
-            Reg.Add(Timeawt);
+            _SurvayParam1.Add(Revbit);
+            _SurvayParam1.Add(Vissl);
 
-            Reg.Add(Revbit);
-            Reg.Add(Vissl);
-            Reg.Add(PerP);
-            Reg.Add(KolP);
-            Reg.Add(PerU);
-            Reg.Add(KolUr);
+            _SurvayParam2.Add(PerP);
+            _SurvayParam2.Add(KolP);
+            _SurvayParam2.Add(PerU);
+            _SurvayParam2.Add(KolUr);
+
         }
         public override Task DoBeforeCancelAsync()
         {
@@ -61,26 +65,79 @@ namespace SiamCross.Models.Sensors.Dua
         {
             if (null == Connection || null == Sensor)
                 return false;
-            if (!await RetryExecAsync(3, LoadState))
+            if (!await LoadState())
                 return false;
-            CalcSurveyTime();
+            InfoEx = "определение времени";
+            CalcSurveyTotalTime();
+            CalcSurveyRemainTime();
 
-            double progressStart = (double)_Remain.TotalMilliseconds / _Total.TotalMilliseconds;
-            int totalmsec = (int)_Remain.TotalMilliseconds;
+            if (_Remain > _Total)
+                return false;
+            if (_Remain == _Total)
+                return true;
+            double progressStart = (double)(1.0 - _Remain.TotalMilliseconds / _Total.TotalMilliseconds);
             InfoEx = "измерение";
             _Cts.CancelAfter(_Remain);
-            using (var timer = CreateProgressTimer(totalmsec, (float)progressStart))
-                return await ProcessSurvey();
+            using (var timer = CreateProgressTimer(_Remain, (float)progressStart))
+            {
+                switch (Vissl.Value)
+                {
+                    default:
+                    case 1:
+                    case 2:
+                        await ProcessSingleSurvey();
+                        break;
+                    case 3:
+                    case 4:
+                        await ProcessMultiLevelSurvey();
+                        break;
+                    case 5:
+                        await ProcessMultiPressureSurvey();
+                        break;
+                }
+            }
+            return true;
         }
 
-        private async Task<bool> ProcessSurvey()
+
+        async Task ProcessMultiLevelSurvey()
+        {
+            while (true)
+            {
+                if (Kolt.Value == 0 && (Interv.Value == 4 || 0 == KolUr.Value[Interv.Value + 1]))
+                    break;
+                await ProcessSingleSurvey();
+                await Connection.TryReadAsync(_CurrentParam, null, _Cts.Token);
+                CalcSurveyRemainTime();
+            }
+        }
+
+
+        async Task ProcessMultiPressureSurvey()
+        {
+            while (true)
+            {
+
+                string remain = $"{_Remain.Hours}:{_Remain.Minutes}:{_Remain.Seconds}"
+                    + $" / {_Total.Hours}:{_Total.Minutes}:{_Total.Seconds}";
+                InfoEx = $"{remain}\nзамеров давления осталось: {Kolt.Value}";
+                if (Kolt.Value == 0)
+                    break;
+                await Task.Delay(Constants.SecondDelay * 10, _Cts.Token);
+                await Connection.TryReadAsync(_CurrentParam, null, _Cts.Token);
+                CalcSurveyRemainTime();
+            }
+        }
+
+        async Task<bool> ProcessSingleSurvey()
         {
             Timeawt.Value = 120;
             DuMeasurementStatus status = DuMeasurementStatus.Empty;
             while (DuMeasurementStatus.Сompleted != status)
             {
                 _Remain -= TimeSpan.FromSeconds(1);
-                string remain = $"осталось: {_Remain.Hours}:{_Remain.Minutes}:{_Remain.Seconds}";
+                string remain = $"{_Remain.Hours}:{_Remain.Minutes}:{_Remain.Seconds}"
+                    + $" / {_Total.Hours}:{_Total.Minutes}:{_Total.Seconds}";
 
                 _Cts.Token.ThrowIfCancellationRequested();
                 await Task.Delay(Constants.SecondDelay, _Cts.Token);
@@ -105,7 +162,7 @@ namespace SiamCross.Models.Sensors.Dua
             return true;
         }
 
-        private async Task<bool> LoadState()
+        async Task<bool> LoadState()
         {
             InfoEx = "инициализация";
 
@@ -117,69 +174,54 @@ namespace SiamCross.Models.Sensors.Dua
             ret = await Connection.TryReadAsync(StatusReg, null, _Cts.Token);
             if (RespResult.NormalPkg != ret)
                 return false;
-            ret = await Connection.TryReadAsync(Timeost, null, _Cts.Token);
+            ret = await Connection.TryReadAsync(_CurrentParam, null, _Cts.Token);
             if (RespResult.NormalPkg != ret)
                 return false;
 
-            ret = await Connection.TryReadAsync(Interv, null, _Cts.Token);
+            ret = await Connection.TryReadAsync(_SurvayParam1, null, _Cts.Token);
             if (RespResult.NormalPkg != ret)
                 return false;
-            ret = await Connection.TryReadAsync(Kolt, null, _Cts.Token);
+            ret = await Connection.TryReadAsync(_SurvayParam2, null, _Cts.Token);
             if (RespResult.NormalPkg != ret)
                 return false;
-            ret = await Connection.TryReadAsync(Timeawt, null, _Cts.Token);
-            if (RespResult.NormalPkg != ret)
-                return false;
-
-            ret = await Connection.TryReadAsync(Revbit, null, _Cts.Token);
-            if (RespResult.NormalPkg != ret)
-                return false;
-            ret = await Connection.TryReadAsync(Vissl, null, _Cts.Token);
-            if (RespResult.NormalPkg != ret)
-                return false;
-            ret = await Connection.TryReadAsync(PerP, null, _Cts.Token);
-            if (RespResult.NormalPkg != ret)
-                return false;
-            ret = await Connection.TryReadAsync(KolP, null, _Cts.Token);
-            if (RespResult.NormalPkg != ret)
-                return false;
-            ret = await Connection.TryReadAsync(PerU, null, _Cts.Token);
-            if (RespResult.NormalPkg != ret)
-                return false;
-            ret = await Connection.TryReadAsync(KolUr, null, _Cts.Token);
-            if (RespResult.NormalPkg != ret)
-                return false;
-
-            /*
-            foreach (var r in Reg)
-            {
-                RespResult ret = await Connection.TryReadAsync(r, null, _Cts.Token);
-                if (RespResult.NormalPkg != ret)
-                    return false;
-            }
-            */
             return true;
         }
 
-        void CalcSurveyTime()
+
+
+        void CalcSurveyTotalTime()
         {
-            InfoEx = "определение времени";
+            switch (Vissl.Value)
+            {
+                default:
+                case 1:
+                case 2:
+                    _Total = CalcNonSheduledTotal();
+                    break;
+                case 3:
+                case 4:
+                    _Total = CalcSheduledLevelTotal();
+                    break;
+                case 5:
+                    _Total = CalcSheduledPressureTotal();
+                    break;
+            }
+        }
+        void CalcSurveyRemainTime()
+        {
             switch (Vissl.Value)
             {
                 default:
                 case 1:
                 case 2:
                     _Remain = CalcNonSheduledRemain();
-                    _Total = CalcNonSheduledTotal();
                     break;
                 case 3:
                 case 4:
                     _Remain = CalcSheduledLevelRemain();
-                    _Total = CalcSheduledLevelTotal();
                     break;
                 case 5:
                     _Remain = CalcSheduledPressureRemain();
-                    _Total = CalcSheduledPressureTotal();
                     break;
             }
         }
@@ -193,7 +235,10 @@ namespace SiamCross.Models.Sensors.Dua
             for (int i = 0; i < PerU.Value.Length; ++i)
             {
                 var survRemain = Constants.Quantitys[KolUr.Value[i]];
-                surveysTimeSec += survRemain * (Constants.Periods[PerU.Value[i]] * 60 + (_TimeoutValvePrepare + _TimeoutSurvay6000)/1000);
+                var survTime = Constants.Quantitys[KolUr.Value[i]] * 60;
+                if (survTime < 180)
+                    survTime = _ValvePrepareTimeSec + _SurvayTimeSec;
+                surveysTimeSec += survRemain * survTime;
             }
             var ts = TimeSpan.FromSeconds(surveysTimeSec);
             return ts;
@@ -201,7 +246,7 @@ namespace SiamCross.Models.Sensors.Dua
         TimeSpan CalcSheduledPressureTotal()
         {
             var survRemain = Constants.Quantitys[KolP.Value];
-            var surveysTimeSec = survRemain * Constants.Periods[PerP.Value]*60;
+            var surveysTimeSec = survRemain * Constants.Periods[PerP.Value] * 60;
             var ts = TimeSpan.FromSeconds(surveysTimeSec);
             return ts;
         }
@@ -227,26 +272,41 @@ namespace SiamCross.Models.Sensors.Dua
         TimeSpan CalcSheduledLevelRemain()
         {
             int surveysTimeSec = 0;
-            for (int i= Interv.Value; i < PerU.Value.Length;++i)
+            for (int i = Interv.Value; i < PerU.Value.Length; ++i)
             {
-                var survRemain = (i == Interv.Value) ? Kolt.Value : Constants.Quantitys[KolUr.Value[i]];
-                surveysTimeSec += survRemain * (Constants.Periods[PerU.Value[i]] * 60 + (_TimeoutValvePrepare + _TimeoutSurvay6000) / 1000);
+                int survRemain;
+                if (i == Interv.Value)
+                {
+                    if (0 < Kolt.Value)
+                        survRemain = Kolt.Value - 1;
+                    else
+                        survRemain = 0;
+                }
+                else
+                    survRemain = Constants.Quantitys[KolUr.Value[i]];
+
+                if (0 < survRemain)
+                {
+                    var survTime = Constants.Quantitys[KolUr.Value[i]] * 60;
+                    if (survTime < 180)
+                        survTime = _ValvePrepareTimeSec + _SurvayTimeSec;
+                    surveysTimeSec += survRemain * survTime;
+                }
             }
-
             surveysTimeSec += Timeost.Value[0] * 3600 + Timeost.Value[1] * 60 + Timeost.Value[2];
-
             var ts = TimeSpan.FromSeconds(surveysTimeSec);
-            //ts += CalcNonSheduledRemain();
             return ts;
         }
         TimeSpan CalcSheduledPressureRemain()
         {
-            var survRemain = Constants.Quantitys[KolP.Value];
-            var surveysTimeSec = survRemain * Constants.Periods[PerP.Value]*60;
+            int survRemain;
+            if (0 < Kolt.Value)
+                survRemain = Kolt.Value - 1;
+            else
+                survRemain = 0;
+            var surveysTimeSec = survRemain * Constants.Periods[PerP.Value] * 60;
             surveysTimeSec += Timeost.Value[0] * 3600 + Timeost.Value[1] * 60 + Timeost.Value[2];
-
             var ts = TimeSpan.FromSeconds(surveysTimeSec);
-            ts += CalcNonSheduledRemain();
             return ts;
 
         }

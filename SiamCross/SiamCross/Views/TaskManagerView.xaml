@@ -6,6 +6,12 @@
              x:Name="this">
     <StackLayout Orientation="Vertical" 
                  BindingContext="{x:Reference this}">
+        <StackLayout.Triggers>
+            <DataTrigger TargetType="StackLayout" Binding="{Binding TaskManager.IsHidden}" Value="true" >
+                <Setter Property="HeightRequest" Value="0"   />
+                <Setter Property="IsVisible" Value="false"   />
+            </DataTrigger>
+        </StackLayout.Triggers>
         <Frame Style="{StaticResource GroupingFrameStyle}" Padding="0" >
             <Grid ColumnSpacing="0" RowSpacing="0" Padding="5" 
                   BackgroundColor="{StaticResource colorPrimaryPale}">
