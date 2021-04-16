@@ -10,14 +10,13 @@ namespace SiamCross.Models
         TaskManager Manager { get; }
         string Info { get; }
         float Progress { get; }
-        Task<bool> ExecAsync(TaskManager mgr);
+        Task<bool> ExecAsync(TaskManager mgr, CancellationToken ct);
         Task CancelAsync();
 
     }
 
     public abstract class BaseTask : ITask
     {
-        protected CancellationTokenSource _Cts = null;
         TaskManager _Mgr = null;
         string _Info;
         float _Progress;
@@ -70,19 +69,17 @@ namespace SiamCross.Models
         }
 
 
-        public async Task<bool> ExecAsync(TaskManager mgr)
+        public async Task<bool> ExecAsync(TaskManager mgr, CancellationToken ct)
         {
             if (null == mgr)
                 return false;
             bool ret = false;
             try
             {
-                using (_Cts = new CancellationTokenSource())
-                {
-                    Manager = mgr;
-                    Progress = 0f;
-                    ret = await DoExecute();
-                }
+                Manager = mgr;
+                Progress = 0.00f;
+                Manager.Progress.Report(_Progress);
+                ret = await DoExecuteAsync(ct);
             }
             catch (Exception ex)
             {
@@ -96,7 +93,7 @@ namespace SiamCross.Models
             }
             return ret;
         }
-        public abstract Task<bool> DoExecute();
+        public abstract Task<bool> DoExecuteAsync(CancellationToken ct);
 
         public virtual Task DoBeforeCancelAsync()
         {
@@ -111,10 +108,6 @@ namespace SiamCross.Models
             catch (Exception ex)
             {
                 LogException(ex);
-            }
-            finally
-            {
-                _Cts?.Cancel();
             }
         }
         public static void LogException(Exception ex)

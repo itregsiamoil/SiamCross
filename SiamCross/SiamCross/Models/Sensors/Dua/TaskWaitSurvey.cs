@@ -1,6 +1,7 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Sensors.Du.Measurement;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dua
@@ -27,12 +28,9 @@ namespace SiamCross.Models.Sensors.Dua
         readonly MemVarByteArray PerU = new MemVarByteArray(0x8022, new MemValueByteArray(5));
         readonly MemVarByteArray KolUr = new MemVarByteArray(0x8027, new MemValueByteArray(5));
 
-        static readonly int _TimeoutValvePrepare = 120000;
-        static readonly int _TimeoutSurvay3000 = 20000;
-        static readonly int _TimeoutSurvay6000 = 2 * _TimeoutSurvay3000;
+        static readonly int _ValvePrepareTimeSec = 120;
+        int SurvayTimeSec => 0 < (Revbit.Value & (1 << 6)) ? 36 : 18;
 
-        int _SurvayTimeSec => 0 < (Revbit.Value & (1 << 6)) ? 36 : 18;
-        int _ValvePrepareTimeSec => 120;
 
 
         TimeSpan _Remain;
@@ -55,17 +53,19 @@ namespace SiamCross.Models.Sensors.Dua
             _SurvayParam2.Add(KolUr);
 
         }
-        public override Task DoBeforeCancelAsync()
+        public override async Task DoBeforeCancelAsync()
         {
             OpReg.Value = 4;
-            return Connection.WriteAsync(OpReg, null, _Cts.Token);
+            using (var ctSrc = new CancellationTokenSource(Constants.ConnectTimeout))
+                await Connection.WriteAsync(OpReg, null, ctSrc.Token);
         }
 
-        public override async Task<bool> DoExecute()
+        public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {
             if (null == Connection || null == Sensor)
                 return false;
-            if (!await LoadState())
+
+            if (!await LoadStateAsync(ct))
                 return false;
             InfoEx = "определение времени";
             CalcSurveyTotalTime();
@@ -77,7 +77,9 @@ namespace SiamCross.Models.Sensors.Dua
                 return true;
             double progressStart = (double)(1.0 - _Remain.TotalMilliseconds / _Total.TotalMilliseconds);
             InfoEx = "измерение";
-            _Cts.CancelAfter(_Remain);
+
+            using (var ctSrc = new CancellationTokenSource(_Remain+TimeSpan.FromMilliseconds(Constants.ConnectTimeout)))
+            using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
             using (var timer = CreateProgressTimer(_Remain, (float)progressStart))
             {
                 switch (Vissl.Value)
@@ -85,51 +87,20 @@ namespace SiamCross.Models.Sensors.Dua
                     default:
                     case 1:
                     case 2:
-                        await ProcessSingleSurvey();
+                        await DoSingleLevelAsync(linkTsc.Token);
                         break;
                     case 3:
                     case 4:
-                        await ProcessMultiLevelSurvey();
+                        await DoMultiLevelAsync(linkTsc.Token);
                         break;
                     case 5:
-                        await ProcessMultiPressureSurvey();
+                        await DoMultiPressureAsync(linkTsc.Token);
                         break;
                 }
             }
             return true;
         }
-
-
-        async Task ProcessMultiLevelSurvey()
-        {
-            while (true)
-            {
-                if (Kolt.Value == 0 && (Interv.Value == 4 || 0 == KolUr.Value[Interv.Value + 1]))
-                    break;
-                await ProcessSingleSurvey();
-                await Connection.TryReadAsync(_CurrentParam, null, _Cts.Token);
-                CalcSurveyRemainTime();
-            }
-        }
-
-
-        async Task ProcessMultiPressureSurvey()
-        {
-            while (true)
-            {
-
-                string remain = $"{_Remain.Hours}:{_Remain.Minutes}:{_Remain.Seconds}"
-                    + $" / {_Total.Hours}:{_Total.Minutes}:{_Total.Seconds}";
-                InfoEx = $"{remain}\nзамеров давления осталось: {Kolt.Value}";
-                if (Kolt.Value == 0)
-                    break;
-                await Task.Delay(Constants.SecondDelay * 10, _Cts.Token);
-                await Connection.TryReadAsync(_CurrentParam, null, _Cts.Token);
-                CalcSurveyRemainTime();
-            }
-        }
-
-        async Task<bool> ProcessSingleSurvey()
+        async Task<bool> DoSingleLevelAsync(CancellationToken ct)
         {
             Timeawt.Value = 120;
             DuMeasurementStatus status = DuMeasurementStatus.Empty;
@@ -139,9 +110,8 @@ namespace SiamCross.Models.Sensors.Dua
                 string remain = $"{_Remain.Hours}:{_Remain.Minutes}:{_Remain.Seconds}"
                     + $" / {_Total.Hours}:{_Total.Minutes}:{_Total.Seconds}";
 
-                _Cts.Token.ThrowIfCancellationRequested();
-                await Task.Delay(Constants.SecondDelay, _Cts.Token);
-                await UpdateStatus();
+                await Task.Delay(Constants.SecondDelay, ct);
+                await UpdateStatusAsync(ct);
                 status = (DuMeasurementStatus)StatusReg.Value;
                 switch (status)
                 {
@@ -155,39 +125,69 @@ namespace SiamCross.Models.Sensors.Dua
                         break;
                     case DuMeasurementStatus.ValvePreparation:
                         InfoEx = $"{remain}\n{DuStatusAdapter.StatusToString(status)}, осталось { Timeawt.Value}сек.";
-                        await UpdateValvePreparation();
+                        await UpdateValvePreparationAsync(ct);
                         break;
                 }
             }
             return true;
         }
-
-        async Task<bool> LoadState()
+        async Task DoMultiLevelAsync(CancellationToken ct)
         {
-            InfoEx = "инициализация";
+            while (true)
+            {
+                if (Kolt.Value == 0 && (Interv.Value == 4 || 0 == KolUr.Value[Interv.Value + 1]))
+                    break;
+                await DoSingleLevelAsync(ct);
+                await Connection.TryReadAsync(_CurrentParam, null, ct);
+                CalcSurveyRemainTime();
+            }
+        }
+        async Task DoMultiPressureAsync(CancellationToken ct)
+        {
+            while (true)
+            {
 
-            if (!await CheckConnectionAsync())
-                return false;
-
-            RespResult ret = RespResult.NormalPkg;
-
-            ret = await Connection.TryReadAsync(StatusReg, null, _Cts.Token);
-            if (RespResult.NormalPkg != ret)
-                return false;
-            ret = await Connection.TryReadAsync(_CurrentParam, null, _Cts.Token);
-            if (RespResult.NormalPkg != ret)
-                return false;
-
-            ret = await Connection.TryReadAsync(_SurvayParam1, null, _Cts.Token);
-            if (RespResult.NormalPkg != ret)
-                return false;
-            ret = await Connection.TryReadAsync(_SurvayParam2, null, _Cts.Token);
-            if (RespResult.NormalPkg != ret)
-                return false;
-            return true;
+                string remain = $"{_Remain.Hours}:{_Remain.Minutes}:{_Remain.Seconds}"
+                    + $" / {_Total.Hours}:{_Total.Minutes}:{_Total.Seconds}";
+                InfoEx = $"{remain}\nзамеров давления осталось: {Kolt.Value}";
+                if (Kolt.Value == 0)
+                    break;
+                await Task.Delay(Constants.SecondDelay * 5, ct);
+                await Connection.TryReadAsync(_CurrentParam, null, ct);
+                CalcSurveyRemainTime();
+            }
         }
 
+        async Task<bool> LoadStateAsync(CancellationToken ct)
+        {
+            
+            using (var ctSrc = new CancellationTokenSource(Constants.ConnectTimeout))
+            using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
+            {
+                if (!await CheckConnectionAsync(linkTsc.Token))
+                    return false;
 
+                RespResult ret = RespResult.NormalPkg;
+
+                InfoEx = "чтение статуса";
+
+                ret = await Connection.TryReadAsync(StatusReg, null, linkTsc.Token);
+                if (RespResult.NormalPkg != ret)
+                    return false;
+                InfoEx = "чтение состояния";
+                ret = await Connection.TryReadAsync(_CurrentParam, null, linkTsc.Token);
+                if (RespResult.NormalPkg != ret)
+                    return false;
+                InfoEx = "чтение параметров";
+                ret = await Connection.TryReadAsync(_SurvayParam1, null, linkTsc.Token);
+                if (RespResult.NormalPkg != ret)
+                    return false;
+                ret = await Connection.TryReadAsync(_SurvayParam2, null, linkTsc.Token);
+                if (RespResult.NormalPkg != ret)
+                    return false;
+                return true;
+            }
+        }
 
         void CalcSurveyTotalTime()
         {
@@ -227,7 +227,7 @@ namespace SiamCross.Models.Sensors.Dua
         }
         TimeSpan CalcNonSheduledTotal()
         {
-            return TimeSpan.FromMilliseconds(_TimeoutSurvay6000 + _TimeoutValvePrepare);
+            return TimeSpan.FromSeconds(_ValvePrepareTimeSec + SurvayTimeSec);
         }
         TimeSpan CalcSheduledLevelTotal()
         {
@@ -237,7 +237,7 @@ namespace SiamCross.Models.Sensors.Dua
                 var survRemain = Constants.Quantitys[KolUr.Value[i]];
                 var survTime = Constants.Quantitys[KolUr.Value[i]] * 60;
                 if (survTime < 180)
-                    survTime = _ValvePrepareTimeSec + _SurvayTimeSec;
+                    survTime = _ValvePrepareTimeSec + SurvayTimeSec;
                 surveysTimeSec += survRemain * survTime;
             }
             var ts = TimeSpan.FromSeconds(surveysTimeSec);
@@ -259,15 +259,15 @@ namespace SiamCross.Models.Sensors.Dua
                 case DuMeasurementStatus.Сompleted:
                     break;
                 case DuMeasurementStatus.EсhoMeasurement:
-                    return TimeSpan.FromMilliseconds(_TimeoutSurvay6000);
+                    return TimeSpan.FromSeconds(SurvayTimeSec);
                 case DuMeasurementStatus.WaitingForClick:
                 case DuMeasurementStatus.Empty:
                 case DuMeasurementStatus.NoiseMeasurement:
-                    return TimeSpan.FromMilliseconds(_TimeoutSurvay6000 + _TimeoutValvePrepare);
+                    return TimeSpan.FromSeconds(SurvayTimeSec + _ValvePrepareTimeSec);
                 case DuMeasurementStatus.ValvePreparation:
-                    return TimeSpan.FromMilliseconds(_TimeoutSurvay6000 + Timeawt.Value * 1000);
+                    return TimeSpan.FromSeconds(SurvayTimeSec + Timeawt.Value );
             }
-            return TimeSpan.FromMilliseconds(1);
+            return TimeSpan.FromSeconds(1);
         }
         TimeSpan CalcSheduledLevelRemain()
         {
@@ -289,7 +289,7 @@ namespace SiamCross.Models.Sensors.Dua
                 {
                     var survTime = Constants.Quantitys[KolUr.Value[i]] * 60;
                     if (survTime < 180)
-                        survTime = _ValvePrepareTimeSec + _SurvayTimeSec;
+                        survTime = _ValvePrepareTimeSec + SurvayTimeSec;
                     surveysTimeSec += survRemain * survTime;
                 }
             }
@@ -311,11 +311,11 @@ namespace SiamCross.Models.Sensors.Dua
 
         }
 
-        async Task UpdateStatus()
+        async Task UpdateStatusAsync(CancellationToken ct)
         {
             try
             {
-                await Connection.ReadAsync(StatusReg, null, _Cts.Token);
+                await Connection.ReadAsync(StatusReg, null, ct);
             }
             catch (ProtocolException ex)
             {
@@ -323,11 +323,11 @@ namespace SiamCross.Models.Sensors.Dua
             }
 
         }
-        async Task UpdateValvePreparation()
+        async Task UpdateValvePreparationAsync(CancellationToken ct)
         {
             try
             {
-                await Connection.ReadAsync(Timeawt, null, _Cts.Token);
+                await Connection.ReadAsync(Timeawt, null, ct);
             }
             catch (ProtocolException ex)
             {

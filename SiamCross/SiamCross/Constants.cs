@@ -5,7 +5,7 @@
 #if DEBUG
         public static readonly int ConnectTimeout = 100000;
 #else
-        public static readonly int ConnectTimeout = 8000;
+        public static readonly int ConnectTimeout = 20000;
 #endif
 
 

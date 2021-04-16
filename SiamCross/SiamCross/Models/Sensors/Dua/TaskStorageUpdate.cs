@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dua
@@ -11,6 +12,14 @@ namespace SiamCross.Models.Sensors.Dua
         readonly MemVarUInt16 Ukex = new MemVarUInt16();
         readonly MemStruct Aviable = new MemStruct(0x8418);
 
+        uint _BytesTotal;
+        uint _BytesProgress;
+        void SetProgressBytes(uint bytes)
+        {
+            _BytesProgress += bytes;
+            Progress = ((float)_BytesProgress / _BytesTotal);
+        }
+
         public TaskStorageUpdate(DuaStorage model, ISensor sensor)
             : base(sensor, "Опрос хранилища")
         {
@@ -21,37 +30,30 @@ namespace SiamCross.Models.Sensors.Dua
             Aviable.Add(Ukex);
         }
 
-        public override async Task<bool> DoExecute()
+        public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {
             if (null == _Storage || null == Connection || null == Sensor)
                 return false;
-            _Cts.CancelAfter(30000);
-            using (var timer = CreateProgressTimer(30000))
-                return await Update();
+
+            _BytesProgress = 0;
+            _BytesTotal = Aviable.Size;
+
+            using (var ctSrc = new CancellationTokenSource(TimeSpan.FromMilliseconds(Constants.ConnectTimeout)))
+            {
+                using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
+                {
+                    return await UpdateAsync(linkTsc.Token);
+                }
+            }
         }
 
-        async Task<bool> SingleUpdate()
-        {
-            RespResult ret = RespResult.ErrorUnknown;
-            try
-            {
-                var tmp = Connection.AdditioonalTimeout;
-                ret = await Connection.ReadAsync(Aviable, null, _Cts.Token);
-            }
-            catch (Exception ex)
-            {
-                LogException(ex);
-            }
-            return RespResult.NormalPkg == ret;
-        }
-
-        public async Task<bool> Update()
+        async Task<bool> UpdateAsync(CancellationToken ct)
         {
             bool ret = false;
-            if (await CheckConnectionAsync())
+            if (await CheckConnectionAsync(ct))
             {
                 InfoEx = "чтение";
-                ret = await SingleUpdate();
+                ret = RespResult.NormalPkg == await Connection.TryReadAsync(Aviable, SetProgressBytes, ct); 
             }
 
             if (ret)

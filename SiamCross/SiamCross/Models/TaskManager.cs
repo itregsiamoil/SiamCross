@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models
 {
-    public class TaskManager: IDisposable
+    public class TaskManager : IDisposable
     {
         readonly bool IsBackground = Thread.CurrentThread.IsBackground;
         readonly int ThreadId = Thread.CurrentThread.ManagedThreadId;
         ITask CurrentTask = null;
+        CancellationTokenSource _TaskCts = new CancellationTokenSource();
         private readonly SemaphoreSlim _Lock = new SemaphoreSlim(1);
         readonly Progress<ITask> _Task = new Progress<ITask>();
         readonly Progress<string> _Info = new Progress<string>();
@@ -29,12 +30,12 @@ namespace SiamCross.Models
         public Progress<string> OnChangeInfo => _Info;
         public Progress<float> OnChangeProgress => _Progress;
         public Progress<bool> OnChangeHidden => _Hidden;
-        
+
         protected void Subscribe(ITask task)
         {
             Interlocked.Exchange(ref CurrentTask, task);
             Task.Report(CurrentTask);
-            _VisibleTimer.Change(100, 0);
+            (_Hidden as IProgress<bool>).Report(false);
         }
 
         protected void Unsubscribe()
@@ -43,6 +44,7 @@ namespace SiamCross.Models
                 return;
             Interlocked.Exchange(ref CurrentTask, null);
             Task.Report(null);
+            _VisibleTimer.Change(10000, 0);
         }
         public async Task<bool> Execute(ITask task)
         {
@@ -56,8 +58,13 @@ namespace SiamCross.Models
                     if (null != CurrentTask)
                         return false;
                     Subscribe(task);
+                    if (_TaskCts.IsCancellationRequested)
+                    {
+                        _TaskCts.Dispose();
+                        _TaskCts = new CancellationTokenSource();
+                    }
                 }
-                ret = await task.ExecAsync(this);
+                ret = await task.ExecAsync(this, _TaskCts.Token);
                 using (await _Lock.UseWaitAsync())
                     Unsubscribe();
             }
@@ -77,7 +84,13 @@ namespace SiamCross.Models
         public async Task Cancel()
         {
             using (await _Lock.UseWaitAsync())
-                await CurrentTask?.CancelAsync();
+            {
+                if (null != CurrentTask)
+                {
+                    await CurrentTask.CancelAsync();
+                    _TaskCts.Cancel();
+                }
+            }
         }
         public async Task RefreshTask()
         {
@@ -91,14 +104,11 @@ namespace SiamCross.Models
                 (_Hidden as IProgress<bool>).Report(true);
                 _VisibleTimer.Change(Timeout.Infinite, 0);
             }
-            else
-            {
-                (_Hidden as IProgress<bool>).Report(false);
-                _VisibleTimer.Change(10000, 0);
-            }
         }
         public void Dispose()
         {
+            _TaskCts.Cancel();
+            _TaskCts.Dispose();
             _VisibleTimer.Dispose();
             _Lock.Dispose();
         }

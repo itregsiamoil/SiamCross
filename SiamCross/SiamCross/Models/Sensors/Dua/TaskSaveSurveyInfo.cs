@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dua
@@ -23,7 +24,6 @@ namespace SiamCross.Models.Sensors.Dua
         uint _BytesTotal;
         uint _BytesProgress;
 
-
         public TaskSaveSurveyInfo(DuaSurveyCfg model, ISensor sensor)
             : base(sensor, "Запись параметров измерения")
         {
@@ -37,7 +37,7 @@ namespace SiamCross.Models.Sensors.Dua
             Reg.Add(KolUr);
         }
 
-        public override async Task<bool> DoExecute()
+        public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {
             if (null == _Model || null == Connection || null == Sensor)
                 return false;
@@ -46,13 +46,18 @@ namespace SiamCross.Models.Sensors.Dua
             _BytesTotal = 0;
             _BytesProgress = 0;
             Reg.ForEach((r) => _BytesTotal += r.Size);
-            _Cts.CancelAfter(20000);
-            return await DoSave();
+            using (var ctSrc = new CancellationTokenSource(Constants.ConnectTimeout))
+            {
+                using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
+                {
+                    return await DoSaveAsync(linkTsc.Token);
+                }
+            }
         }
-        public async Task<bool> DoSave()
+        async Task<bool> DoSaveAsync(CancellationToken ct)
         {
             bool ret = false;
-            if (await CheckConnectionAsync())
+            if (await CheckConnectionAsync(ct))
             {
                 InfoEx = "запись";
 
@@ -86,7 +91,7 @@ namespace SiamCross.Models.Sensors.Dua
                 _Model.LevelPeriodIndex.CopyTo(PerU.Value, 0);
                 _Model.LevelQuantityIndex.CopyTo(KolUr.Value, 0);
 
-                ret = await RetryExecAsync(3, DoSaveSingle);
+                ret = await RetryExecAsync(3, DoSaveSingleAsync, ct);
             }
 
             _Model.Synched = ret;
@@ -97,12 +102,12 @@ namespace SiamCross.Models.Sensors.Dua
             }
             return ret;
         }
-        async Task<bool> DoSaveSingle()
+        async Task<bool> DoSaveSingleAsync(CancellationToken ct)
         {
             foreach (var r in Reg)
             {
                 RespResult ret
-                    = await Connection.TryWriteAsync(r, SetProgressBytes, _Cts.Token);
+                    = await Connection.TryWriteAsync(r, SetProgressBytes, ct);
                 if (RespResult.NormalPkg != ret)
                     return false;
             }

@@ -2,6 +2,7 @@
 using SiamCross.Services;
 using System;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 
@@ -99,7 +100,7 @@ namespace SiamCross.Models.Sensors.Dua
             Progress = ((float)_BytesReaded / _BytesTotal);
         }
 
-        public override async Task<bool> DoExecute()
+        public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {
             if (null == _Storage || null == Connection || null == Sensor)
                 return false;
@@ -108,38 +109,30 @@ namespace SiamCross.Models.Sensors.Dua
             uint bytesSym = _Storage.CountRep * (ReportHeader.Size);
             _BytesTotal = bytesEcho + bytesSym;
             _BytesReaded = 0;
-            //uint timeoutTotal = bytesTotal * 2; // среднее время чтения 1 байта
 
-            //using (var timer = CreateProgressTimer((int)timeoutTotal))
-            {
-                if (!await CheckConnectionAsync())
-                    return false;
-                await DoReadEcho();
-
-
-            }
-            return true;
+            return await DoReadEchoAsync(ct); ;
         }
 
-        protected async Task<bool> DoReadEcho()
+        protected async Task<bool> DoReadEchoAsync(CancellationToken ct)
         {
+            if (!await CheckConnectionAsync(ct))
+                return false;
+
             var begin = _Storage.StartEcho;
             var qty = _Storage.CountEcho;
-
 
             for (UInt32 rec = 0; rec < qty; ++rec)
             {
                 InfoEx = $"чтение {rec + 1} измерения с эхограммой";
 
                 ReportHeader.Address = 0x82000000 + ReportHeader.Size * (begin + rec);
-                await Connection.ReadAsync(ReportHeader, null, _Cts.Token);
+                await Connection.ReadAsync(ReportHeader, null, ct);
                 SetProgressBytes(ReportHeader.Size);
 
                 Connection.AdditioonalTimeout = 9000;
                 Echo.Address = 0x84000000 + _EchoSize * rec;
 
-                await Connection.ReadMemAsync(Echo.Address, Echo.Size, Echo.Value, 0, SetProgressBytes, _Cts.Token);
-
+                await Connection.ReadMemAsync(Echo.Address, Echo.Size, Echo.Value, 0, SetProgressBytes, ct);
 
                 var well = Encoding.UTF8.GetString(skv.Value);
                 var bush = Encoding.UTF8.GetString(kust.Value);

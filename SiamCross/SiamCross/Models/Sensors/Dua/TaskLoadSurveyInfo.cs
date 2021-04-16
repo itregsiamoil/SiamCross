@@ -1,4 +1,5 @@
 ﻿using SiamCross.Models.Connection.Protocol;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms.Internals;
 
@@ -30,7 +31,6 @@ namespace SiamCross.Models.Sensors.Dua
             _BytesProgress += bytes;
             Progress = ((float)_BytesProgress / _BytesTotal);
         }
-
         public TaskLoadSurveyInfo(DuaSurveyCfg model, ISensor sensor)
             : base(sensor, "Опрос параметров измерения")
         {
@@ -49,35 +49,33 @@ namespace SiamCross.Models.Sensors.Dua
             SurvayParam.Add(PerU);
             SurvayParam.Add(KolUr);
         }
-
-        public override async Task<bool> DoExecute()
+        public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {
             if (null == _Model || null == Connection || null == Sensor)
                 return false;
 
-            Progress = 0;
             _BytesProgress = 0;
             _BytesTotal = SurvayParam.Size;
-            _Cts.CancelAfter(20000);
-            return await Update();
+
+            using (var ctSrc = new CancellationTokenSource(Constants.ConnectTimeout))
+            {
+                using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
+                {
+                    return await UpdateAsync(linkTsc.Token);
+                }
+            }
         }
 
-        async Task<bool> SingleUpdate()
-        {
-            RespResult ret = await Connection.TryReadAsync(SurvayParam, SetProgressBytes, _Cts.Token);
-            return RespResult.NormalPkg == ret;
-        }
-
-        public async Task<bool> Update()
+        async Task<bool> UpdateAsync(CancellationToken ct)
         {
             bool readed = false;
 
             if (!_Model.Synched)
             {
-                if (await CheckConnectionAsync())
+                if (await CheckConnectionAsync(ct))
                 {
                     InfoEx = "чтение";
-                    readed = await SingleUpdate();
+                    readed = RespResult.NormalPkg == await Connection.TryReadAsync(SurvayParam, SetProgressBytes, ct);
                 }
             }
             else

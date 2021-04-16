@@ -28,13 +28,8 @@
         <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
             <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
             <ScrollView VerticalOptions="StartAndExpand">
-                <StackLayout>
-                    <StackLayout.Triggers>
-                        <DataTrigger TargetType="StackLayout" Binding="{Binding Sensor.TaskManager.IsBusy}" Value="true" >
-                            <Setter Property="IsEnabled" Value="false"  />
-                        </DataTrigger>
-                    </StackLayout.Triggers>
-
+                <StackLayout 
+                    IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
 
                     <Label Text="Измерения без эхограмм" Style="{StaticResource SectionLabel}" />
                     <Frame Style="{StaticResource GroupingFrameStyle}" >

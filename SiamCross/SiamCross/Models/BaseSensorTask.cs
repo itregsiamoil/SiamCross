@@ -41,24 +41,24 @@ namespace SiamCross.Models
             Progress += currenProgress * ProgressRemain;
         }
 
-        public async Task<bool> RetryExecAsync(uint retry, Func<Task<bool>> fn)
+        public async Task<bool> RetryExecAsync(uint retry, Func<CancellationToken, Task<bool>> fn, CancellationToken ct)
         {
             bool isOk = false;
             for (int i = 0; i < retry
-                && !_Cts.IsCancellationRequested
+                && !ct.IsCancellationRequested
                 && !isOk; ++i)
             {
-                isOk = await fn.Invoke();
+                isOk = await fn.Invoke(ct);
             }
             return isOk;
         }
 
-        public async Task<bool> CheckConnectionAsync()
+        public async Task<bool> CheckConnectionAsync(CancellationToken ct)
         {
             if (Models.Connection.ConnectionState.Connected == Sensor.Connection.State)
                 return true;
             InfoEx = Resource.StatConn_PendingConnect;
-            if (await Sensor.DoActivate(_Cts.Token))
+            if (await Sensor.DoActivate(ct))
                 return true;
             InfoEx = "не удалось подключиться к прибору";
             return false;

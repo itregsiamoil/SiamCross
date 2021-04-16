@@ -1,4 +1,5 @@
 ﻿using SiamCross.Models.Connection.Protocol;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dua
@@ -14,20 +15,20 @@ namespace SiamCross.Models.Sensors.Dua
             Vissl.Value = type;
         }
 
-        public override async Task<bool> DoExecute()
+        public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {
             if (1 > Vissl.Value || 5 < Vissl.Value)
                 return false;
             if (null == Connection || null == Sensor)
                 return false;
 
-            if (!await CheckConnectionAsync())
+            if (!await CheckConnectionAsync(ct))
                 return false;
             InfoEx = "инициализация";
-            await Connection.WriteAsync(Vissl, null, _Cts.Token);
+            await Connection.WriteAsync(Vissl, null, ct);
             InfoEx = "запуск";
             OpReg.Value = 1;
-            await Connection.WriteAsync(OpReg, null, _Cts.Token);
+            await Connection.WriteAsync(OpReg, null, ct);
             return true;
         }
     }
