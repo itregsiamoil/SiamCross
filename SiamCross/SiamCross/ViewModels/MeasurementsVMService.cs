@@ -427,12 +427,16 @@ namespace SiamCross.ViewModels
 
                             var startp = new DuMeasurementStartParameters(false, false, false, secp, 0.0);
 
+                            byte[] echoArray = { };
+                            mData.Measure.DataBlob.TryGetValue("lgechogram", out echoArray);
+
+
                             DuMeasurementData data = new DuMeasurementData(DateTime.Now
                                 , startp
                                 , (float)mData.Measure.DataFloat["sudpressure"]
                                 , (ushort)mData.Measure.DataFloat["lglevel"]
                                 , (ushort)mData.Measure.DataInt["lgreflectioncount"]
-                                , mData.Measure.DataBlob["lgechogram"]
+                                , echoArray
                                 , MeasureState.Ok);
 
                             du_meas = new DuMeasurement(data);

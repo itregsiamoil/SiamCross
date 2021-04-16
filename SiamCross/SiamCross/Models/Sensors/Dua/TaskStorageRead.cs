@@ -110,10 +110,12 @@ namespace SiamCross.Models.Sensors.Dua
             _BytesTotal = bytesEcho + bytesSym;
             _BytesReaded = 0;
 
-            return await DoReadEchoAsync(ct); ;
+            await DoReadEchoAsync(true,ct);
+            await DoReadEchoAsync(false, ct);
+            return true;
         }
 
-        protected async Task<bool> DoReadEchoAsync(CancellationToken ct)
+        protected async Task<bool> DoReadEchoAsync(bool echo,CancellationToken ct)
         {
             if (!await CheckConnectionAsync(ct))
                 return false;
@@ -121,24 +123,30 @@ namespace SiamCross.Models.Sensors.Dua
             var begin = _Storage.StartEcho;
             var qty = _Storage.CountEcho;
 
+            uint reportBaseAddress = echo ? 0x83000000 : 0x82000000;
+
+
             for (UInt32 rec = 0; rec < qty; ++rec)
             {
-                InfoEx = $"чтение {rec + 1} измерения с эхограммой";
+                InfoEx = $"чтение {rec + 1} измерения " + (echo? "с эхограммой":string.Empty);
 
-                ReportHeader.Address = 0x82000000 + ReportHeader.Size * (begin + rec);
+                ReportHeader.Address = reportBaseAddress + ReportHeader.Size * (begin + rec);
                 await Connection.ReadAsync(ReportHeader, null, ct);
                 SetProgressBytes(ReportHeader.Size);
 
-                Connection.AdditioonalTimeout = 9000;
-                Echo.Address = 0x84000000 + _EchoSize * rec;
-
-                await Connection.ReadMemAsync(Echo.Address, Echo.Size, Echo.Value, 0, SetProgressBytes, ct);
+                if(echo)
+                {
+                    var tmp  = Connection.AdditioonalTimeout;
+                    Connection.AdditioonalTimeout = 9000;
+                    Echo.Address = 0x84000000 + _EchoSize * rec;
+                    await Connection.ReadMemAsync(Echo.Address, Echo.Size, Echo.Value, 0, SetProgressBytes, ct);
+                    Connection.AdditioonalTimeout = tmp;
+                }
+                
 
                 var well = Encoding.UTF8.GetString(skv.Value);
                 var bush = Encoding.UTF8.GetString(kust.Value);
-
                 var pos = new PositionInfo(field.Value, well, bush, shop.Value);
-
                 var mi = new MeasurementInfo()
                 {
                     Kind = 1,
@@ -154,7 +162,8 @@ namespace SiamCross.Models.Sensors.Dua
                 mi.DataFloat.Add("lglevel", urov.Value);
                 mi.DataFloat.Add("sudpressure", pressure.Value / 10.0);
                 mi.DataFloat.Add("lgtimediscrete", 0.00585938);
-                mi.DataBlob.Add("lgechogram", Echo.Value);
+                if (echo)
+                    mi.DataBlob.Add("lgechogram", Echo.Value);
 
                 MeasureData survey = new MeasureData(
                      pos

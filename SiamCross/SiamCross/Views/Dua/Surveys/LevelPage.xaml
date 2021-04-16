@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:survey="clr-namespace:SiamCross.ViewModels.Dua.Survey" 
              xmlns:views="clr-namespace:SiamCross.Views"
              xmlns:local="clr-namespace:SiamCross;assembly=SiamCross" 
@@ -123,7 +124,8 @@
                         <StackLayout >
                             <Grid Padding="0,10,0,10">
                                 <Label Text="Разрешение срабатывания"/>
-                                <Switch IsToggled="{Binding IsValveAutomaticEnabled}"/>
+                                <Switch IsToggled="{Binding IsValveAutomaticEnabled}"
+                                        IsEnabled="{Binding IsDisabledValveAutomatic}"/>
                             </Grid>
                             <Grid Padding="0,10,0,10">
                                 <Label Text="Длительность срабатывания 0,2/0,05"/>

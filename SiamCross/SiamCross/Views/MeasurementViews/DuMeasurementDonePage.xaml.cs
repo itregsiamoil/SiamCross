@@ -36,9 +36,12 @@ namespace SiamCross.Views
             {
                 _measurement = measurement;
                 ViewModelWrap<DuMeasurementDoneViewModel> vmWrap = new ViewModelWrap<DuMeasurementDoneViewModel>(measurement);
-                _points = EchogramConverter.GetPoints(measurement
-                    , out minX, out maxX, out minY, out maxY);
-                vmWrap.ViewModel.SetAxisLimits(minX, maxX, minY, maxY);
+                if(null!=measurement.Echogram)
+                {
+                    _points = EchogramConverter.GetPoints(measurement
+                        , out minX, out maxX, out minY, out maxY);
+                    vmWrap.ViewModel.SetAxisLimits(minX, maxX, minY, maxY);
+                }
                 BindingContext = vmWrap.ViewModel;
                 InitializeComponent();
             }
@@ -53,6 +56,9 @@ namespace SiamCross.Views
         {
             try
             {
+                if (null == _points)
+                    return;
+
                 SKImageInfo info = args.Info;
                 SKSurface surface = args.Surface;
                 SKCanvas canvas = surface.Canvas;
@@ -116,7 +122,7 @@ namespace SiamCross.Views
             try
             {
                 base.OnDisappearing();
-                DbService.Instance.SaveDuMeasurement(_measurement);
+                //DbService.Instance.SaveDuMeasurement(_measurement);
                 MessagingCenter
                     .Send(this, "Refresh measurement", _measurement);
             }

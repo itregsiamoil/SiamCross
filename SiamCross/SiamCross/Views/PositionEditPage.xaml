@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross" 
-             xmlns:models="clr-namespace:SiamCross.ViewModels"
+             xmlns:models="clr-namespace:SiamCross.ViewModels" 
+             xmlns:views="clr-namespace:SiamCross.Views"
              x:Class="SiamCross.Views.PositionEditPage"
              x:DataType="models:PositionInfoVM" >
 
@@ -16,85 +17,99 @@
 
 
     <ContentPage.Content>
-        <StackLayout Spacing="0" Margin="10">
-            <Grid RowSpacing="0" ColumnSpacing="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="60*"></ColumnDefinition>
-                    <ColumnDefinition Width="20*"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Label Text="{local1:Translate Field}" 
-                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" />
+        <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
+            <!--
+            <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
+            -->
+            <ScrollView VerticalOptions="StartAndExpand">
+                <StackLayout>
+                    <Label Text="Местоположение" Style="{StaticResource SectionLabel}" />
+                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                        <StackLayout>
+                            <Grid RowSpacing="0" ColumnSpacing="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60*"></ColumnDefinition>
+                                    <ColumnDefinition Width="20*"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Label Text="{local1:Translate Field}" 
+                                       Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" />
 
-                <Picker ItemsSource="{Binding Fields}" 
-                        SelectedItem="{Binding SelectedField}"
-                        ItemDisplayBinding="{Binding Title}"
-                        Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" >
-                </Picker>
+                                <Picker ItemsSource="{Binding Fields}" 
+                                        SelectedItem="{Binding SelectedField}"
+                                        ItemDisplayBinding="{Binding Title}"
+                                        Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" >
+                                </Picker>
 
-                <Label VerticalTextAlignment="Center" FontSize="Medium" 
-                    Grid.Row="1" Grid.Column="1">
-                    <Label.FormattedText>
-                        <FormattedString >
-                            <Span Text="["/>
-                            <Span Text="{Binding FieldId}"/>
-                            <Span Text="]"/>
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
+                                <Label VerticalTextAlignment="Center" FontSize="Medium" 
+                                    Grid.Row="1" Grid.Column="1">
+                                    <Label.FormattedText>
+                                        <FormattedString >
+                                            <Span Text="["/>
+                                            <Span Text="{Binding FieldId}"/>
+                                            <Span Text="]"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
 
-                <!--
-                <Entry Text="{Binding FieldId}" Keyboard="Numeric"
-                       Grid.Row="1" Grid.Column="1">
-                    <Entry.Behaviors>
-                        <xct:NumericValidationBehavior/>
-                    </Entry.Behaviors>
-                    <Entry.Effects>
-                        <xct:SelectAllTextEffect/>
-                    </Entry.Effects>
-                </Entry>
-                -->
+                                <Button Text="&#x002B;" FontSize="30"
+                                                    Grid.Row="1" Grid.Column="2" Grid.RowSpan="1"
+                                                    Command="{Binding Path=AddFieldCommand}" 
+                                                    CommandParameter="Image1" />
+                            </Grid>
+                            <Label Text="{local1:Translate Well}" />
+                            <Entry Text="{Binding Well}"
+                                        Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <xct:NumericValidationBehavior/>
+                                </Entry.Behaviors>
+                                <Entry.Effects>
+                                    <xct:SelectAllTextEffect/>
+                                </Entry.Effects>
+                            </Entry>
+                            <Label Text="{local1:Translate Bush}" />
+                            <Entry Text="{Binding Bush}"
+                                        Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <xct:NumericValidationBehavior/>
+                                </Entry.Behaviors>
+                                <Entry.Effects>
+                                    <xct:SelectAllTextEffect/>
+                                </Entry.Effects>
+                            </Entry>
+                            <Label Text="{local1:Translate Shop}"/>
+                            <Entry Text="{Binding Shop}"
+                                        Keyboard="Numeric">
+                                <Entry.Behaviors>
+                                    <xct:NumericValidationBehavior/>
+                                </Entry.Behaviors>
+                                <Entry.Effects>
+                                    <xct:SelectAllTextEffect/>
+                                </Entry.Effects>
+                            </Entry>
 
+                        </StackLayout>                
+                    </Frame>
+            
+                    <Label Text="Получение" Style="{StaticResource SectionLabel}" />
+                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                        <StackLayout>
+                            <Button Text="Считать из БД" HorizontalOptions="FillAndExpand" 
+                                BackgroundColor="{StaticResource colorPrimaryLight}" />
+                            <Button Text="Считать из датчика" HorizontalOptions="FillAndExpand" 
+                                BackgroundColor="{StaticResource colorPrimaryLight}" />
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+            </ScrollView>
 
-                <Button Text="&#x002B;" FontSize="30"
-                                    Grid.Row="1" Grid.Column="2" Grid.RowSpan="1"
-                                    Command="{Binding Path=AddFieldCommand}" 
-                                    CommandParameter="Image1" />
-            </Grid>
-            <Label Text="{local1:Translate Well}" />
-            <Entry Text="{Binding Well}"
-                        Keyboard="Numeric">
-                <Entry.Behaviors>
-                    <xct:NumericValidationBehavior/>
-                </Entry.Behaviors>
-                <Entry.Effects>
-                    <xct:SelectAllTextEffect/>
-                </Entry.Effects>
-            </Entry>
-            <Label Text="{local1:Translate Bush}" />
-            <Entry Text="{Binding Bush}"
-                        Keyboard="Numeric">
-                <Entry.Behaviors>
-                    <xct:NumericValidationBehavior/>
-                </Entry.Behaviors>
-                <Entry.Effects>
-                    <xct:SelectAllTextEffect/>
-                </Entry.Effects>
-            </Entry>
-            <Label Text="{local1:Translate Shop}"/>
-            <Entry Text="{Binding Shop}"
-                        Keyboard="Numeric">
-                <Entry.Behaviors>
-                    <xct:NumericValidationBehavior/>
-                </Entry.Behaviors>
-                <Entry.Effects>
-                    <xct:SelectAllTextEffect/>
-                </Entry.Effects>
-            </Entry>
+            <Button Text="Сохранить " HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorPrimaryLight}">
+            </Button>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

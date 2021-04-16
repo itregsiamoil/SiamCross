@@ -65,6 +65,10 @@ namespace SiamCross.Models.Sensors.Dua
             if (null == Connection || null == Sensor)
                 return false;
 
+            _Total = TimeSpan.FromSeconds(_ValvePrepareTimeSec);
+            _Remain = TimeSpan.FromSeconds(_ValvePrepareTimeSec);
+
+
             if (!await LoadStateAsync(ct))
                 return false;
             InfoEx = "определение времени";
@@ -73,7 +77,7 @@ namespace SiamCross.Models.Sensors.Dua
 
             if (_Remain > _Total)
                 return false;
-            if (_Remain == _Total)
+            if (0 == _Remain.TotalSeconds)
                 return true;
             double progressStart = (double)(1.0 - _Remain.TotalMilliseconds / _Total.TotalMilliseconds);
             InfoEx = "измерение";
@@ -171,21 +175,33 @@ namespace SiamCross.Models.Sensors.Dua
 
                 InfoEx = "чтение статуса";
 
-                ret = await Connection.TryReadAsync(StatusReg, null, linkTsc.Token);
-                if (RespResult.NormalPkg != ret)
-                    return false;
+                do
+                {
+                    //ret = await Connection.TryReadAsync(StatusReg, null, linkTsc.Token);
+                    //if (RespResult.NormalPkg != ret)
+                    //    return false;
+                    await DoSingleLevelAsync(ct);
+                }
+                while (4 > StatusReg.Value);
+
                 InfoEx = "чтение состояния";
                 ret = await Connection.TryReadAsync(_CurrentParam, null, linkTsc.Token);
                 if (RespResult.NormalPkg != ret)
                     return false;
-                InfoEx = "чтение параметров";
+                    
+                InfoEx = "чтение параметров 1";
                 ret = await Connection.TryReadAsync(_SurvayParam1, null, linkTsc.Token);
                 if (RespResult.NormalPkg != ret)
                     return false;
+
+                InfoEx = "чтение параметров 2";
                 ret = await Connection.TryReadAsync(_SurvayParam2, null, linkTsc.Token);
                 if (RespResult.NormalPkg != ret)
                     return false;
                 return true;
+
+
+
             }
         }
 

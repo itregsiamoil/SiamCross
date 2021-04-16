@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-             xmlns:vm="clr-namespace:SiamCross.ViewModels.Dua" xmlns:views="clr-namespace:SiamCross.Views"
+             xmlns:vm="clr-namespace:SiamCross.ViewModels.Dua" 
+             xmlns:views="clr-namespace:SiamCross.Views"
              x:DataType="vm:DuaStorageVM"
              x:Class="SiamCross.Views.Dua.DuaDownloadPage">
     <ContentPage.Resources>
@@ -90,25 +91,45 @@
                                 </Grid.ColumnDefinitions>
                                 <Label Text="Начальное измерение" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
                                 <Entry Text="{Binding StartEcho}" Keyboard="Numeric"
-                                       Grid.Column="1" Grid.Row="0"/>
+                                       Grid.Column="1" Grid.Row="0">
+                                    <Entry.Behaviors>
+                                        <xct:NumericValidationBehavior MaximumDecimalPlaces="0" />
+                                    </Entry.Behaviors>
+                                    <Entry.Effects>
+                                        <xct:SelectAllTextEffect/>
+                                    </Entry.Effects>
+                                </Entry>
                                 <Label Text="Количество" Grid.Column="0" Grid.Row="1" VerticalTextAlignment="Center"/>
                                 <Entry Text="{Binding CountEcho}" Keyboard="Numeric"
-                                       Grid.Column="1" Grid.Row="1"/>
-
+                                       Grid.Column="1" Grid.Row="1">
+                                    <Entry.Behaviors>
+                                        <xct:NumericValidationBehavior MaximumDecimalPlaces="0" />
+                                    </Entry.Behaviors>
+                                    <Entry.Effects>
+                                        <xct:SelectAllTextEffect/>
+                                    </Entry.Effects>
+                                </Entry>
                             </Grid>
-
 
                         </StackLayout>
                     </Frame>
                 </StackLayout>
             </ScrollView>
 
-            <StackLayout Orientation="Vertical" >
+            <StackLayout Orientation="Horizontal" Spacing="0" >
+                <Button Text="Очистить " HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorAccentLight}"
+                        Command="{Binding CmdClearStorage}"
+                        IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >
+                </Button>
+
+
                 <Button Text="Считать" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdDownload}"
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >
                 </Button>
+                
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

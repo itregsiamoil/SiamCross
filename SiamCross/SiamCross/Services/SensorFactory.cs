@@ -35,6 +35,7 @@ namespace SiamCross.Services
 
             switch (deviceInfo.Device.Kind)
             {
+                default: return null;
                 case 0x1301:
                 case 0x1302:
                 case 0x1303:
@@ -56,8 +57,7 @@ namespace SiamCross.Services
                         var sensor = new DuaSensor(connection, deviceInfo);
                         return sensor;
                     }
-                default:
-                    return null; ;
+                
             }
         }
     }
