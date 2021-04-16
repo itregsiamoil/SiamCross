@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models
 {
-    public class TaskManager
+    public class TaskManager: IDisposable
     {
         readonly bool IsBackground = Thread.CurrentThread.IsBackground;
         readonly int ThreadId = Thread.CurrentThread.ManagedThreadId;
@@ -15,9 +15,12 @@ namespace SiamCross.Models
         readonly Progress<ITask> _Task = new Progress<ITask>();
         readonly Progress<string> _Info = new Progress<string>();
         readonly Progress<float> _Progress = new Progress<float>();
+        readonly Progress<bool> _Hidden = new Progress<bool>();
+        readonly Timer _VisibleTimer;
 
         public TaskManager()
         {
+            _VisibleTimer = new Timer(new TimerCallback(OnTimer), null, Timeout.Infinite, 0);
         }
         public IProgress<ITask> Task => _Task;
         public IProgress<string> Info => _Info;
@@ -25,18 +28,21 @@ namespace SiamCross.Models
         public Progress<ITask> OnChangeTask => _Task;
         public Progress<string> OnChangeInfo => _Info;
         public Progress<float> OnChangeProgress => _Progress;
+        public Progress<bool> OnChangeHidden => _Hidden;
+        
         protected void Subscribe(ITask task)
         {
-            CurrentTask = task;
-            Task.Report(task);
+            Interlocked.Exchange(ref CurrentTask, task);
+            Task.Report(CurrentTask);
+            _VisibleTimer.Change(100, 0);
         }
 
         protected void Unsubscribe()
         {
             if (null == CurrentTask)
                 return;
+            Interlocked.Exchange(ref CurrentTask, null);
             Task.Report(null);
-            CurrentTask = null;
         }
         public async Task<bool> Execute(ITask task)
         {
@@ -77,6 +83,24 @@ namespace SiamCross.Models
         {
             using (await _Lock.UseWaitAsync())
                 Task.Report(CurrentTask);
+        }
+        void OnTimer(object obj)
+        {
+            if (null == CurrentTask)
+            {
+                (_Hidden as IProgress<bool>).Report(true);
+                _VisibleTimer.Change(Timeout.Infinite, 0);
+            }
+            else
+            {
+                (_Hidden as IProgress<bool>).Report(false);
+                _VisibleTimer.Change(10000, 0);
+            }
+        }
+        public void Dispose()
+        {
+            _VisibleTimer.Dispose();
+            _Lock.Dispose();
         }
     }
 }
