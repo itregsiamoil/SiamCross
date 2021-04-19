@@ -1,4 +1,5 @@
 ﻿using SiamCross.ViewModels;
+using System;
 using System.Windows.Input;
 
 namespace SiamCross.Models.Sensors
@@ -17,7 +18,7 @@ namespace SiamCross.Models.Sensors
         public ICommand CmdClearStorage { get; set; }
     }
 
-    public class BaseStorageVM : BaseVM, IStorage
+    public abstract class BaseStorageVM : BaseVM, IStorage, IDisposable
     {
         public IStorage Model { get; }
         public ICommand CmdUpdateStorageInfo { get; set; }
@@ -31,5 +32,7 @@ namespace SiamCross.Models.Sensors
             CmdDownload = Model?.CmdDownload;
             CmdClearStorage = Model?.CmdClearStorage;
         }
+
+        public abstract void Dispose();
     }
 }

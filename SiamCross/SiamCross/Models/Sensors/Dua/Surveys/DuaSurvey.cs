@@ -14,10 +14,10 @@ namespace SiamCross.Models.Sensors.Dua.Surveys
             var cmdSaveParam = Config?.CmdSaveParam as AsyncCommand;
             await cmdSaveParam.ExecuteAsync();
 
-            var taskSurvey = new TaskSurvey(_Sensor, Name, SurveyType);
+            var taskSurvey = new TaskSurvey(_Sensor.Model, Name, SurveyType);
             await manager.Execute(taskSurvey);
 
-            var taskWaitSurvey = new TaskWaitSurvey(_Sensor);
+            var taskWaitSurvey = new TaskWaitSurvey(_Sensor.Model);
             await manager.Execute(taskWaitSurvey);
         }
 

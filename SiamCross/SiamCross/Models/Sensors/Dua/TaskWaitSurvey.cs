@@ -36,7 +36,7 @@ namespace SiamCross.Models.Sensors.Dua
         TimeSpan _Remain;
         TimeSpan _Total;
 
-        public TaskWaitSurvey(ISensor sensor)
+        public TaskWaitSurvey(SensorModel sensor)
             : base(sensor, "Ожидание измерения")
         {
             _CurrentParam.Add(Timeost);
@@ -62,7 +62,7 @@ namespace SiamCross.Models.Sensors.Dua
 
         public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {
-            if (null == Connection || null == Sensor)
+            if (null == Connection)
                 return false;
 
             _Total = TimeSpan.FromSeconds(_ValvePrepareTimeSec);

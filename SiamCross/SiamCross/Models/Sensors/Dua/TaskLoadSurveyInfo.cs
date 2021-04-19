@@ -9,20 +9,20 @@ namespace SiamCross.Models.Sensors.Dua
     {
         readonly DuaSurveyCfg _Model;
 
-        public readonly MemStruct SurvayParam = new MemStruct(0x8008);
-        public readonly MemVarUInt16 Revbit = new MemVarUInt16();
-        public readonly MemVarUInt8 Vissl = new MemVarUInt8();
-        public readonly MemVarByteArray Kust = new MemVarByteArray(0, new MemValueByteArray(5));
-        public readonly MemVarByteArray Skv = new MemVarByteArray(0, new MemValueByteArray(6));
-        public readonly MemVarUInt16 Field = new MemVarUInt16();
-        public readonly MemVarUInt16 Shop = new MemVarUInt16();
-        public readonly MemVarUInt16 Operator = new MemVarUInt16();
-        public readonly MemVarUInt16 Vzvuk = new MemVarUInt16();
-        public readonly MemVarUInt16 Ntpop = new MemVarUInt16();
-        public readonly MemVarUInt8 PerP = new MemVarUInt8();
-        public readonly MemVarUInt8 KolP = new MemVarUInt8();
-        public readonly MemVarByteArray PerU = new MemVarByteArray(0, new MemValueByteArray(5));
-        public readonly MemVarByteArray KolUr = new MemVarByteArray(0, new MemValueByteArray(5));
+        readonly MemStruct SurvayParam = new MemStruct(0x8008);
+        readonly MemVarUInt16 Revbit = new MemVarUInt16();
+        readonly MemVarUInt8 Vissl = new MemVarUInt8();
+        readonly MemVarByteArray Kust = new MemVarByteArray(0, new MemValueByteArray(5));
+        readonly MemVarByteArray Skv = new MemVarByteArray(0, new MemValueByteArray(6));
+        readonly MemVarUInt16 Field = new MemVarUInt16();
+        readonly MemVarUInt16 Shop = new MemVarUInt16();
+        readonly MemVarUInt16 Operator = new MemVarUInt16();
+        readonly MemVarUInt16 Vzvuk = new MemVarUInt16();
+        readonly MemVarUInt16 Ntpop = new MemVarUInt16();
+        readonly MemVarUInt8 PerP = new MemVarUInt8();
+        readonly MemVarUInt8 KolP = new MemVarUInt8();
+        readonly MemVarByteArray PerU = new MemVarByteArray(0, new MemValueByteArray(5));
+        readonly MemVarByteArray KolUr = new MemVarByteArray(0, new MemValueByteArray(5));
 
         uint _BytesTotal;
         uint _BytesProgress;
@@ -31,7 +31,7 @@ namespace SiamCross.Models.Sensors.Dua
             _BytesProgress += bytes;
             Progress = ((float)_BytesProgress / _BytesTotal);
         }
-        public TaskLoadSurveyInfo(DuaSurveyCfg model, ISensor sensor)
+        public TaskLoadSurveyInfo(DuaSurveyCfg model, SensorModel sensor)
             : base(sensor, "Опрос параметров измерения")
         {
             _Model = model;
@@ -51,7 +51,7 @@ namespace SiamCross.Models.Sensors.Dua
         }
         public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {
-            if (null == _Model || null == Connection || null == Sensor)
+            if (null == _Model || null == Connection)
                 return false;
 
             _BytesProgress = 0;

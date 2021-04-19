@@ -6,7 +6,7 @@
              xmlns:models="clr-namespace:SiamCross.ViewModels" 
              xmlns:views="clr-namespace:SiamCross.Views"
              x:Class="SiamCross.Views.PositionEditPage"
-             x:DataType="models:PositionInfoVM" >
+             x:DataType="models:PositionVM" >
 
     <NavigationPage.TitleView >
         <StackLayout>
@@ -18,9 +18,7 @@
 
     <ContentPage.Content>
         <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
-            <!--
             <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
-            -->
             <ScrollView VerticalOptions="StartAndExpand">
                 <StackLayout>
                     <Label Text="Данные" Style="{StaticResource SectionLabel}" />
@@ -59,7 +57,7 @@
 
                                 <Button Text="&#x002B;" FontSize="20" BackgroundColor="{StaticResource colorPrimaryLight}"
                                                     Grid.Row="1" Grid.Column="2" 
-                                                    Command="{Binding Path=AddFieldCommand}" 
+                                                    Command="{Binding Path=CmdMakeNew}" 
                                                     CommandParameter="Image1" />
                             </Grid>
 
@@ -112,7 +110,7 @@
                             </Grid>
                         </StackLayout>                
                     </Frame>
-
+                    <!--
                     <Label Text="Источник данных" Style="{StaticResource SectionLabel}" />
                     <Frame Style="{StaticResource GroupingFrameStyle}" >
                         <StackLayout Margin="5" >
@@ -138,15 +136,20 @@
                             </Grid>
                         </StackLayout>
                     </Frame>
+                    -->
                 </StackLayout>
             </ScrollView>
 
             <StackLayout Orientation="Horizontal" Spacing="0" >
                 <Button Text="Загрузить" HorizontalOptions="FillAndExpand" 
-                        BackgroundColor="{StaticResource colorSecondaryLight}" >
+                        BackgroundColor="{StaticResource colorSecondaryLight}"
+                        Command="{Binding CmdLoad}" 
+                        IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
                 </Button>
                 <Button Text="Сохранить" HorizontalOptions="FillAndExpand" 
-                        BackgroundColor="{StaticResource colorPrimaryLight}">
+                        BackgroundColor="{StaticResource colorPrimaryLight}"
+                        Command="{Binding CmdSave}" 
+                        IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
                 </Button>
 
             </StackLayout>

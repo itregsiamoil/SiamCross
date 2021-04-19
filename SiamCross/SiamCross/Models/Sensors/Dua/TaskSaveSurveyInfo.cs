@@ -24,7 +24,7 @@ namespace SiamCross.Models.Sensors.Dua
         uint _BytesTotal;
         uint _BytesProgress;
 
-        public TaskSaveSurveyInfo(DuaSurveyCfg model, ISensor sensor)
+        public TaskSaveSurveyInfo(DuaSurveyCfg model, SensorModel sensor)
             : base(sensor, "Запись параметров измерения")
         {
             _Model = model;
@@ -39,10 +39,9 @@ namespace SiamCross.Models.Sensors.Dua
 
         public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {
-            if (null == _Model || null == Connection || null == Sensor)
+            if (null == _Model || null == Connection)
                 return false;
 
-            Progress = 0;
             _BytesTotal = 0;
             _BytesProgress = 0;
             Reg.ForEach((r) => _BytesTotal += r.Size);

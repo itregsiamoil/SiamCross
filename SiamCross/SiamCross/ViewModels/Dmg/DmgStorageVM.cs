@@ -19,5 +19,10 @@ namespace SiamCross.ViewModels.Dmg
             Sensor = sensor;
             _StorageModel = Model as DmgStorage;
         }
+
+        public override void Dispose()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

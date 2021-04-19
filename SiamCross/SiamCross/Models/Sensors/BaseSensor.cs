@@ -17,7 +17,7 @@ namespace SiamCross.Models.Sensors
 {
     public abstract class BaseSensor : BaseVM, ISensor
     {
-        readonly SensorModel _Model = new SensorModel();
+        readonly SensorModel _Model;
         public SensorModel Model => _Model;
         #region TmpVariables
         #endregion
@@ -33,19 +33,19 @@ namespace SiamCross.Models.Sensors
             if (null == sender || "State" != e.PropertyName)
                 return;
             ChangeNotify(nameof(ConnStateStr));
-            if (ConnectionState.Connected == mConnection.State)
+            if (ConnectionState.Connected == Connection.State)
                 OnConnect();
         }
-        protected BaseSensor(IProtocolConnection conn, ScannedDeviceInfo dev_info)
+        protected BaseSensor(IProtocolConnection conn, DeviceInfo deviceInfo)
         {
-            ScannedDeviceInfo = dev_info;
+            _Model = new SensorModel(conn, deviceInfo);
+            ScannedDeviceInfo = new ScannedDeviceInfo(_Model.Device);
             Firmware = "";
             Battery = "";
             Temperature = "";
             RadioFirmware = "";
             Status = "";
 
-            mConnection = conn;
             IsMeasurement = false;
             // Получение планировщика UI для потока, который создал форму:
             //_uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
@@ -63,6 +63,8 @@ namespace SiamCross.Models.Sensors
 
             SurveysVM = new SurveysCollectionVM(this);
 
+            PositionVM = new PositionVM(this);
+
             Model.ConnHolder = new ConnectionHolder(
                 Model.Manager, Connection, QuickReport);
 
@@ -70,14 +72,13 @@ namespace SiamCross.Models.Sensors
 
         public virtual async void Dispose()
         {
+            Connection.PropertyChanged -= OnConnectionChange;
             await Deactivate();
-            await mConnection.Disconnect();
             Model?.Dispose();
         }
         #endregion
         #region basic implementation
         #region Variables
-        private readonly IProtocolConnection mConnection;
         #endregion
         public string ConnStateStr => ConnectionStateAdapter.ToString(Connection.State);
         public int MeasureProgressP => (int)(mMeasureProgress * 100);
@@ -94,7 +95,7 @@ namespace SiamCross.Models.Sensors
                 ChangeNotify(nameof(MeasureProgressP));
             }
         }
-        public IProtocolConnection Connection => mConnection;
+        public IProtocolConnection Connection => Model.Connection;
 
         private bool mIsAlive;
 
@@ -117,12 +118,7 @@ namespace SiamCross.Models.Sensors
                 ChangeNotify();
             }
         }
-        PositionInfoVM _Position = new PositionInfoVM();
-        public PositionInfoVM PositionVM
-        {
-            get => _Position;
-            set => _Position = value;
-        }
+        public PositionVM PositionVM { get; }
         public ICommand ShowDetailViewCommand { get; set; }
         public ICommand ShowInfoViewCommand { get; set; }
 
@@ -135,13 +131,11 @@ namespace SiamCross.Models.Sensors
 
         public TaskManagerVM TaskManager { get; set; }
 
-        public CommonInfo Info { get; }
-
         public ICommand ShowSurveysViewCommand { get; set; }
 
         //public IReadOnlyList<SurveyVM> Surveys { get; set; }
 
-        public ScannedDeviceInfo ScannedDeviceInfo { get; set; }
+        public ScannedDeviceInfo ScannedDeviceInfo { get; }
         public abstract Task<bool> QuickReport(CancellationToken cancellationToken);
         //public virtual Task<bool> UpdateRssi(CancellationToken cancellationToken);
         public abstract Task StartMeasurement(object measurementParameters);
@@ -236,7 +230,7 @@ namespace SiamCross.Models.Sensors
                 }
                 using (await semaphore.UseWaitAsync())
                 {
-                    await mConnection?.Disconnect();
+                    await Connection?.Disconnect();
                     if (_activated)
                     {
                         _activated = false;
@@ -337,7 +331,7 @@ namespace SiamCross.Models.Sensors
                 || !await PostConnectInit(ct))
             {
                 Debug.WriteLine("StartAlive FAILED");
-                await mConnection.Disconnect();
+                await Connection.Disconnect();
                 return false;
             }
             Status = Resource.ConnectedStatus;

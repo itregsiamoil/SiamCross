@@ -6,7 +6,7 @@ namespace SiamCross.Models.Sensors.Dua
 {
     public class DuaStorage : BaseStorage
     {
-        private readonly ISensor _Sensor;
+        public readonly SensorModel SensorModel;
 
         public uint StartRep;
         public uint CountRep;
@@ -19,15 +19,13 @@ namespace SiamCross.Models.Sensors.Dua
 
         async Task Read()
         {
-            var manager = _Sensor.Model.Manager;
-            var taskRead = new TaskStorageRead(this, _Sensor);
-            await manager.Execute(taskRead);
+            var taskRead = new TaskStorageRead(this, SensorModel);
+            await SensorModel.Manager.Execute(taskRead);
         }
         async Task Update()
         {
-            var manager = _Sensor.Model.Manager;
-            var task = new TaskStorageUpdate(this, _Sensor);
-            await manager.Execute(task);
+            var task = new TaskStorageUpdate(this, SensorModel);
+            await SensorModel.Manager.Execute(task);
         }
         async Task Clear()
         {
@@ -38,26 +36,25 @@ namespace SiamCross.Models.Sensors.Dua
                 Resource.NotButton);
             if (!result)
                 return;
-            var manager = _Sensor.Model.Manager;
-            var task = new TaskStorageClear(_Sensor);
-            await manager.Execute(task);
+            var task = new TaskStorageClear(SensorModel);
+            await SensorModel.Manager.Execute(task);
             await Update();
         }
 
-        public DuaStorage(ISensor sensor)
+        public DuaStorage(SensorModel sensor)
         {
-            _Sensor = sensor;
+            SensorModel = sensor;
             CmdUpdateStorageInfo = new AsyncCommand(
                 Update,
-                () => _Sensor.TaskManager.IsFree,
+                () => SensorModel.Manager.IsFree,
                 null, false, false);
             CmdDownload = new AsyncCommand(
                 Read,
-                () => _Sensor.TaskManager.IsFree,
+                () => SensorModel.Manager.IsFree,
                 null, false, false);
             CmdClearStorage = new AsyncCommand(
                 Clear,
-                () => _Sensor.TaskManager.IsFree,
+                () => SensorModel.Manager.IsFree,
                 null, false, false);
         }
 

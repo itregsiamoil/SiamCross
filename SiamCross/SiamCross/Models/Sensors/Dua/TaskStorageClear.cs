@@ -1,7 +1,5 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,13 +9,13 @@ namespace SiamCross.Models.Sensors.Dua
     {
         readonly MemVarUInt8 OpReg = new MemVarUInt8(0x8800);
 
-        public TaskStorageClear(ISensor sensor)
+        public TaskStorageClear(SensorModel sensor)
             : base(sensor, "Очистка памяти")
         {
         }
         public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {
-            if (null == Connection || null == Sensor)
+            if (null == Connection)
                 return false;
 
             if (!await CheckConnectionAsync(ct))

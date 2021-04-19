@@ -39,6 +39,7 @@ namespace SiamCross.ViewModels
             ShowStateViewCommand = PageNavigator.CreateAsyncCommand(() => _Sensor.StateVM);
             ShowSurveysViewCommand = PageNavigator.CreateAsyncCommand(() => _Sensor.SurveysVM);
             ShowPositionEditorCommand = PageNavigator.CreateAsyncCommand(() => _Sensor.PositionVM);
+
         }
 
         private async Task ShowDownloads()

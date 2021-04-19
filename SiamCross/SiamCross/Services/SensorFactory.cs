@@ -43,21 +43,21 @@ namespace SiamCross.Services
                 case 0x1402:
                 case 0x1403:
                     {
-                        Ddin2Sensor sensor = new Ddin2Sensor(connection, deviceInfo);
+                        Ddin2Sensor sensor = new Ddin2Sensor(connection, deviceInfo.Device);
                         return sensor;
                     }
                 case 0x1101:
                     {
                         IProtocolConnection connection_old = new SiamProtocolConnection(conn);
-                        DuSensor sensor = new DuSensor(connection_old, deviceInfo);
+                        DuSensor sensor = new DuSensor(connection_old, deviceInfo.Device);
                         return sensor;
                     }
                 case 0x1201:
                     {
-                        var sensor = new DuaSensor(connection, deviceInfo);
+                        var sensor = new DuaSensor(connection, deviceInfo.Device);
                         return sensor;
                     }
-                
+
             }
         }
     }

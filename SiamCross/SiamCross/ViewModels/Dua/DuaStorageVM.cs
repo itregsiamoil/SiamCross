@@ -53,5 +53,10 @@ namespace SiamCross.ViewModels.Dua
                 return;
             ChangeNotify(e.PropertyName);
         }
+
+        public override void Dispose()
+        {
+            _StorageModel.PropertyChanged -= StorageModel_PropertyChanged;
+        }
     }
 }

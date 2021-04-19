@@ -49,8 +49,8 @@ namespace SiamCross.Models.Sensors.Dmg
         public readonly MemVarUInt16 TimeDiscr;
 
 
-        public DmgBaseSensor(IProtocolConnection conn, ScannedDeviceInfo dev_info)
-            : base(conn, dev_info)
+        public DmgBaseSensor(IProtocolConnection conn, DeviceInfo deviceInfo)
+            : base(conn, deviceInfo)
         {
             _SurvayParam = new MemStruct(0x8000);
             Rod = _SurvayParam.Add(new MemVarUInt16(nameof(Rod)));

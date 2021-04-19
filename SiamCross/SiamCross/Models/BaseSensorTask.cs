@@ -8,18 +8,17 @@ namespace SiamCross.Models
 {
     public abstract class BaseSensorTask : BaseTask
     {
-        public ISensor Sensor;
-        public IProtocolConnection Connection;
+        public SensorModel Sensor;
+        public IProtocolConnection Connection => Sensor.Connection;
 
         float ProgressRemain;
         TimeSpan ProgressTime;
         static readonly int RefreshPeriod = 500;
         uint TimerRetry => (uint)(ProgressTime.TotalMilliseconds / RefreshPeriod + 1);
 
-        public BaseSensorTask(ISensor sensor, string name)
+        public BaseSensorTask(SensorModel sensor, string name)
         {
             Sensor = sensor;
-            Connection = sensor.Connection;
             Name = name;
         }
 
@@ -58,10 +57,17 @@ namespace SiamCross.Models
             if (Models.Connection.ConnectionState.Connected == Sensor.Connection.State)
                 return true;
             InfoEx = Resource.StatConn_PendingConnect;
-            if (await Sensor.DoActivate(ct))
-                return true;
-            InfoEx = "не удалось подключиться к прибору";
-            return false;
+
+            bool connected = false;
+            for (int i = 0; i < Connection.Retry
+                            && !connected
+                            && !ct.IsCancellationRequested; ++i)
+                connected = await Connection.Connect(ct);
+            if (connected && !Sensor.ConnHolder.IsActivated)
+                Sensor.ConnHolder.IsActivated = true;
+            if (!connected)
+                InfoEx = "не удалось подключиться к прибору";
+            return connected;
         }
     }
 }

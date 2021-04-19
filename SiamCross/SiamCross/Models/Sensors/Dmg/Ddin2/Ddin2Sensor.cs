@@ -1,5 +1,4 @@
 ﻿using SiamCross.Models.Connection.Protocol;
-using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
 using SiamCross.Services;
 using System;
@@ -11,8 +10,8 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
     {
         private Ddin2MeasurementManager _measurementManager;
 
-        public Ddin2Sensor(IProtocolConnection conn, ScannedDeviceInfo dev_info)
-            : base(conn, dev_info)
+        public Ddin2Sensor(IProtocolConnection conn, DeviceInfo deviceInfo)
+            : base(conn, deviceInfo)
         {
         }
         public override async Task StartMeasurement(object measurementParameters)

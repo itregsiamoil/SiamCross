@@ -135,14 +135,14 @@ namespace SiamCross.Models
         public double Accuracy;
     }
     [Serializable]
-    public class PositionInfo
+    public class Position
     {
         public uint Field;
         public string Well;
         public string Bush;
         public uint Shop;
         public GeoLocation Location;
-        public PositionInfo(
+        public Position(
               uint field = 0, string well = default
             , string bush = default, uint shop = 0)
         {
@@ -203,14 +203,14 @@ namespace SiamCross.Models
     public class MeasureData
     {
         public long Id = 0;
-        public PositionInfo Position = new PositionInfo();
+        public Position Position = new Position();
         public DeviceInfo Device = new DeviceInfo();
         public CommonInfo Info = new CommonInfo();
         public MeasurementInfo Measure = new MeasurementInfo();
         public DistributionInfo MailDistribution;
         public DistributionInfo FileDistribution;
 
-        public MeasureData(PositionInfo pos
+        public MeasureData(Position pos
             , DeviceInfo dev
             , CommonInfo info
             , MeasurementInfo measure

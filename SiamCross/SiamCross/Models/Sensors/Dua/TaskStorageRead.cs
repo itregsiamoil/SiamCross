@@ -49,9 +49,11 @@ namespace SiamCross.Models.Sensors.Dua
 
         readonly MemVarByteArray Echo;
 
-        public TaskStorageRead(DuaStorage model, ISensor sensor)
+        public TaskStorageRead(DuaStorage model, SensorModel sensor)
             : base(sensor, "Опрос хранилища")
         {
+            Sensor = sensor;
+
             if (model is DuaStorage storage)
                 _Storage = storage;
 
@@ -102,7 +104,7 @@ namespace SiamCross.Models.Sensors.Dua
 
         public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {
-            if (null == _Storage || null == Connection || null == Sensor)
+            if (null == _Storage || null == Connection)
                 return false;
 
             uint bytesEcho = _Storage.CountEcho * (ReportHeader.Size + _EchoSize);
@@ -145,7 +147,7 @@ namespace SiamCross.Models.Sensors.Dua
 
                 var well = Encoding.UTF8.GetString(skv.Value);
                 var bush = Encoding.UTF8.GetString(kust.Value);
-                var pos = new PositionInfo(field.Value, well, bush, shop.Value);
+                var pos = new Position(field.Value, well, bush, shop.Value);
                 var mi = new MeasurementInfo()
                 {
                     Kind = 1,
@@ -166,7 +168,7 @@ namespace SiamCross.Models.Sensors.Dua
 
                 MeasureData survey = new MeasureData(
                      pos
-                    , Sensor.ScannedDeviceInfo.Device
+                    , Sensor.Device
                     , Sensor.Info
                     , mi);
                 await DbService.Instance.SaveMeasurement(survey);

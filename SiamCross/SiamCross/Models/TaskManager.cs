@@ -30,6 +30,7 @@ namespace SiamCross.Models
         public Progress<string> OnChangeInfo => _Info;
         public Progress<float> OnChangeProgress => _Progress;
         public Progress<bool> OnChangeHidden => _Hidden;
+        public bool IsFree => null == CurrentTask;
 
         protected void Subscribe(ITask task)
         {

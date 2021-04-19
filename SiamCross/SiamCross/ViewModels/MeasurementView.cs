@@ -14,7 +14,7 @@ namespace SiamCross.ViewModels
         public MeasurementView()
         {
             MeasureData = new MeasureData(
-                new PositionInfo()
+                new Position()
                 , new DeviceInfo()
                 , new CommonInfo()
                 , new MeasurementInfo());

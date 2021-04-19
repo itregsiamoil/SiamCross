@@ -9,7 +9,7 @@ namespace SiamCross.Models.Sensors.Dua
         readonly MemVarUInt8 OpReg = new MemVarUInt8(0x8800);
         readonly MemVarUInt8 Vissl = new MemVarUInt8(0x800A);
 
-        public TaskSurvey(ISensor sensor, string name, byte type)
+        public TaskSurvey(SensorModel sensor, string name, byte type)
             : base(sensor, name)
         {
             Vissl.Value = type;
@@ -19,7 +19,7 @@ namespace SiamCross.Models.Sensors.Dua
         {
             if (1 > Vissl.Value || 5 < Vissl.Value)
                 return false;
-            if (null == Connection || null == Sensor)
+            if (null == Connection)
                 return false;
 
             if (!await CheckConnectionAsync(ct))

@@ -20,7 +20,7 @@ namespace SiamCross.Models.Sensors.Dua
             Progress = ((float)_BytesProgress / _BytesTotal);
         }
 
-        public TaskStorageUpdate(DuaStorage model, ISensor sensor)
+        public TaskStorageUpdate(DuaStorage model, SensorModel sensor)
             : base(sensor, "Опрос хранилища")
         {
             if (model is DuaStorage storage)
@@ -32,7 +32,7 @@ namespace SiamCross.Models.Sensors.Dua
 
         public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {
-            if (null == _Storage || null == Connection || null == Sensor)
+            if (null == _Storage || null == Connection)
                 return false;
 
             _BytesProgress = 0;

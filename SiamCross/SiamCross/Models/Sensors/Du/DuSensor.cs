@@ -1,5 +1,4 @@
 ﻿using SiamCross.Models.Connection.Protocol;
-using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Du.Measurement;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
@@ -15,7 +14,7 @@ namespace SiamCross.Models.Sensors.Du
         private DuMeasurementManager _measurementManager;
         private readonly DuQuickReportBuilder _reportBuilder = new DuQuickReportBuilder();
 
-        public DuSensor(IProtocolConnection conn, ScannedDeviceInfo deviceInfo)
+        public DuSensor(IProtocolConnection conn, DeviceInfo deviceInfo)
             : base(conn, deviceInfo)
         {
 

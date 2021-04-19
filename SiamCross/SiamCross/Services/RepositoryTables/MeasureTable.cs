@@ -15,7 +15,7 @@ namespace SiamCross.Services.RepositoryTables
         public MeasureTableItem()
         {
             MeasureData = new MeasureData(
-                new PositionInfo()
+                new Position()
                 , new DeviceInfo()
                 , new CommonInfo()
                 , new MeasurementInfo()

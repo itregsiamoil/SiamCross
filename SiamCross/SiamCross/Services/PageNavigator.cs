@@ -25,7 +25,7 @@ namespace SiamCross.Services
         }
         public static Task Init()
         {
-            Register(typeof(PositionInfoVM), () => new PositionEditPage());
+            Register(typeof(PositionVM), () => new PositionEditPage());
             Register(typeof(SensorDetailsVM), () => new SensorDetailsPage());
 
             Register(typeof(DmgStorageVM), () => new DmgDownloadPage());

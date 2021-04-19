@@ -12,15 +12,35 @@ namespace SiamCross.Models.Sensors
 {
     public class SensorModel : IDisposable
     {
-        public readonly TaskManager Manager = new TaskManager();
+        public readonly IProtocolConnection Connection;
+        public readonly TaskManager Manager;
+
+
+
+        public readonly SensorPosition Position;
+
+
+
+        public readonly DeviceInfo Device;
+        public readonly CommonInfo Info;
         public IStorage Storage { get; set; }
         public ISurveyCfg SurveyCfg { get; set; }
         public ConnectionHolder ConnHolder { get; set; }
 
         public readonly List<ISurvey> Surveys = new List<ISurvey>();
 
+        public SensorModel(IProtocolConnection conn, DeviceInfo deviceInfo)
+        {
+            Device = deviceInfo;
+            Connection = conn;
+            Manager = new TaskManager();
+            Position = new SensorPosition(this);
+            Info = new CommonInfo();
+        }
+
         public void Dispose()
         {
+            Connection.Disconnect();
             ConnHolder?.Dispose();
         }
     }
@@ -35,7 +55,7 @@ namespace SiamCross.Models.Sensors
         IViewModel UserConfigVM { get; set; }
         IViewModel StateVM { get; set; }
         SurveysCollectionVM SurveysVM { get; }
-        PositionInfoVM PositionVM { get; set; }
+        PositionVM PositionVM { get; }
 
 
 
@@ -68,7 +88,7 @@ namespace SiamCross.Models.Sensors
         Task<bool> QuickReport(CancellationToken cancelToken);
         Task StartMeasurement(object measurementParameters);
         ScannedDeviceInfo ScannedDeviceInfo { get; }
-        CommonInfo Info { get; }
+
 
 
         string Name { get; }
