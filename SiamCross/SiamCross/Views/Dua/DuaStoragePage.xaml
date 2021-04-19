@@ -5,7 +5,7 @@
              xmlns:vm="clr-namespace:SiamCross.ViewModels.Dua" 
              xmlns:views="clr-namespace:SiamCross.Views"
              x:DataType="vm:DuaStorageVM"
-             x:Class="SiamCross.Views.Dua.DuaDownloadPage">
+             x:Class="SiamCross.Views.Dua.DuaStoragePage">
     <ContentPage.Resources>
         <Style TargetType="{x:Type StackLayout}">
             <Setter Property="Spacing" Value="0" />
@@ -54,6 +54,12 @@
                                 <Label Text="Начальное измерение" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
                                 <Entry Text="{Binding StartRep}" Keyboard="Numeric"
                                        Grid.Column="1" Grid.Row="0">
+                                    <Entry.Behaviors>
+                                        <xct:NumericValidationBehavior 
+                                            InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                            MinimumValue="0"
+                                            MaximumValue="{Binding AviableRep}"/>
+                                    </Entry.Behaviors>
                                     <Entry.Effects>
                                         <xct:SelectAllTextEffect/>
                                     </Entry.Effects>
@@ -61,6 +67,12 @@
                                 <Label Text="Количество" Grid.Column="0" Grid.Row="1" VerticalTextAlignment="Center"/>
                                 <Entry Text="{Binding CountRep}" Keyboard="Numeric"
                                        Grid.Column="1" Grid.Row="1">
+                                    <Entry.Behaviors>
+                                        <xct:NumericValidationBehavior 
+                                            InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                            MinimumValue="0"
+                                            MaximumValue="{Binding AviableRep}"/>
+                                    </Entry.Behaviors>
                                     <Entry.Effects>
                                         <xct:SelectAllTextEffect/>
                                     </Entry.Effects>
@@ -93,7 +105,10 @@
                                 <Entry Text="{Binding StartEcho}" Keyboard="Numeric"
                                        Grid.Column="1" Grid.Row="0">
                                     <Entry.Behaviors>
-                                        <xct:NumericValidationBehavior MaximumDecimalPlaces="0" />
+                                        <xct:NumericValidationBehavior 
+                                            InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                            MinimumValue="0"
+                                            MaximumValue="{Binding AviableEcho}"/>
                                     </Entry.Behaviors>
                                     <Entry.Effects>
                                         <xct:SelectAllTextEffect/>
@@ -103,7 +118,10 @@
                                 <Entry Text="{Binding CountEcho}" Keyboard="Numeric"
                                        Grid.Column="1" Grid.Row="1">
                                     <Entry.Behaviors>
-                                        <xct:NumericValidationBehavior MaximumDecimalPlaces="0" />
+                                        <xct:NumericValidationBehavior 
+                                            InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                            MinimumValue="0"
+                                            MaximumValue="{Binding AviableEcho}"/>
                                     </Entry.Behaviors>
                                     <Entry.Effects>
                                         <xct:SelectAllTextEffect/>

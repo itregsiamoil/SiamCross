@@ -32,7 +32,7 @@ namespace SiamCross.Services
             Register(typeof(ViewModels.Dmg.Survey.DynamogrammVM)
                 , () => new DynamogrammPage());
 
-            Register(typeof(DuaStorageVM), () => new DuaDownloadPage());
+            Register(typeof(DuaStorageVM), () => new DuaStoragePage());
             Register(typeof(FactoryConfigVM), () => new FactoryConfigPage());
             Register(typeof(UserConfigVM), () => new UserConfigPage());
             //ViewFactoryService.Register(typeof(StateVM), () => new StatePage());

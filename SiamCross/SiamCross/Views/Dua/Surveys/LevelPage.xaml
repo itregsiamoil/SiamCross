@@ -30,7 +30,7 @@
         </StackLayout>
     </NavigationPage.TitleView>
     <ContentPage.ToolbarItems >
-        <ToolbarItem Text="&#x2713; " Command="{Binding CmdSaveParam}"/>
+        <!--ToolbarItem Text="&#x2713; " Command="{Binding CmdSaveParam}"/-->
         <ToolbarItem Text="&#x21BA; " Command="{Binding CmdLoadParam}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
@@ -39,9 +39,10 @@
 
             <ScrollView VerticalOptions="StartAndExpand">
                 <StackLayout IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
-                    <Label Text="График измерения" Style="{StaticResource SectionLabel}" />
+                    <Label Text="График измерения" Style="{StaticResource SectionLabel}" 
+                           IsVisible="{Binding IsSheduler}"/>
                     <Frame Style="{StaticResource GroupingFrameStyle}" 
-                           IsVisible="{Binding IsVisiblePressureSheduler}">
+                           IsVisible="{Binding IsLevelSurvey, Converter={StaticResource InvertedBoolConverter}}">
                         <StackLayout >
                             <Grid Padding="0,10,0,10">
                                 <Grid.RowDefinitions>
@@ -115,18 +116,23 @@
                                         Grid.Column="1" Grid.Row="5"/>
 
                             </Grid>
+                            <Grid Padding="0,10,0,10">
+                                <Label Text="Перейти к АРД при уровне менее 50м."/>
+                                <Switch IsToggled="{Binding IsAutoswitchToAPR}"/>
+                            </Grid>
                         </StackLayout>
                     </Frame>
                     <Label Text="Автоматический клапан" Style="{StaticResource SectionLabel}"
-                           IsVisible="{Binding IsVisibleLevelConfig}"/>
+                           IsVisible="{Binding IsLevelSurvey}"/>
                     <Frame Style="{StaticResource GroupingFrameStyle}" 
-                           IsVisible="{Binding IsVisibleLevelConfig}">
+                           IsVisible="{Binding IsLevelSurvey}">
                         <StackLayout >
                             <Grid Padding="0,10,0,10">
                                 <Label Text="Разрешение срабатывания"/>
                                 <Switch IsToggled="{Binding IsValveAutomaticEnabled}"
-                                        IsEnabled="{Binding IsDisabledValveAutomatic}"/>
+                                        IsEnabled="{Binding IsVisibleLevelSheduler, Converter={StaticResource InvertedBoolConverter}}"/>
                             </Grid>
+
                             <Grid Padding="0,10,0,10">
                                 <Label Text="Длительность срабатывания 0,2/0,05"/>
                                 <Switch IsToggled="{Binding IsValveDurationShort}"/>
@@ -138,9 +144,9 @@
                         </StackLayout>
                     </Frame>
                     <Label Text="Пьезодатчик" Style="{StaticResource SectionLabel}"
-                           IsVisible="{Binding IsVisibleLevelConfig}"/>
+                           IsVisible="{Binding IsLevelSurvey}"/>
                     <Frame Style="{StaticResource GroupingFrameStyle}" 
-                           IsVisible="{Binding IsVisibleLevelConfig}">
+                           IsVisible="{Binding IsLevelSurvey}">
                         <StackLayout >
                             <Grid Padding="0,10,0,10">
                                 <Label Text="Максимальная глубина 3000м./6000м."/>
@@ -153,9 +159,9 @@
                         </StackLayout>
                     </Frame>
                     <Label Text="Скорость звука" Style="{StaticResource SectionLabel}"
-                           IsVisible="{Binding IsVisibleLevelConfig}"/>
+                           IsVisible="{Binding IsLevelSurvey}"/>
                     <Frame Style="{StaticResource GroupingFrameStyle}" 
-                           IsVisible="{Binding IsVisibleLevelConfig}">
+                           IsVisible="{Binding IsLevelSurvey}">
                         <StackLayout >
                             <Grid RowSpacing="0">
                                 <RadioButton Content="Значение" FontSize="Default" TextColor="{StaticResource colorText}"
@@ -166,9 +172,30 @@
                                              Grid.Row="0" Grid.Column="1"/>
 
                                 <Entry Text="{Binding SoundSpeedFixed}"
-                                   Grid.Row="1" Grid.Column="0"/>
+                                       Grid.Row="1" Grid.Column="0" Keyboard="Numeric">
+                                    <Entry.Behaviors>
+                                        <xct:NumericValidationBehavior 
+                                            InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                            MinimumValue="100"
+                                            MaximumValue="500"/>
+                                    </Entry.Behaviors>
+                                    <Entry.Effects>
+                                        <xct:SelectAllTextEffect/>
+                                    </Entry.Effects>
+                                </Entry>
                                 <Entry Text="{Binding SoundSpeedTableId}"
-                                   Grid.Row="1" Grid.Column="1"/>
+                                   Grid.Row="1" Grid.Column="1" Keyboard="Numeric">
+                                    <Entry.Behaviors>
+                                        <xct:NumericValidationBehavior 
+                                            InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                            MaximumDecimalPlaces="0" 
+                                            MinimumValue="0"
+                                            MaximumValue="255"/>
+                                    </Entry.Behaviors>
+                                    <Entry.Effects>
+                                        <xct:SelectAllTextEffect/>
+                                    </Entry.Effects>
+                                </Entry>
                                 <!--
                                 <Picker 
                                    SelectedIndex="{Binding SoundSpeedTableId}"

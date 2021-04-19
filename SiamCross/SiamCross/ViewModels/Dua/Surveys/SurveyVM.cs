@@ -18,15 +18,15 @@ namespace SiamCross.ViewModels.Dua.Survey
         }
         public bool IsValveAutomaticEnabled
         {
-            get => IsDisabledValveAutomatic ? _ModelCfg.IsValveAutomaticEnabled : true;
+            get => IsVisibleLevelSheduler ? true : _ModelCfg.IsValveAutomaticEnabled;
             set
             {
-                if(IsDisabledValveAutomatic)
+                if (IsVisibleLevelSheduler)
                     _ModelCfg.IsValveAutomaticEnabled = true;
                 else
                     _ModelCfg.IsValveAutomaticEnabled = value;
                 ChangeNotify(nameof(IsValveAutomaticEnabled));
-            } 
+            }
         }
         public bool IsValveDurationShort
         {
@@ -143,11 +143,11 @@ namespace SiamCross.ViewModels.Dua.Survey
             set => _ModelCfg.LevelQuantityIndex[4] = value;
         }
         public byte SurveyType => _ModelSurvey.SurveyType;
-        public bool IsVisiblePressureSheduler => 5 == _ModelSurvey.SurveyType;
-        public bool IsVisibleLevelSheduler => (3 == _ModelSurvey.SurveyType || 4 == _ModelSurvey.SurveyType);
-        public bool IsDisabledValveAutomatic => (3 != _ModelSurvey.SurveyType && 4 != _ModelSurvey.SurveyType);
 
-        public bool IsVisibleLevelConfig => 5 != _ModelSurvey.SurveyType;
+        public bool IsSheduler => 2 < _ModelSurvey.SurveyType;
+        public bool IsLevelSurvey => (0 < _ModelSurvey.SurveyType && 5 > _ModelSurvey.SurveyType);
+        public bool IsVisibleLevelSheduler => (3 == _ModelSurvey.SurveyType || 4 == _ModelSurvey.SurveyType);
+
 
         public SurveyVM(ISensor sensor, DuaSurvey model)
             : base(sensor, model)

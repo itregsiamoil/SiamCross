@@ -67,6 +67,9 @@
     <Compile Update="Views\Dmg\Surveys\DynamogrammPage.xaml.cs">
       <DependentUpon>DynamogrammPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Dua\DuaStoragePage.xaml.cs">
+      <DependentUpon>DuaStoragePage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Dua\FactoryConfigPage.xaml.cs">
       <DependentUpon>FactoryConfigPage.xaml</DependentUpon>
     </Compile>
@@ -106,9 +109,6 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Views\Dmg\DmgDownloadPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\Dua\DuaDownloadPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Dua\FactoryConfigPage.xaml">

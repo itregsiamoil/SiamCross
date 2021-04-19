@@ -110,12 +110,12 @@ namespace SiamCross.Models.Sensors.Dua
             _BytesTotal = bytesEcho + bytesSym;
             _BytesReaded = 0;
 
-            await DoReadEchoAsync(true,ct);
+            await DoReadEchoAsync(true, ct);
             await DoReadEchoAsync(false, ct);
             return true;
         }
 
-        protected async Task<bool> DoReadEchoAsync(bool echo,CancellationToken ct)
+        protected async Task<bool> DoReadEchoAsync(bool echo, CancellationToken ct)
         {
             if (!await CheckConnectionAsync(ct))
                 return false;
@@ -128,21 +128,20 @@ namespace SiamCross.Models.Sensors.Dua
 
             for (UInt32 rec = 0; rec < qty; ++rec)
             {
-                InfoEx = $"чтение {rec + 1} измерения " + (echo? "с эхограммой":string.Empty);
+                InfoEx = $"чтение {rec + 1} измерения " + (echo ? "с эхограммой" : string.Empty);
 
                 ReportHeader.Address = reportBaseAddress + ReportHeader.Size * (begin + rec);
                 await Connection.ReadAsync(ReportHeader, null, ct);
                 SetProgressBytes(ReportHeader.Size);
 
-                if(echo)
+                if (echo)
                 {
-                    var tmp  = Connection.AdditioonalTimeout;
+                    var tmp = Connection.AdditioonalTimeout;
                     Connection.AdditioonalTimeout = 9000;
                     Echo.Address = 0x84000000 + _EchoSize * rec;
                     await Connection.ReadMemAsync(Echo.Address, Echo.Size, Echo.Value, 0, SetProgressBytes, ct);
                     Connection.AdditioonalTimeout = tmp;
                 }
-                
 
                 var well = Encoding.UTF8.GetString(skv.Value);
                 var bush = Encoding.UTF8.GetString(kust.Value);

@@ -1,43 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              x:Class="SiamCross.Views.AddFieldPage"
-             xmlns:local="clr-namespace:SiamCross.Views"
-             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross">
+             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross" 
+             xmlns:viewmodels="clr-namespace:SiamCross.ViewModels" 
+             x:DataType="viewmodels:AddFieldViewModel"
+             Title="qweqwe"
+             IsVisible="true"
+             >
     <ContentPage.Content>
-        <TableView Intent="Data" 
-               HasUnevenRows="True" 
-               HorizontalOptions="CenterAndExpand">
-            <TableRoot>
-                <TableSection Title="{local1:Translate NewField}">
-                    <ViewCell>
-                        <StackLayout  >
-                            <Label Text="{local1:Translate FieldName}"></Label>
-                            <Entry Text="{Binding FieldName}"/>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout  >
-                            <Label Text="{local1:Translate FieldCode}"></Label>
-                            <Entry Text="{Binding FieldCode, Mode=TwoWay}" 
-                               Keyboard="Numeric">
-                                <Entry.Behaviors>
-                                    <local:IntegerNumberValidationBehavior/>
-                                </Entry.Behaviors>
-                            </Entry>
-                        </StackLayout>
-                    </ViewCell>
-                    <ViewCell>
-                        <StackLayout>
-                            <Button 
-                            Text="Ок"
-                            Command="{Binding Add}"
-                            Margin="20"
-                            HorizontalOptions="CenterAndExpand"></Button>
-                        </StackLayout>
-                    </ViewCell>
-                </TableSection>
-            </TableRoot>
-        </TableView>
+        <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
+            <Label Text="{local:Translate NewField}" Style="{StaticResource SectionLabel}" />
+            <ScrollView VerticalOptions="StartAndExpand">
+                <Frame Style="{StaticResource GroupingFrameStyle}" >
+                    <StackLayout Padding="5">
+                        <Label Text="{local:Translate FieldName}"></Label>
+                        <Entry Text="{Binding FieldName}"/>
+                        <Label Text="{local:Translate FieldCode}"></Label>
+                        <Entry Text="{Binding FieldCode, Mode=TwoWay}"
+                                Keyboard="Numeric">
+                            <Entry.Behaviors>
+                                <xct:NumericValidationBehavior MaximumDecimalPlaces="0" MinimumValue="0" />
+                            </Entry.Behaviors>
+                            <Entry.Effects>
+                                <xct:SelectAllTextEffect/>
+                            </Entry.Effects>
+                        </Entry>
+                    </StackLayout>
+                </Frame>
+            </ScrollView>
+            <StackLayout Orientation="Horizontal" Spacing="0">
+                <Button Text="Сохранить" HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorPrimaryLight}"
+                        Command="{Binding Add}" >
+                </Button>
+            </StackLayout>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

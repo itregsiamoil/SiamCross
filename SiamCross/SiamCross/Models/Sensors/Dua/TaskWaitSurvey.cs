@@ -82,7 +82,7 @@ namespace SiamCross.Models.Sensors.Dua
             double progressStart = (double)(1.0 - _Remain.TotalMilliseconds / _Total.TotalMilliseconds);
             InfoEx = "измерение";
 
-            using (var ctSrc = new CancellationTokenSource(_Remain+TimeSpan.FromMilliseconds(Constants.ConnectTimeout)))
+            using (var ctSrc = new CancellationTokenSource(_Remain + TimeSpan.FromMilliseconds(Constants.ConnectTimeout)))
             using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
             using (var timer = CreateProgressTimer(_Remain, (float)progressStart))
             {
@@ -164,7 +164,6 @@ namespace SiamCross.Models.Sensors.Dua
 
         async Task<bool> LoadStateAsync(CancellationToken ct)
         {
-            
             using (var ctSrc = new CancellationTokenSource(Constants.ConnectTimeout))
             using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
             {
@@ -188,7 +187,6 @@ namespace SiamCross.Models.Sensors.Dua
                 ret = await Connection.TryReadAsync(_CurrentParam, null, linkTsc.Token);
                 if (RespResult.NormalPkg != ret)
                     return false;
-                    
                 InfoEx = "чтение параметров 1";
                 ret = await Connection.TryReadAsync(_SurvayParam1, null, linkTsc.Token);
                 if (RespResult.NormalPkg != ret)
@@ -281,7 +279,7 @@ namespace SiamCross.Models.Sensors.Dua
                 case DuMeasurementStatus.NoiseMeasurement:
                     return TimeSpan.FromSeconds(SurvayTimeSec + _ValvePrepareTimeSec);
                 case DuMeasurementStatus.ValvePreparation:
-                    return TimeSpan.FromSeconds(SurvayTimeSec + Timeawt.Value );
+                    return TimeSpan.FromSeconds(SurvayTimeSec + Timeawt.Value);
             }
             return TimeSpan.FromSeconds(1);
         }

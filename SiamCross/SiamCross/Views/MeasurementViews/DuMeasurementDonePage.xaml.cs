@@ -3,7 +3,6 @@ using NLog;
 using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models.Tools;
-using SiamCross.Services;
 using SiamCross.Services.Logging;
 using SiamCross.ViewModels;
 using SkiaSharp;
@@ -36,7 +35,7 @@ namespace SiamCross.Views
             {
                 _measurement = measurement;
                 ViewModelWrap<DuMeasurementDoneViewModel> vmWrap = new ViewModelWrap<DuMeasurementDoneViewModel>(measurement);
-                if(null!=measurement.Echogram)
+                if (null != measurement.Echogram)
                 {
                     _points = EchogramConverter.GetPoints(measurement
                         , out minX, out maxX, out minY, out maxY);

@@ -87,6 +87,12 @@
                 <Setter Property="FontSize" Value="Title" />
                 <Setter Property="TextColor" Value="{StaticResource colorText}" />
             </Style>
+
+            <Style x:Key="InvalidEntryStyle" TargetType="Entry">
+                <Setter Property="TextColor" Value="{StaticResource colorAccent}" />
+            </Style>
+            <xct:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

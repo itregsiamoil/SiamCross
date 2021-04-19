@@ -4,9 +4,9 @@ using Xamarin.Forms.Xaml;
 namespace SiamCross.Views.Dua
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DuaDownloadPage : ContentPage
+    public partial class DuaStoragePage : ContentPage
     {
-        public DuaDownloadPage()
+        public DuaStoragePage()
         {
             InitializeComponent();
         }

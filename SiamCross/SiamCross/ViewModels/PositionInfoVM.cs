@@ -172,7 +172,11 @@ namespace SiamCross.ViewModels
         public string Bush
         {
             get => _Model.Bush;
-            set => _Model.Bush = value;
+            set
+            {
+                _Model.Bush = value;
+                ChangeNotify();
+            }
         }
         public string Shop
         {

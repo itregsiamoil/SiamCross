@@ -53,7 +53,7 @@ namespace SiamCross.Models.Sensors.Dua
             if (await CheckConnectionAsync(ct))
             {
                 InfoEx = "чтение";
-                ret = RespResult.NormalPkg == await Connection.TryReadAsync(Aviable, SetProgressBytes, ct); 
+                ret = RespResult.NormalPkg == await Connection.TryReadAsync(Aviable, SetProgressBytes, ct);
             }
 
             if (ret)
