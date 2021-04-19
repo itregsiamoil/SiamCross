@@ -6,8 +6,8 @@ namespace SiamCross.Models.Sensors.Dua
 {
     public class TaskSurvey : BaseSensorTask
     {
-        public readonly MemVarUInt8 OpReg = new MemVarUInt8(0x8800);
-        public readonly MemVarUInt8 Vissl = new MemVarUInt8(0x800A);
+        readonly MemVarUInt8 OpReg = new MemVarUInt8(0x8800);
+        readonly MemVarUInt8 Vissl = new MemVarUInt8(0x800A);
 
         public TaskSurvey(ISensor sensor, string name, byte type)
             : base(sensor, name)
