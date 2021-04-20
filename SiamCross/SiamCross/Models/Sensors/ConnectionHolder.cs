@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors
 {
@@ -17,8 +19,7 @@ namespace SiamCross.Models.Sensors
         readonly TaskManager _Manager;
         readonly Connection.IConnection _Connection;
 
-        Func<CancellationToken, Task> _QuckReportFn;
-
+        public ICommand CmdUpdateStatus { get; set; }
 
         bool _IsQickInfo;
         bool _IsActivated;
@@ -48,9 +49,9 @@ namespace SiamCross.Models.Sensors
         }
 
         public ConnectionHolder(TaskManager mgr, Connection.IConnection connection
-            , Func<CancellationToken, Task> quckReportFn = null)
+            , ICommand cmdUpdateStatus  = null)
         {
-            _QuckReportFn = quckReportFn;
+            CmdUpdateStatus = cmdUpdateStatus;
             _Connection = connection;
             _Connection.PropertyChanged += OnConnectionChange;
 
@@ -106,9 +107,11 @@ namespace SiamCross.Models.Sensors
                 }
                 if (_IsQickInfo || 30 < (DateTime.Now - _LastExchange).TotalSeconds)
                 {
-                    await _QuckReportFn?.Invoke(_cancellToken.Token);
-                    _LastExchange = DateTime.Now;
-                    //_Connection.PhyConnection.UpdateRssi();
+                    if (CmdUpdateStatus is AsyncCommand cmd)
+                    {
+                        await cmd.ExecuteAsync();
+                        _LastExchange = DateTime.Now;
+                    }
                 }
             }
             else

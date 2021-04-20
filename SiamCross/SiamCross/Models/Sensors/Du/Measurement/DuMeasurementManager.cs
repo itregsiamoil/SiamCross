@@ -21,7 +21,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
 
         public ISensor Sensor => mSensor;
 
-        public DuMeasurementStatus MeasurementStatus { get; set; }
+        public DuStatus MeasurementStatus { get; set; }
 
         private readonly byte[] _currentEchogram = new byte[3000];
         private UInt16 mSrcFluidLevel = 0;
@@ -50,7 +50,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                 await GetPressure();
                 await SendParameters();
                 MeasurementStatus = await ExecuteMeasurement();
-                if (DuMeasurementStatus.Сompleted != MeasurementStatus)
+                if (DuStatus.Сompleted != MeasurementStatus)
                 {
                     error = MeasureState.LogicError;
                 }
@@ -118,13 +118,13 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             if (0x02 != resp[3])
                 throw new IOErrPkgException("SetStatus response error");
         }
-        private async Task<DuMeasurementStatus> ExecuteMeasurement()
+        private async Task<DuStatus> ExecuteMeasurement()
         {
             bool started = await Start();
             if (!started)
                 return await GetStatus();
 
-            DuMeasurementStatus status = DuMeasurementStatus.Empty;
+            DuStatus status = DuStatus.Empty;
             byte[] resp = { };
             UInt32 measure_time_sec = 40;//18/36
             float sep_cost = 50f / measure_time_sec;
@@ -135,14 +135,14 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                 status = await GetStatus();
                 switch (status)
                 {
-                    case DuMeasurementStatus.Сompleted:
+                    case DuStatus.Сompleted:
                         isDone = true;
                         break;
                     default:
-                    case DuMeasurementStatus.EсhoMeasurement:
-                    case DuMeasurementStatus.WaitingForClick:
-                    case DuMeasurementStatus.Empty:
-                    case DuMeasurementStatus.NoiseMeasurement:
+                    case DuStatus.EсhoMeasurement:
+                    case DuStatus.WaitingForClick:
+                    case DuStatus.Empty:
+                    case DuStatus.NoiseMeasurement:
                         break;
                 }
 
@@ -269,17 +269,17 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             for (UInt32 i = 0; i < time_sec && !isDone; i++)
             {
                 await Task.Delay(Constants.SecondDelay);
-                DuMeasurementStatus status = await GetStatus();
+                DuStatus status = await GetStatus();
                 switch (status)
                 {
-                    case DuMeasurementStatus.WaitingForClick:
+                    case DuStatus.WaitingForClick:
                         isDone = true;
                         break;
                     default:
-                    case DuMeasurementStatus.EсhoMeasurement:
-                    case DuMeasurementStatus.Empty:
-                    case DuMeasurementStatus.NoiseMeasurement:
-                    case DuMeasurementStatus.Сompleted:
+                    case DuStatus.EсhoMeasurement:
+                    case DuStatus.Empty:
+                    case DuStatus.NoiseMeasurement:
+                    case DuStatus.Сompleted:
                         break;
                 }
                 _progress += sep_cost;
@@ -288,9 +288,9 @@ namespace SiamCross.Models.Sensors.Du.Measurement
             return isDone;
 
         }
-        private async Task<DuMeasurementStatus> GetStatus()
+        private async Task<DuStatus> GetStatus()
         {
-            DuMeasurementStatus status = DuMeasurementStatus.Empty;
+            DuStatus status = DuStatus.Empty;
             byte[] resp = { };
             resp = await Sensor.Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.SensorState]);
             if (null == resp || 12 > resp.Length)
@@ -299,7 +299,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
                 throw new IOErrPkgException("GetStatus response error");
             if (16 != resp.Length)
                 throw new IOErrPkgException("GetStatus response length error");
-            status = (DuMeasurementStatus)BitConverter.ToUInt16(resp, 12);
+            status = (DuStatus)BitConverter.ToUInt16(resp, 12);
             System.Diagnostics.Debug.WriteLine("DU status=" + status.ToString());
             return status;
         }

@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors
 {
@@ -57,8 +58,10 @@ namespace SiamCross.Models.Sensors
 
             PositionVM = new PositionVM(this);
 
-            Model.ConnHolder = new ConnectionHolder(
-                Model.Manager, Connection, QuickReport);
+            Model.ConnHolder.CmdUpdateStatus = new AsyncCommand(
+                () => QuickReport(),
+                () => Model.Manager.IsFree,
+                null, false, false);
 
         }
 
@@ -128,7 +131,7 @@ namespace SiamCross.Models.Sensors
         //public IReadOnlyList<SurveyVM> Surveys { get; set; }
 
         public ScannedDeviceInfo ScannedDeviceInfo { get; }
-        public abstract Task<bool> QuickReport(CancellationToken cancellationToken);
+        public abstract Task<bool> QuickReport(CancellationToken cancellationToken=default);
         //public virtual Task<bool> UpdateRssi(CancellationToken cancellationToken);
         public abstract Task StartMeasurement(object measurementParameters);
 
@@ -333,7 +336,13 @@ namespace SiamCross.Models.Sensors
             get
             {
                 if (DeviceIndex.Instance.TryGetName(ScannedDeviceInfo.Device.Kind, out string str))
-                    return str;
+                {
+                    var sp = str.IndexOf(" ");
+                    if (sp > 0)
+                        return str.Substring(0, sp);
+                    else
+                        return str;
+                }
                 return string.Empty;
             }
         }

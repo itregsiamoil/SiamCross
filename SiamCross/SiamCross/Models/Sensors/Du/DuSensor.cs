@@ -94,10 +94,10 @@ namespace SiamCross.Models.Sensors.Du
 
         }
 
-        private async Task<DuMeasurementStatus> GetStatus(CancellationToken cancelToken)
+        private async Task<DuStatus> GetStatus(CancellationToken cancelToken)
         {
             cancelToken.ThrowIfCancellationRequested();
-            DuMeasurementStatus status = DuMeasurementStatus.Empty;
+            DuStatus status = DuStatus.Empty;
             byte[] resp = { };
             resp = await Connection.Exchange(DuCommands.FullCommandDictionary[DuCommandsEnum.SensorState]);
             if (null == resp || 12 > resp.Length)
@@ -106,7 +106,7 @@ namespace SiamCross.Models.Sensors.Du
                 throw new IOErrPkgException("GetStatus response error");
             if (16 != resp.Length)
                 throw new IOErrPkgException("GetStatus response length error");
-            status = (DuMeasurementStatus)BitConverter.ToUInt16(resp, 12);
+            status = (DuStatus)BitConverter.ToUInt16(resp, 12);
             System.Diagnostics.Debug.WriteLine("DU status=" + status.ToString());
             return status;
         }
@@ -126,18 +126,18 @@ namespace SiamCross.Models.Sensors.Du
             // и не отвечает на другие команды следовательно, 
             // чтоб подключиться к нему:
             // 1 опрашиваем статус
-            DuMeasurementStatus status = await GetStatus(cancelToken);
+            DuStatus status = await GetStatus(cancelToken);
             // 2 делаем сброс если занят
             cancelToken.ThrowIfCancellationRequested();
             switch (status)
             {
-                case DuMeasurementStatus.Empty:
+                case DuStatus.Empty:
                     break;
                 default:
-                case DuMeasurementStatus.WaitingForClick:
-                case DuMeasurementStatus.EсhoMeasurement:
-                case DuMeasurementStatus.NoiseMeasurement:
-                case DuMeasurementStatus.Сompleted:
+                case DuStatus.WaitingForClick:
+                case DuStatus.EсhoMeasurement:
+                case DuStatus.NoiseMeasurement:
+                case DuStatus.Сompleted:
                     await SetStatusEmpty(cancelToken);
                     break;
             }

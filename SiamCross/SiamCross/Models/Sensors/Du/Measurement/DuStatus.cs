@@ -1,6 +1,6 @@
 ﻿namespace SiamCross.Models.Sensors.Du.Measurement
 {
-    public enum DuMeasurementStatus
+    public enum DuStatus
     {
         Empty = 0,
         NoiseMeasurement,

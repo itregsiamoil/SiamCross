@@ -25,7 +25,7 @@ namespace SiamCross.Models.Sensors
         public readonly CommonInfo Info;
         public IStorage Storage { get; set; }
         public ISurveyCfg SurveyCfg { get; set; }
-        public ConnectionHolder ConnHolder { get; set; }
+        public ConnectionHolder ConnHolder { get; }
 
         public readonly List<ISurvey> Surveys = new List<ISurvey>();
 
@@ -36,12 +36,15 @@ namespace SiamCross.Models.Sensors
             Manager = new TaskManager();
             Position = new SensorPosition(this);
             Info = new CommonInfo();
+
+            ConnHolder = new ConnectionHolder(Manager, Connection);
         }
 
         public virtual void Dispose()
         {
             Connection.Disconnect();
             ConnHolder?.Dispose();
+            Connection.Dispose();
         }
     }
 

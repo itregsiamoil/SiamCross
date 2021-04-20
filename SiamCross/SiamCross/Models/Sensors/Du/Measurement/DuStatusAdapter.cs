@@ -2,22 +2,22 @@
 {
     public static class DuStatusAdapter
     {
-        public static DuMeasurementStatus StringStatusToEnum(string stringStatus)
+        public static DuStatus StringStatusToEnum(string stringStatus)
         {
             if (!string.IsNullOrEmpty(stringStatus))
             {
                 switch (stringStatus)
                 {
-                    case "0": return DuMeasurementStatus.Empty;
-                    case "1": return DuMeasurementStatus.NoiseMeasurement;
-                    case "2": return DuMeasurementStatus.WaitingForClick;
-                    case "3": return DuMeasurementStatus.EсhoMeasurement;
-                    case "4": return DuMeasurementStatus.Сompleted;
-                    case "5": return DuMeasurementStatus.ValvePreparation;
+                    case "0": return DuStatus.Empty;
+                    case "1": return DuStatus.NoiseMeasurement;
+                    case "2": return DuStatus.WaitingForClick;
+                    case "3": return DuStatus.EсhoMeasurement;
+                    case "4": return DuStatus.Сompleted;
+                    case "5": return DuStatus.ValvePreparation;
                 }
             }
 
-            return DuMeasurementStatus.Empty;
+            return DuStatus.Empty;
         }
 
         public static string StringStatusToReport(string stringStatus)
@@ -38,17 +38,17 @@
             return Resource.Stat_Free; //stub
         }
 
-        public static string StatusToString(DuMeasurementStatus status)
+        public static string StatusToString(DuStatus status)
         {
             switch (status)
             {
                 default: break;
-                case DuMeasurementStatus.Empty: return Resource.Stat_Free;
-                case DuMeasurementStatus.NoiseMeasurement: return Resource.Stat_NoiseMeas;
-                case DuMeasurementStatus.WaitingForClick: return Resource.Stat_ClickWait;
-                case DuMeasurementStatus.EсhoMeasurement: return Resource.Stat_Meas;
-                case DuMeasurementStatus.Сompleted: return Resource.Stat_Complete;
-                case DuMeasurementStatus.ValvePreparation: return Resource.Stat_ValvePreparation;
+                case DuStatus.Empty: return Resource.Stat_Free;
+                case DuStatus.NoiseMeasurement: return Resource.Stat_NoiseMeas;
+                case DuStatus.WaitingForClick: return Resource.Stat_ClickWait;
+                case DuStatus.EсhoMeasurement: return Resource.Stat_Meas;
+                case DuStatus.Сompleted: return Resource.Stat_Complete;
+                case DuStatus.ValvePreparation: return Resource.Stat_ValvePreparation;
             }
             return Resource.Stat_Free; //stub
         }

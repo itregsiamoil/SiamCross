@@ -106,8 +106,10 @@
                                                             <FormattedString >
                                                                 <Span Text="{Binding Type}" />
                                                                 <Span Text=" " />
+                                                                <!--
                                                                 <Span Text="{Binding Connection.PhyConnection.PhyInterface.Name}" />
                                                                 <Span Text=" " />
+                                                                -->
                                                                 <Span Text="{Binding ConnStateStr}" />
                                                             </FormattedString>
                                                         </Label.FormattedText>

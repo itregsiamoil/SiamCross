@@ -112,21 +112,17 @@ namespace SiamCross.Models.Sensors.Dua
             _BytesTotal = bytesEcho + bytesSym;
             _BytesReaded = 0;
 
-            await DoReadEchoAsync(true, ct);
-            await DoReadEchoAsync(false, ct);
+            await DoReadEchoAsync(true, _Storage.StartEcho, _Storage.CountEcho, ct);
+            await DoReadEchoAsync(false, _Storage.StartRep, _Storage.CountRep, ct);
             return true;
         }
 
-        protected async Task<bool> DoReadEchoAsync(bool echo, CancellationToken ct)
+        protected async Task<bool> DoReadEchoAsync(bool echo, uint begin, uint qty, CancellationToken ct)
         {
             if (!await CheckConnectionAsync(ct))
                 return false;
 
-            var begin = _Storage.StartEcho;
-            var qty = _Storage.CountEcho;
-
             uint reportBaseAddress = echo ? 0x83000000 : 0x82000000;
-
 
             for (UInt32 rec = 0; rec < qty; ++rec)
             {
