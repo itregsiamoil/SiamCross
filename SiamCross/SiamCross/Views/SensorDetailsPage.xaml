@@ -53,7 +53,7 @@
 
                 <Frame Style="{StaticResource MenuItemStyle}" >
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding Sensor.PositionVM.CmdEdit}" />
+                        <TapGestureRecognizer Command="{Binding ShowPositionEditorCommand}" />
                     </Frame.GestureRecognizers>
                     <StackLayout>
                         <Label Style="{StaticResource TitleLabel}" >

@@ -19,6 +19,7 @@ namespace SiamCross.ViewModels.MeasurementViewModels
         public ICommand CmdSaveParam { get; }
         public ICommand CmdLoadParam { get; }
         public ICommand CmdShow { get; }
+        public ICommand CmdWait { get; }
         public ICommand CmdStart { get; set; }
         public BaseSurveyVM(ISensor sensor, ISurvey model)
         {
@@ -30,6 +31,7 @@ namespace SiamCross.ViewModels.MeasurementViewModels
             CmdLoadParam = Config?.CmdLoadParam;
             //CmdShow = Config?.CmdShow;
             CmdStart = Model?.CmdStart;
+            CmdWait = Model?.CmdWait;
 
             CmdShow = new AsyncCommand(DoShow,
                 (Func<bool>)null,

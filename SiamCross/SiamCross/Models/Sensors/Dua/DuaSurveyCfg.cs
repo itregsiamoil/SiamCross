@@ -5,7 +5,7 @@ namespace SiamCross.Models.Sensors.Dua
 {
     public class DuaSurveyCfg : BaseSurveyCfg
     {
-        private readonly ISensor _Sensor;
+        private readonly SensorModel _Sensor;
 
         public bool Synched = false;
 
@@ -25,29 +25,25 @@ namespace SiamCross.Models.Sensors.Dua
 
         async Task DoSave()
         {
-            var manager = _Sensor.Model.Manager;
-            var taskSaveInfo = new TaskSaveSurveyInfo(this, _Sensor.Model);
-            await manager.Execute(taskSaveInfo);
+            var taskSaveInfo = new TaskSaveSurveyInfo(this, _Sensor);
+            await _Sensor.Manager.Execute(taskSaveInfo);
         }
         async Task DoLoad()
         {
-            var manager = _Sensor.Model.Manager;
-            var taskUpdate = new TaskLoadSurveyInfo(this, _Sensor.Model);
-            await manager.Execute(taskUpdate);
+            var taskUpdate = new TaskLoadSurveyInfo(this, _Sensor);
+            await _Sensor.Manager.Execute(taskUpdate);
         }
 
-        public DuaSurveyCfg(ISensor sensor)
+        public DuaSurveyCfg(SensorModel sensor)
         {
             _Sensor = sensor;
 
-            var manager = _Sensor.Model.Manager;
-
             CmdLoadParam = new AsyncCommand(DoLoad,
-                () => _Sensor.TaskManager.IsFree,
+                () => _Sensor.Manager.IsFree,
                 null, false, false);
 
             CmdSaveParam = new AsyncCommand(DoSave,
-                () => _Sensor.TaskManager.IsFree,
+                () => _Sensor.Manager.IsFree,
                 null, false, false);
 
             //CmdShow = new AsyncCommand(DoShow,

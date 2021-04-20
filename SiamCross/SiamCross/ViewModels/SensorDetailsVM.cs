@@ -31,25 +31,33 @@ namespace SiamCross.ViewModels
         public SensorDetailsVM(ISensor sensor)
         {
             _Sensor = sensor;
-            ShowDownloadsViewCommand = new AsyncCommand(ShowDownloads
+            ShowDownloadsViewCommand = new AsyncCommand(ShowStoragePage
                 , (Func<object, bool>)null, null, false, true);
 
-            ShowUserConfigViewCommand = PageNavigator.CreateAsyncCommand(() => _Sensor.UserConfigVM);
-            ShowFactoryConfigViewCommand = PageNavigator.CreateAsyncCommand(() => _Sensor.FactoryConfigVM);
-            ShowStateViewCommand = PageNavigator.CreateAsyncCommand(() => _Sensor.StateVM);
-            ShowSurveysViewCommand = PageNavigator.CreateAsyncCommand(() => _Sensor.SurveysVM);
-            ShowPositionEditorCommand = PageNavigator.CreateAsyncCommand(() => _Sensor.PositionVM);
+            ShowPositionEditorCommand = new AsyncCommand(ShowPositionPage
+                , (Func<object, bool>)null, null, false, true);
 
+            ShowSurveysViewCommand = new AsyncCommand(ShowSurveysPage
+                , (Func<object, bool>)null, null, false, true);
+
+            //ShowUserConfigViewCommand = PageNavigator.CreateAsyncCommand(() => _Sensor.UserConfigVM);
+            //ShowFactoryConfigViewCommand = PageNavigator.CreateAsyncCommand(() => _Sensor.FactoryConfigVM);
+            //ShowStateViewCommand = PageNavigator.CreateAsyncCommand(() => _Sensor.StateVM);
         }
 
-        private async Task ShowDownloads()
+        Task ShowSurveysPage()
         {
-            var ctx = _Sensor.StorageVM;
-            var view = PageNavigator.Get(ctx);
-            await App.NavigationPage.Navigation.PushAsync(view);
-
-            if (ctx is BaseStorageVM dvm)
-                dvm.CmdUpdateStorageInfo.Execute(this);
+            return PageNavigator.ShowPage(_Sensor.SurveysVM);
+        }
+        async Task ShowPositionPage()
+        {
+            _Sensor.Model.Position.CmdLoad.Execute(this);
+            await PageNavigator.ShowPage(_Sensor.PositionVM);
+        }
+        async Task ShowStoragePage()
+        {
+            _Sensor.Model.Storage.CmdUpdateStorageInfo.Execute(this);
+            await PageNavigator.ShowPage(_Sensor.StorageVM);
         }
 
     }//public class SensorDetailsViewModel : BaseVM

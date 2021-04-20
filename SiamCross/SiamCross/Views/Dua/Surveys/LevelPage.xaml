@@ -37,180 +37,183 @@
         <StackLayout  BackgroundColor="{StaticResource colorBackgroundLight}" >
             <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}" />
 
-            <ScrollView VerticalOptions="StartAndExpand">
-                <StackLayout IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
-                    <Label Text="График измерения" Style="{StaticResource SectionLabel}" 
+            <RefreshView Command="{Binding CmdLoadParam}">
+                <ScrollView VerticalOptions="StartAndExpand">
+                    <StackLayout IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
+                        <Label Text="График измерения" Style="{StaticResource SectionLabel}" 
                            IsVisible="{Binding IsSheduler}"/>
-                    <Frame Style="{StaticResource GroupingFrameStyle}" 
+                        <Frame Style="{StaticResource GroupingFrameStyle}" 
                            IsVisible="{Binding IsLevelSurvey, Converter={StaticResource InvertedBoolConverter}}">
-                        <StackLayout >
-                            <Grid Padding="0,10,0,10">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="50*" />
-                                    <ColumnDefinition Width="50*" />
-                                </Grid.ColumnDefinitions>
-                                <Label Text="Количество" Grid.Column="0" Grid.Row="0"/>
-                                <Label Text="Период (мин)" Grid.Column="1" Grid.Row="0"/>
+                            <StackLayout >
+                                <Grid Padding="0,10,0,10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50*" />
+                                        <ColumnDefinition Width="50*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="Количество" Grid.Column="0" Grid.Row="0"/>
+                                    <Label Text="Период (мин)" Grid.Column="1" Grid.Row="0"/>
 
-                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
+                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
                                         SelectedIndex="{Binding PressureQuantityIndex}"
                                         Grid.Column="0" Grid.Row="1"/>
-                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
+                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
                                         SelectedIndex="{Binding PressurePeriodIndex}"
                                         Grid.Column="1" Grid.Row="1"/>
-                            </Grid>
-                        </StackLayout>
-                    </Frame>
-                    <Frame Style="{StaticResource GroupingFrameStyle}"
+                                </Grid>
+                            </StackLayout>
+                        </Frame>
+                        <Frame Style="{StaticResource GroupingFrameStyle}"
                            IsVisible="{Binding IsVisibleLevelSheduler}">
-                        <StackLayout >
-                            <Grid Padding="0,10,0,10">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="50*" />
-                                    <ColumnDefinition Width="50*" />
-                                </Grid.ColumnDefinitions>
-                                <Label Text="Количество" Grid.Column="0" Grid.Row="0"/>
-                                <Label Text="Период (мин)" Grid.Column="1" Grid.Row="0"/>
+                            <StackLayout >
+                                <Grid Padding="0,10,0,10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50*" />
+                                        <ColumnDefinition Width="50*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="Количество" Grid.Column="0" Grid.Row="0"/>
+                                    <Label Text="Период (мин)" Grid.Column="1" Grid.Row="0"/>
 
-                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
+                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
                                         SelectedIndex="{Binding LevelQuantityIndex0}"
                                         Grid.Column="0" Grid.Row="1"/>
-                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
+                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
                                         SelectedIndex="{Binding LevelPeriodIndex0}"
                                         Grid.Column="1" Grid.Row="1"/>
-                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
+                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
                                         SelectedIndex="{Binding LevelQuantityIndex1}"
                                         Grid.Column="0" Grid.Row="2"/>
-                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
+                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
                                         SelectedIndex="{Binding LevelPeriodIndex1}"
                                         Grid.Column="1" Grid.Row="2"/>
-                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
+                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
                                         SelectedIndex="{Binding LevelQuantityIndex2}"
                                         Grid.Column="0" Grid.Row="3"/>
-                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
+                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
                                         SelectedIndex="{Binding LevelPeriodIndex2}"
                                         Grid.Column="1" Grid.Row="3"/>
-                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
+                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
                                         SelectedIndex="{Binding LevelQuantityIndex3}"
                                         Grid.Column="0" Grid.Row="4"/>
-                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
+                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
                                         SelectedIndex="{Binding LevelPeriodIndex3}"
                                         Grid.Column="1" Grid.Row="4"/>
-                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
+                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
                                         SelectedIndex="{Binding LevelQuantityIndex4}"
                                         Grid.Column="0" Grid.Row="5"/>
-                                <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
+                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
                                         SelectedIndex="{Binding LevelPeriodIndex4}"
                                         Grid.Column="1" Grid.Row="5"/>
 
-                            </Grid>
-                            <Grid Padding="0,10,0,10">
-                                <Label Text="Перейти к АРД при уровне менее 50м."/>
-                                <Switch IsToggled="{Binding IsAutoswitchToAPR}"/>
-                            </Grid>
-                        </StackLayout>
-                    </Frame>
-                    <Label Text="Автоматический клапан" Style="{StaticResource SectionLabel}"
+                                </Grid>
+                                <Grid Padding="0,10,0,10">
+                                    <Label Text="Перейти к АРД при уровне менее 50м."/>
+                                    <Switch IsToggled="{Binding IsAutoswitchToAPR}"/>
+                                </Grid>
+                            </StackLayout>
+                        </Frame>
+                        <Label Text="Автоматический клапан" Style="{StaticResource SectionLabel}"
                            IsVisible="{Binding IsLevelSurvey}"/>
-                    <Frame Style="{StaticResource GroupingFrameStyle}" 
+                        <Frame Style="{StaticResource GroupingFrameStyle}" 
                            IsVisible="{Binding IsLevelSurvey}">
-                        <StackLayout >
-                            <Grid Padding="0,10,0,10">
-                                <Label Text="Разрешение срабатывания"/>
-                                <Switch IsToggled="{Binding IsValveAutomaticEnabled}"
+                            <StackLayout >
+                                <Grid Padding="0,10,0,10">
+                                    <Label Text="Разрешение срабатывания"/>
+                                    <Switch IsToggled="{Binding IsValveAutomaticEnabled}"
                                         IsEnabled="{Binding IsVisibleLevelSheduler, Converter={StaticResource InvertedBoolConverter}}"/>
-                            </Grid>
+                                </Grid>
 
-                            <Grid Padding="0,10,0,10">
-                                <Label Text="Длительность срабатывания 0,2/0,05"/>
-                                <Switch IsToggled="{Binding IsValveDurationShort}"/>
-                            </Grid>
-                            <Grid Padding="0,10,0,10">
-                                <Label Text="Направление газа впуск/выпуск"/>
-                                <Switch IsToggled="{Binding IsValveDirectionInput}"/>
-                            </Grid>
-                        </StackLayout>
-                    </Frame>
-                    <Label Text="Пьезодатчик" Style="{StaticResource SectionLabel}"
+                                <Grid Padding="0,10,0,10">
+                                    <Label Text="Длительность срабатывания 0,2/0,05"/>
+                                    <Switch IsToggled="{Binding IsValveDurationShort}"/>
+                                </Grid>
+                                <Grid Padding="0,10,0,10">
+                                    <Label Text="Направление газа впуск/выпуск"/>
+                                    <Switch IsToggled="{Binding IsValveDirectionInput}"/>
+                                </Grid>
+                            </StackLayout>
+                        </Frame>
+                        <Label Text="Пьезодатчик" Style="{StaticResource SectionLabel}"
                            IsVisible="{Binding IsLevelSurvey}"/>
-                    <Frame Style="{StaticResource GroupingFrameStyle}" 
+                        <Frame Style="{StaticResource GroupingFrameStyle}" 
                            IsVisible="{Binding IsLevelSurvey}">
-                        <StackLayout >
-                            <Grid Padding="0,10,0,10">
-                                <Label Text="Максимальная глубина 3000м./6000м."/>
-                                <Switch IsToggled="{Binding IsPiezoDepthMax}"/>
-                            </Grid>
-                            <Grid Padding="0,10,0,10">
-                                <Label Text="Дополнительное усиление"/>
-                                <Switch IsToggled="{Binding IsPiezoAdditionalGain}"/>
-                            </Grid>
-                        </StackLayout>
-                    </Frame>
-                    <Label Text="Скорость звука" Style="{StaticResource SectionLabel}"
+                            <StackLayout >
+                                <Grid Padding="0,10,0,10">
+                                    <Label Text="Максимальная глубина 3000м./6000м."/>
+                                    <Switch IsToggled="{Binding IsPiezoDepthMax}"/>
+                                </Grid>
+                                <Grid Padding="0,10,0,10">
+                                    <Label Text="Дополнительное усиление"/>
+                                    <Switch IsToggled="{Binding IsPiezoAdditionalGain}"/>
+                                </Grid>
+                            </StackLayout>
+                        </Frame>
+                        <Label Text="Скорость звука" Style="{StaticResource SectionLabel}"
                            IsVisible="{Binding IsLevelSurvey}"/>
-                    <Frame Style="{StaticResource GroupingFrameStyle}" 
+                        <Frame Style="{StaticResource GroupingFrameStyle}" 
                            IsVisible="{Binding IsLevelSurvey}">
-                        <StackLayout >
-                            <Grid RowSpacing="0">
-                                <RadioButton Content="Значение" FontSize="Default" TextColor="{StaticResource colorText}"
+                            <StackLayout >
+                                <Grid RowSpacing="0">
+                                    <RadioButton Content="Значение" FontSize="Default" TextColor="{StaticResource colorText}"
                                              IsChecked="{Binding IsSoundSpeedCustom}"
                                          Grid.Row="0" Grid.Column="0"/>
-                                <RadioButton Content="Таблица" FontSize="Default" TextColor="{StaticResource colorText}"
+                                    <RadioButton Content="Таблица" FontSize="Default" TextColor="{StaticResource colorText}"
                                              IsChecked="{Binding IsSoundSpeedTable}"
                                              Grid.Row="0" Grid.Column="1"/>
 
-                                <Entry Text="{Binding SoundSpeedFixed}"
+                                    <Entry Text="{Binding SoundSpeedFixed}"
                                        Grid.Row="1" Grid.Column="0" Keyboard="Numeric">
-                                    <Entry.Behaviors>
-                                        <xct:NumericValidationBehavior 
+                                        <Entry.Behaviors>
+                                            <xct:NumericValidationBehavior 
                                             InvalidStyle="{StaticResource InvalidEntryStyle}"
                                             MinimumValue="100"
                                             MaximumValue="500"/>
-                                    </Entry.Behaviors>
-                                    <Entry.Effects>
-                                        <xct:SelectAllTextEffect/>
-                                    </Entry.Effects>
-                                </Entry>
-                                <Entry Text="{Binding SoundSpeedTableId}"
+                                        </Entry.Behaviors>
+                                        <Entry.Effects>
+                                            <xct:SelectAllTextEffect/>
+                                        </Entry.Effects>
+                                    </Entry>
+                                    <Entry Text="{Binding SoundSpeedTableId}"
                                    Grid.Row="1" Grid.Column="1" Keyboard="Numeric">
-                                    <Entry.Behaviors>
-                                        <xct:NumericValidationBehavior 
+                                        <Entry.Behaviors>
+                                            <xct:NumericValidationBehavior 
                                             InvalidStyle="{StaticResource InvalidEntryStyle}"
                                             MaximumDecimalPlaces="0" 
                                             MinimumValue="0"
                                             MaximumValue="255"/>
-                                    </Entry.Behaviors>
-                                    <Entry.Effects>
-                                        <xct:SelectAllTextEffect/>
-                                    </Entry.Effects>
-                                </Entry>
-                                <!--
+                                        </Entry.Behaviors>
+                                        <Entry.Effects>
+                                            <xct:SelectAllTextEffect/>
+                                        </Entry.Effects>
+                                    </Entry>
+                                    <!--
                                 <Picker 
                                    SelectedIndex="{Binding SoundSpeedTableId}"
                                    Grid.Row="1" Grid.Column="1"/>
                                 -->
-                            </Grid>
-                        </StackLayout>
-                    </Frame>
-                </StackLayout>
-            </ScrollView>
+                                </Grid>
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                </ScrollView>
+            </RefreshView>
+
             <Button Text="Запустить" HorizontalOptions="FillAndExpand"
                     BackgroundColor="{StaticResource colorPrimaryLight}" 
                     Command="{Binding CmdStart}"
-                    IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" 
-                />
+                    IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
+            </Button>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

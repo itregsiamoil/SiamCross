@@ -25,7 +25,7 @@ namespace SiamCross.Models.Sensors.Dua
         }
 
         public TaskPositionLoad(SensorPosition pos)
-            : base(pos.SensorModel, "Загрузка местоположения")
+            : base(pos.Sensor, "Загрузка местоположения")
         {
             _Model = pos;
 
@@ -53,36 +53,35 @@ namespace SiamCross.Models.Sensors.Dua
         }
         async Task<bool> UpdateAsync(CancellationToken ct)
         {
-            if (!await CheckConnectionAsync(ct))
-                return false;
+            if (null != _Model.Saved)
+            {
+                _Model.Current = _Model.Saved;
+                InfoEx = "обновлено";
+                return true;
+            }
 
-            InfoEx = "чтение";
-            bool readed = RespResult.NormalPkg == await Connection.TryReadAsync(SurvayParam, SetProgressBytes, ct);
+            bool readed = false;
+            if (await CheckConnectionAsync(ct))
+            {
+                InfoEx = "чтение";
+                readed = RespResult.NormalPkg == await Connection.TryReadAsync(SurvayParam, SetProgressBytes, ct);
+                InfoEx = "выполнено";
+            }
 
             if (readed)
             {
                 //await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                _Model.FieldId = Field.Value;
-                _Model.Well = Encoding.UTF8.GetString(Skv.Value, 0, Skv.Value.Length);
-                _Model.Bush = Encoding.UTF8.GetString(Kust.Value, 0, Kust.Value.Length);
-                _Model.Shop = Shop.Value;
-                InfoEx = "успешно выполнено";
-
+                _Model.Current = new Position(
+                    Field.Value,
+                    Encoding.UTF8.GetString(Skv.Value, 0, Skv.Value.Length),
+                    Encoding.UTF8.GetString(Kust.Value, 0, Kust.Value.Length),
+                    Shop.Value);
             }
             else
             {
-                _Model.FieldId = 0;
-                _Model.Well = "0";
-                _Model.Bush = "0";
-                _Model.Shop = 0;
-                InfoEx = "set default";
+                _Model.Current = new Position();
             }
 
-            _Model.ChangeNotify(nameof(_Model.FieldId));
-            _Model.ChangeNotify("SelectedField");
-            _Model.ChangeNotify(nameof(_Model.Well));
-            _Model.ChangeNotify(nameof(_Model.Bush));
-            _Model.ChangeNotify(nameof(_Model.Shop));
             return readed;
         }
 

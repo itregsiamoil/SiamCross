@@ -22,8 +22,8 @@ namespace SiamCross.Models.Sensors
 
 
 
-        public BaseSensor2(IProtocolConnection conn, DeviceInfo deviceInfo)
-            : base(conn, deviceInfo)
+        public BaseSensor2(SensorModel model)
+            : base(model)
         {
             _Common = new MemStruct(0x00);
             DeviceType = _Common.Add(new MemVarUInt16(nameof(DeviceType)));
@@ -35,8 +35,6 @@ namespace SiamCross.Models.Sensors
             _Info = new MemStruct(0x1000);
             ProgrammVersionAddress = _Info.Add(new MemVarUInt32(nameof(ProgrammVersionAddress)));
             ProgrammVersionSize = _Info.Add(new MemVarUInt16(nameof(ProgrammVersionSize)));
-
-            _Memory.Add(_Common);
 
         }
 

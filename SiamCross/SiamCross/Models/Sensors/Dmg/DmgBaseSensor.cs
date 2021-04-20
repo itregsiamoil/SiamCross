@@ -10,6 +10,21 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dmg
 {
+    public class DmgSensorModel : SensorModel
+    {
+        public DmgSensorModel(IProtocolConnection conn, DeviceInfo deviceInfo)
+           : base(conn, deviceInfo)
+        {
+            Storage = new DmgStorage(this);
+
+            //SurveyCfg = new DuaSurveyCfg(this);
+
+            Surveys.Add(new Dynamogramm(this));
+
+        }
+    }
+
+
     public abstract class DmgBaseSensor : BaseSensor2
     {
         public readonly MemStruct _SurvayParam;
@@ -49,8 +64,8 @@ namespace SiamCross.Models.Sensors.Dmg
         public readonly MemVarUInt16 TimeDiscr;
 
 
-        public DmgBaseSensor(IProtocolConnection conn, DeviceInfo deviceInfo)
-            : base(conn, deviceInfo)
+        public DmgBaseSensor(SensorModel model)
+            : base(model)
         {
             _SurvayParam = new MemStruct(0x8000);
             Rod = _SurvayParam.Add(new MemVarUInt16(nameof(Rod)));
@@ -91,31 +106,15 @@ namespace SiamCross.Models.Sensors.Dmg
             WeightDiscr = _Report.Add(new MemVarUInt16(nameof(WeightDiscr)));
             TimeDiscr = _Report.Add(new MemVarUInt16(nameof(TimeDiscr)));
 
-            var dmgModel = new Dynamogramm(this);
-            Model.Surveys.Add(dmgModel);
 
-            var dmgVM = new DynamogrammVM(this, dmgModel);
+            var dmgVM = new DynamogrammVM(this, Model.Surveys[0] as BaseSurvey);
             SurveysVM.SurveysCollection.Add(dmgVM);
 
-            /*
-            var sur2 = new SurveyVM(this
-                , "Тест клапанов"
-                , "long long description");
-            surveys.Add(sur2);
-
-            var sur3 = new SurveyVM(this
-                , "Вес штанг"
-                , "long long description");
-            surveys.Add(sur3);
-            */
-
-            Model.Storage = new DmgStorage(this);
             StorageVM = new DmgStorageVM(this);
 
             //FactoryConfigVM = new FactoryConfigVM(this);
             //UserConfigVM = new UserConfigVM(this);
             //StateVM = new StateVM(this);
-
 
         }
 

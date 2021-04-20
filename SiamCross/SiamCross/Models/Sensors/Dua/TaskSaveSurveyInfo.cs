@@ -92,13 +92,9 @@ namespace SiamCross.Models.Sensors.Dua
 
                 ret = await RetryExecAsync(3, DoSaveSingleAsync, ct);
             }
-
             _Model.Synched = ret;
             if (ret)
-            {
-                InfoEx = "успешно выполнено";
-
-            }
+                InfoEx = "выполнено";
             return ret;
         }
         async Task<bool> DoSaveSingleAsync(CancellationToken ct)

@@ -38,7 +38,7 @@ namespace SiamCross.Models.Sensors
             Info = new CommonInfo();
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             Connection.Disconnect();
             ConnHolder?.Dispose();
@@ -73,12 +73,6 @@ namespace SiamCross.Models.Sensors
 
 
         IProtocolConnection Connection { get; }
-
-        List<MemStruct> Memory { get; }
-
-        //Task ActivateAsync();
-        //Task DeactivateAsync();
-        Task<bool> DoActivate(CancellationToken token = default);
 
         string ConnStateStr { get; }
         bool Activate { get; set; }

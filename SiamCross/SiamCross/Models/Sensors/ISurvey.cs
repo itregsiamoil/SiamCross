@@ -11,16 +11,18 @@ namespace SiamCross.Models.Sensors
 
         ISurveyCfg Config { get; }
         ICommand CmdStart { get; }
+        ICommand CmdWait { get; }
     }
     public class BaseSurvey : BaseVM, ISurvey
     {
-        protected readonly ISensor _Sensor;
+        protected readonly SensorModel _Sensor;
         public string Name { get; }
         public string Description { get; }
         public ISurveyCfg Config { get; set; }
         public ICommand CmdStart { get; set; }
+        public ICommand CmdWait { get; set; }
 
-        public BaseSurvey(ISensor sensor, ISurveyCfg cfg, string name, string description)
+        public BaseSurvey(SensorModel sensor, ISurveyCfg cfg, string name, string description)
         {
             _Sensor = sensor;
             Name = name;

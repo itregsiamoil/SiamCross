@@ -11,51 +11,49 @@ namespace SiamCross.Models.Sensors
     [Serializable]
     public class SensorPosition : BaseVM
     {
-        public enum PositionSource
+        readonly ITask _TaskLoad;
+        readonly ITask _TaskSave;
+        readonly Position _Position = new Position();
+        public readonly SensorModel Sensor;
+        public Position Saved { get; private set; }
+        public Position Current
         {
-            Device = 0,
-            DataBase = 1,
-            SurveyDataBase = 2
+            get => _Position;
+            set
+            {
+                if (null == value)
+                {
+                    _Position.Field = 0;
+                    _Position.Well = "0";
+                    _Position.Bush = "0";
+                    _Position.Shop = 0;
+                }
+                else
+                {
+                    _Position.Field = value.Field;
+                    _Position.Well = value.Well;
+                    _Position.Bush = value.Bush;
+                    _Position.Shop = value.Shop;
+                }
+                ChangeNotify();
+            }
         }
-        public readonly SensorModel SensorModel;
-        public readonly Position _Position = new Position();
-
-        public uint FieldId
-        {
-            get => _Position.Field;
-            set { _Position.Field = value; ChangeNotify(); }
-        }
-        public string Well
-        {
-            get => _Position.Well;
-            set { _Position.Well = value; ChangeNotify(); }
-        }
-        public string Bush
-        {
-            get => _Position.Bush;
-            set { _Position.Bush = value; ChangeNotify(); }
-        }
-        public uint Shop
-        {
-            get => _Position.Shop;
-            set { _Position.Shop = value; ChangeNotify(); }
-        }
-        public PositionSource Source;
 
         public ICommand CmdMakeNew { get; }
         public ICommand CmdLoad { get; }
         public ICommand CmdSave { get; }
-        public SensorPosition(SensorModel sensorModel, PositionSource source = PositionSource.Device)
+        public SensorPosition(SensorModel sensorModel)
         {
-            SensorModel = sensorModel;
-            Source = source;
+            Sensor = sensorModel;
+            _TaskLoad = new TaskPositionLoad(this);
+            _TaskSave = new TaskPositionSave(this);
 
             CmdMakeNew = new AsyncCommand(ShowMakeNewPosition
                 , (Func<object, bool>)null, null, false, false);
             CmdLoad = new AsyncCommand(DoLoad
-                , (Func<object, bool>)null, null, false, false);
+                , () => Sensor.Manager.IsFree, null, false, false);
             CmdSave = new AsyncCommand(DoSave
-                , (Func<object, bool>)null, null, false, false);
+                , () => Sensor.Manager.IsFree, null, false, false);
         }
 
         async Task ShowMakeNewPosition()
@@ -76,14 +74,29 @@ namespace SiamCross.Models.Sensors
         }
         async Task DoLoad()
         {
-            var task = new TaskPositionLoad(this);
-            await SensorModel.Manager.Execute(task);
-
+            if (await Sensor.Manager.Execute(_TaskLoad))
+            {
+                if (null == Saved)
+                    Saved = new Position();
+                Saved.Field = Current.Field;
+                Saved.Well = Current.Well;
+                Saved.Bush = Current.Bush;
+                Saved.Shop = Current.Shop;
+                ChangeNotify(nameof(Saved));
+            }
         }
         async Task DoSave()
         {
-            var task = new TaskPositionSave(this);
-            await SensorModel.Manager.Execute(task);
+            if (await Sensor.Manager.Execute(_TaskSave))
+            {
+                if (null == Saved)
+                    Saved = new Position();
+                Saved.Field = Current.Field;
+                Saved.Well = Current.Well;
+                Saved.Bush = Current.Bush;
+                Saved.Shop = Current.Shop;
+                ChangeNotify(nameof(Saved));
+            }
         }
 
     }

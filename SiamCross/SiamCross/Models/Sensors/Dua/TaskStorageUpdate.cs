@@ -61,7 +61,7 @@ namespace SiamCross.Models.Sensors.Dua
                 //await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 _Storage.AviableRep = Uksh.Value;
                 _Storage.AviableEcho = Ukex.Value;
-                InfoEx = "успешно выполнено";
+                InfoEx = "выполнено";
             }
             else
             {

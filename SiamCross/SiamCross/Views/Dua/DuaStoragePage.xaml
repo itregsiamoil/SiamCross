@@ -28,111 +28,114 @@
     <ContentPage.Content>
         <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
             <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
-            <ScrollView VerticalOptions="StartAndExpand">
-                <StackLayout 
+
+            <RefreshView Command="{Binding CmdUpdateStorageInfo}">
+                <ScrollView VerticalOptions="StartAndExpand">
+                    <StackLayout 
                     IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
 
-                    <Label Text="Измерения без эхограмм" Style="{StaticResource SectionLabel}" />
-                    <Frame Style="{StaticResource GroupingFrameStyle}" >
-                        <StackLayout>
-                            <Label >
-                                <Label.FormattedText>
-                                    <FormattedString >
-                                        <Span Text="{Binding AviableRep}"  />
-                                        <Span Text=" из 3008"  />
-                                    </FormattedString>
-                                </Label.FormattedText>
-                            </Label>
+                        <Label Text="Измерения без эхограмм" Style="{StaticResource SectionLabel}" />
+                        <Frame Style="{StaticResource GroupingFrameStyle}" >
+                            <StackLayout>
+                                <Label >
+                                    <Label.FormattedText>
+                                        <FormattedString >
+                                            <Span Text="{Binding AviableRep}"  />
+                                            <Span Text=" из 3008"  />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
 
-                            <Grid RowSpacing="0">
-                                <Grid.RowDefinitions>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="60*"/>
-                                    <ColumnDefinition Width="40*"/>
-                                </Grid.ColumnDefinitions>
-                                <Label Text="Начальное измерение" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
-                                <Entry Text="{Binding StartRep}" Keyboard="Numeric"
+                                <Grid RowSpacing="0">
+                                    <Grid.RowDefinitions>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="60*"/>
+                                        <ColumnDefinition Width="40*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="Начальное измерение" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
+                                    <Entry Text="{Binding StartRep}" Keyboard="Numeric"
                                        Grid.Column="1" Grid.Row="0">
-                                    <Entry.Behaviors>
-                                        <xct:NumericValidationBehavior 
+                                        <Entry.Behaviors>
+                                            <xct:NumericValidationBehavior 
                                             InvalidStyle="{StaticResource InvalidEntryStyle}"
                                             MinimumValue="0"
                                             MaximumValue="{Binding AviableRep}"/>
-                                    </Entry.Behaviors>
-                                    <Entry.Effects>
-                                        <xct:SelectAllTextEffect/>
-                                    </Entry.Effects>
-                                </Entry>
-                                <Label Text="Количество" Grid.Column="0" Grid.Row="1" VerticalTextAlignment="Center"/>
-                                <Entry Text="{Binding CountRep}" Keyboard="Numeric"
+                                        </Entry.Behaviors>
+                                        <Entry.Effects>
+                                            <xct:SelectAllTextEffect/>
+                                        </Entry.Effects>
+                                    </Entry>
+                                    <Label Text="Количество" Grid.Column="0" Grid.Row="1" VerticalTextAlignment="Center"/>
+                                    <Entry Text="{Binding CountRep}" Keyboard="Numeric"
                                        Grid.Column="1" Grid.Row="1">
-                                    <Entry.Behaviors>
-                                        <xct:NumericValidationBehavior 
+                                        <Entry.Behaviors>
+                                            <xct:NumericValidationBehavior 
                                             InvalidStyle="{StaticResource InvalidEntryStyle}"
                                             MinimumValue="0"
                                             MaximumValue="{Binding AviableRep}"/>
-                                    </Entry.Behaviors>
-                                    <Entry.Effects>
-                                        <xct:SelectAllTextEffect/>
-                                    </Entry.Effects>
-                                </Entry>
+                                        </Entry.Behaviors>
+                                        <Entry.Effects>
+                                            <xct:SelectAllTextEffect/>
+                                        </Entry.Effects>
+                                    </Entry>
 
-                            </Grid>
-                        </StackLayout>
-                    </Frame>
+                                </Grid>
+                            </StackLayout>
+                        </Frame>
 
-                    <Label Text="Измерения с эхограммами" Style="{StaticResource SectionLabel}" />
-                    <Frame Style="{StaticResource GroupingFrameStyle}" >
-                        <StackLayout>
-                            <Label>
-                                <Label.FormattedText>
-                                    <FormattedString >
-                                        <Span Text="{Binding AviableEcho}"  />
-                                        <Span Text=" из 310"  />
-                                    </FormattedString>
-                                </Label.FormattedText>
-                            </Label>
+                        <Label Text="Измерения с эхограммами" Style="{StaticResource SectionLabel}" />
+                        <Frame Style="{StaticResource GroupingFrameStyle}" >
+                            <StackLayout>
+                                <Label>
+                                    <Label.FormattedText>
+                                        <FormattedString >
+                                            <Span Text="{Binding AviableEcho}"  />
+                                            <Span Text=" из 310"  />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
 
-                            <Grid RowSpacing="0">
-                                <Grid.RowDefinitions>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="60*"/>
-                                    <ColumnDefinition Width="40*"/>
-                                </Grid.ColumnDefinitions>
-                                <Label Text="Начальное измерение" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
-                                <Entry Text="{Binding StartEcho}" Keyboard="Numeric"
+                                <Grid RowSpacing="0">
+                                    <Grid.RowDefinitions>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="60*"/>
+                                        <ColumnDefinition Width="40*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="Начальное измерение" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
+                                    <Entry Text="{Binding StartEcho}" Keyboard="Numeric"
                                        Grid.Column="1" Grid.Row="0">
-                                    <Entry.Behaviors>
-                                        <xct:NumericValidationBehavior 
+                                        <Entry.Behaviors>
+                                            <xct:NumericValidationBehavior 
                                             InvalidStyle="{StaticResource InvalidEntryStyle}"
                                             MinimumValue="0"
                                             MaximumValue="{Binding AviableEcho}"/>
-                                    </Entry.Behaviors>
-                                    <Entry.Effects>
-                                        <xct:SelectAllTextEffect/>
-                                    </Entry.Effects>
-                                </Entry>
-                                <Label Text="Количество" Grid.Column="0" Grid.Row="1" VerticalTextAlignment="Center"/>
-                                <Entry Text="{Binding CountEcho}" Keyboard="Numeric"
+                                        </Entry.Behaviors>
+                                        <Entry.Effects>
+                                            <xct:SelectAllTextEffect/>
+                                        </Entry.Effects>
+                                    </Entry>
+                                    <Label Text="Количество" Grid.Column="0" Grid.Row="1" VerticalTextAlignment="Center"/>
+                                    <Entry Text="{Binding CountEcho}" Keyboard="Numeric"
                                        Grid.Column="1" Grid.Row="1">
-                                    <Entry.Behaviors>
-                                        <xct:NumericValidationBehavior 
+                                        <Entry.Behaviors>
+                                            <xct:NumericValidationBehavior 
                                             InvalidStyle="{StaticResource InvalidEntryStyle}"
                                             MinimumValue="0"
                                             MaximumValue="{Binding AviableEcho}"/>
-                                    </Entry.Behaviors>
-                                    <Entry.Effects>
-                                        <xct:SelectAllTextEffect/>
-                                    </Entry.Effects>
-                                </Entry>
-                            </Grid>
+                                        </Entry.Behaviors>
+                                        <Entry.Effects>
+                                            <xct:SelectAllTextEffect/>
+                                        </Entry.Effects>
+                                    </Entry>
+                                </Grid>
 
-                        </StackLayout>
-                    </Frame>
-                </StackLayout>
-            </ScrollView>
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                </ScrollView>
+            </RefreshView>
 
             <StackLayout Orientation="Horizontal" Spacing="0" >
                 <Button Text="Очистить " HorizontalOptions="FillAndExpand" 
@@ -140,15 +143,13 @@
                         Command="{Binding CmdClearStorage}"
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >
                 </Button>
-
-
                 <Button Text="Считать" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdDownload}"
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >
                 </Button>
-                
             </StackLayout>
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -80,19 +80,21 @@ namespace SiamCross.Services
             _Views[type] = view;
             return view;
         }
+
+
+        public static Task ShowPage(IViewModel vm)
+        {
+            if (null == vm)
+                return Task.CompletedTask;
+            var page = Get(vm);
+            if (null == page)
+                return Task.CompletedTask;
+            return App.NavigationPage.Navigation.PushAsync(page);
+        }
+
         public static AsyncCommand CreateAsyncCommand(Func<IViewModel> fnGetVM)
         {
-            Task exec()
-            {
-                var vm = fnGetVM();
-                if (null == vm)
-                    return Task.CompletedTask;
-                var page = Get(vm);
-                if (null == page)
-                    return Task.CompletedTask;
-                return App.NavigationPage.Navigation.PushAsync(page);
-            }
-            return new AsyncCommand(exec
+            return new AsyncCommand(() => ShowPage(fnGetVM())
                 , (Func<object, bool>)null, null, false, false);
         }
         public static AsyncCommand CreateAsyncCommand(IViewModel vm)

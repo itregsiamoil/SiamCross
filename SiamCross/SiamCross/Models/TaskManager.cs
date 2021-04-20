@@ -39,13 +39,13 @@ namespace SiamCross.Models
             (_Hidden as IProgress<bool>).Report(false);
         }
 
-        protected void Unsubscribe()
+        protected void Unsubscribe(bool ret)
         {
             if (null == CurrentTask)
                 return;
             Interlocked.Exchange(ref CurrentTask, null);
             Task.Report(null);
-            _VisibleTimer.Change(10000, 0);
+            _VisibleTimer.Change(ret ? 2000 : 10000, 0);
         }
         public async Task<bool> Execute(ITask task)
         {
@@ -67,7 +67,7 @@ namespace SiamCross.Models
                 }
                 ret = await task.ExecAsync(this, _TaskCts.Token);
                 using (await _Lock.UseWaitAsync())
-                    Unsubscribe();
+                    Unsubscribe(ret);
             }
             catch (Exception ex)
             {

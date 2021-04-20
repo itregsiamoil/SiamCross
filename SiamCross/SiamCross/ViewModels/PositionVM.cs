@@ -39,7 +39,23 @@ namespace SiamCross.ViewModels
         {
             if (sender != _Model)
                 return;
-            ChangeNotify(e.PropertyName);
+            if ("Saved" == e.PropertyName)
+            {
+                ChangeNotify(nameof(FieldName));
+                ChangeNotify(nameof(FieldId));
+                ChangeNotify(nameof(Well));
+                ChangeNotify(nameof(Bush));
+                ChangeNotify(nameof(Shop));
+            }
+            if ("Current" == e.PropertyName)
+            {
+                ChangeNotify(nameof(SelectedField));
+                ChangeNotify(nameof(CurrentFieldId));
+                ChangeNotify(nameof(CurrentWell));
+                ChangeNotify(nameof(CurrentBush));
+                ChangeNotify(nameof(CurrentShop));
+            }
+
         }
 
         public PositionVM(ISensor sensor)
@@ -66,11 +82,26 @@ namespace SiamCross.ViewModels
         {
             _Model.PropertyChanged -= StorageModel_PropertyChanged;
         }
+
+        public string FieldId => _Model.Saved.Field.ToString();
+        public string FieldName
+        {
+            get
+            {
+                if (Repo.FieldDir.DictById.TryGetValue(_Model.Saved.Field, out FieldItem item))
+                    return item.Title;
+                return string.Empty;
+            }
+        }
+        public string Well => _Model.Saved.Well;
+        public string Bush => _Model.Saved.Bush;
+        public string Shop => _Model.Saved.Shop.ToString();
+
         public FieldItem SelectedField
         {
             get
             {
-                if (Repo.FieldDir.DictById.TryGetValue(_Model.FieldId, out FieldItem item))
+                if (Repo.FieldDir.DictById.TryGetValue(_Model.Current.Field, out FieldItem item))
                     return item;
                 return null;
             }
@@ -80,74 +111,53 @@ namespace SiamCross.ViewModels
                     return;
                 if (!Repo.FieldDir.DictByTitle.TryGetValue(value.Title, out FieldItem item))
                     return;
-                if (_Model.FieldId == item.Id)
+                if (_Model.Current.Field == item.Id)
                     return;
-                _Model.FieldId = item.Id;
+                _Model.Current.Field = item.Id;
                 ChangeNotify();
-                ChangeNotify(nameof(FieldId));
-                ChangeNotify(nameof(FieldName));
+                ChangeNotify(nameof(CurrentFieldId));
             }
         }
-        public string FieldId
+        public string CurrentFieldId
         {
-            get => _Model.FieldId.ToString();
+            get => _Model.Current.Field.ToString();
             set
             {
                 if (string.IsNullOrEmpty(value) || !uint.TryParse(value, out uint id))
                     return;
-                _Model.FieldId = id;
+                _Model.Current.Field = id;
                 ChangeNotify();
-                ChangeNotify(nameof(FieldName));
                 ChangeNotify(nameof(SelectedField));
             }
         }
-        public string FieldName
+        public string CurrentWell
         {
-            get
-            {
-                if (Repo.FieldDir.DictById.TryGetValue(_Model.FieldId, out FieldItem item))
-                    return item.Title;
-                return string.Empty;
-            }
-        }
-
-        public string Well
-        {
-            get => _Model.Well;
+            get => _Model.Current.Well;
             set
             {
-                _Model.Well = value;
+                _Model.Current.Well = value;
                 ChangeNotify();
             }
         }
-        public string Bush
+        public string CurrentBush
         {
-            get => _Model.Bush;
+            get => _Model.Current.Bush;
             set
             {
-                _Model.Bush = value;
+                _Model.Current.Bush = value;
                 ChangeNotify();
             }
         }
-        public string Shop
+        public string CurrentShop
         {
-            get => _Model.Shop.ToString();
+            get => _Model.Current.Shop.ToString();
             set
             {
                 if (uint.TryParse(value, out uint val))
                 {
-                    _Model.Shop = val;
+                    _Model.Current.Shop = val;
                     ChangeNotify();
                 }
-            }
-        }
-        public SensorPosition.PositionSource Source
-        {
-            get => _Model.Source;
-            set
-            {
-                _Model.Source = value;
-                ChangeNotify();
             }
         }
 

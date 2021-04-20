@@ -141,16 +141,16 @@ namespace SiamCross.Models
         public string Well;
         public string Bush;
         public uint Shop;
-        public GeoLocation Location;
+        //public GeoLocation Location;
         public Position(
-              uint field = 0, string well = default
-            , string bush = default, uint shop = 0)
+              uint field = 0, string well = "0"
+            , string bush = "0", uint shop = 0)
         {
             Field = field;
             Well = well;
             Bush = bush;
             Shop = shop;
-            Location = new GeoLocation();
+            //Location = new GeoLocation();
         }
     }
     [Serializable]

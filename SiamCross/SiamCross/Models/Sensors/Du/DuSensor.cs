@@ -14,8 +14,8 @@ namespace SiamCross.Models.Sensors.Du
         private DuMeasurementManager _measurementManager;
         private readonly DuQuickReportBuilder _reportBuilder = new DuQuickReportBuilder();
 
-        public DuSensor(IProtocolConnection conn, DeviceInfo deviceInfo)
-            : base(conn, deviceInfo)
+        public DuSensor(SensorModel model)
+            : base(model)
         {
 
         }

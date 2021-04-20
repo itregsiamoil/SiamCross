@@ -99,7 +99,7 @@ namespace SiamCross.Models.Sensors.Dua
                 PerU.Value.CopyTo(_Model.LevelPeriodIndex, 0);
                 KolUr.Value.CopyTo(_Model.LevelQuantityIndex, 0);
 
-                InfoEx = "успешно выполнено";
+                InfoEx = "выполнено";
                 _Model.Synched = readed;
             }
             else if (!_Model.Synched)

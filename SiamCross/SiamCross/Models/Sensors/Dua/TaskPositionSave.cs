@@ -26,7 +26,7 @@ namespace SiamCross.Models.Sensors.Dua
         }
 
         public TaskPositionSave(SensorPosition pos)
-            : base(pos.SensorModel, "Сохранение местоположения")
+            : base(pos.Sensor, "Сохранение местоположения")
         {
             _Model = pos;
 
@@ -55,21 +55,22 @@ namespace SiamCross.Models.Sensors.Dua
         }
         async Task<bool> DoSaveSingleAsync(CancellationToken ct)
         {
-            Field.Value = (ushort)_Model.FieldId;
-            PadRightCharCopy(Skv.Value, _Model.Well);
-            PadRightCharCopy(Kust.Value, _Model.Bush);
-            Shop.Value = (ushort)_Model.Shop;
+            Field.Value = (ushort)_Model.Current.Field;
+            PadRightCharCopy(Skv.Value, _Model.Current.Well);
+            PadRightCharCopy(Kust.Value, _Model.Current.Bush);
+            Shop.Value = (ushort)_Model.Current.Shop;
             Operator.Value = 0;
             InfoEx = "запись";
+            bool ret = false;
             foreach (var r in Reg)
             {
-                RespResult ret
-                    = await Connection.TryWriteAsync(r, SetProgressBytes, ct);
-                if (RespResult.NormalPkg != ret)
-                    return false;
+                ret = RespResult.NormalPkg == await Connection.TryWriteAsync(r, SetProgressBytes, ct);
+                if (!ret)
+                    break;
             }
-            InfoEx = "выполнено";
-            return true;
+            if (ret)
+                InfoEx = "выполнено";
+            return ret;
         }
 
         void PadRightCharCopy(byte[] dst, string src)

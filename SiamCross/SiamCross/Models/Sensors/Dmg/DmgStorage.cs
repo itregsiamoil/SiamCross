@@ -1,9 +1,6 @@
 ﻿using SiamCross.Models.Connection.Protocol;
-using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,7 +8,7 @@ namespace SiamCross.Models.Sensors.Dmg
 {
     public class DmgStorage : BaseStorage
     {
-        private readonly ISensor _Sensor;
+        private readonly SensorModel _Sensor;
         private readonly IProtocolConnection _Connection;
 
         readonly byte[] _currentDynGraph = new byte[1000 * 2];
@@ -39,7 +36,7 @@ namespace SiamCross.Models.Sensors.Dmg
         readonly MemVarUInt16 TimeDiscr;
 
         public bool OpenOnDownload;
-        public DmgStorage(ISensor sensor)
+        public DmgStorage(SensorModel sensor)
         {
             _Sensor = sensor;
             _Connection = sensor.Connection;
@@ -89,7 +86,7 @@ namespace SiamCross.Models.Sensors.Dmg
         }
         public async Task<RespResult> Update(CancellationToken token = default, IProgress<string> progress = null)
         {
-            if (!await _Sensor.DoActivate())
+            if (!await _Sensor.Connection.Connect(token))
                 return await Task.FromResult(RespResult.ErrorConnection);
 
             RespResult ret = RespResult.ErrorTimeout;
@@ -112,13 +109,15 @@ namespace SiamCross.Models.Sensors.Dmg
             }
         }
 
-        public async Task<IReadOnlyList<object>> Download(uint begin, uint qty
+        public Task<IReadOnlyList<object>> Download(uint begin, uint qty
         , Action<uint> onStepProgress = null, Action<string> onStepInfo = null)
         {
+            return null;
+            /*
             try
             {
                 onStepInfo?.Invoke("Подключение...");
-                if (!await _Sensor.DoActivate())
+                if (!await _Sensor.Connection.Connect(token))
                     throw new Exception("can`t connect");
                 return await DoDownload(begin, qty, onStepProgress, onStepInfo);
             }
@@ -133,10 +132,13 @@ namespace SiamCross.Models.Sensors.Dmg
             }
             onStepInfo?.Invoke("Ошибка подключения");
             return new List<object>();
+            */
         }
-        protected async Task<IReadOnlyList<object>> DoDownload(uint begin, uint end
+        protected Task<IReadOnlyList<object>> DoDownload(uint begin, uint end
             , Action<uint> onStepProgress = null, Action<string> onStepInfo = null)
         {
+            return null;
+            /*
             onStepInfo?.Invoke("Download SurvayParam");
             await _Connection.ReadAsync(_SurvayParam);
 
@@ -192,6 +194,7 @@ namespace SiamCross.Models.Sensors.Dmg
             var data_list = new List<Ddin2MeasurementData>();
             data_list.Add(measurement);
             return data_list;
+            */
         }
         /*
         private async Task StartDownload()

@@ -1,15 +1,66 @@
-﻿using SiamCross.Models.Connection.Protocol;
+﻿using SiamCross.Models.Connection;
+using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Dua.Surveys;
 using SiamCross.ViewModels.Dua;
 using SiamCross.ViewModels.Dua.Survey;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors.Dua
 {
+    public class DuaSensorModel : SensorModel
+    {
+        public DuaSensorModel(IProtocolConnection conn, DeviceInfo deviceInfo)
+           : base(conn, deviceInfo)
+        {
+            Connection.AdditioonalTimeout = 2000;
+            Storage = new DuaStorage(this);
+            SurveyCfg = new DuaSurveyCfg(this);
+
+            Surveys.Add(new DuaSurvey(this, SurveyCfg
+                , "Статический уровень"
+                , "уровень жидкости в спокойном состоянии", 1));
+            Surveys.Add(new DuaSurvey(this, SurveyCfg
+                , "Динамический уровень"
+                , "уровень жидкости, наблюдаемый при откачке", 2));
+            Surveys.Add(new DuaSurvey(this, SurveyCfg
+                , "КВУ"
+                , "кривая восстановления уровня", 3));
+            Surveys.Add(new DuaSurvey(this, SurveyCfg
+                , "КПУ"
+                , "кривая падения уровня", 4));
+            Surveys.Add(new DuaSurvey(this, SurveyCfg
+                , "АРД"
+                , "автоматическая регистрация давления", 5));
+
+            Connection.PropertyChanged += OnConnectionChange;
+        }
+        async void OnConnectionChange(object sender, PropertyChangedEventArgs e)
+        {
+            if (null == sender || "State" != e.PropertyName)
+                return;
+            if (ConnectionState.Connected == Connection.State)
+                await OnConnect();
+        }
+        async Task OnConnect()
+        {
+            await (Surveys[0].CmdWait as AsyncCommand).ExecuteAsync();
+            await (Position.CmdLoad as AsyncCommand).ExecuteAsync();
+        }
+        public override void Dispose()
+        {
+            Connection.PropertyChanged -= OnConnectionChange;
+            base.Dispose();
+        }
+
+    }
+
+
     public class DuaSensor : BaseSensor2
     {
         public readonly MemStruct _CurrentParam;//0x8400
@@ -19,63 +70,21 @@ namespace SiamCross.Models.Sensors.Dua
 
 
 
-        public DuaSensor(IProtocolConnection conn, DeviceInfo deviceInfo)
-            : base(conn, deviceInfo)
+        public DuaSensor(SensorModel model)
+            : base(model)
         {
-            Connection.AdditioonalTimeout = 2000;
-
-            Model.Storage = new DuaStorage(Model);
             StorageVM = new DuaStorageVM(this);
-
 
             _CurrentParam = new MemStruct(0x8400);
             BatteryVoltage = _CurrentParam.Add(new MemVarUInt16(nameof(BatteryVoltage)));
             ТempC = _CurrentParam.Add(new MemVarUInt16(nameof(ТempC)));
             Pressure = _CurrentParam.Add(new MemVarInt16(nameof(Pressure)));
 
-            Model.SurveyCfg = new DuaSurveyCfg(this);
-
+            foreach (var surveyModel in Model.Surveys)
             {
-                var model = new DuaSurvey(this, Model.SurveyCfg
-                    , "Статический уровень"
-                    , "уровень жидкости в спокойном состоянии", 1);
-                Model.Surveys.Add(model);
-                var vm = new SurveyVM(this, model);
+                var vm = new SurveyVM(this, surveyModel as DuaSurvey);
                 SurveysVM.SurveysCollection.Add(vm);
             }
-            {
-                var model = new DuaSurvey(this, Model.SurveyCfg
-                    , "Динамический уровень"
-                    , "уровень жидкости, наблюдаемый при откачке", 2);
-                Model.Surveys.Add(model);
-                var vm = new SurveyVM(this, model);
-                SurveysVM.SurveysCollection.Add(vm);
-            }
-            {
-                var model = new DuaSurvey(this, Model.SurveyCfg
-                    , "КВУ"
-                    , "кривая восстановления уровня", 3);
-                Model.Surveys.Add(model);
-                var vm = new SurveyVM(this, model);
-                SurveysVM.SurveysCollection.Add(vm);
-            }
-            {
-                var model = new DuaSurvey(this, Model.SurveyCfg
-                    , "КПУ"
-                    , "кривая падения уровня", 4);
-                Model.Surveys.Add(model);
-                var vm = new SurveyVM(this, model);
-                SurveysVM.SurveysCollection.Add(vm);
-            }
-            {
-                var model = new DuaSurvey(this, Model.SurveyCfg
-                    , "АРД"
-                    , "автоматическая регистрация давления", 5);
-                Model.Surveys.Add(model);
-                var vm = new SurveyVM(this, model);
-                SurveysVM.SurveysCollection.Add(vm);
-            }
-
 
 
             //FactoryConfigVM = new FactoryConfigVM(this);
@@ -85,14 +94,6 @@ namespace SiamCross.Models.Sensors.Dua
 
 
         }
-
-        public override void OnConnect()
-        {
-            var manager = Model.Manager;
-            var taskWaitSurvey = new TaskWaitSurvey(Model);
-            Task.Run(() => manager.Execute(taskWaitSurvey));
-        }
-
 
         public override async Task<bool> QuickReport(CancellationToken cancelToken)
         {

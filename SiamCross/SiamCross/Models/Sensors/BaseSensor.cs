@@ -6,7 +6,6 @@ using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
@@ -23,22 +22,15 @@ namespace SiamCross.Models.Sensors
         #endregion
         #region Constructors & Destructors
         //TaskScheduler _uiScheduler;
-
-        public virtual void OnConnect()
-        {
-
-        }
         void OnConnectionChange(object sender, PropertyChangedEventArgs e)
         {
             if (null == sender || "State" != e.PropertyName)
                 return;
             ChangeNotify(nameof(ConnStateStr));
-            if (ConnectionState.Connected == Connection.State)
-                OnConnect();
         }
-        protected BaseSensor(IProtocolConnection conn, DeviceInfo deviceInfo)
+        protected BaseSensor(SensorModel model)
         {
-            _Model = new SensorModel(conn, deviceInfo);
+            _Model = model;
             ScannedDeviceInfo = new ScannedDeviceInfo(_Model.Device);
             Firmware = "";
             Battery = "";
@@ -151,18 +143,6 @@ namespace SiamCross.Models.Sensors
         private bool _activated = false;
         private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
         #endregion
-
-        public async Task<bool> DoActivate(CancellationToken ct = default)
-        {
-            bool connected = false;
-            for (int i = 0; i < Connection.Retry
-                            && !connected
-                            && !ct.IsCancellationRequested; ++i)
-                connected = await Connection.Connect(ct);
-            if (connected && !Activate)
-                Activate = true;
-            return connected;
-        }
 
         private async Task AsyncActivate()
         {
@@ -365,8 +345,6 @@ namespace SiamCross.Models.Sensors
         public string Status { get => _status; set { _status = value; ChangeNotify(); } }
         public Guid Id => ScannedDeviceInfo.Guid;
 
-        protected readonly List<MemStruct> _Memory = new List<MemStruct>();
-        public List<MemStruct> Memory => _Memory;
         protected void ClearStatus()
         {
             //IsAlive = false;
