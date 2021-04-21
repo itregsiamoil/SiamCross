@@ -684,6 +684,6 @@ DB Siam can't import the files with the same identifiers.</value>
     <value>Software «SIAM SERVICE» is a «SIAM» software package designed for storing, transmitting, processing and interpreting data obtained during well testing via Bluetooth wireless data transmission from portable devices (dynamographs / level gauges).</value>
   </data>
   <data name="Stat_ValvePreparation" xml:space="preserve">
-    <value>Automatic valve preparation</value>
+    <value>auto-valve: preparation</value>
   </data>
 </root>

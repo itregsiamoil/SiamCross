@@ -15,6 +15,7 @@ using SiamCross.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -99,20 +100,31 @@ namespace SiamCross.ViewModels
         {
             try
             {
+                Stopwatch perf = new Stopwatch();
+                perf.Restart();
+
+
                 SelectedMeasurements.Clear();
-                Measurements.Clear();
+                Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Clear selected");
+                Measurements?.Clear();
+                Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Clear all");
+                _Measurements?.Clear();
+                _ddin2Measurements?.Clear();
+                _duMeasurements?.Clear();
+                Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Clear data");
+
                 ObservableCollection<MeasurementView> meas = new ObservableCollection<MeasurementView>();
                 _ddin2Measurements = DbService.Instance.GetDdin2Measurements().ToList();
                 _duMeasurements = DbService.Instance.GetDuMeasurements().ToList();
-
                 var measurements = (await DbService.Instance.GetMeasurements()).ToList();
+                Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Load from db");
 
-                _Measurements.Clear();
                 foreach (var m in measurements)
                 {
                     _Measurements.Add(m.MeasureData);
                     meas.Add(new MeasurementView(m.MeasureData));
                 }
+                Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Set DUA");
 
 
                 foreach (Ddin2Measurement m in _ddin2Measurements)
@@ -128,6 +140,7 @@ namespace SiamCross.ViewModels
                             Comments = m.Comment
                         });
                 }
+                Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Set DDIN");
 
                 foreach (DuMeasurement m in _duMeasurements)
                 {
@@ -142,11 +155,14 @@ namespace SiamCross.ViewModels
                             Comments = m.Comment
                         });
                 }
+                Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Set DU");
 
                 foreach (MeasurementView element in meas.OrderByDescending(m => m.Date))
                 {
                     Measurements.Add(element);
                 }
+                Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Sort and set to gui");
+                perf.Stop();
             }
             catch (Exception ex)
             {

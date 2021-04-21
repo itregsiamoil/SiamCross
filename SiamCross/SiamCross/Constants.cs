@@ -11,8 +11,8 @@
 
         public static readonly ushort[] Periods = new ushort[]
             {1,2,3,4,5,7,10,15,20,30,40,60,90,120,180,240,300,420,600,720 };
-        public static readonly ushort[] Quantitys = new ushort[]
-            {0,1,2,3,4,5,7,10,15,20,30,40,50,70,100,150,200,300,400,500,600,700,800,900,0xFFFF };
+        public static readonly short[] Quantitys = new short[]
+            {0,1,2,3,4,5,7,10,15,20,30,40,50,70,100,150,200,300,400,500,600,700,800,900,-1 };
 
         public static readonly double DefaultSoundSpeedFixed = 320;
 

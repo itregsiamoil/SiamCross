@@ -23,20 +23,20 @@ namespace SiamCross.Models.Sensors.Dua
             SurveyCfg = new DuaSurveyCfg(this);
 
             Surveys.Add(new DuaSurvey(this, SurveyCfg
-                , "Статический уровень"
-                , "уровень жидкости в спокойном состоянии", 1));
+                , Kind.LStatic.Title()
+                , Kind.LStatic.Info(), 1));
             Surveys.Add(new DuaSurvey(this, SurveyCfg
-                , "Динамический уровень"
-                , "уровень жидкости, наблюдаемый при откачке", 2));
+                , Kind.LDynamic.Title()
+                , Kind.LDynamic.Info(), 2));
             Surveys.Add(new DuaSurvey(this, SurveyCfg
-                , "КВУ"
-                , "кривая восстановления уровня", 3));
+                , Kind.LRC.Title()
+                , Kind.LRC.Info(), 3));
             Surveys.Add(new DuaSurvey(this, SurveyCfg
-                , "КПУ"
-                , "кривая падения уровня", 4));
+                , Kind.LDC.Title()
+                , Kind.LDC.Info(), 4));
             Surveys.Add(new DuaSurvey(this, SurveyCfg
-                , "АРД"
-                , "автоматическая регистрация давления", 5));
+                , Kind.PAR.Title()
+                , Kind.PAR.Info(), 5));
 
             Connection.PropertyChanged += OnConnectionChange;
         }

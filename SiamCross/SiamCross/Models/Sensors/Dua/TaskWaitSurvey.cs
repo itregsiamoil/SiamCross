@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Sensors.Du.Measurement;
+using SiamCross.Models.Sensors.Dua.Surveys;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,13 +33,14 @@ namespace SiamCross.Models.Sensors.Dua
         int SurvayTimeSec => 0 < (Revbit.Value & (1 << 6)) ? 40 : 20;
         int ValveSurvayTimeSec => _ValveTimeSec + SurvayTimeSec;
 
+        Kind SurveyKind => (Kind)Vissl.Value;
 
 
         TimeSpan _Remain;
         TimeSpan _Total;
 
         public TaskWaitSurvey(SensorModel sensor)
-            : base(sensor, "Ожидание измерения")
+            : base(sensor, Resource.Survey)
         {
             _CurrentParam.Add(Timeost);
             _CurrentParam.Add(Interv);
@@ -69,7 +71,6 @@ namespace SiamCross.Models.Sensors.Dua
             _Total = TimeSpan.FromSeconds(ValveSurvayTimeSec);
             _Remain = TimeSpan.FromSeconds(ValveSurvayTimeSec);
 
-
             if (!await LoadStateAsync(ct))
                 return false;
             InfoEx = "определение времени";
@@ -81,10 +82,9 @@ namespace SiamCross.Models.Sensors.Dua
             if (0 == _Remain.TotalSeconds)
                 return true;
             double progressStart = (double)(1.0 - _Remain.TotalMilliseconds / _Total.TotalMilliseconds);
-            InfoEx = "измерение";
 
-            using (var ctSrc = new CancellationTokenSource(_Remain + TimeSpan.FromMilliseconds(Constants.ConnectTimeout)))
-            using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
+            Name = $"{Resource.Survey} {SurveyKind.Title()}";
+
             using (var timer = CreateProgressTimer(_Remain, (float)progressStart))
             {
                 switch (Vissl.Value)
@@ -92,20 +92,32 @@ namespace SiamCross.Models.Sensors.Dua
                     default:
                     case 1:
                     case 2:
-                        await DoSingleLevelAsync(linkTsc.Token);
+                        await DoSingleLevelAsync(ct);
                         break;
                     case 3:
                     case 4:
-                        await DoMultiLevelAsync(linkTsc.Token);
+                        await DoMultiLevelAsync(ct);
                         break;
                     case 5:
-                        await DoMultiPressureAsync(linkTsc.Token);
+                        await DoMultiPressureAsync(ct);
                         break;
                 }
             }
             return true;
         }
 
+        string GetRemainString()
+        {
+            if (TimeSpan.MaxValue == _Total)
+                return "\u221E из \u221E";
+            string remain = $"осталось " +
+                (0 == _Remain.Days ? string.Empty : $"{_Remain.Days} суток ") +
+                $"{_Remain.Hours}:{_Remain.Minutes}:{_Remain.Seconds}"
+                + $" из " +
+                (0 == _Total.Days ? string.Empty : $"{_Total.Days} суток ") +
+                $"{_Total.Hours}:{_Total.Minutes}:{_Total.Seconds}";
+            return remain;
+        }
         async Task WaitAvailability(CancellationToken ct)
         {
             DuStatus status = DuStatus.NoiseMeasurement;
@@ -115,8 +127,7 @@ namespace SiamCross.Models.Sensors.Dua
                     || DuStatus.ValvePreparation == status)
             {
                 var startTime = DateTime.Now;
-                string remain = $"{_Remain.Hours}:{_Remain.Minutes}:{_Remain.Seconds}"
-                    + $" / {_Total.Hours}:{_Total.Minutes}:{_Total.Seconds}";
+                string remain = GetRemainString();
                 await UpdateStatusAsync(ct);
                 status = (DuStatus)StatusReg.Value;
                 switch (status)
@@ -130,11 +141,11 @@ namespace SiamCross.Models.Sensors.Dua
                     case DuStatus.NoiseMeasurement:
                     case DuStatus.WaitingForClick:
                     case DuStatus.EсhoMeasurement:
-                        InfoEx = $"{remain}\n{DuStatusAdapter.StatusToString(status)}";
+                        InfoEx = $"{remain}\n{status.Title()}";
                         await Task.Delay(Constants.SecondDelay, ct);
                         break;
                     case DuStatus.ValvePreparation:
-                        InfoEx = $"{remain}\n{DuStatusAdapter.StatusToString(status)}, осталось { Timeawt.Value}сек.";
+                        InfoEx = $"{remain}\n{status.Title()}, осталось { Timeawt.Value}сек.";
                         await UpdateValvePreparationAsync(ct);
                         break;
                 }
@@ -171,8 +182,7 @@ namespace SiamCross.Models.Sensors.Dua
             while (true)
             {
 
-                string remain = $"{_Remain.Hours}:{_Remain.Minutes}:{_Remain.Seconds}"
-                    + $" / {_Total.Hours}:{_Total.Minutes}:{_Total.Seconds}";
+                string remain = GetRemainString();
                 InfoEx = $"{remain}\nзамеров давления осталось: {Kolt.Value}";
                 if (Kolt.Value == 0)
                     break;
@@ -212,12 +222,8 @@ namespace SiamCross.Models.Sensors.Dua
                 if (RespResult.NormalPkg != ret)
                     return false;
                 return true;
-
-
-
             }
         }
-
         void CalcSurveyTotalTime()
         {
             switch (Vissl.Value)
@@ -260,10 +266,13 @@ namespace SiamCross.Models.Sensors.Dua
         }
         TimeSpan CalcSheduledLevelTotal()
         {
-            int timeSec = 0;
+            long timeSec = 0;
             for (int i = 0; i < PerU.Value.Length; ++i)
             {
                 var survRemain = Constants.Quantitys[KolUr.Value[i]];
+                if (0 > survRemain)
+                    return TimeSpan.MaxValue;
+
                 var survTime = Constants.Periods[PerU.Value[i]] * 60;
                 if (survTime < 180)
                     survTime = ValveSurvayTimeSec;
@@ -303,16 +312,21 @@ namespace SiamCross.Models.Sensors.Dua
             int timeSec = 0;
             for (int i = Interv.Value; i < PerU.Value.Length; ++i)
             {
-                int survRemain;
+                short survRemain;
+
                 if (i == Interv.Value)
                 {
                     if (0 < Kolt.Value)
-                        survRemain = Kolt.Value - 1;
+                        survRemain = (short)(Kolt.Value - 1);
                     else
                         survRemain = 0;
                 }
                 else
                     survRemain = Constants.Quantitys[KolUr.Value[i]];
+
+                if (0 > survRemain)
+                    return TimeSpan.MaxValue;
+
 
                 if (0 < survRemain)
                 {

@@ -1475,7 +1475,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Automatic valve preparation.
+        ///   Ищет локализованную строку, похожую на auto-valve: preparation.
         /// </summary>
         public static string Stat_ValvePreparation {
             get {

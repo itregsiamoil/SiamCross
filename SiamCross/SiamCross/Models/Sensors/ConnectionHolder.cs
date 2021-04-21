@@ -38,7 +38,7 @@ namespace SiamCross.Models.Sensors
                     if (null != _cancellToken)
                         _cancellToken.Dispose();
                     _cancellToken = new CancellationTokenSource();
-                    _AliveTimer.Change(0, 1000);
+                    _AliveTimer.Change(0, Constants.SecondDelay);
                 }
                 else
                 {
@@ -63,10 +63,20 @@ namespace SiamCross.Models.Sensors
 
         void OnTimer(object obj)
         {
-            if (!_Runed)
+            try
             {
-                _Runed = true;
-                Task.Run(DoSingle);
+                if (!_Runed)
+                {
+                    _Runed = true;
+                    Task.Run(DoSingle);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("EXCEPTION in LiveUpdate"
+                + ex.Message + " "
+                + ex.GetType() + " "
+                + ex.StackTrace + "\n");
             }
         }
         async Task DoSingle()
@@ -81,13 +91,6 @@ namespace SiamCross.Models.Sensors
             catch (OperationCanceledException)
             {
                 await DoDisableLive();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("EXCEPTION in LiveUpdate"
-                + ex.Message + " "
-                + ex.GetType() + " "
-                + ex.StackTrace + "\n");
             }
             finally
             {
@@ -105,7 +108,8 @@ namespace SiamCross.Models.Sensors
                     _LastExchange = DateTime.Now;
                     return;
                 }
-                if (_IsQickInfo || 30 < (DateTime.Now - _LastExchange).TotalSeconds)
+                var t = (DateTime.Now - _LastExchange).TotalSeconds;
+                if (_IsQickInfo || 30 < t)
                 {
                     if (CmdUpdateStatus is AsyncCommand cmd)
                     {
@@ -123,7 +127,7 @@ namespace SiamCross.Models.Sensors
         }
         async Task DoDisableLive()
         {
-            _AliveTimer.Change(System.Threading.Timeout.Infinite, 1000);
+            _AliveTimer.Change(System.Threading.Timeout.Infinite, 0);
             await _Connection.Disconnect();
             Debug.WriteLine($"Cancel liveupdate");
         }
@@ -139,7 +143,7 @@ namespace SiamCross.Models.Sensors
         public void Dispose()
         {
             IsActivated = false;
-            _AliveTimer?.Dispose();
+            _AliveTimer.Dispose();
             _Connection.PropertyChanged -= OnConnectionChange;
             _Manager.OnChangeTask.ProgressChanged -= OnManegerChangeTask;
             _cancellToken?.Dispose();
