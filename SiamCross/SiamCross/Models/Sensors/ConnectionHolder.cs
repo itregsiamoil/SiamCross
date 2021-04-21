@@ -128,6 +128,7 @@ namespace SiamCross.Models.Sensors
         async Task DoDisableLive()
         {
             _AliveTimer.Change(System.Threading.Timeout.Infinite, 0);
+            await _Manager.Cancel(true);
             await _Connection.Disconnect();
             Debug.WriteLine($"Cancel liveupdate");
         }

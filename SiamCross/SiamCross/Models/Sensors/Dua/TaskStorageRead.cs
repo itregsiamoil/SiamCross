@@ -50,7 +50,7 @@ namespace SiamCross.Models.Sensors.Dua
         readonly MemVarByteArray Echo;
 
         public TaskStorageRead(DuaStorage model, SensorModel sensor)
-            : base(sensor, "Опрос хранилища")
+            : base(sensor, "Чтение исследований")
         {
             Sensor = sensor;
 
@@ -113,7 +113,12 @@ namespace SiamCross.Models.Sensors.Dua
             _BytesReaded = 0;
 
             await DoReadEchoAsync(true, _Storage.StartEcho, _Storage.CountEcho, ct);
+            if (ct.IsCancellationRequested)
+                return false;
             await DoReadEchoAsync(false, _Storage.StartRep, _Storage.CountRep, ct);
+            if (ct.IsCancellationRequested)
+                return false;
+
             return true;
         }
 

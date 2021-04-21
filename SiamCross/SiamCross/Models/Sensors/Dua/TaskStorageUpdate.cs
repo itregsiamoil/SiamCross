@@ -67,7 +67,6 @@ namespace SiamCross.Models.Sensors.Dua
             {
                 _Storage.AviableRep = 0;
                 _Storage.AviableEcho = 0;
-                InfoEx = "не выполнено";
             }
 
             _Storage.CountRep = _Storage.AviableRep;

@@ -14,7 +14,7 @@
         </StackLayout.Triggers>
         <Frame Style="{StaticResource GroupingFrameStyle}" Padding="0" >
             <Grid ColumnSpacing="0" RowSpacing="0" Padding="5" 
-                  BackgroundColor="{StaticResource colorPrimaryPale}">
+                  BackgroundColor="{StaticResource colorBackground}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height ="Auto" />
                     <RowDefinition Height="20" />
@@ -27,7 +27,7 @@
 
                 <Label Text="{Binding TaskManager.Info}" 
                        Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
-                <Button Text="&#x274C;" TextColor="Red" BackgroundColor="LightPink"
+                <Button Text="&#x274C;" TextColor="Red" BackgroundColor="{StaticResource colorAccentPale}"
                         Grid.Column="2" Grid.Row="0"
                         Command="{Binding TaskManager.CancelCmd}" 
                         IsVisible="{Binding TaskManager.IsBusy, Mode=OneWay}"

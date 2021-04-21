@@ -39,17 +39,17 @@ namespace SiamCross.Models
             (_Hidden as IProgress<bool>).Report(false);
         }
 
-        protected void Unsubscribe(bool ret)
+        protected void Unsubscribe(JobStatus ret)
         {
             if (null == CurrentTask)
                 return;
             Interlocked.Exchange(ref CurrentTask, null);
             Task.Report(null);
-            _VisibleTimer.Change(ret ? 2000 : 10000, 0);
+            _VisibleTimer.Change(JobStatus.Сomplete == ret ? 2000 : 10000, 0);
         }
-        public async Task<bool> Execute(ITask task)
+        public async Task<JobStatus> Execute(ITask task)
         {
-            bool ret = false;
+            JobStatus ret = JobStatus.Error;
             if (null == task)
                 return ret;
             try
@@ -57,7 +57,7 @@ namespace SiamCross.Models
                 using (await _Lock.UseWaitAsync())
                 {
                     if (null != CurrentTask)
-                        return false;
+                        return JobStatus.Error;
                     Subscribe(task);
                     if (_TaskCts.IsCancellationRequested)
                     {
@@ -74,21 +74,26 @@ namespace SiamCross.Models
                 Debug.WriteLine("EXCEPTION "
                     + ex.Message + " " + ex.GetType() + "\n"
                     + ex.StackTrace + "\n");
-                ret = false;
+                ret = JobStatus.Error;
             }
-            if (ret)
-                Info?.Report($"\u2713 {task.Info}");
-            else
-                Info?.Report($"\u2716 {task.Info}");
+            switch (ret)
+            {
+                case JobStatus.Сomplete: Info?.Report($"\u2335 {task.Info}"); break;
+                case JobStatus.Canceled: Info?.Report($"\u2300 {task.Info}"); break;
+                case JobStatus.Terminated: Info?.Report($"\u2317 {task.Info}"); break;
+                default:
+                case JobStatus.Error: Info?.Report($"\u2716 {task.Info}"); break;
+            }
             return ret;
         }
-        public async Task Cancel()
+        public async Task Cancel(bool terminate = false)
         {
             using (await _Lock.UseWaitAsync())
             {
                 if (null != CurrentTask)
                 {
-                    await CurrentTask.CancelAsync();
+                    if (!terminate)
+                        await CurrentTask.CancelAsync();
                     _TaskCts.Cancel();
                 }
             }

@@ -116,7 +116,6 @@ namespace SiamCross.Models.Sensors.Dua
                 _Model.PressureQuantityIndex = default;
                 _Model.LevelPeriodIndex.ForEach((item) => item = 0);
                 _Model.LevelQuantityIndex.ForEach((item) => item = 0);
-                InfoEx = "set default";
             }
 
             _Model.ChangeNotify(nameof(_Model.IsAutoswitchToAPR));

@@ -5,14 +5,24 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models
 {
+    public enum JobStatus
+    {
+        Created = -2,
+        Started = -1,
+        Сomplete = 0,
+        Canceled,
+        Terminated,
+        Error,
+    }
     public interface ITask
     {
         TaskManager Manager { get; }
         string Info { get; }
         float Progress { get; }
-        Task<bool> ExecAsync(TaskManager mgr, CancellationToken ct);
+        Task<JobStatus> ExecAsync(TaskManager mgr, CancellationToken ct);
         Task CancelAsync();
 
+        JobStatus Status { get; }
     }
 
     public abstract class BaseTask : ITask
@@ -20,7 +30,9 @@ namespace SiamCross.Models
         TaskManager _Mgr = null;
         string _Info;
         float _Progress;
-        private string _Name;
+        string _Name;
+        JobStatus _Status = JobStatus.Created;
+        public JobStatus Status => _Status;
 
         public TaskManager Manager
         {
@@ -69,29 +81,56 @@ namespace SiamCross.Models
         }
 
 
-        public async Task<bool> ExecAsync(TaskManager mgr, CancellationToken ct)
+        public async Task<JobStatus> ExecAsync(TaskManager mgr, CancellationToken ct)
         {
+            _Status = JobStatus.Started;
             if (null == mgr)
-                return false;
-            bool ret = false;
+            {
+                _Status = JobStatus.Error;
+                return _Status;
+            }
+
             try
             {
                 Manager = mgr;
                 Progress = 0.00f;
                 Manager.Progress.Report(_Progress);
-                ret = await DoExecuteAsync(ct);
+                if (await DoExecuteAsync(ct))
+                {
+                    Progress = 1f;
+                    _Status = JobStatus.Сomplete;
+                }
+                else
+                    switch (_Status)
+                    {
+                        default:
+                            _Status = ct.IsCancellationRequested ?
+                            JobStatus.Terminated : JobStatus.Error;
+                            break;
+                        case JobStatus.Canceled: break;
+                    }
+            }
+            catch (OperationCanceledException ex)
+            {
+                switch (_Status)
+                {
+                    default:
+                        _Status = ct.IsCancellationRequested ?
+                        JobStatus.Terminated : JobStatus.Error;
+                        break;
+                    case JobStatus.Canceled: break;
+                }
             }
             catch (Exception ex)
             {
                 LogException(ex);
-                ret = false;
+                _Status = JobStatus.Error;
             }
             finally
             {
-                Progress = 1f;
                 Manager = null;
             }
-            return ret;
+            return _Status;
         }
         public abstract Task<bool> DoExecuteAsync(CancellationToken ct);
 
@@ -104,10 +143,12 @@ namespace SiamCross.Models
             try
             {
                 await DoBeforeCancelAsync();
+                _Status = JobStatus.Canceled;
             }
             catch (Exception ex)
             {
                 LogException(ex);
+                _Status = JobStatus.Error;
             }
         }
         public static void LogException(Exception ex)

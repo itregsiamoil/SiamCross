@@ -72,7 +72,7 @@ namespace SiamCross.Models.Sensors
         }
         async Task DoLoad()
         {
-            if (null != TaskLoad && await Sensor.Manager.Execute(TaskLoad))
+            if (JobStatus.Сomplete == await Sensor.Manager.Execute(TaskLoad))
             {
                 if (null == Saved)
                     Saved = new Position();
@@ -85,7 +85,7 @@ namespace SiamCross.Models.Sensors
         }
         async Task DoSave()
         {
-            if (null != TaskSave && await Sensor.Manager.Execute(TaskSave))
+            if (JobStatus.Сomplete == await Sensor.Manager.Execute(TaskSave))
             {
                 if (null == Saved)
                     Saved = new Position();
