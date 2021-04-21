@@ -1,5 +1,4 @@
 ﻿using SiamCross.Models.Connection.Protocol;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,7 +6,7 @@ namespace SiamCross.Models.Sensors.Dua.Surveys
 {
     public class TaskStatusUpdate : BaseSensorTask
     {
-        readonly MemStruct _CurrentParam= new MemStruct(0x8400);
+        readonly MemStruct _CurrentParam = new MemStruct(0x8400);
         readonly MemVarUInt16 BatteryVoltage = new MemVarUInt16();
         readonly MemVarUInt16 ТempC = new MemVarUInt16();
         readonly MemVarInt16 Pressure = new MemVarInt16();

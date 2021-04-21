@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace SiamCross.ViewModels
 {
-    public class SurveysCollectionVM : BaseVM
+    public class SurveysCollectionVM : BasePageVM
     {
         public ISensor Sensor { get; }
         public ObservableCollection<BaseSurveyVM> SurveysCollection { get; set; }
@@ -15,6 +15,17 @@ namespace SiamCross.ViewModels
             SurveysCollection = new ObservableCollection<BaseSurveyVM>();
             //Sensor.Model.Surveys.ForEach(o => SurveysCollection.Add(o));
 
+        }
+
+        public override void Unsubscribe()
+        {
+            throw new System.NotImplementedException();
+        }
+        public override void Dispose()
+        {
+            base.Dispose();
+            foreach (var s in SurveysCollection)
+                s.Dispose();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using SiamCross.Models.Sensors;
+﻿using SiamCross.Models;
+using SiamCross.Models.Sensors;
 using SiamCross.Services;
 using SiamCross.Services.RepositoryTables;
 using System;
@@ -17,7 +18,7 @@ namespace SiamCross.ViewModels
         { }
     }
 
-    public class PositionVM : BaseVM, IDisposable
+    public class PositionVM : BasePageVM
     {
         readonly SensorPosition _Model;
 
@@ -62,7 +63,6 @@ namespace SiamCross.ViewModels
         {
             Sensor = sensor;
             _Model = Sensor.Model.Position;
-            _Model.PropertyChanged += StorageModel_PropertyChanged;
 
             CmdEdit = CmdEdit = new AsyncCommand(ShowEditor
                 , (Func<object, bool>)null, null, false, false);
@@ -71,18 +71,33 @@ namespace SiamCross.ViewModels
             CmdSave = _Model.CmdSave;
 
             Repo.FieldDir.FieldList.ForEach(o => _Fields.Add(o));
+
+            _Model.PropertyChanged += StorageModel_PropertyChanged;
             Repo.FieldDir.FieldList.CollectionChanged += FieldList_CollectionChanged;
+            Sensor.Model.Manager.OnChangeTask.ProgressChanged += SetTask;
+        }
+        public override void Unsubscribe()
+        {
+            _Model.PropertyChanged -= StorageModel_PropertyChanged;
+            Repo.FieldDir.FieldList.CollectionChanged -= FieldList_CollectionChanged;
+            Sensor.Model.Manager.OnChangeTask.ProgressChanged -= SetTask;
+        }
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
+        void SetTask(object obj, ITask task)
+        {
+            //RaiseCanExecuteChanged(CmdEdit);
+            //RaiseCanExecuteChanged(CmdMakeNew);
+            RaiseCanExecuteChanged(CmdLoad);
+            RaiseCanExecuteChanged(CmdSave);
         }
         async Task ShowEditor()
         {
             var cmd = PageNavigator.CreateAsyncCommand(() => new PositionVM(Sensor));
             await cmd.ExecuteAsync();
         }
-        public void Dispose()
-        {
-            _Model.PropertyChanged -= StorageModel_PropertyChanged;
-        }
-
         public string FieldId => _Model.Saved.Field.ToString();
         public string FieldName
         {

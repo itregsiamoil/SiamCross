@@ -66,8 +66,8 @@ namespace SiamCross.Models.Sensors.Dua
             if (null == Connection)
                 return false;
 
-            _Total = TimeSpan.FromSeconds(_ValveTimeSec);
-            _Remain = TimeSpan.FromSeconds(_ValveTimeSec);
+            _Total = TimeSpan.FromSeconds(ValveSurvayTimeSec);
+            _Remain = TimeSpan.FromSeconds(ValveSurvayTimeSec);
 
 
             if (!await LoadStateAsync(ct))
@@ -107,12 +107,12 @@ namespace SiamCross.Models.Sensors.Dua
         }
 
         async Task WaitAvailability(CancellationToken ct)
-        { 
+        {
             DuStatus status = DuStatus.NoiseMeasurement;
-            while (    DuStatus.NoiseMeasurement == status
+            while (DuStatus.NoiseMeasurement == status
                     || DuStatus.WaitingForClick == status
                     || DuStatus.EсhoMeasurement == status
-                    || DuStatus.ValvePreparation ==status)
+                    || DuStatus.ValvePreparation == status)
             {
                 var startTime = DateTime.Now;
                 string remain = $"{_Remain.Hours}:{_Remain.Minutes}:{_Remain.Seconds}"
@@ -144,20 +144,19 @@ namespace SiamCross.Models.Sensors.Dua
         }
         async Task<bool> DoSingleLevelAsync(CancellationToken ct)
         {
-            while (4 != StatusReg.Value )
+            while (4 != StatusReg.Value)
             {
                 await WaitAvailability(ct);
                 await Task.Delay(Constants.SecondDelay, ct);
                 _Remain -= TimeSpan.FromSeconds(1);
             }
-                
             return true;
         }
         async Task DoMultiLevelAsync(CancellationToken ct)
         {
             while (true)
             {
-                if (0==Kolt.Value)
+                if (0 == Kolt.Value)
                     break;
                 await WaitAvailability(ct);
                 await Connection.TryReadAsync(_CurrentParam, null, ct);
@@ -270,7 +269,7 @@ namespace SiamCross.Models.Sensors.Dua
                     survTime = ValveSurvayTimeSec;
                 timeSec += survRemain * survTime;
             }
-            var ts = TimeSpan.FromSeconds(timeSec+ SurvayTimeSec);
+            var ts = TimeSpan.FromSeconds(timeSec + SurvayTimeSec);
             return ts;
         }
         TimeSpan CalcSheduledPressureTotal()
@@ -323,8 +322,11 @@ namespace SiamCross.Models.Sensors.Dua
                     timeSec += survRemain * survTime;
                 }
             }
+            var maxOst = Constants.Periods[PerU.Value[Interv.Value]] * 60;
+            var curOst = Timeost.Value[0] * 3600 + Timeost.Value[1] * 60 + Timeost.Value[2]
+                + SurvayTimeSec + 6;
 
-            timeSec += Timeost.Value[0] * 3600 + Timeost.Value[1] * 60 + Timeost.Value[2] + SurvayTimeSec + 2;
+            timeSec += (curOst > maxOst) ? maxOst : curOst;
 
             var ts = TimeSpan.FromSeconds(timeSec);
             return ts;

@@ -12,38 +12,36 @@ namespace SiamCross.Models.Sensors
 {
     public class SensorModel : IDisposable
     {
+        public readonly DeviceInfo Device;
+
         public readonly IProtocolConnection Connection;
         public readonly TaskManager Manager;
-
-
+        public readonly ConnectionHolder ConnHolder;
 
         public readonly SensorPosition Position;
-
-
-
-        public readonly DeviceInfo Device;
+        public readonly List<ISurvey> Surveys;
         public readonly CommonInfo Info;
         public IStorage Storage { get; set; }
         public ISurveyCfg SurveyCfg { get; set; }
-        public ConnectionHolder ConnHolder { get; }
-
-        public readonly List<ISurvey> Surveys = new List<ISurvey>();
 
         public SensorModel(IProtocolConnection conn, DeviceInfo deviceInfo)
         {
             Device = deviceInfo;
             Connection = conn;
             Manager = new TaskManager();
-            Position = new SensorPosition(this);
-            Info = new CommonInfo();
-
             ConnHolder = new ConnectionHolder(Manager, Connection);
+
+            Position = new SensorPosition(this);
+            Surveys = new List<ISurvey>();
+            Info = new CommonInfo();
         }
 
         public virtual void Dispose()
         {
             Connection.Disconnect();
+
             ConnHolder?.Dispose();
+            Manager?.Dispose();
             Connection.Dispose();
         }
     }
@@ -53,29 +51,17 @@ namespace SiamCross.Models.Sensors
     {
         SensorModel Model { get; }
 
+        IProtocolConnection Connection { get; }
+        TaskManagerVM TaskManager { get; set; }
         BaseStorageVM StorageVM { get; set; }
-        IViewModel FactoryConfigVM { get; set; }
-        IViewModel UserConfigVM { get; set; }
-        IViewModel StateVM { get; set; }
         SurveysCollectionVM SurveysVM { get; }
         PositionVM PositionVM { get; }
-
-
-
-        TaskManagerVM TaskManager { get; set; }
-
-
-
+        //IViewModel FactoryConfigVM { get; set; }
+        //IViewModel UserConfigVM { get; set; }
+        //IViewModel StateVM { get; set; }
         ICommand ShowDetailViewCommand { get; set; }
         ICommand ShowSurveysViewCommand { get; set; }
         ICommand ShowInfoViewCommand { get; set; }
-
-        //IReadOnlyList<SurveyVM> Surveys { get; set; }
-
-
-
-
-        IProtocolConnection Connection { get; }
 
         string ConnStateStr { get; }
         bool Activate { get; set; }
@@ -86,8 +72,6 @@ namespace SiamCross.Models.Sensors
         Task StartMeasurement(object measurementParameters);
         ScannedDeviceInfo ScannedDeviceInfo { get; }
 
-
-
         string Name { get; }
         string Type { get; }
         string Firmware { get; }
@@ -96,7 +80,6 @@ namespace SiamCross.Models.Sensors
         string RadioFirmware { get; }
         string Status { get; set; }
         Guid Id { get; }
-
 
     }
 }

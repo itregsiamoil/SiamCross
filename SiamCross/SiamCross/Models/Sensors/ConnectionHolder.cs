@@ -49,7 +49,7 @@ namespace SiamCross.Models.Sensors
         }
 
         public ConnectionHolder(TaskManager mgr, Connection.IConnection connection
-            , ICommand cmdUpdateStatus  = null)
+            , ICommand cmdUpdateStatus = null)
         {
             CmdUpdateStatus = cmdUpdateStatus;
             _Connection = connection;

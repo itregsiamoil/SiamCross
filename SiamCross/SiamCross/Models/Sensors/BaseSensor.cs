@@ -67,9 +67,15 @@ namespace SiamCross.Models.Sensors
 
         public virtual async void Dispose()
         {
-            Connection.PropertyChanged -= OnConnectionChange;
             await Deactivate();
-            Model?.Dispose();
+
+            TaskManager.Dispose();
+            PositionVM?.Dispose();
+            SurveysVM?.Dispose();
+            StorageVM?.Dispose();
+
+            Connection.PropertyChanged -= OnConnectionChange;
+            Model?.Dispose(); // TODO !!! удалить в будущем
         }
         #endregion
         #region basic implementation
@@ -118,9 +124,9 @@ namespace SiamCross.Models.Sensors
         public ICommand ShowInfoViewCommand { get; set; }
 
         public BaseStorageVM StorageVM { get; set; }
-        public IViewModel FactoryConfigVM { get; set; }
-        public IViewModel UserConfigVM { get; set; }
-        public IViewModel StateVM { get; set; }
+        //public IViewModel FactoryConfigVM { get; set; }
+        //public IViewModel UserConfigVM { get; set; }
+        //public IViewModel StateVM { get; set; }
         public SurveysCollectionVM SurveysVM { get; }
 
 
@@ -131,7 +137,7 @@ namespace SiamCross.Models.Sensors
         //public IReadOnlyList<SurveyVM> Surveys { get; set; }
 
         public ScannedDeviceInfo ScannedDeviceInfo { get; }
-        public abstract Task<bool> QuickReport(CancellationToken cancellationToken=default);
+        public abstract Task<bool> QuickReport(CancellationToken cancellationToken = default);
         //public virtual Task<bool> UpdateRssi(CancellationToken cancellationToken);
         public abstract Task StartMeasurement(object measurementParameters);
 

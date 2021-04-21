@@ -1,4 +1,5 @@
-﻿using SiamCross.Models.Sensors;
+﻿using SiamCross.Models;
+using SiamCross.Models.Sensors;
 using SiamCross.Services;
 using System;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.ViewModels.MeasurementViewModels
 {
-    public class BaseSurveyVM : BaseVM, ISurvey, ISurveyCfg
+    public class BaseSurveyVM : BasePageVM, ISurvey, ISurveyCfg
     {
         public string Name => Model.Name;
         public string Description => Model.Description;
@@ -37,10 +38,9 @@ namespace SiamCross.ViewModels.MeasurementViewModels
                 (Func<bool>)null,
                 null, false, false);
 
-
             if (null != Config)
                 Config.PropertyChanged += StorageModel_PropertyChanged;
-
+            Sensor.Model.Manager.OnChangeTask.ProgressChanged += SetTask;
         }
         private void StorageModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
@@ -64,6 +64,24 @@ namespace SiamCross.ViewModels.MeasurementViewModels
             {
 
             }
+        }
+        void SetTask(object obj, ITask task)
+        {
+            RaiseCanExecuteChanged(CmdSaveParam);
+            RaiseCanExecuteChanged(CmdLoadParam);
+            RaiseCanExecuteChanged(CmdStart);
+            RaiseCanExecuteChanged(CmdWait);
+            RaiseCanExecuteChanged(CmdShow);
+        }
+        public override void Unsubscribe()
+        {
+            if (null != Config)
+                Config.PropertyChanged -= StorageModel_PropertyChanged;
+            Sensor.Model.Manager.OnChangeTask.ProgressChanged -= SetTask;
+        }
+        public override void Dispose()
+        {
+            base.Dispose();
         }
     }
 }

@@ -6,7 +6,7 @@ using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.ViewModels
 {
-    public class TaskManagerVM : BaseVM, IDisposable
+    public class TaskManagerVM : BasePageVM, IDisposable
     {
         TaskManager _Model;
         void SetHidden(object obj, bool val)
@@ -41,7 +41,7 @@ namespace SiamCross.ViewModels
             _Model.OnChangeHidden.ProgressChanged += SetHidden;
             _Model.RefreshTask().ConfigureAwait(false);
         }
-        void Unsubscribe()
+        public override void Unsubscribe()
         {
             _Model.OnChangeTask.ProgressChanged -= SetTask;
             _Model.OnChangeInfo.ProgressChanged -= SetInfo;
@@ -70,9 +70,9 @@ namespace SiamCross.ViewModels
             Subscribe(model);
             CancelCmd = new AsyncCommand(DoCancel, () => IsBusy, null, false, false);
         }
-        public void Dispose()
+        public override void Dispose()
         {
-            Unsubscribe();
+            base.Dispose();
         }
     }
 }
