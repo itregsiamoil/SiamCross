@@ -1,5 +1,4 @@
-﻿using SiamCross.Models.Sensors.Dua;
-using SiamCross.ViewModels;
+﻿using SiamCross.ViewModels;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -11,10 +10,11 @@ namespace SiamCross.Models.Sensors
     [Serializable]
     public class SensorPosition : BaseVM
     {
-        readonly ITask _TaskLoad;
-        readonly ITask _TaskSave;
-        readonly Position _Position = new Position();
         public readonly SensorModel Sensor;
+        readonly Position _Position = new Position();
+
+        public ITask TaskLoad { get; set; }
+        public ITask TaskSave { get; set; }
         public Position Saved { get; private set; }
         public Position Current
         {
@@ -45,8 +45,6 @@ namespace SiamCross.Models.Sensors
         public SensorPosition(SensorModel sensorModel)
         {
             Sensor = sensorModel;
-            _TaskLoad = new TaskPositionLoad(this);
-            _TaskSave = new TaskPositionSave(this);
 
             CmdMakeNew = new AsyncCommand(ShowMakeNewPosition
                 , (Func<object, bool>)null, null, false, false);
@@ -74,7 +72,7 @@ namespace SiamCross.Models.Sensors
         }
         async Task DoLoad()
         {
-            if (await Sensor.Manager.Execute(_TaskLoad))
+            if (null != TaskLoad && await Sensor.Manager.Execute(TaskLoad))
             {
                 if (null == Saved)
                     Saved = new Position();
@@ -87,7 +85,7 @@ namespace SiamCross.Models.Sensors
         }
         async Task DoSave()
         {
-            if (await Sensor.Manager.Execute(_TaskSave))
+            if (null != TaskSave && await Sensor.Manager.Execute(TaskSave))
             {
                 if (null == Saved)
                     Saved = new Position();

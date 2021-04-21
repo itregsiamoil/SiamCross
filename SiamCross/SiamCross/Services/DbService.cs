@@ -373,8 +373,8 @@ namespace SiamCross.Services
                     + "\n msg=" + ex.Message
                     + "\n type=" + ex.GetType()
                     + "\n stack=" + ex.StackTrace + "\n");
-                throw;
             }
+            return null;
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

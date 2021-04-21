@@ -420,42 +420,7 @@ namespace SiamCross.ViewModels
 
                             await DbService.Instance.GetValues(mData);
 
-                            if (!mData.Measure.DataFloat.TryGetValue("bufferpressure", out double bufferpressure))
-                                bufferpressure = 0.0;
-
-                            var secp = new DuMeasurementSecondaryParameters(
-                                            mData.Device.Name
-                                            , Resource.Echogram
-                                            , mData.Position.Field.ToString()
-                                            , mData.Position.Well.ToString()
-                                            , mData.Position.Bush.ToString()
-                                            , mData.Position.Shop.ToString()
-                                            , bufferpressure
-                                            , mData.Measure.Comment
-                                            , "0.0"//_Sensor.Battery
-                                            , "0.0"//_Sensor.Temperature
-                                            , "0.0"//_Sensor.Firmware
-                                            , "0.0"//_Sensor.RadioFirmware
-                                            , mData.Measure.DataInt["sudresearchtype"].ToString()
-                                            , mData.Measure.DataInt["sudcorrectiontype"].ToString()
-                                            , mData.Measure.DataFloat["lgsoundspeed"].ToString()
-                                            );
-
-                            var startp = new DuMeasurementStartParameters(false, false, false, secp, 0.0);
-
-                            byte[] echoArray = { };
-                            mData.Measure.DataBlob.TryGetValue("lgechogram", out echoArray);
-
-
-                            DuMeasurementData data = new DuMeasurementData(DateTime.Now
-                                , startp
-                                , (float)mData.Measure.DataFloat["sudpressure"]
-                                , (ushort)mData.Measure.DataFloat["lglevel"]
-                                , (ushort)mData.Measure.DataInt["lgreflectioncount"]
-                                , echoArray
-                                , MeasureState.Ok);
-
-                            du_meas = new DuMeasurement(data);
+                            du_meas = ConvertToOldMeasurement(mData);
                         }
 
                         if (du_meas != null)
@@ -496,10 +461,18 @@ namespace SiamCross.ViewModels
                             break;
                         case 1:
                             DuMeasurement du = DbService.Instance.GetDuMeasurementById(mv.Id);
-                            file_name = CreateName(du.Name, du.DateTime);
-                            doc = xmlCreator.CreateDuXml(du);
-                            paths[i] = await XmlSaver.SaveXml(file_name, doc);
-                            await MediaScannerService.Instance.Scan(paths[i]);
+                            if (null == du)
+                            {
+                                await DbService.Instance.GetValues(mv.MeasureData);
+                                du = ConvertToOldMeasurement(mv.MeasureData);
+                            }
+                            if (null != du)
+                            {
+                                file_name = CreateName(du.Name, du.DateTime);
+                                doc = xmlCreator.CreateDuXml(du);
+                                paths[i] = await XmlSaver.SaveXml(file_name, doc);
+                                await MediaScannerService.Instance.Scan(paths[i]);
+                            }
                             break;
                     }
                 }
@@ -508,6 +481,48 @@ namespace SiamCross.ViewModels
             //await MediaScannerService.Instance.Scan(mes_dir);
             return paths;
         }
+        static DuMeasurement ConvertToOldMeasurement(MeasureData mData)
+        {
+            if (!mData.Measure.DataFloat.TryGetValue("bufferpressure", out double bufferpressure))
+                bufferpressure = 0.0;
+
+            var secp = new DuMeasurementSecondaryParameters(
+                            mData.Device.Name
+                            , Resource.Echogram
+                            , mData.Position.Field.ToString()
+                            , mData.Position.Well.ToString()
+                            , mData.Position.Bush.ToString()
+                            , mData.Position.Shop.ToString()
+                            , bufferpressure
+                            , mData.Measure.Comment
+                            , "0.0"//_Sensor.Battery
+                            , "0.0"//_Sensor.Temperature
+                            , "0.0"//_Sensor.Firmware
+                            , "0.0"//_Sensor.RadioFirmware
+                            , mData.Measure.DataInt["sudresearchtype"].ToString()
+                            , mData.Measure.DataInt["sudcorrectiontype"].ToString()
+                            , mData.Measure.DataFloat["lgsoundspeed"].ToString()
+                            );
+
+            var startp = new DuMeasurementStartParameters(false, false, false, secp, 0.0);
+
+            byte[] echoArray = { };
+            mData.Measure.DataBlob.TryGetValue("lgechogram", out echoArray);
+
+
+            DuMeasurementData data = new DuMeasurementData(DateTime.Now
+                , startp
+                , (float)mData.Measure.DataFloat["sudpressure"]
+                , (ushort)mData.Measure.DataFloat["lglevel"]
+                , (ushort)mData.Measure.DataInt["lgreflectioncount"]
+                , echoArray
+                , MeasureState.Ok);
+
+            return new DuMeasurement(data);
+        }
+
+
+
         private static bool ValidateForEmptiness()
         {
             List<string> errorList = new List<string>();

@@ -9,7 +9,7 @@ namespace SiamCross.Models.Sensors.Dua
     {
         readonly SensorPosition _Model;
 
-        readonly MemStruct SurvayParam = new MemStruct(0x800B);
+        readonly MemStruct PosParam;
         readonly MemVarByteArray Kust = new MemVarByteArray(0, new MemValueByteArray(5));
         readonly MemVarByteArray Skv = new MemVarByteArray(0, new MemValueByteArray(6));
         readonly MemVarUInt16 Field = new MemVarUInt16();
@@ -24,16 +24,16 @@ namespace SiamCross.Models.Sensors.Dua
             Progress = ((float)_BytesProgress / _BytesTotal);
         }
 
-        public TaskPositionLoad(SensorPosition pos)
+        public TaskPositionLoad(SensorPosition pos, uint baseAddress = 0x800B)
             : base(pos.Sensor, "Загрузка местоположения")
         {
             _Model = pos;
-
-            SurvayParam.Add(Kust);
-            SurvayParam.Add(Skv);
-            SurvayParam.Add(Field);
-            SurvayParam.Add(Shop);
-            SurvayParam.Add(Operator);
+            PosParam = new MemStruct(baseAddress);
+            PosParam.Add(Kust);
+            PosParam.Add(Skv);
+            PosParam.Add(Field);
+            PosParam.Add(Shop);
+            PosParam.Add(Operator);
         }
         public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {
@@ -41,7 +41,7 @@ namespace SiamCross.Models.Sensors.Dua
                 return false;
 
             _BytesProgress = 0;
-            _BytesTotal = SurvayParam.Size;
+            _BytesTotal = PosParam.Size;
 
             using (var ctSrc = new CancellationTokenSource(Constants.ConnectTimeout))
             {
@@ -64,7 +64,7 @@ namespace SiamCross.Models.Sensors.Dua
             if (await CheckConnectionAsync(ct))
             {
                 InfoEx = "чтение";
-                readed = RespResult.NormalPkg == await Connection.TryReadAsync(SurvayParam, SetProgressBytes, ct);
+                readed = RespResult.NormalPkg == await Connection.TryReadAsync(PosParam, SetProgressBytes, ct);
                 InfoEx = "выполнено";
             }
 

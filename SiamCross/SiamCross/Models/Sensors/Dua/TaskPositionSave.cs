@@ -1,5 +1,4 @@
 ﻿using SiamCross.Models.Connection.Protocol;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,8 +8,7 @@ namespace SiamCross.Models.Sensors.Dua
     {
         readonly SensorPosition _Model;
 
-        public readonly List<MemVar> Reg = new List<MemVar>();
-
+        readonly MemStruct PosParam;
         readonly MemVarByteArray Kust = new MemVarByteArray(0x800B, new MemValueByteArray(5));
         readonly MemVarByteArray Skv = new MemVarByteArray(0x8010, new MemValueByteArray(6));
         readonly MemVarUInt16 Field = new MemVarUInt16(0x8016);
@@ -25,16 +23,18 @@ namespace SiamCross.Models.Sensors.Dua
             Progress = ((float)_BytesProgress / _BytesTotal);
         }
 
-        public TaskPositionSave(SensorPosition pos)
+        public TaskPositionSave(SensorPosition pos, uint baseAddress = 0x800B)
             : base(pos.Sensor, "Сохранение местоположения")
         {
             _Model = pos;
 
-            Reg.Add(Kust);
-            Reg.Add(Skv);
-            Reg.Add(Field);
-            Reg.Add(Shop);
-            Reg.Add(Operator);
+            PosParam = new MemStruct(baseAddress);
+            PosParam.Add(Kust);
+            PosParam.Add(Skv);
+            PosParam.Add(Field);
+            PosParam.Add(Shop);
+            PosParam.Add(Operator);
+
         }
         public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {
@@ -42,8 +42,7 @@ namespace SiamCross.Models.Sensors.Dua
                 return false;
 
             _BytesProgress = 0;
-            _BytesTotal = 0;
-            Reg.ForEach((r) => _BytesTotal += r.Size);
+            _BytesTotal = PosParam.Size;
 
             using (var ctSrc = new CancellationTokenSource(Constants.ConnectTimeout))
             {
@@ -62,7 +61,7 @@ namespace SiamCross.Models.Sensors.Dua
             Operator.Value = 0;
             InfoEx = "запись";
             bool ret = false;
-            foreach (var r in Reg)
+            foreach (var r in PosParam.GetVars())
             {
                 ret = RespResult.NormalPkg == await Connection.TryWriteAsync(r, SetProgressBytes, ct);
                 if (!ret)

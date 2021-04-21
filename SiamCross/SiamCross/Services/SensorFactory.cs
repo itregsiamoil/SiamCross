@@ -10,6 +10,7 @@ using SiamCross.Models.Sensors.Dmg;
 using SiamCross.Models.Sensors.Dmg.Ddin2;
 using SiamCross.Models.Sensors.Du;
 using SiamCross.Models.Sensors.Dua;
+using SiamCross.Models.Sensors.UMT;
 
 namespace SiamCross.Services
 {
@@ -61,7 +62,12 @@ namespace SiamCross.Services
                         var vm = new DuaSensor(model);
                         return vm;
                     }
-
+                case 0x1700:
+                    {
+                        var model = new UmtSensorModel(connection, deviceInfo.Device);
+                        var vm = new UmtSensorVM(model);
+                        return vm;
+                    }
             }
         }
     }

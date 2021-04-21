@@ -19,6 +19,10 @@ namespace SiamCross.Models.Sensors.Dua
            : base(conn, deviceInfo)
         {
             Connection.AdditioonalTimeout = 2000;
+
+            Position.TaskLoad = new TaskPositionLoad(Position);
+            Position.TaskSave = new TaskPositionSave(Position);
+
             Storage = new DuaStorage(this);
             SurveyCfg = new DuaSurveyCfg(this);
 
@@ -49,8 +53,8 @@ namespace SiamCross.Models.Sensors.Dua
         }
         async Task OnConnect()
         {
-            await (Surveys[0].CmdWait as AsyncCommand).ExecuteAsync();
-            await (Position.CmdLoad as AsyncCommand).ExecuteAsync();
+            await (Surveys[0].CmdWait as AsyncCommand)?.ExecuteAsync();
+            await (Position.CmdLoad as AsyncCommand)?.ExecuteAsync();
         }
         public override void Dispose()
         {

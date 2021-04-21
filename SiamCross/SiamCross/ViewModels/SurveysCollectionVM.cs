@@ -19,7 +19,7 @@ namespace SiamCross.ViewModels
 
         public override void Unsubscribe()
         {
-            throw new System.NotImplementedException();
+            
         }
         public override void Dispose()
         {
