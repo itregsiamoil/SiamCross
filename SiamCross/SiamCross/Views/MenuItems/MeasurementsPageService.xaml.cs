@@ -31,11 +31,9 @@ namespace SiamCross.Views.MenuItems
 
         private void OnCheckBoxCheckedChanged(object sender, CheckedChangedEventArgs e)
         {
-            CheckBox chk = sender as CheckBox;
-            if (null == chk)
+            if (!(sender is CheckBox chk))
                 return;
-            MeasurementView meas = chk.BindingContext as MeasurementView;
-            if (null == meas)
+            if (!(chk.BindingContext is MeasurementView meas))
                 return;
 
             _vm.UpdateSelect(meas, e.Value);

@@ -327,17 +327,16 @@ namespace SiamCross.Services
                 throw;
             }
         }
-        public void RemoveDuMeasurement(long removebleId)
+        public async Task RemoveDuMeasurementAsync(long removebleId)
         {
             NonQueryCheck();
             try
             {
-                _database.Execute("DELETE FROM DuMeasurement WHERE Id =" + removebleId);
+                await _database.ExecuteAsync("DELETE FROM DuMeasurement WHERE Id =" + removebleId);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "RemoveDuMeasurement" + "\n");
-                throw;
             }
         }
         public IEnumerable<DuMeasurement> GetDuMeasurements()
@@ -358,13 +357,14 @@ namespace SiamCross.Services
                 throw;
             }
         }
-        public DuMeasurement GetDuMeasurementById(long id)
+        public async Task<DuMeasurement> GetDuMeasurementByIdAsync(long id)
         {
             NonQueryCheck();
             try
             {
-                return _database.Query<DuMeasurement>(
-                    "SELECT * FROM DuMeasurement WHERE Id =" + id).First();
+                var resilt = await _database.QueryAsync<DuMeasurement>(
+                    "SELECT * FROM DuMeasurement WHERE Id =" + id);
+                return resilt.First();
             }
             catch (Exception ex)
             {
@@ -557,8 +557,8 @@ namespace SiamCross.Services
             catch (Exception e)
             {
                 _logger.Error(e, $"Ddin2GetById database error!" + "\n");
-                throw;
             }
+            return null;
         }
 
         private string GetCreateDataBaseScript(string resourceName)
@@ -578,7 +578,7 @@ namespace SiamCross.Services
             return ret;
         }
 
-        public async Task GetValues(MeasureData m)
+        public async Task GetValuesAsync(MeasureData m)
         {
             using (var tr = _siamServiceDB.BeginTransaction(IsolationLevel.Serializable))
             {
@@ -589,9 +589,7 @@ namespace SiamCross.Services
                 tr.Commit();
             }
         }
-
-
-        public async Task<IEnumerable<MeasureTableItem>> GetMeasurements()
+        public async Task<IEnumerable<MeasureTableItem>> GetSurveysAsync()
         {
             NonQueryCheck();
             try
@@ -610,7 +608,7 @@ namespace SiamCross.Services
             //return Task.FromResult<IEnumerable<MeasureTableItem>>(new List<MeasureTableItem>());
             return new List<MeasureTableItem>();
         }
-        public async Task<long> SaveMeasurement(MeasureData survey)
+        public async Task<long> SaveSurveyAsync(MeasureData survey)
         {
             NonQueryCheck();
             IDbTransaction tr = null; ;
@@ -636,7 +634,7 @@ namespace SiamCross.Services
             }
             return -1;
         }
-        public async Task DeleteMeasurement(long measureId)
+        public async Task DelSurveyAsync(long measureId)
         {
             NonQueryCheck();
             IDbTransaction tr = null; ;

@@ -37,7 +37,7 @@ namespace SiamCross.ViewModels
         private string _title;
         private List<Ddin2Measurement> _ddin2Measurements;
         private List<DuMeasurement> _duMeasurements;
-        private List<MeasureData> _Measurements = new List<MeasureData>();
+        //private List<MeasureData> _Measurements = new List<MeasureData>();
 
 
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
@@ -108,7 +108,6 @@ namespace SiamCross.ViewModels
                 Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Clear selected");
                 Measurements?.Clear();
                 Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Clear all");
-                _Measurements?.Clear();
                 _ddin2Measurements?.Clear();
                 _duMeasurements?.Clear();
                 Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Clear data");
@@ -116,12 +115,11 @@ namespace SiamCross.ViewModels
                 ObservableCollection<MeasurementView> meas = new ObservableCollection<MeasurementView>();
                 _ddin2Measurements = DbService.Instance.GetDdin2Measurements().ToList();
                 _duMeasurements = DbService.Instance.GetDuMeasurements().ToList();
-                var measurements = (await DbService.Instance.GetMeasurements()).ToList();
+                var measurements = (await DbService.Instance.GetSurveysAsync()).ToList();
                 Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Load from db");
 
                 foreach (var m in measurements)
                 {
-                    _Measurements.Add(m.MeasureData);
                     meas.Add(new MeasurementView(m.MeasureData));
                 }
                 Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Set DUA");
@@ -252,16 +250,16 @@ namespace SiamCross.ViewModels
             {
                 if (0 == SelectedMeasurements.Count)
                     return;
-                string[] paths = await SaveXmlsReturnPaths(SelectedMeasurements);
+                var paths = await SaveXmlsReturnPaths(SelectedMeasurements);
 
                 List<ShareFile> sf = new List<ShareFile>();
-                for (int i = 0; i < paths.Length; ++i)
+                foreach (var p in paths)
                 {
-                    sf.Add(new ShareFile(paths[i]));
+                    sf.Add(new ShareFile(p));
                 }
                 await Share.RequestAsync(new ShareMultipleFilesRequest
                 {
-                    Title = Title,
+                    Title = $"{Resource.SelectedMeasurements}: {paths.Count}",
                     Files = sf
                 });
             }
@@ -287,7 +285,7 @@ namespace SiamCross.ViewModels
                 }
 
                 //ToastService.Instance.LongAlert($"{Resource.SendingMeasurements}...");
-                string[] paths = await SaveXmlsReturnPaths(SelectedMeasurements);
+                var paths = await SaveXmlsReturnPaths(SelectedMeasurements);
 
                 bool is_ok = await EmailService.Instance.SendEmailWithFilesAsync("Siam Measurements",
                     "\nSiamCompany Telemetry Transfer Service",
@@ -325,7 +323,7 @@ namespace SiamCross.ViewModels
                 foreach (MeasurementView survay in SelectedMeasurements)
                     survay.Saving = true;
 
-                string[] paths = await SaveXmlsReturnPaths(SelectedMeasurements);
+                var paths = await SaveXmlsReturnPaths(SelectedMeasurements);
 
                 string ts = DateTime.Now.ToString();
                 string dir = EnvironmentService.Instance.GetDir_Measurements();
@@ -366,15 +364,17 @@ namespace SiamCross.ViewModels
                     {
                         if (m is MeasurementView mv)
                         {
+                            Measurements.Remove(mv);
                             switch (mv.MeasureKind)
                             {
                                 case 0: DbService.Instance.RemoveDdin2Measurement(mv.Id); break;
                                 case 1:
-                                    DbService.Instance.RemoveDuMeasurement(mv.Id);
-                                    await DbService.Instance.DeleteMeasurement(mv.Id);
+                                    if (0x1201 == mv.MeasureData.Device.Kind)
+                                        await DbService.Instance.DelSurveyAsync(mv.Id);
+                                    else
+                                        await DbService.Instance.RemoveDuMeasurementAsync(mv.Id);
                                     break;
                             }
-                            Measurements.Remove(mv);
                         }
                     }
                     MessagingCenter.Send(this, "RefreshAfterDeleting");
@@ -385,7 +385,6 @@ namespace SiamCross.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "DeleteMeasurements method" + "\n");
-                throw;
             }
         }
         public async Task PushPageAsync(MeasurementView selectedMeasurement)
@@ -411,25 +410,23 @@ namespace SiamCross.ViewModels
                             }
                         break;
                     case 1:
-                        DuMeasurement du_meas = _duMeasurements?
-                            .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
-                        if (null == du_meas)
+                        DuMeasurement du = null;
+                        if (0x1201 == selectedMeasurement.MeasureData.Device.Kind)
                         {
-                            var mData = _Measurements?
-                                .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
-
-                            await DbService.Instance.GetValues(mData);
-
-                            du_meas = ConvertToOldMeasurement(mData);
+                            await DbService.Instance.GetValuesAsync(selectedMeasurement.MeasureData);
+                            du = ConvertToOldMeasurement(selectedMeasurement.MeasureData);
+                        }
+                        else
+                        {
+                            du = _duMeasurements?.SingleOrDefault(m => m.Id == selectedMeasurement.Id);
                         }
 
-                        if (du_meas != null)
-                            if (CanOpenPage(typeof(DuMeasurementDonePage)))
-                            {
-                                await App.NavigationPage.Navigation
-                                    .PushAsync(
-                                        new DuMeasurementDonePage(du_meas), true);
-                            }
+                        if (du != null && CanOpenPage(typeof(DuMeasurementDonePage)))
+                        {
+                            await App.NavigationPage.Navigation
+                                .PushAsync(
+                                    new DuMeasurementDonePage(du), true);
+                        }
                         break;
                 }
             }
@@ -439,10 +436,10 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
-        private static async Task<string[]> SaveXmlsReturnPaths(IReadOnlyList<object> meas)
+        private static async Task<IReadOnlyCollection<string>> SaveXmlsReturnPaths(IReadOnlyList<object> meas)
         {
             XmlCreator xmlCreator = new XmlCreator();
-            string[] paths = new string[meas.Count];
+            var paths = new SortedSet<string>();
             for (int i = 0; i < meas.Count; i++)
             {
                 if (meas[i] is MeasurementView mv)
@@ -454,31 +451,39 @@ namespace SiamCross.ViewModels
                         default: break;
                         case 0:
                             Ddin2Measurement dnm = DbService.Instance.GetDdin2MeasurementById(mv.Id);
-                            file_name = CreateName(dnm.Name, dnm.DateTime);
-                            doc = xmlCreator.CreateDdin2Xml(dnm);
-                            paths[i] = await XmlSaver.SaveXml(file_name, doc);
-                            await MediaScannerService.Instance.Scan(paths[i]);
+                            if (null != dnm)
+                            {
+                                file_name = CreateName(dnm.Name, dnm.DateTime);
+                                doc = xmlCreator.CreateDdin2Xml(dnm);
+                                var curr_path = await XmlSaver.SaveXml(file_name, doc);
+                                paths.Add(curr_path);
+                            }
                             break;
                         case 1:
-                            DuMeasurement du = DbService.Instance.GetDuMeasurementById(mv.Id);
-                            if (null == du)
+                            DuMeasurement du;
+                            if (0x1201 == mv.MeasureData.Device.Kind)
                             {
-                                await DbService.Instance.GetValues(mv.MeasureData);
+                                await DbService.Instance.GetValuesAsync(mv.MeasureData);
                                 du = ConvertToOldMeasurement(mv.MeasureData);
                             }
+                            else
+                            {
+                                du = await DbService.Instance.GetDuMeasurementByIdAsync(mv.Id);
+                            }
+
                             if (null != du)
                             {
                                 file_name = CreateName(du.Name, du.DateTime);
                                 doc = xmlCreator.CreateDuXml(du);
-                                paths[i] = await XmlSaver.SaveXml(file_name, doc);
-                                await MediaScannerService.Instance.Scan(paths[i]);
+                                var curr_path = await XmlSaver.SaveXml(file_name, doc);
+                                paths.Add(curr_path);
                             }
                             break;
                     }
                 }
             }
-            //string mes_dir = EnvironmentService.Instance.GetDir_Measurements();
-            //await MediaScannerService.Instance.Scan(mes_dir);
+            string mes_dir = EnvironmentService.Instance.GetDir_Measurements();
+            await MediaScannerService.Instance.Scan(mes_dir);
             return paths;
         }
         static DuMeasurement ConvertToOldMeasurement(MeasureData mData)
@@ -509,8 +514,7 @@ namespace SiamCross.ViewModels
             byte[] echoArray = { };
             mData.Measure.DataBlob.TryGetValue("lgechogram", out echoArray);
 
-
-            DuMeasurementData data = new DuMeasurementData(DateTime.Now
+            DuMeasurementData data = new DuMeasurementData(mData.Measure.EndTimestamp
                 , startp
                 , (float)mData.Measure.DataFloat["sudpressure"]
                 , (ushort)mData.Measure.DataFloat["lglevel"]
@@ -520,7 +524,6 @@ namespace SiamCross.ViewModels
 
             return new DuMeasurement(data);
         }
-
 
 
         private static bool ValidateForEmptiness()

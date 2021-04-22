@@ -1,5 +1,7 @@
 ﻿using SiamCross.Services.Environment;
+using SiamCross.Services.MediaScanner;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -19,42 +21,49 @@ namespace SiamCross.Services
                 return null;
 
             string fullPath = Path.Combine(path, filename);
-            FileStream fs = TryCreateFileStream(fullPath);
+
+            FileStream fs = await TryCreateFileStream(fullPath);
             if (null == fs)
                 return null;
-            //File.SetAttributes(fullPath, FileAttributes.Normal);
-            //FileIOPermission filePermission =new FileIOPermission(FileIOPermissionAccess.AllAccess, fullPath);
-            System.Xml.XmlWriterSettings settings = new System.Xml.XmlWriterSettings
+            using (fs)
             {
-                Async = true,
-                OmitXmlDeclaration = true,
-                Indent = true,
-                NewLineOnAttributes = true
-            };
+                System.Xml.XmlWriterSettings settings = new System.Xml.XmlWriterSettings
+                {
+                    Async = false,
+                    OmitXmlDeclaration = true,
+                    Indent = true,
+                    NewLineOnAttributes = true
+                };
 
-            System.Xml.XmlWriter writer = System.Xml.XmlWriter.Create(fs, settings);
-            xml.Save(writer);
-            //MediaScannerConnection.ScanFile(Android.App.Application.Context, new String[] { fullPath }, null, null);
-            await writer?.FlushAsync();
-            await fs.FlushAsync();
-            writer?.Dispose();
-            fs.Dispose();
+                using (System.Xml.XmlWriter writer = System.Xml.XmlWriter.Create(fs, settings))
+                {
+                    xml.Save(writer);
+                    writer.Flush();
+                    writer.Close();
+                }
+
+                await fs.FlushAsync();
+                fs.Close();
+            }
+
+            await MediaScannerService.Instance.Scan(fullPath);
             return fullPath;
         }
-        private static FileStream TryCreateFileStream(string filename)
+        static async Task<FileStream> TryCreateFileStream(string filename)
         {
             FileStream fs = null;
             try
             {
-                fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
-            }
-            catch (Exception)
-            {
                 if (File.Exists(filename))
                 {
                     File.Delete(filename);
-                    fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
+                    await MediaScannerService.Instance.Scan(filename);
                 }
+                fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"EXCEPTION {ex.Message} {ex.GetType()}\n{ex.StackTrace}");
             }
             return fs;
         }

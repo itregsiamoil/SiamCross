@@ -18,7 +18,7 @@ namespace SiamCross.ViewModels.Dua.Survey
         }
         public bool IsValveAutomaticEnabled
         {
-            get => IsVisibleLevelSheduler ? true : _ModelCfg.IsValveAutomaticEnabled;
+            get => IsVisibleLevelSheduler || _ModelCfg.IsValveAutomaticEnabled;
             set
             {
                 if (IsVisibleLevelSheduler)

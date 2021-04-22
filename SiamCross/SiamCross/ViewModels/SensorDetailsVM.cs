@@ -47,17 +47,17 @@ namespace SiamCross.ViewModels
 
         Task ShowSurveysPage()
         {
-            return PageNavigator.ShowPage(_Sensor.SurveysVM);
+            return PageNavigator.ShowPageAsync(_Sensor.SurveysVM);
         }
         async Task ShowPositionPage()
         {
             _Sensor.Model.Position.CmdLoad.Execute(this);
-            await PageNavigator.ShowPage(_Sensor.PositionVM);
+            await PageNavigator.ShowPageAsync(_Sensor.PositionVM);
         }
         async Task ShowStoragePage()
         {
             _Sensor.Model.Storage.CmdUpdateStorageInfo.Execute(this);
-            await PageNavigator.ShowPage(_Sensor.StorageVM);
+            await PageNavigator.ShowPageAsync(_Sensor.StorageVM);
         }
 
     }//public class SensorDetailsViewModel : BaseVM

@@ -16,6 +16,9 @@ namespace SiamCross.Models.Tools
             max_x = float.MinValue;
             max_y = float.MinValue;
 
+            if (null == duMeasurement.Echogram)
+                return new double[0, 2];
+
             double[,] points = new double[duMeasurement.Echogram.Length, 2];
             float tableSpeedCorrection = 0;
             float xDiscrete;

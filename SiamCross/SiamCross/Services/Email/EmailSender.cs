@@ -1,6 +1,7 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms.Internals;
 using Settings = SiamCross.Models.Tools.Settings;
@@ -37,7 +38,7 @@ namespace SiamCross.Services.Email
         }
         public async Task<bool> SendEmailWithFilesAsync(string subject,
                                        string text,
-                                       string[] filenames)
+                                       IReadOnlyCollection<string> filenames)
         {
             MimeMessage m = new MimeMessage();
 

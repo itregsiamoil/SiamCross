@@ -82,47 +82,28 @@ namespace SiamCross.Services
         }
 
 
-        public static Task ShowPage(IViewModel vm)
+        public static async Task ShowPageAsync(IViewModel vm)
         {
-            if (null == vm)
-                return Task.CompletedTask;
-            var page = Get(vm);
-            if (null == page)
-                return Task.CompletedTask;
-            return App.NavigationPage.Navigation.PushAsync(page);
+            try
+            {
+                if (null == vm)
+                    return;
+                var page = Get(vm);
+                if (null == page)
+                    return;
+                await App.NavigationPage.Navigation.PushAsync(page);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"EXCEPTION {ex.Message} {ex.GetType()}\n{ex.StackTrace}");
+            }
         }
 
         public static AsyncCommand CreateAsyncCommand(Func<IViewModel> fnGetVM)
         {
-            return new AsyncCommand(() => ShowPage(fnGetVM())
+            return new AsyncCommand(() => ShowPageAsync(fnGetVM())
                 , (Func<object, bool>)null, null, false, false);
         }
-        public static AsyncCommand CreateAsyncCommand(IViewModel vm)
-        {
-            Task exec()
-            {
-                try
-                {
-                    if (null == vm)
-                        return Task.CompletedTask;
-                    var page = Get(vm);
-                    if (null == page)
-                        return Task.CompletedTask;
-                    return App.NavigationPage.Navigation.PushAsync(page);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex, "EXCEPTION "
-                        + System.Reflection.MethodBase.GetCurrentMethod().Name
-                        + "\n msg=" + ex.Message
-                        + "\n type=" + ex.GetType()
-                        + "\n stack=" + ex.StackTrace + "\n");
 
-                }
-                return Task.CompletedTask;
-            }
-            return new AsyncCommand(exec
-                , (Func<object, bool>)null, null, false, false);
-        }
     }
 }

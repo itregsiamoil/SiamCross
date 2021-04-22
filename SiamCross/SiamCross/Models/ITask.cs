@@ -110,7 +110,7 @@ namespace SiamCross.Models
                         case JobStatus.Canceled: break;
                     }
             }
-            catch (OperationCanceledException ex)
+            catch (OperationCanceledException)
             {
                 switch (_Status)
                 {

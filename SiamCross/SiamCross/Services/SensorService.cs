@@ -130,7 +130,7 @@ namespace SiamCross.Services
                     if (show)
                         await App.NavigationPage.Navigation.PushAsync(
                             new DuMeasurementDonePage(
-                                DbService.Instance.GetDuMeasurementById(addId)), true);
+                                await DbService.Instance.GetDuMeasurementByIdAsync(addId)), true);
                     break;
                 default:
                     break;

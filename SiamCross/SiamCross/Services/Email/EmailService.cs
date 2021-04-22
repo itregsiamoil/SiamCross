@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SiamCross.Services.Email
@@ -15,7 +16,7 @@ namespace SiamCross.Services.Email
             _emailSender = new EmailSender();
         }
         public async Task<bool> SendEmailWithFilesAsync(string subject
-            , string text, string[] filenames)
+            , string text, IReadOnlyCollection<string> filenames)
         {
             return await _emailSender.SendEmailWithFilesAsync(subject, text, filenames);
         }
