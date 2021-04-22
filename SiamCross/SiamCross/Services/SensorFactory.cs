@@ -10,7 +10,7 @@ using SiamCross.Models.Sensors.Dmg;
 using SiamCross.Models.Sensors.Dmg.Ddin2;
 using SiamCross.Models.Sensors.Du;
 using SiamCross.Models.Sensors.Dua;
-using SiamCross.Models.Sensors.UMT;
+using SiamCross.Models.Sensors.Umt;
 
 namespace SiamCross.Services
 {

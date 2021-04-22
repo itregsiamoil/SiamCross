@@ -1,4 +1,4 @@
-﻿namespace SiamCross.Models.Sensors.UMT
+﻿namespace SiamCross.Models.Sensors.Umt
 {
     public class TaskPositionSave : Dua.TaskPositionSave
     {

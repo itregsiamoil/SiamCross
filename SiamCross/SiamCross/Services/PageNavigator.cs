@@ -38,6 +38,8 @@ namespace SiamCross.Services
             Register(typeof(SurveysCollectionVM), () => new SurveysCollectionPage());
 
             Register(typeof(ViewModels.Dua.Survey.SurveyVM), () => new Views.Dua.LevelPage());
+            Register(typeof(ViewModels.Umt.SurveyVM), () => new Views.Umt.SurvayCfgPage());
+
             return Task.CompletedTask;
         }
         public static void Register(Type type, ContentPage view)

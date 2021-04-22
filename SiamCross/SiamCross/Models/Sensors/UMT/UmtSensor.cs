@@ -1,11 +1,13 @@
 ﻿using SiamCross.Models.Connection;
 using SiamCross.Models.Connection.Protocol;
+using SiamCross.Models.Sensors.Umt.Surveys;
+using SiamCross.ViewModels.Umt;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.CommunityToolkit.ObjectModel;
 
-namespace SiamCross.Models.Sensors.UMT
+namespace SiamCross.Models.Sensors.Umt
 {
     public class UmtSensorModel : SensorModel
     {
@@ -22,25 +24,13 @@ namespace SiamCross.Models.Sensors.UMT
             /*
             Storage = new DuaStorage(this);
             SurveyCfg = new DuaSurveyCfg(this);
-
-            Surveys.Add(new DuaSurvey(this, SurveyCfg
-                , Kind.LStatic.Title()
-                , Kind.LStatic.Info(), 1));
-            Surveys.Add(new DuaSurvey(this, SurveyCfg
-                , Kind.LDynamic.Title()
-                , Kind.LDynamic.Info(), 2));
-            Surveys.Add(new DuaSurvey(this, SurveyCfg
-                , Kind.LRC.Title()
-                , Kind.LRC.Info(), 3));
-            Surveys.Add(new DuaSurvey(this, SurveyCfg
-                , Kind.LDC.Title()
-                , Kind.LDC.Info(), 4));
-            Surveys.Add(new DuaSurvey(this, SurveyCfg
-                , Kind.PAR.Title()
-                , Kind.PAR.Info(), 5));
-
-            
             */
+            Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.Static));
+            Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.Dynamic));
+            Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.PeriodicStatic));
+            Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.PeriodycDynamic));
+            
+            
         }
         async void OnConnectionChange(object sender, PropertyChangedEventArgs e)
         {
@@ -68,6 +58,11 @@ namespace SiamCross.Models.Sensors.UMT
             : base(model)
         {
 
+            foreach (var surveyModel in Model.Surveys)
+            {
+                var vm = new SurveyVM(this, surveyModel as UmtSurvey);
+                SurveysVM.SurveysCollection.Add(vm);
+            }
 
         }
 

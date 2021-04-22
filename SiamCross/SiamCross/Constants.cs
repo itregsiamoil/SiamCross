@@ -2,6 +2,7 @@
 {
     public static class Constants
     {
+        public static readonly int DaySeconds = 86400;
 #if DEBUG
         public static readonly int ConnectTimeout = 100000;
 #else
