@@ -3,7 +3,6 @@ using SiamCross.ViewModels.Dmg;
 using SiamCross.ViewModels.Dua;
 using SiamCross.Views;
 using SiamCross.Views.DDIN2;
-using SiamCross.Views.Dua;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -32,14 +31,13 @@ namespace SiamCross.Services
             Register(typeof(ViewModels.Dmg.Survey.DynamogrammVM)
                 , () => new DynamogrammPage());
 
-            Register(typeof(DuaStorageVM), () => new DuaStoragePage());
-            Register(typeof(FactoryConfigVM), () => new FactoryConfigPage());
-            Register(typeof(UserConfigVM), () => new UserConfigPage());
+            Register(typeof(DuaStorageVM), () => new Views.Dua.DuaStoragePage());
+            Register(typeof(FactoryConfigVM), () => new Views.Dua.FactoryConfigPage());
+            Register(typeof(UserConfigVM), () => new Views.Dua.UserConfigPage());
             //ViewFactoryService.Register(typeof(StateVM), () => new StatePage());
             Register(typeof(SurveysCollectionVM), () => new SurveysCollectionPage());
 
-            Register(typeof(ViewModels.Dua.Survey.SurveyVM)
-                , () => new LevelPage());
+            Register(typeof(ViewModels.Dua.Survey.SurveyVM), () => new Views.Dua.LevelPage());
             return Task.CompletedTask;
         }
         public static void Register(Type type, ContentPage view)

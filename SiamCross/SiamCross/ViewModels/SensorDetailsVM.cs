@@ -56,7 +56,7 @@ namespace SiamCross.ViewModels
         }
         async Task ShowStoragePage()
         {
-            _Sensor.Model.Storage.CmdUpdateStorageInfo.Execute(this);
+            _Sensor.Model.Storage?.CmdUpdateStorageInfo?.Execute(this);
             await PageNavigator.ShowPageAsync(_Sensor.StorageVM);
         }
 

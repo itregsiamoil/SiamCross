@@ -35,9 +35,9 @@
                 default: return "UNKNOWN";
             }
         }
-        public static ushort ToUShort(this Kind enumValue)
+        public static byte ToByte(this Kind enumValue)
         {
-            return (ushort)enumValue;
+            return (byte)enumValue;
         }
     }
 }

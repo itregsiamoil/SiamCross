@@ -5,7 +5,7 @@ namespace SiamCross.Models.Sensors.Dua.Surveys
 {
     public class DuaSurvey : BaseSurvey
     {
-        public byte SurveyType { get; }
+        public Kind SurveyType { get; }
 
         async Task DoSurvey()
         {
@@ -25,10 +25,10 @@ namespace SiamCross.Models.Sensors.Dua.Surveys
 
 
 
-        public DuaSurvey(SensorModel sensor, ISurveyCfg cfg, string name, string description, byte type)
-            : base(sensor, cfg, name, description)
+        public DuaSurvey(SensorModel sensor, ISurveyCfg cfg, Kind kind)
+            : base(sensor, cfg, kind.Title(), kind.Info())
         {
-            SurveyType = type;
+            SurveyType = kind;
 
             CmdStart = new AsyncCommand(DoSurvey,
                 () => _Sensor.Manager.IsFree,

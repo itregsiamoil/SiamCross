@@ -26,21 +26,11 @@ namespace SiamCross.Models.Sensors.Dua
             Storage = new DuaStorage(this);
             SurveyCfg = new DuaSurveyCfg(this);
 
-            Surveys.Add(new DuaSurvey(this, SurveyCfg
-                , Kind.LStatic.Title()
-                , Kind.LStatic.Info(), 1));
-            Surveys.Add(new DuaSurvey(this, SurveyCfg
-                , Kind.LDynamic.Title()
-                , Kind.LDynamic.Info(), 2));
-            Surveys.Add(new DuaSurvey(this, SurveyCfg
-                , Kind.LRC.Title()
-                , Kind.LRC.Info(), 3));
-            Surveys.Add(new DuaSurvey(this, SurveyCfg
-                , Kind.LDC.Title()
-                , Kind.LDC.Info(), 4));
-            Surveys.Add(new DuaSurvey(this, SurveyCfg
-                , Kind.PAR.Title()
-                , Kind.PAR.Info(), 5));
+            Surveys.Add(new DuaSurvey(this, SurveyCfg, Kind.LStatic));
+            Surveys.Add(new DuaSurvey(this, SurveyCfg, Kind.LDynamic));
+            Surveys.Add(new DuaSurvey(this, SurveyCfg, Kind.LRC));
+            Surveys.Add(new DuaSurvey(this, SurveyCfg, Kind.LDC));
+            Surveys.Add(new DuaSurvey(this, SurveyCfg, Kind.PAR));
 
             Connection.PropertyChanged += OnConnectionChange;
         }
