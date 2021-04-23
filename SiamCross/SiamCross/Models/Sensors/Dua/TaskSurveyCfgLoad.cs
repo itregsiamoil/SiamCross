@@ -5,7 +5,7 @@ using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models.Sensors.Dua
 {
-    public class TaskLoadSurveyInfo : BaseSensorTask
+    public class TaskSurveyCfgLoad : BaseSensorTask
     {
         readonly DuaSurveyCfg _Model;
 
@@ -31,7 +31,7 @@ namespace SiamCross.Models.Sensors.Dua
             _BytesProgress += bytes;
             Progress = ((float)_BytesProgress / _BytesTotal);
         }
-        public TaskLoadSurveyInfo(DuaSurveyCfg model, SensorModel sensor)
+        public TaskSurveyCfgLoad(DuaSurveyCfg model, SensorModel sensor)
             : base(sensor, "Опрос параметров измерения")
         {
             _Model = model;

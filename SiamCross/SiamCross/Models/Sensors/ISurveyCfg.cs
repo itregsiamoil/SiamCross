@@ -9,11 +9,14 @@ namespace SiamCross.Models.Sensors
         ICommand CmdSaveParam { get; }
         ICommand CmdLoadParam { get; }
         //ICommand CmdShow { get; }
+        void ResetSaved();
     }
-    public class BaseSurveyCfg : BaseVM, ISurveyCfg
+    public abstract class BaseSurveyCfg : BaseVM, ISurveyCfg
     {
         public ICommand CmdSaveParam { get; set; }
         public ICommand CmdLoadParam { get; set; }
         //public ICommand CmdShow { get; set; }
+
+        public virtual void ResetSaved(){}
     }
 }

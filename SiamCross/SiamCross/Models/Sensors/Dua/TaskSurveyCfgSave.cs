@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dua
 {
-    public class TaskSaveSurveyInfo : BaseSensorTask
+    public class TaskSurveyCfgSave : BaseSensorTask
     {
         readonly DuaSurveyCfg _Model;
 
@@ -24,7 +24,7 @@ namespace SiamCross.Models.Sensors.Dua
         uint _BytesTotal;
         uint _BytesProgress;
 
-        public TaskSaveSurveyInfo(DuaSurveyCfg model, SensorModel sensor)
+        public TaskSurveyCfgSave(DuaSurveyCfg model, SensorModel sensor)
             : base(sensor, "Запись параметров измерения")
         {
             _Model = model;

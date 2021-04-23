@@ -19,7 +19,7 @@ namespace SiamCross.Models.Sensors.Dua.Surveys
         }
         async Task DoWaitSurvey()
         {
-            var taskWaitSurvey = new TaskWaitSurvey(_Sensor);
+            var taskWaitSurvey = new TaskSurveyWait(_Sensor);
             await _Sensor.Manager.Execute(taskWaitSurvey);
         }
 

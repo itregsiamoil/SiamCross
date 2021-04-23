@@ -38,6 +38,10 @@ namespace SiamCross.Models.Sensors
                 ChangeNotify();
             }
         }
+        public void ResetSaved()
+        {
+            Saved = null;
+        }
 
         public ICommand CmdMakeNew { get; }
         public ICommand CmdLoad { get; }
@@ -73,28 +77,24 @@ namespace SiamCross.Models.Sensors
         async Task DoLoad()
         {
             if (JobStatus.Сomplete == await Sensor.Manager.Execute(TaskLoad))
-            {
-                if (null == Saved)
-                    Saved = new Position();
-                Saved.Field = Current.Field;
-                Saved.Well = Current.Well;
-                Saved.Bush = Current.Bush;
-                Saved.Shop = Current.Shop;
-                ChangeNotify(nameof(Saved));
-            }
+                UpdateSaved();
         }
         async Task DoSave()
         {
             if (JobStatus.Сomplete == await Sensor.Manager.Execute(TaskSave))
-            {
-                if (null == Saved)
-                    Saved = new Position();
-                Saved.Field = Current.Field;
-                Saved.Well = Current.Well;
-                Saved.Bush = Current.Bush;
-                Saved.Shop = Current.Shop;
-                ChangeNotify(nameof(Saved));
-            }
+                UpdateSaved();
+            else
+                ResetSaved();
+        }
+        void UpdateSaved()
+        {
+            if (null == Saved)
+                Saved = new Position();
+            Saved.Field = Current.Field;
+            Saved.Well = Current.Well;
+            Saved.Bush = Current.Bush;
+            Saved.Shop = Current.Shop;
+            ChangeNotify(nameof(Saved));
         }
 
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dua
 {
-    public class TaskWaitSurvey : BaseSensorTask
+    public class TaskSurveyWait : BaseSensorTask
     {
         //public readonly MemStruct _Operating;//0x8800
         readonly MemVarUInt8 OpReg = new MemVarUInt8(0x8800);
@@ -39,7 +39,7 @@ namespace SiamCross.Models.Sensors.Dua
         TimeSpan _Remain;
         TimeSpan _Total;
 
-        public TaskWaitSurvey(SensorModel sensor)
+        public TaskSurveyWait(SensorModel sensor)
             : base(sensor, Resource.Survey)
         {
             _CurrentParam.Add(Timeost);

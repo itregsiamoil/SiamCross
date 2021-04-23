@@ -54,7 +54,7 @@ namespace SiamCross.Models
 
         public async Task<bool> CheckConnectionAsync(CancellationToken ct)
         {
-            if (Models.Connection.ConnectionState.Connected == Sensor.Connection.State)
+            if (Models.Connection.ConnectionState.Connected == Connection.State)
                 return true;
             InfoEx = Resource.StatConn_PendingConnect;
 

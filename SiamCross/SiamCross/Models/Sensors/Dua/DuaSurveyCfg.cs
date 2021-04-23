@@ -25,12 +25,12 @@ namespace SiamCross.Models.Sensors.Dua
 
         async Task DoSave()
         {
-            var taskSaveInfo = new TaskSaveSurveyInfo(this, _Sensor);
+            var taskSaveInfo = new TaskSurveyCfgSave(this, _Sensor);
             await _Sensor.Manager.Execute(taskSaveInfo);
         }
         async Task DoLoad()
         {
-            var taskUpdate = new TaskLoadSurveyInfo(this, _Sensor);
+            var taskUpdate = new TaskSurveyCfgLoad(this, _Sensor);
             await _Sensor.Manager.Execute(taskUpdate);
         }
 

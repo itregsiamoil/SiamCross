@@ -40,6 +40,13 @@ namespace SiamCross.Models.Sensors.Dua
                 return;
             if (ConnectionState.Connected == Connection.State)
                 await OnConnect();
+            if (ConnectionState.Disconnected == Connection.State)
+                OnDisconnect();
+        }
+        void OnDisconnect()
+        {
+            Position.ResetSaved();
+            SurveyCfg.ResetSaved();
         }
         async Task OnConnect()
         {
