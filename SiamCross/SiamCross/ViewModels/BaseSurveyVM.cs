@@ -83,5 +83,10 @@ namespace SiamCross.ViewModels.MeasurementViewModels
         {
             base.Dispose();
         }
+
+        public void ResetSaved()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

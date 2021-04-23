@@ -11,7 +11,7 @@ namespace SiamCross.ViewModels.Umt
         protected readonly SurveyCfg _ModelCfg;
         protected readonly UmtSurvey _ModelSurvey;
 
-        public UInt32 IsAutoswitchToAPR
+        public UInt32 Period
         {
             get => _ModelCfg.Period;
             set => _ModelCfg.Period = value;

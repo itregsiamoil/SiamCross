@@ -29,7 +29,7 @@
         </StackLayout>
     </NavigationPage.TitleView>
     <ContentPage.ToolbarItems >
-        <!--ToolbarItem Text="&#x2713; " Command="{Binding CmdSaveParam}"/-->
+        <ToolbarItem Text="&#x2713; " Command="{Binding CmdSaveParam}"/>
         <ToolbarItem Text="&#x21BA; " Command="{Binding CmdLoadParam}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
@@ -59,6 +59,7 @@
                                     </Entry.Effects>
                                 </Entry>
                                 <Stepper x:Name="_stepper" HorizontalOptions="EndAndExpand" 
+                                         Value="{Binding Period}"
                                          Minimum="1"
                                          Maximum="{Binding Source={x:Static local:Constants.DaySeconds}}"
                                          Increment="1"/>

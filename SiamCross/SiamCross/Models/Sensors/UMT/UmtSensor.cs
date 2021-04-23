@@ -21,16 +21,17 @@ namespace SiamCross.Models.Sensors.Umt
 
             Connection.PropertyChanged += OnConnectionChange;
 
+            SurveyCfg = new SurveyCfg(this);
             /*
             Storage = new DuaStorage(this);
-            SurveyCfg = new DuaSurveyCfg(this);
+            
             */
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.Static));
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.Dynamic));
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.PeriodicStatic));
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.PeriodycDynamic));
-            
-            
+
+
         }
         async void OnConnectionChange(object sender, PropertyChangedEventArgs e)
         {
@@ -38,6 +39,13 @@ namespace SiamCross.Models.Sensors.Umt
                 return;
             if (ConnectionState.Connected == Connection.State)
                 await OnConnect();
+            if (ConnectionState.Disconnected == Connection.State)
+                OnDisconnect();
+        }
+        void OnDisconnect()
+        {
+            Position.ResetSaved();
+            SurveyCfg.ResetSaved();
         }
         async Task OnConnect()
         {

@@ -17,6 +17,6 @@ namespace SiamCross.Models.Sensors
         public ICommand CmdLoadParam { get; set; }
         //public ICommand CmdShow { get; set; }
 
-        public virtual void ResetSaved(){}
+        public virtual void ResetSaved() { }
     }
 }
