@@ -1,7 +1,6 @@
 ﻿using SiamCross.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -56,7 +55,7 @@ namespace SiamCross.Views.MenuItems
             _vm.OnBackButton();
         }
 
-        async protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             await _vm.ReloadMeasurementsFromDb().ConfigureAwait(false);
         }

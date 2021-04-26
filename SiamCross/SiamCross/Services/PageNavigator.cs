@@ -41,6 +41,7 @@ namespace SiamCross.Services
             //ViewFactoryService.Register(typeof(StateVM), () => new StatePage());
 
             Register(typeof(ViewModels.Umt.SurveyVM), () => new Views.Umt.SurvayCfgPage());
+            Register(typeof(ViewModels.Umt.StorageVM), () => new Views.Umt.StoragePage());
 
             return Task.CompletedTask;
         }

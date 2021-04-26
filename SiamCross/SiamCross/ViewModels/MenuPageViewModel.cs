@@ -91,42 +91,38 @@ namespace SiamCross.ViewModels
         }
         private async Task GoHome()
         {
-            await App.NavigationPage.Navigation.PopToRootAsync();
             App.MenuIsPresented = false;
+            await App.NavigationPage.Navigation.PopToRootAsync();
         }
         private async Task GoSearch()
         {
             await App.NavigationPage.Navigation.PopToRootAsync(false);
-            await App.NavigationPage.Navigation.PushAsync(new SearchPanelPage());
             App.MenuIsPresented = false;
+            await App.NavigationPage.Navigation.PushAsync(new SearchPanelPage());
         }
-
         private async Task GoMeasuring()
         {
             await App.NavigationPage.Navigation.PopToRootAsync(false);
-            await Services.PageNavigator.ShowPageAsync(MeasurementsVMService.Instance);
             App.MenuIsPresented = false;
+            await Services.PageNavigator.ShowPageAsync(MeasurementsVMService.Instance);
         }
-
         private async Task GoHandbook()
         {
             await App.NavigationPage.Navigation.PopToRootAsync(false);
-            await App.NavigationPage.Navigation.PushAsync(new HandbookPage());
             App.MenuIsPresented = false;
+            await App.NavigationPage.Navigation.PushAsync(new HandbookPage());
         }
-
         private async Task GoSettings()
         {
             await App.NavigationPage.Navigation.PopToRootAsync(false);
-            await App.NavigationPage.Navigation.PushAsync(new SettingsPanelPage());
             App.MenuIsPresented = false;
+            await App.NavigationPage.Navigation.PushAsync(new SettingsPanelPage());
         }
-
         private async Task GoAbout()
         {
             await App.NavigationPage.Navigation.PopToRootAsync(false);
-            await App.NavigationPage.Navigation.PushAsync(new AboutPanelPage());
             App.MenuIsPresented = false;
+            await App.NavigationPage.Navigation.PushAsync(new AboutPanelPage());
         }
 
         public string Version => DependencyService.Get<IAppVersionAndBuild>().GetVersionNumber();

@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:views="clr-namespace:SiamCross.Views"
+             xmlns:vm="clr-namespace:SiamCross.ViewModels.Umt" 
+             x:DataType="vm:StorageVM"
+             x:Class="SiamCross.Views.Umt.StoragePage">
+    <ContentPage.Resources>
+        <Style TargetType="{x:Type StackLayout}">
+            <Setter Property="Spacing" Value="0" />
+        </Style>
+    </ContentPage.Resources >
+    <NavigationPage.TitleView >
+        <StackLayout>
+            <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
+            <Label Text="Хранилище"
+                   FontSize="Medium" FontAttributes="Bold" 
+                   LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+    <ContentPage.ToolbarItems >
+        <ToolbarItem Text="&#x21BA; "
+                     Command="{Binding CmdUpdateStorageInfo}"/>
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
+            <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
+
+            <RefreshView Command="{Binding CmdUpdateStorageInfo}">
+                <ScrollView VerticalOptions="StartAndExpand">
+                    <StackLayout 
+                    IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
+
+                        <Label Text="Измерения" Style="{StaticResource SectionLabel}" />
+                        <Frame Style="{StaticResource GroupingFrameStyle}" >
+                            <StackLayout>
+                                <Label >
+                                    <Label.FormattedText>
+                                        <FormattedString >
+                                            <Span Text="Количество измерений &#10;"  />
+                                            <Span Text="{Binding SurveyQty}"/>
+                                            <Span Text="&#10;"/>
+                                            <Span Text="Свободно &#10;"  />
+                                            <Span Text="{Binding EmptySpaceRatio}"/>
+                                            <Span Text="% из "/>
+                                            <Span Text="{Binding TotalSpaceM}"/>
+                                            <Span Text="M "/>
+                                            <Span Text="{Binding TotalSpaceK}"/>
+                                            <Span Text="k "/>
+                                            <Span Text="{Binding TotalSpaceB}"/>
+                                            <Span Text="b  "/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                            </StackLayout>
+                        </Frame>
+
+                    </StackLayout>
+                </ScrollView>
+            </RefreshView>
+
+            <StackLayout Orientation="Horizontal" Spacing="0" >
+                <Button Text="Очистить " HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorAccentLight}"
+                        Command="{Binding CmdClearStorage}"
+                        IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >
+                </Button>
+                <Button Text="Считать" HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorPrimaryLight}"
+                        Command="{Binding CmdDownload}"
+                        IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >
+                </Button>
+            </StackLayout>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

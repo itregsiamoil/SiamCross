@@ -7,13 +7,22 @@ namespace SiamCross.Models.Sensors.Umt.Surveys
     {
         public Kind SurveyType { get; }
 
-        Task DoSurvey()
+        async Task DoSurvey()
         {
-            return Task.CompletedTask;
+            var cmdSaveParam = Config?.CmdSaveParam as AsyncCommand;
+            await cmdSaveParam.ExecuteAsync();
+
+            var taskSurvey = new TaskSurvey(_Sensor, Name, SurveyType);
+            var result = await _Sensor.Manager.Execute(taskSurvey);
+
+            if (JobStatus.Сomplete == result)
+                await DoWaitSurvey();
         }
-        Task DoWaitSurvey()
+        async Task DoWaitSurvey()
         {
-            return Task.CompletedTask;
+            var taskWaitSurvey = new TaskSurveyWait(_Sensor);
+            await _Sensor.Manager.Execute(taskWaitSurvey);
+
         }
         public UmtSurvey(SensorModel sensor, ISurveyCfg cfg, Kind kind)
             : base(sensor, cfg, kind.Title(), kind.Info())

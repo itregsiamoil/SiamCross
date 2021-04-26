@@ -22,10 +22,8 @@ namespace SiamCross.Models.Sensors.Umt
             Connection.PropertyChanged += OnConnectionChange;
 
             SurveyCfg = new SurveyCfg(this);
-            /*
-            Storage = new DuaStorage(this);
-            
-            */
+            Storage = new Storage(this);
+
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.Static));
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.Dynamic));
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.PeriodicStatic));
@@ -49,7 +47,7 @@ namespace SiamCross.Models.Sensors.Umt
         }
         async Task OnConnect()
         {
-            //await (Surveys[0].CmdWait as AsyncCommand)?.ExecuteAsync();
+            await (Surveys[0].CmdWait as AsyncCommand)?.ExecuteAsync();
             await (Position.CmdLoad as AsyncCommand)?.ExecuteAsync();
         }
         public override void Dispose()
@@ -65,6 +63,7 @@ namespace SiamCross.Models.Sensors.Umt
         public UmtSensorVM(SensorModel model)
             : base(model)
         {
+            StorageVM = new StorageVM(this);
 
             foreach (var surveyModel in Model.Surveys)
             {
