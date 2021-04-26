@@ -21,11 +21,14 @@ namespace SiamCross
 
         private void CallMain()
         {
+            RootPage = new RootPage();
+
             MenuPage menuPage = new MenuPage() { Title = "SiamServiceMenu" };
             NavigationPage = new NavigationPage(new ControlPanelPage());
-            RootPage = new RootPage();
+            
             RootPage.Flyout = menuPage;
             RootPage.Detail = NavigationPage;
+
             MainPage = RootPage;
             App.Navigation = NavigationPage.Navigation;
         }

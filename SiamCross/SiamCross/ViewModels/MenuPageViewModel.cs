@@ -8,7 +8,9 @@ using SiamCross.Views.MenuItems.HandbookPanel;
 using SiamCross.Views.MenuItems.SearchPanel;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
@@ -42,12 +44,12 @@ namespace SiamCross.ViewModels
         }
         public MenuPageViewModel()
         {
-            GoControlPanel = new Command(GoHome);
-            GoSearchPanel = new Command(GoSearch);
-            GoMeasuringPanel = new Command(GoMeasuring);
-            GoDirectoryPanel = new Command(GoHandbook);
-            GoSettingsPanel = new Command(GoSettings);
-            GoAboutPanel = new Command(GoAbout);
+            GoControlPanel = CreateAsyncCommand(GoHome);
+            GoSearchPanel = CreateAsyncCommand(GoSearch);
+            GoMeasuringPanel = CreateAsyncCommand(GoMeasuring);
+            GoDirectoryPanel = CreateAsyncCommand(GoHandbook);
+            GoSettingsPanel = CreateAsyncCommand(GoSettings);
+            GoAboutPanel = CreateAsyncCommand(GoAbout);
 
             MenuItems = new List<MenuPageItem>
             {
@@ -83,78 +85,48 @@ namespace SiamCross.ViewModels
                 }
             };
         }
-
-        private void GoHome(object obj)
+        AsyncCommand CreateAsyncCommand(Func<Task> t)
         {
-            App.NavigationPage.Navigation.PopToRootAsync();
+            return new AsyncCommand(t, () => App.NavigationPage.IsBusy, null, false, false);
+        }
+        private async Task GoHome()
+        {
+            await App.NavigationPage.Navigation.PopToRootAsync();
             App.MenuIsPresented = false;
         }
-        /// <summary>
-        /// Проверяет на соответствие параметр и
-        /// тип последней страницы в стеке навигации.
-        /// Если страничка уже открыта, возвращает false
-        /// </summary>
-        /// <param name="type">Тип проверяемой страницы</param>
-        /// <returns></returns>
-        private bool CanOpenPage(Type type)
+        private async Task GoSearch()
         {
-            try
-            {
-                IReadOnlyList<Page> stack = App.NavigationPage.Navigation.NavigationStack;
-                if (stack[stack.Count - 1].GetType() != type)
-                    return true;
-                return false;
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "CanOpenPage method" + "\n");
-                throw;
-            }
+            await App.NavigationPage.Navigation.PopToRootAsync(false);
+            await App.NavigationPage.Navigation.PushAsync(new SearchPanelPage());
+            App.MenuIsPresented = false;
         }
 
-        private void GoSearch(object obj)
+        private async Task GoMeasuring()
         {
-            if (CanOpenPage(typeof(SearchPanelPage)))
-            {
-                App.NavigationPage.Navigation.PushAsync(new SearchPanelPage());
-                App.MenuIsPresented = false;
-            }
+            await App.NavigationPage.Navigation.PopToRootAsync(false);
+            await App.NavigationPage.Navigation.PushAsync(new MeasurementsPage());
+            App.MenuIsPresented = false;
         }
 
-        private void GoMeasuring(object obj)
+        private async Task GoHandbook()
         {
-            if (CanOpenPage(typeof(MeasurementsPage)))
-            {
-                App.NavigationPage.Navigation.PushAsync(new MeasurementsPage());
-                App.MenuIsPresented = false;
-            }
+            await App.NavigationPage.Navigation.PopToRootAsync(false);
+            await App.NavigationPage.Navigation.PushAsync(new HandbookPage());
+            App.MenuIsPresented = false;
         }
 
-        private void GoHandbook(object obj)
+        private async Task GoSettings()
         {
-            if (CanOpenPage(typeof(DirectoryPage)))
-            {
-                App.NavigationPage.Navigation.PushAsync(new HandbookPage());
-                App.MenuIsPresented = false;
-            }
+            await App.NavigationPage.Navigation.PopToRootAsync(false);
+            await App.NavigationPage.Navigation.PushAsync(new SettingsPanelPage());
+            App.MenuIsPresented = false;
         }
 
-        private void GoSettings(object obj)
+        private async Task GoAbout()
         {
-            if (CanOpenPage(typeof(SettingsPanelPage)))
-            {
-                App.NavigationPage.Navigation.PushAsync(new SettingsPanelPage());
-                App.MenuIsPresented = false;
-            }
-        }
-
-        private void GoAbout(object obj)
-        {
-            if (CanOpenPage(typeof(AboutPanelPage)))
-            {
-                App.NavigationPage.Navigation.PushAsync(new AboutPanelPage());
-                App.MenuIsPresented = false;
-            }
+            await App.NavigationPage.Navigation.PopToRootAsync(false);
+            await App.NavigationPage.Navigation.PushAsync(new AboutPanelPage());
+            App.MenuIsPresented = false;
         }
 
         public string Version => DependencyService.Get<IAppVersionAndBuild>().GetVersionNumber();
