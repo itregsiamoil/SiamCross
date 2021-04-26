@@ -1,6 +1,5 @@
 ﻿using SiamCross.ViewModels;
 using SiamCross.ViewModels.Dmg;
-using SiamCross.ViewModels.Dua;
 using SiamCross.Views;
 using SiamCross.Views.DDIN2;
 using System;
@@ -26,18 +25,18 @@ namespace SiamCross.Services
         {
             Register(typeof(PositionVM), () => new PositionEditPage());
             Register(typeof(SensorDetailsVM), () => new SensorDetailsPage());
+            Register(typeof(SurveysCollectionVM), () => new SurveysCollectionPage());
 
             Register(typeof(DmgStorageVM), () => new DmgDownloadPage());
             Register(typeof(ViewModels.Dmg.Survey.DynamogrammVM)
                 , () => new DynamogrammPage());
 
-            Register(typeof(DuaStorageVM), () => new Views.Dua.DuaStoragePage());
-            Register(typeof(FactoryConfigVM), () => new Views.Dua.FactoryConfigPage());
-            Register(typeof(UserConfigVM), () => new Views.Dua.UserConfigPage());
+            Register(typeof(ViewModels.Dua.Survey.SurveyVM), () => new Views.Dua.SurvayCfgPage());
+            Register(typeof(ViewModels.Dua.DuaStorageVM), () => new Views.Dua.DuaStoragePage());
+            //Register(typeof(FactoryConfigVM), () => new Views.Dua.FactoryConfigPage());
+            //Register(typeof(UserConfigVM), () => new Views.Dua.UserConfigPage());
             //ViewFactoryService.Register(typeof(StateVM), () => new StatePage());
-            Register(typeof(SurveysCollectionVM), () => new SurveysCollectionPage());
 
-            Register(typeof(ViewModels.Dua.Survey.SurveyVM), () => new Views.Dua.LevelPage());
             Register(typeof(ViewModels.Umt.SurveyVM), () => new Views.Umt.SurvayCfgPage());
 
             return Task.CompletedTask;

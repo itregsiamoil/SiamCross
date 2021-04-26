@@ -5,7 +5,7 @@
              xmlns:survey="clr-namespace:SiamCross.ViewModels.Dua.Survey" 
              xmlns:views="clr-namespace:SiamCross.Views"
              xmlns:local="clr-namespace:SiamCross;assembly=SiamCross" 
-             x:Class="SiamCross.Views.Dua.LevelPage"
+             x:Class="SiamCross.Views.Dua.SurvayCfgPage"
              x:DataType="survey:SurveyVM"
              >
     <ContentPage.Resources>
