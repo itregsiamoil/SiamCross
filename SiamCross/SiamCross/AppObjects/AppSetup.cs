@@ -28,12 +28,13 @@ namespace SiamCross.AppObjects
             cb.RegisterType<DynamogrammVM>().AsSelf();
             cb.RegisterType<Ddin2MeasurementDoneViewModel>().AsSelf();
             cb.RegisterType<DuMeasurementDoneViewModel>().AsSelf();
-            cb.RegisterType<DirectoryViewModel>().AsSelf();
-            cb.RegisterType<SettingsViewModel>().AsSelf();
-            cb.RegisterType<AddFieldViewModel>().AsSelf();
             cb.RegisterType<DuMeasurementViewModel>().AsSelf();
-            cb.RegisterType<SoundSpeedViewModel>().AsSelf();
-            cb.RegisterType<SoundSpeedViewViewModel>().AsSelf();
+
+            cb.RegisterType<DirectoryViewModel>().SingleInstance();
+            cb.RegisterType<SettingsViewModel>().SingleInstance();
+            cb.RegisterType<AddFieldViewModel>().SingleInstance();
+            cb.RegisterType<SoundSpeedViewModel>().SingleInstance();
+            cb.RegisterType<SoundSpeedViewViewModel>().SingleInstance();
         }
 
         public async Task Init()

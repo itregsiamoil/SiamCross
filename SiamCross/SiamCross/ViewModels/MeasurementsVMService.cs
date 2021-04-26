@@ -20,6 +20,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Linq;
+using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -84,33 +85,34 @@ namespace SiamCross.ViewModels
             Measurements = new ObservableCollection<MeasurementView>();
             SelectedMeasurements = new ObservableCollection<object>();
             Title = Resource.MeasurementsTitle;
-            RefreshCommand = new Command(ReloadMeasurementsFromDb);
+            RefreshCommand = new AsyncCommand(ReloadMeasurementsFromDb);
             SelectAllCommand = new Command(SelectAll);
             UnselectAllCommand = new Command(UnselectAll);
-            ShareCommand = new Command(ShareMeasurementsAsync);
-            SendCommand = new Command(SendMeasurementsAsync);
-            SaveCommand = new Command(SaveMeasurementsAsync);
-            DeleteCommand = new Command(DeleteMeasurementsAsync);
+            ShareCommand = new AsyncCommand(ShareMeasurementsAsync);
+            SendCommand = new AsyncCommand(SendMeasurementsAsync);
+            SaveCommand = new AsyncCommand(SaveMeasurementsAsync);
+            DeleteCommand = new AsyncCommand(DeleteMeasurementsAsync);
 
             OnItemTappedCommand = new Command(obj => OnItemTapped(obj as MeasurementView));
             OnItemLongPressCommand = new Command(obj => OnItemLongPress(obj as MeasurementView));
 
         }
-        public async void ReloadMeasurementsFromDb()
+        public void DoOnDisappearing()
+        {
+            SelectedMeasurements.Clear();
+            Measurements?.Clear();
+            _ddin2Measurements?.Clear();
+            _duMeasurements?.Clear();
+        }
+        public async Task ReloadMeasurementsFromDb()
         {
             try
             {
                 Stopwatch perf = new Stopwatch();
                 perf.Restart();
 
-
-                SelectedMeasurements.Clear();
-                Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Clear selected");
-                Measurements?.Clear();
+                DoOnDisappearing();
                 Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Clear all");
-                _ddin2Measurements?.Clear();
-                _duMeasurements?.Clear();
-                Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Clear data");
 
                 ObservableCollection<MeasurementView> meas = new ObservableCollection<MeasurementView>();
                 _ddin2Measurements = DbService.Instance.GetDdin2Measurements().ToList();
@@ -244,7 +246,7 @@ namespace SiamCross.ViewModels
                 UpdateSelect(item, item.IsSelected);
             }
         }
-        private async void ShareMeasurementsAsync(object obj)
+        private async Task ShareMeasurementsAsync()
         {
             try
             {
@@ -269,7 +271,7 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
-        private async void SendMeasurementsAsync(object obj)
+        private async Task SendMeasurementsAsync()
         {
             try
             {
@@ -313,7 +315,7 @@ namespace SiamCross.ViewModels
                 }
             }
         }
-        private async void SaveMeasurementsAsync(object obj)
+        private async Task SaveMeasurementsAsync()
         {
             try
             {
@@ -345,7 +347,7 @@ namespace SiamCross.ViewModels
                 throw;
             }
         }
-        private async void DeleteMeasurementsAsync()
+        private async Task DeleteMeasurementsAsync()
         {
             try
             {

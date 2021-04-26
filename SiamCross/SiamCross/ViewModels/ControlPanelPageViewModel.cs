@@ -47,8 +47,8 @@ namespace SiamCross.ViewModels
                 {
                     if (CanOpenPage(typeof(MeasurementsPage)))
                     {
-                        App.NavigationPage.Navigation.PushAsync(new MeasurementsPage());
-                        App.MenuIsPresented = false;
+                        //App.NavigationPage.Navigation.PushAsync(new MeasurementsPage());
+                        //App.MenuIsPresented = false;
                     }
                 }
             }

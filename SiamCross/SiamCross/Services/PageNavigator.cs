@@ -2,6 +2,7 @@
 using SiamCross.ViewModels.Dmg;
 using SiamCross.Views;
 using SiamCross.Views.DDIN2;
+using SiamCross.Views.MenuItems;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,6 +24,8 @@ namespace SiamCross.Services
         }
         public static Task Init()
         {
+            Register(typeof(MeasurementsVMService), () => new MeasurementsPage());
+
             Register(typeof(PositionVM), () => new PositionEditPage());
             Register(typeof(SensorDetailsVM), () => new SensorDetailsPage());
             Register(typeof(SurveysCollectionVM), () => new SurveysCollectionPage());

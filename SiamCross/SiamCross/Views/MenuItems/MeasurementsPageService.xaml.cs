@@ -1,6 +1,7 @@
 ﻿using SiamCross.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -13,8 +14,6 @@ namespace SiamCross.Views.MenuItems
         private readonly MeasurementsVMService _vm = MeasurementsVMService.Instance;
         public MeasurementsPage()
         {
-            _vm.ReloadMeasurementsFromDb();
-            base.BindingContext = _vm;
             InitializeComponent();
         }
         private void OnCollectionViewSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -51,9 +50,15 @@ namespace SiamCross.Views.MenuItems
             _vm.OnItemTapped(e.Item as MeasurementView);
         }
 
-        protected override void OnAppearing()
+        protected override void OnDisappearing()
         {
+            _vm.DoOnDisappearing();
+            _vm.OnBackButton();
+        }
 
+        async protected override void OnAppearing()
+        {
+            await _vm.ReloadMeasurementsFromDb().ConfigureAwait(false);
         }
     }
 }

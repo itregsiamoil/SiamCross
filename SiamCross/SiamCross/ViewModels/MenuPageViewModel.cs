@@ -104,7 +104,7 @@ namespace SiamCross.ViewModels
         private async Task GoMeasuring()
         {
             await App.NavigationPage.Navigation.PopToRootAsync(false);
-            await App.NavigationPage.Navigation.PushAsync(new MeasurementsPage());
+            await Services.PageNavigator.ShowPageAsync(MeasurementsVMService.Instance);
             App.MenuIsPresented = false;
         }
 
