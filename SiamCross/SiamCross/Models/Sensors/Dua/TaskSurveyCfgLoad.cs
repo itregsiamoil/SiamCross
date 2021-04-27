@@ -1,4 +1,5 @@
 ﻿using SiamCross.Models.Connection.Protocol;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms.Internals;
@@ -24,6 +25,9 @@ namespace SiamCross.Models.Sensors.Dua
         readonly MemVarByteArray PerU = new MemVarByteArray(0, new MemValueByteArray(5));
         readonly MemVarByteArray KolUr = new MemVarByteArray(0, new MemValueByteArray(5));
 
+        readonly MemStruct CurrParam = new MemStruct(0x8406);
+        readonly MemVarByteArray Timestamp = new MemVarByteArray(0x8406, new MemValueByteArray(6));
+
         uint _BytesTotal;
         uint _BytesProgress;
         void SetProgressBytes(uint bytes)
@@ -48,6 +52,8 @@ namespace SiamCross.Models.Sensors.Dua
             SurvayParam.Add(KolP);
             SurvayParam.Add(PerU);
             SurvayParam.Add(KolUr);
+
+            CurrParam.Add(Timestamp);
         }
         public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {
@@ -55,7 +61,7 @@ namespace SiamCross.Models.Sensors.Dua
                 return false;
 
             _BytesProgress = 0;
-            _BytesTotal = SurvayParam.Size;
+            _BytesTotal = SurvayParam.Size + CurrParam.Size;
 
             using (var ctSrc = new CancellationTokenSource(Constants.ConnectTimeout))
             {
@@ -80,6 +86,19 @@ namespace SiamCross.Models.Sensors.Dua
             }
             else
                 InfoEx = "обновлено";
+
+            if (RespResult.NormalPkg == await Connection.TryReadAsync(CurrParam, SetProgressBytes, ct))
+            {
+                var dt = DateTime.Now;
+                var epoh = dt.Year - dt.Year % 100;
+                var year = (100 > Timestamp.Value[5]) ? epoh + Timestamp.Value[5] : Timestamp.Value[5];
+
+                _Model.Timestamp = new DateTime(
+                    year, Timestamp.Value[4], Timestamp.Value[3]
+                    , Timestamp.Value[0], Timestamp.Value[1], Timestamp.Value[2]);
+            }
+            else
+                _Model.Timestamp = DateTime.MinValue;
 
             if (readed)
             {
@@ -128,6 +147,7 @@ namespace SiamCross.Models.Sensors.Dua
             _Model.ChangeNotify(nameof(_Model.SoundSpeedTableId));
             _Model.ChangeNotify(nameof(_Model.PressurePeriodIndex));
             _Model.ChangeNotify(nameof(_Model.PressureQuantityIndex));
+            _Model.ChangeNotify(nameof(_Model.Timestamp));
             for (uint i = 0; i < _Model.LevelPeriodIndex.Length; ++i)
             {
                 _Model.ChangeNotify($"LevelPeriodIndex{i}");

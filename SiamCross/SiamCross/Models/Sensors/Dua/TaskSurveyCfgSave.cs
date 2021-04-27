@@ -11,15 +11,15 @@ namespace SiamCross.Models.Sensors.Dua
     {
         readonly DuaSurveyCfg _Model;
 
-        public readonly List<MemVar> Reg = new List<MemVar>();
-
-        public readonly MemVarUInt16 Revbit = new MemVarUInt16(0x8008);
-        public readonly MemVarUInt16 Vzvuk = new MemVarUInt16(0x801C);
-        public readonly MemVarUInt16 Ntpop = new MemVarUInt16(0x801E);
-        public readonly MemVarUInt8 PerP = new MemVarUInt8(0x8020);
-        public readonly MemVarUInt8 KolP = new MemVarUInt8(0x8021);
-        public readonly MemVarByteArray PerU = new MemVarByteArray(0x8022, new MemValueByteArray(5));
-        public readonly MemVarByteArray KolUr = new MemVarByteArray(0x8027, new MemValueByteArray(5));
+        readonly List<MemVar> Reg = new List<MemVar>();
+        readonly MemVarUInt16 Revbit = new MemVarUInt16(0x8008);
+        readonly MemVarUInt16 Vzvuk = new MemVarUInt16(0x801C);
+        readonly MemVarUInt16 Ntpop = new MemVarUInt16(0x801E);
+        readonly MemVarUInt8 PerP = new MemVarUInt8(0x8020);
+        readonly MemVarUInt8 KolP = new MemVarUInt8(0x8021);
+        readonly MemVarByteArray PerU = new MemVarByteArray(0x8022, new MemValueByteArray(5));
+        readonly MemVarByteArray KolUr = new MemVarByteArray(0x8027, new MemValueByteArray(5));
+        readonly MemVarByteArray Timestamp = new MemVarByteArray(0x8406, new MemValueByteArray(6));
 
         uint _BytesTotal;
         uint _BytesProgress;
@@ -35,6 +35,7 @@ namespace SiamCross.Models.Sensors.Dua
             Reg.Add(KolP);
             Reg.Add(PerU);
             Reg.Add(KolUr);
+            Reg.Add(Timestamp);
         }
 
         public override async Task<bool> DoExecuteAsync(CancellationToken ct)
@@ -89,6 +90,14 @@ namespace SiamCross.Models.Sensors.Dua
 
                 _Model.LevelPeriodIndex.CopyTo(PerU.Value, 0);
                 _Model.LevelQuantityIndex.CopyTo(KolUr.Value, 0);
+
+                var dt = DateTime.Now;
+                Timestamp.Value[5] = (100 > dt.Year) ? (byte)dt.Year : (byte)(dt.Year % 100);
+                Timestamp.Value[4] = (byte)dt.Month;
+                Timestamp.Value[3] = (byte)dt.Day;
+                Timestamp.Value[0] = (byte)dt.Hour;
+                Timestamp.Value[1] = (byte)dt.Minute;
+                Timestamp.Value[2] = (byte)dt.Second;
 
                 ret = await RetryExecAsync(3, DoSaveSingleAsync, ct);
             }

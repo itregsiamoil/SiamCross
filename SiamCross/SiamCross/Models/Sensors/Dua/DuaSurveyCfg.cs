@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors.Dua
@@ -22,6 +23,7 @@ namespace SiamCross.Models.Sensors.Dua
         public byte PressureQuantityIndex;
         public readonly byte[] LevelPeriodIndex = new byte[5];
         public readonly byte[] LevelQuantityIndex = new byte[5];
+        public DateTime Timestamp;
 
         async Task DoSave()
         {

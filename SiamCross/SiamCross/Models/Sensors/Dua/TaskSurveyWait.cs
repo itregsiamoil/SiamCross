@@ -155,7 +155,7 @@ namespace SiamCross.Models.Sensors.Dua
         }
         async Task<bool> DoSingleLevelAsync(CancellationToken ct)
         {
-            while (4 != StatusReg.Value)
+            while (4 != StatusReg.Value && TimeSpan.Zero < _Remain)
             {
                 await WaitAvailability(ct);
                 await Task.Delay(Constants.SecondDelay, ct);

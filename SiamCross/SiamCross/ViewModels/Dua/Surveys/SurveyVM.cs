@@ -142,8 +142,9 @@ namespace SiamCross.ViewModels.Dua.Survey
             get => _ModelCfg.LevelQuantityIndex[4];
             set => _ModelCfg.LevelQuantityIndex[4] = value;
         }
-        public Kind SurveyType => _ModelSurvey.SurveyType;
+        public string Timestamp => _ModelCfg.Timestamp.ToString("G");
 
+        public Kind SurveyType => _ModelSurvey.SurveyType;
         public bool IsSheduler => 2 < _ModelSurvey.SurveyType.ToByte();
         public bool IsLevelSurvey => (0 < _ModelSurvey.SurveyType.ToByte() && 5 > _ModelSurvey.SurveyType.ToByte());
         public bool IsVisibleLevelSheduler => (Kind.LRC == _ModelSurvey.SurveyType || Kind.LDC == _ModelSurvey.SurveyType);

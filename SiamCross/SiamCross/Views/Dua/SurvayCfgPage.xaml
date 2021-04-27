@@ -40,32 +40,9 @@
             <RefreshView Command="{Binding CmdLoadParam}">
                 <ScrollView VerticalOptions="StartAndExpand">
                     <StackLayout IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
-                        <Label Text="График измерения" Style="{StaticResource SectionLabel}" 
-                           IsVisible="{Binding IsSheduler}"/>
-                        <Frame Style="{StaticResource GroupingFrameStyle}" 
-                           IsVisible="{Binding IsLevelSurvey, Converter={StaticResource InvertedBoolConverter}}">
-                            <StackLayout >
-                                <Grid Padding="0,10,0,10">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50*" />
-                                        <ColumnDefinition Width="50*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Text="Количество" Grid.Column="0" Grid.Row="0"/>
-                                    <Label Text="Период (мин)" Grid.Column="1" Grid.Row="0"/>
 
-                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
-                                        SelectedIndex="{Binding PressureQuantityIndex}"
-                                        Grid.Column="0" Grid.Row="1"/>
-                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
-                                        SelectedIndex="{Binding PressurePeriodIndex}"
-                                        Grid.Column="1" Grid.Row="1"/>
-                                </Grid>
-                            </StackLayout>
-                        </Frame>
+                        <Label Text="График измерения уровня" Style="{StaticResource SectionLabel}" 
+                           IsVisible="{Binding IsVisibleLevelSheduler}"/>
                         <Frame Style="{StaticResource GroupingFrameStyle}"
                            IsVisible="{Binding IsVisibleLevelSheduler}">
                             <StackLayout >
@@ -123,6 +100,32 @@
                                 </Grid>
                             </StackLayout>
                         </Frame>
+                        <Label Text="График АРД" Style="{StaticResource SectionLabel}" 
+                           IsVisible="{Binding IsSheduler}"/>
+                        <Frame Style="{StaticResource GroupingFrameStyle}" 
+                               IsVisible="{Binding IsSheduler}">
+                            <StackLayout >
+                                <Grid Padding="0,10,0,10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50*" />
+                                        <ColumnDefinition Width="50*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="Количество" Grid.Column="0" Grid.Row="0"/>
+                                    <Label Text="Период (мин)" Grid.Column="1" Grid.Row="0"/>
+
+                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
+                                        SelectedIndex="{Binding PressureQuantityIndex}"
+                                        Grid.Column="0" Grid.Row="1"/>
+                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
+                                        SelectedIndex="{Binding PressurePeriodIndex}"
+                                        Grid.Column="1" Grid.Row="1"/>
+                                </Grid>
+                            </StackLayout>
+                        </Frame>
                         <Label Text="Автоматический клапан" Style="{StaticResource SectionLabel}"
                            IsVisible="{Binding IsLevelSurvey}"/>
                         <Frame Style="{StaticResource GroupingFrameStyle}" 
@@ -144,7 +147,7 @@
                                 </Grid>
                             </StackLayout>
                         </Frame>
-                        <Label Text="Пьезодатчик" Style="{StaticResource SectionLabel}"
+                        <Label Text="Датчик уровня(звуковой)" Style="{StaticResource SectionLabel}"
                            IsVisible="{Binding IsLevelSurvey}"/>
                         <Frame Style="{StaticResource GroupingFrameStyle}" 
                            IsVisible="{Binding IsLevelSurvey}">
@@ -205,6 +208,24 @@
                                 </Grid>
                             </StackLayout>
                         </Frame>
+
+                        <Label Text="Дополнительно" Style="{StaticResource SectionLabel}"/>
+                        <Frame Style="{StaticResource GroupingFrameStyle}" >
+                            <StackLayout >
+                                <Label >
+                                    <Label.FormattedText>
+                                        <FormattedString >
+                                            <Span Text="Время прибора: "  />
+                                            <Span Text="{Binding Timestamp}"/>
+                                            <Span Text="&#10;"/>
+                                            <Span Text="будет синхронизированно при запуске" FontSize="Micro"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </StackLayout>
+                        </Frame>
+
+
                     </StackLayout>
                 </ScrollView>
             </RefreshView>
