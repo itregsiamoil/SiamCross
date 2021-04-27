@@ -34,7 +34,7 @@
                     <StackLayout 
                     IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
 
-                        <Label Text="Измерения" Style="{StaticResource SectionLabel}" />
+                        <Label Text="Исследования" Style="{StaticResource SectionLabel}" />
                         <Frame Style="{StaticResource GroupingFrameStyle}" >
                             <StackLayout>
                                 <Label >
@@ -62,7 +62,7 @@
                                 <Label>
                                     <Label.FormattedText>
                                         <FormattedString >
-                                            <Span Text="Количество измерений: "  />
+                                            <Span Text="Количество исследований: "  />
                                             <Span Text="{Binding SurveyQty}"/>
                                         </FormattedString>
                                     </Label.FormattedText>
@@ -75,7 +75,7 @@
                                         <ColumnDefinition Width="60*"/>
                                         <ColumnDefinition Width="40*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Label Text="Начальное измерение" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
+                                    <Label Text="Начальное исследование" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
                                     <Entry Text="{Binding StartRep}" Keyboard="Numeric"
                                        Grid.Column="1" Grid.Row="0">
                                         <Entry.Behaviors>

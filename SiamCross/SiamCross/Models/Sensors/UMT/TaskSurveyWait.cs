@@ -78,16 +78,20 @@ namespace SiamCross.Models.Sensors.Umt
 
             if (null == Connection)
                 return false;
-
+            InfoEx = "чтение статуса";
             await Connection.ReadAsync(StatusReg, null, ct);
+            InfoEx = "чтение вида исследования";
             await Connection.ReadAsync(_SurvayParam1, null, ct);
             Name = $"{Resource.Survey} {SurveyKind.Title()}";
             InfoEx = "чтение";
             if (0 == StatusReg.Value)
                 return true;
-
+            
+            InfoEx = "чтение информации о памяти";
             await Connection.ReadAsync(_MemInfo, null, ct);
+            InfoEx = "чтение информации о измерении";
             await Connection.ReadAsync(_SurvayParam2, null, ct);
+            InfoEx = "чтение текущей информации ";
             await Connection.ReadAsync(_CurrInfo, null, ct);
             ulong totalMem = (ulong)(kolbl.Value) * kolstr.Value * page.Value;
 
@@ -104,7 +108,7 @@ namespace SiamCross.Models.Sensors.Umt
 
             double progressStart = (double)(1.0 - _Remain.TotalMilliseconds / _Total.TotalMilliseconds);
 
-            using (var timer = CreateProgressTimer(_Remain, (float)progressStart))
+            //using (var timer = CreateProgressTimer(_Remain, (float)progressStart))
             {
                 await DoMultiPressureAsync(ct);
             }
@@ -112,11 +116,14 @@ namespace SiamCross.Models.Sensors.Umt
         }
         async Task DoMultiPressureAsync(CancellationToken ct)
         {
+            
             while (true && !ct.IsCancellationRequested)
             {
+                InfoEx = $"Свободно памяти ~{Emem.Value * 0.1f}% \n измерение...";
                 await Task.Delay(Constants.SecondDelay * 10, ct);
-
-
+                InfoEx = "чтение текущей информации ";
+                await Connection.ReadAsync(_CurrInfo, null, ct);
+                Progress = 1.0f-Emem.Value * 0.1f;
             }
         }
 
