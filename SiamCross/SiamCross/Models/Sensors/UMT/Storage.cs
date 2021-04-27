@@ -11,10 +11,12 @@ namespace SiamCross.Models.Sensors.Umt
 
         ulong _TotalSpace = 0;
         double _EmptySpaceRatio = 0;
+        UInt16 _SurveyQty = 0;
+        uint _StartRep;
+        uint _CountRep;
 
-         UInt16 _SurveyQty = 0;
 
-        public ulong TotalSpace 
+        public ulong TotalSpace
         {
             get => _TotalSpace;
             set => SetProperty(ref _TotalSpace, value);
@@ -28,6 +30,16 @@ namespace SiamCross.Models.Sensors.Umt
         {
             get => _SurveyQty;
             set => SetProperty(ref _SurveyQty, value);
+        }
+        public uint StartRep
+        {
+            get => _StartRep;
+            set => SetProperty(ref _StartRep, value);
+        }
+        public uint CountRep
+        {
+            get => _CountRep;
+            set => SetProperty(ref _CountRep, value);
         }
 
         async Task Read()

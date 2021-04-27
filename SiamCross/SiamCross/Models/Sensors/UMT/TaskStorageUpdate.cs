@@ -1,5 +1,4 @@
 ﻿using SiamCross.Models.Connection.Protocol;
-using SiamCross.Models.Sensors.Umt.Surveys;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -73,6 +72,7 @@ namespace SiamCross.Models.Sensors.Umt
             _Storage.TotalSpace = (ulong)(kolbl.Value) * kolstr.Value * page.Value;
             _Storage.EmptySpaceRatio = Math.Round(0.1f * Emem.Value, 1);
             _Storage.SurveyQty = Kolisl.Value;
+            _Storage.CountRep = Kolisl.Value;
 
             return ret;
         }

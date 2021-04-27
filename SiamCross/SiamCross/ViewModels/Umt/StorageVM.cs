@@ -17,7 +17,16 @@ namespace SiamCross.ViewModels.Umt
         public string TotalSpaceK => (_StorageModel.TotalSpace % 1024).ToString();
         public string TotalSpaceB => (_StorageModel.TotalSpace % (1024)).ToString();
 
-
+        public uint StartRep
+        {
+            get => _StorageModel.StartRep;
+            set => _StorageModel.StartRep = value;
+        }
+        public uint CountRep
+        {
+            get => _StorageModel.CountRep;
+            set => _StorageModel.CountRep = value;
+        }
 
 
         public StorageVM(ISensor sensor)
@@ -57,7 +66,7 @@ namespace SiamCross.ViewModels.Umt
 
             ChangeNotify(e.PropertyName);
 
-            
+
         }
     }
 

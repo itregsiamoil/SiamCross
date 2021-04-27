@@ -1,6 +1,4 @@
 ﻿using SiamCross.Models.Connection.Protocol;
-using SiamCross.Models.Sensors.Umt.Surveys;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -45,8 +43,8 @@ namespace SiamCross.Models.Sensors.Umt
 
             if (null == _Storage || null == Connection)
                 return false;
-            
-            
+
+
             if (!await CheckConnectionAsync(ct))
                 return false;
 

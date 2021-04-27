@@ -78,7 +78,7 @@ namespace SiamCross.Models.Sensors.Umt
 
             if (null == Connection)
                 return false;
-            
+
             await Connection.ReadAsync(StatusReg, null, ct);
             await Connection.ReadAsync(_SurvayParam1, null, ct);
             Name = $"{Resource.Survey} {SurveyKind.Title()}";

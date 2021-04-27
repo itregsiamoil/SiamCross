@@ -40,12 +40,7 @@
                                 <Label >
                                     <Label.FormattedText>
                                         <FormattedString >
-                                            <Span Text="Количество измерений &#10;"  />
-                                            <Span Text="{Binding SurveyQty}"/>
-                                            <Span Text="&#10;"/>
-                                            <Span Text="Свободно &#10;"  />
-                                            <Span Text="{Binding EmptySpaceRatio}"/>
-                                            <Span Text="% из "/>
+                                            <Span Text="Всего памяти: &#x2246;"  FontSize="Default"/>
                                             <Span Text="{Binding TotalSpaceM}"/>
                                             <Span Text="M "/>
                                             <Span Text="{Binding TotalSpaceK}"/>
@@ -55,6 +50,59 @@
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
+                                <Label >
+                                    <Label.FormattedText>
+                                        <FormattedString >
+                                            <Span Text="Свободно памяти: &#x2246;"  />
+                                            <Span Text="{Binding EmptySpaceRatio}" />
+                                            <Span Text=" %"  />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label>
+                                    <Label.FormattedText>
+                                        <FormattedString >
+                                            <Span Text="Количество измерений: "  />
+                                            <Span Text="{Binding SurveyQty}"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <Grid RowSpacing="0">
+                                    <Grid.RowDefinitions>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="60*"/>
+                                        <ColumnDefinition Width="40*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="Начальное измерение" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
+                                    <Entry Text="{Binding StartRep}" Keyboard="Numeric"
+                                       Grid.Column="1" Grid.Row="0">
+                                        <Entry.Behaviors>
+                                            <xct:NumericValidationBehavior 
+                                            InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                            MinimumValue="0"
+                                            MaximumValue="{Binding SurveyQty}"/>
+                                        </Entry.Behaviors>
+                                        <Entry.Effects>
+                                            <xct:SelectAllTextEffect/>
+                                        </Entry.Effects>
+                                    </Entry>
+                                    <Label Text="Количество" Grid.Column="0" Grid.Row="1" VerticalTextAlignment="Center"/>
+                                    <Entry Text="{Binding SurveyQty}" Keyboard="Numeric"
+                                       Grid.Column="1" Grid.Row="1">
+                                        <Entry.Behaviors>
+                                            <xct:NumericValidationBehavior 
+                                            InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                            MinimumValue="0"
+                                            MaximumValue="{Binding SurveyQty}"/>
+                                        </Entry.Behaviors>
+                                        <Entry.Effects>
+                                            <xct:SelectAllTextEffect/>
+                                        </Entry.Effects>
+                                    </Entry>
+
+                                </Grid>
 
                             </StackLayout>
                         </Frame>

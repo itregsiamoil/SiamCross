@@ -40,7 +40,7 @@ namespace SiamCross.Models.Sensors.Dua
                 return;
             if (ConnectionState.Connected == Connection.State)
                 await OnConnect();
-            if (ConnectionState.Disconnected == Connection.State)
+            else if (ConnectionState.Disconnected == Connection.State)
                 OnDisconnect();
         }
         void OnDisconnect()
@@ -93,8 +93,21 @@ namespace SiamCross.Models.Sensors.Dua
             //StateVM = new StateVM(this);
 
 
-
+            Model.ConnHolder.PropertyChanged += OnHolderChange;
         }
+        void OnHolderChange(object sender, PropertyChangedEventArgs e)
+        {
+            if (null == sender || nameof(Model.ConnHolder.IsActivated) != e.PropertyName)
+                return;
+            ChangeNotify(nameof(Activate));
+        }
+        public override void Dispose()
+        {
+            Model.ConnHolder.PropertyChanged -= OnHolderChange;
+            base.Dispose();
+        }
+
+
 
         public override async Task<bool> QuickReport(CancellationToken cancelToken)
         {
