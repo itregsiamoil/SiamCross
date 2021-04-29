@@ -73,6 +73,7 @@ namespace SiamCross.Models.Sensors.Umt
             _Storage.EmptySpaceRatio = Math.Round(0.1f * Emem.Value, 1);
             _Storage.SurveyQty = Kolisl.Value;
             _Storage.CountRep = Kolisl.Value;
+            _Storage.StartRep = Kolisl.Value;
 
             return ret;
         }
