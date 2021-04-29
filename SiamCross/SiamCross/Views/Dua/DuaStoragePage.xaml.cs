@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using SiamCross.ViewModels;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace SiamCross.Views.Dua
@@ -9,6 +10,16 @@ namespace SiamCross.Views.Dua
         public DuaStoragePage()
         {
             InitializeComponent();
+
+        }
+        protected override void OnSizeAllocated(double width, double height)
+        {
+            base.OnSizeAllocated(width, height); //must be called
+            if (BindingContext is BasePageVM vm)
+            {
+                vm.ChangeNotify(nameof(BasePageVM.IsLandscape));
+                vm.ChangeNotify(nameof(BasePageVM.IsPortrait));
+            }
         }
     }
 }

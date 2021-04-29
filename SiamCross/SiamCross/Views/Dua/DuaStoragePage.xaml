@@ -10,18 +10,37 @@
         <Style TargetType="{x:Type StackLayout}">
             <Setter Property="Spacing" Value="0" />
         </Style>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
     </ContentPage.Resources >
     <NavigationPage.TitleView >
-        <StackLayout>
-            <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
-            <Label Text="Хранилище"
+        <StackLayout Orientation="Horizontal" >
+            <StackLayout 
+                HorizontalOptions="StartAndExpand" >
+                <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
+                <Label Text="Хранилище"
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}" 
+                         HorizontalOptions="End" VerticalOptions="Fill" >
+                <Button Text="Очистить "
+                        HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
+                        BackgroundColor="{StaticResource colorAccentLight}"
+                        Command="{Binding CmdClearStorage}"
+                        IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" />
+                <Button Text="Считать"
+                        HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
+                        BackgroundColor="{StaticResource colorPrimaryLight}"
+                        Command="{Binding CmdDownload}"
+                        IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" />
+            </StackLayout>
         </StackLayout>
     </NavigationPage.TitleView>
 
     <ContentPage.ToolbarItems >
-        <ToolbarItem Text="&#x21BA; "
+        <ToolbarItem Text="&#x21BA;"
                      Command="{Binding CmdUpdateStorageInfo}"/>
     </ContentPage.ToolbarItems>
 
@@ -30,14 +49,31 @@
             <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
 
             <RefreshView Command="{Binding CmdUpdateStorageInfo}">
-                <ScrollView VerticalOptions="StartAndExpand">
-                    <StackLayout 
-                    IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
-
-                        <Label Text="Измерения без эхограмм" Style="{StaticResource SectionLabel}" />
-                        <Frame Style="{StaticResource GroupingFrameStyle}" >
+                <ScrollView VerticalOptions="FillAndExpand" >
+                    <FlexLayout Padding="0" 
+                                Direction="Row"
+                                Wrap="Wrap"
+                                JustifyContent="Start"
+                                AlignItems="Start"
+                                AlignContent="Start"
+                                IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
+                        <!--
+                        <BoxView BackgroundColor="Red" Margin="5" HeightRequest="50" WidthRequest="250"
+                                 FlexLayout.Grow="1"  />
+                        
+                        <BoxView BackgroundColor="Green" Margin="5" HeightRequest="150" WidthRequest="250"
+                                 FlexLayout.Grow="1"  />
+                        
+                        <BoxView BackgroundColor="Blue" Margin="5" HeightRequest="450" WidthRequest="250"
+                                 FlexLayout.Grow="1" />
+                        -->
+                        <Frame Style="{StaticResource GroupingFrameStyle}" FlexLayout.Grow="1"  FlexLayout.Basis="250" 
+                               >
                             <StackLayout>
-                                <Label >
+                                <Label Text="Измерения без эхограмм" Style="{StaticResource SectionLabel}" 
+                                       Margin="-4,-4,-4,0" BackgroundColor="{StaticResource colorBackgroundLight}" 
+                                       />
+                                <Label>
                                     <Label.FormattedText>
                                         <FormattedString >
                                             <Span Text="{Binding AviableRep}"  />
@@ -84,9 +120,12 @@
                             </StackLayout>
                         </Frame>
 
-                        <Label Text="Измерения с эхограммами" Style="{StaticResource SectionLabel}" />
-                        <Frame Style="{StaticResource GroupingFrameStyle}" >
+                        <Frame Style="{StaticResource GroupingFrameStyle}" FlexLayout.Grow="1" FlexLayout.Basis="250"
+                               >
                             <StackLayout>
+                                <Label Text="Измерения с эхограммами" Style="{StaticResource SectionLabel}"  
+                                       Margin="-4,-4,-4,0" BackgroundColor="{StaticResource colorBackgroundLight}" 
+                                       />
                                 <Label>
                                     <Label.FormattedText>
                                         <FormattedString >
@@ -133,17 +172,17 @@
 
                             </StackLayout>
                         </Frame>
-                    </StackLayout>
+                    </FlexLayout>
                 </ScrollView>
             </RefreshView>
 
-            <StackLayout Orientation="Horizontal" Spacing="0" >
-                <Button Text="Очистить " HorizontalOptions="FillAndExpand" 
+            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsPortrait}" >
+                <Button Text="Очистить" HorizontalOptions="FillAndExpand"
                         BackgroundColor="{StaticResource colorAccentLight}"
                         Command="{Binding CmdClearStorage}"
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >
                 </Button>
-                <Button Text="Считать" HorizontalOptions="FillAndExpand" 
+                <Button Text="Считать" HorizontalOptions="FillAndExpand"
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdDownload}"
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >
