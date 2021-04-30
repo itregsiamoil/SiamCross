@@ -7,6 +7,7 @@ namespace SiamCross.Views
     {
         protected override void OnAppearing()
         {
+            base.OnAppearing();
             if (BindingContext is BasePageVM vm)
             {
                 vm.EnableOrintationNotify = true;
@@ -14,12 +15,21 @@ namespace SiamCross.Views
         }
         protected override void OnDisappearing()
         {
+            base.OnDisappearing();
             if (BindingContext is BasePageVM vm)
             {
                 vm.EnableOrintationNotify = false;
             }
         }
         /*
+        protected override void OnBindingContextChanged()
+        {
+            base.OnBindingContextChanged();
+            if (null == BindingContext)
+                return;
+            if (BindingContext is BasePageVM vm)
+                vm.OrintationNotify();
+        }
         protected override void OnSizeAllocated(double width, double height)
         {
             base.OnSizeAllocated(width, height); //must be called

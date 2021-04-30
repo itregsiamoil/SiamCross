@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<views:BaseContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:survey="clr-namespace:SiamCross.ViewModels.Dua.Survey" 
@@ -8,45 +8,67 @@
              x:Class="SiamCross.Views.Dua.SurvayCfgPage"
              x:DataType="survey:SurveyVM"
              >
+    
     <ContentPage.Resources>
         <Style TargetType="{x:Type StackLayout}">
             <Setter Property="Spacing" Value="0" />
         </Style>
+        <Style TargetType="RadioButton" ApplyToDerivedTypes="True">
+            <Setter Property="FontSize" Value="Default" />
+            <Setter Property="TextColor" Value="{StaticResource colorText}" />
+        </Style>
     </ContentPage.Resources >
+    
     <NavigationPage.TitleView >
-        <StackLayout>
-            <Label TextColor="{StaticResource colorTextPale}" LineBreakMode="TailTruncation">
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="{Binding Sensor.Name}"/>
-                        <Span Text="&#x2190;"/>
-                        <Span Text="Исследования"/>
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Label Text="{Binding Name}"
+        <StackLayout Orientation="Horizontal" >
+            <StackLayout HorizontalOptions="StartAndExpand" >
+                <Label TextColor="{StaticResource colorTextPale}" LineBreakMode="TailTruncation">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding Sensor.Name}"/>
+                            <Span Text="&#x2190;"/>
+                            <Span Text="Исследования"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label Text="{Binding Name}"
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
-        </StackLayout>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}"
+                         HorizontalOptions="End" VerticalOptions="Fill" >
+                <Button Text="Запустить" HorizontalOptions="FillAndExpand"
+                    BackgroundColor="{StaticResource colorPrimaryLight}" 
+                    Command="{Binding CmdStart}"
+                    IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}"/>
+            </StackLayout>
+        </StackLayout>        
     </NavigationPage.TitleView>
+    
     <ContentPage.ToolbarItems >
         <!--ToolbarItem Text="&#x2713; " Command="{Binding CmdSaveParam}"/-->
         <ToolbarItem Text="&#x21BA; " Command="{Binding CmdLoadParam}"/>
     </ContentPage.ToolbarItems>
+    
     <ContentPage.Content>
         <StackLayout  BackgroundColor="{StaticResource colorBackgroundLight}" >
             <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}" />
 
             <RefreshView Command="{Binding CmdLoadParam}">
-                <ScrollView VerticalOptions="StartAndExpand">
-                    <StackLayout IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
-
-                        <Label Text="График измерения уровня" Style="{StaticResource SectionLabel}" 
-                           IsVisible="{Binding IsVisibleLevelSheduler}"/>
-                        <Frame Style="{StaticResource GroupingFrameStyle}"
-                           IsVisible="{Binding IsVisibleLevelSheduler}">
+                <ScrollView VerticalOptions="FillAndExpand" Orientation="Both">
+                    <FlexLayout Padding="0"
+                        Direction="Row"
+                                Wrap="Wrap"
+                                JustifyContent="Start"
+                                AlignItems="Start"
+                                AlignContent="Start"
+                                IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
+                        <Frame Style="{StaticResource GroupingFrameStyle2}"
+                               FlexLayout.Grow="1"  FlexLayout.Basis="280"
+                               IsVisible="{Binding IsVisibleLevelSheduler}">
                             <StackLayout >
-                                <Grid Padding="0,10,0,10">
+                                <Label Text="График измерения уровня" Style="{StaticResource SectionLabel2}"/>
+                                <Grid Padding="4,0,4,0" RowSpacing="0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
@@ -92,20 +114,21 @@
                                     <Picker ItemsSource="{Binding Source={x:Static local:Constants.Periods}}"
                                         SelectedIndex="{Binding LevelPeriodIndex4}"
                                         Grid.Column="1" Grid.Row="5"/>
-
                                 </Grid>
-                                <Grid Padding="0,10,0,10">
+                                <Grid Padding="4,10,4,10">
                                     <Label Text="Перейти к АРД при уровне менее 50м."/>
                                     <Switch IsToggled="{Binding IsAutoswitchToAPR}"/>
                                 </Grid>
                             </StackLayout>
                         </Frame>
-                        <Label Text="График АРД" Style="{StaticResource SectionLabel}" 
-                           IsVisible="{Binding IsSheduler}"/>
-                        <Frame Style="{StaticResource GroupingFrameStyle}" 
+
+                       
+                        <Frame Style="{StaticResource GroupingFrameStyle2}"
+                               FlexLayout.Grow="1"  FlexLayout.Basis="280" 
                                IsVisible="{Binding IsSheduler}">
                             <StackLayout >
-                                <Grid Padding="0,10,0,10">
+                                <Label Text="График АРД" Style="{StaticResource SectionLabel2}"/>
+                                <Grid Padding="4,0,4,0" RowSpacing="0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
@@ -126,57 +149,54 @@
                                 </Grid>
                             </StackLayout>
                         </Frame>
-                        <Label Text="Автоматический клапан" Style="{StaticResource SectionLabel}"
-                           IsVisible="{Binding IsLevelSurvey}"/>
-                        <Frame Style="{StaticResource GroupingFrameStyle}" 
-                           IsVisible="{Binding IsLevelSurvey}">
+                        <Frame Style="{StaticResource GroupingFrameStyle2}"
+                               FlexLayout.Grow="1"  FlexLayout.Basis="280"
+                               IsVisible="{Binding IsLevelSurvey}">
                             <StackLayout >
-                                <Grid Padding="0,10,0,10">
-                                    <Label Text="Разрешение срабатывания"/>
-                                    <Switch IsToggled="{Binding IsValveAutomaticEnabled}"
+                                <Label Text="Автоматический клапан" Style="{StaticResource SectionLabel2}"/>
+                                <Grid Padding="4,10,4,10" RowSpacing="20">
+                                    <Label Text="Разрешение срабатывания" Grid.Row="0"/>
+                                    <Switch IsToggled="{Binding IsValveAutomaticEnabled}" Grid.Row="0"
                                         IsEnabled="{Binding IsVisibleLevelSheduler, Converter={StaticResource InvertedBoolConverter}}"/>
-                                </Grid>
+                                    <Label Text="Длительность срабатывания 0,2/0,05" Grid.Row="1"/>
+                                    <Switch IsToggled="{Binding IsValveDurationShort}" Grid.Row="1" />
 
-                                <Grid Padding="0,10,0,10">
-                                    <Label Text="Длительность срабатывания 0,2/0,05"/>
-                                    <Switch IsToggled="{Binding IsValveDurationShort}"/>
-                                </Grid>
-                                <Grid Padding="0,10,0,10">
-                                    <Label Text="Направление газа впуск/выпуск"/>
-                                    <Switch IsToggled="{Binding IsValveDirectionInput}"/>
+                                    <Label Text="Направление газа впуск/выпуск" Grid.Row="2"/>
+                                    <Switch IsToggled="{Binding IsValveDirectionInput}" Grid.Row="2"/>
                                 </Grid>
                             </StackLayout>
                         </Frame>
-                        <Label Text="Датчик уровня(звуковой)" Style="{StaticResource SectionLabel}"
-                           IsVisible="{Binding IsLevelSurvey}"/>
-                        <Frame Style="{StaticResource GroupingFrameStyle}" 
-                           IsVisible="{Binding IsLevelSurvey}">
+
+
+
+                        <Frame Style="{StaticResource GroupingFrameStyle2}"
+                               FlexLayout.Grow="1"  FlexLayout.Basis="280"
+                               IsVisible="{Binding IsLevelSurvey}">
                             <StackLayout >
-                                <Grid Padding="0,10,0,10">
-                                    <Label Text="Максимальная глубина 3000м./6000м."/>
-                                    <Switch IsToggled="{Binding IsPiezoDepthMax}"/>
-                                </Grid>
-                                <Grid Padding="0,10,0,10">
-                                    <Label Text="Дополнительное усиление"/>
-                                    <Switch IsToggled="{Binding IsPiezoAdditionalGain}"/>
+                                <Label Text="Датчик уровня" Style="{StaticResource SectionLabel2}"/>
+                                <Grid Padding="4,10,4,10" RowSpacing="20">
+                                    <Label Text="Максимальная глубина 3000м./6000м." Grid.Row="0"/>
+                                    <Switch IsToggled="{Binding IsPiezoDepthMax}" Grid.Row="0"/>
+                                    <Label Text="Дополнительное усиление" Grid.Row="1"/>
+                                    <Switch IsToggled="{Binding IsPiezoAdditionalGain}" Grid.Row="1"/>
                                 </Grid>
                             </StackLayout>
                         </Frame>
-                        <Label Text="Скорость звука" Style="{StaticResource SectionLabel}"
-                           IsVisible="{Binding IsLevelSurvey}"/>
-                        <Frame Style="{StaticResource GroupingFrameStyle}" 
-                           IsVisible="{Binding IsLevelSurvey}">
+                        <Frame Style="{StaticResource GroupingFrameStyle2}"
+                               FlexLayout.Grow="1"  FlexLayout.Basis="280"
+                               IsVisible="{Binding IsLevelSurvey}">
                             <StackLayout >
-                                <Grid RowSpacing="0">
-                                    <RadioButton Content="Значение" FontSize="Default" TextColor="{StaticResource colorText}"
+                                <Label Text="Скорость звука" Style="{StaticResource SectionLabel2}"/>
+                                <Grid RowSpacing="0" Padding="4" >
+                                    <RadioButton Content="Значение" 
                                              IsChecked="{Binding IsSoundSpeedCustom}"
                                          Grid.Row="0" Grid.Column="0"/>
-                                    <RadioButton Content="Таблица" FontSize="Default" TextColor="{StaticResource colorText}"
+                                    <RadioButton Content="Таблица" 
                                              IsChecked="{Binding IsSoundSpeedTable}"
                                              Grid.Row="0" Grid.Column="1"/>
 
                                     <Entry Text="{Binding SoundSpeedFixed}"
-                                       Grid.Row="1" Grid.Column="0" Keyboard="Numeric">
+                                           Grid.Row="1" Grid.Column="0" Keyboard="Numeric">
                                         <Entry.Behaviors>
                                             <xct:NumericValidationBehavior 
                                             InvalidStyle="{StaticResource InvalidEntryStyle}"
@@ -188,7 +208,7 @@
                                         </Entry.Effects>
                                     </Entry>
                                     <Entry Text="{Binding SoundSpeedTableId}"
-                                   Grid.Row="1" Grid.Column="1" Keyboard="Numeric">
+                                           Grid.Row="1" Grid.Column="1" Keyboard="Numeric">
                                         <Entry.Behaviors>
                                             <xct:NumericValidationBehavior 
                                             InvalidStyle="{StaticResource InvalidEntryStyle}"
@@ -200,19 +220,14 @@
                                             <xct:SelectAllTextEffect/>
                                         </Entry.Effects>
                                     </Entry>
-                                    <!--
-                                <Picker 
-                                   SelectedIndex="{Binding SoundSpeedTableId}"
-                                   Grid.Row="1" Grid.Column="1"/>
-                                -->
                                 </Grid>
                             </StackLayout>
                         </Frame>
-
-                        <Label Text="Дополнительно" Style="{StaticResource SectionLabel}"/>
-                        <Frame Style="{StaticResource GroupingFrameStyle}" >
-                            <StackLayout >
-                                <Label >
+                        <Frame Style="{StaticResource GroupingFrameStyle2}"
+                               FlexLayout.Grow="1"  FlexLayout.Basis="280" >
+                            <StackLayout>
+                                <Label Text="Дополнительно" Style="{StaticResource SectionLabel2}"/>
+                                <Label Padding="4">
                                     <Label.FormattedText>
                                         <FormattedString >
                                             <Span Text="Время прибора: "  />
@@ -224,17 +239,16 @@
                                 </Label>
                             </StackLayout>
                         </Frame>
-
-
-                    </StackLayout>
+                    </FlexLayout>
                 </ScrollView>
             </RefreshView>
 
-            <Button Text="Запустить" HorizontalOptions="FillAndExpand"
+            <Button Text="Запустить" IsVisible="{Binding IsPortrait}"
+                    HorizontalOptions="FillAndExpand"
                     BackgroundColor="{StaticResource colorPrimaryLight}" 
                     Command="{Binding CmdStart}"
                     IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
             </Button>
         </StackLayout>
     </ContentPage.Content>
-</ContentPage>
+</views:BaseContentPage>

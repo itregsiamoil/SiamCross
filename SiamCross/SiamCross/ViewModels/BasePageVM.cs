@@ -18,18 +18,27 @@ namespace SiamCross.ViewModels
             get => _EnableOrintationNotify;
             set
             {
+                if (_EnableOrintationNotify == value)
+                    return;
                 _EnableOrintationNotify = value;
                 if (_EnableOrintationNotify)
+                {
+                    _Orientation = DeviceDisplay.MainDisplayInfo.Orientation;
                     DeviceDisplay.MainDisplayInfoChanged += DeviceDisplay_MainDisplayInfoChanged;
+                    OrintationNotify();
+                }
                 else
                     DeviceDisplay.MainDisplayInfoChanged -= DeviceDisplay_MainDisplayInfoChanged;
-                ChangeNotify(nameof(IsLandscape));
-                ChangeNotify(nameof(IsPortrait));
             }
+        }
+        public void OrintationNotify()
+        {
+            ChangeNotify(nameof(IsLandscape));
+            ChangeNotify(nameof(IsPortrait));
         }
         private void DeviceDisplay_MainDisplayInfoChanged(object sender, DisplayInfoChangedEventArgs e)
         {
-            if (null!=e && e.DisplayInfo.Orientation == _Orientation)
+            if (null != e && e.DisplayInfo.Orientation == _Orientation)
                 return;
             _Orientation = e.DisplayInfo.Orientation;
             ChangeNotify(nameof(IsLandscape));
