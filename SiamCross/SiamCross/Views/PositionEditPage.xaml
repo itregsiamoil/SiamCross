@@ -1,19 +1,38 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<views:BaseContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:essentials="clr-namespace:Xamarin.Essentials;assembly=Xamarin.Essentials"
              xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross" 
              xmlns:models="clr-namespace:SiamCross.ViewModels" 
              xmlns:views="clr-namespace:SiamCross.Views"
              x:Class="SiamCross.Views.PositionEditPage"
              x:DataType="models:PositionVM" >
 
+    <ContentPage.Resources>
+        <Style TargetType="{x:Type StackLayout}">
+            <Setter Property="Spacing" Value="0" />
+        </Style>
+    </ContentPage.Resources >    
+    
     <NavigationPage.TitleView >
-        <StackLayout>
-            <Label Text="{local1:Translate LocationInfo}" FontSize="Title" TextColor="White" />
-            <!--Label Text="{Binding Sensor.Name}" TextColor="White" /-->
-        </StackLayout>
+        <StackLayout Orientation="Horizontal" >
+            <StackLayout HorizontalOptions="StartAndExpand" >
+                <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
+                <Label Text="{local1:Translate LocationInfo}"
+                   FontSize="Medium" FontAttributes="Bold" 
+                   LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}" 
+                         HorizontalOptions="End" VerticalOptions="Fill" >
+                <Button Text="Сохранить" HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorPrimaryLight}"
+                        Command="{Binding CmdSave}" 
+                        IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}"/>
+            </StackLayout>
+        </StackLayout>        
     </NavigationPage.TitleView>
+    
     <ContentPage.ToolbarItems >
         <!--ToolbarItem Text="&#x2713; " Command="{Binding CmdSaveParam}"/-->
         <ToolbarItem Text="&#x21BA; " Command="{Binding CmdLoad}"/>
@@ -27,93 +46,95 @@
             <RefreshView Command="{Binding CmdLoad}">
                 <ScrollView VerticalOptions="StartAndExpand">
                     <StackLayout>
-                        <Label Text="Данные" Style="{StaticResource SectionLabel}" />
-                        <Frame Style="{StaticResource GroupingFrameStyle}" >
-                            <StackLayout Margin="5">
-                                <Grid RowSpacing="0" ColumnSpacing="5"  >
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="60*"></ColumnDefinition>
-                                        <ColumnDefinition Width="20*"></ColumnDefinition>
-                                        <ColumnDefinition Width="50"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Text="{local1:Translate Field}" 
+                        <Frame Style="{StaticResource GroupingFrameStyle2}" >
+                            <StackLayout>
+                                <Label Text="Данные" Style="{StaticResource SectionLabel2}" />
+                                <StackLayout Padding="4">
+                                    <Grid RowSpacing="0" ColumnSpacing="5"  >
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="60*"></ColumnDefinition>
+                                            <ColumnDefinition Width="20*"></ColumnDefinition>
+                                            <ColumnDefinition Width="50"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Text="{local1:Translate Field}" 
                                        Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" />
 
-                                    <Picker ItemsSource="{Binding Fields}" 
+                                        <Picker ItemsSource="{Binding Fields}" 
                                         SelectedItem="{Binding SelectedField}"
                                         ItemDisplayBinding="{Binding Title}"
                                         Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" >
-                                    </Picker>
+                                        </Picker>
 
-                                    <Label VerticalTextAlignment="Center" HorizontalOptions="End"
+                                        <Label VerticalTextAlignment="Center" HorizontalOptions="End"
                                        FontSize="Medium" 
                                        Grid.Row="1" Grid.Column="1">
-                                        <Label.FormattedText>
-                                            <FormattedString >
-                                                <Span Text="["/>
-                                                <Span Text="{Binding CurrentFieldId}"/>
-                                                <Span Text="]"/>
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
+                                            <Label.FormattedText>
+                                                <FormattedString >
+                                                    <Span Text="["/>
+                                                    <Span Text="{Binding CurrentFieldId}"/>
+                                                    <Span Text="]"/>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
 
-                                    <Button Text="&#x002B;" FontSize="20" BackgroundColor="{StaticResource colorPrimaryLight}"
+                                        <Button Text="&#x002B;" FontSize="20" BackgroundColor="{StaticResource colorPrimaryLight}"
                                                     Grid.Row="1" Grid.Column="2" 
                                                     Command="{Binding Path=CmdMakeNew}" 
                                                     CommandParameter="Image1" />
-                                </Grid>
+                                    </Grid>
 
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="30*"></ColumnDefinition>
-                                        <ColumnDefinition Width="30*"></ColumnDefinition>
-                                        <ColumnDefinition Width="30*"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Text="{local1:Translate Well}" 
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="30*"></ColumnDefinition>
+                                            <ColumnDefinition Width="30*"></ColumnDefinition>
+                                            <ColumnDefinition Width="30*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Text="{local1:Translate Well}" 
                                        Grid.Row="0" Grid.Column="0"/>
-                                    <Entry Text="{Binding CurrentWell}"
+                                        <Entry Text="{Binding CurrentWell}"
                                        Grid.Row="1" Grid.Column="0"
                                         Keyboard="Numeric">
-                                        <Entry.Behaviors>
-                                            <xct:NumericValidationBehavior/>
-                                        </Entry.Behaviors>
-                                        <Entry.Effects>
-                                            <xct:SelectAllTextEffect/>
-                                        </Entry.Effects>
-                                    </Entry>
-                                    <Label Text="{local1:Translate Bush}" 
+                                            <Entry.Behaviors>
+                                                <xct:NumericValidationBehavior/>
+                                            </Entry.Behaviors>
+                                            <Entry.Effects>
+                                                <xct:SelectAllTextEffect/>
+                                            </Entry.Effects>
+                                        </Entry>
+                                        <Label Text="{local1:Translate Bush}" 
                                        Grid.Row="0" Grid.Column="1"/>
-                                    <Entry Text="{Binding CurrentBush}"
+                                        <Entry Text="{Binding CurrentBush}"
                                        Grid.Row="1" Grid.Column="1"
                                        Keyboard="Numeric">
-                                        <Entry.Behaviors>
-                                            <xct:NumericValidationBehavior/>
-                                        </Entry.Behaviors>
-                                        <Entry.Effects>
-                                            <xct:SelectAllTextEffect/>
-                                        </Entry.Effects>
-                                    </Entry>
-                                    <Label Text="{local1:Translate Shop}"
+                                            <Entry.Behaviors>
+                                                <xct:NumericValidationBehavior/>
+                                            </Entry.Behaviors>
+                                            <Entry.Effects>
+                                                <xct:SelectAllTextEffect/>
+                                            </Entry.Effects>
+                                        </Entry>
+                                        <Label Text="{local1:Translate Shop}"
                                        Grid.Row="0" Grid.Column="2"/>
-                                    <Entry Text="{Binding CurrentShop}"
+                                        <Entry Text="{Binding CurrentShop}"
                                        Grid.Row="1" Grid.Column="2"
                                        Keyboard="Numeric">
-                                        <Entry.Behaviors>
-                                            <xct:NumericValidationBehavior/>
-                                        </Entry.Behaviors>
-                                        <Entry.Effects>
-                                            <xct:SelectAllTextEffect/>
-                                        </Entry.Effects>
-                                    </Entry>
-                                </Grid>
+                                            <Entry.Behaviors>
+                                                <xct:NumericValidationBehavior/>
+                                            </Entry.Behaviors>
+                                            <Entry.Effects>
+                                                <xct:SelectAllTextEffect/>
+                                            </Entry.Effects>
+                                        </Entry>
+                                    </Grid>
+                                </StackLayout>
                             </StackLayout>
                         </Frame>
                         <!--
@@ -147,7 +168,7 @@
                 </ScrollView>
             </RefreshView>
 
-            <StackLayout Orientation="Horizontal" Spacing="0" >
+            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsPortrait}" >
                 <Button Text="Сохранить" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdSave}" 
@@ -157,4 +178,4 @@
 
         </StackLayout>
     </ContentPage.Content>
-</ContentPage>
+</views:BaseContentPage>

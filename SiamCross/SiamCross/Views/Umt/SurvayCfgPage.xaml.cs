@@ -1,11 +1,9 @@
-﻿
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using Xamarin.Forms.Xaml;
 
 namespace SiamCross.Views.Umt
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class SurvayCfgPage : ContentPage
+    public partial class SurvayCfgPage : BaseContentPage
     {
         public SurvayCfgPage()
         {

@@ -7,7 +7,7 @@ using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.ViewModels
 {
-    public class SensorDetailsVM : BaseVM
+    public class SensorDetailsVM : BasePageVM
     {
         public ICommand ShowUserConfigViewCommand { get; set; }
         public ICommand ShowFactoryConfigViewCommand { get; set; }
@@ -43,6 +43,10 @@ namespace SiamCross.ViewModels
             //ShowUserConfigViewCommand = PageNavigator.CreateAsyncCommand(() => _Sensor.UserConfigVM);
             //ShowFactoryConfigViewCommand = PageNavigator.CreateAsyncCommand(() => _Sensor.FactoryConfigVM);
             //ShowStateViewCommand = PageNavigator.CreateAsyncCommand(() => _Sensor.StateVM);
+        }
+        public override void Unsubscribe()
+        {
+            //throw new NotImplementedException();
         }
 
         Task ShowSurveysPage()

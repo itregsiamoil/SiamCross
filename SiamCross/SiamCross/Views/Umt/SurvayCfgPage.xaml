@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<views:BaseContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:views="clr-namespace:SiamCross.Views"
@@ -12,22 +12,35 @@
             <Setter Property="Spacing" Value="0" />
         </Style>
     </ContentPage.Resources >
+    
     <NavigationPage.TitleView >
-        <StackLayout>
-            <Label TextColor="{StaticResource colorTextPale}" LineBreakMode="TailTruncation">
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="{Binding Sensor.Name}"/>
-                        <Span Text="&#x2190;"/>
-                        <Span Text="Исследования"/>
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Label Text="{Binding Name}"
+        <StackLayout Orientation="Horizontal" >
+            <StackLayout HorizontalOptions="StartAndExpand" >
+                <Label TextColor="{StaticResource colorTextPale}" LineBreakMode="TailTruncation">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding Sensor.Name}"/>
+                            <Span Text="&#x2190;"/>
+                            <Span Text="Исследования"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label Text="{Binding Name}"
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}" 
+                         HorizontalOptions="End" VerticalOptions="Fill" >
+                <Button Text="Запустить" HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
+                    BackgroundColor="{StaticResource colorPrimaryLight}" 
+                    Command="{Binding CmdStart}"
+                    IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}"/>
+            </StackLayout>
         </StackLayout>
+
+
     </NavigationPage.TitleView>
+    
     <ContentPage.ToolbarItems >
         <ToolbarItem Text="&#x2713; " Command="{Binding CmdSaveParam}"/>
         <ToolbarItem Text="&#x21BA; " Command="{Binding CmdLoadParam}"/>
@@ -38,53 +51,62 @@
 
             <RefreshView Command="{Binding CmdLoadParam}">
                 <ScrollView VerticalOptions="StartAndExpand">
-                    <StackLayout IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
-                        <Label Text="График измерения" Style="{StaticResource SectionLabel}" 
-                           IsVisible="{Binding IsSheduler}"/>
-                        <Frame Style="{StaticResource GroupingFrameStyle}" 
+                    <FlexLayout Padding="0" 
+                                Direction="Row"
+                                Wrap="Wrap"
+                                JustifyContent="Start"
+                                AlignItems="Start"
+                                AlignContent="Start"
+                                IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
+                        <Frame Style="{StaticResource GroupingFrameStyle2}" 
+                               FlexLayout.Grow="1"  FlexLayout.Basis="250"
                                IsVisible="{Binding IsSheduler}">
                             <StackLayout >
-                                <Label Text="Период сек."/>
-                                <Entry Text="{Binding Source={x:Reference _stepper}, Path=Value}"
+                                <Label Text="График измерения" Style="{StaticResource SectionLabel2}" />
+                                <StackLayout Padding="4">
+                                    <Label Text="Период сек."/>
+                                    <Entry Text="{Binding Source={x:Reference _stepper}, Path=Value}"
                                        Keyboard="Numeric">
-                                    <Entry.Behaviors>
-                                        <xct:NumericValidationBehavior 
+                                        <Entry.Behaviors>
+                                            <xct:NumericValidationBehavior 
                                             InvalidStyle="{StaticResource InvalidEntryStyle}"
                                             MaximumDecimalPlaces="0" 
                                             MinimumValue="1"
                                             MaximumValue="{Binding Source={x:Static local:Constants.DaySeconds}}"/>
-                                    </Entry.Behaviors>
-                                    <Entry.Effects>
-                                        <xct:SelectAllTextEffect/>
-                                    </Entry.Effects>
-                                </Entry>
-                                <Stepper x:Name="_stepper" HorizontalOptions="EndAndExpand" 
+                                        </Entry.Behaviors>
+                                        <Entry.Effects>
+                                            <xct:SelectAllTextEffect/>
+                                        </Entry.Effects>
+                                    </Entry>
+                                    <Stepper x:Name="_stepper" HorizontalOptions="EndAndExpand" 
                                          Value="{Binding Period}"
                                          Minimum="1"
                                          Maximum="{Binding Source={x:Static local:Constants.DaySeconds}}"
                                          Increment="1"/>
+
+                                </StackLayout>
                             </StackLayout>
                         </Frame>
-
-                        <Label Text="Датчик температуры" Style="{StaticResource SectionLabel}"/>
-                        <Frame Style="{StaticResource GroupingFrameStyle}">
+                        <Frame Style="{StaticResource GroupingFrameStyle2}"
+                               FlexLayout.Grow="1"  FlexLayout.Basis="250">
                             <StackLayout >
-                                <Grid Padding="0,10,0,10">
+                                <Label Text="Датчик температуры" Style="{StaticResource SectionLabel2}"/>
+                                <Grid Padding="4,10,4,10">
                                     <Label Text="Запись температуры"/>
                                     <Switch IsToggled="{Binding IsEnabledTempRecord}"/>
                                 </Grid>
                             </StackLayout>
                         </Frame>
-                        
-                    </StackLayout>
+                    </FlexLayout>
                 </ScrollView>
             </RefreshView>
 
-            <Button Text="Запустить" HorizontalOptions="FillAndExpand"
+            <Button Text="Запустить" HorizontalOptions="FillAndExpand" 
+                    IsVisible="{Binding IsPortrait}"
                     BackgroundColor="{StaticResource colorPrimaryLight}" 
                     Command="{Binding CmdStart}"
                     IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
             </Button>
         </StackLayout>
     </ContentPage.Content>
-</ContentPage>
+</views:BaseContentPage>

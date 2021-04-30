@@ -7,9 +7,9 @@
         <ResourceDictionary>
             <Color x:Key="launcher_background">#FFFFFF</Color>
 
-            <Color x:Key="colorBackgroundDark">#333333</Color>
-            <Color x:Key="colorBackgroundMedium">#666666</Color>
-            <Color x:Key="colorBackground">#CCCCCC</Color>
+            <Color x:Key="colorBackgroundDark">#666666</Color>
+            <Color x:Key="colorBackgroundMedium">#CCCCCC</Color>
+            <Color x:Key="colorBackground">#DDDDDD</Color>
             <Color x:Key="colorBackgroundLight">#EEEEEE</Color>
             <Color x:Key="colorBackgroundPale">#FFFFFF</Color>
 
@@ -49,6 +49,10 @@
             <Color x:Key="colorCtrlInactive">#E0E0E0</Color>
             <Color x:Key="colorCtrlBg">#F0F0F0</Color>
 
+            <Style TargetType="{x:Type Button}">
+                <Setter Property="CornerRadius" Value="0" />
+            </Style>
+
             <Style x:Key="GroupingFrameStyle" TargetType="{x:Type Frame}">
                 <Setter Property="Margin" Value="4" />
                 <Setter Property="Padding" Value="4" />
@@ -56,20 +60,26 @@
                 <Setter Property="HasShadow" Value="True" />
                 <Setter Property="BackgroundColor" Value="{StaticResource colorBackgroundPale}" />
             </Style>
-            <Style x:Key="GroupingFrameTitleStyle" TargetType="{x:Type Label}">
-                <Setter Property="Margin" Value="-6,-6,-6,6" />
-                <Setter Property="Padding" Value="10,0,5,0" />
-                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
-                <Setter Property="FontSize" Value="Medium" />
-                <Setter Property="TextColor" Value="{StaticResource colorTextLight}" />
-                <Setter Property="BackgroundColor" Value="{StaticResource colorPrimaryDark}"  />
-            </Style>
-
             <Style x:Key="SectionLabel" TargetType="{x:Type Label}">
                 <Setter Property="Padding" Value="10,0,10,0" />
                 <Setter Property="HorizontalOptions" Value="FillAndExpand" />
                 <Setter Property="FontSize" Value="Medium" />
                 <Setter Property="TextColor" Value="{StaticResource colorText}" />
+            </Style>
+
+            <Style x:Key="GroupingFrameStyle2" TargetType="{x:Type Frame}">
+                <Setter Property="Margin" Value="4" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="4" />
+                <Setter Property="HasShadow" Value="True" />
+                <Setter Property="BackgroundColor" Value="{StaticResource colorBackgroundPale}" />
+            </Style>
+            <Style x:Key="SectionLabel2" TargetType="{x:Type Label}">
+                <Setter Property="Padding" Value="10,0,10,0" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="FontSize" Value="Medium" />
+                <Setter Property="TextColor" Value="{StaticResource colorText}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource colorBackground}" />
             </Style>
 
             <Style x:Key="MenuItemStyle" TargetType="{x:Type Frame}">
@@ -78,7 +88,7 @@
                 <Setter Property="CornerRadius" Value="4" />
                 <Setter Property="HasShadow" Value="True" />
                 <Setter Property="BackgroundColor" Value="{StaticResource colorBackgroundPale}" />
-                <Setter Property="xct:TouchEffect.PressedBackgroundColor" Value="{StaticResource colorPrimaryLight}" />
+                <Setter Property="xct:TouchEffect.PressedBackgroundColor" Value="{StaticResource colorPrimaryPale}" />
                 <!--Setter Property="xct:TouchEffect.NativeAnimation" Value="true" />
                 <Setter Property="xct:TouchEffect.NativeAnimationColor" Value="{StaticResource colorCtrlHighlight}" /-->
                 <Setter Property="xct:TouchEffect.PressedScale" Value="0.96" />

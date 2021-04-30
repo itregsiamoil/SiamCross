@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<views:BaseContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:views="clr-namespace:SiamCross.Views"
@@ -12,11 +12,26 @@
         </Style>
     </ContentPage.Resources >
     <NavigationPage.TitleView >
-        <StackLayout>
-            <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
-            <Label Text="Хранилище"
+        <StackLayout Orientation="Horizontal" >
+            <StackLayout HorizontalOptions="StartAndExpand" >
+                <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
+                <Label Text="Хранилище"
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}" 
+                         HorizontalOptions="End" VerticalOptions="Fill" >
+                <Button Text="Очистить "
+                        HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
+                        BackgroundColor="{StaticResource colorAccentLight}"
+                        Command="{Binding CmdClearStorage}"
+                        IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" />
+                <Button Text="Считать"
+                        HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
+                        BackgroundColor="{StaticResource colorPrimaryLight}"
+                        Command="{Binding CmdDownload}"
+                        IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" />
+            </StackLayout>
         </StackLayout>
     </NavigationPage.TitleView>
 
@@ -34,76 +49,80 @@
                     <StackLayout 
                     IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
 
-                        <Label Text="Исследования" Style="{StaticResource SectionLabel}" />
-                        <Frame Style="{StaticResource GroupingFrameStyle}" >
+                        
+                        <Frame Style="{StaticResource GroupingFrameStyle2}" >
                             <StackLayout>
-                                <Label >
-                                    <Label.FormattedText>
-                                        <FormattedString >
-                                            <Span Text="Всего памяти: &#x2246;"  FontSize="Default"/>
-                                            <Span Text="{Binding TotalSpaceM}"/>
-                                            <Span Text="M "/>
-                                            <Span Text="{Binding TotalSpaceK}"/>
-                                            <Span Text="k "/>
-                                            <Span Text="{Binding TotalSpaceB}"/>
-                                            <Span Text="b  "/>
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
-                                <Label >
-                                    <Label.FormattedText>
-                                        <FormattedString >
-                                            <Span Text="Свободно памяти: &#x2246;"  />
-                                            <Span Text="{Binding EmptySpaceRatio}" />
-                                            <Span Text=" %"  />
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
-                                <Label>
-                                    <Label.FormattedText>
-                                        <FormattedString >
-                                            <Span Text="Количество исследований: "  />
-                                            <Span Text="{Binding SurveyQty}"/>
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
+                                <Label Text="Исследования" Style="{StaticResource SectionLabel2}" />
+                                <StackLayout Padding="4">
+                                    <Label >
+                                        <Label.FormattedText>
+                                            <FormattedString >
+                                                <Span Text="Всего памяти: &#x2246; " />
+                                                <Span Text="{Binding TotalSpaceM}"/>
+                                                <Span Text="M "/>
+                                                <Span Text="{Binding TotalSpaceK}"/>
+                                                <Span Text="k "/>
+                                                <Span Text="{Binding TotalSpaceB}"/>
+                                                <Span Text="b  "/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label >
+                                        <Label.FormattedText>
+                                            <FormattedString >
+                                                <Span Text="Свободно памяти: &#x2246; "  />
+                                                <Span Text="{Binding EmptySpaceRatio}" />
+                                                <Span Text=" %"  />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString >
+                                                <Span Text="Количество исследований: &#x2246; "  />
+                                                <Span Text="{Binding SurveyQty}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <!--
 
-                                <Grid RowSpacing="0">
-                                    <Grid.RowDefinitions>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="60*"/>
-                                        <ColumnDefinition Width="40*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Text="Начальное исследование" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
-                                    <Entry Text="{Binding StartRep}" Keyboard="Numeric"
-                                       Grid.Column="1" Grid.Row="0">
-                                        <Entry.Behaviors>
-                                            <xct:NumericValidationBehavior 
-                                            InvalidStyle="{StaticResource InvalidEntryStyle}"
-                                            MinimumValue="0"
-                                            MaximumValue="{Binding SurveyQty}"/>
-                                        </Entry.Behaviors>
-                                        <Entry.Effects>
-                                            <xct:SelectAllTextEffect/>
-                                        </Entry.Effects>
-                                    </Entry>
-                                    <Label Text="Количество" Grid.Column="0" Grid.Row="1" VerticalTextAlignment="Center"/>
-                                    <Entry Text="{Binding SurveyQty}" Keyboard="Numeric"
-                                       Grid.Column="1" Grid.Row="1">
-                                        <Entry.Behaviors>
-                                            <xct:NumericValidationBehavior 
-                                            InvalidStyle="{StaticResource InvalidEntryStyle}"
-                                            MinimumValue="0"
-                                            MaximumValue="{Binding SurveyQty}"/>
-                                        </Entry.Behaviors>
-                                        <Entry.Effects>
-                                            <xct:SelectAllTextEffect/>
-                                        </Entry.Effects>
-                                    </Entry>
+                                    <Grid RowSpacing="0">
+                                        <Grid.RowDefinitions>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="60*"/>
+                                            <ColumnDefinition Width="40*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Text="Начальное исследование" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
+                                        <Entry Text="{Binding StartRep}" Keyboard="Numeric"
+                                           Grid.Column="1" Grid.Row="0">
+                                            <Entry.Behaviors>
+                                                <xct:NumericValidationBehavior 
+                                                InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                                MinimumValue="0"
+                                                MaximumValue="{Binding SurveyQty}"/>
+                                            </Entry.Behaviors>
+                                            <Entry.Effects>
+                                                <xct:SelectAllTextEffect/>
+                                            </Entry.Effects>
+                                        </Entry>
+                                        <Label Text="Количество" Grid.Column="0" Grid.Row="1" VerticalTextAlignment="Center"/>
+                                        <Entry Text="{Binding SurveyQty}" Keyboard="Numeric"
+                                           Grid.Column="1" Grid.Row="1">
+                                            <Entry.Behaviors>
+                                                <xct:NumericValidationBehavior 
+                                                InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                                MinimumValue="0"
+                                                MaximumValue="{Binding SurveyQty}"/>
+                                            </Entry.Behaviors>
+                                            <Entry.Effects>
+                                                <xct:SelectAllTextEffect/>
+                                            </Entry.Effects>
+                                        </Entry>
 
-                                </Grid>
-
+                                    </Grid>
+                                    -->
+                                </StackLayout>
                             </StackLayout>
                         </Frame>
 
@@ -111,7 +130,7 @@
                 </ScrollView>
             </RefreshView>
 
-            <StackLayout Orientation="Horizontal" Spacing="0" >
+            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsPortrait}" >
                 <Button Text="Очистить " HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorAccentLight}"
                         Command="{Binding CmdClearStorage}"
@@ -126,4 +145,4 @@
 
         </StackLayout>
     </ContentPage.Content>
-</ContentPage>
+</views:BaseContentPage>

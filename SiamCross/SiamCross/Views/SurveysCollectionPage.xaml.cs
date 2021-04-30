@@ -1,10 +1,9 @@
-﻿using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using Xamarin.Forms.Xaml;
 
 namespace SiamCross.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class SurveysCollectionPage : ContentPage
+    public partial class SurveysCollectionPage : BaseContentPage
     {
         public SurveysCollectionPage()
         {
