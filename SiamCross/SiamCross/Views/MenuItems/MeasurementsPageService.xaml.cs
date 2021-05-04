@@ -8,7 +8,7 @@ namespace SiamCross.Views.MenuItems
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
 
-    public partial class MeasurementsPage : ContentPage
+    public partial class MeasurementsPage : BaseContentPage
     {
         private readonly MeasurementsVMService _vm = MeasurementsVMService.Instance;
         public MeasurementsPage()
@@ -51,12 +51,14 @@ namespace SiamCross.Views.MenuItems
 
         protected override void OnDisappearing()
         {
+            base.OnDisappearing();
             _vm.DoOnDisappearing();
             _vm.OnBackButton();
         }
 
         protected override async void OnAppearing()
         {
+            base.OnAppearing();
             await _vm.ReloadMeasurementsFromDb().ConfigureAwait(false);
         }
     }

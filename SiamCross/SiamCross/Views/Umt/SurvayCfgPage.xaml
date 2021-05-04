@@ -60,6 +60,7 @@
                                 IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
                         <Frame Style="{StaticResource GroupingFrameStyle2}" 
                                FlexLayout.Grow="1"  FlexLayout.Basis="250"
+                               IsEnabled="{Binding Sensor.TaskManager.IsFree}"
                                IsVisible="{Binding IsSheduler}">
                             <StackLayout >
                                 <Label Text="График измерения" Style="{StaticResource SectionLabel2}" />
@@ -88,6 +89,7 @@
                             </StackLayout>
                         </Frame>
                         <Frame Style="{StaticResource GroupingFrameStyle2}"
+                               IsEnabled="{Binding Sensor.TaskManager.IsFree}"
                                FlexLayout.Grow="1"  FlexLayout.Basis="250">
                             <StackLayout >
                                 <Label Text="Датчик температуры" Style="{StaticResource SectionLabel2}"/>

@@ -57,7 +57,9 @@
             <RefreshView Command="{Binding CmdLoadParam}">
                 <ScrollView VerticalOptions="Fill" Orientation="Both">
 
-                    <StackLayout Orientation="Vertical" VerticalOptions="Fill" HorizontalOptions="FillAndExpand">
+                    <StackLayout Orientation="Vertical" 
+                                 VerticalOptions="Fill" HorizontalOptions="FillAndExpand"
+                                 IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
                         <StackLayout.Triggers>
                             <DataTrigger TargetType="StackLayout" Binding="{Binding IsLandscape}" Value="true" >
                                 <Setter Property="Orientation" Value="Horizontal"  />
@@ -65,7 +67,8 @@
                         </StackLayout.Triggers>
                         <StackLayout HorizontalOptions="FillAndExpand" IsVisible="{Binding IsSheduler}">
                             <Frame Style="{StaticResource GroupingFrameStyle2}"
-                               IsVisible="{Binding IsVisibleLevelSheduler}">
+                                   IsEnabled="{Binding Sensor.TaskManager.IsFree}"
+                                   IsVisible="{Binding IsVisibleLevelSheduler}">
                                 <StackLayout >
                                     <Label Text="График измерения уровня" Style="{StaticResource SectionLabel2}"/>
                                     <Grid Padding="4,0,4,0" RowSpacing="0">
@@ -122,6 +125,7 @@
                                 </StackLayout>
                             </Frame>
                             <Frame Style="{StaticResource GroupingFrameStyle2}"
+                                   IsEnabled="{Binding Sensor.TaskManager.IsFree}"
                                    IsVisible="{Binding IsSheduler}">
                                 <StackLayout >
                                     <Label Text="График АРД" Style="{StaticResource SectionLabel2}"/>
@@ -154,6 +158,7 @@
                                     AlignItems="Start"
                                     AlignContent="Start" >
                             <Frame Style="{StaticResource GroupingFrameStyle2}"
+                                   IsEnabled="{Binding Sensor.TaskManager.IsFree}"
                                    FlexLayout.Grow="1"  FlexLayout.Basis="280"
                                    IsVisible="{Binding IsLevelSurvey}">
                                 <StackLayout >
@@ -172,6 +177,7 @@
                             </Frame>
                             <Frame Style="{StaticResource GroupingFrameStyle2}"
                                    FlexLayout.Grow="1"  FlexLayout.Basis="280"
+                                   IsEnabled="{Binding Sensor.TaskManager.IsFree}"
                                    IsVisible="{Binding IsLevelSurvey}">
                                 <StackLayout >
                                     <Label Text="Датчик уровня" Style="{StaticResource SectionLabel2}"/>
@@ -185,6 +191,7 @@
                             </Frame>
                             <Frame Style="{StaticResource GroupingFrameStyle2}"
                                    FlexLayout.Grow="1"  FlexLayout.Basis="280"
+                                   IsEnabled="{Binding Sensor.TaskManager.IsFree}"
                                    IsVisible="{Binding IsLevelSurvey}">
                                 <StackLayout >
                                     <Label Text="Скорость звука" Style="{StaticResource SectionLabel2}"/>
@@ -225,7 +232,8 @@
                                 </StackLayout>
                             </Frame>
                             <Frame Style="{StaticResource GroupingFrameStyle2}"
-                                   FlexLayout.Grow="1"  FlexLayout.Basis="280">
+                                   FlexLayout.Grow="1"  FlexLayout.Basis="280"
+                                   IsEnabled="{Binding Sensor.TaskManager.IsFree}">
                                 <StackLayout>
                                     <Label Text="Дополнительно" Style="{StaticResource SectionLabel2}"/>
                                     <Label Padding="4">

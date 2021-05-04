@@ -29,10 +29,10 @@
         <StackLayout BackgroundColor="{StaticResource colorBackground}">
             <ScrollView VerticalOptions="StartAndExpand">
                 <StackLayout BackgroundColor="{StaticResource colorBackground}">
-                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                    <Frame Style="{StaticResource GroupingFrameStyle2}" >
                         <StackLayout>
                             <Label Text="Термокоэффициены давления" 
-                               Style="{StaticResource GroupingFrameTitleStyle}"/>
+                               Style="{StaticResource SectionLabel2}"/>
                             <Grid ColumnSpacing="0" RowSpacing="0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>

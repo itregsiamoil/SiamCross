@@ -5,6 +5,8 @@
              x:Class="SiamCross.App">
     <Application.Resources>
         <ResourceDictionary>
+            <xct:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            
             <Color x:Key="launcher_background">#FFFFFF</Color>
 
             <Color x:Key="colorBackgroundDark">#666666</Color>
@@ -53,26 +55,17 @@
                 <Setter Property="CornerRadius" Value="0" />
             </Style>
 
-            <Style x:Key="GroupingFrameStyle" TargetType="{x:Type Frame}">
-                <Setter Property="Margin" Value="4" />
-                <Setter Property="Padding" Value="4" />
-                <Setter Property="CornerRadius" Value="4" />
-                <Setter Property="HasShadow" Value="True" />
-                <Setter Property="BackgroundColor" Value="{StaticResource colorBackgroundPale}" />
-            </Style>
-            <Style x:Key="SectionLabel" TargetType="{x:Type Label}">
-                <Setter Property="Padding" Value="10,0,10,0" />
-                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
-                <Setter Property="FontSize" Value="Medium" />
-                <Setter Property="TextColor" Value="{StaticResource colorText}" />
-            </Style>
-
             <Style x:Key="GroupingFrameStyle2" TargetType="{x:Type Frame}">
                 <Setter Property="Margin" Value="4" />
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="CornerRadius" Value="4" />
                 <Setter Property="HasShadow" Value="True" />
                 <Setter Property="BackgroundColor" Value="{StaticResource colorBackgroundPale}" />
+                <Style.Triggers>
+                    <Trigger TargetType="Frame" Property="IsEnabled" Value="False">
+                        <Setter Property="BackgroundColor" Value="{StaticResource colorBackgroundLight}" />
+                    </Trigger>
+                </Style.Triggers>
             </Style>
             <Style x:Key="SectionLabel2" TargetType="{x:Type Label}">
                 <Setter Property="Padding" Value="10,0,10,0" />
@@ -101,7 +94,6 @@
             <Style x:Key="InvalidEntryStyle" TargetType="Entry">
                 <Setter Property="TextColor" Value="{StaticResource colorAccent}" />
             </Style>
-            <xct:InvertedBoolConverter x:Key="InvertedBoolConverter" />
 
         </ResourceDictionary>
     </Application.Resources>

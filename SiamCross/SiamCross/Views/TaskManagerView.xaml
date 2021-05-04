@@ -12,9 +12,8 @@
                 <Setter Property="IsVisible" Value="false"   />
             </DataTrigger>
         </StackLayout.Triggers>
-        <Frame Style="{StaticResource GroupingFrameStyle}" Padding="0" >
-            <Grid ColumnSpacing="0" RowSpacing="0" Padding="5" 
-                  BackgroundColor="{StaticResource colorBackground}">
+        <Frame Style="{StaticResource GroupingFrameStyle2}" IsEnabled="{Binding TaskManager.IsBusy}">
+            <Grid ColumnSpacing="0" RowSpacing="0" Padding="5" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height ="Auto" />
                     <RowDefinition Height="20" />

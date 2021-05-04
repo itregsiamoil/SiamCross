@@ -6,17 +6,13 @@
              x:Class="SiamCross.Views.MenuItems.ControlPanelPage"
              x:Name="ControlPanel"
              Title="{local:Translate ControlPanelTitle}">
+    
     <ContentPage.Resources>
-        <ResourceDictionary>
-            <Color x:Key="colorContentBg">White</Color>
-        </ResourceDictionary>
-        <!--Style TargetType="{x:Type Label}" ApplyToDerivedTypes="True">
-        <Setter Property="TextColor" Value="Black" />
-    </> -->
     </ContentPage.Resources>
+
     <ContentPage.Content>
 
-        <StackLayout>
+        <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
             
             <Label 
                    Font="Bold" FontSize="Title" LineBreakMode="WordWrap"
@@ -70,7 +66,7 @@
                                             </DataTrigger>
                                         </SwipeView.Triggers>
                                         <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
-                                                    BackgroundColor="{StaticResource colorCtrlBg}"
+                                                    BackgroundColor="{StaticResource colorBackgroundPale}"
                                                     Padding="5" Margin="0" Spacing="0" >
                                             <StackLayout.Triggers>
                                                 <DataTrigger TargetType="StackLayout" Binding="{Binding Connection.State}" Value="Connected" >

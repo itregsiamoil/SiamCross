@@ -44,9 +44,10 @@
             <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
 
             <RefreshView Command="{Binding CmdLoad}">
-                <ScrollView VerticalOptions="StartAndExpand">
-                    <StackLayout>
-                        <Frame Style="{StaticResource GroupingFrameStyle2}" >
+                <ScrollView VerticalOptions="FillAndExpand">
+                    <StackLayout IsEnabled="{Binding Sensor.TaskManager.IsFree}">
+                        <Frame Style="{StaticResource GroupingFrameStyle2}" 
+                               IsEnabled="{Binding Sensor.TaskManager.IsFree}">
                             <StackLayout>
                                 <Label Text="Данные" Style="{StaticResource SectionLabel2}" />
                                 <StackLayout Padding="4">
@@ -138,8 +139,8 @@
                             </StackLayout>
                         </Frame>
                         <!--
-                    <Label Text="Источник данных" Style="{StaticResource SectionLabel}" />
-                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                    <Label Text="Источник данных" Style="{StaticResource SectionLabel2}" />
+                    <Frame Style="{StaticResource GroupingFrameStyle2}" >
                         <StackLayout Margin="5" >
                             <Grid RowSpacing="10">
                                 <Grid.RowDefinitions>

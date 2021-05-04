@@ -29,8 +29,12 @@ using Xamarin.Forms.Internals;
 namespace SiamCross.ViewModels
 {
     [Preserve(AllMembers = true)]
-    public class MeasurementsVMService : BaseVM
+    public class MeasurementsVMService : BasePageVM
     {
+        public override void Unsubscribe()
+        {
+
+        }
         private static readonly Lazy<MeasurementsVMService> _instance =
             new Lazy<MeasurementsVMService>(() => new MeasurementsVMService());
         public static MeasurementsVMService Instance => _instance.Value;

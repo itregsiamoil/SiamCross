@@ -29,10 +29,10 @@
         <StackLayout BackgroundColor="{StaticResource colorBackground}">
             <ScrollView VerticalOptions="StartAndExpand">
                 <StackLayout >
-                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                    <Frame Style="{StaticResource GroupingFrameStyle2}" >
                         <StackLayout>
                             <Label Text="Датчик давления" 
-                               Style="{StaticResource GroupingFrameTitleStyle}"/>
+                               Style="{StaticResource SectionLabel2}"/>
                             <Label Text="Чувствительность"/>
                             <Entry Text="" />
                             <Label Text="Смещение нуля"/>
@@ -40,20 +40,20 @@
 
                         </StackLayout>
                     </Frame>
-                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                    <Frame Style="{StaticResource GroupingFrameStyle2}" >
                         <StackLayout >
                             <Label Text="Пьезодатчик" 
-                               Style="{StaticResource GroupingFrameTitleStyle}"/>
+                               Style="{StaticResource SectionLabel2}"/>
                             <Label Text="Чувствительность"/>
                             <Entry Text="" />
                             <Label Text="Смещение нуля канала усиления"/>
                             <Entry Text="" />
                         </StackLayout>
                     </Frame>
-                    <Frame Style="{StaticResource GroupingFrameStyle}" >
+                    <Frame Style="{StaticResource GroupingFrameStyle2}" >
                         <StackLayout >
                             <Label Text="Разное" 
-                               Style="{StaticResource GroupingFrameTitleStyle}"/>
+                               Style="{StaticResource SectionLabel2}"/>
                             <Grid Padding="0,10,0,10">
                                 <Label Text="Сервисный режим"/>
                                 <Switch />

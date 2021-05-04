@@ -66,6 +66,7 @@
                                  FlexLayout.Grow="1" />
                         -->
                         <Frame Style="{StaticResource GroupingFrameStyle2}" 
+                               IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}"
                                FlexLayout.Grow="1"  FlexLayout.Basis="250" >
                             <StackLayout>
                                 <Label Text="Измерения без эхограмм" Style="{StaticResource SectionLabel2}" />
@@ -118,6 +119,7 @@
                         </Frame>
 
                         <Frame Style="{StaticResource GroupingFrameStyle2}" 
+                               IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}"
                                FlexLayout.Grow="1" FlexLayout.Basis="250">
                             <StackLayout>
                                 <Label Text="Измерения с эхограммами" Style="{StaticResource SectionLabel2}" />

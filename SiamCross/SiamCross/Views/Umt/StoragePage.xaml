@@ -50,7 +50,8 @@
                     IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
 
                         
-                        <Frame Style="{StaticResource GroupingFrameStyle2}" >
+                        <Frame Style="{StaticResource GroupingFrameStyle2}"
+                               IsEnabled="{Binding Sensor.TaskManager.IsFree}">
                             <StackLayout>
                                 <Label Text="Исследования" Style="{StaticResource SectionLabel2}" />
                                 <StackLayout Padding="4">

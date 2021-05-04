@@ -26,9 +26,9 @@
     <ContentPage.Content>
         <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
             <ScrollView VerticalOptions="StartAndExpand">
-                <Frame Style="{StaticResource GroupingFrameStyle}" >
+                <Frame Style="{StaticResource GroupingFrameStyle2}" >
                     <StackLayout>
-                        <Label Style="{StaticResource GroupingFrameTitleStyle}">
+                        <Label Style="{StaticResource SectionLabel2}">
                             <Label.FormattedText>
                                 <FormattedString >
                                     <Span Text="Измерения" />

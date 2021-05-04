@@ -1,54 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<views:BaseContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SiamCross.Views.MenuItems.MeasurementsPage"
              xmlns:localEffects="clr-namespace:SiamCross.Services;assembly=SiamCross"
              xmlns:local="clr-namespace:SiamCross.ViewModels;assembly=SiamCross"
              NavigationPage.HasBackButton ="true"
+             xmlns:views="clr-namespace:SiamCross.Views"
+             x:Class="SiamCross.Views.MenuItems.MeasurementsPage"
              x:DataType="local:MeasurementsVMService"
              x:Name="MyPage"
              Title="{Binding Title, Mode=TwoWay}">
-<!--
-    <NavigationPage.TitleView>
-        <StackLayout>
-            <Label Text="{Binding Title}" Font="Bold" TextColor="White" />
-        </StackLayout>
-    </NavigationPage.TitleView>
-
-    <ContentPage.Resources>
-        <Style TargetType="StackLayout">
-            <Setter Property="VisualStateManager.VisualStateGroups">
-                <VisualStateGroupList>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="Normal" />
-                        <VisualState x:Name="Selected">
-                            <VisualState.Setters>
-                                <Setter Property="BackgroundColor"
-                                        Value="{StaticResource colorCtrlNormal}" />
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateGroupList>
-            </Setter>
-        </Style>
-    </ContentPage.Resources>
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="&#x25A1;" Command="{Binding UnselectAllCommand}"></ToolbarItem>
-        <ToolbarItem Text="&#x25A3;" Command="{Binding SelectAllCommand}"/>
-    </ContentPage.ToolbarItems>
-
- -->    
-    <!--Icons made by
-    <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from
-    <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>-->
-    
-    
+<!--Icons made by
+<a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from
+<a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>-->
 <!--
                             SelectedItems="{Binding SelectedMeasurements}"
                             SelectionMode="Multiple"
                             SelectedItem="{Binding OnSelectItem}"
                             SelectionChanged="OnCollectionViewSelectionChanged"
 -->
+
+    <ContentPage.Resources>
+        <Style TargetType="{x:Type StackLayout}">
+            <Setter Property="Spacing" Value="0" />
+        </Style>
+    </ContentPage.Resources >
+
+    <NavigationPage.TitleView >
+        <StackLayout Orientation="Horizontal" >
+            <StackLayout HorizontalOptions="StartAndExpand" >
+                <Label Text="{Binding Title, Mode=TwoWay}"
+                   FontSize="Medium" FontAttributes="Bold" 
+                   LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}"
+                         HorizontalOptions="End" VerticalOptions="Fill" >
+            </StackLayout>
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="&#x25A1;" Command="{Binding UnselectAllCommand}"></ToolbarItem>
         <ToolbarItem Text="&#x25A3;" Command="{Binding SelectAllCommand}"/>
@@ -172,37 +162,32 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <FlexLayout BackgroundColor="{StaticResource colorPrimary}" 
-                Wrap="Wrap" JustifyContent="Center" Direction="Row" 
+            <StackLayout
+                Orientation="Horizontal"
                 Margin="0" Padding="0" IsVisible="false">
-                <FlexLayout.Triggers>
-                    <DataTrigger TargetType="FlexLayout" Binding="{Binding SelectMode}" Value="true" >
+                <StackLayout.Triggers>
+                    <DataTrigger TargetType="StackLayout" Binding="{Binding SelectMode}" Value="true" >
                         <Setter Property="IsVisible" Value="true"  />
                     </DataTrigger>
-                </FlexLayout.Triggers>
-
-                <Button ImageSource="share.png"  IsEnabled="False"
-                        FlexLayout.AlignSelf="Center" FlexLayout.Basis="30" FlexLayout.Grow="40"
-                        BackgroundColor="Transparent"
-                        Command="{Binding Path=ShareCommand}" 
-                         />
-                <Button ImageSource="send.png"
-                        FlexLayout.AlignSelf="Center" FlexLayout.Basis="30" FlexLayout.Grow="40"
-                        BackgroundColor="Transparent"
-                        Command="{Binding Path=SendCommand}" 
-                         />
-                <Button ImageSource="save.png"
-                        FlexLayout.AlignSelf="Center" FlexLayout.Basis="30" FlexLayout.Grow="40"
-                        BackgroundColor="Transparent"
-                        Command="{Binding Path=SaveCommand}"
-                         />
+                </StackLayout.Triggers>
                 <Button ImageSource="trashcan.png" 
-                        FlexLayout.AlignSelf="Center" FlexLayout.Basis="30" FlexLayout.Grow="40"
-                        BackgroundColor="Transparent"
-                        Command="{Binding Path=DeleteCommand}" 
-                         />
-                
-            </FlexLayout>
+                        HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorAccentLight}"
+                        Command="{Binding Path=DeleteCommand}"/>
+                <Button ImageSource="save.png"
+                        HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorPrimaryLight}"
+                        Command="{Binding Path=SaveCommand}"/>
+                <Button ImageSource="send.png"
+                        HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorPrimaryLight}"
+                        Command="{Binding Path=SendCommand}"/>
+                <Button ImageSource="share.png" 
+                        HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorPrimaryLight}"
+                        Command="{Binding Path=ShareCommand}"/>
+
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
-</ContentPage>
+</views:BaseContentPage>

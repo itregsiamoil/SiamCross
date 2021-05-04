@@ -11,22 +11,25 @@
              >
     <ContentPage.Content>
         <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
-            <Label Text="{local:Translate NewField}" Style="{StaticResource SectionLabel}" />
+            
             <ScrollView VerticalOptions="StartAndExpand">
-                <Frame Style="{StaticResource GroupingFrameStyle}" >
-                    <StackLayout Padding="5">
-                        <Label Text="{local:Translate FieldName}"></Label>
-                        <Entry Text="{Binding FieldName}"/>
-                        <Label Text="{local:Translate FieldCode}"></Label>
-                        <Entry Text="{Binding FieldCode, Mode=TwoWay}"
+                <Frame Style="{StaticResource GroupingFrameStyle2}" >
+                    <StackLayout>
+                        <Label Text="{local:Translate NewField}" Style="{StaticResource SectionLabel2}" />
+                        <StackLayout Padding="5">
+                            <Label Text="{local:Translate FieldName}"></Label>
+                            <Entry Text="{Binding FieldName}"/>
+                            <Label Text="{local:Translate FieldCode}"></Label>
+                            <Entry Text="{Binding FieldCode, Mode=TwoWay}"
                                 Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <xct:NumericValidationBehavior MaximumDecimalPlaces="0" MinimumValue="0" />
-                            </Entry.Behaviors>
-                            <Entry.Effects>
-                                <xct:SelectAllTextEffect/>
-                            </Entry.Effects>
-                        </Entry>
+                                <Entry.Behaviors>
+                                    <xct:NumericValidationBehavior MaximumDecimalPlaces="0" MinimumValue="0" />
+                                </Entry.Behaviors>
+                                <Entry.Effects>
+                                    <xct:SelectAllTextEffect/>
+                                </Entry.Effects>
+                            </Entry>
+                        </StackLayout>
                     </StackLayout>
                 </Frame>
             </ScrollView>
