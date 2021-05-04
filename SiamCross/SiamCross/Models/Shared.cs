@@ -20,6 +20,7 @@ namespace SiamCross.Models
         {
             Instance.Add(0, Resource.Dynamogram);
             Instance.Add(1, Resource.Echogram);
+            Instance.Add(2, "MT");
         }
     }
     public static class DeviceIndex
@@ -164,8 +165,7 @@ namespace SiamCross.Models
         public Dictionary<string, long> DataInt = new Dictionary<string, long>();
         public Dictionary<string, double> DataFloat = new Dictionary<string, double>();
         public Dictionary<string, string> DataString = new Dictionary<string, string>();
-        public Dictionary<string, byte[]> DataBlob = new Dictionary<string, byte[]>();
-
+        public Dictionary<string, string> DataBlob = new Dictionary<string, string>();
 
         [XmlIgnore]
         public Dictionary<string, object> Data = new Dictionary<string, object>();

@@ -1,6 +1,9 @@
 ﻿using SiamCross.Models.Connection.Protocol;
+using SiamCross.Services.Environment;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -50,6 +53,14 @@ namespace SiamCross.Models.Sensors.Umt
 
         const UInt32 FramOffset = 0x70000000;
         const UInt32 FlashOffset = 0x80000000;
+        const UInt32 _MtSize = 4096;
+
+        readonly MemVarByteArray DataMt;
+        MeasureData _CurrSurvey = null;
+        Stream _CurrData = null;
+
+        ulong _BytesTotal;
+        ulong _BytesReaded;
 
 
         UInt16 PageSize => page.Value;
@@ -104,6 +115,8 @@ namespace SiamCross.Models.Sensors.Umt
             _Rep.Add(StartTimestamp);
             _Rep.Add(IntervalRep);
 
+            DataMt = new MemVarByteArray(0, new MemValueByteArray(_MtSize));
+
         }
         public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {
@@ -115,7 +128,7 @@ namespace SiamCross.Models.Sensors.Umt
             await Connection.ReadAsync(_MemInfo, null, ct);
             InfoEx = "чтение текущего состояния памяти";
             await Connection.ReadAsync(_CurrMemInfo, null, ct);
-            InfoEx = "чтение количества исследованиу";
+            InfoEx = "чтение количества исследований";
             await Connection.ReadAsync(_CurrInfo, null, ct);
 
 
@@ -125,31 +138,54 @@ namespace SiamCross.Models.Sensors.Umt
                 return true;
             }
 
+            var totalSpace = (ulong)(kolbl.Value) * kolstr.Value * page.Value;
+            var emptySpaceRatio = Math.Round(0.1f * Emem.Value, 1);
+
+            _BytesTotal = (uint)(totalSpace * (1 - emptySpaceRatio / 100.0f));
+            _BytesReaded = 0;
+
+
             UInt16 currAddrInPage = Adrtek.Value;
 
             InfoEx = $"пропуск {_Storage.StartRep} измерений";
 
             NomIslt.Value = Kolisl.Value;
-            UInt16 CurrentSurveyId = Kolisl.Value;
+            //UInt16 CurrentSurveyId = Kolisl.Value;
+            UInt16 CurrentSurveyId = 0xFFFF;
             HashSet<UInt16> ReadedSurveys = new HashSet<UInt16>();
             ReadedSurveys.Add(CurrentSurveyId);
 
+
+
+
+            //var repBegin = _Storage.StartRep;
+            //var repQty = _Storage.CountRep;
+
+            var repBegin = Kolisl.Value;
+            var repQty = Kolisl.Value;
 
             if (IsFram(currAddrInPage))
             {
                 currAddrInPage = (UInt16)(currAddrInPage & 0x7FFF);
 
-                while (NomIslt.Value > _Storage.StartRep)
+                while (CurrentSurveyId > repBegin)
                 {
                     _Rep.Address = FramOffset + currAddrInPage;
                     await Connection.ReadAsync(_Rep, null, ct);
 
-
                     if (CurrentSurveyId != NomIslt.Value)
                     {
+                        if (null != _CurrSurvey)
+                        {
+                            await AppendSurveyData(ct);
+                            await CloseSurvey(ct);
+                        }
+                        OpenSurvey();
                         CurrentSurveyId = NomIslt.Value;
-                        ReadedSurveys.Add(CurrentSurveyId);
+                        if (!ReadedSurveys.Add(CurrentSurveyId))
+                            break;
                     }
+                    await AppendSurveyData(ct);
 
                     if (0 == currAddrInPage)
                     {
@@ -163,7 +199,7 @@ namespace SiamCross.Models.Sensors.Umt
 
             }
             // read from flash
-            while (NomIslt.Value > _Storage.StartRep)
+            while (CurrentSurveyId > repBegin)
             {
                 _Rep.Address = FlashOffset + GetCurrentPageAddress() + currAddrInPage;
                 await Connection.ReadAsync(_Rep, null, ct);
@@ -173,18 +209,86 @@ namespace SiamCross.Models.Sensors.Umt
 
                 if (CurrentSurveyId != NomIslt.Value)
                 {
+                    if (null != _CurrSurvey)
+                    {
+                        await AppendSurveyData(ct);
+                        await CloseSurvey(ct);
+                    }
+                    OpenSurvey();
                     CurrentSurveyId = NomIslt.Value;
-                    ReadedSurveys.Add(CurrentSurveyId);
+                    if (!ReadedSurveys.Add(CurrentSurveyId))
+                        break;
                 }
+                await AppendSurveyData(ct);
             }
 
+            if (null != _CurrSurvey)
+            {
+                await AppendSurveyData(ct);
+                await CloseSurvey(ct);
+            }
 
             return true;
         }
 
+        async Task CloseSurvey(CancellationToken ct)
+        {
+            try
+            {
+                await _CurrData.FlushAsync(ct);
+            }
+            finally
+            {
+                _CurrData.Close();
+                _CurrData.Dispose();
+                _CurrData = null;
+            }
+        }
+        async Task AppendSurveyData(CancellationToken ct)
+        {
+            if (null == _CurrSurvey)
+                return;
+            DataMt.Address = _Rep.Address + _Rep.Size;
+            ulong qty = (ulong)4 * KolPar.Value * (ulong)(KolToch.Value + 1);
+            await Connection.ReadMemAsync(DataMt.Address, (uint)qty, DataMt.Value, 0, SetProgressBytes, ct);
+            await _CurrData.WriteAsync(DataMt.Value, 0, (int)qty, ct);
+        }
+        void OpenSurvey()
+        {
 
+            MeasureData survey = new MeasureData(
+                new Position()
+                , Sensor.Device
+                , Sensor.Info
+                , new MeasurementInfo());
 
+            survey.Measure.Kind = 2;
+            survey.Position.Field = FieldRep.Value;
+            survey.Position.Well = Encoding.UTF8.GetString(SkvRep.Value);
+            survey.Position.Bush = Encoding.UTF8.GetString(KustRep.Value);
+            survey.Position.Shop = ShopRep.Value;
+            survey.Measure.BeginTimestamp = GetTimestamp(StartTimestamp.Value);
+            survey.Measure.EndTimestamp = GetTimestamp(StartTimestamp.Value);
 
+            var path = Path.Combine(
+                EnvironmentService.Instance.GetDir_LocalApplicationData(), "_CurrData.tmp");
+            _CurrData = new FileStream(path, FileMode.Create);
+
+            _CurrSurvey = survey;
+        }
+        DateTime GetTimestamp(byte[] data)
+        {
+            try
+            {
+                return new DateTime(data[5], data[4], data[3]
+                            , data[0], data[1], data[2]);
+            }
+            catch (Exception)
+            {
+
+            }
+            return DateTime.Now;
+        }
         UInt16 GetCurrentPageAddress()
         {
             return (UInt16)(PageSize * (CurrentPage + CurrentBlock * PageQty));
@@ -215,6 +319,10 @@ namespace SiamCross.Models.Sensors.Umt
         {
             return 0 < (pageAddr & (1 << 15));
         }
-
+        void SetProgressBytes(uint bytes)
+        {
+            _BytesReaded += bytes;
+            Progress = ((float)_BytesReaded / _BytesTotal);
+        }
     }
 }

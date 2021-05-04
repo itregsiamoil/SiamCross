@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -416,7 +417,7 @@ namespace SiamCross.ViewModels
                         if (0x1201 == selectedMeasurement.MeasureData.Device.Kind)
                         {
                             await DbService.Instance.GetValuesAsync(selectedMeasurement.MeasureData);
-                            du = ConvertToOldMeasurement(selectedMeasurement.MeasureData);
+                            du = await ConvertToOldMeasurementAsync(selectedMeasurement.MeasureData);
                         }
                         else
                         {
@@ -434,7 +435,12 @@ namespace SiamCross.ViewModels
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "PushPage method" + "\n");
+                string msg = "EXCEPTION "
+                    + "\n msg=" + ex.Message
+                    + "\n type=" + ex.GetType()
+                    + "\n stack=" + ex.StackTrace + "\n";
+                Debug.WriteLine(msg);
+                _logger.Error(ex, msg);
                 throw;
             }
         }
@@ -466,7 +472,7 @@ namespace SiamCross.ViewModels
                             if (0x1201 == mv.MeasureData.Device.Kind)
                             {
                                 await DbService.Instance.GetValuesAsync(mv.MeasureData);
-                                du = ConvertToOldMeasurement(mv.MeasureData);
+                                du = await ConvertToOldMeasurementAsync(mv.MeasureData);
                             }
                             else
                             {
@@ -488,7 +494,7 @@ namespace SiamCross.ViewModels
             await MediaScannerService.Instance.Scan(mes_dir);
             return paths;
         }
-        static DuMeasurement ConvertToOldMeasurement(MeasureData mData)
+        static async Task<DuMeasurement> ConvertToOldMeasurementAsync(MeasureData mData)
         {
             if (!mData.Measure.DataFloat.TryGetValue("bufferpressure", out double bufferpressure))
                 bufferpressure = 0.0;
@@ -513,8 +519,20 @@ namespace SiamCross.ViewModels
 
             var startp = new DuMeasurementStartParameters(false, false, false, secp, 0.0);
 
-            byte[] echoArray = { };
-            mData.Measure.DataBlob.TryGetValue("lgechogram", out echoArray);
+            byte[] echoArray = null;
+            if (mData.Measure.DataBlob.TryGetValue("lgechogram", out string echoFile))
+            {
+                var echoStream = OpenTempFile(echoFile);
+                if (null != echoStream)
+                {
+                    echoArray = new byte[3000];
+                    using (echoStream)
+                    {
+                        await echoStream.ReadAsync(echoArray, 0, (int)echoStream.Length);
+                        echoStream.Close();
+                    }
+                }
+            }
 
             DuMeasurementData data = new DuMeasurementData(mData.Measure.EndTimestamp
                 , startp
@@ -525,6 +543,24 @@ namespace SiamCross.ViewModels
                 , MeasureState.Ok);
 
             return new DuMeasurement(data);
+        }
+
+        static FileStream OpenTempFile(string name)
+        {
+            try
+            {
+                var path = Path.Combine(
+                    Environment.GetFolderPath(
+                    Environment.SpecialFolder.Personal), "bin");
+                path = Path.Combine(path, name);
+
+                return new FileStream(path, FileMode.Open);
+            }
+            catch (Exception)
+            {
+
+            }
+            return null;
         }
 
 

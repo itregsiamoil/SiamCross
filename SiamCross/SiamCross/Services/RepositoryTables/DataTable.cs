@@ -51,5 +51,5 @@ namespace SiamCross.Services.RepositoryTables
     public class DataInt : DataTable<long> { public DataInt(IDbConnection db) : base(db, "ValInt") { } }
     public class DataFloat : DataTable<double> { public DataFloat(IDbConnection db) : base(db, "ValFloat") { } }
     public class DataString : DataTable<string> { public DataString(IDbConnection db) : base(db, "ValString") { } }
-    public class DataBlob : DataTable<byte[]> { public DataBlob(IDbConnection db) : base(db, "ValBlob") { } }
+    public class DataBlob : DataTable<string> { public DataBlob(IDbConnection db) : base(db, "ValBlob") { } }
 }

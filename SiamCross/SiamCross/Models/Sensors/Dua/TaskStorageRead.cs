@@ -1,6 +1,7 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Services;
 using System;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -164,8 +165,20 @@ namespace SiamCross.Models.Sensors.Dua
                 mi.DataFloat.Add("lglevel", urov.Value);
                 mi.DataFloat.Add("sudpressure", pressure.Value / 10.0);
                 mi.DataFloat.Add("lgtimediscrete", 0.00585938);
+
                 if (echo)
-                    mi.DataBlob.Add("lgechogram", Echo.Value);
+                {
+                    var echoStream = CreateTempFile();
+                    if (null != echoStream)
+                    {
+                        using (echoStream)
+                        {
+                            await echoStream.WriteAsync(Echo.Value, 0, (int)Echo.Size, ct);
+                            mi.DataBlob.Add("lgechogram", Path.GetFileName(echoStream.Name));
+                            echoStream.Close();
+                        }
+                    }
+                }
 
                 MeasureData survey = new MeasureData(
                      pos
@@ -173,13 +186,30 @@ namespace SiamCross.Models.Sensors.Dua
                     , Sensor.Info
                     , mi);
                 await DbService.Instance.SaveSurveyAsync(survey);
-
             }
-
-
             return true;
         }
 
+        static FileStream CreateTempFile()
+        {
+            var path = Path.Combine(
+                Environment.GetFolderPath(
+                Environment.SpecialFolder.Personal), "bin");
+            var dir = Directory.CreateDirectory(path);
+            for (int i = 0; i < 100; i++)
+            {
+                try
+                {
+                    string filename = Path.Combine(dir.FullName, "tmp" + i.ToString());
+                    return new FileStream(filename, FileMode.CreateNew);
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+            return null;
+        }
         DateTime GetTimestamp()
         {
             try
