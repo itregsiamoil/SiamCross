@@ -695,4 +695,7 @@
   <data name="Stat_ValvePreparation" xml:space="preserve">
     <value>авт.клапан: подготовка</value>
   </data>
+  <data name="Manometr" xml:space="preserve">
+    <value>манометр</value>
+  </data>
 </root>

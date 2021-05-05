@@ -686,4 +686,7 @@ DB Siam can't import the files with the same identifiers.</value>
   <data name="Stat_ValvePreparation" xml:space="preserve">
     <value>auto-valve: preparation</value>
   </data>
+  <data name="Manometr" xml:space="preserve">
+    <value>manometr</value>
+  </data>
 </root>

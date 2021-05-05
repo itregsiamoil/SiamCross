@@ -11,6 +11,12 @@ INSERT INTO DataDictionary(Title, Kind)VALUES('lgreflectioncount', 1);
 INSERT INTO DataDictionary(Title, Kind)VALUES('lgtimediscrete', 5);
 INSERT INTO DataDictionary(Title, Kind)VALUES('lgechogram', 3);
 
+INSERT INTO DataDictionary(Title, Kind)VALUES('mtscalefactor', 1);
+INSERT INTO DataDictionary(Title, Kind)VALUES('mtinterval', 2);
+INSERT INTO DataDictionary(Title, Kind)VALUES('mttemperature', 3);
+INSERT INTO DataDictionary(Title, Kind)VALUES('mtpressure', 3);
+INSERT INTO DataDictionary(Title, Kind)VALUES('umttemperatureex', 3);
+
 INSERT INTO DataDictionary(Title, Kind, Tag)VALUES('bufferpressure', 5, 1);
 INSERT INTO DataDictionary(Title, Kind, Tag)VALUES('pumpdepth', 5, 1);
 INSERT INTO DataDictionary(Title, Kind, Tag)VALUES('holeindex', 1, 1);

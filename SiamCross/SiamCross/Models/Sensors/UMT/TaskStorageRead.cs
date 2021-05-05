@@ -1,4 +1,5 @@
 ﻿using SiamCross.Models.Connection.Protocol;
+using SiamCross.Services;
 using SiamCross.Services.Environment;
 using System;
 using System.Collections.Generic;
@@ -57,7 +58,9 @@ namespace SiamCross.Models.Sensors.Umt
 
         readonly MemVarByteArray DataMt;
         MeasureData _CurrSurvey = null;
-        Stream _CurrData = null;
+        FileStream _DataPress = null;
+        FileStream _DataTemp = null;
+        FileStream _DataTempExt = null;
 
         ulong _BytesTotal;
         ulong _BytesReaded;
@@ -235,13 +238,22 @@ namespace SiamCross.Models.Sensors.Umt
         {
             try
             {
-                await _CurrData.FlushAsync(ct);
+                await DbService.Instance.SaveSurveyAsync(_CurrSurvey);
+                await _DataPress.FlushAsync(ct);
+                await _DataTemp.FlushAsync(ct);
+                await _DataTempExt.FlushAsync(ct);
             }
             finally
             {
-                _CurrData.Close();
-                _CurrData.Dispose();
-                _CurrData = null;
+                _DataPress.Close();
+                _DataTemp.Close();
+                _DataTempExt.Close();
+                _DataPress.Dispose();
+                _DataTemp.Dispose();
+                _DataTempExt.Dispose();
+                _DataPress = null;
+                _DataTemp = null;
+                _DataTempExt = null;
             }
         }
         async Task AppendSurveyData(CancellationToken ct)
@@ -249,9 +261,27 @@ namespace SiamCross.Models.Sensors.Umt
             if (null == _CurrSurvey)
                 return;
             DataMt.Address = _Rep.Address + _Rep.Size;
-            ulong qty = (ulong)4 * KolPar.Value * (ulong)(KolToch.Value + 1);
+            uint qty = (uint)4 * KolPar.Value * (uint)(KolToch.Value + 1);
             await Connection.ReadMemAsync(DataMt.Address, (uint)qty, DataMt.Value, 0, SetProgressBytes, ct);
-            await _CurrData.WriteAsync(DataMt.Value, 0, (int)qty, ct);
+
+            int curr = 0;
+            while (curr < qty)
+            {
+                switch (KolPar.Value)
+                {
+                    default: break;
+                    case 3:
+                        await _DataTempExt.WriteAsync(DataMt.Value, curr + 2, 4, ct);
+                        goto case 2;
+                    case 2:
+                        await _DataTemp.WriteAsync(DataMt.Value, curr + 1, 4, ct);
+                        goto case 1;
+                    case 1:
+                        await _DataPress.WriteAsync(DataMt.Value, curr + 0, 4, ct);
+                        break;
+                }
+                curr += (KolPar.Value) * 4;
+            }
         }
         void OpenSurvey()
         {
@@ -270,9 +300,14 @@ namespace SiamCross.Models.Sensors.Umt
             survey.Measure.BeginTimestamp = GetTimestamp(StartTimestamp.Value);
             survey.Measure.EndTimestamp = GetTimestamp(StartTimestamp.Value);
 
-            var path = Path.Combine(
-                EnvironmentService.Instance.GetDir_LocalApplicationData(), "_CurrData.tmp");
-            _CurrData = new FileStream(path, FileMode.Create);
+            _DataPress = EnvironmentService.CreateTempFileSurvey();
+            _DataTemp = EnvironmentService.CreateTempFileSurvey();
+            _DataTempExt = EnvironmentService.CreateTempFileSurvey();
+
+            survey.Measure.DataString.Add("mtinterval", TimeSpan.FromSeconds(IntervalRep.Value / 10000).ToString());
+            survey.Measure.DataBlob.Add("mtpressure", Path.GetFileName(_DataPress.Name));
+            survey.Measure.DataBlob.Add("mttemperature", Path.GetFileName(_DataTemp.Name));
+            survey.Measure.DataBlob.Add("umttemperatureex", Path.GetFileName(_DataTempExt.Name));
 
             _CurrSurvey = survey;
         }

@@ -20,7 +20,7 @@ namespace SiamCross.Models
         {
             Instance.Add(0, Resource.Dynamogram);
             Instance.Add(1, Resource.Echogram);
-            Instance.Add(2, "MT");
+            Instance.Add(2, Resource.Manometr);
         }
     }
     public static class DeviceIndex
@@ -36,6 +36,7 @@ namespace SiamCross.Models
             Instance.Add(0x1401, Resource.DynamographSensorType + " 0x1401");
             Instance.Add(0x1402, Resource.DynamographSensorType + " 0x1402");
             Instance.Add(0x1403, Resource.DynamographSensorType + " 0x1403");
+            Instance.Add(0x1700, Resource.Manometr + " 0x1700");
         }
     }
 

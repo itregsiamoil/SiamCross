@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Services;
+using SiamCross.Services.Environment;
 using System;
 using System.IO;
 using System.Text;
@@ -168,7 +169,7 @@ namespace SiamCross.Models.Sensors.Dua
 
                 if (echo)
                 {
-                    var echoStream = CreateTempFile();
+                    var echoStream = EnvironmentService.CreateTempFileSurvey();
                     if (null != echoStream)
                     {
                         using (echoStream)
@@ -188,27 +189,6 @@ namespace SiamCross.Models.Sensors.Dua
                 await DbService.Instance.SaveSurveyAsync(survey);
             }
             return true;
-        }
-
-        static FileStream CreateTempFile()
-        {
-            var path = Path.Combine(
-                Environment.GetFolderPath(
-                Environment.SpecialFolder.Personal), "bin");
-            var dir = Directory.CreateDirectory(path);
-            for (int i = 0; i < 100; i++)
-            {
-                try
-                {
-                    string filename = Path.Combine(dir.FullName, "tmp" + i.ToString());
-                    return new FileStream(filename, FileMode.CreateNew);
-                }
-                catch (Exception)
-                {
-
-                }
-            }
-            return null;
         }
         DateTime GetTimestamp()
         {

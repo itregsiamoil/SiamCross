@@ -101,13 +101,10 @@ namespace SiamCross.Models.Sensors.Umt
             if (0 < (Revbit.Value & (4 << 1)))
                 surSize += sizeof(UInt32);
 
-            ulong totalSec = (Interval.Value / 10000) * totalMem;
-
+            ulong totalSec = (Interval.Value / 10000) * (totalMem / surSize);
             _Total = TimeSpan.FromSeconds(totalSec);
-            _Remain = TimeSpan.FromSeconds(totalSec * (Emem.Value * 0.1f));
-
-            double progressStart = (double)(1.0 - _Remain.TotalMilliseconds / _Total.TotalMilliseconds);
-
+            _Remain = TimeSpan.FromSeconds(totalSec * (Emem.Value / 1000f));
+            //double progressStart = (double)(1.0 - _Remain.TotalMilliseconds / _Total.TotalMilliseconds);
             //using (var timer = CreateProgressTimer(_Remain, (float)progressStart))
             {
                 await DoMultiPressureAsync(ct);
@@ -117,15 +114,30 @@ namespace SiamCross.Models.Sensors.Umt
         async Task DoMultiPressureAsync(CancellationToken ct)
         {
 
-            while (true && !ct.IsCancellationRequested)
+            while (true && !ct.IsCancellationRequested && 0 != StatusReg.Value)
             {
-                InfoEx = $"Свободно памяти ~{Emem.Value * 0.1f}% \n измерение...";
+                InfoEx = $"{GetRemainString()}\nСвободно памяти ~{Emem.Value * 0.1f}% \n измерение...";
                 await Task.Delay(Constants.SecondDelay * 10, ct);
                 InfoEx = "чтение текущей информации ";
                 await Connection.ReadAsync(_CurrInfo, null, ct);
-                Progress = 1.0f - Emem.Value * 0.1f;
+                Progress = 1.0f - Emem.Value / 1000f;
+                _Remain = TimeSpan.FromSeconds(_Total.TotalSeconds / (Emem.Value / 1000f));
             }
         }
+        string GetRemainString()
+        {
+            if (TimeSpan.MaxValue == _Total)
+                return "\u221E из \u221E";
+            if (1 > _Remain.TotalSeconds)
+                return "0 из \u221E";
 
+            string remain = $"осталось " +
+                (0 == _Remain.Days ? string.Empty : $"{_Remain.Days} суток ") +
+                $"{_Remain.Hours}:{_Remain.Minutes}:{_Remain.Seconds}"
+                + $" из " +
+                (0 == _Total.Days ? string.Empty : $"{_Total.Days} суток ") +
+                $"{_Total.Hours}:{_Total.Minutes}:{_Total.Seconds}";
+            return remain;
+        }
     }
 }

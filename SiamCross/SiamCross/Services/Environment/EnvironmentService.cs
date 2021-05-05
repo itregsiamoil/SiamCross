@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace SiamCross.Services.Environment
 {
@@ -25,5 +26,27 @@ namespace SiamCross.Services.Environment
         {
             return _object.GetDir_LocalApplicationData(); ;
         }
+        public static FileStream CreateTempFileSurvey()
+        {
+            var path = Path.Combine(
+                System.Environment.GetFolderPath(
+                System.Environment.SpecialFolder.Personal), "bin");
+            var dir = Directory.CreateDirectory(path);
+            for (int i = 0; i < 100; i++)
+            {
+                try
+                {
+                    string filename = Path.Combine(dir.FullName, "tmp" + i.ToString());
+                    return new FileStream(filename, FileMode.CreateNew);
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+            return null;
+        }
+
+
     }
 }

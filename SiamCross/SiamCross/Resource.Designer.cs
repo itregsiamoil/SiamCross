@@ -908,6 +908,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на manometr.
+        /// </summary>
+        public static string Manometr {
+            get {
+                return ResourceManager.GetString("Manometr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Depth measurement up to 6000m.
         /// </summary>
         public static string MaxDepth6000 {
