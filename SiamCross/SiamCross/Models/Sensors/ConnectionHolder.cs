@@ -12,7 +12,7 @@ namespace SiamCross.Models.Sensors
     {
         readonly Timer _AliveTimer;
         DateTime _LastExchange = DateTime.Now;
-        bool _Runed = false;
+        int _Runed = 0;
         CancellationTokenSource _cancellToken = null;
 
         bool _IsManagerBusy;
@@ -65,11 +65,8 @@ namespace SiamCross.Models.Sensors
         {
             try
             {
-                if (!_Runed)
-                {
-                    _Runed = true;
+                if (0 == Interlocked.CompareExchange(ref _Runed, 1, 0))
                     Task.Run(DoSingle);
-                }
             }
             catch (Exception ex)
             {
@@ -95,7 +92,7 @@ namespace SiamCross.Models.Sensors
             finally
             {
                 //if(_cancellToken.Token.IsCancellationRequested)
-                _Runed = false;
+                Interlocked.Exchange(ref _Runed, 0);
             }
         }
         async Task DoLive()

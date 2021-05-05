@@ -69,7 +69,7 @@ namespace SiamCross.Services
             }
         }
 
-        public int UserDbVersion = 5;
+        public int UserDbVersion = 6;
         public FieldDictionaryTable FieldDictionary { get; protected set; }
         public DataDictionary DataDictionary { get; protected set; }
         public DataInt DataInt { get; protected set; }

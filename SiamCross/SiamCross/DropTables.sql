@@ -5,3 +5,4 @@ DROP TABLE IF EXISTS ValBlob;
 DROP TABLE IF EXISTS Measurement;
 DROP TABLE IF EXISTS FieldDictionary;
 DROP TABLE IF EXISTS DataDictionary;
+DROP TABLE IF EXISTS SoundSpeedDictionary;

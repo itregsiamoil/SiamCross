@@ -1,8 +1,10 @@
 ﻿using SiamCross.Models.Adapters;
 using SiamCross.Models.Adapters.PhyInterface;
 using SiamCross.ViewModels;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.CommunityToolkit.Extensions;
+using Xamarin.CommunityToolkit.UI.Views.Options;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -66,7 +68,38 @@ namespace SiamCross.Views.MenuItems
         }
         protected async void RequestExit()
         {
-            bool _ExitCmd = await this.DisplaySnackBarAsync("Exit app?", "Yes", ExecuteExit);
+            var options = new SnackBarOptions();
+            var appRes = Application.Current.Resources;
+
+            if (appRes.TryGetValue("colorPrimaryLight", out object obj_bg_color))
+                if (obj_bg_color is Color bgColor)
+                    options.BackgroundColor = bgColor;
+
+            Color txtColor = Color.Black;
+
+            Color acentColor = Color.Red;
+            if (appRes.TryGetValue("colorAccentLight", out object obj_acc_color))
+                if (obj_acc_color is Color resAcentColor)
+                    acentColor = resAcentColor;
+
+            options.MessageOptions.Foreground = txtColor;
+            options.MessageOptions.Message = "Close app?";
+
+            options.Actions = new List<SnackBarActionOptions>
+            {
+                    new SnackBarActionOptions
+                    {
+                        ForegroundColor = txtColor,
+                        BackgroundColor = acentColor,
+                        Text = Resource.YesButton,
+                        Action = () =>
+                        {
+                            ExecuteExit();
+                            return Task.CompletedTask;
+                        }
+                    }
+            };
+            bool _ExitCmd = await this.DisplaySnackBarAsync(options);
         }
         protected override bool OnBackButtonPressed()
         {

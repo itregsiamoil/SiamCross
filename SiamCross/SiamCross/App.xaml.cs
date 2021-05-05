@@ -55,11 +55,14 @@ namespace SiamCross
 
         protected override void OnSleep()
         {
+            App.Navigation.PopToRootAsync();
+            base.OnSleep();
             // Handle when your app sleeps
         }
 
         protected override void OnResume()
         {
+            base.OnResume();
             // Handle when your app resumes
         }
     }
