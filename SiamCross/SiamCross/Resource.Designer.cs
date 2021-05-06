@@ -214,6 +214,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на automatic.
+        /// </summary>
+        public static string Automatic {
+            get {
+                return ResourceManager.GetString("Automatic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Balancer.
         /// </summary>
         public static string BalancedModelPump {
@@ -520,6 +529,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на dynamograph.
+        /// </summary>
+        public static string Dynamograph {
+            get {
+                return ResourceManager.GetString("Dynamograph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Dynamograph.
         /// </summary>
         public static string DynamographSensorType {
@@ -818,6 +836,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на intertraversal.
+        /// </summary>
+        public static string Intertraversal {
+            get {
+                return ResourceManager.GetString("Intertraversal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Interval.
         /// </summary>
         public static string Interval {
@@ -881,6 +908,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на level meter.
+        /// </summary>
+        public static string Levelmeter {
+            get {
+                return ResourceManager.GetString("Levelmeter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Load.
         /// </summary>
         public static string Load {
@@ -913,6 +949,15 @@ namespace SiamCross {
         public static string Manometr {
             get {
                 return ResourceManager.GetString("Manometr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на manual.
+        /// </summary>
+        public static string Manual {
+            get {
+                return ResourceManager.GetString("Manual", resourceCulture);
             }
         }
         
@@ -1102,6 +1147,15 @@ namespace SiamCross {
         public static string Ok {
             get {
                 return ResourceManager.GetString("Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на overhead.
+        /// </summary>
+        public static string Overhead {
+            get {
+                return ResourceManager.GetString("Overhead", resourceCulture);
             }
         }
         
@@ -1607,6 +1661,15 @@ namespace SiamCross {
         public static string TextAboutCompany {
             get {
                 return ResourceManager.GetString("TextAboutCompany", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на thermometer.
+        /// </summary>
+        public static string Thermometer {
+            get {
+                return ResourceManager.GetString("Thermometer", resourceCulture);
             }
         }
         

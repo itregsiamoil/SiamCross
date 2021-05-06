@@ -689,4 +689,25 @@ DB Siam can't import the files with the same identifiers.</value>
   <data name="Manometr" xml:space="preserve">
     <value>manometr</value>
   </data>
+  <data name="Dynamograph" xml:space="preserve">
+    <value>dynamograph</value>
+  </data>
+  <data name="Intertraversal" xml:space="preserve">
+    <value>intertraversal</value>
+  </data>
+  <data name="Levelmeter" xml:space="preserve">
+    <value>level meter</value>
+  </data>
+  <data name="Manual" xml:space="preserve">
+    <value>manual</value>
+  </data>
+  <data name="Overhead" xml:space="preserve">
+    <value>overhead</value>
+  </data>
+  <data name="Automatic" xml:space="preserve">
+    <value>automatic</value>
+  </data>
+  <data name="Thermometer" xml:space="preserve">
+    <value>thermometer</value>
+  </data>
 </root>

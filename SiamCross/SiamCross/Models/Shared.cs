@@ -4,6 +4,15 @@ using System.Xml.Serialization;
 
 namespace SiamCross.Models
 {
+    public static class PhyIndex
+    {
+        public static readonly KeyKeyCollection<string> Instance = new KeyKeyCollection<string>();
+        static PhyIndex()
+        {
+            Instance.Add(0, "Bluetooth 2");
+            Instance.Add(1, "Bluetooth Le");
+        }
+    }
     public static class ProtocolIndex
     {
         public static readonly KeyKeyCollection<string> Instance = new KeyKeyCollection<string>();
@@ -28,15 +37,15 @@ namespace SiamCross.Models
         public static readonly KeyKeyCollection<string> Instance = new KeyKeyCollection<string>();
         static DeviceIndex()
         {
-            Instance.Add(0x1101, Resource.LevelGaugeSensorType + " 0x1101");
-            Instance.Add(0x1201, Resource.LevelGaugeSensorType + " 0x1201");
-            Instance.Add(0x1301, Resource.DynamographSensorType + " 0x1301");
-            Instance.Add(0x1302, Resource.DynamographSensorType + " 0x1302");
-            Instance.Add(0x1303, Resource.DynamographSensorType + " 0x1303");
-            Instance.Add(0x1401, Resource.DynamographSensorType + " 0x1401");
-            Instance.Add(0x1402, Resource.DynamographSensorType + " 0x1402");
-            Instance.Add(0x1403, Resource.DynamographSensorType + " 0x1403");
-            Instance.Add(0x1700, Resource.Manometr + " 0x1700");
+            Instance.Add(0x1101, $"{Resource.Levelmeter} {Resource.Manual} v.01");
+            Instance.Add(0x1201, $"{Resource.Levelmeter} {Resource.Automatic} v.01");
+            Instance.Add(0x1301, $"{Resource.Dynamograph} {Resource.Overhead} v.01");
+            Instance.Add(0x1302, $"{Resource.Dynamograph} {Resource.Overhead} v.02");
+            Instance.Add(0x1303, $"{Resource.Dynamograph} {Resource.Overhead} v.03");
+            Instance.Add(0x1401, $"{Resource.Dynamograph} {Resource.Intertraversal} v.01");
+            Instance.Add(0x1402, $"{Resource.Dynamograph} {Resource.Intertraversal} v.02");
+            Instance.Add(0x1403, $"{Resource.Dynamograph} {Resource.Intertraversal} v.03");
+            Instance.Add(0x1700, $"{Resource.Manometr}+{Resource.Thermometer} v.00");
         }
     }
 

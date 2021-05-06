@@ -7,7 +7,7 @@
              xmlns:models="clr-namespace:SiamCross.ViewModels" 
              xmlns:views="clr-namespace:SiamCross.Views"
              x:Class="SiamCross.Views.PositionEditPage"
-             x:DataType="models:PositionVM" >
+             x:DataType="models:SensorPositionVM" >
 
     <ContentPage.Resources>
         <Style TargetType="{x:Type StackLayout}">

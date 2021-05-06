@@ -698,4 +698,25 @@
   <data name="Manometr" xml:space="preserve">
     <value>манометр</value>
   </data>
+  <data name="Dynamograph" xml:space="preserve">
+    <value>динамограф</value>
+  </data>
+  <data name="Intertraversal" xml:space="preserve">
+    <value>межтраверсный</value>
+  </data>
+  <data name="Overhead" xml:space="preserve">
+    <value>накладной</value>
+  </data>
+  <data name="Automatic" xml:space="preserve">
+    <value>автоматический</value>
+  </data>
+  <data name="Levelmeter" xml:space="preserve">
+    <value>уровнемер</value>
+  </data>
+  <data name="Manual" xml:space="preserve">
+    <value>ручной</value>
+  </data>
+  <data name="Thermometer" xml:space="preserve">
+    <value>термометр</value>
+  </data>
 </root>

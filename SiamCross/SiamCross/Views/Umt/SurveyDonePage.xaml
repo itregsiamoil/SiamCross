@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage  
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
+    xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
+    xmlns:views="clr-namespace:SiamCross.Views" 
+    xmlns:vm="clr-namespace:SiamCross.ViewModels"
+    x:DataType="vm:SurveyDoneVM"
+    x:Class="SiamCross.Views.Umt.SurveyDonePage">
+
+    <ContentPage.Resources>
+        <Style TargetType="{x:Type StackLayout}">
+            <Setter Property="Spacing" Value="0" />
+        </Style>
+    </ContentPage.Resources >
+    
+    <NavigationPage.TitleView >
+        <StackLayout Orientation="Horizontal" >
+            <StackLayout HorizontalOptions="StartAndExpand" >
+                <Label Text="{Binding DeviceInfo.Name}" TextColor="{StaticResource colorTextPale}" />
+                <Label Text="Исследование"
+                   FontSize="Medium" FontAttributes="Bold" 
+                   LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}" 
+                         HorizontalOptions="End" VerticalOptions="Fill" >
+            </StackLayout>
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+    <ContentPage.ToolbarItems >
+        <!--ToolbarItem Text="&#x21BA; " Command="{Binding CmdUpdateStorageInfo}"/-->
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <ScrollView 
+            VerticalOptions="FillAndExpand"
+            BackgroundColor="{StaticResource colorBackgroundLight}">
+            <StackLayout>
+
+                <Frame Style="{StaticResource GroupingFrameStyle2}">
+                    <StackLayout>
+                        <Label Text="{local:Translate MeasurementData}" Style="{StaticResource SectionLabel2}" />
+                        <skia:SKCanvasView x:Name="CanvasView"
+                                               PaintSurface="CanvasView_PaintSurface"
+                                               IgnorePixelScaling="false"
+                                               HeightRequest="200"
+                                               />
+                    </StackLayout>
+                </Frame>
+
+
+
+                <Frame Style="{StaticResource GroupingFrameStyle2}">
+                    <StackLayout>
+                        <Label Text="{local:Translate LocationInfo}" Style="{StaticResource SectionLabel2}" />
+                        <Label LineBreakMode="WordWrap" Padding="4">
+                            <Label.FormattedText Margin="0">
+                                <FormattedString >
+                                    <Span Text="{local:Translate Field}" />
+                                    <Span Text=" " />
+                                    <Span Text="{Binding Position.FieldName, Mode=OneWay }" Font="Bold" TextColor="Black"/>
+                                    <Span Text="[" Font="Bold" TextColor="Black"/>
+                                    <Span Text="{Binding Position.FieldId, Mode=OneWay }" Font="Bold" TextColor="Black"/>
+                                    <Span Text="]" Font="Bold" TextColor="Black"/>
+                                    <Span Text="&#10;" />
+                                    <Span Text="{local:Translate Well} " />
+                                    <Span Text=" " />
+                                    <Span Text="{Binding Position.Well}" Font="Bold" TextColor="Black"/>
+                                    <Span Text=" " />
+                                    <Span Text="{local:Translate Bush}" />
+                                    <Span Text=" " />
+                                    <Span Text="{Binding Position.Bush}" Font="Bold" TextColor="Black"/>
+                                    <Span Text=" " />
+                                    <Span Text="{local:Translate Shop}" />
+                                    <Span Text=" " />
+                                    <Span Text="{Binding Position.Shop}" Font="Bold" TextColor="Black"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </StackLayout>
+                </Frame>
+
+                <Frame Style="{StaticResource GroupingFrameStyle2}">
+                    <StackLayout>
+                        <Label Text="{local:Translate Device}" Style="{StaticResource SectionLabel2}" />
+                        <Grid Margin="0" Padding="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50*" />
+                                <ColumnDefinition Width="50*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+                            <Label Text="{local:Translate Device}"         Grid.Column="0" Grid.Row="0" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding DeviceInfo.Name}"        Grid.Column="1" Grid.Row="0" Font="Bold" TextColor="Black" />
+                            <Label Text="{local:Translate Type}"    Grid.Column="0" Grid.Row="1" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding DeviceInfo.Kind}"             Grid.Column="1" Grid.Row="1" Font="Bold" TextColor="Black" />
+                            <Label Text="Номер"        Grid.Column="0" Grid.Row="2" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding DeviceInfo.Number}"             Grid.Column="1" Grid.Row="2" Font="Bold" TextColor="Black" />
+                            <Label Text="Тип подключения"       Grid.Column="0" Grid.Row="3" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding DeviceInfo.Phy}"            Grid.Column="1" Grid.Row="3" Font="Bold" TextColor="Black" />
+                            <Label Text="Тип протокола"  Grid.Column="0" Grid.Row="4" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding DeviceInfo.Protocol}"           Grid.Column="1" Grid.Row="4" Font="Bold" TextColor="Black" />
+                        </Grid>
+
+                    </StackLayout>
+                </Frame>
+
+            </StackLayout>
+        </ScrollView>
+
+    </ContentPage.Content>
+</views:BaseContentPage>

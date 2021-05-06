@@ -1,122 +1,55 @@
 ﻿using SiamCross.Models;
-using SiamCross.Models.Sensors;
 using SiamCross.Services;
 using SiamCross.Services.RepositoryTables;
-using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
-    public class FieldsCollection : ObservableCollection<string>
-    {
-        public FieldsCollection()
-        { }
-    }
 
     public class PositionVM : BasePageVM
     {
-        readonly SensorPosition _Model;
-
-        public ISensor Sensor { get; }
-        public ICommand CmdEdit { get; }
-        public ICommand CmdMakeNew { get; }
-        public ICommand CmdLoad { get; }
-        public ICommand CmdSave { get; }
-
+        readonly PositionModel _Model;
         readonly ObservableCollection<FieldItem> _Fields = new ObservableCollection<FieldItem>();
-        public ObservableCollection<FieldItem> Fields => _Fields;
-        private void FieldList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            _Fields.Clear();
-            Repo.FieldDir.FieldList.ForEach(o => _Fields.Add(o));
-            ChangeNotify(nameof(SelectedField));
-        }
-        private void StorageModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        void StorageModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (sender != _Model)
                 return;
-            if ("Saved" == e.PropertyName)
-            {
-                ChangeNotify(nameof(FieldName));
-                ChangeNotify(nameof(FieldId));
-                ChangeNotify(nameof(Well));
-                ChangeNotify(nameof(Bush));
-                ChangeNotify(nameof(Shop));
-            }
-            if ("Current" == e.PropertyName)
-            {
-                ChangeNotify(nameof(SelectedField));
-                ChangeNotify(nameof(CurrentFieldId));
-                ChangeNotify(nameof(CurrentWell));
-                ChangeNotify(nameof(CurrentBush));
-                ChangeNotify(nameof(CurrentShop));
-            }
-
+            ChangeNotify(e.PropertyName);
         }
-
-        public PositionVM(ISensor sensor)
+        void FieldList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            Sensor = sensor;
-            _Model = Sensor.Model.Position;
-
-            CmdEdit = CmdEdit = new AsyncCommand(ShowEditor
-                , (Func<object, bool>)null, null, false, false);
-            CmdMakeNew = _Model.CmdMakeNew;
-            CmdLoad = _Model.CmdLoad;
-            CmdSave = _Model.CmdSave;
-
+            _Fields.Clear();
             Repo.FieldDir.FieldList.ForEach(o => _Fields.Add(o));
-
+            ChangeNotify(nameof(Fields));
+        }
+        public PositionVM(PositionModel pos)
+        {
+            _Model = pos;
             _Model.PropertyChanged += StorageModel_PropertyChanged;
             Repo.FieldDir.FieldList.CollectionChanged += FieldList_CollectionChanged;
-            Sensor.Model.Manager.OnChangeTask.ProgressChanged += SetTask;
         }
         public override void Unsubscribe()
         {
             _Model.PropertyChanged -= StorageModel_PropertyChanged;
             Repo.FieldDir.FieldList.CollectionChanged -= FieldList_CollectionChanged;
-            Sensor.Model.Manager.OnChangeTask.ProgressChanged -= SetTask;
         }
         public override void Dispose()
         {
             base.Dispose();
         }
-        void SetTask(object obj, ITask task)
-        {
-            //RaiseCanExecuteChanged(CmdEdit);
-            //RaiseCanExecuteChanged(CmdMakeNew);
-            RaiseCanExecuteChanged(CmdLoad);
-            RaiseCanExecuteChanged(CmdSave);
-        }
-        async Task ShowEditor()
-        {
-            var cmd = PageNavigator.CreateAsyncCommand(() => new PositionVM(Sensor));
-            await cmd.ExecuteAsync();
-        }
-        public string FieldId => _Model.Saved.Field.ToString();
-        public string FieldName
-        {
-            get
-            {
-                if (Repo.FieldDir.DictById.TryGetValue(_Model.Saved.Field, out FieldItem item))
-                    return item.Title;
-                return string.Empty;
-            }
-        }
-        public string Well => _Model.Saved.Well;
-        public string Bush => _Model.Saved.Bush;
-        public string Shop => _Model.Saved.Shop.ToString();
-
+        public ObservableCollection<FieldItem> Fields => _Fields;
+        public string FieldId => _Model.FieldId.ToString();
+        public string FieldName => _Model.FieldName;
+        public string Well => _Model.Well;
+        public string Bush => _Model.Bush;
+        public string Shop => _Model.Shop.ToString();
         public FieldItem SelectedField
         {
             get
             {
-                if (Repo.FieldDir.DictById.TryGetValue(_Model.Current.Field, out FieldItem item))
+                if (Repo.FieldDir.DictById.TryGetValue(_Model.FieldId, out FieldItem item))
                     return item;
                 return null;
             }
@@ -126,55 +59,13 @@ namespace SiamCross.ViewModels
                     return;
                 if (!Repo.FieldDir.DictByTitle.TryGetValue(value.Title, out FieldItem item))
                     return;
-                if (_Model.Current.Field == item.Id)
+                if (_Model.FieldId == item.Id)
                     return;
-                _Model.Current.Field = item.Id;
+                _Model.FieldId = item.Id;
                 ChangeNotify();
-                ChangeNotify(nameof(CurrentFieldId));
+                ChangeNotify(nameof(FieldId));
             }
         }
-        public string CurrentFieldId
-        {
-            get => _Model.Current.Field.ToString();
-            set
-            {
-                if (string.IsNullOrEmpty(value) || !uint.TryParse(value, out uint id))
-                    return;
-                _Model.Current.Field = id;
-                ChangeNotify();
-                ChangeNotify(nameof(SelectedField));
-            }
-        }
-        public string CurrentWell
-        {
-            get => _Model.Current.Well;
-            set
-            {
-                _Model.Current.Well = value;
-                ChangeNotify();
-            }
-        }
-        public string CurrentBush
-        {
-            get => _Model.Current.Bush;
-            set
-            {
-                _Model.Current.Bush = value;
-                ChangeNotify();
-            }
-        }
-        public string CurrentShop
-        {
-            get => _Model.Current.Shop.ToString();
-            set
-            {
-                if (uint.TryParse(value, out uint val))
-                {
-                    _Model.Current.Shop = val;
-                    ChangeNotify();
-                }
-            }
-        }
-
     }
+
 }

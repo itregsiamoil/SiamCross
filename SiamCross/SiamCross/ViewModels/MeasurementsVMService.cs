@@ -394,20 +394,20 @@ namespace SiamCross.ViewModels
                 _logger.Error(ex, "DeleteMeasurements method" + "\n");
             }
         }
-        public async Task PushPageAsync(MeasurementView selectedMeasurement)
+        public async Task PushPageAsync(MeasurementView survey)
         {
-            if (null == selectedMeasurement)
+            if (null == survey)
                 return;
             UnselectAll();
 
             try
             {
-                switch (selectedMeasurement.MeasureKind) // MeasurementIndex.Instance.
+                switch (survey.MeasureKind) // MeasurementIndex.Instance.
                 {
                     default: break;
                     case 0:
                         Ddin2Measurement ddin_meas = _ddin2Measurements?
-                            .SingleOrDefault(m => m.Id == selectedMeasurement.Id);
+                            .SingleOrDefault(m => m.Id == survey.Id);
                         if (ddin_meas != null)
                             if (CanOpenPage(typeof(Ddin2MeasurementDonePage)))
                             {
@@ -418,14 +418,14 @@ namespace SiamCross.ViewModels
                         break;
                     case 1:
                         DuMeasurement du = null;
-                        if (0x1201 == selectedMeasurement.MeasureData.Device.Kind)
+                        if (0x1201 == survey.MeasureData.Device.Kind)
                         {
-                            await DbService.Instance.GetValuesAsync(selectedMeasurement.MeasureData);
-                            du = await ConvertToOldMeasurementAsync(selectedMeasurement.MeasureData);
+                            await DbService.Instance.GetValuesAsync(survey.MeasureData);
+                            du = await ConvertToOldMeasurementAsync(survey.MeasureData);
                         }
                         else
                         {
-                            du = _duMeasurements?.SingleOrDefault(m => m.Id == selectedMeasurement.Id);
+                            du = _duMeasurements?.SingleOrDefault(m => m.Id == survey.Id);
                         }
 
                         if (du != null && CanOpenPage(typeof(DuMeasurementDonePage)))
@@ -435,6 +435,22 @@ namespace SiamCross.ViewModels
                                     new DuMeasurementDonePage(du), true);
                         }
                         break;
+                    case 2:
+                        if (0x1700 == survey.MeasureData.Device.Kind)
+                        {
+                            await DbService.Instance.GetValuesAsync(survey.MeasureData);
+                            var model = new SurveyDoneModel(survey.MeasureData);
+                            var vm = new SurveyDoneVM(model);
+
+                            var page = new Views.Umt.SurveyDonePage();
+                            page.BindingContext = vm;
+
+                            await App.NavigationPage.Navigation.PushAsync(page);
+
+                        }
+
+                        break;
+
                 }
             }
             catch (Exception ex)
@@ -490,6 +506,11 @@ namespace SiamCross.ViewModels
                                 var curr_path = await XmlSaver.SaveXml(file_name, doc);
                                 paths.Add(curr_path);
                             }
+                            break;
+                        case 2:
+                            if (0x1700 == mv.MeasureData.Device.Kind)
+                                await DbService.Instance.GetValuesAsync(mv.MeasureData);
+
                             break;
                     }
                 }
@@ -558,7 +579,7 @@ namespace SiamCross.ViewModels
                     Environment.SpecialFolder.Personal), "bin");
                 path = Path.Combine(path, name);
 
-                return new FileStream(path, FileMode.Open);
+                return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
             }
             catch (Exception)
             {

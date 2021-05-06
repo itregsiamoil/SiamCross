@@ -56,7 +56,7 @@ namespace SiamCross.Models.Sensors
 
             SurveysVM = new SurveysCollectionVM(this);
 
-            PositionVM = new PositionVM(this);
+            PositionVM = new SensorPositionVM(this);
 
             Model.ConnHolder.CmdUpdateStatus = new AsyncCommand(
                 () => QuickReport(),
@@ -119,7 +119,7 @@ namespace SiamCross.Models.Sensors
                 ChangeNotify();
             }
         }
-        public PositionVM PositionVM { get; }
+        public SensorPositionVM PositionVM { get; }
         public ICommand ShowDetailViewCommand { get; set; }
         public ICommand ShowInfoViewCommand { get; set; }
 
@@ -342,13 +342,7 @@ namespace SiamCross.Models.Sensors
             get
             {
                 if (DeviceIndex.Instance.TryGetName(ScannedDeviceInfo.Device.Kind, out string str))
-                {
-                    var sp = str.IndexOf(" ");
-                    if (sp > 0)
-                        return str.Substring(0, sp);
-                    else
-                        return str;
-                }
+                    return str;
                 return string.Empty;
             }
         }

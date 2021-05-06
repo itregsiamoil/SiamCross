@@ -46,6 +46,7 @@ namespace SiamCross.Views.MenuItems
 
         protected override void OnAppearing()
         {
+            BindingContext = _vm;
             base.OnAppearing();
             RequestEnableBuetooth();
             _vm.EnableQickInfoAll();
@@ -54,6 +55,7 @@ namespace SiamCross.Views.MenuItems
         {
             base.OnDisappearing();
             _vm.DisableQickInfoAll();
+            BindingContext = null;
         }
 
 

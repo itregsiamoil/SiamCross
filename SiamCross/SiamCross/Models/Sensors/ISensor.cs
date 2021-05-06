@@ -55,7 +55,7 @@ namespace SiamCross.Models.Sensors
         TaskManagerVM TaskManager { get; set; }
         BaseStorageVM StorageVM { get; set; }
         SurveysCollectionVM SurveysVM { get; }
-        PositionVM PositionVM { get; }
+        SensorPositionVM PositionVM { get; }
         //IViewModel FactoryConfigVM { get; set; }
         //IViewModel UserConfigVM { get; set; }
         //IViewModel StateVM { get; set; }

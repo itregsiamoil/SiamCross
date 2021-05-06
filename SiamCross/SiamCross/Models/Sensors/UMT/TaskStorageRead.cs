@@ -144,13 +144,13 @@ namespace SiamCross.Models.Sensors.Umt
             var totalSpace = (ulong)(kolbl.Value) * kolstr.Value * page.Value;
             var emptySpaceRatio = Math.Round(0.1f * Emem.Value, 1);
 
-            _BytesTotal = (uint)(totalSpace * (1 - emptySpaceRatio / 100.0f));
+            _BytesTotal = (uint)(totalSpace * ((double)1.0f - emptySpaceRatio / 100.0f));
             _BytesReaded = 0;
 
 
             UInt16 currAddrInPage = Adrtek.Value;
 
-            InfoEx = $"пропуск {_Storage.StartRep} измерений";
+            
 
             NomIslt.Value = Kolisl.Value;
             //UInt16 CurrentSurveyId = Kolisl.Value;
@@ -171,10 +171,10 @@ namespace SiamCross.Models.Sensors.Umt
             {
                 currAddrInPage = (UInt16)(currAddrInPage & 0x7FFF);
 
-                while (CurrentSurveyId > repBegin)
+                while (true)
                 {
                     _Rep.Address = FramOffset + currAddrInPage;
-                    await Connection.ReadAsync(_Rep, null, ct);
+                    await Connection.ReadAsync(_Rep, SetProgressBytes, ct);
 
                     if (CurrentSurveyId != NomIslt.Value)
                     {
@@ -183,10 +183,10 @@ namespace SiamCross.Models.Sensors.Umt
                             await AppendSurveyData(ct);
                             await CloseSurvey(ct);
                         }
-                        OpenSurvey();
                         CurrentSurveyId = NomIslt.Value;
                         if (!ReadedSurveys.Add(CurrentSurveyId))
                             break;
+                        OpenSurvey();
                     }
                     await AppendSurveyData(ct);
 
@@ -202,10 +202,10 @@ namespace SiamCross.Models.Sensors.Umt
 
             }
             // read from flash
-            while (CurrentSurveyId > repBegin)
+            while (true)
             {
                 _Rep.Address = FlashOffset + GetCurrentPageAddress() + currAddrInPage;
-                await Connection.ReadAsync(_Rep, null, ct);
+                await Connection.ReadAsync(_Rep, SetProgressBytes, ct);
                 if (0 == currAddrInPage)
                     DecrementPage();
                 currAddrInPage = AdrPr.Value;
@@ -217,10 +217,11 @@ namespace SiamCross.Models.Sensors.Umt
                         await AppendSurveyData(ct);
                         await CloseSurvey(ct);
                     }
-                    OpenSurvey();
+                    
                     CurrentSurveyId = NomIslt.Value;
-                    if (!ReadedSurveys.Add(CurrentSurveyId))
+                    if (UInt16.MaxValue==NomIslt.Value || !ReadedSurveys.Add(CurrentSurveyId))
                         break;
+                    OpenSurvey();
                 }
                 await AppendSurveyData(ct);
             }
@@ -291,6 +292,8 @@ namespace SiamCross.Models.Sensors.Umt
                 , Sensor.Device
                 , Sensor.Info
                 , new MeasurementInfo());
+
+            InfoEx = $"чтение {NomIslt.Value} исследования";
 
             survey.Measure.Kind = 2;
             survey.Position.Field = FieldRep.Value;

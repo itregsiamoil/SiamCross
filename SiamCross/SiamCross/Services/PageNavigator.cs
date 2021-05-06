@@ -26,7 +26,7 @@ namespace SiamCross.Services
         {
             Register(typeof(MeasurementsVMService), () => new MeasurementsPage());
 
-            Register(typeof(PositionVM), () => new PositionEditPage());
+            Register(typeof(SensorPositionVM), () => new PositionEditPage());
             Register(typeof(SensorDetailsVM), () => new SensorDetailsPage());
             Register(typeof(SurveysCollectionVM), () => new SurveysCollectionPage());
 
