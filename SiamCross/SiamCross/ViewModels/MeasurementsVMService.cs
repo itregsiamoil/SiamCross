@@ -18,6 +18,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Linq;
@@ -185,6 +186,10 @@ namespace SiamCross.ViewModels
             }
             return false;
         }
+        public void UpdateSelectTitle()
+        {
+            Title = $"{Resource.SelectedMeasurements}: {SelCount}";
+        }
         public void UpdateSelect(MeasurementView item, bool select)
         {
             if (select)
@@ -196,7 +201,6 @@ namespace SiamCross.ViewModels
             {
                 SelectedMeasurements.Remove(item);
             }
-            Title = $"{Resource.SelectedMeasurements}: {SelCount}";
         }
         public async void OnItemTapped(MeasurementView item)
         {
@@ -233,23 +237,58 @@ namespace SiamCross.ViewModels
         {
             if (!SelectMode)
                 return;
+
+            Stopwatch perf = new Stopwatch();
+            perf.Restart();
+            /*
             IEnumerable<MeasurementView> selected = Measurements.Where(element => element.IsSelected);
             foreach (MeasurementView item in selected)
             {
                 item.IsSelected = false;
                 UpdateSelect(item, item.IsSelected);
             }
+            */
+            SelectedMeasurements.Clear();
+            Parallel.ForEach(Measurements, item => item.IsSelected = false);
+            Debug.WriteLine($"[{perf.ElapsedMilliseconds}] OLD UnselectAll");
+            UpdateSelectTitle();
         }
         private void SelectAll()
         {
             if (!SelectMode)
                 SelectMode = true;
+            Stopwatch perf = new Stopwatch();
+            /*
+            perf.Restart();
             IEnumerable<MeasurementView> selected = Measurements.Where(element => !element.IsSelected);
             foreach (MeasurementView item in selected)
             {
                 item.IsSelected = true;
                 UpdateSelect(item, item.IsSelected);
             }
+            Debug.WriteLine($"[{perf.ElapsedMilliseconds}] OLD SelectAll");
+            perf.Restart();
+            SelectedMeasurements.Clear();
+            foreach (MeasurementView item in Measurements)
+            {
+                item.IsSelected = true;
+                SelectedMeasurements.Add(item);
+            }
+            Debug.WriteLine($"[{perf.ElapsedMilliseconds}] NEW SelectAll");
+            */
+
+            perf.Restart();
+            SelectedMeasurements.Clear();
+            Parallel.ForEach(Measurements, item =>
+            {
+                //if (!item.IsSelected)
+                {
+                    item.IsSelected = true;
+                    SelectedMeasurements.Add(item);
+                }
+            });
+            Debug.WriteLine($"[{perf.ElapsedMilliseconds}] NEW SelectAll");
+            UpdateSelectTitle();
         }
         private async Task ShareMeasurementsAsync()
         {
@@ -380,6 +419,9 @@ namespace SiamCross.ViewModels
                                         await DbService.Instance.DelSurveyAsync(mv.Id);
                                     else
                                         await DbService.Instance.RemoveDuMeasurementAsync(mv.Id);
+                                    break;
+                                default:
+                                    await DbService.Instance.DelSurveyAsync(mv.Id);
                                     break;
                             }
                         }

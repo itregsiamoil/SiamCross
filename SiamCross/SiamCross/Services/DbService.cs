@@ -619,23 +619,6 @@ namespace SiamCross.Services
                 await DataInt.Save(measureId, survey.Measure.DataInt);
                 await DataFloat.Save(measureId, survey.Measure.DataFloat);
                 await DataString.Save(measureId, survey.Measure.DataString);
-
-                var path = Path.Combine(
-                    System.Environment.GetFolderPath(
-                    System.Environment.SpecialFolder.Personal), "bin");
-
-                var new_blobs = new Dictionary<string, string>();
-                foreach (var item in survey.Measure.DataBlob)
-                {
-                    string filename = $"{measureId}_{item.Key}";
-                    var old_path = Path.Combine(path, survey.Measure.DataBlob[item.Key]);
-                    var new_path = Path.Combine(path, filename);
-                    File.Delete(new_path);
-                    File.Move(old_path, new_path);
-                    new_blobs.Add(item.Key, filename);
-                }
-                survey.Measure.DataBlob = new_blobs;
-
                 await DataBlob.Save(measureId, survey.Measure.DataBlob);
                 tr.Commit();
                 return measureId;
@@ -658,6 +641,8 @@ namespace SiamCross.Services
             try
             {
                 tr = _siamServiceDB.BeginTransaction(IsolationLevel.Serializable);
+
+                await DataBlob.BeforeDelete(measureId);
                 await MeasureTable.Delete(measureId);
                 tr.Commit();
             }

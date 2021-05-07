@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace SiamCross.Services.RepositoryTables
@@ -24,7 +25,7 @@ namespace SiamCross.Services.RepositoryTables
             select_by_id_sql = $"SELECT * FROM {table} WHERE MeasureId=@MeasureId";
         }
 
-        public async Task Save(long measureId, Dictionary<string, T> values)
+        public virtual async Task Save(long measureId, Dictionary<string, T> values)
         {
             foreach (var v in values)
             {
@@ -37,7 +38,7 @@ namespace SiamCross.Services.RepositoryTables
                 await _db.ExecuteAsync(insert_sql, param);
             }
         }
-        public async Task<Dictionary<string, T>> Load(long measureId)
+        public virtual async Task<Dictionary<string, T>> Load(long measureId)
         {
             //const string sql = "SELECT * FROM  WHERE MeasureId=@MeasureId";
             var values = await _db.QueryAsync<DataItem<T>>(select_by_id_sql, param: new { MeasureId = measureId });
@@ -51,5 +52,42 @@ namespace SiamCross.Services.RepositoryTables
     public class DataInt : DataTable<long> { public DataInt(IDbConnection db) : base(db, "ValInt") { } }
     public class DataFloat : DataTable<double> { public DataFloat(IDbConnection db) : base(db, "ValFloat") { } }
     public class DataString : DataTable<string> { public DataString(IDbConnection db) : base(db, "ValString") { } }
-    public class DataBlob : DataTable<string> { public DataBlob(IDbConnection db) : base(db, "ValBlob") { } }
+    public class DataBlob : DataTable<string>
+    { 
+        public DataBlob(IDbConnection db) 
+            : base(db, "ValBlob") 
+        { }
+        public override async Task Save(long measureId, Dictionary<string, string> values)
+        {
+            var path = Path.Combine(
+                    System.Environment.GetFolderPath(
+                    System.Environment.SpecialFolder.Personal), "bin");
+
+            var new_blobs = new Dictionary<string, string>();
+            foreach (var item in values)
+            {
+                string filename = $"{measureId}_{item.Key}";
+                var old_path = Path.Combine(path, values[item.Key]);
+                var new_path = Path.Combine(path, filename);
+                File.Delete(new_path);
+                File.Move(old_path, new_path);
+                new_blobs.Add(item.Key, filename);
+            }
+            values = new_blobs;
+            await base.Save(measureId, values);
+        }
+        public async Task BeforeDelete(long measureId)
+        {
+            var path = Path.Combine(
+                System.Environment.GetFolderPath(
+                System.Environment.SpecialFolder.Personal), "bin");
+
+            var files = await Load(measureId);
+            foreach (var f in files)
+            {
+                File.Delete(Path.Combine(path, f.Value));
+            }
+            
+        }
+    }
 }

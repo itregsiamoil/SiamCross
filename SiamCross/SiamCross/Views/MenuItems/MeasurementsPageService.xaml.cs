@@ -35,6 +35,7 @@ namespace SiamCross.Views.MenuItems
                 return;
 
             _vm.UpdateSelect(meas, e.Value);
+            _vm.UpdateSelectTitle();
         }
 
         protected override bool OnBackButtonPressed()
