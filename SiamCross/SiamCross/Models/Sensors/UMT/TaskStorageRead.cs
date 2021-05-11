@@ -171,21 +171,17 @@ namespace SiamCross.Models.Sensors.Umt
             {
                 currAddrInPage = (UInt16)(currAddrInPage & 0x7FFF);
 
-                while (true)
+                while (0x7FFF != currAddrInPage)
                 {
                     _Rep.Address = FramOffset + currAddrInPage;
                     await Connection.ReadAsync(_Rep, SetProgressBytes, ct);
 
                     if (CurrentSurveyId != NomIslt.Value)
                     {
-                        if (null != _CurrSurvey)
-                        {
-                            await AppendSurveyData(ct);
-                            await CloseSurvey(ct);
-                        }
-                        CurrentSurveyId = NomIslt.Value;
-                        if (!ReadedSurveys.Add(CurrentSurveyId))
+                        await CloseSurvey(ct);
+                        if (UInt16.MaxValue == NomIslt.Value || !ReadedSurveys.Add(NomIslt.Value))
                             break;
+                        CurrentSurveyId = NomIslt.Value;
                         OpenSurvey();
                     }
                     await AppendSurveyData(ct);
@@ -196,47 +192,37 @@ namespace SiamCross.Models.Sensors.Umt
                         break;
                     }
                     currAddrInPage = AdrPr.Value;
-
-
                 }
-
             }
             // read from flash
-            while (true)
+            while (0x7FFF != currAddrInPage)
             {
                 _Rep.Address = FlashOffset + GetCurrentPageAddress() + currAddrInPage;
                 await Connection.ReadAsync(_Rep, SetProgressBytes, ct);
-                if (0 == currAddrInPage)
-                    DecrementPage();
-                currAddrInPage = AdrPr.Value;
 
                 if (CurrentSurveyId != NomIslt.Value)
                 {
-                    if (null != _CurrSurvey)
-                    {
-                        await AppendSurveyData(ct);
-                        await CloseSurvey(ct);
-                    }
-                    
-                    CurrentSurveyId = NomIslt.Value;
-                    if (UInt16.MaxValue==NomIslt.Value || !ReadedSurveys.Add(CurrentSurveyId))
+                    await CloseSurvey(ct);
+                    if (UInt16.MaxValue == NomIslt.Value || !ReadedSurveys.Add(NomIslt.Value))
                         break;
+                    CurrentSurveyId = NomIslt.Value;
                     OpenSurvey();
                 }
                 await AppendSurveyData(ct);
-            }
 
-            if (null != _CurrSurvey)
-            {
-                await AppendSurveyData(ct);
-                await CloseSurvey(ct);
+                if (0 == currAddrInPage)
+                    DecrementPage();
+                currAddrInPage = AdrPr.Value;
             }
-
+            
+            await CloseSurvey(ct);
             return true;
         }
 
         async Task CloseSurvey(CancellationToken ct)
         {
+            if (null == _CurrSurvey)
+                return;
             try
             {
                 await DbService.Instance.SaveSurveyAsync(_CurrSurvey);
@@ -262,7 +248,7 @@ namespace SiamCross.Models.Sensors.Umt
             if (null == _CurrSurvey)
                 return;
             DataMt.Address = _Rep.Address + _Rep.Size;
-            uint qty = (uint)4 * KolPar.Value * (uint)(KolToch.Value + 1);
+            uint qty = (uint)4 * KolPar.Value * (uint)((0 == KolToch.Value) ? 1 : KolToch.Value);
             await Connection.ReadMemAsync(DataMt.Address, (uint)qty, DataMt.Value, 0, SetProgressBytes, ct);
 
             int curr = 0;
@@ -272,13 +258,13 @@ namespace SiamCross.Models.Sensors.Umt
                 {
                     default: break;
                     case 3:
-                        await _DataTempExt.WriteAsync(DataMt.Value, curr + 2, 4, ct);
+                        await _DataTempExt.WriteAsync(DataMt.Value, curr + 2*4, 4, ct);
                         goto case 2;
                     case 2:
-                        await _DataTemp.WriteAsync(DataMt.Value, curr + 1, 4, ct);
+                        await _DataTemp.WriteAsync(DataMt.Value, curr + 1*4, 4, ct);
                         goto case 1;
                     case 1:
-                        await _DataPress.WriteAsync(DataMt.Value, curr + 0, 4, ct);
+                        await _DataPress.WriteAsync(DataMt.Value, curr + 0*4, 4, ct);
                         break;
                 }
                 curr += (KolPar.Value) * 4;
@@ -307,6 +293,7 @@ namespace SiamCross.Models.Sensors.Umt
             _DataTemp = EnvironmentService.CreateTempFileSurvey();
             _DataTempExt = EnvironmentService.CreateTempFileSurvey();
 
+            survey.Measure.DataInt.Add("PeriodSec", IntervalRep.Value/10000);
             survey.Measure.DataString.Add("mtinterval", TimeSpan.FromSeconds(IntervalRep.Value / 10000).ToString());
             survey.Measure.DataBlob.Add("mtpressure", Path.GetFileName(_DataPress.Name));
             survey.Measure.DataBlob.Add("mttemperature", Path.GetFileName(_DataTemp.Name));
@@ -327,9 +314,9 @@ namespace SiamCross.Models.Sensors.Umt
             }
             return DateTime.Now;
         }
-        UInt16 GetCurrentPageAddress()
+        uint GetCurrentPageAddress()
         {
-            return (UInt16)(PageSize * (CurrentPage + CurrentBlock * PageQty));
+            return PageSize * (CurrentPage + (uint)CurrentBlock * PageQty);
         }
         void DecrementPage()
         {

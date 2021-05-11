@@ -1,14 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<views:BaseContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:localEffects="clr-namespace:SiamCross.Services;assembly=SiamCross"
-             xmlns:local="clr-namespace:SiamCross.ViewModels;assembly=SiamCross"
-             NavigationPage.HasBackButton ="true"
-             xmlns:views="clr-namespace:SiamCross.Views"
-             x:Class="SiamCross.Views.MenuItems.MeasurementsPage"
-             x:DataType="local:MeasurementsVMService"
-             x:Name="MyPage"
-             Title="{Binding Title, Mode=TwoWay}">
+<views:BaseContentPage 
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+    xmlns:localEffects="clr-namespace:SiamCross.Services;assembly=SiamCross"
+    xmlns:local="clr-namespace:SiamCross.ViewModels;assembly=SiamCross"
+    NavigationPage.HasBackButton ="true"
+    xmlns:views="clr-namespace:SiamCross.Views"
+    x:Class="SiamCross.Views.MenuItems.MeasurementsPage"
+    x:DataType="local:MeasurementsVMService"
+    x:Name="MyPage"
+    Title="{Binding Title, Mode=TwoWay}">
 <!--Icons made by
 <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from
 <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>-->
@@ -83,14 +85,10 @@
                                                     <RowDefinition Height="35"/>
                                                 </Grid.RowDefinitions>
                                                 <CheckBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" HorizontalOptions="End"
-                                                          IsVisible="false"
                                                           IsChecked="{Binding IsSelected}" 
-                                                          CheckedChanged="OnCheckBoxCheckedChanged">
-                                                    <CheckBox.Triggers>
-                                                        <DataTrigger TargetType="CheckBox" Binding="{Binding Path=BindingContext.SelectMode , Source={x:Reference MyPage}}" Value="true" >
-                                                            <Setter Property="IsVisible" Value="true"  />
-                                                        </DataTrigger>
-                                                    </CheckBox.Triggers>
+                                                          CheckedChanged="OnCheckBoxCheckedChanged"
+                                                          IsVisible = "{Binding Path=BindingContext.SelectMode , Source={x:Reference MyPage}}"
+                                                          >
                                                 </CheckBox>
                                                 <Label Grid.Row="0" Text="{Binding Field}" FontAttributes="Bold"></Label>
                                                 <Label Grid.Row="1" Text="{Binding Date}" FontAttributes="Bold"></Label>

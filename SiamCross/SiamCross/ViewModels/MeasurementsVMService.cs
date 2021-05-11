@@ -240,16 +240,12 @@ namespace SiamCross.ViewModels
 
             Stopwatch perf = new Stopwatch();
             perf.Restart();
-            /*
             IEnumerable<MeasurementView> selected = Measurements.Where(element => element.IsSelected);
             foreach (MeasurementView item in selected)
             {
                 item.IsSelected = false;
-                UpdateSelect(item, item.IsSelected);
+                //UpdateSelect(item, item.IsSelected);
             }
-            */
-            SelectedMeasurements.Clear();
-            Parallel.ForEach(Measurements, item => item.IsSelected = false);
             Debug.WriteLine($"[{perf.ElapsedMilliseconds}] OLD UnselectAll");
             UpdateSelectTitle();
         }
@@ -258,36 +254,14 @@ namespace SiamCross.ViewModels
             if (!SelectMode)
                 SelectMode = true;
             Stopwatch perf = new Stopwatch();
-            /*
             perf.Restart();
             IEnumerable<MeasurementView> selected = Measurements.Where(element => !element.IsSelected);
             foreach (MeasurementView item in selected)
             {
                 item.IsSelected = true;
-                UpdateSelect(item, item.IsSelected);
+                //UpdateSelect(item, item.IsSelected);
             }
             Debug.WriteLine($"[{perf.ElapsedMilliseconds}] OLD SelectAll");
-            perf.Restart();
-            SelectedMeasurements.Clear();
-            foreach (MeasurementView item in Measurements)
-            {
-                item.IsSelected = true;
-                SelectedMeasurements.Add(item);
-            }
-            Debug.WriteLine($"[{perf.ElapsedMilliseconds}] NEW SelectAll");
-            */
-
-            perf.Restart();
-            SelectedMeasurements.Clear();
-            Parallel.ForEach(Measurements, item =>
-            {
-                //if (!item.IsSelected)
-                {
-                    item.IsSelected = true;
-                    SelectedMeasurements.Add(item);
-                }
-            });
-            Debug.WriteLine($"[{perf.ElapsedMilliseconds}] NEW SelectAll");
             UpdateSelectTitle();
         }
         private async Task ShareMeasurementsAsync()
