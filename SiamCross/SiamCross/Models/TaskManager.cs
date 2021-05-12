@@ -8,8 +8,10 @@ namespace SiamCross.Models
 {
     public class TaskManager : IDisposable
     {
+#if DEBUG
         readonly bool IsBackground = Thread.CurrentThread.IsBackground;
         readonly int ThreadId = Thread.CurrentThread.ManagedThreadId;
+#endif
         ITask CurrentTask = null;
         CancellationTokenSource _TaskCts = new CancellationTokenSource();
         private readonly SemaphoreSlim _Lock = new SemaphoreSlim(1);

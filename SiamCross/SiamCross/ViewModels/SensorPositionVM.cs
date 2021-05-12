@@ -67,8 +67,11 @@ namespace SiamCross.ViewModels
             CmdEdit = CmdEdit = new AsyncCommand(ShowEditor
                 , (Func<object, bool>)null, null, false, false);
             CmdMakeNew = _Model.CmdMakeNew;
-            CmdLoad = _Model.CmdLoad;
-            CmdSave = _Model.CmdSave;
+
+            CmdLoad = new AsyncCommand(DoLoad
+                , () => Sensor.Model.Manager.IsFree, null, false, false);
+            CmdSave = new AsyncCommand(DoSave
+                , () => Sensor.Model.Manager.IsFree, null, false, false);
 
             Repo.FieldDir.FieldList.ForEach(o => _Fields.Add(o));
 
@@ -92,6 +95,14 @@ namespace SiamCross.ViewModels
             //RaiseCanExecuteChanged(CmdMakeNew);
             RaiseCanExecuteChanged(CmdLoad);
             RaiseCanExecuteChanged(CmdSave);
+        }
+        async Task<JobStatus> DoLoad()
+        {
+            return await Sensor.Model.Manager.Execute(_Model.TaskLoad);
+        }
+        async Task<JobStatus> DoSave()
+        {
+            return await Sensor.Model.Manager.Execute(_Model.TaskSave);
         }
         async Task ShowEditor()
         {

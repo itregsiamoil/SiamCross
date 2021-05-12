@@ -1,4 +1,5 @@
-﻿using SiamCross.Models.Connection.Protocol;
+﻿using SiamCross.Models.Connection;
+using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
 using SiamCross.ViewModels;
 using System;
@@ -34,11 +35,36 @@ namespace SiamCross.Models.Sensors
             Position = new SensorPosition(this);
             Surveys = new List<ISurvey>();
             Info = new CommonInfo();
+            Connection.PropertyChanged += OnConnectionChange;
+        }
+        async void OnConnectionChange(object sender, PropertyChangedEventArgs e)
+        {
+            if (null == sender || "State" != e.PropertyName)
+                return;
+            if (ConnectionState.Connected == Connection.State)
+                await OnConnect();
+            else if (ConnectionState.Disconnected == Connection.State)
+                OnDisconnect();
+        }
+        void OnDisconnect()
+        {
+            Position.ResetSaved();
+            SurveyCfg.ResetSaved();
+        }
+        async Task OnConnect()
+        {
+            var result = await Manager.Execute(SurveyCfg.TaskWait);
+            if (JobStatus.Сomplete == result)
+                result = await Manager.Execute(Position.TaskLoad);
+
+            if (JobStatus.Сomplete != result)
+                await this.Connection.Disconnect();
         }
 
-        public virtual void Dispose()
+        public virtual async void Dispose()
         {
-            Connection.Disconnect();
+            await Connection.Disconnect();
+            Connection.PropertyChanged -= OnConnectionChange;
 
             ConnHolder?.Dispose();
             Manager?.Dispose();

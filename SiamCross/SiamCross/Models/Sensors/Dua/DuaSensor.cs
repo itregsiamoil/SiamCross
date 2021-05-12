@@ -1,5 +1,4 @@
-﻿using SiamCross.Models.Connection;
-using SiamCross.Models.Connection.Protocol;
+﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Dua.Surveys;
 using SiamCross.ViewModels.Dua;
@@ -9,7 +8,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors.Dua
 {
@@ -31,34 +29,7 @@ namespace SiamCross.Models.Sensors.Dua
             Surveys.Add(new DuaSurvey(this, SurveyCfg, Kind.LRC));
             Surveys.Add(new DuaSurvey(this, SurveyCfg, Kind.LDC));
             Surveys.Add(new DuaSurvey(this, SurveyCfg, Kind.PAR));
-
-            Connection.PropertyChanged += OnConnectionChange;
         }
-        async void OnConnectionChange(object sender, PropertyChangedEventArgs e)
-        {
-            if (null == sender || "State" != e.PropertyName)
-                return;
-            if (ConnectionState.Connected == Connection.State)
-                await OnConnect();
-            else if (ConnectionState.Disconnected == Connection.State)
-                OnDisconnect();
-        }
-        void OnDisconnect()
-        {
-            Position.ResetSaved();
-            SurveyCfg.ResetSaved();
-        }
-        async Task OnConnect()
-        {
-            await (Surveys[0].CmdWait as AsyncCommand)?.ExecuteAsync();
-            await (Position.CmdLoad as AsyncCommand)?.ExecuteAsync();
-        }
-        public override void Dispose()
-        {
-            Connection.PropertyChanged -= OnConnectionChange;
-            base.Dispose();
-        }
-
     }
 
 

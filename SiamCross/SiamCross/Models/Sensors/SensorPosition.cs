@@ -44,18 +44,12 @@ namespace SiamCross.Models.Sensors
         }
 
         public ICommand CmdMakeNew { get; }
-        public ICommand CmdLoad { get; }
-        public ICommand CmdSave { get; }
         public SensorPosition(SensorModel sensorModel)
         {
             Sensor = sensorModel;
 
             CmdMakeNew = new AsyncCommand(ShowMakeNewPosition
                 , (Func<object, bool>)null, null, false, false);
-            CmdLoad = new AsyncCommand(DoLoad
-                , () => Sensor.Manager.IsFree, null, false, false);
-            CmdSave = new AsyncCommand(DoSave
-                , () => Sensor.Manager.IsFree, null, false, false);
         }
 
         async Task ShowMakeNewPosition()
@@ -74,19 +68,7 @@ namespace SiamCross.Models.Sensors
                 //throw;
             }
         }
-        async Task DoLoad()
-        {
-            if (JobStatus.Сomplete == await Sensor.Manager.Execute(TaskLoad))
-                UpdateSaved();
-        }
-        async Task DoSave()
-        {
-            if (JobStatus.Сomplete == await Sensor.Manager.Execute(TaskSave))
-                UpdateSaved();
-            else
-                ResetSaved();
-        }
-        void UpdateSaved()
+        public void UpdateSaved()
         {
             if (null == Saved)
                 Saved = new Position();

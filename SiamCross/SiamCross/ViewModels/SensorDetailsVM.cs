@@ -55,7 +55,7 @@ namespace SiamCross.ViewModels
         }
         async Task ShowPositionPage()
         {
-            _Sensor.Model.Position.CmdLoad.Execute(this);
+            await Sensor.Model.Manager.Execute(Sensor.Model.Position.TaskLoad);
             await PageNavigator.ShowPageAsync(_Sensor.PositionVM);
         }
         async Task ShowStoragePage()

@@ -1,11 +1,9 @@
-﻿using SiamCross.Models.Connection;
-using SiamCross.Models.Connection.Protocol;
+﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Sensors.Umt.Surveys;
 using SiamCross.ViewModels.Umt;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
-using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors.Umt
 {
@@ -19,8 +17,6 @@ namespace SiamCross.Models.Sensors.Umt
             Position.TaskLoad = new TaskPositionLoad(Position);
             Position.TaskSave = new TaskPositionSave(Position);
 
-            Connection.PropertyChanged += OnConnectionChange;
-
             SurveyCfg = new SurveyCfg(this);
             Storage = new Storage(this);
 
@@ -28,34 +24,7 @@ namespace SiamCross.Models.Sensors.Umt
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.Dynamic));
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.PeriodicStatic));
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.PeriodycDynamic));
-
-
         }
-        async void OnConnectionChange(object sender, PropertyChangedEventArgs e)
-        {
-            if (null == sender || "State" != e.PropertyName)
-                return;
-            if (ConnectionState.Connected == Connection.State)
-                await OnConnect();
-            else if (ConnectionState.Disconnected == Connection.State)
-                OnDisconnect();
-        }
-        void OnDisconnect()
-        {
-            Position.ResetSaved();
-            SurveyCfg.ResetSaved();
-        }
-        async Task OnConnect()
-        {
-            await (Surveys[0].CmdWait as AsyncCommand)?.ExecuteAsync();
-            await (Position.CmdLoad as AsyncCommand)?.ExecuteAsync();
-        }
-        public override void Dispose()
-        {
-            Connection.PropertyChanged -= OnConnectionChange;
-            base.Dispose();
-        }
-
     }
 
     public class UmtSensorVM : BaseSensor2

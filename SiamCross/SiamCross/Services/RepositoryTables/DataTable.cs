@@ -53,9 +53,9 @@ namespace SiamCross.Services.RepositoryTables
     public class DataFloat : DataTable<double> { public DataFloat(IDbConnection db) : base(db, "ValFloat") { } }
     public class DataString : DataTable<string> { public DataString(IDbConnection db) : base(db, "ValString") { } }
     public class DataBlob : DataTable<string>
-    { 
-        public DataBlob(IDbConnection db) 
-            : base(db, "ValBlob") 
+    {
+        public DataBlob(IDbConnection db)
+            : base(db, "ValBlob")
         { }
         public override async Task Save(long measureId, Dictionary<string, string> values)
         {
@@ -87,7 +87,7 @@ namespace SiamCross.Services.RepositoryTables
             {
                 File.Delete(Path.Combine(path, f.Value));
             }
-            
+
         }
     }
 }

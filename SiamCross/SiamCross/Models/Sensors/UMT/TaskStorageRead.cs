@@ -150,7 +150,7 @@ namespace SiamCross.Models.Sensors.Umt
 
             UInt16 currAddrInPage = Adrtek.Value;
 
-            
+
 
             NomIslt.Value = Kolisl.Value;
             //UInt16 CurrentSurveyId = Kolisl.Value;
@@ -214,7 +214,7 @@ namespace SiamCross.Models.Sensors.Umt
                     DecrementPage();
                 currAddrInPage = AdrPr.Value;
             }
-            
+
             await CloseSurvey(ct);
             return true;
         }
@@ -258,13 +258,13 @@ namespace SiamCross.Models.Sensors.Umt
                 {
                     default: break;
                     case 3:
-                        await _DataTempExt.WriteAsync(DataMt.Value, curr + 2*4, 4, ct);
+                        await _DataTempExt.WriteAsync(DataMt.Value, curr + 2 * 4, 4, ct);
                         goto case 2;
                     case 2:
-                        await _DataTemp.WriteAsync(DataMt.Value, curr + 1*4, 4, ct);
+                        await _DataTemp.WriteAsync(DataMt.Value, curr + 1 * 4, 4, ct);
                         goto case 1;
                     case 1:
-                        await _DataPress.WriteAsync(DataMt.Value, curr + 0*4, 4, ct);
+                        await _DataPress.WriteAsync(DataMt.Value, curr + 0 * 4, 4, ct);
                         break;
                 }
                 curr += (KolPar.Value) * 4;
@@ -293,7 +293,7 @@ namespace SiamCross.Models.Sensors.Umt
             _DataTemp = EnvironmentService.CreateTempFileSurvey();
             _DataTempExt = EnvironmentService.CreateTempFileSurvey();
 
-            survey.Measure.DataInt.Add("PeriodSec", IntervalRep.Value/10000);
+            survey.Measure.DataInt.Add("PeriodSec", IntervalRep.Value / 10000);
             survey.Measure.DataString.Add("mtinterval", TimeSpan.FromSeconds(IntervalRep.Value / 10000).ToString());
             survey.Measure.DataBlob.Add("mtpressure", Path.GetFileName(_DataPress.Name));
             survey.Measure.DataBlob.Add("mttemperature", Path.GetFileName(_DataTemp.Name));

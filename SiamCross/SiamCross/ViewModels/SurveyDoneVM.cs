@@ -42,16 +42,15 @@ namespace SiamCross.ViewModels
                 return;
 
             FileStream file = OpenTempFile(filename);
-            if(null== file)
+            if (null == file)
                 return;
-
-            MinX = _Model.SurveyInfo.BeginTimestamp;
-            MaxX = MinX + TimeSpan.FromSeconds(periodSec);
-
             using (file)
             {
+                MinX = _Model.SurveyInfo.BeginTimestamp;
+                MaxX = MinX + TimeSpan.FromSeconds(periodSec * file.Length / 4);
+
                 byte[] b = new byte[4];
-                while (0<file.Read(b,0, 4))
+                while (0 < file.Read(b, 0, 4))
                 {
                     float val = BitConverter.ToSingle(b, 0);
                     if (val < MinPress)
@@ -83,15 +82,15 @@ namespace SiamCross.ViewModels
 
             float txtOffset = 2;
 
-            float yLblAxisWidth = (paintAxies.MeasureText("0000") + txtOffset*2);
-            float yLblAxisHeight = (paintAxies.TextSize + txtOffset*2) * 2;
+            float yLblAxisWidth = (paintAxies.MeasureText("0000") + txtOffset * 2);
+            float yLblAxisHeight = (paintAxies.TextSize + txtOffset * 2) * 2;
 
-            float xLblAxisWidth = (paintAxies.MeasureText("00.00.00") + 4)*1.2f;
-            float xLblAxisHeight = (paintAxies.TextSize + txtOffset*2) *2;
+            float xLblAxisWidth = (paintAxies.MeasureText("00.00.00") + 4) * 1.2f;
+            float xLblAxisHeight = (paintAxies.TextSize + txtOffset * 2) * 2;
 
             var rect = SKRect.Create(
                 yLblAxisWidth
-                , yLblAxisHeight/2
+                , yLblAxisHeight / 2
                 , info.Width - yLblAxisWidth * 2
                 , info.Height - yLblAxisHeight - xLblAxisHeight);
 
@@ -114,7 +113,7 @@ namespace SiamCross.ViewModels
             float horizontalStep = ((rect.Bottom - rect.Top) / horizontalCount);
 
             float leftAxisYStartLabel = MaxPress;
-            float leftAxisYStartStep = (MaxPress - MinPress)/ horizontalCount;
+            float leftAxisYStartStep = (MaxPress - MinPress) / horizontalCount;
 
             for (float i = rect.Top; i < rect.Bottom + 1; i += horizontalStep)
             {
@@ -139,11 +138,11 @@ namespace SiamCross.ViewModels
                 IsAntialias = true
             };
             FileStream file = OpenTempFile(filename);
-            if(null== file)
+            if (null == file)
                 return;
             using (file)
             {
-                if(file.Length>=4)
+                if (file.Length >= 4)
                 {
                     double dx = rect.Width / (file.Length / 4 - 0);
                     double dy = rect.Height / (MaxPress - MinPress);
@@ -154,8 +153,8 @@ namespace SiamCross.ViewModels
                     SKPath path = new SKPath();
 
                     file.Read(b, 0, 4);
-                    val = BitConverter.ToSingle(b, 0) ;
-                    path.MoveTo((float)(i * dx) + rect.Left, rect.Top + rect.Height - (float)(  (val- MinPress) * dy));
+                    val = BitConverter.ToSingle(b, 0);
+                    path.MoveTo((float)(i * dx) + rect.Left, rect.Top + rect.Height - (float)((val - MinPress) * dy));
                     i++;
 
                     while (0 < file.Read(b, 0, 4))
@@ -166,7 +165,7 @@ namespace SiamCross.ViewModels
                         path.LineTo((float)(i * dx) + rect.Left, rect.Top + rect.Height - (float)((val - MinPress) * dy));
                         i++;
                     }
-                    canvas.DrawPath(path, paint);                
+                    canvas.DrawPath(path, paint);
                 }
             }
         }

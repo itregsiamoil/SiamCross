@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors.Dua
 {
@@ -25,28 +23,13 @@ namespace SiamCross.Models.Sensors.Dua
         public readonly byte[] LevelQuantityIndex = new byte[5];
         public DateTime Timestamp;
 
-        async Task DoSave()
-        {
-            var taskSaveInfo = new TaskSurveyCfgSave(this, _Sensor);
-            await _Sensor.Manager.Execute(taskSaveInfo);
-        }
-        async Task DoLoad()
-        {
-            var taskUpdate = new TaskSurveyCfgLoad(this, _Sensor);
-            await _Sensor.Manager.Execute(taskUpdate);
-        }
-
         public DuaSurveyCfg(SensorModel sensor)
         {
             _Sensor = sensor;
 
-            CmdLoadParam = new AsyncCommand(DoLoad,
-                () => _Sensor.Manager.IsFree,
-                null, false, false);
-
-            CmdSaveParam = new AsyncCommand(DoSave,
-                () => _Sensor.Manager.IsFree,
-                null, false, false);
+            TaskSave = new TaskSurveyCfgSave(this, _Sensor);
+            TaskLoad = new TaskSurveyCfgLoad(this, _Sensor);
+            TaskWait = new TaskSurveyWait(sensor);
 
             //CmdShow = new AsyncCommand(DoShow,
             //    (Func<bool>)null,

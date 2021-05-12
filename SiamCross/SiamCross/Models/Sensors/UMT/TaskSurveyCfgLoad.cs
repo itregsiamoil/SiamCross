@@ -29,7 +29,14 @@ namespace SiamCross.Models.Sensors.Umt
             {
                 using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
                 {
-                    return await UpdateAsync(linkTsc.Token);
+                    bool ret = await UpdateAsync(linkTsc.Token);
+                    if (ret)
+                        _Model.UpdateSaved();
+                    _Model.ChangeNotify(nameof(_Model.Period));
+                    _Model.ChangeNotify(nameof(_Model.IsEnabledTempRecord));
+
+
+                    return ret;
                 }
             }
         }

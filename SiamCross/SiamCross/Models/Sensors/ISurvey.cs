@@ -7,11 +7,15 @@ namespace SiamCross.Models.Sensors
     {
         string Name { get; }
         string Description { get; }
-
-
+        ISurveyCfg Config { get; }
+        ITask TaskStart { get; set; }
+    }
+    public interface ISurveyVM
+    {
+        string Name { get; }
+        string Description { get; }
         ISurveyCfg Config { get; }
         ICommand CmdStart { get; }
-        ICommand CmdWait { get; }
     }
     public class BaseSurvey : BaseVM, ISurvey
     {
@@ -19,8 +23,7 @@ namespace SiamCross.Models.Sensors
         public string Name { get; }
         public string Description { get; }
         public ISurveyCfg Config { get; set; }
-        public ICommand CmdStart { get; set; }
-        public ICommand CmdWait { get; set; }
+        public ITask TaskStart { get; set; }
 
         public BaseSurvey(SensorModel sensor, ISurveyCfg cfg, string name, string description)
         {

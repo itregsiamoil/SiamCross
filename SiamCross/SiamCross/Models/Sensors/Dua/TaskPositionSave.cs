@@ -48,7 +48,12 @@ namespace SiamCross.Models.Sensors.Dua
             {
                 using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
                 {
-                    return await DoSaveSingleAsync(linkTsc.Token);
+                    bool ret = await DoSaveSingleAsync(linkTsc.Token);
+                    if (ret)
+                        _Model.UpdateSaved();
+                    else
+                        _Model.ResetSaved();
+                    return ret;
                 }
             }
         }
