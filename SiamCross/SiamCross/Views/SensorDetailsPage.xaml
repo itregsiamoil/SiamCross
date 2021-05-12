@@ -47,55 +47,57 @@
     </NavigationPage.TitleView>
 
     <ContentPage.Content>
-        <ScrollView BackgroundColor="{StaticResource colorBackgroundLight}" >
-            <FlexLayout Padding="0" 
+        <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
+
+            <ScrollView VerticalOptions="FillAndExpand">
+                <FlexLayout Padding="0" 
                         Direction="Row"
                         Wrap="Wrap"
                         JustifyContent="Start"
                         AlignItems="Start"
                         AlignContent="Start">
-                <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}" />
 
-                <Frame Style="{StaticResource MenuItemStyle}" FlexLayout.Grow="1"  FlexLayout.Basis="250" HeightRequest="80">
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ShowPositionEditorCommand}" />
-                    </Frame.GestureRecognizers>
-                    <StackLayout>
-                        <Label Style="{StaticResource TitleLabel}" >
-                            <Label.FormattedText Margin="0">
-                                <FormattedString >
-                                    <Span Text="&#x1F310; " />
-                                    <Span Text="{local:Translate LocationInfo}" />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                        <Label LineBreakMode="WordWrap" >
-                            <Label.FormattedText Margin="0">
-                                <FormattedString >
-                                    <Span Text="{local:Translate Field}" />
-                                    <Span Text=" " />
-                                    <Span Text="{Binding Sensor.PositionVM.FieldName, Mode=OneWay }" Font="Bold" TextColor="Black"/>
-                                    <Span Text="[" Font="Bold" TextColor="Black"/>
-                                    <Span Text="{Binding Sensor.PositionVM.FieldId, Mode=OneWay }" Font="Bold" TextColor="Black"/>
-                                    <Span Text="]" Font="Bold" TextColor="Black"/>
-                                    <Span Text="&#10;" />
-                                    <Span Text="{local:Translate Well} " />
-                                    <Span Text=" " />
-                                    <Span Text="{Binding Sensor.PositionVM.Well}" Font="Bold" TextColor="Black"/>
-                                    <Span Text=" " />
-                                    <Span Text="{local:Translate Bush}" />
-                                    <Span Text=" " />
-                                    <Span Text="{Binding Sensor.PositionVM.Bush}" Font="Bold" TextColor="Black"/>
-                                    <Span Text=" " />
-                                    <Span Text="{local:Translate Shop}" />
-                                    <Span Text=" " />
-                                    <Span Text="{Binding Sensor.PositionVM.Shop}" Font="Bold" TextColor="Black"/>
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                    </StackLayout>
-                </Frame>
-                <!--
+
+                    <Frame Style="{StaticResource MenuItemStyle}" FlexLayout.Grow="1"  FlexLayout.Basis="250" HeightRequest="80">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowPositionEditorCommand}" />
+                        </Frame.GestureRecognizers>
+                        <StackLayout>
+                            <Label Style="{StaticResource TitleLabel}" >
+                                <Label.FormattedText Margin="0">
+                                    <FormattedString >
+                                        <Span Text="&#x1F310; " />
+                                        <Span Text="{local:Translate LocationInfo}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label LineBreakMode="WordWrap" >
+                                <Label.FormattedText Margin="0">
+                                    <FormattedString >
+                                        <Span Text="{local:Translate Field}" />
+                                        <Span Text=" " />
+                                        <Span Text="{Binding Sensor.PositionVM.FieldName, Mode=OneWay }" Font="Bold" TextColor="Black"/>
+                                        <Span Text="[" Font="Bold" TextColor="Black"/>
+                                        <Span Text="{Binding Sensor.PositionVM.FieldId, Mode=OneWay }" Font="Bold" TextColor="Black"/>
+                                        <Span Text="]" Font="Bold" TextColor="Black"/>
+                                        <Span Text="&#10;" />
+                                        <Span Text="{local:Translate Well} " />
+                                        <Span Text=" " />
+                                        <Span Text="{Binding Sensor.PositionVM.Well}" Font="Bold" TextColor="Black"/>
+                                        <Span Text=" " />
+                                        <Span Text="{local:Translate Bush}" />
+                                        <Span Text=" " />
+                                        <Span Text="{Binding Sensor.PositionVM.Bush}" Font="Bold" TextColor="Black"/>
+                                        <Span Text=" " />
+                                        <Span Text="{local:Translate Shop}" />
+                                        <Span Text=" " />
+                                        <Span Text="{Binding Sensor.PositionVM.Shop}" Font="Bold" TextColor="Black"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </StackLayout>
+                    </Frame>
+                    <!--
                 <Frame Style="{StaticResource MenuItemStyle}" >
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ShowInfoViewCommand}" />
@@ -133,27 +135,30 @@
                     </StackLayout>
                 </Frame>
                 -->
-                <Frame Style="{StaticResource MenuItemStyle}" FlexLayout.Grow="1"  FlexLayout.Basis="250" HeightRequest="80">
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ShowSurveysViewCommand}" />
-                    </Frame.GestureRecognizers>
-                    <StackLayout>
-                        <Label Text="&#x1F4C8; Исследования" Style="{StaticResource TitleLabel}"/>
-                        <Label Text="Установка праметров, запуск и остановка исследования "/>
-                    </StackLayout>
-                </Frame>
-                <Frame Style="{StaticResource MenuItemStyle}" FlexLayout.Grow="1"  FlexLayout.Basis="250" HeightRequest="80">
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ShowDownloadsViewCommand}" />
-                    </Frame.GestureRecognizers>
-                    <StackLayout>
-                        <Label Text="&#x1F4BE; Хранилище" Style="{StaticResource TitleLabel}"/>
-                        <Label Text="Получение из памяти прибора одного или нескольких измерений"/>
-                    </StackLayout>
-                </Frame>
+                    <Frame Style="{StaticResource MenuItemStyle}" FlexLayout.Grow="1"  FlexLayout.Basis="250" HeightRequest="80">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowSurveysViewCommand}" />
+                        </Frame.GestureRecognizers>
+                        <StackLayout>
+                            <Label Text="&#x1F4C8; Исследования" Style="{StaticResource TitleLabel}"/>
+                            <Label Text="Установка праметров, запуск и остановка исследования "/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Style="{StaticResource MenuItemStyle}" FlexLayout.Grow="1"  FlexLayout.Basis="250" HeightRequest="80">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowDownloadsViewCommand}" />
+                        </Frame.GestureRecognizers>
+                        <StackLayout>
+                            <Label Text="&#x1F4BE; Хранилище" Style="{StaticResource TitleLabel}"/>
+                            <Label Text="Получение из памяти прибора одного или нескольких измерений"/>
+                        </StackLayout>
+                    </Frame>
 
-            </FlexLayout>
-        </ScrollView>
-
+                </FlexLayout>
+            </ScrollView>
+            
+            <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}" />
+        
+        </StackLayout>
     </ContentPage.Content>
 </views:BaseContentPage>

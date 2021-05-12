@@ -6,11 +6,13 @@
              xmlns:vm="clr-namespace:SiamCross.ViewModels.Umt" 
              x:DataType="vm:StorageVM"
              x:Class="SiamCross.Views.Umt.StoragePage">
+    
     <ContentPage.Resources>
         <Style TargetType="{x:Type StackLayout}">
             <Setter Property="Spacing" Value="0" />
         </Style>
     </ContentPage.Resources >
+    
     <NavigationPage.TitleView >
         <StackLayout Orientation="Horizontal" >
             <StackLayout HorizontalOptions="StartAndExpand" >
@@ -42,7 +44,6 @@
 
     <ContentPage.Content>
         <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
-            <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
 
             <RefreshView Command="{Binding CmdUpdateStorageInfo}">
                 <ScrollView VerticalOptions="StartAndExpand">
@@ -130,6 +131,8 @@
                     </StackLayout>
                 </ScrollView>
             </RefreshView>
+
+            <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
 
             <StackLayout Orientation="Horizontal" IsVisible="{Binding IsPortrait}" >
                 <Button Text="Очистить " HorizontalOptions="FillAndExpand" 

@@ -41,7 +41,6 @@
 
     <ContentPage.Content>
         <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
-            <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
 
             <RefreshView Command="{Binding CmdLoad}">
                 <ScrollView VerticalOptions="FillAndExpand">
@@ -168,6 +167,8 @@
                     </StackLayout>
                 </ScrollView>
             </RefreshView>
+
+            <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
 
             <StackLayout Orientation="Horizontal" IsVisible="{Binding IsPortrait}" >
                 <Button Text="Сохранить" HorizontalOptions="FillAndExpand" 

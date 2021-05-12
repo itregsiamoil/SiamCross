@@ -47,7 +47,6 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout  BackgroundColor="{StaticResource colorBackgroundLight}" >
-            <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}" />
 
             <RefreshView Command="{Binding CmdLoadParam}">
                 <ScrollView VerticalOptions="StartAndExpand">
@@ -102,6 +101,8 @@
                     </FlexLayout>
                 </ScrollView>
             </RefreshView>
+
+            <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}" />
 
             <Button Text="Запустить" HorizontalOptions="FillAndExpand" 
                     IsVisible="{Binding IsPortrait}"
