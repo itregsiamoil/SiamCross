@@ -36,6 +36,21 @@ namespace SiamCross.ViewModels
 
         void DetectMinMaxPressureGraph()
         {
+            if (!_Model.SurveyInfo.DataInt.TryGetValue("PeriodSec", out long periodSec))
+                return;
+            if (!_Model.SurveyInfo.DataInt.TryGetValue("MeasurementsCount", out long measurementsCount))
+                return;
+            if (!_Model.SurveyInfo.DataFloat.TryGetValue("MinPressure", out double minPress))
+                return;
+            if (!_Model.SurveyInfo.DataFloat.TryGetValue("MaxPressure", out double maxPress))
+                return;
+
+            MinX = _Model.SurveyInfo.BeginTimestamp;
+            MaxX = MinX + TimeSpan.FromSeconds(periodSec * measurementsCount);
+            MinPress = (float)minPress;
+            MaxPress = (float)maxPress;
+
+            /*
             if (!_Model.SurveyInfo.DataBlob.TryGetValue("mtpressure", out string filename))
                 return;
             if (!_Model.SurveyInfo.DataInt.TryGetValue("PeriodSec", out long periodSec))
@@ -59,6 +74,7 @@ namespace SiamCross.ViewModels
                         MaxPress = val;
                 }
             }
+            */
         }
 
 

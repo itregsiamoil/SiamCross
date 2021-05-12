@@ -37,7 +37,7 @@ namespace SiamCross.Services.Environment
                 try
                 {
                     string filename = Path.Combine(dir.FullName, "tmp" + i.ToString());
-                    return new FileStream(filename, FileMode.CreateNew | FileMode.Truncate);
+                    return new FileStream(filename, FileMode.CreateNew);
                 }
                 catch (Exception)
                 {

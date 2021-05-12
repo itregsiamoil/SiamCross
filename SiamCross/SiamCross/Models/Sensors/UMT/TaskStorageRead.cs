@@ -62,6 +62,13 @@ namespace SiamCross.Models.Sensors.Umt
         FileStream _DataTemp = null;
         FileStream _DataTempExt = null;
 
+        float MinPress;
+        float MaxPress;
+        float MinIntTemp;
+        float MaxIntTemp;
+        float MinExtTemp;
+        float MaxExtTemp;
+
         ulong _BytesTotal;
         ulong _BytesReaded;
 
@@ -225,6 +232,14 @@ namespace SiamCross.Models.Sensors.Umt
                 return;
             try
             {
+                _CurrSurvey.Measure.DataFloat.Add("MinPressure", MinPress);
+                _CurrSurvey.Measure.DataFloat.Add("MaxPressure", MaxPress);
+                _CurrSurvey.Measure.DataFloat.Add("MinIntTemperature", MinIntTemp);
+                _CurrSurvey.Measure.DataFloat.Add("MaxIntTemperature", MaxIntTemp);
+                _CurrSurvey.Measure.DataFloat.Add("MinExtTemperature", MinExtTemp);
+                _CurrSurvey.Measure.DataFloat.Add("MaxExtTemperature", MaxExtTemp);
+                _CurrSurvey.Measure.DataInt.Add("MeasurementsCount", _DataPress.Length / 4);
+
                 await DbService.Instance.SaveSurveyAsync(_CurrSurvey);
                 await _DataPress.FlushAsync(ct);
                 await _DataTemp.FlushAsync(ct);
@@ -259,12 +274,15 @@ namespace SiamCross.Models.Sensors.Umt
                     default: break;
                     case 3:
                         await _DataTempExt.WriteAsync(DataMt.Value, curr + 2 * 4, 4, ct);
+                        UpdateMinMax(BitConverter.ToSingle(DataMt.Value, curr + 2 * 4), ref MinExtTemp, ref MaxExtTemp);
                         goto case 2;
                     case 2:
                         await _DataTemp.WriteAsync(DataMt.Value, curr + 1 * 4, 4, ct);
+                        UpdateMinMax(BitConverter.ToSingle(DataMt.Value, curr + 1 * 4), ref MinIntTemp, ref MaxIntTemp);
                         goto case 1;
                     case 1:
                         await _DataPress.WriteAsync(DataMt.Value, curr + 0 * 4, 4, ct);
+                        UpdateMinMax(BitConverter.ToSingle(DataMt.Value, curr + 0 * 4), ref MinPress, ref MaxPress);
                         break;
                 }
                 curr += (KolPar.Value) * 4;
@@ -280,6 +298,13 @@ namespace SiamCross.Models.Sensors.Umt
                 , new MeasurementInfo());
 
             InfoEx = $"чтение {NomIslt.Value} исследования";
+
+            MinPress = float.MaxValue;
+            MaxPress = float.MinValue;
+            MinIntTemp = float.MaxValue;
+            MaxIntTemp = float.MinValue;
+            MinExtTemp = float.MaxValue;
+            MaxExtTemp = float.MinValue;
 
             survey.Measure.Kind = 2;
             survey.Position.Field = FieldRep.Value;
@@ -348,6 +373,13 @@ namespace SiamCross.Models.Sensors.Umt
         {
             _BytesReaded += bytes;
             Progress = ((float)_BytesReaded / _BytesTotal);
+        }
+        static void UpdateMinMax<T>(T val, ref T min, ref T max) where T : IComparable
+        {
+            if(0 > val.CompareTo(min))
+                min = val;
+            if (0 < val.CompareTo(max))
+                max = val;
         }
     }
 }
