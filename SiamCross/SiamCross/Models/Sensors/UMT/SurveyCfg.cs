@@ -7,10 +7,12 @@ namespace SiamCross.Models.Sensors.Umt
     {
         public readonly SensorModel Sensor;
 
+        public DateTime Timestamp;
         public struct Data
         {
             public UInt32 Interval;
             public UInt16 Revbit;
+            public bool IsExtetnalTemp;
         }
         public Data? Saved { get; private set; }
         public Data Current;
@@ -34,17 +36,19 @@ namespace SiamCross.Models.Sensors.Umt
         }
         public bool IsEnabledTempRecord
         {
-            get => 0 < (Current.Revbit & (1 << 1));
+            get => 0 == (Current.Revbit & (1 << 1));
             set
             {
                 BitVector32 myBV = new BitVector32(Current.Revbit);
                 int bit0 = BitVector32.CreateMask();
                 int bit1 = BitVector32.CreateMask(bit0);
-                myBV[bit1] = value;
+                myBV[bit1] = !value;
                 Current.Revbit = (ushort)myBV.Data;
                 ChangeNotify();
             }
         }
+        public bool IsEnabledExtTemp => Current.IsExtetnalTemp;
+
 
         public SurveyCfg(SensorModel sensor)
         {

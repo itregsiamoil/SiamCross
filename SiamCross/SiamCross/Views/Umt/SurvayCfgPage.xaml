@@ -91,11 +91,32 @@
                                IsEnabled="{Binding Sensor.TaskManager.IsFree}"
                                FlexLayout.Grow="1"  FlexLayout.Basis="250">
                             <StackLayout >
-                                <Label Text="Датчик температуры" Style="{StaticResource SectionLabel2}"/>
+                                <Label Text="Датчики температуры" Style="{StaticResource SectionLabel2}"/>
                                 <Grid Padding="4,10,4,10">
-                                    <Label Text="Запись температуры"/>
+                                    <Label Text="Внутренний"/>
                                     <Switch IsToggled="{Binding IsEnabledTempRecord}"/>
                                 </Grid>
+                                <Grid Padding="4,10,4,10">
+                                    <Label Text="Внешний"/>
+                                    <Switch IsToggled="{Binding IsEnabledExtTemp}" IsEnabled="False"/>
+                                </Grid>
+                            </StackLayout>
+                        </Frame>
+                        <Frame Style="{StaticResource GroupingFrameStyle2}"
+                                   FlexLayout.Grow="1"  FlexLayout.Basis="250"
+                                   IsEnabled="{Binding Sensor.TaskManager.IsFree}">
+                            <StackLayout>
+                                <Label Text="Дополнительно" Style="{StaticResource SectionLabel2}"/>
+                                <Label Padding="4">
+                                    <Label.FormattedText>
+                                        <FormattedString >
+                                            <Span Text="Время прибора: "  />
+                                            <Span Text="{Binding Timestamp}"/>
+                                            <Span Text="&#10;"/>
+                                            <Span Text="будет синхронизированно при запуске" FontSize="Micro"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
                             </StackLayout>
                         </Frame>
                     </FlexLayout>

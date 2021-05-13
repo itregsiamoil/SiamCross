@@ -22,6 +22,8 @@ namespace SiamCross.ViewModels.Umt
             set => _ModelCfg.IsEnabledTempRecord = value;
         }
         public bool IsSheduler => 2 < _ModelSurvey.SurveyType.ToByte();
+        public string Timestamp => _ModelCfg.Timestamp.ToString("G");
+        public bool IsEnabledExtTemp => _ModelCfg.IsEnabledExtTemp;
 
         public SurveyVM(ISensor sensor, UmtSurvey model)
             : base(sensor, model)

@@ -43,7 +43,7 @@ namespace SiamCross.Models.Sensors
             try
             {
                 if (null == sender || "State" != e.PropertyName)
-                   return;
+                    return;
                 if (ConnectionState.Connected == Connection.State)
                     await OnConnect();
                 else if (ConnectionState.Disconnected == Connection.State)
