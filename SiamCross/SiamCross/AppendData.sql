@@ -21,6 +21,7 @@ INSERT INTO DataDictionary(Title, Kind)VALUES('MaxIntTemperature', 5);
 INSERT INTO DataDictionary(Title, Kind)VALUES('MinExtTemperature', 5);
 INSERT INTO DataDictionary(Title, Kind)VALUES('MaxExtTemperature', 5);
 --bd siam
+INSERT INTO DataDictionary(Title, Kind)VALUES('umttype', 1);
 INSERT INTO DataDictionary(Title, Kind)VALUES('mtscalefactor', 1);
 INSERT INTO DataDictionary(Title, Kind)VALUES('mtinterval', 2);
 INSERT INTO DataDictionary(Title, Kind)VALUES('mttemperature', 3);

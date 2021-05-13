@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -323,6 +324,93 @@ namespace SiamCross.Models.Tools
 
             return document;
         }
+
+        public XDocument CreateXml(MeasureData md)
+        {
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+
+            XDocument document = new XDocument();
+            XElement deviceList = new XElement("Device_List");
+            
+            XElement device = new XElement("Device");
+            device.Add(new XAttribute("DEVTID", "umt01"));
+            device.Add(new XAttribute("DSTID", md.Device.Name));
+            device.Add(new XAttribute("DEVSERIALNUMBER", md.Device.Number.ToString()));
+
+            XElement measurementList = new XElement("Measurement_List");
+
+            XElement measurement = new XElement("Measurement");
+
+            XElement header = new XElement("Header");
+            header.Add(new XAttribute("MESTYPEID", "mtmeter"));
+            header.Add(new XAttribute("MESSTARTDATE", md.Measure.BeginTimestamp.ToString("yyyy-MM-ddTHH:mm:ss")));
+            header.Add(new XAttribute("MESDEVICEOPERATORID", "0"));
+            header.Add(new XAttribute("MESDEVICEFIELDID", md.Position.Field.ToString()));
+            header.Add(new XAttribute("MESDEVICEWELLCLUSTERID", md.Position.Bush));
+            header.Add(new XAttribute("MESDEVICEWELLID", md.Position.Well));
+            header.Add(new XAttribute("MESDEVICEDEPARTMENTID", md.Position.Shop.ToString()));
+
+            XElement ValueList = new XElement("Value_List");
+            ValueList.Add(MakeValue("umttype", md.Measure.DataInt["umttype"]));
+
+            var ts = TimeSpan.FromSeconds(md.Measure.DataInt["PeriodSec"]);
+            var strts = (DateTime.MinValue+ts).ToString("yyyy-MM-ddTHH:mm:ss");
+            ValueList.Add(MakeValue("mtinterval", strts, "MSVDATE"));
+
+            ValueList.Add(MakeBase64Value("mtpressure", md.Measure.DataBlob["mtpressure"]));
+
+            string fileName;
+            if(md.Measure.DataBlob.TryGetValue("mttemperature",out fileName))
+                ValueList.Add(MakeBase64Value("mttemperature", fileName));
+            if (md.Measure.DataBlob.TryGetValue("umttemperatureex", out fileName))
+                ValueList.Add(MakeBase64Value("mttemperature", fileName));
+
+            header.Add(ValueList);
+            measurement.Add(header);
+            measurementList.Add(measurement);
+            device.Add(measurementList);
+            deviceList.Add(device);
+            document.Add(deviceList);
+
+
+            return document;
+        }
+
+        XElement MakeBase64Value(string name, string fileName)
+        {
+            var path = Path.Combine(
+                    Environment.GetFolderPath(
+                    Environment.SpecialFolder.Personal), "bin");
+            path = Path.Combine(path, fileName);
+
+            var file = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using (file)
+            {
+                byte[] arr = new byte[file.Length];
+                file.Read(arr, 0, (int)file.Length);
+                return MakeValue(name, arr);
+            }
+        }
+        XElement MakeValue(string name, byte[] val)
+        {
+            return MakeValue(name, Convert.ToBase64String(val), "MSVDATA");
+        }
+        XElement MakeValue(string name, DateTime val)
+        {
+            return MakeValue(name, val.ToString(), "MSVDATE");
+        }
+        XElement MakeValue(string name, long val)
+        {
+            return MakeValue(name, val.ToString(), "MSVINTEGER");
+        }
+        XElement MakeValue(string name, string val, string kind)
+        {
+            return new XElement("Value",
+                new XAttribute("MSVDICTIONARYID", name),
+                new XAttribute(kind, val));
+        }
+
+
 
         private const float arrayDivider = 10;
 

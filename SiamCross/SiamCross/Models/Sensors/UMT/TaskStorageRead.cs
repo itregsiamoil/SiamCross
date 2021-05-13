@@ -238,21 +238,23 @@ namespace SiamCross.Models.Sensors.Umt
                 _CurrSurvey.Measure.DataFloat.Add("MaxIntTemperature", MaxIntTemp);
                 _CurrSurvey.Measure.DataFloat.Add("MinExtTemperature", MinExtTemp);
                 _CurrSurvey.Measure.DataFloat.Add("MaxExtTemperature", MaxExtTemp);
-                _CurrSurvey.Measure.DataInt.Add("MeasurementsCount", _DataPress.Length / 4);
+                _CurrSurvey.Measure.DataInt.Add("MeasurementsCount", _DataPress.Length/4);
 
                 await DbService.Instance.SaveSurveyAsync(_CurrSurvey);
                 await _DataPress.FlushAsync(ct);
-                await _DataTemp.FlushAsync(ct);
-                await _DataTempExt.FlushAsync(ct);
+                if (null != _DataTemp)
+                    await _DataTemp.FlushAsync(ct);
+                if (null != _DataTempExt)
+                    await _DataTempExt.FlushAsync(ct);
             }
             finally
             {
                 _DataPress.Close();
-                _DataTemp.Close();
-                _DataTempExt.Close();
+                _DataTemp?.Close();
+                _DataTempExt?.Close();
                 _DataPress.Dispose();
-                _DataTemp.Dispose();
-                _DataTempExt.Dispose();
+                _DataTemp?.Dispose();
+                _DataTempExt?.Dispose();
                 _DataPress = null;
                 _DataTemp = null;
                 _DataTempExt = null;
@@ -273,11 +275,11 @@ namespace SiamCross.Models.Sensors.Umt
                 {
                     default: break;
                     case 3:
-                        await _DataTempExt.WriteAsync(DataMt.Value, curr + 2 * 4, 4, ct);
+                        await _DataTempExt?.WriteAsync(DataMt.Value, curr + 2 * 4, 4, ct);
                         UpdateMinMax(BitConverter.ToSingle(DataMt.Value, curr + 2 * 4), ref MinExtTemp, ref MaxExtTemp);
                         goto case 2;
                     case 2:
-                        await _DataTemp.WriteAsync(DataMt.Value, curr + 1 * 4, 4, ct);
+                        await _DataTemp?.WriteAsync(DataMt.Value, curr + 1 * 4, 4, ct);
                         UpdateMinMax(BitConverter.ToSingle(DataMt.Value, curr + 1 * 4), ref MinIntTemp, ref MaxIntTemp);
                         goto case 1;
                     case 1:
@@ -287,6 +289,14 @@ namespace SiamCross.Models.Sensors.Umt
                 }
                 curr += (KolPar.Value) * 4;
             }
+
+            long interval = _CurrSurvey.Measure.DataInt["PeriodSec"];
+            long count = _DataPress.Length / 4;
+
+            _CurrSurvey.Measure.BeginTimestamp = GetTimestamp(StartTimestamp.Value);
+            var ts = TimeSpan.FromSeconds(interval * (count - 1));
+            _CurrSurvey.Measure.EndTimestamp = _CurrSurvey.Measure.BeginTimestamp + ts;
+
         }
         void OpenSurvey()
         {
@@ -311,27 +321,40 @@ namespace SiamCross.Models.Sensors.Umt
             survey.Position.Well = Encoding.UTF8.GetString(SkvRep.Value);
             survey.Position.Bush = Encoding.UTF8.GetString(KustRep.Value);
             survey.Position.Shop = ShopRep.Value;
-            survey.Measure.BeginTimestamp = GetTimestamp(StartTimestamp.Value);
-            survey.Measure.EndTimestamp = GetTimestamp(StartTimestamp.Value);
-
-            _DataPress = EnvironmentService.CreateTempFileSurvey();
-            _DataTemp = EnvironmentService.CreateTempFileSurvey();
-            _DataTempExt = EnvironmentService.CreateTempFileSurvey();
+            //survey.Measure.BeginTimestamp = GetTimestamp(StartTimestamp.Value);
+            //survey.Measure.EndTimestamp = GetTimestamp(StartTimestamp.Value)
+            //    + TimeSpan.FromSeconds((KolToch.Value-1) * IntervalRep.Value/10000);
 
             survey.Measure.DataInt.Add("PeriodSec", IntervalRep.Value / 10000);
+            survey.Measure.DataInt.Add("umttype", VisslRep.Value);
             survey.Measure.DataString.Add("mtinterval", TimeSpan.FromSeconds(IntervalRep.Value / 10000).ToString());
-            survey.Measure.DataBlob.Add("mtpressure", Path.GetFileName(_DataPress.Name));
-            survey.Measure.DataBlob.Add("mttemperature", Path.GetFileName(_DataTemp.Name));
-            survey.Measure.DataBlob.Add("umttemperatureex", Path.GetFileName(_DataTempExt.Name));
-
+            switch (KolPar.Value)
+            {
+                default: break;
+                case 3:
+                    _DataTempExt = EnvironmentService.CreateTempFileSurvey();
+                    survey.Measure.DataBlob.Add("umttemperatureex", Path.GetFileName(_DataTempExt.Name));
+                    goto case 2;
+                case 2:
+                    _DataTemp = EnvironmentService.CreateTempFileSurvey();
+                    survey.Measure.DataBlob.Add("mttemperature", Path.GetFileName(_DataTemp.Name));
+                    goto case 1;
+                case 1:
+                    _DataPress = EnvironmentService.CreateTempFileSurvey();
+                    survey.Measure.DataBlob.Add("mtpressure", Path.GetFileName(_DataPress.Name));
+                    break;
+            }
             _CurrSurvey = survey;
         }
         DateTime GetTimestamp(byte[] data)
         {
             try
             {
-                return new DateTime(data[5], data[4], data[3]
-                            , data[0], data[1], data[2]);
+                var dt = DateTime.Now;
+                var epoh = dt.Year - dt.Year % 100;
+                var year = (100 > data[5]) ? epoh + data[5] : data[5];
+
+                return new DateTime(year, data[4], data[3], data[0], data[1], data[2]);
             }
             catch (Exception)
             {
@@ -376,7 +399,7 @@ namespace SiamCross.Models.Sensors.Umt
         }
         static void UpdateMinMax<T>(T val, ref T min, ref T max) where T : IComparable
         {
-            if(0 > val.CompareTo(min))
+            if (0 > val.CompareTo(min))
                 min = val;
             if (0 < val.CompareTo(max))
                 max = val;

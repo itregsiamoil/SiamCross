@@ -46,8 +46,32 @@
                                                IgnorePixelScaling="false"
                                                HeightRequest="200"
                                                />
-                </StackLayout>
+                    <Grid Margin="0" Padding="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50*" />
+                            <ColumnDefinition Width="50*" />
+                        </Grid.ColumnDefinitions>
+                        <Label Text="Тип исследования"
+                               Grid.Column="0" Grid.Row="0" LineBreakMode="WordWrap"/>
+                        <Label Text="{Binding SurveyName}"
+                               Grid.Column="1" Grid.Row="0" Font="Bold" TextColor="Black" />
+                        <Label Text="Начало"
+                               Grid.Column="0" Grid.Row="1" LineBreakMode="WordWrap"/>
+                        <Label Text="{Binding SurveyInfo.BeginTimestamp}"
+                               Grid.Column="1" Grid.Row="1" Font="Bold" TextColor="Black" />
+                        <Label Text="Конец"
+                               Grid.Column="0" Grid.Row="2" LineBreakMode="WordWrap"/>
+                        <Label Text="{Binding SurveyInfo.EndTimestamp}"
+                               Grid.Column="1" Grid.Row="2" Font="Bold" TextColor="Black" />
+                        <Label Text="Количество замеров"
+                               Grid.Column="0" Grid.Row="3" LineBreakMode="WordWrap"/>
+                        <Label Text="{Binding MeasurementsCount}"
+                               Grid.Column="1" Grid.Row="3" Font="Bold" TextColor="Black" />
+                        
+                    </Grid>
 
+                </StackLayout>
+                
                 <StackLayout BackgroundColor ="{StaticResource colorBackgroundPale}">
                     <Label Text="{local:Translate LocationInfo}" Style="{StaticResource SectionLabel2}" />
                     <Label LineBreakMode="WordWrap" Padding="4">

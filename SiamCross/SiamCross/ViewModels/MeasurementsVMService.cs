@@ -525,7 +525,12 @@ namespace SiamCross.ViewModels
                         case 2:
                             if (0x1700 == mv.MeasureData.Device.Kind)
                                 await DbService.Instance.GetValuesAsync(mv.MeasureData);
-
+                            {
+                                file_name = CreateName(mv.MeasureData.Device.Name, mv.MeasureData.Measure.BeginTimestamp);
+                                doc = xmlCreator.CreateXml(mv.MeasureData);
+                                var curr_path = await XmlSaver.SaveXml(file_name, doc);
+                                paths.Add(curr_path);
+                            }
                             break;
                     }
                 }

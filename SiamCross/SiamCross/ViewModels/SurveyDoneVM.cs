@@ -1,4 +1,5 @@
 ﻿using SiamCross.Models;
+using SiamCross.Models.Sensors.Umt.Surveys;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System;
@@ -28,14 +29,25 @@ namespace SiamCross.ViewModels
             DetectMinMaxPressureGraph();
         }
 
+        public uint MeasurementsCount { get; private set; }
+
+        public string SurveyName { get; private set; }
+
         float MinPress = float.MaxValue;
         float MaxPress = float.MinValue;
+
+        float MinTemp = float.MaxValue;
+        float MaxTemp = float.MinValue;
 
         DateTime MinX = DateTime.MaxValue;
         DateTime MaxX = DateTime.MinValue;
 
         void DetectMinMaxPressureGraph()
         {
+            
+
+            if (!_Model.SurveyInfo.DataInt.TryGetValue("umttype", out long kind))
+                return;
             if (!_Model.SurveyInfo.DataInt.TryGetValue("PeriodSec", out long periodSec))
                 return;
             if (!_Model.SurveyInfo.DataInt.TryGetValue("MeasurementsCount", out long measurementsCount))
@@ -44,40 +56,32 @@ namespace SiamCross.ViewModels
                 return;
             if (!_Model.SurveyInfo.DataFloat.TryGetValue("MaxPressure", out double maxPress))
                 return;
+            if (!_Model.SurveyInfo.DataFloat.TryGetValue("MinIntTemperature", out double minIntTemp))
+                return;
+            if (!_Model.SurveyInfo.DataFloat.TryGetValue("MaxIntTemperature", out double maxIntTemp))
+                return;
+            if (!_Model.SurveyInfo.DataFloat.TryGetValue("MinExtTemperature", out double minExtTemp))
+                return;
+            if (!_Model.SurveyInfo.DataFloat.TryGetValue("MaxExtTemperature", out double maxExtTemp))
+                return;
+            SurveyName = ((Kind)kind).Title();
 
             MinX = _Model.SurveyInfo.BeginTimestamp;
             MaxX = MinX + TimeSpan.FromSeconds(periodSec * measurementsCount);
+            MeasurementsCount = (uint)measurementsCount;
+
+            
+
             MinPress = (float)minPress;
             MaxPress = (float)maxPress;
+            MinTemp = (float)minIntTemp;
+            MaxTemp = (float)maxIntTemp;
 
-            /*
-            if (!_Model.SurveyInfo.DataBlob.TryGetValue("mtpressure", out string filename))
-                return;
-            if (!_Model.SurveyInfo.DataInt.TryGetValue("PeriodSec", out long periodSec))
-                return;
-
-            FileStream file = OpenTempFile(filename);
-            if (null == file)
-                return;
-            using (file)
-            {
-                MinX = _Model.SurveyInfo.BeginTimestamp;
-                MaxX = MinX + TimeSpan.FromSeconds(periodSec * file.Length / 4);
-
-                byte[] b = new byte[4];
-                while (0 < file.Read(b, 0, 4))
-                {
-                    float val = BitConverter.ToSingle(b, 0);
-                    if (val < MinPress)
-                        MinPress = val;
-                    if (val > MaxPress)
-                        MaxPress = val;
-                }
-            }
-            */
+            if (float.MinValue < minExtTemp && minExtTemp < MinTemp)
+                MinTemp = (float)minExtTemp;
+            if (float.MaxValue > maxExtTemp && maxExtTemp > MaxTemp)
+                MaxTemp = (float)maxExtTemp;
         }
-
-
         public virtual SKRect DrawAxies(SKCanvas canvas, SKImageInfo info)
         {
             Color txtColor = Color.DarkGray;
@@ -98,7 +102,7 @@ namespace SiamCross.ViewModels
 
             float txtOffset = 2;
 
-            float yLblAxisWidth = (paintAxies.MeasureText("0000") + txtOffset * 2);
+            float yLblAxisWidth = (paintAxies.MeasureText("000.00") + txtOffset * 4);
             float yLblAxisHeight = (paintAxies.TextSize + txtOffset * 2) * 2;
 
             float xLblAxisWidth = (paintAxies.MeasureText("00.00.00") + 4) * 1.2f;
@@ -131,61 +135,70 @@ namespace SiamCross.ViewModels
             float leftAxisYStartLabel = MaxPress;
             float leftAxisYStartStep = (MaxPress - MinPress) / horizontalCount;
 
+            float rightAxisYStartLabel = MaxTemp;
+            float rightAxisYStartStep = (MaxTemp - MinTemp) / horizontalCount;
+
+
             for (float i = rect.Top; i < rect.Bottom + 1; i += horizontalStep)
             {
                 canvas.DrawLine(rect.Left, i, rect.Right, i, paintAxies);
-                canvas.DrawText(leftAxisYStartLabel.ToString("N2"), 2, i - txtOffset, paintAxies);
+                canvas.DrawText(leftAxisYStartLabel.ToString("N3"), 2, i - txtOffset, paintAxies);
+                canvas.DrawText(rightAxisYStartLabel.ToString("N2"), rect.Right + 2, i - txtOffset, paintAxies);
                 leftAxisYStartLabel -= leftAxisYStartStep;
+                rightAxisYStartLabel -= rightAxisYStartStep;
             }
             return rect;
         }
 
-        public virtual void DrawPressure(SKCanvas canvas, SKRect rect)
+        public virtual void DrawLineСhart(SKCanvas canvas, SKRect rect
+            , string dataname, Color color, float minVal, float maxVal)
         {
-            if (!_Model.SurveyInfo.DataBlob.TryGetValue("mtpressure", out string filename))
+            if (!_Model.SurveyInfo.DataBlob.TryGetValue(dataname, out string filename))
+                return;
+            FileStream file = OpenTempFile(filename);
+            if (null == file || 4 > file.Length)
                 return;
 
             SKPaint paint = new SKPaint
             {
                 Style = SKPaintStyle.Stroke,
-                Color = Color.Accent.ToSKColor(),
+                Color = color.ToSKColor(),
                 StrokeWidth = 1,
                 LcdRenderText = true,
                 IsAntialias = true
             };
-            FileStream file = OpenTempFile(filename);
-            if (null == file)
-                return;
             using (file)
             {
-                if (file.Length >= 4)
+                long pointStep;
+                if (MeasurementsCount <= rect.Width)
+                    pointStep = 1;
+                else
+                    pointStep = (long)(MeasurementsCount / rect.Width);
+
+
+                double dx = rect.Width / (file.Length / 4 - 0);
+                double dy = rect.Height / (maxVal - minVal);
+                //SKPoint[] skPoints = new SKPoint[file.Length/4];
+                byte[] b = new byte[4];
+                float val;
+                long i = 0;
+                SKPath path = new SKPath();
+
+                file.Read(b, 0, 4);
+                val = BitConverter.ToSingle(b, 0);
+                path.MoveTo((float)(i * dx) + rect.Left, rect.Top + rect.Height - (float)((val - minVal) * dy));
+                i++;
+
+                while (0 < file.Read(b, 0, 4))
                 {
-                    double dx = rect.Width / (file.Length / 4 - 0);
-                    double dy = rect.Height / (MaxPress - MinPress);
-                    //SKPoint[] skPoints = new SKPoint[file.Length/4];
-                    byte[] b = new byte[4];
-                    float val;
-                    uint i = 0;
-                    SKPath path = new SKPath();
-
-                    file.Read(b, 0, 4);
                     val = BitConverter.ToSingle(b, 0);
-                    path.MoveTo((float)(i * dx) + rect.Left, rect.Top + rect.Height - (float)((val - MinPress) * dy));
+                    path.LineTo((float)(i * dx) + rect.Left, rect.Top + rect.Height - (float)((val - minVal) * dy));
                     i++;
-
-                    while (0 < file.Read(b, 0, 4))
-                    {
-                        val = BitConverter.ToSingle(b, 0);
-                        //skPoints[i].Y = val*dy;
-                        //skPoints[i].X = i*dx;
-                        path.LineTo((float)(i * dx) + rect.Left, rect.Top + rect.Height - (float)((val - MinPress) * dy));
-                        i++;
-                    }
-                    canvas.DrawPath(path, paint);
+                    file.Seek(4 * (pointStep-1), SeekOrigin.Current);
                 }
+                canvas.DrawPath(path, paint);
             }
         }
-
         public virtual void Render(SKPaintSurfaceEventArgs args)
         {
             SKImageInfo info = args.Info;
@@ -196,7 +209,9 @@ namespace SiamCross.ViewModels
 
             var rect = DrawAxies(canvas, info);
 
-            DrawPressure(canvas, rect);
+            DrawLineСhart(canvas, rect, "mtpressure", Color.Blue, MinPress, MaxPress);
+            DrawLineСhart(canvas, rect, "mttemperature", Color.Orange, MinTemp, MaxTemp);
+            DrawLineСhart(canvas, rect, "umttemperatureex", Color.Red, MinTemp, MaxTemp);
 
 
         }
