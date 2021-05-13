@@ -5,6 +5,7 @@ using SiamCross.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -39,12 +40,22 @@ namespace SiamCross.Models.Sensors
         }
         async void OnConnectionChange(object sender, PropertyChangedEventArgs e)
         {
-            if (null == sender || "State" != e.PropertyName)
-                return;
-            if (ConnectionState.Connected == Connection.State)
-                await OnConnect();
-            else if (ConnectionState.Disconnected == Connection.State)
-                OnDisconnect();
+            try
+            {
+                if (null == sender || "State" != e.PropertyName)
+                   return;
+                if (ConnectionState.Connected == Connection.State)
+                    await OnConnect();
+                else if (ConnectionState.Disconnected == Connection.State)
+                    OnDisconnect();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("WARNING exception "
+                + ex.Message + " "
+                + ex.GetType() + " "
+                + ex.StackTrace + "\n");
+            }
         }
         void OnDisconnect()
         {

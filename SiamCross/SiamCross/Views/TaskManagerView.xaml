@@ -7,7 +7,7 @@
              x:Name="this">
 
     <ContentView.Behaviors>
-        <xct:AnimationBehavior EventName="MeasureInvalidated">
+        <xct:AnimationBehavior EventName="SizeChanged">
             <xct:AnimationBehavior.AnimationType>
                 <xct:ScaleAnimation Scale="1.1"/>
             </xct:AnimationBehavior.AnimationType>

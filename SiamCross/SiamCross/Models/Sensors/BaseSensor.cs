@@ -230,7 +230,7 @@ namespace SiamCross.Models.Sensors
             }
             catch (Exception ex)
             {
-                DebugLog.WriteLine("WARNING exception "
+                Debug.WriteLine("WARNING exception "
                 + ex.Message + " "
                 + ex.GetType() + " "
                 + ex.StackTrace + "\n");
