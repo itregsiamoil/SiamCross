@@ -55,6 +55,7 @@ namespace SiamCross.Models.Sensors.Umt
         const UInt32 FramOffset = 0x70000000;
         const UInt32 FlashOffset = 0x80000000;
         const UInt32 _MtSize = 4096;
+        const UInt32 _MaxFileSize = 1024*1024*10;
 
         readonly MemVarByteArray DataMt;
         MeasureData _CurrSurvey = null;
@@ -126,6 +127,10 @@ namespace SiamCross.Models.Sensors.Umt
             _Rep.Add(IntervalRep);
 
             DataMt = new MemVarByteArray(0, new MemValueByteArray(_MtSize));
+
+            var file1 = new byte[_MaxFileSize];
+            var file2 = new byte[_MaxFileSize];
+            var file3 = new byte[_MaxFileSize];
 
         }
         public override async Task<bool> DoExecuteAsync(CancellationToken ct)
@@ -265,12 +270,15 @@ namespace SiamCross.Models.Sensors.Umt
             if (null == _CurrSurvey)
                 return;
             DataMt.Address = _Rep.Address + _Rep.Size;
-            uint qty = (uint)4 * KolPar.Value * (uint)((0 == KolToch.Value) ? 1 : KolToch.Value);
+            uint qty = (uint)4 * KolPar.Value * (uint)( ((0 == KolToch.Value) ? 1 : KolToch.Value) );
             await Connection.ReadMemAsync(DataMt.Address, (uint)qty, DataMt.Value, 0, SetProgressBytes, ct);
 
-            int curr = 0;
-            while (curr < qty)
+
+            int curr = (int)qty;
+            while (0 < curr)
             {
+                curr -= (KolPar.Value) * 4;
+
                 switch (KolPar.Value)
                 {
                     default: break;
@@ -287,7 +295,7 @@ namespace SiamCross.Models.Sensors.Umt
                         UpdateMinMax(BitConverter.ToSingle(DataMt.Value, curr + 0 * 4), ref MinPress, ref MaxPress);
                         break;
                 }
-                curr += (KolPar.Value) * 4;
+                
             }
 
             long interval = _CurrSurvey.Measure.DataInt["PeriodSec"];

@@ -176,7 +176,7 @@ namespace SiamCross.ViewModels
                     pointStep = (long)(MeasurementsCount / rect.Width);
 
 
-                double dx = rect.Width / (file.Length / 4 - 0);
+                double dx = rect.Width / (file.Length / 4 / pointStep  - 0);
                 double dy = rect.Height / (maxVal - minVal);
                 //SKPoint[] skPoints = new SKPoint[file.Length/4];
                 byte[] b = new byte[4];

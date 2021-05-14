@@ -53,9 +53,9 @@ namespace SiamCross
             await Settings.Instance.Initialize();
         }
 
-        protected override void OnSleep()
+        protected override async void OnSleep()
         {
-            App.Navigation.PopToRootAsync();
+            await App.Navigation.PopToRootAsync();
             base.OnSleep();
             // Handle when your app sleeps
         }

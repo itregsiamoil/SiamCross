@@ -365,8 +365,8 @@ namespace SiamCross.Models.Tools
             if (md.Measure.DataBlob.TryGetValue("umttemperatureex", out fileName))
                 ValueList.Add(MakeBase64Value("mttemperature", fileName));
 
-            header.Add(ValueList);
             measurement.Add(header);
+            measurement.Add(ValueList);
             measurementList.Add(measurement);
             device.Add(measurementList);
             deviceList.Add(device);
@@ -386,8 +386,18 @@ namespace SiamCross.Models.Tools
             var file = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
             using (file)
             {
-                byte[] arr = new byte[file.Length];
-                file.Read(arr, 0, (int)file.Length);
+                float val;
+                byte[] arr4 = new byte[4];
+                byte[] arr = new byte[file.Length*2];
+                UInt32 i = 0;
+                while(0<file.Read(arr4, 0, 4))
+                {
+                    val = BitConverter.ToSingle(arr4, 0);
+
+                    BitConverter.GetBytes(((double)val)).CopyTo(arr, i * 8);
+                    //arr4.CopyTo(arr, i*8);
+                    i++;
+                }
                 return MakeValue(name, arr);
             }
         }
@@ -406,8 +416,8 @@ namespace SiamCross.Models.Tools
         XElement MakeValue(string name, string val, string kind)
         {
             return new XElement("Value",
-                new XAttribute("MSVDICTIONARYID", name),
-                new XAttribute(kind, val));
+                new XAttribute(kind, val),
+                new XAttribute("MSVDICTIONARYID", name));
         }
 
 
