@@ -39,7 +39,8 @@
             BackgroundColor="{StaticResource colorBackgroundLight}">
             <StackLayout>
 
-                <StackLayout BackgroundColor ="{StaticResource colorBackgroundPale}">
+                <StackLayout 
+                    BackgroundColor ="{StaticResource colorBackgroundPale}">
                     <Label Text="{local:Translate MeasurementData}" Style="{StaticResource SectionLabel2}" />
                     <skia:SKCanvasView x:Name="CanvasView"
                                                PaintSurface="CanvasView_PaintSurface"
@@ -67,12 +68,16 @@
                                Grid.Column="0" Grid.Row="3" LineBreakMode="WordWrap"/>
                         <Label Text="{Binding MeasurementsCount}"
                                Grid.Column="1" Grid.Row="3" Font="Bold" TextColor="Black" />
-                        
+                        <Label Text="Интервал"
+                               Grid.Column="0" Grid.Row="4" LineBreakMode="WordWrap"/>
+                        <Label Text="{Binding Interval}"
+                               Grid.Column="1" Grid.Row="4" Font="Bold" TextColor="Black" />
                     </Grid>
 
                 </StackLayout>
                 
-                <StackLayout BackgroundColor ="{StaticResource colorBackgroundPale}">
+                <StackLayout 
+                    BackgroundColor ="{StaticResource colorBackgroundPale}">
                     <Label Text="{local:Translate LocationInfo}" Style="{StaticResource SectionLabel2}" />
                     <Label LineBreakMode="WordWrap" Padding="4">
                         <Label.FormattedText Margin="0">
@@ -100,7 +105,8 @@
                     </Label>
                 </StackLayout>
 
-                <StackLayout BackgroundColor ="{StaticResource colorBackgroundPale}">
+                <StackLayout 
+                    BackgroundColor ="{StaticResource colorBackgroundPale}">
                     <Label Text="{local:Translate Device}" Style="{StaticResource SectionLabel2}" />
                     <Grid Margin="0" Padding="4">
                         <Grid.ColumnDefinitions>

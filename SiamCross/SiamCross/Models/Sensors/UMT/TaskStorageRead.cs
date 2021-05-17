@@ -54,14 +54,15 @@ namespace SiamCross.Models.Sensors.Umt
 
         const UInt32 FramOffset = 0x70000000;
         const UInt32 FlashOffset = 0x80000000;
-        const UInt32 _MtSize = 4096;
-        const UInt32 _MaxFileSize = 1024*1024*10;
+        const int _MtSize = 4096;
+        const int _MaxFileSize = 1024*1024*10;
 
         readonly MemVarByteArray DataMt;
         MeasureData _CurrSurvey = null;
-        FileStream _DataPress = null;
-        FileStream _DataTemp = null;
-        FileStream _DataTempExt = null;
+
+        MemoryStream _DataPress;
+        MemoryStream _DataTemp;
+        MemoryStream _DataTempExt;
 
         float MinPress;
         float MaxPress;
@@ -127,11 +128,6 @@ namespace SiamCross.Models.Sensors.Umt
             _Rep.Add(IntervalRep);
 
             DataMt = new MemVarByteArray(0, new MemValueByteArray(_MtSize));
-
-            var file1 = new byte[_MaxFileSize];
-            var file2 = new byte[_MaxFileSize];
-            var file3 = new byte[_MaxFileSize];
-
         }
         public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {
@@ -165,19 +161,9 @@ namespace SiamCross.Models.Sensors.Umt
 
 
             NomIslt.Value = Kolisl.Value;
-            //UInt16 CurrentSurveyId = Kolisl.Value;
             UInt16 CurrentSurveyId = 0xFFFF;
             HashSet<UInt16> ReadedSurveys = new HashSet<UInt16>();
             ReadedSurveys.Add(CurrentSurveyId);
-
-
-
-
-            //var repBegin = _Storage.StartRep;
-            //var repQty = _Storage.CountRep;
-
-            var repBegin = Kolisl.Value;
-            var repQty = Kolisl.Value;
 
             if (IsFram(currAddrInPage))
             {
@@ -220,6 +206,13 @@ namespace SiamCross.Models.Sensors.Umt
                     CurrentSurveyId = NomIslt.Value;
                     OpenSurvey();
                 }
+
+                uint qty = (uint)4 * KolPar.Value * (uint)(((0 == KolToch.Value) ? 1 : KolToch.Value));
+                if (_DataPress.Position < qty)
+                {
+                    await CloseSurvey(ct);
+                    OpenSurvey();
+                }
                 await AppendSurveyData(ct);
 
                 if (0 == currAddrInPage)
@@ -243,14 +236,28 @@ namespace SiamCross.Models.Sensors.Umt
                 _CurrSurvey.Measure.DataFloat.Add("MaxIntTemperature", MaxIntTemp);
                 _CurrSurvey.Measure.DataFloat.Add("MinExtTemperature", MinExtTemp);
                 _CurrSurvey.Measure.DataFloat.Add("MaxExtTemperature", MaxExtTemp);
-                _CurrSurvey.Measure.DataInt.Add("MeasurementsCount", _DataPress.Length/4);
 
-                await DbService.Instance.SaveSurveyAsync(_CurrSurvey);
-                await _DataPress.FlushAsync(ct);
-                if (null != _DataTemp)
-                    await _DataTemp.FlushAsync(ct);
+                using(var file = EnvironmentService.CreateTempFileSurvey())
+                {
+                    await _DataPress.CopyToAsync(file, _MtSize, ct);
+                    _CurrSurvey.Measure.DataBlob.Add("mtpressure", Path.GetFileName(file.Name));
+                    file.Close();
+                }
+                if(null != _DataTemp)
+                    using (var file = EnvironmentService.CreateTempFileSurvey())
+                    {
+                        await _DataTemp.CopyToAsync(file, _MtSize, ct);
+                        _CurrSurvey.Measure.DataBlob.Add("mttemperature", Path.GetFileName(file.Name));
+                        file.Close();
+                    }
                 if (null != _DataTempExt)
-                    await _DataTempExt.FlushAsync(ct);
+                    using (var file = EnvironmentService.CreateTempFileSurvey())
+                    {
+                        await _DataTempExt.CopyToAsync(file, _MtSize, ct);
+                        _CurrSurvey.Measure.DataBlob.Add("umttemperatureex", Path.GetFileName(file.Name));
+                        file.Close();
+                    }
+                await DbService.Instance.SaveSurveyAsync(_CurrSurvey);
             }
             finally
             {
@@ -273,12 +280,13 @@ namespace SiamCross.Models.Sensors.Umt
             uint qty = (uint)4 * KolPar.Value * (uint)( ((0 == KolToch.Value) ? 1 : KolToch.Value) );
             await Connection.ReadMemAsync(DataMt.Address, (uint)qty, DataMt.Value, 0, SetProgressBytes, ct);
 
+            _DataPress.Seek(-qty/ KolPar.Value, SeekOrigin.Current);
+            _DataTemp?.Seek(-qty/ KolPar.Value, SeekOrigin.Current);
+            _DataTempExt?.Seek(-qty/KolPar.Value, SeekOrigin.Current);
 
-            int curr = (int)qty;
-            while (0 < curr)
+            int curr = 0;
+            while (curr < qty)
             {
-                curr -= (KolPar.Value) * 4;
-
                 switch (KolPar.Value)
                 {
                     default: break;
@@ -295,11 +303,15 @@ namespace SiamCross.Models.Sensors.Umt
                         UpdateMinMax(BitConverter.ToSingle(DataMt.Value, curr + 0 * 4), ref MinPress, ref MaxPress);
                         break;
                 }
-                
+                curr += (KolPar.Value) * 4;
             }
+            _DataPress.Seek(-qty / KolPar.Value, SeekOrigin.Current);
+            _DataTemp?.Seek(-qty / KolPar.Value, SeekOrigin.Current);
+            _DataTempExt?.Seek(-qty / KolPar.Value, SeekOrigin.Current);
 
-            long interval = _CurrSurvey.Measure.DataInt["PeriodSec"];
-            long count = _DataPress.Length / 4;
+            long interval = IntervalRep.Value / 10000;
+            long count = (_MaxFileSize - _DataPress.Position)/4 ;
+            _CurrSurvey.Measure.DataInt["MeasurementsCount"] = count;
 
             _CurrSurvey.Measure.BeginTimestamp = GetTimestamp(StartTimestamp.Value);
             var ts = TimeSpan.FromSeconds(interval * (count - 1));
@@ -336,20 +348,21 @@ namespace SiamCross.Models.Sensors.Umt
             survey.Measure.DataInt.Add("PeriodSec", IntervalRep.Value / 10000);
             survey.Measure.DataInt.Add("umttype", VisslRep.Value);
             survey.Measure.DataString.Add("mtinterval", TimeSpan.FromSeconds(IntervalRep.Value / 10000).ToString());
+            survey.Measure.DataInt["MeasurementsCount"] = 0;
             switch (KolPar.Value)
             {
                 default: break;
                 case 3:
-                    _DataTempExt = EnvironmentService.CreateTempFileSurvey();
-                    survey.Measure.DataBlob.Add("umttemperatureex", Path.GetFileName(_DataTempExt.Name));
+                    _DataTempExt = new MemoryStream(_MaxFileSize);
+                    _DataTempExt.Seek(_MaxFileSize, SeekOrigin.Begin);
                     goto case 2;
                 case 2:
-                    _DataTemp = EnvironmentService.CreateTempFileSurvey();
-                    survey.Measure.DataBlob.Add("mttemperature", Path.GetFileName(_DataTemp.Name));
+                    _DataTemp = new MemoryStream(_MaxFileSize);
+                    _DataTemp.Seek(_MaxFileSize, SeekOrigin.Begin);
                     goto case 1;
                 case 1:
-                    _DataPress = EnvironmentService.CreateTempFileSurvey();
-                    survey.Measure.DataBlob.Add("mtpressure", Path.GetFileName(_DataPress.Name));
+                    _DataPress = new MemoryStream(_MaxFileSize);
+                    _DataPress.Seek(_MaxFileSize, SeekOrigin.Begin);
                     break;
             }
             _CurrSurvey = survey;

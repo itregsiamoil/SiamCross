@@ -26,12 +26,12 @@ namespace SiamCross.ViewModels
             MailDistribution = new DistributionInfoVM(_Model.MailDistribution);
             FileDistribution = new DistributionInfoVM(_Model.FileDistribution);
 
-            DetectMinMaxPressureGraph();
+            PrepareGraph();
         }
-
-        public uint MeasurementsCount { get; private set; }
-
         public string SurveyName { get; private set; }
+        public uint MeasurementsCount { get; private set; }
+        public uint Interval { get; private set; }
+
 
         float MinPress = float.MaxValue;
         float MaxPress = float.MinValue;
@@ -42,10 +42,8 @@ namespace SiamCross.ViewModels
         DateTime MinX = DateTime.MaxValue;
         DateTime MaxX = DateTime.MinValue;
 
-        void DetectMinMaxPressureGraph()
+        void PrepareGraph()
         {
-            
-
             if (!_Model.SurveyInfo.DataInt.TryGetValue("umttype", out long kind))
                 return;
             if (!_Model.SurveyInfo.DataInt.TryGetValue("PeriodSec", out long periodSec))
@@ -64,13 +62,13 @@ namespace SiamCross.ViewModels
                 return;
             if (!_Model.SurveyInfo.DataFloat.TryGetValue("MaxExtTemperature", out double maxExtTemp))
                 return;
+
             SurveyName = ((Kind)kind).Title();
+            Interval = (uint)periodSec;
+            MeasurementsCount = (uint)measurementsCount;
 
             MinX = _Model.SurveyInfo.BeginTimestamp;
             MaxX = MinX + TimeSpan.FromSeconds(periodSec * measurementsCount);
-            MeasurementsCount = (uint)measurementsCount;
-
-            
 
             MinPress = (float)minPress;
             MaxPress = (float)maxPress;
@@ -163,7 +161,7 @@ namespace SiamCross.ViewModels
             {
                 Style = SKPaintStyle.Stroke,
                 Color = color.ToSKColor(),
-                StrokeWidth = 1,
+                StrokeWidth = 2,
                 LcdRenderText = true,
                 IsAntialias = true
             };
