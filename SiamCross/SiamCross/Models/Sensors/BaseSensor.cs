@@ -346,6 +346,9 @@ namespace SiamCross.Models.Sensors
                 return string.Empty;
             }
         }
+        public string Number => Model.Device.Number.ToString();
+        public string Label => Model.Device.Name;
+
         public string Firmware { get; protected set; }
         public string Battery { get; protected set; }
         public string Temperature { get; protected set; }

@@ -111,6 +111,8 @@ namespace SiamCross.Models.Sensors
 
         string Name { get; }
         string Type { get; }
+        string Number { get; }
+        string Label { get; }
         string Firmware { get; }
         string Battery { get; }
         string Temperature { get; }

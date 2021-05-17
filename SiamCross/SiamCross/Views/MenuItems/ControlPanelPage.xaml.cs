@@ -73,16 +73,15 @@ namespace SiamCross.Views.MenuItems
             var options = new SnackBarOptions();
             var appRes = Application.Current.Resources;
 
-            if (appRes.TryGetValue("colorPrimaryLight", out object obj_bg_color))
-                if (obj_bg_color is Color bgColor)
-                    options.BackgroundColor = bgColor;
-
             Color txtColor = Color.Black;
-
             Color acentColor = Color.Red;
             if (appRes.TryGetValue("colorAccentLight", out object obj_acc_color))
                 if (obj_acc_color is Color resAcentColor)
                     acentColor = resAcentColor;
+            //if (appRes.TryGetValue("colorPrimaryLight", out object obj_bg_color))
+            //    if (obj_bg_color is Color bgColor)
+            //        options.BackgroundColor = bgColor;
+            options.BackgroundColor = acentColor;
 
             options.MessageOptions.Foreground = txtColor;
             options.MessageOptions.Message = "Close app?";
