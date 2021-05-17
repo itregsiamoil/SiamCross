@@ -174,7 +174,7 @@ namespace SiamCross.ViewModels
                     pointStep = (long)(MeasurementsCount / rect.Width);
 
 
-                double dx = rect.Width / (file.Length / 4 / pointStep  - 0);
+                double dx = rect.Width / (file.Length / 4 / pointStep - 0);
                 double dy = rect.Height / (maxVal - minVal);
                 //SKPoint[] skPoints = new SKPoint[file.Length/4];
                 byte[] b = new byte[4];
@@ -192,7 +192,7 @@ namespace SiamCross.ViewModels
                     val = BitConverter.ToSingle(b, 0);
                     path.LineTo((float)(i * dx) + rect.Left, rect.Top + rect.Height - (float)((val - minVal) * dy));
                     i++;
-                    file.Seek(4 * (pointStep-1), SeekOrigin.Current);
+                    file.Seek(4 * (pointStep - 1), SeekOrigin.Current);
                 }
                 canvas.DrawPath(path, paint);
             }

@@ -55,7 +55,7 @@ namespace SiamCross.Models.Sensors.Umt
         const UInt32 FramOffset = 0x70000000;
         const UInt32 FlashOffset = 0x80000000;
         const int _MtSize = 4096;
-        const int _MaxFileSize = 1024*1024*10;
+        const int _MaxFileSize = 1024 * 1024 * 10;
 
         readonly MemVarByteArray DataMt;
         MeasureData _CurrSurvey = null;
@@ -237,13 +237,13 @@ namespace SiamCross.Models.Sensors.Umt
                 _CurrSurvey.Measure.DataFloat.Add("MinExtTemperature", MinExtTemp);
                 _CurrSurvey.Measure.DataFloat.Add("MaxExtTemperature", MaxExtTemp);
 
-                using(var file = EnvironmentService.CreateTempFileSurvey())
+                using (var file = EnvironmentService.CreateTempFileSurvey())
                 {
                     await _DataPress.CopyToAsync(file, _MtSize, ct);
                     _CurrSurvey.Measure.DataBlob.Add("mtpressure", Path.GetFileName(file.Name));
                     file.Close();
                 }
-                if(null != _DataTemp)
+                if (null != _DataTemp)
                     using (var file = EnvironmentService.CreateTempFileSurvey())
                     {
                         await _DataTemp.CopyToAsync(file, _MtSize, ct);
@@ -277,12 +277,12 @@ namespace SiamCross.Models.Sensors.Umt
             if (null == _CurrSurvey)
                 return;
             DataMt.Address = _Rep.Address + _Rep.Size;
-            uint qty = (uint)4 * KolPar.Value * (uint)( ((0 == KolToch.Value) ? 1 : KolToch.Value) );
+            uint qty = (uint)4 * KolPar.Value * (uint)(((0 == KolToch.Value) ? 1 : KolToch.Value));
             await Connection.ReadMemAsync(DataMt.Address, (uint)qty, DataMt.Value, 0, SetProgressBytes, ct);
 
-            _DataPress.Seek(-qty/ KolPar.Value, SeekOrigin.Current);
-            _DataTemp?.Seek(-qty/ KolPar.Value, SeekOrigin.Current);
-            _DataTempExt?.Seek(-qty/KolPar.Value, SeekOrigin.Current);
+            _DataPress.Seek(-qty / KolPar.Value, SeekOrigin.Current);
+            _DataTemp?.Seek(-qty / KolPar.Value, SeekOrigin.Current);
+            _DataTempExt?.Seek(-qty / KolPar.Value, SeekOrigin.Current);
 
             int curr = 0;
             while (curr < qty)
@@ -310,7 +310,7 @@ namespace SiamCross.Models.Sensors.Umt
             _DataTempExt?.Seek(-qty / KolPar.Value, SeekOrigin.Current);
 
             long interval = IntervalRep.Value / 10000;
-            long count = (_MaxFileSize - _DataPress.Position)/4 ;
+            long count = (_MaxFileSize - _DataPress.Position) / 4;
             _CurrSurvey.Measure.DataInt["MeasurementsCount"] = count;
 
             _CurrSurvey.Measure.BeginTimestamp = GetTimestamp(StartTimestamp.Value);

@@ -11,7 +11,7 @@ using Xamarin.Forms.Xaml;
 namespace SiamCross.Views.MenuItems
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ControlPanelPage : ContentPage
+    public partial class ControlPanelPage : BaseContentPage
     {
         ControlPanelPageViewModel _vm;
         public ControlPanelPage()

@@ -19,12 +19,13 @@ using Xamarin.Forms.Internals;
 namespace SiamCross.ViewModels
 {
     [Preserve(AllMembers = true)]
-    public class ControlPanelPageViewModel : BaseVM
+    public class ControlPanelPageViewModel : BasePageVM
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
         public ObservableCollection<ISensor> Sensor { get; }
-        public bool IsRelease => !Version.ToLower().Contains("rc");
+        public bool IsPreRelease => Version.ToLower().Contains("rc");
         public string Version => DependencyService.Get<IAppVersionAndBuild>().GetVersionNumber();
+
         public ControlPanelPageViewModel()
         {
             Sensor = new ObservableCollection<ISensor>();
@@ -106,8 +107,6 @@ namespace SiamCross.ViewModels
                 .SingleOrDefault(s => s.Id == id);
             if (sensor == null)
                 return;
-            if (!CanOpenMeasurement(sensor))
-                return;
 
             switch (sensor.ScannedDeviceInfo.Device.Kind)
             {
@@ -117,6 +116,8 @@ namespace SiamCross.ViewModels
                 case 0x1401:
                 case 0x1402:
                 case 0x1403:
+                    if (!CanOpenMeasurement(sensor))
+                        return;
                     if (!CanOpenPage(typeof(DynamogrammPage)))
                         return;
 
@@ -129,12 +130,15 @@ namespace SiamCross.ViewModels
                     App.NavigationPage.Navigation.PushAsync(page);
                     break;
                 case 0x1101:
+                    if (!CanOpenMeasurement(sensor))
+                        return;
                     if (!CanOpenPage(typeof(DuMeasurementPage)))
                         return;
                     App.NavigationPage.Navigation.PushAsync(
                         new DuMeasurementPage(sensor));
                     break;
                 case 0x1201:
+                case 0x1700:
                     sensor.ShowDetailViewCommand.Execute(this);
                     break;
                 default: break;
@@ -200,6 +204,14 @@ namespace SiamCross.ViewModels
                 _logger.Error(ex, "CanOpenPage method" + "\n");
                 throw;
             }
+        }
+
+        public override void Unsubscribe()
+        {
+            DisableQickInfoAll();
+            SensorService.Instance.SensorAdded -= SensorAdded;
+            SensorService.Instance.SensorDeleting -= SensorDeleted;
+
         }
     }//public class ControlPanelPageViewModel : BaseViewModel, IViewModel
 }

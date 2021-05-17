@@ -331,7 +331,7 @@ namespace SiamCross.Models.Tools
 
             XDocument document = new XDocument();
             XElement deviceList = new XElement("Device_List");
-            
+
             XElement device = new XElement("Device");
             device.Add(new XAttribute("DEVTID", "umt01"));
             device.Add(new XAttribute("DSTID", md.Device.Name));
@@ -354,13 +354,13 @@ namespace SiamCross.Models.Tools
             ValueList.Add(MakeValue("umttype", md.Measure.DataInt["umttype"]));
 
             var ts = TimeSpan.FromSeconds(md.Measure.DataInt["PeriodSec"]);
-            var strts = (DateTime.MinValue+ts).ToString("yyyy-MM-ddTHH:mm:ss");
+            var strts = (DateTime.MinValue + ts).ToString("yyyy-MM-ddTHH:mm:ss");
             ValueList.Add(MakeValue("mtinterval", strts, "MSVDATE"));
 
             ValueList.Add(MakeBase64Value("mtpressure", md.Measure.DataBlob["mtpressure"]));
 
             string fileName;
-            if(md.Measure.DataBlob.TryGetValue("mttemperature",out fileName))
+            if (md.Measure.DataBlob.TryGetValue("mttemperature", out fileName))
                 ValueList.Add(MakeBase64Value("mttemperature", fileName));
             if (md.Measure.DataBlob.TryGetValue("umttemperatureex", out fileName))
                 ValueList.Add(MakeBase64Value("mttemperature", fileName));
@@ -388,9 +388,9 @@ namespace SiamCross.Models.Tools
             {
                 float val;
                 byte[] arr4 = new byte[4];
-                byte[] arr = new byte[file.Length*2];
+                byte[] arr = new byte[file.Length * 2];
                 UInt32 i = 0;
-                while(0<file.Read(arr4, 0, 4))
+                while (0 < file.Read(arr4, 0, 4))
                 {
                     val = BitConverter.ToSingle(arr4, 0);
 

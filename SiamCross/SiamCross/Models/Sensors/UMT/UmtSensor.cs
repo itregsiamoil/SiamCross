@@ -76,7 +76,7 @@ namespace SiamCross.Models.Sensors.Umt
 
                 RespResult ret = await Connection.ReadAsync(_CurrentParam);
 
-                Battery = (Acc.Value ).ToString("N2");
+                Battery = (Acc.Value).ToString("N2");
                 Temperature = (ТempInt.Value).ToString("N2");
 
                 var press_str = (Pressure.Value).ToString("N2");
