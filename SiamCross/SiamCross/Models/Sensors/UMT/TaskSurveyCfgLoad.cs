@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -57,9 +58,17 @@ namespace SiamCross.Models.Sensors.Umt
                 var epoh = dt.Year - dt.Year % 100;
                 var year = (100 > Timestamp.Value[5]) ? epoh + Timestamp.Value[5] : Timestamp.Value[5];
 
-                _Model.Timestamp = new DateTime(
-                    year, Timestamp.Value[4], Timestamp.Value[3]
-                    , Timestamp.Value[0], Timestamp.Value[1], Timestamp.Value[2]);
+                try
+                {
+                    _Model.Timestamp = new DateTime(
+                        year, Timestamp.Value[4], Timestamp.Value[3]
+                        , Timestamp.Value[0], Timestamp.Value[1], Timestamp.Value[2]);
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine("Exception: invalid date");
+                    _Model.Timestamp = DateTime.MinValue;
+                }
             }
             else
                 _Model.Timestamp = DateTime.MinValue;
