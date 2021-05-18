@@ -103,7 +103,7 @@ namespace SiamCross.ViewModels.Dmg.Survey
             }
         }
 
-        protected override void InitMeasurementStartParameters()
+        public override void InitMeasurementStartParameters()
         {
             Rod = Constants.DefaultRod.ToString();
             //DynPeriod = Constants.DefaultDynPeriod.ToString();
@@ -151,7 +151,6 @@ namespace SiamCross.ViewModels.Dmg.Survey
         {
             try
             {
-                StartMeasurementCommand = new Command(() => { });
                 if (!ValidateForEmptinessEveryParameter())
                 {
                     return;

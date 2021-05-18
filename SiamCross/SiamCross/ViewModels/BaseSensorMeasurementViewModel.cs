@@ -96,7 +96,7 @@ namespace SiamCross.ViewModels
             InitMeasurementStartParameters();
         }
 
-        protected abstract void InitMeasurementStartParameters();
+        public abstract void InitMeasurementStartParameters();
         protected abstract bool ValidateForEmptinessEveryParameter();
         protected abstract bool ValidateMeasurementParameters(T measurementParameters);
 

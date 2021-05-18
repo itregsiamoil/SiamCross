@@ -18,6 +18,8 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
             object report = null;
             try
             {
+                if (IsMeasurement)
+                    return;
                 Status = Resource.Survey;
                 IsMeasurement = true;
                 Ddin2MeasurementStartParameters startParams = (Ddin2MeasurementStartParameters)measurementParameters;

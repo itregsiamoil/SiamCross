@@ -149,6 +149,8 @@ namespace SiamCross.Models.Sensors.Du
             object report = null;
             try
             {
+                if (IsMeasurement)
+                    return;
                 Status = Resource.Survey;
                 IsMeasurement = true;
                 DuMeasurementStartParameters startParams = (DuMeasurementStartParameters)measurementParameters;

@@ -108,8 +108,8 @@ namespace SiamCross.ViewModels
                 if (null == devices || 0 == devices.Count)
                     return;
                 string action = await Application.Current.MainPage
-                    .DisplayActionSheet("Select device"
-                    , "Cancel", null, devices.Keys.AsEnumerable().ToArray());
+                    .DisplayActionSheet("Добавить устройство (нажмите для подтверждения)"
+                    , Resource.Cancel, null, devices.Keys.AsEnumerable().ToArray());
                 if (action == "Cancel")
                     return;
                 if (!devices.TryGetValue(action, out ScannedDeviceInfo siam_device))

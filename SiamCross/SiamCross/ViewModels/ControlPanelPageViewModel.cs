@@ -122,12 +122,14 @@ namespace SiamCross.ViewModels
                         return;
 
                     var vm = sensor.SurveysVM.SurveysCollection[0];
-                    if (null == vm)
+                    if(null == vm || !(vm is Dmg.Survey.DynamogrammVM dmgVM))
                         return;
+                    dmgVM.InitMeasurementStartParameters();
                     var page = PageNavigator.Get(vm);
                     if (null == page)
                         return;
                     App.NavigationPage.Navigation.PushAsync(page);
+
                     break;
                 case 0x1101:
                     if (!CanOpenMeasurement(sensor))
