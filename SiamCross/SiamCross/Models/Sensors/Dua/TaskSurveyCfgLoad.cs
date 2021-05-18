@@ -1,5 +1,6 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms.Internals;
@@ -72,33 +73,50 @@ namespace SiamCross.Models.Sensors.Dua
             }
         }
 
-        async Task<bool> UpdateAsync(CancellationToken ct)
+
+        async Task LoadTimestamp(CancellationToken ct)
         {
-            bool readed = false;
+            RespResult res = RespResult.ErrorUnknown;
+            InfoEx = "чтение времени";
+            res = await Connection.TryReadAsync(Timestamp, SetProgressBytes, ct);
 
-            if (!_Model.Synched)
-            {
-                if (await CheckConnectionAsync(ct))
-                {
-                    InfoEx = "чтение";
-                    readed = RespResult.NormalPkg == await Connection.TryReadAsync(SurvayParam, SetProgressBytes, ct);
-                }
-            }
-            else
-                InfoEx = "обновлено";
-
-            if (RespResult.NormalPkg == await Connection.TryReadAsync(CurrParam, SetProgressBytes, ct))
+            if (RespResult.NormalPkg == res)
             {
                 var dt = DateTime.Now;
                 var epoh = dt.Year - dt.Year % 100;
                 var year = (100 > Timestamp.Value[5]) ? epoh + Timestamp.Value[5] : Timestamp.Value[5];
 
-                _Model.Timestamp = new DateTime(
-                    year, Timestamp.Value[4], Timestamp.Value[3]
-                    , Timestamp.Value[0], Timestamp.Value[1], Timestamp.Value[2]);
+                try
+                {
+                    _Model.Timestamp = new DateTime(
+                        year, Timestamp.Value[4], Timestamp.Value[3]
+                        , Timestamp.Value[0], Timestamp.Value[1], Timestamp.Value[2]);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Exception: invalid date");
+                    _Model.Timestamp = DateTime.MinValue;
+                }
             }
             else
                 _Model.Timestamp = DateTime.MinValue;
+            _Model.ChangeNotify(nameof(_Model.Timestamp));
+        }
+
+        async Task<bool> UpdateAsync(CancellationToken ct)
+        {
+            if (!await CheckConnectionAsync(ct))
+                return false;
+            await LoadTimestamp(ct);
+
+            bool readed = false;
+            if (!_Model.Synched)
+            {
+                InfoEx = "чтение параметров";
+                readed = RespResult.NormalPkg == await Connection.TryReadAsync(SurvayParam, SetProgressBytes, ct);
+            }
+            else
+                InfoEx = "обновлено";
 
             if (readed)
             {

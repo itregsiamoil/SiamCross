@@ -1,7 +1,10 @@
 ﻿using SiamCross.AppObjects;
 using SiamCross.Models.Tools;
+using SiamCross.Services;
 using SiamCross.Views;
 using SiamCross.Views.MenuItems;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -18,7 +21,23 @@ namespace SiamCross
             get => RootPage.IsPresented;
             set => RootPage.IsPresented = value;
         }
-
+        private async void MainInit()
+        {
+            var initNavigator = PageNavigator.Init();
+            var initSettings = Settings.Instance.Initialize();
+            var initDbService = DbService.Instance.Init();
+            var tasks = new List<Task>(5);
+            tasks.Add(initNavigator);
+            tasks.Add(initSettings);
+            tasks.Add(initDbService);
+            await Task.WhenAll(tasks).ConfigureAwait(false);
+            tasks.Clear();
+            var initRepo = Repo.InitAsync();
+            var initSensorService = SensorService.Instance.InitinalizeAsync();
+            tasks.Add(initRepo);
+            tasks.Add(initSensorService);
+            await Task.WhenAll(tasks).ConfigureAwait(false);
+        }
         private void CallMain()
         {
             RootPage = new RootPage();
@@ -43,23 +62,19 @@ namespace SiamCross
                 Resource.Culture = DependencyService.Get<ILocalize>()
                                     .GetCurrentCultureInfo();
             }
-
             CallMain();
+            MainInit();
         }
-
-        protected override async void OnStart()
+        protected override void OnStart()
         {
             // Handle when your app starts
-            await Settings.Instance.Initialize();
         }
-
-        protected override async void OnSleep()
+        protected override void OnSleep()
         {
-            await App.Navigation.PopToRootAsync();
+            //await App.Navigation.PopToRootAsync();
             base.OnSleep();
             // Handle when your app sleeps
         }
-
         protected override void OnResume()
         {
             base.OnResume();

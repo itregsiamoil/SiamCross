@@ -73,6 +73,7 @@ namespace SiamCross.Models.Sensors.Umt
             try
             {
                 cancelToken.ThrowIfCancellationRequested();
+                await Connection.PhyConnection.UpdateRssi();
 
                 RespResult ret = await Connection.ReadAsync(_CurrentParam);
 

@@ -17,6 +17,13 @@ namespace SiamCross.Models.Sensors.Umt
         readonly MemVarByteArray Timestamp = new MemVarByteArray(0x8426, new MemValueByteArray(6));
         readonly MemVarFloat ExTemp = new MemVarFloat(0x8408);
 
+        uint _BytesTotal;
+        uint _BytesProgress;
+        void SetProgressBytes(uint bytes)
+        {
+            _BytesProgress += bytes;
+            Progress = ((float)_BytesProgress / _BytesTotal);
+        }
         public TaskSurveyCfgLoad(SurveyCfg model)
             : base(model.Sensor, "Опрос параметров измерения")
         {
@@ -30,6 +37,10 @@ namespace SiamCross.Models.Sensors.Umt
         {
             if (null == _Model || null == Connection)
                 return false;
+
+            _BytesProgress = 0;
+            _BytesTotal = SurvayParam.Size + Timestamp.Size + ExTemp.Size;
+
             using (var ctSrc = new CancellationTokenSource(Constants.ConnectTimeout))
             {
                 using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
@@ -49,8 +60,8 @@ namespace SiamCross.Models.Sensors.Umt
         async Task LoadTimestamp(CancellationToken ct)
         {
             RespResult res = RespResult.ErrorUnknown;
-            if (await CheckConnectionAsync(ct))
-                res = await Connection.TryReadAsync(Timestamp, null, ct);
+            InfoEx = "чтение времени";
+            res = await Connection.TryReadAsync(Timestamp, SetProgressBytes, ct);
 
             if (RespResult.NormalPkg == res)
             {
@@ -64,7 +75,7 @@ namespace SiamCross.Models.Sensors.Umt
                         year, Timestamp.Value[4], Timestamp.Value[3]
                         , Timestamp.Value[0], Timestamp.Value[1], Timestamp.Value[2]);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Debug.WriteLine("Exception: invalid date");
                     _Model.Timestamp = DateTime.MinValue;
@@ -76,6 +87,8 @@ namespace SiamCross.Models.Sensors.Umt
         }
         async Task<bool> UpdateAsync(CancellationToken ct)
         {
+            if (!await CheckConnectionAsync(ct))
+                return false;
             await LoadTimestamp(ct);
 
             if (_Model.Saved.HasValue)
@@ -86,13 +99,11 @@ namespace SiamCross.Models.Sensors.Umt
             }
 
             bool readed = false;
-            if (await CheckConnectionAsync(ct))
-            {
-                InfoEx = "чтение";
-                if (RespResult.NormalPkg == await Connection.TryReadAsync(SurvayParam, null, ct)
-                    && RespResult.NormalPkg == await Connection.TryReadAsync(ExTemp, null, ct))
-                    readed = true;
-            }
+            InfoEx = "чтение параметров";
+            if (RespResult.NormalPkg == await Connection.TryReadAsync(SurvayParam, SetProgressBytes, ct)
+                && RespResult.NormalPkg == await Connection.TryReadAsync(ExTemp, SetProgressBytes, ct))
+                readed = true;
+
             if (readed)
             {
                 //await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();

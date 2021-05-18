@@ -1,8 +1,6 @@
 ﻿using Autofac;
-using SiamCross.Services;
 using SiamCross.ViewModels;
 using SiamCross.ViewModels.Dmg.Survey;
-using System.Threading.Tasks;
 using Xamarin.Forms.Internals;
 
 namespace SiamCross.AppObjects
@@ -35,14 +33,6 @@ namespace SiamCross.AppObjects
             cb.RegisterType<AddFieldViewModel>().SingleInstance();
             cb.RegisterType<SoundSpeedViewModel>().SingleInstance();
             cb.RegisterType<SoundSpeedViewViewModel>().SingleInstance();
-        }
-
-        public async Task Init()
-        {
-            await PageNavigator.Init();
-            await DbService.Instance.Init();
-            await Repo.InitAsync();
-            await SensorService.Instance.InitinalizeAsync();
         }
     }
 }

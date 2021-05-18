@@ -58,7 +58,7 @@
                         AlignContent="Start">
 
 
-                    <Frame Style="{StaticResource MenuItemStyle}" FlexLayout.Grow="1"  FlexLayout.Basis="250" HeightRequest="80">
+                    <Frame Style="{StaticResource MenuItemStyle}" FlexLayout.Grow="1"  FlexLayout.Basis="280" HeightRequest="80">
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding ShowPositionEditorCommand}" />
                         </Frame.GestureRecognizers>
@@ -135,7 +135,7 @@
                     </StackLayout>
                 </Frame>
                 -->
-                    <Frame Style="{StaticResource MenuItemStyle}" FlexLayout.Grow="1"  FlexLayout.Basis="250" HeightRequest="80">
+                    <Frame Style="{StaticResource MenuItemStyle}" FlexLayout.Grow="1"  FlexLayout.Basis="280" HeightRequest="80">
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding ShowSurveysViewCommand}" />
                         </Frame.GestureRecognizers>
@@ -144,7 +144,7 @@
                             <Label Text="Установка праметров, запуск и остановка исследования "/>
                         </StackLayout>
                     </Frame>
-                    <Frame Style="{StaticResource MenuItemStyle}" FlexLayout.Grow="1"  FlexLayout.Basis="250" HeightRequest="80">
+                    <Frame Style="{StaticResource MenuItemStyle}" FlexLayout.Grow="1"  FlexLayout.Basis="280" HeightRequest="80">
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding ShowDownloadsViewCommand}" />
                         </Frame.GestureRecognizers>

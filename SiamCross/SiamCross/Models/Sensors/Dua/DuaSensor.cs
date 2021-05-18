@@ -85,6 +85,7 @@ namespace SiamCross.Models.Sensors.Dua
             try
             {
                 cancelToken.ThrowIfCancellationRequested();
+                await Connection.PhyConnection.UpdateRssi();
 
                 RespResult ret = await Connection.ReadAsync(_CurrentParam);
 

@@ -42,7 +42,7 @@
     </NavigationPage.TitleView>
     
     <ContentPage.ToolbarItems >
-        <ToolbarItem Text="&#x2713; " Command="{Binding CmdSaveParam}"/>
+        <!--ToolbarItem Text="&#x2713; " Command="{Binding CmdSaveParam}"/-->
         <ToolbarItem Text="&#x21BA; " Command="{Binding CmdLoadParam}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
@@ -58,7 +58,7 @@
                                 AlignContent="Start"
                                 IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
                         <Frame Style="{StaticResource GroupingFrameStyle2}" 
-                               FlexLayout.Grow="1"  FlexLayout.Basis="250"
+                               FlexLayout.Grow="1"  FlexLayout.Basis="280"
                                IsEnabled="{Binding Sensor.TaskManager.IsFree}"
                                IsVisible="{Binding IsSheduler}">
                             <StackLayout >
@@ -89,7 +89,7 @@
                         </Frame>
                         <Frame Style="{StaticResource GroupingFrameStyle2}"
                                IsEnabled="{Binding Sensor.TaskManager.IsFree}"
-                               FlexLayout.Grow="1"  FlexLayout.Basis="250">
+                               FlexLayout.Grow="1"  FlexLayout.Basis="280">
                             <StackLayout >
                                 <Label Text="Датчики температуры" Style="{StaticResource SectionLabel2}"/>
                                 <Grid Padding="4,10,4,10">
@@ -103,7 +103,7 @@
                             </StackLayout>
                         </Frame>
                         <Frame Style="{StaticResource GroupingFrameStyle2}"
-                                   FlexLayout.Grow="1"  FlexLayout.Basis="250"
+                                   FlexLayout.Grow="1"  FlexLayout.Basis="280"
                                    IsEnabled="{Binding Sensor.TaskManager.IsFree}">
                             <StackLayout>
                                 <Label Text="Дополнительно" Style="{StaticResource SectionLabel2}"/>
