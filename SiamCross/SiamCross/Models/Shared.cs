@@ -11,6 +11,7 @@ namespace SiamCross.Models
         {
             Instance.Add(0, "Bluetooth 2");
             Instance.Add(1, "Bluetooth Le");
+            Instance.Add(2, "UART");
         }
     }
     public static class ProtocolIndex
@@ -213,10 +214,10 @@ namespace SiamCross.Models
     public class MeasureData
     {
         public long Id = 0;
-        public Position Position = new Position();
-        public DeviceInfo Device = new DeviceInfo();
-        public CommonInfo Info = new CommonInfo();
-        public MeasurementInfo Measure = new MeasurementInfo();
+        public Position Position;
+        public DeviceInfo Device;
+        public CommonInfo Info;
+        public MeasurementInfo Measure;
         public DistributionInfo MailDistribution;
         public DistributionInfo FileDistribution;
 

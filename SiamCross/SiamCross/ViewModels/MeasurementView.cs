@@ -5,69 +5,30 @@ namespace SiamCross.ViewModels
 {
     public class MeasurementView : BaseVM
     {
+        public PositionVM Position { get; }
         public MeasureData MeasureData { get; private set; }
 
         public MeasurementView(MeasureData data)
         {
             MeasureData = data;
+            Position = new PositionVM(new PositionModel(MeasureData.Position));
         }
         public MeasurementView()
         {
             MeasureData = new MeasureData(
                 new Position()
-                , new DeviceInfo()
+                , new Models.DeviceInfo()
                 , new CommonInfo()
                 , new MeasurementInfo());
         }
 
-        public long Id
-        { get => MeasureData.Id; set { MeasureData.Id = value; ChangeNotify(); } }
-        public string Name
-        { get => MeasureData.Device.Name; set { MeasureData.Device.Name = value; ChangeNotify(); } }
-        public string Field
-        {
-            get => MeasureData.Position.Field.ToString();
-            set
-            {
-                if (uint.TryParse(value, out uint val))
-                {
-                    MeasureData.Position.Field = val;
-                    ChangeNotify();
-                }
-            }
-        }
-        public string Comments
-        { get => MeasureData.Measure.Comment; set { MeasureData.Measure.Comment = value; ChangeNotify(); } }
-        public DateTime Date
-        { get => MeasureData.Measure.EndTimestamp; set { MeasureData.Measure.EndTimestamp = value; ChangeNotify(); } }
-        public uint MeasureKind
-        { get => MeasureData.Measure.Kind; set { MeasureData.Measure.Kind = value; ChangeNotify(); } }
-        public string MeasureKindName
-        {
-            get
-            {
-                if (MeasurementIndex.Instance.TryGetName(MeasureData.Measure.Kind, out string name))
-                    return name;
-                return string.Empty;
-            }
-            set
-            {
-                if (uint.TryParse(value, out uint idx))
-                {
-                    if (MeasurementIndex.Instance.TryGetName(idx, out string name))
-                    {
-                        MeasureData.Measure.Kind = idx;
-                        ChangeNotify();
-                    }
-                    return;
-                }
-                if (MeasurementIndex.Instance.TryGetId(value, out uint idxx))
-                {
-                    MeasureData.Measure.Kind = idxx;
-                    ChangeNotify();
-                }
-            }
-        }
+        public long Id => MeasureData.Id;
+        public string Name => MeasureData.Device.Name;
+        public string Number => MeasureData.Device.Number.ToString();
+        public DateTime BeginTimestamp => MeasureData.Measure.BeginTimestamp;
+        public DateTime EndTimestamp => MeasureData.Measure.EndTimestamp;
+        public uint MeasureKind => MeasureData.Measure.Kind;
+        public string Comment => MeasureData.Measure.Comment;
 
         public string LastSentTimestamp
         {
@@ -92,24 +53,20 @@ namespace SiamCross.ViewModels
         }
 
         // view info 
-        public bool Sending
-        { get => _Sending; set { _Sending = value; ChangeNotify(); } }
-        private bool _Sending = false;
-        public bool Saving
-        { get => _Saving; set { _Saving = value; ChangeNotify(); } }
-        private bool _Saving;
+        private bool _IsRunning = false;
+        public bool IsRunning
+        {
+            get => _IsRunning;
+            set => SetProperty(ref _IsRunning, value);
+        }
+
+        bool _IsSelected = false;
         public bool IsSelected
         {
             get => _IsSelected;
-            set
-            {
-                if (_IsSelected == value)
-                    return;
-                _IsSelected = value;
-                ChangeNotify();
-            }
+            set => SetProperty(ref _IsSelected, value);
         }
-        private bool _IsSelected = false;
+
 
     }
 }

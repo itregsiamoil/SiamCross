@@ -16,9 +16,17 @@ namespace SiamCross.Models
             }
             return _IdxNameId.TryGetValue(name, out idx);
         }
+        public uint GetId(T name)
+        {
+            return _IdxNameId[name];
+        }
         public bool TryGetName(uint idx, out T name)
         {
             return _IdxIdName.TryGetValue(idx, out name);
+        }
+        public T GetName(uint id)
+        {
+            return _IdxIdName[id];
         }
         public bool Add(uint idx, T name)
         {

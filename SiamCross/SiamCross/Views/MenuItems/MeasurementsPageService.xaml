@@ -4,11 +4,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
     xmlns:localEffects="clr-namespace:SiamCross.Services;assembly=SiamCross"
-    xmlns:local="clr-namespace:SiamCross.ViewModels;assembly=SiamCross"
+    xmlns:viewmodels="clr-namespace:SiamCross.ViewModels;assembly=SiamCross"
+    xmlns:local="clr-namespace:SiamCross;assembly=SiamCross" 
     NavigationPage.HasBackButton ="true"
     xmlns:views="clr-namespace:SiamCross.Views"
     x:Class="SiamCross.Views.MenuItems.MeasurementsPage"
-    x:DataType="local:MeasurementsVMService"
+    x:DataType="viewmodels:MeasurementsVMService"
     x:Name="MyPage"
     Title="{Binding Title, Mode=TwoWay}">
 <!--Icons made by
@@ -47,20 +48,19 @@
     </ContentPage.ToolbarItems>
     
     <ContentPage.Content>
-        <StackLayout Spacing="0" Margin="0">
+        <StackLayout CompressedLayout.IsHeadless="True">
             <ListView ItemsSource="{Binding Measurements}"
-                      RowHeight="120"
+                      RowHeight="135"
                       HasUnevenRows="false"
                       SeparatorVisibility="None"
                       ItemTapped="ListView_ItemTapped"
                       BackgroundColor="{StaticResource colorCtrlBg}"
                       Margin ="0" >
                 <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="local:MeasurementView">
+                    <DataTemplate x:DataType="viewmodels:MeasurementView">
                         <ViewCell>
                             <ViewCell.View>
-                                <StackLayout>
-                                    <StackLayout Orientation="Vertical" Margin="0" Padding="10,0,10,0" Spacing="0"
+                                <StackLayout 
                                      BackgroundColor="{StaticResource launcher_background}" 
                                         localEffects:LongPressedEffect.Command="{Binding Path=BindingContext.OnItemLongPressCommand
                                             , Source={x:Reference MyPage}}" 
@@ -68,99 +68,130 @@
                                         localEffects:PressedEffect.Command="{Binding Path=BindingContext.OnItemTappedCommand
                                             , Source={x:Reference MyPage}}" 
                                         localEffects:PressedEffect.CommandParameter="{Binding .}">
-                                        <StackLayout.Effects>
-                                            <!--localEffects:PressedEffect /-->
-                                            <localEffects:LongPressedEffect />
-                                        </StackLayout.Effects>
-                                        <StackLayout Orientation="Vertical" Spacing="0" >
-                                            <Grid RowSpacing="0">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="50*" />
-                                                    <ColumnDefinition Width="50*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="20"/>
-                                                    <RowDefinition Height="20"/>
-                                                    <RowDefinition Height="20"/>
-                                                    <RowDefinition Height="35"/>
-                                                </Grid.RowDefinitions>
-                                                <CheckBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" HorizontalOptions="End"
-                                                          IsChecked="{Binding IsSelected}" 
-                                                          CheckedChanged="OnCheckBoxCheckedChanged"
-                                                          IsVisible = "{Binding Path=BindingContext.SelectMode , Source={x:Reference MyPage}}"
-                                                          >
-                                                </CheckBox>
-                                                <Label Grid.Row="0" Text="{Binding Field}" FontAttributes="Bold"></Label>
-                                                <Label Grid.Row="1" Text="{Binding Date}" FontAttributes="Bold"></Label>
-                                                <Label Grid.Row="2" Text="{Binding Name}"/>
-                                                <Label Grid.Row="2" Grid.Column="1" Text="{Binding MeasureKindName}"/>
-                                                <Label Grid.Row="3" Text="{Binding Comments}" Grid.ColumnSpan="2" />
-                                            </Grid>
-                                            <Grid RowSpacing="0" ColumnSpacing="4" Padding="0">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="20" />
-                                                    <ColumnDefinition Width="100*" />
-                                                    <ColumnDefinition Width="20" />
-                                                    <ColumnDefinition Width="100*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="12"/>
-                                                    <RowDefinition Height="12"/>
-                                                </Grid.RowDefinitions>
-                                                <ActivityIndicator IsRunning="{Binding Sending}"
-                                                                   Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" />
-                                                <Label Text="&#x1F4E4;"
+                                    <StackLayout.Effects>
+                                        <!--localEffects:PressedEffect /-->
+                                        <localEffects:LongPressedEffect />
+                                    </StackLayout.Effects>
+                                    
+                                    <Grid RowSpacing="0" Padding="4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50*" />
+                                            <ColumnDefinition Width="50*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="20"/>
+                                            <RowDefinition Height="40"/>
+                                            <RowDefinition Height="20"/>
+                                        </Grid.RowDefinitions>
+
+                                        <ActivityIndicator 
+                                            IsRunning="{Binding IsRunning}" 
+                                            Grid.Row="0" Grid.Column="0" 
+                                            Grid.RowSpan="4" Grid.ColumnSpan="2"/>
+
+                                        <Label Text="{Binding BeginTimestamp}" FontAttributes="Bold"
+                                               Grid.Column="0" Grid.Row="0"/>
+                                        <Label Text="{Binding EndTimestamp}" FontAttributes="Bold" 
+                                               Grid.Column="1" Grid.Row="0"/>
+
+                                        <CheckBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+                                                  HorizontalOptions="End" VerticalOptions="Start"
+                                                  IsChecked="{Binding IsSelected}"
+                                                  CheckedChanged="OnCheckBoxCheckedChanged"
+                                                  IsVisible = "{Binding Path=BindingContext.SelectMode 
+                                                                , Source={x:Reference MyPage}}"/>
+                                        <Label
+                                               Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+                                            <Label.FormattedText>
+                                                <FormattedString >
+                                                    <Span Text="{local:Translate Field}" />
+                                                    <Span Text=" " />
+                                                    <Span Text="{Binding Position.FieldName, Mode=OneWay }" Font="Bold" TextColor="Black"/>
+                                                    <Span Text="[" Font="Bold" TextColor="Black"/>
+                                                    <Span Text="{Binding Position.FieldId, Mode=OneWay }" Font="Bold" TextColor="Black"/>
+                                                    <Span Text="]" Font="Bold" TextColor="Black"/>
+                                                    <Span Text="&#10;" />
+                                                    <Span Text="{local:Translate Well} " />
+                                                    <Span Text=" " />
+                                                    <Span Text="{Binding Position.Well}" Font="Bold" TextColor="Black"/>
+                                                    <Span Text=" " />
+                                                    <Span Text="{local:Translate Bush}" />
+                                                    <Span Text=" " />
+                                                    <Span Text="{Binding Position.Bush}" Font="Bold" TextColor="Black"/>
+                                                    <Span Text=" " />
+                                                    <Span Text="{local:Translate Shop}" />
+                                                    <Span Text=" " />
+                                                    <Span Text="{Binding Position.Shop}" Font="Bold" TextColor="Black"/>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+
+                                        <Label Text="{Binding Name}"
+                                               Grid.Column="0" Grid.Row="2"/>
+                                        <Label Text="{Binding Number}"
+                                               Grid.Column="1" Grid.Row="2"/>
+
+                                    </Grid>
+
+                                    <Label Text="{Binding Comment}" LineBreakMode="TailTruncation" />
+
+                                    <Grid RowSpacing="0" ColumnSpacing="4" >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="20" />
+                                            <ColumnDefinition Width="100*" />
+                                            <ColumnDefinition Width="20" />
+                                            <ColumnDefinition Width="100*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="12"/>
+                                            <RowDefinition Height="12"/>
+                                        </Grid.RowDefinitions>
+                                        <Label Text="&#x1F4E4;"
                                                        VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
                                                        Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" >
-                                                    <Label.Triggers>
-                                                        <DataTrigger TargetType="Label" Binding="{Binding LastSentTimestamp}" Value="" >
-                                                            <Setter Property="IsVisible" Value="false"  />
-                                                        </DataTrigger>
-                                                    </Label.Triggers>
-                                                </Label>
-                                                <Label Text="{Binding LastSentTimestamp}" 
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding LastSentTimestamp}" Value="" >
+                                                    <Setter Property="IsVisible" Value="false"  />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                        <Label Text="{Binding LastSentTimestamp}" 
                                                        Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
                                                        Grid.Row="1" Grid.Column="1" />
-                                                <Label Text="{Binding LastSentRecipient}"
+                                        <Label Text="{Binding LastSentRecipient}"
                                                        LineBreakMode="MiddleTruncation"
                                                        Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
                                                        Grid.Row="0" Grid.Column="1"  />
 
-                                                <ActivityIndicator IsRunning="{Binding Saving}"
-                                                                   Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" />
-                                                <Label Text="&#x1F4BE;"
+                                        <Label Text="&#x1F4BE;"
                                                        VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
                                                        Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" >
-                                                    <Label.Triggers>
-                                                        <DataTrigger TargetType="Label" Binding="{Binding LastSaveTimestamp}" Value="" >
-                                                            <Setter Property="IsVisible" Value="false"  />
-                                                        </DataTrigger>
-                                                    </Label.Triggers>
-                                                </Label>
-                                                <Label Text="{Binding LastSaveTimestamp}" 
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding LastSaveTimestamp}" Value="" >
+                                                    <Setter Property="IsVisible" Value="false"  />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                        <Label Text="{Binding LastSaveTimestamp}" 
                                                        Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
                                                        Grid.Row="1" Grid.Column="3" />
-                                                <Label Text="{Binding LastSaveFolder}"
+                                        <Label Text="{Binding LastSaveFolder}"
                                                        LineBreakMode="MiddleTruncation"
                                                        Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
                                                        Grid.Row="0" Grid.Column="3"  />
+                                    </Grid>
 
-                                            </Grid>
-                                        </StackLayout>
-                                        <BoxView 
-                                            Color="{StaticResource colorCtrlInactive}"
-                                            HeightRequest="1">
-                                        </BoxView>
-                                    </StackLayout>
+                                    <BoxView BackgroundColor="{StaticResource colorBackground}" HeightRequest="1" />
+
                                 </StackLayout>
                             </ViewCell.View>
                         </ViewCell>
-
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
 
             <StackLayout
+                CompressedLayout.IsHeadless="True"
                 Orientation="Horizontal"
                 Margin="0" Padding="0" IsVisible="false">
                 <StackLayout.Triggers>

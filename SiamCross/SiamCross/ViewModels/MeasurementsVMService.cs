@@ -11,6 +11,7 @@ using SiamCross.Services.Email;
 using SiamCross.Services.Environment;
 using SiamCross.Services.Logging;
 using SiamCross.Services.MediaScanner;
+using SiamCross.Services.RepositoryTables;
 using SiamCross.Views;
 using System;
 using System.Collections.Generic;
@@ -134,35 +135,19 @@ namespace SiamCross.ViewModels
 
                 foreach (Ddin2Measurement m in _ddin2Measurements)
                 {
-                    meas.Add(
-                        new MeasurementView
-                        {
-                            Id = m.Id,
-                            Name = m.Name,
-                            Field = m.Field,
-                            Date = m.DateTime,
-                            MeasureKindName = Resource.Dynamogram,
-                            Comments = m.Comment
-                        });
+                    var measView = new MeasurementView(Convert(m));
+                    meas.Add(measView);
                 }
                 Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Set DDIN");
 
                 foreach (DuMeasurement m in _duMeasurements)
                 {
-                    meas.Add(
-                        new MeasurementView
-                        {
-                            Id = m.Id,
-                            Name = m.Name,
-                            Field = m.Field,
-                            Date = m.DateTime,
-                            MeasureKindName = Resource.Echogram,
-                            Comments = m.Comment
-                        });
+                    var measView = new MeasurementView(Convert(m));
+                    meas.Add(measView);
                 }
                 Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Set DU");
 
-                foreach (MeasurementView element in meas.OrderByDescending(m => m.Date))
+                foreach (MeasurementView element in meas.OrderByDescending(m => m.BeginTimestamp))
                 {
                     Measurements.Add(element);
                 }
@@ -285,7 +270,8 @@ namespace SiamCross.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "ShareCommandHandler" + "\n");
-                throw;
+                await Application.Current.MainPage.DisplayAlert(Resource.Error,
+                    ex.Message, "OK");
             }
         }
         private async Task SendMeasurementsAsync()
@@ -299,7 +285,7 @@ namespace SiamCross.ViewModels
 
                 foreach (MeasurementView survay in SelectedMeasurements)
                 {
-                    survay.Sending = true;
+                    survay.IsRunning = true;
                     survay.LastSentRecipient = SiamCross.Models.Tools.Settings.Instance.ToAddress;
                 }
 
@@ -315,7 +301,7 @@ namespace SiamCross.ViewModels
                 {
                     sent_sur.LastSentTimestamp = DateTime.Now.ToString();
                     sent_sur.LastSentRecipient = SiamCross.Models.Tools.Settings.Instance.ToAddress;
-                    sent_sur.Sending = false;
+                    sent_sur.IsRunning = false;
                 }
 
             }
@@ -328,7 +314,7 @@ namespace SiamCross.ViewModels
                 {
                     err_sur.LastSentTimestamp = "";
                     err_sur.LastSentRecipient = "";
-                    err_sur.Sending = false;
+                    err_sur.IsRunning = false;
                 }
             }
         }
@@ -340,7 +326,7 @@ namespace SiamCross.ViewModels
                     return;
                 //ToastService.Instance.LongAlert($"{Resource.SavingMeasurements}...");
                 foreach (MeasurementView survay in SelectedMeasurements)
-                    survay.Saving = true;
+                    survay.IsRunning = true;
 
                 var paths = await SaveXmlsReturnPaths(SelectedMeasurements);
 
@@ -348,7 +334,7 @@ namespace SiamCross.ViewModels
                 string dir = EnvironmentService.Instance.GetDir_Measurements();
                 foreach (MeasurementView m in SelectedMeasurements)
                 {
-                    m.Saving = false;
+                    m.IsRunning = false;
                     m.LastSaveTimestamp = ts;
                     m.LastSaveFolder = dir;
                 }
@@ -361,7 +347,8 @@ namespace SiamCross.ViewModels
                 _logger.Error(ex, "SaveMeasurements method" + "\n");
                 await Application.Current.MainPage.DisplayAlert(Resource.Error,
                 ex.Message, "OK");
-                throw;
+                foreach (MeasurementView m in SelectedMeasurements)
+                    m.IsRunning = false;
             }
         }
         private async Task DeleteMeasurementsAsync()
@@ -589,6 +576,57 @@ namespace SiamCross.ViewModels
 
             return new DuMeasurement(data);
         }
+        MeasureData Convert(Ddin2Measurement m)
+        {
+            uint fieldId = 0; uint shop = 0;
+            if (Repo.FieldDir.DictByTitle.TryGetValue(m.Field, out FieldItem item))
+                fieldId = item.Id;
+            uint.TryParse(m.Shop, out shop);
+            Position pos = new Position(fieldId, m.Well, m.Bush, shop);
+            Models.DeviceInfo dev = new Models.DeviceInfo()
+            {
+                Kind = 0x1401,
+                Name = m.Name,
+                Number = uint.MaxValue
+            };
+            CommonInfo ci = new CommonInfo();
+            MeasurementInfo mi = new MeasurementInfo()
+            {
+                Kind = MeasurementIndex.Instance.GetId(Resource.Dynamogram),
+                BeginTimestamp = m.DateTime,
+                EndTimestamp = m.DateTime,
+                Comment = m.Comment
+            };
+            var md = new MeasureData(pos, dev, ci, mi);
+            md.Id = m.Id;
+            return md;
+        }
+        MeasureData Convert(DuMeasurement m)
+        {
+            uint fieldId = 0; uint shop = 0;
+            if (Repo.FieldDir.DictByTitle.TryGetValue(m.Field, out FieldItem item))
+                fieldId = item.Id;
+            uint.TryParse(m.Shop, out shop);
+            Position pos = new Position(fieldId, m.Well, m.Bush, shop);
+            Models.DeviceInfo dev = new Models.DeviceInfo()
+            {
+                Kind = 0x1101,
+                Name = m.Name,
+                Number = uint.MaxValue
+            };
+            CommonInfo ci = new CommonInfo();
+            MeasurementInfo mi = new MeasurementInfo()
+            {
+                Kind = MeasurementIndex.Instance.GetId(Resource.Echogram),
+                BeginTimestamp = m.DateTime,
+                EndTimestamp = m.DateTime,
+                Comment = m.Comment
+            };
+            var md = new MeasureData(pos, dev, ci, mi);
+            md.Id = m.Id;
+            return md;
+        }
+
 
         static FileStream OpenTempFile(string name)
         {
