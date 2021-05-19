@@ -38,7 +38,13 @@ namespace SiamCross.Models.Sensors.Umt
         }
         async Task<bool> DoSaveAsync(CancellationToken ct)
         {
-            if (_Model.Saved.HasValue && _Model.Saved.Equals(_Model.Current))
+            if (!_Model.Saved.HasValue)
+            {
+                InfoEx = "параметры не считаны, обновите параметры";
+                return false;
+            }
+
+            if (_Model.Saved.Equals(_Model.Current))
             {
                 InfoEx = "обновлено";
                 return true;

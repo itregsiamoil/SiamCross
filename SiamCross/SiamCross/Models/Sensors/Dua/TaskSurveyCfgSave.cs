@@ -56,68 +56,61 @@ namespace SiamCross.Models.Sensors.Dua
         }
         async Task<bool> DoSaveAsync(CancellationToken ct)
         {
-            bool ret = false;
-            if (await CheckConnectionAsync(ct))
-            {
-                InfoEx = "запись";
+            if (!await CheckConnectionAsync(ct))
+                return false;
 
-                BitVector32 myBV = new BitVector32(Revbit.Value);
-                int bit0 = BitVector32.CreateMask();
-                int bit1 = BitVector32.CreateMask(bit0);
-                int bit2 = BitVector32.CreateMask(bit1);
-                int bit3 = BitVector32.CreateMask(bit2);
-                int bit4 = BitVector32.CreateMask(bit3);
-                int bit5 = BitVector32.CreateMask(bit4);
-                int bit6 = BitVector32.CreateMask(bit5);
-                int bit7 = BitVector32.CreateMask(bit6);
-                int bit8 = BitVector32.CreateMask(bit7);
-                int bit9 = BitVector32.CreateMask(bit8);
+            InfoEx = "подготовка";
 
-                myBV[bit5] = _Model.IsAutoswitchToAPR;
-                myBV[bit1] = _Model.IsValveAutomaticEnabled;
-                myBV[bit2] = _Model.IsValveDurationShort;
-                myBV[bit0] = _Model.IsValveDirectionInput;
-                myBV[bit6] = _Model.IsPiezoDepthMax;
-                myBV[bit9] = _Model.IsPiezoAdditionalGain;
+            await Connection.ReadAsync(Revbit, null, ct);
 
-                Revbit.Value = (UInt16)myBV.Data;
+            BitVector32 myBV = new BitVector32(Revbit.Value);
+            int bit0 = BitVector32.CreateMask();
+            int bit1 = BitVector32.CreateMask(bit0);
+            int bit2 = BitVector32.CreateMask(bit1);
+            int bit3 = BitVector32.CreateMask(bit2);
+            int bit4 = BitVector32.CreateMask(bit3);
+            int bit5 = BitVector32.CreateMask(bit4);
+            int bit6 = BitVector32.CreateMask(bit5);
+            int bit7 = BitVector32.CreateMask(bit6);
+            int bit8 = BitVector32.CreateMask(bit7);
+            int bit9 = BitVector32.CreateMask(bit8);
 
-                Vzvuk.Value = (UInt16)(_Model.SoundSpeedFixed * 10);
-                Ntpop.Value = _Model.SoundSpeedTableId;
+            myBV[bit5] = _Model.IsAutoswitchToAPR;
+            myBV[bit1] = _Model.IsValveAutomaticEnabled;
+            myBV[bit2] = _Model.IsValveDurationShort;
+            myBV[bit0] = _Model.IsValveDirectionInput;
+            myBV[bit6] = _Model.IsPiezoDepthMax;
+            myBV[bit9] = _Model.IsPiezoAdditionalGain;
 
-                PerP.Value = _Model.PressurePeriodIndex;
-                KolP.Value = _Model.PressureQuantityIndex;
+            Revbit.Value = (UInt16)myBV.Data;
 
-                _Model.LevelPeriodIndex.CopyTo(PerU.Value, 0);
-                _Model.LevelQuantityIndex.CopyTo(KolUr.Value, 0);
+            Vzvuk.Value = (UInt16)(_Model.SoundSpeedFixed * 10);
+            Ntpop.Value = _Model.SoundSpeedTableId;
 
-                var dt = DateTime.Now;
-                Timestamp.Value[5] = (100 > dt.Year) ? (byte)dt.Year : (byte)(dt.Year % 100);
-                Timestamp.Value[4] = (byte)dt.Month;
-                Timestamp.Value[3] = (byte)dt.Day;
-                Timestamp.Value[0] = (byte)dt.Hour;
-                Timestamp.Value[1] = (byte)dt.Minute;
-                Timestamp.Value[2] = (byte)dt.Second;
+            PerP.Value = _Model.PressurePeriodIndex;
+            KolP.Value = _Model.PressureQuantityIndex;
 
-                ret = await RetryExecAsync(3, DoSaveSingleAsync, ct);
-            }
-            _Model.Synched = ret;
-            if (ret)
-                InfoEx = "выполнено";
-            return ret;
-        }
-        async Task<bool> DoSaveSingleAsync(CancellationToken ct)
-        {
+            _Model.LevelPeriodIndex.CopyTo(PerU.Value, 0);
+            _Model.LevelQuantityIndex.CopyTo(KolUr.Value, 0);
+
+            var dt = DateTime.Now;
+            Timestamp.Value[5] = (100 > dt.Year) ? (byte)dt.Year : (byte)(dt.Year % 100);
+            Timestamp.Value[4] = (byte)dt.Month;
+            Timestamp.Value[3] = (byte)dt.Day;
+            Timestamp.Value[0] = (byte)dt.Hour;
+            Timestamp.Value[1] = (byte)dt.Minute;
+            Timestamp.Value[2] = (byte)dt.Second;
+
+            InfoEx = "запись";
+            _Model.Synched = false;
+
             foreach (var r in Reg)
-            {
-                RespResult ret
-                    = await Connection.TryWriteAsync(r, SetProgressBytes, ct);
-                if (RespResult.NormalPkg != ret)
-                    return false;
-            }
+                await Connection.WriteAsync(r, SetProgressBytes, ct);
+
+            _Model.Synched = true;
+            InfoEx = "выполнено";
             return true;
         }
-
         void SetProgressBytes(uint bytes)
         {
             _BytesProgress += bytes;
