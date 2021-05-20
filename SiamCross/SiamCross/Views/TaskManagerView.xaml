@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:viewmodels="clr-namespace:SiamCross.ViewModels"
+             xmlns:view="clr-namespace:SiamCross.Views" 
              x:Class="SiamCross.Views.TaskManagerView"
+             x:DataType="view:TaskManagerView"
              x:Name="this">
 
     <ContentView.Behaviors>
@@ -14,64 +16,43 @@
         </xct:AnimationBehavior>
     </ContentView.Behaviors>
 
-    <StackLayout 
-        Orientation="Vertical" 
-        BindingContext="{x:Reference this}">
-        <StackLayout.Triggers>
-            <DataTrigger TargetType="StackLayout" Binding="{Binding TaskManager.IsHidden}" Value="true" >
+    <Frame 
+        BindingContext="{x:Reference this}"
+        Style="{StaticResource GroupingFrameStyle2}" 
+        Padding="0" Margin="0"
+        CornerRadius="0"
+        IsEnabled="{Binding TaskManager.IsBusy}">
+        <Frame.Triggers>
+            <DataTrigger TargetType="Frame" Binding="{Binding TaskManager.IsHidden}" Value="true" >
                 <Setter Property="HeightRequest" Value="0"   />
                 <Setter Property="IsVisible" Value="false"   />
             </DataTrigger>
-        </StackLayout.Triggers>
+        </Frame.Triggers>
 
-        <Frame
-            CornerRadius="0"
-            Padding="0" Margin="0"
-            Style="{StaticResource GroupingFrameStyle2}" 
-            IsEnabled="{Binding TaskManager.IsBusy}">
-            <Grid ColumnSpacing="0" RowSpacing="0"  >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height ="Auto" />
-                    <RowDefinition Height="60" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="60" />
-                </Grid.ColumnDefinitions>
+        <Grid ColumnSpacing="0" RowSpacing="0"  >
+            <Grid.RowDefinitions>
+                <RowDefinition Height ="Auto" />
+                <RowDefinition Height="60" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="60" />
+            </Grid.ColumnDefinitions>
 
 
-                <Label Text="{Binding TaskManager.Info}" Padding="5"
+            <Label Text="{Binding TaskManager.Info}" Padding="5"
                        Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"/>
-                <Button Text="&#x274C;" TextColor="Red" BackgroundColor="{StaticResource colorAccentPale}"
+            <Button Text="&#x274C;" TextColor="Red" BackgroundColor="{StaticResource colorAccentPale}"
                         Padding="0" Margin="0"
                         Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
                         Command="{Binding TaskManager.CancelCmd}" 
                         IsVisible="{Binding TaskManager.IsBusy, Mode=OneWay}"
                         IsEnabled="{Binding TaskManager.IsBusy, Mode=OneWay}"/>
-                <ProgressBar 
+            <ProgressBar 
                     VerticalOptions="Start" HorizontalOptions="Fill"
                     Progress="{Binding TaskManager.Progress}"
                     Margin="-0,-10,0,0"
                     Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
-
-                <!--
-                <Label 
-                    Grid.Column="1" Grid.Row="1" >
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="{Binding TaskManager.ProgressInt}"/>
-                            <Span Text="%" />
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
-                
-                <ProgressBar 
-                    IsVisible="{Binding TaskManager.IsBusy, Mode=OneWay}"
-                    Progress="{Binding TaskManager.Progress}"
-                    VerticalOptions="Center"
-                    Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"/>
-                -->
-            </Grid>
-        </Frame>
-    </StackLayout>
+        </Grid>
+    </Frame>
 </ContentView>

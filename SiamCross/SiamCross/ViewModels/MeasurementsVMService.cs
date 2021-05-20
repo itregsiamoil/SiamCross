@@ -120,10 +120,10 @@ namespace SiamCross.ViewModels
                 DoOnDisappearing();
                 Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Clear all");
 
-                ObservableCollection<MeasurementView> meas = new ObservableCollection<MeasurementView>();
+                var meas = new List<MeasurementView>();
                 _ddin2Measurements = DbService.Instance.GetDdin2Measurements().ToList();
                 _duMeasurements = DbService.Instance.GetDuMeasurements().ToList();
-                var measurements = (await DbService.Instance.GetSurveysAsync()).ToList();
+                var measurements = (await DbService.Instance.GetSurveysAsync());
                 Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Load from db");
 
                 foreach (var m in measurements)

@@ -59,8 +59,8 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             // mMinSpeed/(8+1+1) - byte per second
             //one byte = 1000000 / (9600 / (8 + 1 + 1)) / 1000 = 1,04166msec
             //int timeout = 1000000 / (mMinSpeed / (8 + 1 + 1)) * bytes / 1000;
-            int timeout = (int)(bytes * multipler + 0.5);
-            return 1 > timeout ? 1 : timeout;
+            int timeout = (int)(bytes * multipler + 1);
+            return 20 > timeout ? 20 : timeout;
         }
         private static int GetRequestTimeout(int len)
         {
@@ -120,7 +120,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             {
                 DebugLog.WriteLine("EXCEPTION in write"
                     + " elapsed=" + _PerfCounter.ElapsedMilliseconds.ToString()
-                    + ": [" + BitConverter.ToString(_RxBuf, 0, _EndRxBuf) + "]\n"
+                    + ": [" + BitConverter.ToString(_TxBuf, 0, _EndTxBuf) + "]\n"
                     + System.Reflection.MethodBase.GetCurrentMethod().Name
                     + "\n msg=" + ex.Message
                     + "\n type=" + ex.GetType()

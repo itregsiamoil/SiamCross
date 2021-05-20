@@ -5,21 +5,15 @@ namespace SiamCross.ViewModels
 {
     public class MeasurementView : BaseVM
     {
-        public PositionVM Position { get; }
+        string _PositionStringCache;
+        public string PositionString => _PositionStringCache;
         public MeasureData MeasureData { get; private set; }
 
         public MeasurementView(MeasureData data)
         {
             MeasureData = data;
-            Position = new PositionVM(new PositionModel(MeasureData.Position));
-        }
-        public MeasurementView()
-        {
-            MeasureData = new MeasureData(
-                new Position()
-                , new Models.DeviceInfo()
-                , new CommonInfo()
-                , new MeasurementInfo());
+            var Position = new PositionModel(MeasureData.Position);
+            _PositionStringCache = Position.AsString;
         }
 
         public long Id => MeasureData.Id;

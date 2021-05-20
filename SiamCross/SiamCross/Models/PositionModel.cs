@@ -39,5 +39,9 @@ namespace SiamCross.Models
         {
             _Data = data;
         }
+        public string AsString => $"{Resource.Field}: {FieldName}[{FieldId}]"
+                    + $"\n{Resource.Well}: {Well}"
+                    + $" {Resource.Bush}: {Bush}"
+                    + $" {Resource.Shop}: {Shop}";
     }
 }

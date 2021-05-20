@@ -100,30 +100,8 @@
                                                   CheckedChanged="OnCheckBoxCheckedChanged"
                                                   IsVisible = "{Binding Path=BindingContext.SelectMode 
                                                                 , Source={x:Reference MyPage}}"/>
-                                        <Label
+                                        <Label Text="{Binding PositionString}"
                                                Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
-                                            <Label.FormattedText>
-                                                <FormattedString >
-                                                    <Span Text="{local:Translate Field}" />
-                                                    <Span Text=" " />
-                                                    <Span Text="{Binding Position.FieldName, Mode=OneWay }" Font="Bold" TextColor="Black"/>
-                                                    <Span Text="[" Font="Bold" TextColor="Black"/>
-                                                    <Span Text="{Binding Position.FieldId, Mode=OneWay }" Font="Bold" TextColor="Black"/>
-                                                    <Span Text="]" Font="Bold" TextColor="Black"/>
-                                                    <Span Text="&#10;" />
-                                                    <Span Text="{local:Translate Well} " />
-                                                    <Span Text=" " />
-                                                    <Span Text="{Binding Position.Well}" Font="Bold" TextColor="Black"/>
-                                                    <Span Text=" " />
-                                                    <Span Text="{local:Translate Bush}" />
-                                                    <Span Text=" " />
-                                                    <Span Text="{Binding Position.Bush}" Font="Bold" TextColor="Black"/>
-                                                    <Span Text=" " />
-                                                    <Span Text="{local:Translate Shop}" />
-                                                    <Span Text=" " />
-                                                    <Span Text="{Binding Position.Shop}" Font="Bold" TextColor="Black"/>
-                                                </FormattedString>
-                                            </Label.FormattedText>
                                         </Label>
 
                                         <Label Text="{Binding Name}"

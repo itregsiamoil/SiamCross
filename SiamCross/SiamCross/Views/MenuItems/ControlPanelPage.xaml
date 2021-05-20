@@ -78,182 +78,177 @@
                             </DataTrigger>
                         </SwipeView.Triggers>
                         <Frame
-                            BackgroundColor="{StaticResource colorBackgroundPale}"
+                            BackgroundColor="{StaticResource colorBackground}"
                             Padding="0" CornerRadius="4"
-                            
                             HasShadow="True"  >
+                            
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding Path=BindingContext.GotoMeasurementPageCommand,
+                                                Source={x:Reference ControlPanel}}"
+                                    CommandParameter="{Binding Id}"/>
+                            </Frame.GestureRecognizers>
+
                             <Frame.Triggers>
                                 <DataTrigger TargetType="Frame" Binding="{Binding Connection.State}" Value="Connected" >
-                                    <Setter Property="BackgroundColor" Value="{StaticResource colorPrimaryPale}"   />
+                                    <Setter Property="BackgroundColor" Value="{StaticResource colorBackgroundPale}"   />
                                 </DataTrigger>
                             </Frame.Triggers>
                             <StackLayout 
                                     VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
                                     Padding="4" Margin="0" >
-                                <Grid >
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="60*"></RowDefinition>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100*"></ColumnDefinition>
-                                        <ColumnDefinition Width="1"></ColumnDefinition>
-                                        <ColumnDefinition Width="70"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <Label
-                                        xct:TouchEffect.NativeAnimation="True"
-                                        Grid.Row="0" Grid.Column="0">
-                                        <Label.FormattedText>
-                                            <FormattedString >
-                                                <Span Text="{Binding Label}" FontAttributes="Bold" FontSize="Medium"/>
-                                                <Span Text=" № " />
-                                                <Span Text="{Binding Number}" FontAttributes="Bold" FontSize="Medium" />
-                                                <Span Text="&#10;" />
-                                                <Span Text="{Binding Type}"  />
-                                                <!-- <Span Text="{Binding Connection.PhyConnection.PhyInterface.Name}" /> -->
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                        <Label.GestureRecognizers>
-                                            <!-- Command="{Binding ShowDetailViewCommand}" -->
-                                            <TapGestureRecognizer
-                                                Command="{Binding Path=BindingContext.GotoMeasurementPageCommand,
-                                                                Source={x:Reference ControlPanel}}"
-                                                CommandParameter="{Binding Id}"/>
-                                        </Label.GestureRecognizers>
-                                    </Label>
-                                    <BoxView WidthRequest="1" Color="{StaticResource colorBackground}" Grid.Row="0" Grid.Column="1" />
-                                    <Label Text="{Binding ConnStateStr}" FontSize="Micro" HorizontalOptions ="Center" VerticalOptions="End"
-                                           Grid.Row="0" Grid.Column="2" 
-                                           VerticalTextAlignment="End"/>
-                                    <Switch 
-                                        Margin="0,0,0,4" HorizontalOptions="CenterAndExpand" VerticalOptions="FillAndExpand"
-                                        IsToggled="{Binding Activate}"
-                                        Grid.Row="0" Grid.Column="2"  >
-                                        <Switch.Triggers>
-                                            <DataTrigger TargetType="Switch" Binding="{Binding IsMeasurement}" Value="true" >
-                                                <Setter Property="IsEnabled" Value="False"  />
-                                            </DataTrigger>
-                                        </Switch.Triggers>
-                                    </Switch>
-                                </Grid>
-                                <StackLayout 
-                                    Orientation="Vertical" 
-                                    IsVisible="{Binding Activate, Mode=OneWay}">
-                                    <BoxView Color="{StaticResource colorBackground}" HeightRequest="1"/>
                                     <Grid 
-                                        x:Name="SensorInfoBox"
-                                        RowSpacing="0" ColumnSpacing="0" Padding="0">
+                                        ColumnSpacing="0">
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="60*"></RowDefinition>
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="20*"></ColumnDefinition>
-                                            <ColumnDefinition Width="20*"></ColumnDefinition>
-                                            <ColumnDefinition Width="25*"></ColumnDefinition>
-                                            <ColumnDefinition Width="25*"></ColumnDefinition>
+                                            <ColumnDefinition Width="100*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1"></ColumnDefinition>
+                                            <ColumnDefinition Width="80"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
-                                        <Label x:Name="lbl_Firmware"
-                                                VerticalTextAlignment="Center" HorizontalTextAlignment="Start"
-                                                Grid.Row="0" Grid.Column="0">
+                                        <Label
+                                            Grid.Row="0" Grid.Column="0">
                                             <Label.FormattedText>
                                                 <FormattedString >
-                                                    <Span Text="&#x2756;"  />
-                                                    <Span Text="{Binding Firmware}" FontSize="Micro" />
+                                                    <Span Text="{Binding Label}" FontAttributes="Bold" FontSize="Medium"/>
+                                                    <Span Text=" № " />
+                                                    <Span Text="{Binding Number}" FontAttributes="Bold" FontSize="Medium" />
+                                                    <Span Text="&#10;" />
+                                                    <Span Text="{Binding Type}"  />
+                                                    <!-- <Span Text="{Binding Connection.PhyConnection.PhyInterface.Name}" /> -->
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
-                                        <Label x:Name="lbl_Battery"
-                                                VerticalTextAlignment="Center" HorizontalTextAlignment="Start"
-                                                Grid.Row="0" Grid.Column="1" >
-                                            <Label.FormattedText>
-                                                <FormattedString >
-                                                    <Span Text="&#x1F50B;" />
-                                                    <Span Text="{Binding Battery}" />
-                                                    <Span Text="{local:Translate VoltsUnits}" />
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
-                                        <Label x:Name="lbl_Temperature"
-                                                VerticalTextAlignment="Center" HorizontalTextAlignment="Start"
-                                                Grid.Row="0" Grid.Column="2" >
-                                            <Label.FormattedText>
-                                                <FormattedString >
-                                                    <Span Text="&#x1F321;" />
-                                                    <Span Text="{Binding Temperature}" />
-                                                    <Span Text="{local:Translate DegCentigradeUnits}" />
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
-                                        <Label x:Name="lbl_Signal"
-                                                VerticalTextAlignment="Center" HorizontalTextAlignment="Start"
-                                                Grid.Row="0" Grid.Column="3" >
-                                            <Label.FormattedText>
-                                                <FormattedString >
-                                                    <Span Text="&#x1F4F6;"  />
-                                                    <Span Text="{Binding Connection.PhyConnection.Rssi}" />
-                                                    <Span Text="dbm" />
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
+                                        <BoxView 
+                                            Grid.Row="0" Grid.Column="1"
+                                            Color="{StaticResource colorBackgroundMedium}"  />
+                                        <Label 
+                                            Grid.Row="0" Grid.Column="2" 
+                                            Text="{Binding ConnStateStr}" FontSize="Micro" LineBreakMode="MiddleTruncation"
+                                            HorizontalOptions ="CenterAndExpand" VerticalOptions="EndAndExpand"/>
+                                        <Switch 
+                                            Grid.Row="0" Grid.Column="2" Margin="0,0,0,8"
+                                            HorizontalOptions="Center" VerticalOptions="FillAndExpand"
+                                            IsToggled="{Binding Activate}" >
+                                            <Switch.Triggers>
+                                                <DataTrigger TargetType="Switch" Binding="{Binding IsMeasurement}" Value="true" >
+                                                    <Setter Property="IsEnabled" Value="False"  />
+                                                </DataTrigger>
+                                            </Switch.Triggers>
+                                        </Switch>
                                     </Grid>
-
-                                    <BoxView Color="{StaticResource colorBackground}" HeightRequest="1"/>
-                                    <Grid x:Name="MeasureBox"
-                                            RowSpacing="2" ColumnSpacing="2">
-                                        <Grid.GestureRecognizers>
-                                            <TapGestureRecognizer
-                                                Command="{Binding Path=BindingContext.GotoMeasurementPageCommand,
-                                                                Source={x:Reference ControlPanel}}"
-                                                CommandParameter="{Binding Id}"/>
-                                        </Grid.GestureRecognizers>
-
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                            <ColumnDefinition Width="*"></ColumnDefinition>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="25"></RowDefinition>
-                                            <RowDefinition Height="25"></RowDefinition>
-                                        </Grid.RowDefinitions>
-                                        <Label Text="&#x1F4C8;" FontSize="Large" TextColor="Black"
-                                            Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" 
-                                            VerticalTextAlignment="Start" HorizontalTextAlignment="Center" />
-                                        <Label x:Name="lblStatus"
-                                            Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
-                                            VerticalTextAlignment="Start" HorizontalTextAlignment="Start"
-                                            HorizontalOptions ="Start" VerticalOptions ="Start">
-                                            <Label.FormattedText Margin="0">
-                                                <FormattedString >
-                                                    <Span Text="{Binding Status}" />
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
-                                        <Grid x:Name="ProgressGrid" VerticalOptions="End" RowSpacing="0" ColumnSpacing="0"
-                                                Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                                    <StackLayout 
+                                        Orientation="Vertical" 
+                                        IsVisible="{Binding Activate, Mode=OneWay}">
+                                        <BoxView Color="{StaticResource colorBackgroundMedium}" HeightRequest="1"/>
+                                        <Grid 
+                                            x:Name="SensorInfoBox"
+                                            RowSpacing="0" ColumnSpacing="0" Padding="0">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto"></RowDefinition>
                                             </Grid.RowDefinitions>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="35"></ColumnDefinition>
+                                                <ColumnDefinition Width="20*"></ColumnDefinition>
+                                                <ColumnDefinition Width="20*"></ColumnDefinition>
+                                                <ColumnDefinition Width="25*"></ColumnDefinition>
+                                                <ColumnDefinition Width="25*"></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <Label x:Name="lbl_Firmware"
+                                                    VerticalTextAlignment="Center" HorizontalTextAlignment="Start"
+                                                    Grid.Row="0" Grid.Column="0">
+                                                <Label.FormattedText>
+                                                    <FormattedString >
+                                                        <Span Text="&#x2756;"  />
+                                                        <Span Text="{Binding Firmware}" FontSize="Micro" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                            <Label x:Name="lbl_Battery"
+                                                    VerticalTextAlignment="Center" HorizontalTextAlignment="Start"
+                                                    Grid.Row="0" Grid.Column="1" >
+                                                <Label.FormattedText>
+                                                    <FormattedString >
+                                                        <Span Text="&#x1F50B;" />
+                                                        <Span Text="{Binding Battery}" />
+                                                        <Span Text="{local:Translate VoltsUnits}" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                            <Label x:Name="lbl_Temperature"
+                                                    VerticalTextAlignment="Center" HorizontalTextAlignment="Start"
+                                                    Grid.Row="0" Grid.Column="2" >
+                                                <Label.FormattedText>
+                                                    <FormattedString >
+                                                        <Span Text="&#x1F321;" />
+                                                        <Span Text="{Binding Temperature}" />
+                                                        <Span Text="{local:Translate DegCentigradeUnits}" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                            <Label x:Name="lbl_Signal"
+                                                    VerticalTextAlignment="Center" HorizontalTextAlignment="Start"
+                                                    Grid.Row="0" Grid.Column="3" >
+                                                <Label.FormattedText>
+                                                    <FormattedString >
+                                                        <Span Text="&#x1F4F6;"  />
+                                                        <Span Text="{Binding Connection.PhyConnection.Rssi}" />
+                                                        <Span Text="dbm" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </Grid>
+                                        <BoxView Color="{StaticResource colorBackgroundMedium}" HeightRequest="1"/>
+                                        <Grid x:Name="MeasureBox"
+                                            RowSpacing="2" ColumnSpacing="2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"></ColumnDefinition>
                                                 <ColumnDefinition Width="*"></ColumnDefinition>
                                             </Grid.ColumnDefinitions>
-                                            <Label Grid.Row="0" Grid.Column="0">
-                                                <Label.Text>
-                                                    <MultiBinding StringFormat="{}{0}%">
-                                                        <Binding Path="MeasureProgressP" />
-                                                    </MultiBinding>
-                                                </Label.Text>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="25"></RowDefinition>
+                                                <RowDefinition Height="25"></RowDefinition>
+                                            </Grid.RowDefinitions>
+                                            <Label Text="&#x1F4C8;" FontSize="Large" TextColor="Black"
+                                                Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" 
+                                                VerticalTextAlignment="Start" HorizontalTextAlignment="Center" />
+                                            <Label x:Name="lblStatus"
+                                                Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+                                                VerticalTextAlignment="Start" HorizontalTextAlignment="Start"
+                                                HorizontalOptions ="Start" VerticalOptions ="Start">
+                                                <Label.FormattedText Margin="0">
+                                                    <FormattedString >
+                                                        <Span Text="{Binding Status}" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
                                             </Label>
-                                            <ProgressBar Progress="{Binding MeasureProgress}" 
-                                            HorizontalOptions ="Fill" VerticalOptions="Center" IsVisible="true"
-                                            Grid.Row="0" Grid.Column="1"  />
-                                            <Grid.Triggers>
-                                                <DataTrigger TargetType="Grid" Binding="{Binding IsMeasurement}" Value="false" >
-                                                    <Setter Property="IsVisible" Value="false"  />
-                                                </DataTrigger>
-                                            </Grid.Triggers>
+                                            <Grid x:Name="ProgressGrid" VerticalOptions="End" RowSpacing="0" ColumnSpacing="0"
+                                                    Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"></RowDefinition>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="35"></ColumnDefinition>
+                                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                                </Grid.ColumnDefinitions>
+                                                <Label Grid.Row="0" Grid.Column="0">
+                                                    <Label.Text>
+                                                        <MultiBinding StringFormat="{}{0}%">
+                                                            <Binding Path="MeasureProgressP" />
+                                                        </MultiBinding>
+                                                    </Label.Text>
+                                                </Label>
+                                                <ProgressBar Progress="{Binding MeasureProgress}" 
+                                                HorizontalOptions ="Fill" VerticalOptions="Center" IsVisible="true"
+                                                Grid.Row="0" Grid.Column="1"  />
+                                                <Grid.Triggers>
+                                                    <DataTrigger TargetType="Grid" Binding="{Binding IsMeasurement}" Value="false" >
+                                                        <Setter Property="IsVisible" Value="false"  />
+                                                    </DataTrigger>
+                                                </Grid.Triggers>
+                                            </Grid>
                                         </Grid>
-                                    </Grid>
-                                </StackLayout>
+                                    </StackLayout>
                             </StackLayout>
                         </Frame>
                     </SwipeView>
