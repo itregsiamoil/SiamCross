@@ -15,7 +15,6 @@ using SiamCross.Services.RepositoryTables;
 using SiamCross.Views;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -71,8 +70,8 @@ namespace SiamCross.ViewModels
         }
         public int SelCount => SelectedMeasurements.Count;
 
-        public ObservableCollection<MeasurementView> Measurements { get; }
-        public ObservableCollection<object> SelectedMeasurements { get; }
+        public ObservableRangeCollection<MeasurementView> Measurements { get; }
+        public ObservableRangeCollection<object> SelectedMeasurements { get; }
 
         public ICommand RefreshCommand { get; set; }
         public ICommand SelectAllCommand { get; set; }
@@ -88,8 +87,8 @@ namespace SiamCross.ViewModels
 
         private MeasurementsVMService()
         {
-            Measurements = new ObservableCollection<MeasurementView>();
-            SelectedMeasurements = new ObservableCollection<object>();
+            Measurements = new ObservableRangeCollection<MeasurementView>();
+            SelectedMeasurements = new ObservableRangeCollection<object>();
             Title = Resource.MeasurementsTitle;
             RefreshCommand = new AsyncCommand(ReloadMeasurementsFromDb);
             SelectAllCommand = new Command(SelectAll);
@@ -147,10 +146,7 @@ namespace SiamCross.ViewModels
                 }
                 Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Set DU");
 
-                foreach (MeasurementView element in meas.OrderByDescending(m => m.BeginTimestamp))
-                {
-                    Measurements.Add(element);
-                }
+                Measurements.ReplaceRange(meas.OrderByDescending(m => m.BeginTimestamp));
                 Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Sort and set to gui");
                 perf.Stop();
             }
@@ -224,6 +220,7 @@ namespace SiamCross.ViewModels
 
             Stopwatch perf = new Stopwatch();
             perf.Restart();
+            SelectedMeasurements.ReplaceRange(new List<MeasurementView>());
             IEnumerable<MeasurementView> selected = Measurements.Where(element => element.IsSelected);
             foreach (MeasurementView item in selected)
             {
@@ -239,6 +236,7 @@ namespace SiamCross.ViewModels
                 SelectMode = true;
             Stopwatch perf = new Stopwatch();
             perf.Restart();
+            SelectedMeasurements.ReplaceRange(new List<MeasurementView>(Measurements));
             IEnumerable<MeasurementView> selected = Measurements.Where(element => !element.IsSelected);
             foreach (MeasurementView item in selected)
             {

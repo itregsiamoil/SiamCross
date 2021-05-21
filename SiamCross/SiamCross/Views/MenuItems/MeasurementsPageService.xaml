@@ -137,7 +137,7 @@
                                                        Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
                                                        Grid.Row="1" Grid.Column="1" />
                                         <Label Text="{Binding LastSentRecipient}"
-                                                       LineBreakMode="MiddleTruncation"
+                                                       LineBreakMode="TailTruncation"
                                                        Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
                                                        Grid.Row="0" Grid.Column="1"  />
 
@@ -154,7 +154,7 @@
                                                        Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
                                                        Grid.Row="1" Grid.Column="3" />
                                         <Label Text="{Binding LastSaveFolder}"
-                                                       LineBreakMode="MiddleTruncation"
+                                                       LineBreakMode="TailTruncation"
                                                        Font="Italic" FontSize="Micro" VerticalTextAlignment="Center" 
                                                        Grid.Row="0" Grid.Column="3"  />
                                     </Grid>
