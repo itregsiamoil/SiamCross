@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiamCross.Services;
+using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
@@ -165,7 +166,13 @@ namespace SiamCross.Models
             //Location = new GeoLocation();
         }
     }
-    [Serializable]
+
+    public class AttributeItem
+    {
+        public uint Id { get; set; }
+        public string Title { get; set; }
+        public int TypeId { get; set; }
+    }
     public class MeasurementInfo
     {
         public uint Kind;
@@ -173,19 +180,58 @@ namespace SiamCross.Models
         public DateTime EndTimestamp;
         public string Comment;
 
-        public Dictionary<string, long> DataInt = new Dictionary<string, long>();
-        public Dictionary<string, double> DataFloat = new Dictionary<string, double>();
-        public Dictionary<string, string> DataString = new Dictionary<string, string>();
-        public Dictionary<string, string> DataBlob = new Dictionary<string, string>();
+        public Dictionary<AttributeItem, long> DataInt = new Dictionary<AttributeItem, long>();
+        public Dictionary<AttributeItem, double> DataFloat = new Dictionary<AttributeItem, double>();
+        public Dictionary<AttributeItem, string> DataString = new Dictionary<AttributeItem, string>();
+        public Dictionary<AttributeItem, string> DataBlob = new Dictionary<AttributeItem, string>();
 
-        [XmlIgnore]
-        public Dictionary<string, object> Data = new Dictionary<string, object>();
-        [XmlArray("Data")]
-        [XmlArrayItem("Item")]
-        public KeyVal[] DataArray
+        public bool TryGet(string title, out long value)
         {
-            get => KeyVal.ToArray(Data);
-            set => KeyVal.FromArray(value, Data);
+            if (Repo.AttrDir.ByTitle.TryGetValue(title, out AttributeItem attr))
+                return DataInt.TryGetValue(attr, out value);
+            value = 0;
+            return false;
+        }
+        public bool TryGet(string title, out double value)
+        {
+            if (Repo.AttrDir.ByTitle.TryGetValue(title, out AttributeItem attr))
+                return DataFloat.TryGetValue(attr, out value);
+            value = 0f;
+            return false;
+        }
+        public bool TryGet(string title, out string value)
+        {
+            if (Repo.AttrDir.ByTitle.TryGetValue(title, out AttributeItem attr))
+                return DataString.TryGetValue(attr, out value);
+            value = string.Empty;
+            return false;
+        }
+        public bool TryGetBlob(string title, out string value)
+        {
+            if (Repo.AttrDir.ByTitle.TryGetValue(title, out AttributeItem attr))
+                return DataBlob.TryGetValue(attr, out value);
+            value = string.Empty;
+            return false;
+        }
+        public void Set(string title, long value)
+        {
+            var attr = Repo.AttrDir.ByTitle[title];
+            DataInt[attr] = value;
+        }
+        public void Set(string title, double value)
+        {
+            var attr = Repo.AttrDir.ByTitle[title];
+            DataFloat[attr] = value;
+        }
+        public void Set(string title, string value)
+        {
+            var attr = Repo.AttrDir.ByTitle[title];
+            DataString[attr] = value;
+        }
+        public void SetBlob(string title, string value)
+        {
+            var attr = Repo.AttrDir.ByTitle[title];
+            DataBlob[attr] = value;
         }
     }
 

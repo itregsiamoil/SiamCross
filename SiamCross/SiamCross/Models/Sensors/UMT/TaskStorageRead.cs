@@ -230,31 +230,31 @@ namespace SiamCross.Models.Sensors.Umt
                 return;
             try
             {
-                _CurrSurvey.Measure.DataFloat.Add("MinPressure", MinPress);
-                _CurrSurvey.Measure.DataFloat.Add("MaxPressure", MaxPress);
-                _CurrSurvey.Measure.DataFloat.Add("MinIntTemperature", MinIntTemp);
-                _CurrSurvey.Measure.DataFloat.Add("MaxIntTemperature", MaxIntTemp);
-                _CurrSurvey.Measure.DataFloat.Add("MinExtTemperature", MinExtTemp);
-                _CurrSurvey.Measure.DataFloat.Add("MaxExtTemperature", MaxExtTemp);
+                _CurrSurvey.Measure.Set("MinPressure", (double)MinPress);
+                _CurrSurvey.Measure.Set("MaxPressure", (double)MaxPress);
+                _CurrSurvey.Measure.Set("MinIntTemperature", (double)MinIntTemp);
+                _CurrSurvey.Measure.Set("MaxIntTemperature", (double)MaxIntTemp);
+                _CurrSurvey.Measure.Set("MinExtTemperature", (double)MinExtTemp);
+                _CurrSurvey.Measure.Set("MaxExtTemperature", (double)MaxExtTemp);
 
                 using (var file = EnvironmentService.CreateTempFileSurvey())
                 {
                     await _DataPress.CopyToAsync(file, _MtSize, ct);
-                    _CurrSurvey.Measure.DataBlob.Add("mtpressure", Path.GetFileName(file.Name));
+                    _CurrSurvey.Measure.SetBlob("mtpressure", Path.GetFileName(file.Name));
                     file.Close();
                 }
                 if (null != _DataTemp)
                     using (var file = EnvironmentService.CreateTempFileSurvey())
                     {
                         await _DataTemp.CopyToAsync(file, _MtSize, ct);
-                        _CurrSurvey.Measure.DataBlob.Add("mttemperature", Path.GetFileName(file.Name));
+                        _CurrSurvey.Measure.SetBlob("mttemperature", Path.GetFileName(file.Name));
                         file.Close();
                     }
                 if (null != _DataTempExt)
                     using (var file = EnvironmentService.CreateTempFileSurvey())
                     {
                         await _DataTempExt.CopyToAsync(file, _MtSize, ct);
-                        _CurrSurvey.Measure.DataBlob.Add("umttemperatureex", Path.GetFileName(file.Name));
+                        _CurrSurvey.Measure.SetBlob("umttemperatureex", Path.GetFileName(file.Name));
                         file.Close();
                     }
                 await DbService.Instance.SaveSurveyAsync(_CurrSurvey);
@@ -311,7 +311,7 @@ namespace SiamCross.Models.Sensors.Umt
 
             long interval = IntervalRep.Value / 10000;
             long count = (_MaxFileSize - _DataPress.Position) / 4;
-            _CurrSurvey.Measure.DataInt["MeasurementsCount"] = count;
+            _CurrSurvey.Measure.Set("MeasurementsCount", (long)count);
 
             _CurrSurvey.Measure.BeginTimestamp = GetTimestamp(StartTimestamp.Value);
             var ts = TimeSpan.FromSeconds(interval * (count - 1));
@@ -345,10 +345,10 @@ namespace SiamCross.Models.Sensors.Umt
             //survey.Measure.EndTimestamp = GetTimestamp(StartTimestamp.Value)
             //    + TimeSpan.FromSeconds((KolToch.Value-1) * IntervalRep.Value/10000);
 
-            survey.Measure.DataInt.Add("PeriodSec", IntervalRep.Value / 10000);
-            survey.Measure.DataInt.Add("umttype", VisslRep.Value);
-            survey.Measure.DataString.Add("mtinterval", TimeSpan.FromSeconds(IntervalRep.Value / 10000).ToString());
-            survey.Measure.DataInt["MeasurementsCount"] = 0;
+            survey.Measure.Set("PeriodSec", (long)IntervalRep.Value / 10000);
+            survey.Measure.Set("umttype", (long)VisslRep.Value);
+            survey.Measure.Set("mtinterval", TimeSpan.FromSeconds(IntervalRep.Value / 10000).ToString());
+            survey.Measure.Set("MeasurementsCount", (long)0);
             switch (KolPar.Value)
             {
                 default: break;

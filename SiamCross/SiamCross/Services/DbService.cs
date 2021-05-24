@@ -29,33 +29,79 @@ namespace SiamCross.Services
         public static DbService Instance => _instance.Value;
 
         private readonly IDbConnection _database;
-        private readonly IDbConnection _siamServiceDB;
-        protected static IDbConnection CreateDb(string dbFileName)
+        private IDbConnection _Db;
+
+        public int UserDbVersion = 17;
+
+        readonly Attributes Attributes = new Attributes();
+        readonly FieldDictionaryTable FieldDictionary = new FieldDictionaryTable();
+        readonly DataInt DataInt = new DataInt();
+        readonly DataFloat DataFloat = new DataFloat();
+        readonly DataString DataString = new DataString();
+        readonly DataBlob DataBlob = new DataBlob();
+        readonly MeasureTable MeasureTable = new MeasureTable();
+        IDbTransaction BeginTransaction()
         {
-            string dbPath = string.Empty;
+            return _Db.BeginTransaction(IsolationLevel.Serializable);
+        }
+        static string GetDbPath(string dbFileName)
+        {
+#if DEBUG
+            return Path.Combine(
+                EnvironmentService.Instance.GetDir_Downloads(), dbFileName);
+#else
+                return Path.Combine(
+                    EnvironmentService.Instance.GetDir_LocalApplicationData(), dbFileName);
+#endif        
+        }
+        static IDbConnection OpenDb(string dbPath)
+        {
+            IDbConnection db = AppContainer.Container
+                                .Resolve<IDbConnection>(new TypedParameter(typeof(string)
+                                , $"Data Source={dbPath};Version=3;"));
+            db.Open();
+            db.Execute("PRAGMA foreign_keys = ON");
+            var sql_version = db.ExecuteScalar<string>("select sqlite_version()");
+            var sqlFk = db.Query<int?>("PRAGMA foreign_keys").AsList();
+            if (1 > sqlFk.Count || !sqlFk[0].HasValue || 0 == sqlFk[0].Value)
+                throw new Exception($"Database Sqlite version:{sql_version} does not support foreign keys");
+            return db;
+        }
+        static async Task<IDbConnection> CreateDb(string dbPath, int userDbVersion)
+        {
+            AppContainer.Container.Resolve<IDatabaseCreator>().CreateDatabase(dbPath);
+            var db = OpenDb(dbPath);
+            using (var tr = db.BeginTransaction(IsolationLevel.Serializable))
+            {
+                await db.ExecuteAsync(GetCreateDataBaseScript("CreateDataBase.sql"), tr);
+                await db.ExecuteAsync(GetCreateDataBaseScript("AppendData.sql"), tr);
+                await db.ExecuteAsync($"PRAGMA user_version = {userDbVersion}", tr);
+                tr.Commit();
+            }
+            return db;
+        }
+        public async Task Init()
+        {
+            string dbPath = GetDbPath("SiamServiceDB.sqlite");
+            IDbConnection db = null;
             try
             {
-                //const string dbFileName = "siamservicedb.sqlite";
-#if DEBUG
-                dbPath = Path.Combine(
-                    EnvironmentService.Instance.GetDir_Downloads(), dbFileName);
-#else
-                dbPath = Path.Combine(
-                    EnvironmentService.Instance.GetDir_LocalApplicationData(), dbFileName);
-#endif
-                if (!File.Exists(dbPath))
-                    AppContainer.Container.Resolve<IDatabaseCreator>().CreateDatabase(dbPath);
+                if (File.Exists(dbPath))
+                {
+                    db = OpenDb(dbPath);
+                    var userVersionRec = (await db.QueryAsync<int?>("PRAGMA user_version")).AsList();
+                    if (1 > userVersionRec.Count || !userVersionRec[0].HasValue || UserDbVersion != userVersionRec[0].Value)
+                    {
+                        db.Close();
+                        File.Delete(dbPath);
+                        db = await CreateDb(dbPath, UserDbVersion);
+                    }
+                }
+                else
+                    db = await CreateDb(dbPath, UserDbVersion);
 
-                IDbConnection db = AppContainer.Container
-                    .Resolve<IDbConnection>(new TypedParameter(typeof(string)
-                    , $"Data Source={dbPath};Version=3;"));
-                db.Open();
-                db.Execute("PRAGMA foreign_keys = ON");
-                var sql_version = db.ExecuteScalar<string>("select sqlite_version()");
-                var sqlFk = db.Query<int?>("PRAGMA foreign_keys").AsList();
-                if (1 > sqlFk.Count || !sqlFk[0].HasValue || 0 == sqlFk[0].Value)
-                    throw new Exception($"Database Sqlite version:{sql_version} does not support foreign keys");
-                return db;
+                _Db = db;
+
             }
             catch (Exception ex)
             {
@@ -68,46 +114,14 @@ namespace SiamCross.Services
                 throw;
             }
         }
-
-        public int UserDbVersion = 11;
-        public FieldDictionaryTable FieldDictionary { get; protected set; }
-        public DataDictionary DataDictionary { get; protected set; }
-        public DataInt DataInt { get; protected set; }
-        public DataFloat DataFloat { get; protected set; }
-        public DataString DataString { get; protected set; }
-        public DataBlob DataBlob { get; protected set; }
-        public MeasureTable MeasureTable { get; protected set; }
-
-        public async Task Init()
-        {
-            using (var tr = _siamServiceDB.BeginTransaction(IsolationLevel.Serializable))
-            {
-                var userVersionRec = _siamServiceDB.Query<int?>("PRAGMA user_version").AsList();
-                if (1 > userVersionRec.Count || !userVersionRec[0].HasValue || UserDbVersion != userVersionRec[0].Value)
-                {
-                    await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("DropTables.sql"), tr);
-                    await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("CreateDataBase.sql"), tr);
-                    await _siamServiceDB.ExecuteAsync(GetCreateDataBaseScript("AppendData.sql"), tr);
-                    await _siamServiceDB.ExecuteAsync($"PRAGMA user_version = {UserDbVersion}", tr);
-                }
-                await DataDictionary.Load();
-                tr.Commit();
-            }
-        }
         private DbService()
         {
-            _database = CreateDb("Db.sqlite");
-            _siamServiceDB = CreateDb("SiamServiceDB.sqlite");
             try
             {
-                FieldDictionary = new FieldDictionaryTable(_siamServiceDB);
-                DataDictionary = new DataDictionary(_siamServiceDB);
-                DataInt = new DataInt(_siamServiceDB);
-                DataFloat = new DataFloat(_siamServiceDB);
-                DataString = new DataString(_siamServiceDB);
-                DataBlob = new DataBlob(_siamServiceDB);
-                MeasureTable = new MeasureTable(_siamServiceDB);
-
+                string dbPath = GetDbPath("Db.sqlite");
+                if (!File.Exists(dbPath))
+                    AppContainer.Container.Resolve<IDatabaseCreator>().CreateDatabase(dbPath);
+                _database = OpenDb(dbPath);
                 CreateDdin2Table();
                 CreateDuTable();
             }
@@ -561,7 +575,7 @@ namespace SiamCross.Services
             return null;
         }
 
-        private string GetCreateDataBaseScript(string resourceName)
+        static string GetCreateDataBaseScript(string resourceName)
         {
             //Получаем текущую сборку.
             Assembly myAssembly = Assembly.GetExecutingAssembly();
@@ -580,12 +594,12 @@ namespace SiamCross.Services
 
         public async Task GetValuesAsync(MeasureData m)
         {
-            using (var tr = _siamServiceDB.BeginTransaction(IsolationLevel.Serializable))
+            using (var tr = BeginTransaction())
             {
-                m.Measure.DataInt = await DataInt.Load(m.Id);
-                m.Measure.DataFloat = await DataFloat.Load(m.Id);
-                m.Measure.DataString = await DataString.Load(m.Id);
-                m.Measure.DataBlob = await DataBlob.Load(m.Id);
+                m.Measure.DataInt = await DataInt.Load(tr, EntityKind.Survey, m.Id);
+                m.Measure.DataFloat = await DataFloat.Load(tr, EntityKind.Survey, m.Id);
+                m.Measure.DataString = await DataString.Load(tr, EntityKind.Survey, m.Id);
+                m.Measure.DataBlob = await DataBlob.Load(tr, EntityKind.Survey, m.Id);
                 tr.Commit();
             }
         }
@@ -594,8 +608,12 @@ namespace SiamCross.Services
             NonQueryCheck();
             try
             {
-                var v = await MeasureTable.GetMeasurements();
-                return v;
+                using (var tr = BeginTransaction())
+                {
+                    var v = await MeasureTable.GetMeasurements(tr);
+                    tr.Commit();
+                    return v;
+                }
             }
             catch (Exception ex)
             {
@@ -614,18 +632,19 @@ namespace SiamCross.Services
             IDbTransaction tr = null; ;
             try
             {
-                tr = _siamServiceDB.BeginTransaction(IsolationLevel.Serializable);
-                long measureId = await MeasureTable.Save(new MeasureTableItem(survey));
-                await DataInt.Save(measureId, survey.Measure.DataInt);
-                await DataFloat.Save(measureId, survey.Measure.DataFloat);
-                await DataString.Save(measureId, survey.Measure.DataString);
-                await DataBlob.Save(measureId, survey.Measure.DataBlob);
-                tr.Commit();
-                return measureId;
+                using (tr = BeginTransaction())
+                {
+                    long measureId = await MeasureTable.Save(tr, new MeasureTableItem(survey));
+                    await DataInt.Save(tr, EntityKind.Survey, measureId, survey.Measure.DataInt);
+                    await DataFloat.Save(tr, EntityKind.Survey, measureId, survey.Measure.DataFloat);
+                    await DataString.Save(tr, EntityKind.Survey, measureId, survey.Measure.DataString);
+                    await DataBlob.Save(tr, EntityKind.Survey, measureId, survey.Measure.DataBlob);
+                    tr.Commit();
+                    return measureId;
+                }
             }
             catch (Exception ex)
             {
-                tr?.Rollback();
                 Debug.WriteLine("EXCEPTION "
                     + System.Reflection.MethodBase.GetCurrentMethod().Name
                     + "\n msg=" + ex.Message
@@ -640,11 +659,15 @@ namespace SiamCross.Services
             IDbTransaction tr = null; ;
             try
             {
-                tr = _siamServiceDB.BeginTransaction(IsolationLevel.Serializable);
-
-                await DataBlob.BeforeDelete(measureId);
-                await MeasureTable.Delete(measureId);
-                tr.Commit();
+                using (tr = BeginTransaction())
+                {
+                    await MeasureTable.Delete(tr, measureId);
+                    await DataInt.Delete(tr, EntityKind.Survey, measureId);
+                    await DataFloat.Delete(tr, EntityKind.Survey, measureId);
+                    await DataString.Delete(tr, EntityKind.Survey, measureId);
+                    await DataBlob.Delete(tr, EntityKind.Survey, measureId);
+                    tr.Commit();
+                }
             }
             catch (Exception ex)
             {
@@ -656,31 +679,40 @@ namespace SiamCross.Services
                     + "\n stack=" + ex.StackTrace + "\n");
             }
         }
-        /*
-        static string SerilizeXMLString(object obj)
-        {
-            if (null == obj)
-                return null;
-            XmlSerializer formatter = new XmlSerializer(obj.GetType());
-            using (StringWriter stream = new StringWriter())
-            {
-                formatter.Serialize(stream, obj);
-                return stream.ToString();
-            }
-        }
 
-        static byte[] SerilizeXMLBlob(object obj)
+        public async Task DelFieldAsync(long id)
         {
-            if (null == obj)
-                return null;
-            XmlSerializer formatter = new XmlSerializer(obj.GetType());
-            using (MemoryStream stream = new MemoryStream())
+            using (var tr = BeginTransaction())
             {
-                formatter.Serialize(stream, obj);
-                return stream.ToArray();
+                await FieldDictionary.DeleteAsync(tr, id);
+                tr.Commit();
             }
         }
-        */
+        public async Task<FieldItem> SaveFieldAsync(string title, uint id = 0)
+        {
+            using (var tr = BeginTransaction())
+            {
+                var val = await FieldDictionary.SaveAsync(tr, title, id);
+                tr.Commit();
+                return val;
+            }
+        }
+        public async Task<List<FieldItem>> LoadFieldAsync(long id)
+        {
+            using (var tr = BeginTransaction())
+                return await FieldDictionary.LoadAsync(tr, id);
+        }
+        public async Task<List<FieldItem>> LoadFieldAsync()
+        {
+            using (var tr = BeginTransaction())
+                return await FieldDictionary.LoadAsync(tr);
+        }
+        public async Task<IEnumerable<AttributeItem>> LoadAttributesAsync()
+        {
+            using (var tr = BeginTransaction())
+                return await Attributes.LoadAsync(tr);
+
+        }
     }
 }
 

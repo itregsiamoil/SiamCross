@@ -1,4 +1,5 @@
 ﻿using SiamCross.DataBase.DataBaseModels;
+using SiamCross.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -350,19 +351,20 @@ namespace SiamCross.Models.Tools
             header.Add(new XAttribute("MESDEVICEWELLID", md.Position.Well));
             header.Add(new XAttribute("MESDEVICEDEPARTMENTID", md.Position.Shop.ToString()));
 
+            var attrByTitle = Repo.AttrDir.ByTitle;
             XElement ValueList = new XElement("Value_List");
-            ValueList.Add(MakeValue("umttype", md.Measure.DataInt["umttype"]));
+            ValueList.Add(MakeValue("umttype", md.Measure.DataInt[attrByTitle["umttype"]]));
 
-            var ts = TimeSpan.FromSeconds(md.Measure.DataInt["PeriodSec"]);
+            var ts = TimeSpan.FromSeconds(md.Measure.DataInt[attrByTitle["PeriodSec"]]);
             var strts = (DateTime.MinValue + ts).ToString("yyyy-MM-ddTHH:mm:ss");
             ValueList.Add(MakeValue("mtinterval", strts, "MSVDATE"));
 
-            ValueList.Add(MakeBase64Value("mtpressure", md.Measure.DataBlob["mtpressure"]));
+            ValueList.Add(MakeBase64Value("mtpressure", md.Measure.DataBlob[attrByTitle["mtpressure"]]));
 
             string fileName;
-            if (md.Measure.DataBlob.TryGetValue("mttemperature", out fileName))
+            if (md.Measure.DataBlob.TryGetValue(attrByTitle["mttemperature"], out fileName))
                 ValueList.Add(MakeBase64Value("mttemperature", fileName));
-            if (md.Measure.DataBlob.TryGetValue("umttemperatureex", out fileName))
+            if (md.Measure.DataBlob.TryGetValue(attrByTitle["umttemperatureex"], out fileName))
                 ValueList.Add(MakeBase64Value("mttemperature", fileName));
 
             measurement.Add(header);

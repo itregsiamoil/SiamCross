@@ -44,23 +44,23 @@ namespace SiamCross.ViewModels
 
         void PrepareGraph()
         {
-            if (!_Model.SurveyInfo.DataInt.TryGetValue("umttype", out long kind))
+            if (!_Model.SurveyInfo.TryGet("umttype", out long kind))
                 return;
-            if (!_Model.SurveyInfo.DataInt.TryGetValue("PeriodSec", out long periodSec))
+            if (!_Model.SurveyInfo.TryGet("PeriodSec", out long periodSec))
                 return;
-            if (!_Model.SurveyInfo.DataInt.TryGetValue("MeasurementsCount", out long measurementsCount))
+            if (!_Model.SurveyInfo.TryGet("MeasurementsCount", out long measurementsCount))
                 return;
-            if (!_Model.SurveyInfo.DataFloat.TryGetValue("MinPressure", out double minPress))
+            if (!_Model.SurveyInfo.TryGet("MinPressure", out double minPress))
                 return;
-            if (!_Model.SurveyInfo.DataFloat.TryGetValue("MaxPressure", out double maxPress))
+            if (!_Model.SurveyInfo.TryGet("MaxPressure", out double maxPress))
                 return;
-            if (!_Model.SurveyInfo.DataFloat.TryGetValue("MinIntTemperature", out double minIntTemp))
+            if (!_Model.SurveyInfo.TryGet("MinIntTemperature", out double minIntTemp))
                 return;
-            if (!_Model.SurveyInfo.DataFloat.TryGetValue("MaxIntTemperature", out double maxIntTemp))
+            if (!_Model.SurveyInfo.TryGet("MaxIntTemperature", out double maxIntTemp))
                 return;
-            if (!_Model.SurveyInfo.DataFloat.TryGetValue("MinExtTemperature", out double minExtTemp))
+            if (!_Model.SurveyInfo.TryGet("MinExtTemperature", out double minExtTemp))
                 return;
-            if (!_Model.SurveyInfo.DataFloat.TryGetValue("MaxExtTemperature", out double maxExtTemp))
+            if (!_Model.SurveyInfo.TryGet("MaxExtTemperature", out double maxExtTemp))
                 return;
 
             SurveyName = ((Kind)kind).Title();
@@ -151,7 +151,7 @@ namespace SiamCross.ViewModels
         public virtual void DrawLineСhart(SKCanvas canvas, SKRect rect
             , string dataname, Color color, float minVal, float maxVal)
         {
-            if (!_Model.SurveyInfo.DataBlob.TryGetValue(dataname, out string filename))
+            if (!_Model.SurveyInfo.TryGetBlob(dataname, out string filename))
                 return;
             FileStream file = OpenTempFile(filename);
             if (null == file || 4 > file.Length)

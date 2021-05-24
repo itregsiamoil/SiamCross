@@ -12,8 +12,6 @@ namespace SiamCross.Services.RepositoryTables
     }
     public class FieldDictionaryTable
     {
-        private readonly IDbConnection _db;
-
         const string table = "FieldDictionary";
         private readonly string insert_with_default_id
             = $"INSERT OR REPLACE INTO {table}(Title) VALUES(@Title)";
@@ -28,10 +26,6 @@ namespace SiamCross.Services.RepositoryTables
             = $"DELETE FROM {table} WHERE Id=@Id";
         public FieldDictionaryTable()
         {
-        }
-        public FieldDictionaryTable(IDbConnection db)
-        {
-            _db = db;
         }
 
         public async Task DeleteAsync(IDbTransaction tr, long id)
@@ -65,48 +59,6 @@ namespace SiamCross.Services.RepositoryTables
                 .QueryAsync<FieldItem>(select_all);
             return values.AsList();
         }
-
-        public async Task DeleteAsync(long id)
-        {
-            if (null == _db)
-                return;
-            using (var tr = _db.BeginTransaction(IsolationLevel.Serializable))
-            {
-                await DeleteAsync(tr, id);
-                tr.Commit();
-            }
-        }
-        public async Task<FieldItem> SaveAsync(string title, uint id = 0)
-        {
-            if (null == _db)
-                return null;
-            using (var tr = _db.BeginTransaction(IsolationLevel.Serializable))
-            {
-                var val = await SaveAsync(tr, title, id);
-                tr.Commit();
-                return val;
-            }
-        }
-        public async Task<List<FieldItem>> LoadAsync(long id)
-        {
-            if (null == _db)
-                return new List<FieldItem>();
-            using (var tr = _db.BeginTransaction(IsolationLevel.Serializable))
-            {
-                return await LoadAsync(tr, id);
-            }
-        }
-        public async Task<List<FieldItem>> LoadAsync()
-        {
-            if (null == _db)
-                return new List<FieldItem>();
-            using (var tr = _db.BeginTransaction(IsolationLevel.Serializable))
-            {
-                return await LoadAsync(tr);
-            }
-        }
-
-
 
     }
 }

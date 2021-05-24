@@ -526,8 +526,21 @@ namespace SiamCross.ViewModels
         }
         static async Task<DuMeasurement> ConvertToOldMeasurementAsync(MeasureData mData)
         {
-            if (!mData.Measure.DataFloat.TryGetValue("bufferpressure", out double bufferpressure))
-                bufferpressure = 0.0;
+            long sudresearchtype;
+            long sudcorrectiontype;
+            double lgsoundspeed;
+            double bufferpressure;
+            double sudpressure;
+            long lglevel;
+            long lgreflectioncount;
+
+            mData.Measure.TryGet("sudresearchtype", out sudresearchtype);
+            mData.Measure.TryGet("sudcorrectiontype", out sudcorrectiontype);
+            mData.Measure.TryGet("lgsoundspeed", out lgsoundspeed);
+            mData.Measure.TryGet("bufferpressure", out bufferpressure);
+            mData.Measure.TryGet("sudpressure", out sudpressure);
+            mData.Measure.TryGet("lglevel", out lglevel);
+            mData.Measure.TryGet("lgreflectioncount", out lgreflectioncount);
 
             var secp = new DuMeasurementSecondaryParameters(
                             mData.Device.Name
@@ -542,15 +555,15 @@ namespace SiamCross.ViewModels
                             , "0.0"//_Sensor.Temperature
                             , "0.0"//_Sensor.Firmware
                             , "0.0"//_Sensor.RadioFirmware
-                            , mData.Measure.DataInt["sudresearchtype"].ToString()
-                            , mData.Measure.DataInt["sudcorrectiontype"].ToString()
-                            , mData.Measure.DataFloat["lgsoundspeed"].ToString()
+                            , sudresearchtype.ToString()
+                            , sudcorrectiontype.ToString()
+                            , lgsoundspeed.ToString()
                             );
 
             var startp = new DuMeasurementStartParameters(false, false, false, secp, 0.0);
 
             byte[] echoArray = null;
-            if (mData.Measure.DataBlob.TryGetValue("lgechogram", out string echoFile))
+            if (mData.Measure.TryGetBlob("lgechogram", out string echoFile))
             {
                 var echoStream = OpenTempFile(echoFile);
                 if (null != echoStream)
@@ -566,9 +579,9 @@ namespace SiamCross.ViewModels
 
             DuMeasurementData data = new DuMeasurementData(mData.Measure.EndTimestamp
                 , startp
-                , (float)mData.Measure.DataFloat["sudpressure"]
-                , (ushort)mData.Measure.DataFloat["lglevel"]
-                , (ushort)mData.Measure.DataInt["lgreflectioncount"]
+                , (float)sudpressure
+                , (ushort)lglevel
+                , (ushort)lgreflectioncount
                 , echoArray
                 , MeasureState.Ok);
 

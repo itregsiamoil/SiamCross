@@ -30,25 +30,41 @@ namespace SiamCross.Models
             get => _Data.Comment;
             set => SetProperty(ref _Data.Comment, value);
         }
-        public Dictionary<string, long> DataInt
+        public Dictionary<AttributeItem, long> DataInt
         {
             get => _Data.DataInt;
             set => SetProperty(ref _Data.DataInt, value);
         }
-        public Dictionary<string, double> DataFloat
+        public Dictionary<AttributeItem, double> DataFloat
         {
             get => _Data.DataFloat;
             set => SetProperty(ref _Data.DataFloat, value);
         }
-        public Dictionary<string, string> DataString
+        public Dictionary<AttributeItem, string> DataString
         {
             get => _Data.DataString;
             set => SetProperty(ref _Data.DataString, value);
         }
-        public Dictionary<string, string> DataBlob
+        public Dictionary<AttributeItem, string> DataBlob
         {
             get => _Data.DataBlob;
             set => SetProperty(ref _Data.DataBlob, value);
+        }
+        public bool TryGet(string title, out long value)
+        {
+            return _Data.TryGet(title, out value);
+        }
+        public bool TryGet(string title, out double value)
+        {
+            return _Data.TryGet(title, out value);
+        }
+        public bool TryGet(string title, out string value)
+        {
+            return _Data.TryGet(title, out value);
+        }
+        public bool TryGetBlob(string title, out string value)
+        {
+            return _Data.TryGetBlob(title, out value);
         }
     }
 }

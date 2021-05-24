@@ -159,13 +159,13 @@ namespace SiamCross.Models.Sensors.Dua
                     Comment = string.Empty,
                 };
 
-                mi.DataInt.Add("sudresearchtype", vissl.Value);
-                mi.DataFloat.Add("lgsoundspeed", vzvuk.Value / 10.0);
-                mi.DataInt.Add("sudcorrectiontype", ntpop.Value);
-                mi.DataInt.Add("lgreflectioncount", kolotr.Value);
-                mi.DataFloat.Add("lglevel", urov.Value);
-                mi.DataFloat.Add("sudpressure", pressure.Value / 10.0);
-                mi.DataFloat.Add("lgtimediscrete", 0.00585938);
+                mi.Set("sudresearchtype", (long)vissl.Value);
+                mi.Set("lgsoundspeed", (double)vzvuk.Value / 10.0);
+                mi.Set("sudcorrectiontype", (long)ntpop.Value);
+                mi.Set("lgreflectioncount", (long)kolotr.Value);
+                mi.Set("lglevel", (double)urov.Value);
+                mi.Set("sudpressure", (double)pressure.Value / 10.0);
+                mi.Set("lgtimediscrete", (double)0.00585938);
 
                 if (echo)
                 {
@@ -175,7 +175,7 @@ namespace SiamCross.Models.Sensors.Dua
                         using (echoStream)
                         {
                             await echoStream.WriteAsync(Echo.Value, 0, (int)Echo.Size, ct);
-                            mi.DataBlob.Add("lgechogram", Path.GetFileName(echoStream.Name));
+                            mi.SetBlob("lgechogram", Path.GetFileName(echoStream.Name));
                             echoStream.Close();
                         }
                     }

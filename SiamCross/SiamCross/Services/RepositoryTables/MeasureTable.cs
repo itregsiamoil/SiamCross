@@ -57,17 +57,15 @@ namespace SiamCross.Services.RepositoryTables
 
     public class MeasureTable
     {
-        private readonly IDbConnection _db;
-        public MeasureTable(IDbConnection db)
+        public MeasureTable()
         {
-            _db = db;
         }
-        public Task Delete(long measureId)
+        public Task Delete(IDbTransaction tr, long measureId)
         {
-            return _db.ExecuteAsync("DELETE FROM Measurement WHERE Id=@MeasureId "
+            return tr.Connection.ExecuteAsync("DELETE FROM Measurement WHERE Id=@MeasureId "
                 , param: new { MeasureId = measureId });
         }
-        public async Task<long> Save(MeasureTableItem item)
+        public async Task<long> Save(IDbTransaction tr, MeasureTableItem item)
         {
             const string sql = "INSERT INTO Measurement" +
                 "( Field, Well, Bush, Shop" +
@@ -100,9 +98,9 @@ namespace SiamCross.Services.RepositoryTables
 				MeasureComment = item.MeasureComment 
 			};
 			*/
-            int affectedRows = await _db.ExecuteAsync(sql, item);
+            int affectedRows = await tr.Connection.ExecuteAsync(sql, item);
 
-            var rec_id = await _db.QueryAsync<long?>("SELECT last_insert_rowid()");
+            var rec_id = await tr.Connection.QueryAsync<long?>("SELECT last_insert_rowid()");
             if (affectedRows < 1 || rec_id.Count() == 0 || null == rec_id.First())
                 throw new Exception("can`t get last_insert_rowid ");
 
@@ -110,9 +108,9 @@ namespace SiamCross.Services.RepositoryTables
 
         }
 
-        public Task<IEnumerable<MeasureTableItem>> GetMeasurements()
+        public Task<IEnumerable<MeasureTableItem>> GetMeasurements(IDbTransaction tr)
         {
-            return _db.QueryAsync<MeasureTableItem>("SELECT * FROM Measurement");
+            return tr.Connection.QueryAsync<MeasureTableItem>("SELECT * FROM Measurement");
         }
 
 
