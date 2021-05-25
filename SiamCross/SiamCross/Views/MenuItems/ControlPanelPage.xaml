@@ -212,17 +212,22 @@
                                             <Label Text="&#x1F4C8;" FontSize="Large" TextColor="Black"
                                                 Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" 
                                                 VerticalTextAlignment="Start" HorizontalTextAlignment="Center" />
-                                            <Label x:Name="lblStatus"
+                                            <Label 
                                                 Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
                                                 VerticalTextAlignment="Start" HorizontalTextAlignment="Start"
-                                                HorizontalOptions ="Start" VerticalOptions ="Start">
-                                                <Label.FormattedText Margin="0">
-                                                    <FormattedString >
-                                                        <Span Text="{Binding Status}" />
-                                                    </FormattedString>
-                                                </Label.FormattedText>
-                                            </Label>
-                                            <Grid x:Name="ProgressGrid" VerticalOptions="End" RowSpacing="0" ColumnSpacing="0"
+                                                HorizontalOptions ="Start" VerticalOptions ="Start"
+                                                Margin="0"
+                                                IsVisible="{Binding IsNewStatus}"
+                                                Text="{Binding TaskManager.Info}" />
+                                            <Label 
+                                                Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+                                                VerticalTextAlignment="Start" HorizontalTextAlignment="Start"
+                                                HorizontalOptions ="Start" VerticalOptions ="Start"
+                                                Margin="0"
+                                                IsVisible="{Binding IsOldStatus}"
+                                                Text="{Binding Status}" />
+
+                                        <Grid x:Name="ProgressGrid" VerticalOptions="End" RowSpacing="0" ColumnSpacing="0"
                                                     Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto"></RowDefinition>

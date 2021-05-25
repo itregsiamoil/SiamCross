@@ -15,6 +15,7 @@ namespace SiamCross.Models.Sensors
     public class SensorModel : IDisposable
     {
         public readonly DeviceInfo Device;
+        public readonly StatusModel Status = new StatusModel();
 
         public readonly IProtocolConnection Connection;
         public readonly TaskManager Manager;
@@ -120,5 +121,7 @@ namespace SiamCross.Models.Sensors
         string Status { get; set; }
         Guid Id { get; }
 
+        bool IsNewStatus { get; }
+        bool IsOldStatus { get; }
     }
 }

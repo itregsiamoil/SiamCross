@@ -1,11 +1,10 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Sensors.Umt.Surveys;
 using SiamCross.ViewModels.Umt;
-using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors.Umt
 {
@@ -14,7 +13,7 @@ namespace SiamCross.Models.Sensors.Umt
         public UmtSensorModel(IProtocolConnection conn, DeviceInfo deviceInfo)
            : base(conn, deviceInfo)
         {
-            Connection.AdditioonalTimeout = 2000;
+            Connection.AdditioonalTimeout = 3000;
 
             Position.TaskLoad = new TaskPositionLoad(Position);
             Position.TaskSave = new TaskPositionSave(Position);
@@ -26,26 +25,24 @@ namespace SiamCross.Models.Sensors.Umt
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.Dynamic));
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.PeriodicStatic));
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.PeriodycDynamic));
+
+            ConnHolder.CmdUpdateStatus = new AsyncCommand(
+                UpdateStatus,
+                () => Manager.IsFree,
+                null, false, false);
+        }
+        async Task UpdateStatus()
+        {
+            var task = new TaskUpdateStatus(this);
+            await Manager.Execute(task);
         }
     }
 
     public class UmtSensorVM : BaseSensor2
     {
-        readonly MemStruct _CurrentParam;//0x8400
-        readonly MemVarFloat Pressure;
-        readonly MemVarFloat ТempInt;
-        readonly MemVarFloat ТempExt;
-        readonly MemVarFloat Acc;
-
         public UmtSensorVM(SensorModel model)
             : base(model)
         {
-            _CurrentParam = new MemStruct(0x8400);
-            Pressure = _CurrentParam.Add(new MemVarFloat(nameof(Pressure)));
-            ТempInt = _CurrentParam.Add(new MemVarFloat(nameof(ТempInt)));
-            ТempExt = _CurrentParam.Add(new MemVarFloat(nameof(ТempExt)));
-            Acc = _CurrentParam.Add(new MemVarFloat(nameof(Acc)));
-
             StorageVM = new StorageVM(this);
 
             foreach (var surveyModel in Model.Surveys)
@@ -55,6 +52,7 @@ namespace SiamCross.Models.Sensors.Umt
             }
 
             Model.ConnHolder.PropertyChanged += OnHolderChange;
+            IsNewStatus = true;
         }
         void OnHolderChange(object sender, PropertyChangedEventArgs e)
         {
@@ -68,48 +66,10 @@ namespace SiamCross.Models.Sensors.Umt
             base.Dispose();
         }
 
-        public override async Task<bool> QuickReport(CancellationToken cancelToken)
+        public override Task<bool> QuickReport(CancellationToken cancelToken)
         {
-            try
-            {
-                cancelToken.ThrowIfCancellationRequested();
-                await Connection.PhyConnection.UpdateRssi();
-
-                RespResult ret = await Connection.ReadAsync(_CurrentParam);
-
-                Battery = (Acc.Value).ToString("N2");
-                Temperature = (ТempInt.Value).ToString("N2");
-
-                var press_str = (Pressure.Value).ToString("N2");
-                var exttemp_str = (ТempExt.Value).ToString("N2");
-
-                Status =
-                    $"{Resource.Pressure}: " + press_str + $" ({Resource.KGFCMUnits})"
-                    + "\nТемп.зонда: " + exttemp_str + $" ({Resource.DegCentigradeUnits})";
-
-                ChangeNotify(nameof(Battery));
-                ChangeNotify(nameof(Temperature));
-                ChangeNotify(nameof(Status));
-                ScannedDeviceInfo.Device.DeviceData["Battery"] = Battery;
-                ScannedDeviceInfo.Device.DeviceData["Temperature"] = Temperature;
-                ScannedDeviceInfo.Device.DeviceData["Status"] = Status;
-                return true;
-            }
-            catch (ProtocolException)
-            {
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Exception in: "
-                    + System.Reflection.MethodBase.GetCurrentMethod().Name
-                    + "\n msg=" + ex.Message
-                    + "\n type=" + ex.GetType()
-                    + "\n stack=" + ex.StackTrace + "\n");
-            }
-            return false;
+            return Task.FromResult(true);
         }
-
 
         public override bool Activate
         {

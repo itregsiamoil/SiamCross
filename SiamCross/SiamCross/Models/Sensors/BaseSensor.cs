@@ -29,6 +29,10 @@ namespace SiamCross.Models.Sensors
                 return;
             ChangeNotify(nameof(ConnStateStr));
         }
+        void OnStatusChange(object sender, PropertyChangedEventArgs e)
+        {
+            ChangeNotify(e.PropertyName);
+        }
         protected BaseSensor(SensorModel model)
         {
             _Model = model;
@@ -58,11 +62,13 @@ namespace SiamCross.Models.Sensors
 
             PositionVM = new SensorPositionVM(this);
 
-            Model.ConnHolder.CmdUpdateStatus = new AsyncCommand(
-                () => QuickReport(),
-                () => Model.Manager.IsFree,
-                null, false, false);
-
+            if (null == Model.ConnHolder.CmdUpdateStatus)
+                Model.ConnHolder.CmdUpdateStatus = new AsyncCommand(
+                    () => QuickReport(),
+                    () => Model.Manager.IsFree,
+                    null, false, false);
+            Model.Status.PropertyChanged += OnStatusChange;
+            IsNewStatus = false;
         }
 
         public virtual async void Dispose()
@@ -75,6 +81,7 @@ namespace SiamCross.Models.Sensors
             StorageVM?.Dispose();
 
             Connection.PropertyChanged -= OnConnectionChange;
+            Model.Status.PropertyChanged -= OnStatusChange;
             Model?.Dispose(); // TODO !!! удалить в будущем
         }
         #endregion
@@ -259,9 +266,6 @@ namespace SiamCross.Models.Sensors
                 }
             }
         }
-
-
-
         private async Task ExecuteAsync(CancellationToken cancelToken)
         {
             const int rssi_update_period = 2;
@@ -327,13 +331,8 @@ namespace SiamCross.Models.Sensors
             Debug.WriteLine("StartAlive OK");
             return true;
         }
-
-
         public abstract Task<bool> PostConnectInit(CancellationToken cancellationToken);
         #endregion
-
-
-
 
 
         public string Name => ScannedDeviceInfo.Title;
@@ -349,12 +348,82 @@ namespace SiamCross.Models.Sensors
         public string Number => Model.Device.Number.ToString();
         public string Label => Model.Device.Name;
 
-        public string Firmware { get; protected set; }
-        public string Battery { get; protected set; }
-        public string Temperature { get; protected set; }
-        public string RadioFirmware { get; protected set; }
-        string _status;
-        public string Status { get => _status; set { _status = value; ChangeNotify(); } }
+        public string Firmware
+        {
+            get
+            {
+                if (Model.Device.DeviceData.TryGetValue("Firmware", out object obj))
+                    if (obj is string strValue)
+                        return strValue;
+                return string.Empty;
+            }
+            set
+            {
+                Model.Device.DeviceData["Firmware"] = value;
+                ChangeNotify();
+            }
+        }
+        public string Battery
+        {
+            get
+            {
+                if (Model.Device.DeviceData.TryGetValue("Battery", out object obj))
+                    if (obj is string strValue)
+                        return strValue;
+                return string.Empty;
+            }
+            set
+            {
+                Model.Device.DeviceData["Battery"] = value;
+                ChangeNotify();
+            }
+        }
+        public string Temperature
+        {
+            get
+            {
+                if (Model.Device.DeviceData.TryGetValue("Temperature", out object obj))
+                    if (obj is string strValue)
+                        return strValue;
+                return string.Empty;
+            }
+            set
+            {
+                Model.Device.DeviceData["Temperature"] = value;
+                ChangeNotify();
+            }
+        }
+        public string RadioFirmware
+        {
+            get
+            {
+                if (Model.Device.DeviceData.TryGetValue("RadioFirmware", out object obj))
+                    if (obj is string strValue)
+                        return strValue;
+                return string.Empty;
+            }
+            set
+            {
+                Model.Device.DeviceData["RadioFirmware"] = value;
+                ChangeNotify();
+            }
+        }
+        public string Status
+        {
+            get
+            {
+                if (Model.Device.DeviceData.TryGetValue("Status", out object obj))
+                    if (obj is string strValue)
+                        return strValue;
+                return string.Empty;
+            }
+            set
+            {
+                Model.Device.DeviceData["Status"] = value;
+                ChangeNotify();
+            }
+        }
+
         public Guid Id => ScannedDeviceInfo.Guid;
 
         protected void ClearStatus()
@@ -368,6 +437,8 @@ namespace SiamCross.Models.Sensors
             mIsAlive = false;
         }
 
+        public bool IsNewStatus { get; protected set; }
+        public bool IsOldStatus => !IsNewStatus;
 
     }
 }
