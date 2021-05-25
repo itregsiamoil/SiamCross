@@ -107,8 +107,8 @@ namespace SiamCross.Services.RepositoryTables
             var new_blobs = new Dictionary<AttributeItem, string>();
             foreach (var item in values)
             {
-                string filename = $"{entityKind}_{entityId}_{item.Key}";
-                var old_path = Path.Combine(path, values[item.Key]);
+                string filename = $"{entityKind}_{entityId}_{item.Key.Title}";
+                var old_path = Path.Combine(path, item.Value);
                 var new_path = Path.Combine(path, filename);
                 File.Delete(new_path);
                 File.Move(old_path, new_path);
