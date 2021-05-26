@@ -44,11 +44,6 @@ namespace SiamCross.Models.Sensors.Umt
                 return false;
             }
 
-            if (_Model.Saved.Equals(_Model.Current))
-            {
-                InfoEx = "обновлено";
-                return true;
-            }
 
             Revbit.Value = _Model.Current.Revbit;
             Interval.Value = _Model.Current.Interval;
@@ -60,12 +55,18 @@ namespace SiamCross.Models.Sensors.Umt
             Timestamp.Value[1] = (byte)dt.Minute;
             Timestamp.Value[2] = (byte)dt.Second;
 
-            InfoEx = "запись";
+            InfoEx = "синхронизация времени";
             bool ret = false;
             ret = RespResult.NormalPkg == await Connection.TryWriteAsync(Timestamp, null, ct);
             if (!ret)
                 return false;
 
+            InfoEx = "запись параметров";
+            if (_Model.Saved.Equals(_Model.Current))
+            {
+                InfoEx = "обновлено";
+                return true;
+            }
             foreach (var r in SurvayParam.GetVars())
             {
                 ret = RespResult.NormalPkg == await Connection.TryWriteAsync(r, null, ct);
