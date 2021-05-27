@@ -51,7 +51,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         private static readonly int _ResponseRetry = Constants.MAX_PKG_SIZE;
 
 
-        private static readonly int mMinSpeed = 9600; ///bit per second
+        private static readonly int mMinSpeed = 56700; ///bit per second
         private static readonly float multipler = 1000.0f / (mMinSpeed / (8 + 1 + 1));
         private static int GetTime(int bytes)
         {
@@ -66,7 +66,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         {
             return GetTime(len);
         }
-        private int GetResponseTimeout(byte[] rq)
+        private int GetResponseTimeout(byte[] rq, int len)
         {
             int timeout = 0;
             if (null == rq)
@@ -76,10 +76,10 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 default: break;
                 case 0x01:
                     ushort data_len = BitConverter.ToUInt16(rq, 8);
-                    timeout = GetTime(rq.Length + data_len + 2);
+                    timeout = GetTime(len + data_len + 2);
                     break;
                 case 0x02:
-                    timeout = GetTime(rq.Length);
+                    timeout = GetTime(len);
                     break;
             }
             return timeout + mAdditioonTime;
@@ -141,7 +141,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         /// </returns>
         private async Task<RespResult> ResponseAsync(CancellationToken ct)
         {
-            int read_timeout = GetResponseTimeout(_TxBuf);
+            int read_timeout = GetResponseTimeout(_TxBuf, _EndTxBuf);
             _BeginRxBuf = 0;
             _EndRxBuf = 0;
             int need = Constants.MIN_PKG_SIZE;
@@ -204,7 +204,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 }
                 if (!sent)
                     return RespResult.ErrorSending;
-                using (var ctSrc = new CancellationTokenSource(GetResponseTimeout(_TxBuf)))
+                using (var ctSrc = new CancellationTokenSource(GetResponseTimeout(_TxBuf, _EndTxBuf)))
                 {
                     using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
                     {

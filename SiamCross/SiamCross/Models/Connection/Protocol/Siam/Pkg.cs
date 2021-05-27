@@ -32,7 +32,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                 default: return -1;
                 case Command.Read:
                     int data_len = GetDataLen(req);
-                    if (255 < data_len)
+                    if (Constants.MAX_PKG_SIZE < data_len)
                         return -1;
                     return 12 + data_len + 2;
                 case Command.Write:

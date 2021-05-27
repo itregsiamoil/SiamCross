@@ -338,7 +338,7 @@ namespace SiamCross.Droid.Models
         private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
         private TaskCompletionSource<bool> tcs;// = new TaskCompletionSource<byte[]>();
         CancellationTokenSource CtRxSource;
-        private readonly Stream mRxStream = new MemoryStream(512);
+        private readonly Stream mRxStream = new MemoryStream(Constants.MAX_PKG_SIZE * 2);
 
         public override async Task ClearRx()
         {

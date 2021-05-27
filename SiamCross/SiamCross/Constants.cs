@@ -25,7 +25,7 @@
         public const int SIAM_PKG_DEFAULT_DATA_SIZE = 40;
 
         public const int MIN_PKG_SIZE = 12;
-        public const int MAX_PKG_SIZE = 256;
+        public const int MAX_PKG_SIZE = 4096;
 
         public const int ShortDelay = 50;
 

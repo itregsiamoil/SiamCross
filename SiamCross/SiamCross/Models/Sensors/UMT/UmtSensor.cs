@@ -13,7 +13,7 @@ namespace SiamCross.Models.Sensors.Umt
         public UmtSensorModel(IProtocolConnection conn, DeviceInfo deviceInfo)
            : base(conn, deviceInfo)
         {
-            Connection.AdditioonalTimeout = 3000;
+            Connection.AdditioonalTimeout = 4000;
 
             Position.TaskLoad = new TaskPositionLoad(Position);
             Position.TaskSave = new TaskPositionSave(Position);
