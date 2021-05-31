@@ -18,7 +18,7 @@
         public static readonly double DefaultSoundSpeedFixed = 320;
 
         public const int BTLE_PKG_HDR_SIZE = 3;
-        public const int BTLE_PKG_MAX_SIZE = 247;
+        public const int BTLE_PKG_MAX_SIZE = 1024;
 
         public const int SIAM_PKG_CRC_SIZE = 2;
         public const int SIAM_PKG_HDR_SIZE = 12;
@@ -27,6 +27,7 @@
         public const int MIN_PKG_SIZE = 12;
         public const int MAX_PKG_SIZE = 4096;
 
+        public const int BTLE_DEFAULT_MTU = 256 + BTLE_PKG_HDR_SIZE;
         public const int ShortDelay = 50;
 
         public const int LongDelay = 300;

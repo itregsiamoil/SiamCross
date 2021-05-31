@@ -21,6 +21,7 @@ using OperationCanceledException = System.OperationCanceledException;
 //[assembly: Dependency(typeof(BluetoothLeAdapterAndroid))]
 namespace SiamCross.Droid.Models
 {
+    [Fody.ConfigureAwait(false)]
     public class ConnectionBtLe : IConnectionBtLe
     {
         private async void OnDisconected(object obj, DeviceErrorEventArgs args)
@@ -249,7 +250,7 @@ namespace SiamCross.Droid.Models
             bool inited = false;
             try
             {
-                _Mtu = await _device.RequestMtuAsync(256 + 3) - 3;
+                _Mtu = await _device.RequestMtuAsync(Constants.BTLE_DEFAULT_MTU) - Constants.BTLE_PKG_HDR_SIZE;
                 ChangeNotify(nameof(Mtu));
 
                 if (_device.UpdateConnectionInterval(ConnectionInterval.High))

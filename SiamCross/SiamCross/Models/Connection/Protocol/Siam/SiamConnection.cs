@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models.Connection.Protocol.Siam
 {
+    [Fody.ConfigureAwait(false)]
     public class SiamConnection : BaseProtocol
     {
 
@@ -245,9 +246,21 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             RespResult ret = RespResult.ErrorTimeout;
             for (int i = 0; i < retry && NeedRetry(ret) && !ct.IsCancellationRequested; ++i)
             {
-                DebugLog.WriteLine("START transaction, try " + i.ToString());
-                ret = await SingleExchangeAsync(ct);
-                DebugLog.WriteLine("END transaction, try " + i.ToString());
+                try
+                {
+#if DEBUG
+                    _PerfCounter.Restart();
+#endif
+                    DebugLog.WriteLine("START transaction, try " + i.ToString());
+                    ret = await SingleExchangeAsync(ct);
+                    DebugLog.WriteLine("END transaction, try " + i.ToString());
+                }
+                finally
+                {
+#if DEBUG
+                    _PerfCounter.Stop();
+#endif
+                }
             }
             return ret;
         }
@@ -334,22 +347,10 @@ namespace SiamCross.Models.Connection.Protocol.Siam
             , byte[] dst, int dst_start
             , Action<uint> onStepProgress, CancellationToken cancellationToken)
         {
-            try
+            using (await _semaphore.UseWaitAsync(cancellationToken))
             {
-#if DEBUG
-                _PerfCounter.Restart();
-#endif
-                using (await _semaphore.UseWaitAsync(cancellationToken))
-                {
-                    return await DoReadMemoryAsync(start_addr, mem_size
-                        , dst, dst_start, onStepProgress, cancellationToken);
-                }
-            }
-            finally
-            {
-#if DEBUG
-                _PerfCounter.Stop();
-#endif
+                return await DoReadMemoryAsync(start_addr, mem_size
+                    , dst, dst_start, onStepProgress, cancellationToken);
             }
         }
         public override async Task<RespResult> TryWriteMemoryAsync(uint start_addr, uint mem_size
@@ -358,20 +359,8 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         {
             using (await _semaphore.UseWaitAsync(cancellationToken))
             {
-                try
-                {
-#if DEBUG
-                    _PerfCounter.Restart();
-#endif
-                    return await DoWriteMemoryAsync(start_addr, mem_size
-                        , src, src_start, onStepProgress, cancellationToken);
-                }
-                finally
-                {
-#if DEBUG
-                    _PerfCounter.Stop();
-#endif
-                }
+                return await DoWriteMemoryAsync(start_addr, mem_size
+                    , src, src_start, onStepProgress, cancellationToken);
             }
         }
 
@@ -460,19 +449,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         {
             using (await _semaphore.UseWaitAsync(ct))
             {
-                try
-                {
-#if DEBUG
-                    _PerfCounter.Restart();
-#endif
-                    return await DoReadVarAsync(var, onStepProgress, ct);
-                }
-                finally
-                {
-#if DEBUG
-                    _PerfCounter.Stop();
-#endif
-                }
+                return await DoReadVarAsync(var, onStepProgress, ct);
             }
         }
         public override async Task<RespResult> TryWriteAsync(MemStruct var
@@ -480,19 +457,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         {
             using (await _semaphore.UseWaitAsync(ct))
             {
-                try
-                {
-#if DEBUG
-                    _PerfCounter.Restart();
-#endif
-                    return await DoWriteVarAsync(var, onStepProgress, ct);
-                }
-                finally
-                {
-#if DEBUG
-                    _PerfCounter.Stop();
-#endif
-                }
+                return await DoWriteVarAsync(var, onStepProgress, ct);
             }
         }
 

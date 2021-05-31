@@ -80,6 +80,7 @@ namespace SiamCross.Droid.Models
     }
     */
 
+    [Fody.ConfigureAwait(false)]
     [Android.Runtime.Preserve(AllMembers = true)]
     public class ConnectionBt2 : IConnectionBt2
     {

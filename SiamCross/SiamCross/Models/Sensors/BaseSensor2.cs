@@ -43,6 +43,19 @@ namespace SiamCross.Models.Sensors
             RespResult ret;
             try
             {
+                /*
+                Stopwatch _PerfCounter = new Stopwatch();
+                uint DmgSize = 4000;
+                byte[] _currentDynGraph = new byte[DmgSize];
+                _PerfCounter.Restart();
+                for (int i = 0; i < 100; i++)
+                {
+                    RespResult ret1 = await Connection.ReadMemAsync(0x83000000, DmgSize, _currentDynGraph
+                        , 0, null);
+                }
+                Debug.WriteLine("TEST elapsed=" + _PerfCounter.ElapsedMilliseconds.ToString());
+                return true;
+                */
                 cancelToken.ThrowIfCancellationRequested();
                 //DeviceNumber.Value = 170;
                 //MemStruct ms = new MemStruct(0x0A);
