@@ -46,13 +46,9 @@ namespace SiamCross.Models.Sensors.Umt
                 using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
                 {
                     bool ret = await UpdateAsync(linkTsc.Token);
-                    if (ret)
-                        _Model.UpdateSaved();
                     _Model.ChangeNotify(nameof(_Model.Period));
                     _Model.ChangeNotify(nameof(_Model.IsEnabledTempRecord));
                     _Model.ChangeNotify(nameof(_Model.IsEnabledExtTemp));
-
-
                     return ret;
                 }
             }
@@ -104,19 +100,20 @@ namespace SiamCross.Models.Sensors.Umt
                 && RespResult.NormalPkg == await Connection.TryReadAsync(ExTemp, SetProgressBytes, ct))
                 readed = true;
 
-            if (readed)
-            {
-                //await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                _Model.Current.Revbit = Revbit.Value;
-                _Model.Current.Interval = Interval.Value;
-                _Model.Current.IsExtetnalTemp = !(-300 == ExTemp.Value);
-            }
-            else
+            if (!readed)
             {
                 _Model.Current.Revbit = 0;
                 _Model.Current.Interval = 0;
                 _Model.Current.IsExtetnalTemp = false;
+                _Model.ResetSaved();
+                return false;
             }
+
+            //await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            _Model.Current.Revbit = Revbit.Value;
+            _Model.Current.Interval = Interval.Value;
+            _Model.Current.IsExtetnalTemp = !(-300 == ExTemp.Value);
+            _Model.UpdateSaved();
             InfoEx = "выполнено";
             return readed;
         }

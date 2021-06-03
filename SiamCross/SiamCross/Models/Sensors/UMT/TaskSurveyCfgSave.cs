@@ -67,12 +67,14 @@ namespace SiamCross.Models.Sensors.Umt
                 InfoEx = "обновлено";
                 return true;
             }
+            _Model.ResetSaved();
             foreach (var r in SurvayParam.GetVars())
             {
                 ret = RespResult.NormalPkg == await Connection.TryWriteAsync(r, null, ct);
                 if (!ret)
                     return false;
             }
+            _Model.UpdateSaved();
             InfoEx = "выполнено";
             return ret;
         }
