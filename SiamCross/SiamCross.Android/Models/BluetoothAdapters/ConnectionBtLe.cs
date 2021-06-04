@@ -404,7 +404,7 @@ namespace SiamCross.Droid.Models
                 curr_count = (sent + Mtu > count) ? (count - sent) : Mtu;
                 byte[] buf = buffer.AsSpan().Slice(offset + sent, curr_count).ToArray();
                 bool is_ok = await _writeCharacteristic.WriteAsync(buf, ct);
-                Debug.WriteLine($" writing chunk size={curr_count} - resilt is {is_ok}");
+                DebugLog.WriteLine($" writing chunk size={curr_count} - resilt is {is_ok}");
                 if (!is_ok)
                 {
                     if (Mtu > 20)

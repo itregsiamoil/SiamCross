@@ -104,7 +104,7 @@ namespace SiamCross.Droid.Models
         private Task<int> mRxThread = null;
         private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
         private TaskCompletionSource<bool> mRxTsc = null;
-        private readonly Stream mRxStream = new MemoryStream(Constants.MAX_PKG_SIZE*2);
+        private readonly Stream mRxStream = new MemoryStream(Constants.MAX_PKG_SIZE * 2);
         private CancellationTokenSource CtRxSource = null;
 
         private const string _uuid = "00001101-0000-1000-8000-00805f9b34fb";
