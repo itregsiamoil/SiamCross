@@ -94,7 +94,7 @@ namespace SiamCross.Models.Sensors.Dua
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("Exception: invalid date");
+                    Debug.WriteLine($"Exception: invalid date {ex.Message}");
                     _Model.Timestamp = DateTime.MinValue;
                 }
             }

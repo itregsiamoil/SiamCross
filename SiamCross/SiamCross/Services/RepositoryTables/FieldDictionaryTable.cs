@@ -47,17 +47,17 @@ namespace SiamCross.Services.RepositoryTables
 
             return (0 < affectedrow) ? item : null;
         }
-        public async Task<List<FieldItem>> LoadAsync(IDbTransaction tr, long id)
+        public async Task<IEnumerable<FieldItem>> LoadAsync(IDbTransaction tr, long id)
         {
             var values = await tr.Connection
                 .QueryAsync<FieldItem>(select_by_id, new { Id = id });
-            return values.AsList();
+            return values;
         }
-        public async Task<List<FieldItem>> LoadAsync(IDbTransaction tr)
+        public async Task<IEnumerable<FieldItem>> LoadAsync(IDbTransaction tr)
         {
             var values = await tr.Connection
                 .QueryAsync<FieldItem>(select_all);
-            return values.AsList();
+            return values;
         }
 
     }

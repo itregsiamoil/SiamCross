@@ -21,6 +21,7 @@ namespace SiamCross.Models.Sensors
 
         public ICommand CmdUpdateStatus { get; set; }
 
+        const int _Heartbeat = 30;
         bool _IsQickInfo;
         bool _IsActivated;
 
@@ -106,7 +107,7 @@ namespace SiamCross.Models.Sensors
                     return;
                 }
                 var t = (DateTime.Now - _LastExchange).TotalSeconds;
-                if (_IsQickInfo || 30 < t)
+                if (_IsQickInfo || _Heartbeat < t)
                 {
                     if (CmdUpdateStatus is AsyncCommand cmd)
                     {

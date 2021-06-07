@@ -697,12 +697,12 @@ namespace SiamCross.Services
                 return val;
             }
         }
-        public async Task<List<FieldItem>> LoadFieldAsync(long id)
+        public async Task<IEnumerable<FieldItem>> LoadFieldAsync(long id)
         {
             using (var tr = BeginTransaction())
                 return await FieldDictionary.LoadAsync(tr, id);
         }
-        public async Task<List<FieldItem>> LoadFieldAsync()
+        public async Task<IEnumerable<FieldItem>> LoadFieldAsync()
         {
             using (var tr = BeginTransaction())
                 return await FieldDictionary.LoadAsync(tr);

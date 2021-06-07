@@ -66,12 +66,11 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
                 return;
             }
 
-            SoundSpeedFileParcer fileParcer = new SoundSpeedFileParcer();
             List<KeyValuePair<float, float>> newSoundTable;
 
             using (StreamReader reader = new StreamReader(path))
             {
-                newSoundTable = fileParcer.TryToParce(reader.ReadToEnd());
+                newSoundTable = SoundSpeedFileParcer.TryToParce(reader.ReadToEnd());
             }
 
             if (newSoundTable == null)

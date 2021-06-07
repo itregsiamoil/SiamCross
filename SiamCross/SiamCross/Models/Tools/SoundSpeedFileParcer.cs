@@ -2,9 +2,9 @@
 
 namespace SiamCross.Models.Tools
 {
-    public class SoundSpeedFileParcer
+    public static class SoundSpeedFileParcer
     {
-        public List<KeyValuePair<float, float>> TryToParce(string fileText)
+        public static List<KeyValuePair<float, float>> TryToParce(string fileText)
         {
             List<KeyValuePair<float, float>> soundSpeedsList = new List<KeyValuePair<float, float>>();
 
