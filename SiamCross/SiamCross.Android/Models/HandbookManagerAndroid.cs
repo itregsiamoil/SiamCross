@@ -90,7 +90,6 @@ namespace SiamCross.Droid.Models
         public List<SoundSpeedModel> CreateDefaultSoundSpeeds()
         {
             Assembly assembly = IntrospectionExtensions.GetTypeInfo(typeof(App)).Assembly;
-            SoundSpeedFileParcer soundFileParcer = new SoundSpeedFileParcer();
 
             List<KeyValuePair<float, float>> langepasDictionary;
             List<KeyValuePair<float, float>> tatariaDictonary;
@@ -99,14 +98,14 @@ namespace SiamCross.Droid.Models
             using (StreamReader reader = new StreamReader(langepasStream))
             {
                 string text = reader.ReadToEnd();
-                langepasDictionary = soundFileParcer.TryToParce(text);
+                langepasDictionary = SoundSpeedFileParcer.TryToParce(text);
             }
 
             Stream tatariaStream = assembly.GetManifestResourceStream("SiamCross.DefaultSoundSpeedResources.tataria");
             using (StreamReader reader = new StreamReader(tatariaStream))
             {
                 string text = reader.ReadToEnd();
-                tatariaDictonary = soundFileParcer.TryToParce(text);
+                tatariaDictonary = SoundSpeedFileParcer.TryToParce(text);
             }
 
             return new List<SoundSpeedModel>()
