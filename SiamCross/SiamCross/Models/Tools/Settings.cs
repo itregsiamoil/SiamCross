@@ -25,6 +25,8 @@ namespace SiamCross.Models.Tools
             SettingsParameters settings = await _settingsSaver.ReadSettings();
             if (settings != null) //Если файл настроек не пустой
             {
+                FromName = settings.FromName;
+                SubjectName = settings.SubjectName;
                 FromAddress = settings.FromAddress;
                 ToAddress = settings.ToAddress;
                 SmtpAddress = settings.SmtpAddress;
@@ -33,11 +35,24 @@ namespace SiamCross.Models.Tools
                 Password = settings.Password;
                 IsNeedAuthorization = settings.NeedAuthorization;
             }
+            else 
+            {
+                FromName = "sudos";
+                SubjectName = "Siam Measurements";
+                FromAddress = "ddin@kb.siamoil.ru";
+                SmtpAddress = "mail.siamoil.ru";
+                Port = 25;
+                Username = string.Empty;
+                Password = string.Empty;
+                IsNeedAuthorization = false;
+            }
         }
 
         public void Dispose()
         {
             _settingsSaver.SaveSettings(new SettingsParameters(
+                FromName,
+                SubjectName,
                 FromAddress,
                 ToAddress,
                 SmtpAddress,
@@ -50,6 +65,8 @@ namespace SiamCross.Models.Tools
         public async Task SaveSettings()
         {
             await _settingsSaver.SaveSettings(new SettingsParameters(
+                FromName,
+                SubjectName,
                  FromAddress,
                  ToAddress,
                  SmtpAddress,
@@ -59,6 +76,8 @@ namespace SiamCross.Models.Tools
                  IsNeedAuthorization));
         }
 
+        public string FromName { get; set; }
+        public string SubjectName { get; set; }
         public string FromAddress { get; set; }
         public string ToAddress { get; set; }
         public string SmtpAddress { get; set; }

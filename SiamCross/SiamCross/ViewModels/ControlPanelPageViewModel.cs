@@ -7,12 +7,13 @@ using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using SiamCross.Views;
-using SiamCross.Views.MenuItems;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -26,40 +27,24 @@ namespace SiamCross.ViewModels
         public bool IsPreRelease => Version.ToLower().Contains("rc");
         public string Version => DependencyService.Get<IAppVersionAndBuild>().GetVersionNumber();
 
+        public ICommand DeleteSensorCommand { get; }
+        public ICommand GotoMeasurementPageCommand { get; }
+        //public ICommand EnableQickInfoAllCommand => new Command(EnableQickInfoAll);
+        //public ICommand DisableQickInfoAllCommand => new Command(DisableQickInfoAll);
+
         public ControlPanelPageViewModel()
         {
             Sensor = new ObservableCollection<ISensor>();
 
             SensorService.Instance.SensorAdded += SensorAdded;
             SensorService.Instance.SensorDeleting += SensorDeleted;
+            DeleteSensorCommand = new AsyncCommand<Guid>(DeleteSensorHandler
+                , (Func<bool>)null, null, false, false);
+            GotoMeasurementPageCommand = new AsyncCommand<Guid>(GotoMeasurementPage
+                , (Func<bool>)null, null, false, false);
+
         }
-        public ICommand RecentMeasurementCommand => new Command<Guid>(RecentMeasurement);
-        public ICommand DeleteSensorCommand => new Command<Guid>(DeleteSensorHandler);
-        public ICommand GotoMeasurementPageCommand => new Command<Guid>(GotoMeasurementPage);
-        //public ICommand EnableQickInfoAllCommand => new Command(EnableQickInfoAll);
-        //public ICommand DisableQickInfoAllCommand => new Command(DisableQickInfoAll);
-        private void RecentMeasurement(Guid id)
-        {
-            try
-            {
-                ISensor sensor = SensorService.Instance.Sensors
-                    .SingleOrDefault(s => s.Id == id);
-                if (sensor != null)
-                {
-                    if (CanOpenPage(typeof(MeasurementsPage)))
-                    {
-                        //App.NavigationPage.Navigation.PushAsync(new MeasurementsPage());
-                        //App.MenuIsPresented = false;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "DeleteSensorHandler" + "\n");
-                throw;
-            }
-        }
-        private async void DeleteSensorHandler(Guid id)
+        private async Task DeleteSensorHandler(Guid id)
         {
             try
             {
@@ -101,51 +86,58 @@ namespace SiamCross.ViewModels
                 Sensor.Add(sensor);
             }
         }
-        private void GotoMeasurementPage(Guid id)
+        private async Task GotoMeasurementPage(Guid id)
         {
-            ISensor sensor = SensorService.Instance.Sensors
-                .SingleOrDefault(s => s.Id == id);
-            if (sensor == null)
-                return;
-
-            switch (sensor.ScannedDeviceInfo.Device.Kind)
+            try
             {
-                case 0x1301:
-                case 0x1302:
-                case 0x1303:
-                case 0x1401:
-                case 0x1402:
-                case 0x1403:
-                    if (!CanOpenMeasurement(sensor))
-                        return;
-                    if (!CanOpenPage(typeof(DynamogrammPage)))
-                        return;
+                ISensor sensor = SensorService.Instance.Sensors
+                    .SingleOrDefault(s => s.Id == id);
+                if (sensor == null)
+                    return;
 
-                    var vm = sensor.SurveysVM.SurveysCollection[0];
-                    if (null == vm || !(vm is Dmg.Survey.DynamogrammVM dmgVM))
-                        return;
-                    dmgVM.InitMeasurementStartParameters();
-                    var page = PageNavigator.Get(vm);
-                    if (null == page)
-                        return;
-                    App.NavigationPage.Navigation.PushAsync(page);
+                switch (sensor.ScannedDeviceInfo.Device.Kind)
+                {
+                    case 0x1301:
+                    case 0x1302:
+                    case 0x1303:
+                    case 0x1401:
+                    case 0x1402:
+                    case 0x1403:
+                        if (!CanOpenMeasurement(sensor))
+                            return;
+                        if (!CanOpenPage(typeof(DynamogrammPage)))
+                            return;
 
-                    break;
-                case 0x1101:
-                    if (!CanOpenMeasurement(sensor))
-                        return;
-                    if (!CanOpenPage(typeof(DuMeasurementPage)))
-                        return;
-                    App.NavigationPage.Navigation.PushAsync(
-                        new DuMeasurementPage(sensor));
-                    break;
-                case 0x1201:
-                case 0x1700:
-                    sensor.ShowDetailViewCommand.Execute(this);
-                    break;
-                default: break;
+                        var vm = sensor.SurveysVM.SurveysCollection[0];
+                        if (null == vm || !(vm is Dmg.Survey.DynamogrammVM dmgVM))
+                            return;
+                        dmgVM.InitMeasurementStartParameters();
+                        var page = PageNavigator.Get(vm);
+                        if (null == page)
+                            return;
+                        await App.NavigationPage.Navigation.PushAsync(page);
+
+                        break;
+                    case 0x1101:
+                        if (!CanOpenMeasurement(sensor))
+                            return;
+                        if (!CanOpenPage(typeof(DuMeasurementPage)))
+                            return;
+                        await App.NavigationPage.Navigation.PushAsync(
+                            new DuMeasurementPage(sensor));
+                        break;
+                    case 0x1201:
+                    case 0x1700:
+                        sensor.ShowDetailViewCommand.Execute(this);
+                        break;
+                    default: break;
+                }
             }
-
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Message={ex.Message} TRACE={ex.StackTrace}");
+                _logger.Error($"Message={ex.Message} TRACE={ex.StackTrace}");
+            }
         }
         private bool CanOpenMeasurement(ISensor sensorata)
         {

@@ -6,6 +6,8 @@ namespace SiamCross.ViewModels
     [Preserve(AllMembers = true)]
     public class SettingsViewModel : BaseVM
     {
+        private string _fromName;
+        private string _subjectName;
         private string _fromAddress;
         private string _toAddress;
         private string _smtpAddress;
@@ -14,12 +16,30 @@ namespace SiamCross.ViewModels
         private string _password;
         private bool _needAuthorization;
 
+        public string FromName
+        {
+            get => Settings.Instance.FromName;
+            set 
+            {
+                SetProperty(ref _fromName, value);
+                Settings.Instance.FromName = value;
+            }
+        }
+        public string SubjectName
+        {
+            get => Settings.Instance.SubjectName;
+            set
+            {
+                SetProperty(ref _subjectName, value);
+                Settings.Instance.SubjectName = value;
+            }
+        }
         public bool NeedAuthorization
         {
             get => _needAuthorization;
             set
             {
-                _needAuthorization = value;
+                SetProperty(ref _needAuthorization, value);
                 Settings.Instance.IsNeedAuthorization = value;
             }
         }

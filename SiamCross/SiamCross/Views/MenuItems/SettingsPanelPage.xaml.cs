@@ -18,14 +18,9 @@ namespace SiamCross.Views.MenuItems
         private readonly ViewModelWrap<SettingsViewModel> _vm;
         public SettingsPanelPage()
         {
+            InitializeComponent();
             _vm = new ViewModelWrap<SettingsViewModel>();
             BindingContext = _vm.ViewModel;
-            InitializeComponent();
-            if (Settings.Instance.IsNeedAuthorization)
-            {
-                AuthCheckBox.IsChecked = true;
-            }
-            SwitchFieldsEnability();
         }
 
         protected override async void OnDisappearing()
@@ -42,16 +37,5 @@ namespace SiamCross.Views.MenuItems
             }
         }
 
-        private void CheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
-        {
-            SwitchFieldsEnability();
-            _vm.ViewModel.NeedAuthorization = e.Value;
-        }
-
-        private void SwitchFieldsEnability()
-        {
-            UsernameEntry.IsEnabled = AuthCheckBox.IsChecked;
-            PasswordEntry.IsEnabled = AuthCheckBox.IsChecked;
-        }
     }
 }

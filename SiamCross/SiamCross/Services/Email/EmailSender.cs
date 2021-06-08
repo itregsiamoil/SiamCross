@@ -2,6 +2,8 @@
 using MimeKit;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms.Internals;
 using Settings = SiamCross.Models.Tools.Settings;
@@ -42,7 +44,7 @@ namespace SiamCross.Services.Email
         {
             MimeMessage m = new MimeMessage();
 
-            MailboxAddress sender = new MailboxAddress("SiamService", Settings.Instance.FromAddress);
+            MailboxAddress sender = new MailboxAddress(Settings.Instance.FromName, Settings.Instance.FromAddress);
             MailboxAddress receiver = new MailboxAddress("", Settings.Instance.ToAddress);
             m.From.Add(sender);
             m.To.Add(receiver);
@@ -55,7 +57,14 @@ namespace SiamCross.Services.Email
 
             foreach (string path in filenames)
             {
-                builder.Attachments.Add(path);
+                //builder.Attachments.Add(path, path);
+                using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                {
+                    string name = Path.GetFileName(path);
+                    byte[] b = ParserOptions.Default.CharsetEncoding.GetBytes(name.ToCharArray());
+                    name = Encoding.ASCII.GetString(b);
+                    await builder.Attachments.AddAsync(name, fs);
+                }
             }
             m.Body = builder.ToMessageBody();
             return await SendMessage(m);

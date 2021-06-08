@@ -3,75 +3,56 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SiamCross.Views.MenuItems.SettingsPanelPage"
              xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
-             xmlns:local="clr-namespace:SiamCross.Views"
+             xmlns:local="clr-namespace:SiamCross.Views" 
+             xmlns:viewmodels="clr-namespace:SiamCross.ViewModels"
+             x:DataType="viewmodels:SettingsViewModel"
+             x:Name="ThisPage"
              Title="{local1:Translate SettingsTitle}">
-    <TableView HasUnevenRows="True" Margin="5">
-        <TableRoot>
-            <TableSection Title="{local1:Translate EmailSettings}">
-                <ViewCell>
-                    <StackLayout>
-                        <Label Text="{local1:Translate FromAddress}"/>
-                        <Entry Text="{Binding FromAddress}" 
+    <ContentPage.Content>
+        <ScrollView VerticalOptions="FillAndExpand">
+            <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}" Padding="5">
+                <Label Text="Тема"/>
+                <Entry Text="{Binding SubjectName}"/>
+                <Label Text="Имя отправителя"/>
+                <Entry Text="{Binding FromName}"/>
+                <Label Text="{local1:Translate FromAddress}"/>
+                <Entry Text="{Binding FromAddress}" 
                                Keyboard="Email"/>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout>
-                        <Label Text="{local1:Translate ToAddress}"/>
-                        <Entry Text="{Binding ToAddress}"
+                <Label Text="{local1:Translate ToAddress}"/>
+                <Entry Text="{Binding ToAddress}"
                                Keyboard="Email"/>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout>
-                        <Label Text="{local1:Translate SmtpAddress}"/>
-                        <Entry Text="{Binding SmtpAddress}"
+                <Label Text="{local1:Translate SmtpAddress}"/>
+                <Entry Text="{Binding SmtpAddress}"
                                Keyboard="Email"/>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout>
-                        <Label Text="{local1:Translate Port}"></Label>
-                        <Entry Text="{Binding Port}" 
+                <Label Text="{local1:Translate Port}"></Label>
+                <Entry Text="{Binding Port}" 
                                Keyboard="Numeric">
-                            <Entry.Behaviors>
-                                <local:IntegerNumberValidationBehavior/>
-                            </Entry.Behaviors>
-                        </Entry>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <CheckBox x:Name="AuthCheckBox"
-                                  Grid.Column="0" 
-                                  CheckedChanged="CheckBox_CheckedChanged"/>
-                        <Label Margin="0, 5" Text="{local1:Translate Authorization}" Grid.Column="1"/>
-                    </Grid>
-                </ViewCell>
-            </TableSection>
-            <TableSection Title="{local1:Translate AuthentificationData}" x:Name="Authtorization">
-                <ViewCell>
-                    <StackLayout>
-                        <Label Text="{local1:Translate Username}"/>
-                        <Entry Text="{Binding Username}"
+                    <Entry.Behaviors>
+                        <local:IntegerNumberValidationBehavior/>
+                    </Entry.Behaviors>
+                </Entry>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <CheckBox x:Name="AuthCheckBox"
+                              Grid.Column="0" 
+                              IsChecked="{Binding NeedAuthorization}"/>
+                    <Label Margin="0, 5" Text="{local1:Translate Authorization}" Grid.Column="1"/>
+                </Grid>
+                <Label Text="{local1:Translate Username}"/>
+                <Entry Text="{Binding Username}" 
+                       IsEnabled="{Binding NeedAuthorization}"
                                Keyboard="Email" 
                                x:Name="UsernameEntry"/>
-                    </StackLayout>
-                </ViewCell>
-                <ViewCell>
-                    <StackLayout>
-                        <Label Text="{local1:Translate Password}"/>
-                        <Entry Text="{Binding Password}"
+                <Label Text="{local1:Translate Password}"/>
+                <Entry Text="{Binding Password}"
+                       IsEnabled="{Binding NeedAuthorization}"
                                IsPassword="True"
                                Keyboard="Default"
                                x:Name="PasswordEntry"/>
-                    </StackLayout>
-                </ViewCell>
-            </TableSection>
-        </TableRoot>
-    </TableView>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
 </ContentPage>
