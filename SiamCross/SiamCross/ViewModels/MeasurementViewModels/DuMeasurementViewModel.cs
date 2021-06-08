@@ -22,7 +22,6 @@ namespace SiamCross.ViewModels
     public class DuMeasurementViewModel : BaseSensorMeasurementViewModel<DuMeasurementStartParameters>
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
-        private readonly List<SoundSpeedModel> _soundSpeedModels;
         public ObservableCollection<string> ResearchTypes { get; set; }
         public string SelectedResearchType { get; set; }
         public ObservableCollection<string> SoundSpeedCorrections { get; set; }
@@ -110,14 +109,13 @@ namespace SiamCross.ViewModels
         {
             try
             {
-                _soundSpeedModels = HandbookData.Instance.GetSoundSpeedList();
                 ResearchTypes = new ObservableCollection<string>
                 {
                     Resource.DynamicLevel,
                     Resource.StaticLevel
                 };
                 SoundSpeedCorrections = new ObservableCollection<string>();
-                foreach (SoundSpeedModel elem in _soundSpeedModels)
+                foreach (SoundSpeedModel elem in Repo.SoundSpeedDir.Models)
                 {
                     SoundSpeedCorrections.Add(elem.ToString());
                 }

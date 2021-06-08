@@ -19,29 +19,18 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
     {
         public SoundSpeedViewPage(SoundSpeedModel soundSpeedModel)
         {
-            ViewModelWrap<SoundSpeedViewViewModel> vm = new ViewModelWrap<SoundSpeedViewViewModel>(soundSpeedModel);
-            BindingContext = vm.ViewModel;
-
+            BindingContext = new SoundSpeedItemViewModel(soundSpeedModel);
             InitializeComponent();
-        }
-
-        private async void ToolbarItem_Clicked(object sender, EventArgs e)
-        {
-            bool result = await DisplayAlert(
-                      Resource.Attention,
-                      Resource.DeleteQuestion,
-                      Resource.YesButton,
-                      Resource.NotButton);
-            if (result)
-            {
-                (BindingContext as SoundSpeedViewViewModel).Delete();
-            }
         }
 
         private void CanvasView_PaintSurface(object sender, SKPaintSurfaceEventArgs args)
         {
             try
             {
+                SoundSpeedItemViewModel vm = (SoundSpeedItemViewModel)BindingContext;
+                if (null == vm.Points)
+                    return;
+
                 SKImageInfo info = args.Info;
                 SKSurface surface = args.Surface;
                 SKCanvas canvas = surface.Canvas;
@@ -62,30 +51,28 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
                     StrokeWidth = 1
                 };
 
-                SoundSpeedViewViewModel vm = (SoundSpeedViewViewModel)BindingContext;
-
                 double maxX = vm.GetMaximumX();
                 double maxY = vm.GetMaximumY();
                 double minX = vm.GetMinimumX();
                 double minY = vm.GetMinimumY();
 
 
-                double dx = CanvasView.Width / (maxX - minX);
-                double dy = CanvasView.Height / (maxY - minY);
+                double dx = info.Width / (maxX - minX);
+                double dy = info.Height / (maxY - minY);
 
                 List<SKPoint> skPoints = new List<SKPoint>();
 
                 foreach (KeyValuePair<float, float> pair in vm.Points)
                 {
-                    float y = (float)CanvasView.Height - (float)((pair.Value - minY) * dy);
+                    float y = (float)info.Height - (float)((pair.Value - minY) * dy);
                     float x = (float)((pair.Key - minX) * dx);
                     skPoints.Add(new SKPoint(x, y));
                 }
 
                 canvas.DrawPoints(SKPointMode.Polygon, skPoints.ToArray(), paint);
-                canvas.DrawLine(1, 1, 1, (float)CanvasView.Height - 1, paintAxies);
-                canvas.DrawLine(1, (float)CanvasView.Height - 1,
-                    (float)CanvasView.Width - 1, (float)CanvasView.Height - 1, paintAxies);
+                canvas.DrawLine(1, 1, 1, (float)info.Height - 1, paintAxies);
+                canvas.DrawLine(1, (float)info.Height - 1,
+                    (float)info.Width - 1, (float)info.Height - 1, paintAxies);
             }
             catch (Exception ex)
             {
@@ -94,15 +81,12 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
             }
         }
 
-
-
         protected override void OnSizeAllocated(double width, double height)
         {
             base.OnSizeAllocated(width, height);
 
             if (width > height)
             {
-                outerStack.Orientation = StackOrientation.Horizontal;
                 graphGrid.HeightRequest = 180;
                 graphGrid.MinimumHeightRequest = 180;
                 graphGrid.WidthRequest = 240;
@@ -110,7 +94,6 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
             }
             else
             {
-                outerStack.Orientation = StackOrientation.Vertical;
                 graphGrid.HeightRequest = -1;
                 graphGrid.MinimumHeightRequest = -1;
                 graphGrid.WidthRequest = -1;

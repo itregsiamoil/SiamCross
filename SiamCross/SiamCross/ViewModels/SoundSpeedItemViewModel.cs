@@ -3,23 +3,27 @@ using SiamCross.Services;
 using SiamCross.Services.Toast;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Input;
-using Xamarin.Forms;
+using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
     [Preserve(AllMembers = true)]
-    public class SoundSpeedViewViewModel : BaseVM
+    public class SoundSpeedItemViewModel : BaseVM
     {
-        public SoundSpeedViewViewModel(SoundSpeedModel soundSpeed)
+        public SoundSpeedItemViewModel(SoundSpeedModel soundSpeed)
         {
             _targetSoundSpeed = soundSpeed;
-            Edit = new Command(TrySaveEdits);
+            Edit = new AsyncCommand(TrySaveEdits,
+                (Func<bool>)null, null, false, false);
             Name = soundSpeed.Name;
             Code = soundSpeed.Code.ToString();
 
             Points = _targetSoundSpeed.LevelSpeedTable;
+            if (null == Points)
+                return;
 
             MinGraphX = Math.Round(GetMinimumX(), 1).ToString();
             MaxGraphX = Math.Round(GetMaximumX(), 1).ToString();
@@ -45,18 +49,7 @@ namespace SiamCross.ViewModels
 
         public string MaxGraphY { get; set; }
 
-        public void Delete()
-        {
-            try
-            {
-                HandbookData.Instance.RemoveSoundSpeed(_targetSoundSpeed);
-                MessagingCenter.Send<SoundSpeedViewViewModel>(this, "Refresh");
-            }
-            catch { }
-            App.NavigationPage.Navigation.PopAsync();
-        }
-
-        private void TrySaveEdits()
+        private async Task TrySaveEdits()
         {
             if (string.IsNullOrWhiteSpace(Name) ||
                string.IsNullOrWhiteSpace(Code))
@@ -64,13 +57,10 @@ namespace SiamCross.ViewModels
                 ToastService.Instance.LongAlert(Resource.FillInAllTheFields);
                 return;
             }
-
-            HandbookData.Instance.RemoveSoundSpeed(_targetSoundSpeed);
             _targetSoundSpeed.Code = int.Parse(Code);
             _targetSoundSpeed.Name = Name;
-            HandbookData.Instance.AddSoundSpeed(_targetSoundSpeed);
-            MessagingCenter.Send<SoundSpeedViewViewModel>(this, "Refresh");
-            App.NavigationPage.Navigation.PopAsync();
+            await Repo.SoundSpeedDir.SaveAsync(_targetSoundSpeed);
+            await App.NavigationPage.Navigation.PopAsync();
 
             _targetSoundSpeed.Code = int.Parse(Code);
             _targetSoundSpeed.Name = Name;

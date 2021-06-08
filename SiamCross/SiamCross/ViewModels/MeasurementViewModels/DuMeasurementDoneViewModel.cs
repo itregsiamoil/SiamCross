@@ -49,7 +49,7 @@ namespace SiamCross.ViewModels
         {
             _measurement = measurement;
             SoundSpeedCorrections = new ObservableCollection<string>();
-            foreach (SoundSpeedModel elem in HandbookData.Instance.GetSoundSpeedList())
+            foreach (SoundSpeedModel elem in Repo.SoundSpeedDir.Models)
             {
                 SoundSpeedCorrections.Add(elem.ToString());
             }

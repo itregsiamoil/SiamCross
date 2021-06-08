@@ -22,8 +22,7 @@ namespace SiamCross.Models.Sensors.Du.Measurement
 
                 if (string.IsNullOrEmpty(StartParam.SecondaryParameters.SoundSpeed))
                 {
-                    Tools.SoundSpeedModel correctionTable = HandbookData.Instance.GetSoundSpeedList().Find(
-                        x => x.ToString() == StartParam.SecondaryParameters.SoundSpeedCorrection);
+                    Tools.SoundSpeedModel correctionTable = Repo.SoundSpeedDir.DictByTitle[StartParam.SecondaryParameters.SoundSpeedCorrection];
                     StartParam.SecondaryParameters.SoundSpeed =
                         correctionTable.GetApproximatedSpeedFromTable(AnnularPressure).ToString();
                 }

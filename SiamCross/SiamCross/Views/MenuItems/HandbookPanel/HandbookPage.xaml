@@ -7,6 +7,6 @@
              Title="{local1:Translate HandbookTitle}">
     <TabbedPage.Children>
         <local:DirectoryPage />
-        <local:SoundSpeedPage />
+        <local:SoundSpeedListPage />
     </TabbedPage.Children>
 </TabbedPage>

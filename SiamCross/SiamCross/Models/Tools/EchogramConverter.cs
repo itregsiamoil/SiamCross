@@ -1,7 +1,6 @@
 ﻿using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Services;
 using System;
-using System.Linq;
 
 namespace SiamCross.Models.Tools
 {
@@ -24,8 +23,7 @@ namespace SiamCross.Models.Tools
             float xDiscrete;
             if (duMeasurement.SoundSpeed == "")
             {
-                SoundSpeedModel table = HandbookData.Instance.GetSoundSpeedList().SingleOrDefault(
-                    t => t.ToString() == duMeasurement.SoundSpeedCorrection);
+                Tools.SoundSpeedModel table = Repo.SoundSpeedDir.DictByTitle[duMeasurement.SoundSpeedCorrection];
                 tableSpeedCorrection = table.GetApproximatedSpeedFromTable(duMeasurement.AnnularPressure);
                 xDiscrete = tableSpeedCorrection / Constants.EhoFixedSoundSpeed;
             }

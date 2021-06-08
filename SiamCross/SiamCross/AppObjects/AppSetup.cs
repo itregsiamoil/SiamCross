@@ -28,11 +28,11 @@ namespace SiamCross.AppObjects
             cb.RegisterType<DuMeasurementDoneViewModel>().AsSelf();
             cb.RegisterType<DuMeasurementViewModel>().AsSelf();
 
-            cb.RegisterType<DirectoryViewModel>().SingleInstance();
             cb.RegisterType<SettingsViewModel>().SingleInstance();
+
+            cb.RegisterType<DirectoryViewModel>().SingleInstance();
             cb.RegisterType<AddFieldViewModel>().SingleInstance();
-            cb.RegisterType<SoundSpeedViewModel>().SingleInstance();
-            cb.RegisterType<SoundSpeedViewViewModel>().SingleInstance();
+
         }
     }
 }

@@ -290,8 +290,10 @@ namespace SiamCross.ViewModels
                 //ToastService.Instance.LongAlert($"{Resource.SendingMeasurements}...");
                 var paths = await SaveXmlsReturnPaths(SelectedMeasurements);
 
-                bool is_ok = await EmailService.Instance.SendEmailWithFilesAsync("Siam Measurements",
-                    "\nSiamCompany Telemetry Transfer Service",
+                
+
+                bool is_ok = await EmailService.Instance.SendEmailWithFilesAsync(Settings.Instance.SubjectName,
+                    "SiamCompany Telemetry Transfer Service",
                     paths);
                 //ToastService.Instance.LongAlert($"{SelectedMeasurements.Count} {Resource.MeasurementsSentSuccesfully}");
 

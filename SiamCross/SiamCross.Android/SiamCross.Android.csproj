@@ -118,7 +118,6 @@
     <Compile Include="Models\DatabaseCreatorAndroid.cs" />
     <Compile Include="Models\EventHandlerExtensions.cs" />
     <Compile Include="Services\Environment\Environment.cs" />
-    <Compile Include="Models\HandbookManagerAndroid.cs" />
     <Compile Include="Services\MediaScanner\MediaScanner.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
