@@ -68,6 +68,7 @@ namespace SiamCross.Services.Email
                     byte[] b = ParserOptions.Default.CharsetEncoding.GetBytes(name.ToCharArray());
                     name = Encoding.ASCII.GetString(b);
                     await builder.Attachments.AddAsync(name, fs, ContentType.Parse("application/octet-stream"));
+                    fs.Close();
                 }
             }
             m.Body = builder.ToMessageBody();
