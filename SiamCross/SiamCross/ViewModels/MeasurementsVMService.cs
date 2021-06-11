@@ -284,7 +284,7 @@ namespace SiamCross.ViewModels
                 foreach (MeasurementView survay in SelectedMeasurements)
                 {
                     survay.IsRunning = true;
-                    survay.LastSentRecipient = SiamCross.Models.Tools.Settings.Instance.ToAddress;
+                    survay.LastSentRecipient = Settings.Instance.ToAddress;
                 }
 
                 //ToastService.Instance.LongAlert($"{Resource.SendingMeasurements}...");
@@ -300,7 +300,7 @@ namespace SiamCross.ViewModels
                 foreach (MeasurementView sent_sur in SelectedMeasurements)
                 {
                     sent_sur.LastSentTimestamp = DateTime.Now.ToString();
-                    sent_sur.LastSentRecipient = SiamCross.Models.Tools.Settings.Instance.ToAddress;
+                    sent_sur.LastSentRecipient = Settings.Instance.ToAddress;
                     sent_sur.IsRunning = false;
                 }
 
@@ -671,7 +671,7 @@ namespace SiamCross.ViewModels
             if (string.IsNullOrEmpty(Settings.Instance.SmtpAddress))
                 errorList.Add($"{Resource.EnterSmtpAddress}");
 
-            if (Settings.Instance.IsNeedAuthorization)
+            if (Settings.Instance.NeedAuthorization)
             {
                 if (string.IsNullOrEmpty(Settings.Instance.Username))
                     errorList.Add($"{Resource.EnterUsername}");

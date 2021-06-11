@@ -1,58 +1,97 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SiamCross.Views.MenuItems.SettingsPanelPage"
-             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
-             xmlns:local="clr-namespace:SiamCross.Views" 
-             xmlns:viewmodels="clr-namespace:SiamCross.ViewModels"
-             x:DataType="viewmodels:SettingsViewModel"
-             x:Name="ThisPage"
-             Title="{local1:Translate SettingsTitle}">
+<views:BaseContentPage 
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+    x:Class="SiamCross.Views.MenuItems.SettingsPanelPage"
+    xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
+    xmlns:views="clr-namespace:SiamCross.Views" 
+    xmlns:viewmodels="clr-namespace:SiamCross.ViewModels"
+    x:DataType="viewmodels:SettingsViewModel"
+    x:Name="ThisPage"
+    Title="{local1:Translate SettingsTitle}">
+
+    <ContentPage.Resources>
+        <Style TargetType="{x:Type StackLayout}">
+            <Setter Property="Spacing" Value="0" />
+        </Style>
+    </ContentPage.Resources >
+
+    <NavigationPage.TitleView >
+        <StackLayout Orientation="Horizontal" >
+            <StackLayout HorizontalOptions="FillAndExpand" >
+                <Label Text="{local1:Translate SettingsTitle}" 
+                       FontSize="Medium" FontAttributes="Bold" VerticalTextAlignment="Center"
+                       LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}" >
+                <Button Text="По умолчанию" HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorBackgroundMedium}"
+                        Command="{Binding CmdDefault}">
+                </Button>
+                <Button Text="Сохранить" HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorPrimaryLight}"
+                        Command="{Binding CmdSave}" >
+                </Button>
+            </StackLayout>
+        </StackLayout>
+    </NavigationPage.TitleView>
+
     <ContentPage.Content>
-        <ScrollView VerticalOptions="FillAndExpand">
-            <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}" Padding="5">
-                <Label Text="Тема"/>
-                <Entry Text="{Binding SubjectName}"/>
-                <Label Text="Имя отправителя"/>
-                <Entry Text="{Binding FromName}"/>
-                <Label Text="{local1:Translate FromAddress}"/>
-                <Entry Text="{Binding FromAddress}" 
+        <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
+            <ScrollView VerticalOptions="FillAndExpand">
+                <StackLayout Padding="5">
+                    <Label Text="Тема"/>
+                    <Entry Text="{Binding SubjectName}"/>
+                    <Label Text="Имя отправителя"/>
+                    <Entry Text="{Binding FromName}"/>
+                    <Label Text="{local1:Translate FromAddress}"/>
+                    <Entry Text="{Binding FromAddress}" 
                                Keyboard="Email"/>
-                <Label Text="{local1:Translate ToAddress}"/>
-                <Entry Text="{Binding ToAddress}"
+                    <Label Text="{local1:Translate ToAddress}"/>
+                    <Entry Text="{Binding ToAddress}"
                                Keyboard="Email"/>
-                <Label Text="{local1:Translate SmtpAddress}"/>
-                <Entry Text="{Binding SmtpAddress}"
+                    <Label Text="{local1:Translate SmtpAddress}"/>
+                    <Entry Text="{Binding SmtpAddress}"
                                Keyboard="Email"/>
-                <Label Text="{local1:Translate Port}"></Label>
-                <Entry Text="{Binding Port}" 
+                    <Label Text="{local1:Translate Port}"></Label>
+                    <Entry Text="{Binding Port}" 
                                Keyboard="Numeric">
-                    <Entry.Behaviors>
-                        <local:IntegerNumberValidationBehavior/>
-                    </Entry.Behaviors>
-                </Entry>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <CheckBox x:Name="AuthCheckBox"
-                              Grid.Column="0" 
-                              IsChecked="{Binding NeedAuthorization}"/>
-                    <Label Margin="0, 5" Text="{local1:Translate Authorization}" Grid.Column="1"/>
-                </Grid>
-                <Label Text="{local1:Translate Username}"/>
-                <Entry Text="{Binding Username}" 
+                        <Entry.Behaviors>
+                            <xct:NumericValidationBehavior/>
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Grid Padding="0,20,0,20">
+                        <Label Text="{local1:Translate Authorization}"/>
+                        <Switch x:Name="AuthCheckBox" IsToggled="{Binding NeedAuthorization}"/>
+                    </Grid>
+                    <Label Text="{local1:Translate Username}"/>
+                    <Entry Text="{Binding Username}" 
                        IsEnabled="{Binding NeedAuthorization}"
                                Keyboard="Email" 
                                x:Name="UsernameEntry"/>
-                <Label Text="{local1:Translate Password}"/>
-                <Entry Text="{Binding Password}"
+                    <Label Text="{local1:Translate Password}"/>
+                    <Entry Text="{Binding Password}"
                        IsEnabled="{Binding NeedAuthorization}"
                                IsPassword="True"
                                Keyboard="Default"
                                x:Name="PasswordEntry"/>
+                </StackLayout>
+            </ScrollView>
+            
+            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsPortrait}" >
+                <Button Text="По умолчанию" HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorBackgroundMedium}"
+                        Command="{Binding CmdDefault}">
+                </Button>
+
+                <Button Text="Сохранить" HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorPrimaryLight}"
+                        Command="{Binding CmdSave}" >
+                </Button>
             </StackLayout>
-        </ScrollView>
+        </StackLayout>
+
+
     </ContentPage.Content>
-</ContentPage>
+</views:BaseContentPage>

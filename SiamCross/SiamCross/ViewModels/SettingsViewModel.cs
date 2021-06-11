@@ -1,117 +1,107 @@
 ﻿using SiamCross.Models.Tools;
+using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
     [Preserve(AllMembers = true)]
-    public class SettingsViewModel : BaseVM
+    public class SettingsViewModel : BasePageVM
     {
-        private string _fromName;
-        private string _subjectName;
-        private string _fromAddress;
-        private string _toAddress;
-        private string _smtpAddress;
-        private string _port;
-        private string _username;
-        private string _password;
-        private bool _needAuthorization;
+        private MailSettingsData _MailSettingsData = new MailSettingsData();
+        public ICommand CmdDefault { get; }
+        public ICommand CmdSave { get; }
 
         public string FromName
         {
-            get => Settings.Instance.FromName;
-            set 
-            {
-                SetProperty(ref _fromName, value);
-                Settings.Instance.FromName = value;
-            }
+            get => _MailSettingsData.FromName;
+            set => SetProperty(ref _MailSettingsData.FromName, value);
         }
         public string SubjectName
         {
-            get => Settings.Instance.SubjectName;
-            set
-            {
-                SetProperty(ref _subjectName, value);
-                Settings.Instance.SubjectName = value;
-            }
+            get => _MailSettingsData.SubjectName;
+            set => SetProperty(ref _MailSettingsData.SubjectName, value);
         }
         public bool NeedAuthorization
         {
-            get => _needAuthorization;
-            set
-            {
-                SetProperty(ref _needAuthorization, value);
-                Settings.Instance.IsNeedAuthorization = value;
-            }
+            get => _MailSettingsData.NeedAuthorization;
+            set => SetProperty(ref _MailSettingsData.NeedAuthorization, value);
         }
         public string FromAddress
         {
-            get => _fromAddress;
-            set
-            {
-                _fromAddress = value;
-                Settings.Instance.FromAddress = value;
-            }
+            get => _MailSettingsData.FromAddress;
+            set => SetProperty(ref _MailSettingsData.FromAddress, value);
         }
-
         public string ToAddress
         {
-            get => _toAddress;
-            set
-            {
-                _toAddress = value;
-                Settings.Instance.ToAddress = value;
-            }
+            get => _MailSettingsData.ToAddress;
+            set => SetProperty(ref _MailSettingsData.ToAddress, value);
         }
-
         public string SmtpAddress
         {
-            get => _smtpAddress;
-            set
-            {
-                _smtpAddress = value;
-                Settings.Instance.SmtpAddress = value;
-            }
+            get => _MailSettingsData.SmtpAddress;
+            set => SetProperty(ref _MailSettingsData.SmtpAddress, value);
         }
-
-        public string Port
+        public int Port
         {
-            get => _port;
-            set
-            {
-                _port = value;
-                if (int.TryParse(value, out int p))
-                    Settings.Instance.Port = p;
-            }
+            get => _MailSettingsData.Port;
+            set => SetProperty(ref _MailSettingsData.Port, value);
         }
-
         public string Username
         {
-            get => _username;
-            set
-            {
-                _username = value;
-                Settings.Instance.Username = value;
-            }
+            get => _MailSettingsData.Username;
+            set => SetProperty(ref _MailSettingsData.Username, value);
         }
-
         public string Password
         {
-            get => _password;
-            set
-            {
-                _password = value;
-                Settings.Instance.Password = value;
-            }
+            get => _MailSettingsData.Password;
+            set => SetProperty(ref _MailSettingsData.Password, value);
         }
-
         public SettingsViewModel()
         {
-            FromAddress = Settings.Instance.FromAddress;
-            ToAddress = Settings.Instance.ToAddress;
-            SmtpAddress = Settings.Instance.SmtpAddress;
-            Port = Settings.Instance.Port.ToString();
-            Username = Settings.Instance.Username;
-            Password = Settings.Instance.Password;
+            CmdDefault = new AsyncCommand(DoDefault
+               , (Func<object, bool>)null, null, false, false);
+            CmdSave = new AsyncCommand(DoSave
+                , (Func<object, bool>)null, null, false, false);
+
+            _MailSettingsData = Settings.Instance.GetData();
+            /*
+            ChangeNotify(nameof(FromName));
+            ChangeNotify(nameof(SubjectName));
+            ChangeNotify(nameof(FromAddress));
+            ChangeNotify(nameof(ToAddress));
+            ChangeNotify(nameof(SmtpAddress));
+            ChangeNotify(nameof(Port));
+            ChangeNotify(nameof(Username));
+            ChangeNotify(nameof(Password));
+            ChangeNotify(nameof(NeedAuthorization));
+            */
+        }
+
+        public override void Unsubscribe()
+        {
+            //throw new System.NotImplementedException();
+        }
+
+        private Task DoDefault()
+        {
+            FromName = "siam";
+            SubjectName = "Siam Measurements";
+            FromAddress = "sudos@kb.siamoil.ru";
+            ToAddress = string.Empty;
+            SmtpAddress = "kb.siamoil.ru";
+            Port = 25;
+            Username = "sudos";
+            Password = "zEsPe5";
+            NeedAuthorization = true;
+            return Task.CompletedTask;
+        }
+        private async Task DoSave()
+        {
+            Settings.Instance.SetData(_MailSettingsData);
+            await Settings.Instance.SaveSettings();
         }
     }
 }

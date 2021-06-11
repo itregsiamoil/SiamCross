@@ -5,8 +5,8 @@ namespace SiamCross.Services
 {
     public interface ISettingsSaver
     {
-        Task SaveSettings(SettingsParameters settings);
+        Task SaveSettings(MailSettingsData settings);
 
-        Task<SettingsParameters> ReadSettings();
+        Task<MailSettingsData> ReadSettings();
     }
 }

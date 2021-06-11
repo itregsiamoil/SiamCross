@@ -73,6 +73,8 @@ namespace SiamCross.Models.Sensors.Dua
 
             if (!await LoadStateAsync(ct))
                 return false;
+            if (0 == Kolt.Value)
+                return true;
             InfoEx = "определение времени";
             CalcSurveyTotalTime();
             CalcSurveyRemainTime();

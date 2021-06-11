@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models.Tools
 {
-    public sealed class Settings : IDisposable
+    public sealed class Settings : MailSettings, IDisposable
     {
         private static readonly Lazy<Settings> _instance =
             new Lazy<Settings>(() => new Settings());
@@ -19,71 +19,19 @@ namespace SiamCross.Models.Tools
         {
             _settingsSaver = AppContainer.Container.Resolve<ISettingsSaver>();
         }
-
         public async Task Initialize()
         {
-            SettingsParameters settings = await _settingsSaver.ReadSettings();
-            if (settings != null) //Если файл настроек не пустой
-            {
-                FromName = settings.FromName;
-                SubjectName = settings.SubjectName;
-                FromAddress = settings.FromAddress;
-                ToAddress = settings.ToAddress;
-                SmtpAddress = settings.SmtpAddress;
-                Port = settings.Port;
-                Username = settings.Username;
-                Password = settings.Password;
-                IsNeedAuthorization = settings.NeedAuthorization;
-            }
-            else 
-            {
-                FromName = "sudos";
-                SubjectName = "Siam Measurements";
-                FromAddress = "ddin@kb.siamoil.ru";
-                SmtpAddress = "mail.siamoil.ru";
-                Port = 25;
-                Username = string.Empty;
-                Password = string.Empty;
-                IsNeedAuthorization = false;
-            }
+            SetData(await _settingsSaver.ReadSettings());
         }
-
-        public void Dispose()
+        public async void Dispose()
         {
-            _settingsSaver.SaveSettings(new SettingsParameters(
-                FromName,
-                SubjectName,
-                FromAddress,
-                ToAddress,
-                SmtpAddress,
-                Port,
-                Username,
-                Password,
-                IsNeedAuthorization));
+            await SaveSettings();
         }
-
         public async Task SaveSettings()
         {
-            await _settingsSaver.SaveSettings(new SettingsParameters(
-                FromName,
-                SubjectName,
-                 FromAddress,
-                 ToAddress,
-                 SmtpAddress,
-                 Port,
-                 Username,
-                 Password,
-                 IsNeedAuthorization));
+            await _settingsSaver.SaveSettings(GetData());
         }
 
-        public string FromName { get; set; }
-        public string SubjectName { get; set; }
-        public string FromAddress { get; set; }
-        public string ToAddress { get; set; }
-        public string SmtpAddress { get; set; }
-        public int Port { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public bool IsNeedAuthorization { get; set; }
+
     }
 }

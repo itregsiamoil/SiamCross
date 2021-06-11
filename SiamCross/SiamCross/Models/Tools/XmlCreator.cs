@@ -87,12 +87,19 @@ namespace SiamCross.Models.Tools
             string time = dbDdinModel.DateTime.TimeOfDay.ToString().Split('.')[0];
 
             string field = "";
-            string[] tempField = dbDdinModel.Field.Split(':');
-            if (tempField.Length > 1)
+            if (int.TryParse(dbDdinModel.Field, out int fieldID))
             {
-                if (tempField[1].Length > 1)
+                field = fieldID.ToString();
+            }
+            else
+            {
+                string[] tempField = dbDdinModel.Field.Split(':');
+                if (tempField.Length > 1)
                 {
-                    field = tempField[1].Remove(0, 1);
+                    if (tempField[1].Length > 1)
+                    {
+                        field = tempField[1].Remove(0, 1);
+                    }
                 }
             }
 
@@ -232,12 +239,19 @@ namespace SiamCross.Models.Tools
             string time = dbDuModel.DateTime.TimeOfDay.ToString().Split('.')[0];
 
             string field = "";
-            string[] tempField = dbDuModel.Field.Split(':');
-            if (tempField.Length > 1)
+            if (int.TryParse(dbDuModel.Field, out int fieldID))
             {
-                if (tempField[1].Length > 1)
+                field = fieldID.ToString();
+            }
+            else
+            {
+                string[] tempField = dbDuModel.Field.Split(':');
+                if (tempField.Length > 1)
                 {
-                    field = tempField[1].Remove(0, 1);
+                    if (tempField[1].Length > 1)
+                    {
+                        field = tempField[1].Remove(0, 1);
+                    }
                 }
             }
 

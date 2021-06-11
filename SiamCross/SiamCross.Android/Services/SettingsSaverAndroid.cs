@@ -3,6 +3,8 @@ using Newtonsoft.Json;
 using SiamCross.Droid.Services;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,83 +14,65 @@ using Xamarin.Forms;
 namespace SiamCross.Droid.Services
 {
     [Preserve(AllMembers = true)]
+    [Fody.ConfigureAwait(false)]
     public class SettingsSaverAndroid : ISettingsSaver
     {
         private readonly SemaphoreSlim _mutex = new SemaphoreSlim(1);
-
         private const string _name = "settings.json";
-
-        private readonly string _path;
+        private readonly string _path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), _name);
+        private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.All
+        };
 
         public SettingsSaverAndroid()
         {
-            _path = Path.Combine(
-                    System.Environment.GetFolderPath(
-                        System.Environment.SpecialFolder.Personal), _name);
+
         }
-
-        /// <summary>
-        /// Прочитать настройки из json-файла.
-        /// </summary>
-        /// <returns>Настройки или null</returns>
-        public async Task<SettingsParameters> ReadSettings()
+        public async Task<MailSettingsData> ReadSettings()
         {
-            SettingsParameters result = null;
-
-            if (!File.Exists(_path)) return null;
-
-            await _mutex.WaitAsync();
             try
             {
-                StreamReader file = new StreamReader(_path);
-
-                while (!file.EndOfStream)
+                MailSettings result = null;
+                using (await _mutex.UseWaitAsync())
                 {
-                    string line = await file.ReadLineAsync();
-
-                    object item = JsonConvert.DeserializeObject(
-                        line, _jsonSettings);
-
-                    if (item is SettingsParameters settings)
+                    using StreamReader file = new StreamReader(_path);
+                    while (!file.EndOfStream)
                     {
-                        result = settings;
+                        string line = await file.ReadLineAsync();
+                        object item = JsonConvert.DeserializeObject(line, _jsonSettings);
+                        if (item is MailSettings settings)
+                            result = settings;
+                    }
+                    file.Close();
+                }
+                return result.GetData();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"EXCEPTION {ex.Message}\n{ex.StackTrace}");
+            }
+            return new MailSettingsData();
+        }
+        public async Task SaveSettings(MailSettingsData data)
+        {
+            try
+            {
+                using (await _mutex.UseWaitAsync())
+                {
+                    MailSettings settings = new MailSettings();
+                    settings.SetData(data);
+                    using (StreamWriter file = new StreamWriter(_path))
+                    {
+                        string jsonString = JsonConvert.SerializeObject(settings, _jsonSettings);
+                        await file.WriteLineAsync(jsonString);
                     }
                 }
-
-                file.Dispose();
             }
-            finally
+            catch (Exception ex)
             {
-                _mutex.Release();
-            }
-
-
-            return result;
-        }
-
-        public async Task SaveSettings(SettingsParameters settings)
-        {
-            await _mutex.WaitAsync();
-
-            try
-            {
-                using (StreamWriter file = new StreamWriter(_path))
-                {
-                    string jsonString = JsonConvert.SerializeObject(settings,
-                                                            _jsonSettings);
-                    await file.WriteLineAsync(jsonString);
-                }
-            }
-            finally
-            {
-                _mutex.Release();
+                Debug.WriteLine($"EXCEPTION {ex.Message}\n{ex.StackTrace}");
             }
         }
-
-        protected static readonly JsonSerializerSettings
-            _jsonSettings = new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.All
-            };
     }
 }

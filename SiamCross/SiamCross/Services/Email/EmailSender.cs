@@ -17,11 +17,14 @@ namespace SiamCross.Services.Email
         {
             try
             {
+                //var dir = EnvironmentService.Instance.GetDir_Downloads();
+                //var path = Path.Combine(dir, "smtp.log");
+                //using (SmtpClient client = new SmtpClient(new ProtocolLogger(path)))
                 using (SmtpClient client = new SmtpClient())
                 {
                     await client.ConnectAsync(Settings.Instance.SmtpAddress, Settings.Instance.Port);
 
-                    if (Settings.Instance.IsNeedAuthorization)
+                    if (Settings.Instance.NeedAuthorization)
                     {
                         // Note: since we don't have an OAuth2 token, disable
                         // the XOAUTH2 authentication mechanism.
@@ -45,15 +48,16 @@ namespace SiamCross.Services.Email
             MimeMessage m = new MimeMessage();
 
             MailboxAddress sender = new MailboxAddress(Settings.Instance.FromName, Settings.Instance.FromAddress);
-            MailboxAddress receiver = new MailboxAddress("", Settings.Instance.ToAddress);
+            MailboxAddress receiver = new MailboxAddress(string.Empty, Settings.Instance.ToAddress);
             m.From.Add(sender);
             m.To.Add(receiver);
             m.Subject = subject;
 
-            BodyBuilder builder = new BodyBuilder
-            {
-                TextBody = text
-            };
+            //BodyBuilder builder = new BodyBuilder
+            //{
+            //    TextBody = text
+            //};
+            BodyBuilder builder = new BodyBuilder();
 
             foreach (string path in filenames)
             {
@@ -63,7 +67,8 @@ namespace SiamCross.Services.Email
                     string name = Path.GetFileName(path);
                     byte[] b = ParserOptions.Default.CharsetEncoding.GetBytes(name.ToCharArray());
                     name = Encoding.ASCII.GetString(b);
-                    await builder.Attachments.AddAsync(name, fs);
+                    await builder.Attachments.AddAsync(name, fs, ContentType.Parse("application/octet-stream"));
+                    fs.Close();
                 }
             }
             m.Body = builder.ToMessageBody();

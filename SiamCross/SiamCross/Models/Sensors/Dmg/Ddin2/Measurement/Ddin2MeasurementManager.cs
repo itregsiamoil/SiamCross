@@ -39,6 +39,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2.Measurement
             Ddin2MeasurementData report;
             try
             {
+                await SetStatusEmpty();
                 await SendParameters();
                 bool started = await Start();
                 if (started)
