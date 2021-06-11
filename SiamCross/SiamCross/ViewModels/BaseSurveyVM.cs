@@ -108,6 +108,7 @@ namespace SiamCross.ViewModels.MeasurementViewModels
         }
         public override void Unsubscribe()
         {
+            base.Unsubscribe();
             if (null != Config)
                 Config.PropertyChanged -= StorageModel_PropertyChanged;
             Sensor.Model.Manager.OnChangeTask.ProgressChanged -= SetTask;

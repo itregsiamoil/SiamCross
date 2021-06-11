@@ -81,6 +81,7 @@ namespace SiamCross.ViewModels
         }
         public override void Unsubscribe()
         {
+            base.Unsubscribe();
             _Model.PropertyChanged -= StorageModel_PropertyChanged;
             Repo.FieldDir.FieldList.CollectionChanged -= FieldList_CollectionChanged;
             Sensor.Model.Manager.OnChangeTask.ProgressChanged -= SetTask;

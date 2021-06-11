@@ -9,7 +9,7 @@
     xmlns:viewmodels="clr-namespace:SiamCross.ViewModels"
     x:DataType="viewmodels:SettingsViewModel"
     x:Name="ThisPage"
-    Title="{local1:Translate SettingsTitle}">
+    Title="{local1:Translate EmailSettings}">
 
     <ContentPage.Resources>
         <Style TargetType="{x:Type StackLayout}">
@@ -19,12 +19,12 @@
 
     <NavigationPage.TitleView >
         <StackLayout Orientation="Horizontal" >
-            <StackLayout HorizontalOptions="FillAndExpand" >
+            <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand">
                 <Label Text="{local1:Translate SettingsTitle}" 
-                       FontSize="Medium" FontAttributes="Bold" VerticalTextAlignment="Center"
+                       FontSize="Medium" FontAttributes="Bold" 
                        LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
             </StackLayout>
-            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}" >
+            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}">
                 <Button Text="По умолчанию" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorBackgroundMedium}"
                         Command="{Binding CmdDefault}">
@@ -78,18 +78,21 @@
                                x:Name="PasswordEntry"/>
                 </StackLayout>
             </ScrollView>
-            
-            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsPortrait}" >
-                <Button Text="По умолчанию" HorizontalOptions="FillAndExpand" 
-                        BackgroundColor="{StaticResource colorBackgroundMedium}"
-                        Command="{Binding CmdDefault}">
-                </Button>
 
-                <Button Text="Сохранить" HorizontalOptions="FillAndExpand" 
+            <Grid IsVisible="{Binding IsPortrait}" 
+                  ColumnSpacing="0" RowSpacing="0" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Button Text="По умолчанию"
+                        BackgroundColor="{StaticResource colorBackgroundMedium}"
+                        Command="{Binding CmdDefault}"
+                        Grid.Column="0"/>
+                <Button Text="Сохранить"
                         BackgroundColor="{StaticResource colorPrimaryLight}"
-                        Command="{Binding CmdSave}" >
-                </Button>
-            </StackLayout>
+                        Command="{Binding CmdSave}"
+                        Grid.Column="1"/>
+            </Grid>
         </StackLayout>
 
 

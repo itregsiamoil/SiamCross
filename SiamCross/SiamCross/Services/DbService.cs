@@ -30,12 +30,13 @@ namespace SiamCross.Services
 
         private readonly IDbConnection _database;
         private IDbConnection _Db;
+        public IDbConnection Db => _Db;
+
 
         public int UserDbVersion = 18;
 
         readonly Attributes Attributes = new Attributes();
         readonly FieldDictionaryTable FieldDictionary = new FieldDictionaryTable();
-        readonly SoundSpeedTable SoundSpeedDictionary = new SoundSpeedTable();
         readonly DataInt DataInt = new DataInt();
         readonly DataFloat DataFloat = new DataFloat();
         readonly DataString DataString = new DataString();
@@ -713,30 +714,6 @@ namespace SiamCross.Services
             using (var tr = BeginTransaction())
                 return await Attributes.LoadAsync(tr);
 
-        }
-
-        public async Task<IEnumerable<SoundSpeedItem>> LoadSoundSpeedAsync()
-        {
-            using (var tr = BeginTransaction())
-                return await SoundSpeedDictionary.LoadAsync(tr);
-        }
-        public async Task<SoundSpeedItem> SaveSoundSpeedAsync(string title, uint id, string val)
-        {
-            using (var tr = BeginTransaction())
-            {
-                var ret = await SoundSpeedDictionary.SaveAsync(tr, title, id, val);
-                tr.Commit();
-                return ret;
-            }
-
-        }
-        public async Task DelSoundSpeedAsync(long id)
-        {
-            using (var tr = BeginTransaction())
-            {
-                await SoundSpeedDictionary.DeleteAsync(tr, id);
-                tr.Commit();
-            }
         }
     }
 }

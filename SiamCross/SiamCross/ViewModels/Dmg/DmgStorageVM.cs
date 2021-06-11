@@ -21,9 +21,11 @@ namespace SiamCross.ViewModels.Dmg
         }
         public override void Unsubscribe()
         {
+            base.Unsubscribe();
         }
         public override void Dispose()
         {
+            base.Dispose();
         }
     }
 }

@@ -12,10 +12,10 @@ namespace SiamCross.Views
         private readonly MenuPageViewModel _vm;
         public MenuPage()
         {
+            InitializeComponent();
             _vm = new MenuPageViewModel();
             BindingContext = _vm;
             //this.Icon = "yourHamburgerIcon.png"; //only neeeded for ios
-            InitializeComponent();
         }
 
         private void MenuListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)

@@ -49,6 +49,7 @@ namespace SiamCross.ViewModels.Dua
         }
         public override void Unsubscribe()
         {
+            base.Unsubscribe();
             _StorageModel.PropertyChanged -= StorageModel_PropertyChanged;
             Sensor.Model.Manager.OnChangeTask.ProgressChanged -= SetTask;
         }

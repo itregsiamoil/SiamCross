@@ -8,78 +8,40 @@ using SiamCross.Services.StdDialog;
 using SiamCross.Views.MenuItems.HandbookPanel;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Xamarin.CommunityToolkit.Helpers;
 using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
-    public abstract class BaseViewModel : INotifyPropertyChanged
+    public class SoundSpeedListVM : BasePageVM
     {
-        readonly DelegateWeakEventManager _propertyChangedEventManager = new DelegateWeakEventManager();
-
-        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
+        SelectionMode _SelectionMode = SelectionMode.None;
+        public SelectionMode SelectionMode
         {
-            add => _propertyChangedEventManager.AddEventHandler(value);
-            remove => _propertyChangedEventManager.RemoveEventHandler(value);
+            get => _SelectionMode;
+            set => SetProperty(ref _SelectionMode, value);
         }
-
-        protected void SetProperty<T>(ref T backingStore, in T value, in System.Action onChanged = null, [CallerMemberName] in string propertyname = "")
-        {
-            if (EqualityComparer<T>.Default.Equals(backingStore, value))
-                return;
-
-            backingStore = value;
-
-            onChanged?.Invoke();
-
-            OnPropertyChanged(propertyname);
-        }
-
-        protected void OnPropertyChanged([CallerMemberName] in string propertyName = "")
-        {
-            _propertyChangedEventManager.RaiseEvent(this, new PropertyChangedEventArgs(propertyName), nameof(INotifyPropertyChanged.PropertyChanged));
-        }
-    }
-
-    public class SoundSpeedListVM : BaseViewModel
-    {
-        /*
-        readonly WeakEventManager<NotifyCollectionChangedEventArgs> _EventManager
-            = new WeakEventManager<NotifyCollectionChangedEventArgs>();
-        
-        public event EventHandler<NotifyCollectionChangedEventArgs> GetNotifyCollectionChanged
-        {
-            add => _EventManager.AddEventHandler(value);
-            remove => _EventManager.RemoveEventHandler(value);
-        }
-        //void OnGetLatestReleaseFailed(string message) => _getLatestReleaseFailedEventManager.RaiseEvent(this, message, nameof(GetLatestReleaseFailed));
-        */
-
+        public ICommand CmdLongPress { get; }
         public ICommand CmdAdd { get; }
         public ICommand CmdDel { get; }
         public ICommand CmdEdit { get; }
-        public ObservableCollection<SoundSpeedModel> SoundSpeedList { get; set; }
-        object _SelectedItem;
-        public object SelectedItem
-        {
-            get => _SelectedItem;
-            set => SetProperty(ref _SelectedItem, value);
-        }
+        public ObservableRangeCollection<SoundSpeedModel> SoundSpeedList { get; }
+        public ObservableRangeCollection<object> SelectedItems { get; }
+        public object SelectedItem { get; set; }
 
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
         public SoundSpeedListVM()
         {
-            SoundSpeedList = new ObservableCollection<SoundSpeedModel>();
+            SoundSpeedList = new ObservableRangeCollection<SoundSpeedModel>();
+            SelectedItems = new ObservableRangeCollection<object>();
+
+            CmdLongPress = new Command(OnLongPress);
 
             CmdAdd = new AsyncCommand(AddSound
                 , (Func<object, bool>)null, null, false, false);
@@ -87,24 +49,17 @@ namespace SiamCross.ViewModels
                 , (Func<object, bool>)null, null, false, false);
             CmdEdit = new AsyncCommand<object>(EditSound
                 , (Func<object, bool>)null, null, false, false);
-            InitAsync();
+
         }
         public Task InitAsync(CancellationToken ct = default)
         {
-            //Repo.SoundSpeedDir.Models.CollectionChanged += Models_CollectionChanged;
-            //Repo.SoundSpeedDir.Models.CollectionChanged += Models_CollectionChanged;
-
-            //Repo.SoundSpeedDir._EventManager += Models_CollectionChanged;
-
-
-            //Repo.SoundSpeedDir._getCollectionChangedEventManager
-            //    .AddEventHandler(Models_CollectionChanged, "Event");
-
+            Repo.SoundSpeedDir.Models.CollectionChanged += Models_CollectionChanged;
             Update();
             return Task.CompletedTask;
         }
-        public void Unsubscribe()
+        public override void Unsubscribe()
         {
+            base.Unsubscribe();
             Repo.SoundSpeedDir.Models.CollectionChanged -= Models_CollectionChanged;
         }
 
@@ -117,19 +72,19 @@ namespace SiamCross.ViewModels
         {
             try
             {
-                SoundSpeedList.Clear();
-                foreach (SoundSpeedModel soundItem in Repo.SoundSpeedDir.Models)
-                {
-                    SoundSpeedList.Add(soundItem);
-                }
+                SoundSpeedList.ReplaceRange(Repo.SoundSpeedDir.Models);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Update method" + "\n");
-                throw;
             }
         }
 
+        private void OnLongPress()
+        {
+            SelectionMode = SelectionMode.Multiple;
+            App.NavigationPage.DisplayAlert("Multiselect activate", null, "OK");
+        }
 
 
         private async Task AddSound()
@@ -173,12 +128,11 @@ namespace SiamCross.ViewModels
             {
                 try
                 {
-
-                    if (SelectedItem is SoundSpeedModel ssModel)
+                    foreach (var item in SelectedItems)
                     {
-                        _ = await Repo.SoundSpeedDir.DeleteAsync((uint)ssModel.Code);
+                        if (item is SoundSpeedModel ssModel)
+                            _ = await Repo.SoundSpeedDir.DeleteAsync((uint)ssModel.Code);
                     }
-
                 }
                 catch (Exception ex)
                 {

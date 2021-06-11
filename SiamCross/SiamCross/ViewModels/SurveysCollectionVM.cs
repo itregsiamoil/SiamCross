@@ -19,6 +19,7 @@ namespace SiamCross.ViewModels
 
         public override void Unsubscribe()
         {
+            base.Unsubscribe();
         }
         public override void Dispose()
         {

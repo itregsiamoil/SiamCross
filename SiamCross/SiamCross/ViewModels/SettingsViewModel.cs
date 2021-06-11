@@ -82,7 +82,7 @@ namespace SiamCross.ViewModels
 
         public override void Unsubscribe()
         {
-            //throw new System.NotImplementedException();
+            base.Unsubscribe();
         }
 
         private Task DoDefault()

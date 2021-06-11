@@ -215,7 +215,7 @@ namespace SiamCross.ViewModels
         }
         public override void Unsubscribe()
         {
-            //    throw new NotImplementedException();
+            base.Unsubscribe();
         }
         static FileStream OpenTempFile(string name)
         {

@@ -33,7 +33,7 @@ namespace SiamCross.ViewModels
     {
         public override void Unsubscribe()
         {
-
+            base.Unsubscribe();
         }
         private static readonly Lazy<MeasurementsVMService> _instance =
             new Lazy<MeasurementsVMService>(() => new MeasurementsVMService());
@@ -290,7 +290,7 @@ namespace SiamCross.ViewModels
                 //ToastService.Instance.LongAlert($"{Resource.SendingMeasurements}...");
                 var paths = await SaveXmlsReturnPaths(SelectedMeasurements);
 
-                
+
 
                 bool is_ok = await EmailService.Instance.SendEmailWithFilesAsync(Settings.Instance.SubjectName,
                     "SiamCompany Telemetry Transfer Service",

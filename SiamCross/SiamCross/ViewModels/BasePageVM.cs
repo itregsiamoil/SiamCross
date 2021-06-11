@@ -44,10 +44,12 @@ namespace SiamCross.ViewModels
             ChangeNotify(nameof(IsLandscape));
             ChangeNotify(nameof(IsPortrait));
         }
-        public abstract void Unsubscribe();
+        public virtual void Unsubscribe()
+        {
+            EnableOrintationNotify = false;
+        }
         public virtual void Dispose()
         {
-            DeviceDisplay.MainDisplayInfoChanged -= DeviceDisplay_MainDisplayInfoChanged;
             Unsubscribe();
         }
         public static void RaiseCanExecuteChanged(ICommand command)

@@ -1,54 +1,125 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross" 
-             xmlns:viewmodels="clr-namespace:SiamCross.ViewModels" 
-             xmlns:tools="clr-namespace:SiamCross.Models.Tools"
-             x:Class="SiamCross.Views.MenuItems.HandbookPanel.SoundSpeedListPage"
-             x:DataType="viewmodels:SoundSpeedListVM"
-             Title="{local1:Translate SoundSpeed}"
-             x:Name="ThisPage">
+<views:BaseContentPage  
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+    xmlns:views="clr-namespace:SiamCross.Views"
+    xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross" 
+    xmlns:viewmodels="clr-namespace:SiamCross.ViewModels" 
+    xmlns:tools="clr-namespace:SiamCross.Models.Tools"
+    Title="{local1:Translate SoundSpeed}"
+    x:Class="SiamCross.Views.MenuItems.HandbookPanel.SoundSpeedListPage"
+    x:DataType="viewmodels:SoundSpeedListVM"
+    x:Name="ThisPage">
+
+    <ContentPage.Resources>
+        <Style TargetType="{x:Type StackLayout}">
+            <Setter Property="Spacing" Value="0" />
+        </Style>
+    </ContentPage.Resources >
+
+    <!--
+    <NavigationPage.TitleView >
+        <StackLayout Orientation="Horizontal" >
+            <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand">
+                <Label Text="{local1:Translate SoundSpeed}" 
+                       FontSize="Medium" FontAttributes="Bold" 
+                       LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" >
+                <Button Text="&#x271A;" HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorPrimaryLight}"
+                        Command="{Binding CmdAdd}">
+                </Button>
+                <Button Text="&#x274C;" HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorAccentLight}"
+                        Command="{Binding CmdDel}" >
+                </Button>
+            </StackLayout>
+        </StackLayout>
+    </NavigationPage.TitleView>
+
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="&#x271A;"  Command="{Binding CmdAdd}"/>
         <ToolbarItem Text="&#x274C;" Command="{Binding CmdDel}"/>
     </ContentPage.ToolbarItems>
+    -->
     <ContentPage.Content>
         <StackLayout>
-            <CollectionView ItemsSource="{Binding SoundSpeedList, Mode=TwoWay}" 
+            <CollectionView ItemsSource="{Binding SoundSpeedList}" 
                       SelectedItem="{Binding SelectedItem}"
-                      SelectionMode="Single">
+                      SelectedItems="{Binding SelectedItems}"
+                      SelectionMode="{Binding SelectionMode}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="tools:SoundSpeedModel">
-                        <Grid Padding="10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="20*"/>
-                                <ColumnDefinition Width="60*"/>
-                                <ColumnDefinition Width="20*"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Text="{Binding Code}" 
+                        <Frame 
+                            x:Name="Frame"
+                            xct:TouchEffect.LongPressCommand="{Binding Path=BindingContext.CmdLongPress, Source={x:Reference ThisPage}}"
+                            xct:TouchEffect.NativeAnimation="True">
+                            
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter
+                                                TargetName="Frame"
+                                                Property="BackgroundColor"
+                                                Value="{StaticResource colorBackgroundLight}"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter
+                                                TargetName="Frame"
+                                                Property="BackgroundColor"
+                                                Value="{StaticResource colorPrimaryPale}"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20*"/>
+                                    <ColumnDefinition Width="60*"/>
+                                    <ColumnDefinition Width="20*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Text="{Binding Code}" 
                                     FontSize="Medium"
                                     Grid.Column="0"/>
 
-                            <Label Text="{Binding Name}" 
+                                <Label Text="{Binding Name}" 
                                     FontSize="Medium"
                                     Grid.Column="1"/>
 
-                            <Label Text="&#x270E;" 
+                                <Label Text="&#x270E;" 
                                    HorizontalOptions="FillAndExpand" HorizontalTextAlignment="End"
                                    FontSize="Medium"
                                    Grid.Column="2">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer 
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer 
                                         Command="{Binding Path=BindingContext.CmdEdit
                                             , Source={x:Reference ThisPage}}"
                                         CommandParameter="{Binding .}"
                                         />
-                                </Label.GestureRecognizers>
-                            </Label>
-                        </Grid>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </Grid>
+                        </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+    <!--
+            <Grid IsVisible="{Binding IsPortrait}" 
+                      ColumnSpacing="0" RowSpacing="0" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Button Text="&#x274C;" HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorAccentLight}"
+                        Command="{Binding CmdDel}" />
+            </Grid>
+    -->        
         </StackLayout>
     </ContentPage.Content>
-</ContentPage>
+    
+</views:BaseContentPage>

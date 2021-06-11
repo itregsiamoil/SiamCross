@@ -1,50 +1,45 @@
 ﻿using SiamCross.ViewModels;
 using System.Threading;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 
 namespace SiamCross.Views.MenuItems.HandbookPanel
 {
-    public partial class SoundSpeedListPage : ContentPage
+    public partial class SoundSpeedListPage
     {
-        Task InitTask;
-        CancellationTokenSource Cts;
+        private Task InitTask;
+        private CancellationTokenSource Cts;
+        SoundSpeedListVM _vm;
         public SoundSpeedListPage()
         {
             InitializeComponent();
-            BindingContext = new SoundSpeedListVM();
         }
-        /*
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            if (!(BindingContext is SoundSpeedListVM pvm))
-            {
-                pvm = new SoundSpeedListVM();
-                BindingContext = pvm;
-            }
+            if (null == _vm)
+                _vm = new SoundSpeedListVM();
+            if (!(BindingContext is SoundSpeedListVM))
+                BindingContext = _vm;
 
             if (null == Cts || Cts.IsCancellationRequested)
                 Cts = new CancellationTokenSource();
-            InitTask = Task.Run(async () => await pvm.InitAsync(Cts.Token).ConfigureAwait(false));
+            InitTask = Task.Run(async () => await _vm.InitAsync(Cts.Token).ConfigureAwait(false));
         }
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            if (BindingContext is BasePageVM pvm)
+            if (null != _vm)
             {
                 Task.Run(async () =>
                 {
-                    if (null!= InitTask && !InitTask.IsCompleted)
+                    if (null != InitTask && !InitTask.IsCompleted)
                     {
                         Cts?.Cancel();
                         await InitTask;
                     }
-                    pvm.Unsubscribe();
+                    _vm.Unsubscribe();
                 });
             }
-            //BindingContext = null;
         }
-        */
     }
 }

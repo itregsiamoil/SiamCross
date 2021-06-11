@@ -19,6 +19,7 @@ namespace SiamCross.ViewModels
         }
         public override void Unsubscribe()
         {
+            base.Unsubscribe();
             _Model.PropertyChanged -= StorageModel_PropertyChanged;
         }
         public DateTime Timestamp

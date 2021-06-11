@@ -33,8 +33,9 @@ namespace SiamCross.ViewModels
         public ICommand GoControlPanel { get; set; }
         public ICommand GoSearchPanel { get; set; }
         public ICommand GoMeasuringPanel { get; set; }
-        public ICommand GoDirectoryPanel { get; set; }
-        public ICommand GoSettingsPanel { get; set; }
+        public ICommand GoMailSettings { get; set; }
+        public ICommand GoFieldDir { get; set; }
+        public ICommand GoSoundSpeedDir { get; }
         public ICommand GoAboutPanel { get; set; }
 
         public MenuPageItem SelectedItem
@@ -47,8 +48,9 @@ namespace SiamCross.ViewModels
             GoControlPanel = CreateAsyncCommand(GoHome);
             GoSearchPanel = CreateAsyncCommand(GoSearch);
             GoMeasuringPanel = CreateAsyncCommand(GoMeasuring);
-            GoDirectoryPanel = CreateAsyncCommand(GoHandbook);
-            GoSettingsPanel = CreateAsyncCommand(GoSettings);
+            GoMailSettings = CreateAsyncCommand(GoMail);
+            GoFieldDir = CreateAsyncCommand(GoField);
+            GoSoundSpeedDir = CreateAsyncCommand(GoSoundSpeed);
             GoAboutPanel = CreateAsyncCommand(GoAbout);
 
             MenuItems = new List<MenuPageItem>
@@ -70,13 +72,18 @@ namespace SiamCross.ViewModels
                 },
                 new MenuPageItem()
                 {
-                    Title = Resource.HandbookTitle,
-                    Command = GoDirectoryPanel
+                    Title = Resource.EmailSettings,
+                    Command = GoMailSettings
                 },
                 new MenuPageItem()
                 {
-                    Title = Resource.SettingsTitle,
-                    Command = GoSettingsPanel
+                    Title = Resource.Fields,
+                    Command = GoFieldDir
+                },
+                new MenuPageItem()
+                {
+                    Title = Resource.SoundSpeed,
+                    Command = GoSoundSpeedDir
                 },
                 new MenuPageItem()
                 {
@@ -106,18 +113,25 @@ namespace SiamCross.ViewModels
             App.MenuIsPresented = false;
             await Services.PageNavigator.ShowPageAsync(MeasurementsVMService.Instance);
         }
-        private async Task GoHandbook()
-        {
-            await App.NavigationPage.Navigation.PopToRootAsync(false);
-            App.MenuIsPresented = false;
-            await App.NavigationPage.Navigation.PushAsync(new HandbookPage());
-        }
-        private async Task GoSettings()
+        private async Task GoMail()
         {
             await App.NavigationPage.Navigation.PopToRootAsync(false);
             App.MenuIsPresented = false;
             await App.NavigationPage.Navigation.PushAsync(new SettingsPanelPage());
         }
+        private async Task GoField()
+        {
+            await App.NavigationPage.Navigation.PopToRootAsync(false);
+            App.MenuIsPresented = false;
+            await App.NavigationPage.Navigation.PushAsync(new DirectoryPage());
+        }
+        private async Task GoSoundSpeed()
+        {
+            await App.NavigationPage.Navigation.PopToRootAsync(false);
+            App.MenuIsPresented = false;
+            await App.NavigationPage.Navigation.PushAsync(new SoundSpeedListPage());
+        }
+
         private async Task GoAbout()
         {
             await App.NavigationPage.Navigation.PopToRootAsync(false);

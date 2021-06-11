@@ -202,6 +202,7 @@ namespace SiamCross.ViewModels
 
         public override void Unsubscribe()
         {
+            base.Unsubscribe();
             DisableQickInfoAll();
             SensorService.Instance.SensorAdded -= SensorAdded;
             SensorService.Instance.SensorDeleting -= SensorDeleted;

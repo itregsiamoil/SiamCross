@@ -43,6 +43,7 @@ namespace SiamCross.ViewModels
         }
         public override void Unsubscribe()
         {
+            base.Unsubscribe();
             _Model.OnChangeTask.ProgressChanged -= SetTask;
             _Model.OnChangeInfo.ProgressChanged -= SetInfo;
             _Model.OnChangeProgress.ProgressChanged -= SetProgress;
