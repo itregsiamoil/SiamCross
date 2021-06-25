@@ -21,11 +21,18 @@ namespace SiamCross.ViewModels
 {
     public class SoundSpeedListVM : BasePageVM
     {
+        public bool IsMultiselectMode => _SelectionMode == SelectionMode.Multiple;
+
+
         SelectionMode _SelectionMode = SelectionMode.None;
         public SelectionMode SelectionMode
         {
             get => _SelectionMode;
-            set => SetProperty(ref _SelectionMode, value);
+            set
+            {
+                SetProperty(ref _SelectionMode, value);
+                ChangeNotify(nameof(IsMultiselectMode));
+            }
         }
         public ICommand CmdLongPress { get; }
         public ICommand CmdAdd { get; }
@@ -83,7 +90,16 @@ namespace SiamCross.ViewModels
         private void OnLongPress()
         {
             SelectionMode = SelectionMode.Multiple;
-            App.NavigationPage.DisplayAlert("Multiselect activate", null, "OK");
+        }
+        public bool OnBackButton()
+        {
+            if (IsMultiselectMode)
+            {
+                SelectedItems.Clear();
+                SelectionMode = SelectionMode.None;
+                return true;
+            }
+            return false;
         }
 
 
@@ -145,6 +161,9 @@ namespace SiamCross.ViewModels
         {
             try
             {
+                if (IsMultiselectMode)
+                    return;
+
                 SelectedItem = item;
                 if (!(SelectedItem is SoundSpeedModel soundModel))
                     return;

@@ -15,7 +15,6 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
         }
         protected override void OnAppearing()
         {
-            base.OnAppearing();
             if (null == _vm)
                 _vm = new SoundSpeedListVM();
             if (!(BindingContext is SoundSpeedListVM))
@@ -24,6 +23,7 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
             if (null == Cts || Cts.IsCancellationRequested)
                 Cts = new CancellationTokenSource();
             InitTask = Task.Run(async () => await _vm.InitAsync(Cts.Token).ConfigureAwait(false));
+            base.OnAppearing();
         }
         protected override void OnDisappearing()
         {
@@ -40,6 +40,10 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
                     _vm.Unsubscribe();
                 });
             }
+        }
+        protected override bool OnBackButtonPressed()
+        {
+            return _vm.OnBackButton();
         }
     }
 }
