@@ -13,6 +13,23 @@ namespace SiamCross.Models.Connection.Protocol
             if (sender.Equals(mPhyConn) && e.PropertyName == nameof(Connection.IConnection.State))
                 ChangeNotify(nameof(State));
         }
+        int _RequestCount = 0;
+        public int RequestCount
+        {
+            get => _RequestCount;
+            set => SetProperty(ref _RequestCount, value);
+        }
+        int _ResponseCount = 0;
+        public int ResponseCount
+        {
+            get => _ResponseCount;
+            set => SetProperty(ref _ResponseCount, value);
+        }
+        public void PrintExchangeCounters()
+        {
+            System.Diagnostics.Debug.WriteLine($"App: RequestCount={RequestCount} ResponseCount={ResponseCount}");
+        }
+
         public ConnectionState State => mPhyConn.State;
 
 

@@ -157,9 +157,19 @@ namespace SiamCross.Models.Sensors.Umt
 
 
             UInt16 currAddrInPage = Adrtek.Value;
-
-
-
+            /*
+            var sc = Connection as Connection.Protocol.Siam.SiamConnection;
+            sc.Address = 127;
+            MemVarUInt16 devBtRequest = new MemVarUInt16(0x5E);
+            MemVarUInt16 devUartResponse = new MemVarUInt16(0x60);
+            var devTest = new MemStruct(0x5E);
+            devTest.Add(devBtRequest);
+            devTest.Add(devUartResponse);
+            await Connection.ReadAsync(devTest);
+            sc.PrintExchangeCounters();
+            System.Diagnostics.Debug.WriteLine($"dev: BtRequest={devBtRequest.Value} UartResponse={devUartResponse.Value}");
+            sc.Address = 1;
+            */
             NomIslt.Value = Kolisl.Value;
             UInt16 CurrentSurveyId = 0xFFFF;
             HashSet<UInt16> ReadedSurveys = new HashSet<UInt16>();
@@ -221,6 +231,14 @@ namespace SiamCross.Models.Sensors.Umt
             }
 
             await CloseSurvey(ct);
+            /*
+            sc.Address = 127;
+            await Connection.ReadAsync(devTest);
+            sc.PrintExchangeCounters();
+            System.Diagnostics.Debug.WriteLine($"dev: BtRequest={devBtRequest.Value} UartResponse={devUartResponse.Value}");
+            sc.Address = 1;
+            */
+
             return true;
         }
 

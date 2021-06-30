@@ -44,18 +44,38 @@ namespace SiamCross.Models.Sensors
             try
             {
                 /*
+                var sc = Connection as Connection.Protocol.Siam.SiamConnection;
+                sc.Address = 127;
+                MemVarUInt16 devBtRequest = new MemVarUInt16(0x5E);
+                MemVarUInt16 devUartResponse = new MemVarUInt16(0x60);
+                var devTest = new MemStruct(0x5E);
+                devTest.Add(devBtRequest);
+                devTest.Add(devUartResponse);
+                await Connection.ReadAsync(devTest);
+                sc.PrintExchangeCounters();
+                System.Diagnostics.Debug.WriteLine($"dev: BtRequest={devBtRequest.Value} UartResponse={devUartResponse.Value}");
+                sc.Address = 1;
+
                 Stopwatch _PerfCounter = new Stopwatch();
                 uint DmgSize = 4000;
                 byte[] _currentDynGraph = new byte[DmgSize];
                 _PerfCounter.Restart();
-                for (int i = 0; i < 100; i++)
+                for (int i = 0; i < 10; i++)
                 {
                     RespResult ret1 = await Connection.ReadMemAsync(0x83000000, DmgSize, _currentDynGraph
                         , 0, null);
                 }
                 Debug.WriteLine("TEST elapsed=" + _PerfCounter.ElapsedMilliseconds.ToString());
+
+                sc.Address = 127;
+                await Connection.ReadAsync(devTest);
+                sc.PrintExchangeCounters();
+                System.Diagnostics.Debug.WriteLine($"dev: BtRequest={devBtRequest.Value} UartResponse={devUartResponse.Value}");
+                sc.Address = 1;
+
                 return true;
                 */
+                
                 cancelToken.ThrowIfCancellationRequested();
                 //DeviceNumber.Value = 170;
                 //MemStruct ms = new MemStruct(0x0A);

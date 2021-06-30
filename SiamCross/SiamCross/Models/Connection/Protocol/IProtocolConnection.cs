@@ -17,6 +17,8 @@ namespace SiamCross.Models.Connection.Protocol
     }
     public interface IProtocolConnection : IConnection
     {
+        int RequestCount { get; set; }
+        int ResponseCount { get; set; }
         IPhyConnection PhyConnection { get; }
 
         Task<byte[]> Exchange(byte[] req);

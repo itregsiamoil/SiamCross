@@ -24,7 +24,11 @@ namespace SiamCross.Models.Connection.Protocol.Siam
         public override async Task<bool> Connect(CancellationToken ct)
         {
             using (await _semaphore.UseWaitAsync(ct))
+            {
+                RequestCount = 0;
+                ResponseCount = 0;
                 return await base.Connect(ct);
+            }
         }
         public override async Task<bool> Disconnect()
         {
@@ -127,6 +131,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                     + "\n type=" + ex.GetType()
                     + "\n stack=" + ex.StackTrace + "\n");
             }
+            RequestCount++;
             return sent_ok;
         }
 
@@ -171,6 +176,7 @@ namespace SiamCross.Models.Connection.Protocol.Siam
                                 + ": [" + BitConverter.ToString(_RxBuf, _BeginRxBuf, _EndRxBuf - _BeginRxBuf) + "]\n"
                                 //+ ": [" + BitConverter.ToString(_RxBuf, 0, _EndRxBuf) + "]\n"
                                 );
+                            ResponseCount++;
                             return ((RespResult)need);
                     }
                 }//for (int i = 0; i < mResponseRetry && 0 == pkg.Length; ++i)
