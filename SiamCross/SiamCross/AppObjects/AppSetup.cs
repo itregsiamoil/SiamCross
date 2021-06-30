@@ -30,9 +30,6 @@ namespace SiamCross.AppObjects
 
             cb.RegisterType<SettingsViewModel>().SingleInstance();
 
-            cb.RegisterType<DirectoryViewModel>().SingleInstance();
-            cb.RegisterType<AddFieldViewModel>().SingleInstance();
-
         }
     }
 }

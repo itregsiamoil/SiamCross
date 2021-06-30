@@ -629,7 +629,7 @@
     <value>Замер температуры</value>
   </data>
   <data name="IntervalChoiceText" xml:space="preserve">
-    <value>Enter the intehval!</value>
+    <value>Введите интервал</value>
   </data>
   <data name="SelectedMeasurementTypeChoiceText" xml:space="preserve">
     <value>Choose a type of research!</value>
@@ -718,5 +718,20 @@
   </data>
   <data name="Thermometer" xml:space="preserve">
     <value>термометр</value>
+  </data>
+  <data name="DoLoad" xml:space="preserve">
+    <value>Загрузить</value>
+  </data>
+  <data name="DoSave" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="DoDelete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="DoExport" xml:space="preserve">
+    <value>Экспортировать</value>
+  </data>
+  <data name="DoImport" xml:space="preserve">
+    <value>Импортировать</value>
   </data>
 </root>

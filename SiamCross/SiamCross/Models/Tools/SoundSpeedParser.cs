@@ -2,9 +2,9 @@
 
 namespace SiamCross.Models.Tools
 {
-    public static class SoundSpeedFileParcer
+    public static class SoundSpeedParser
     {
-        public static List<KeyValuePair<float, float>> TryToParce(string fileText)
+        public static List<KeyValuePair<float, float>> ToList(string fileText)
         {
             List<KeyValuePair<float, float>> soundSpeedsList = new List<KeyValuePair<float, float>>();
 
@@ -39,6 +39,15 @@ namespace SiamCross.Models.Tools
             }
 
             return soundSpeedsList.Count != 0 ? soundSpeedsList : null;
+        }
+
+
+        public static string ToString(List<KeyValuePair<float, float>> values)
+        {
+            string str = string.Empty;
+            foreach (var item in values)
+                str += $" 0 {item.Key} {item.Value} \r\n";
+            return str;
         }
     }
 }

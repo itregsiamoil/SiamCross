@@ -710,4 +710,19 @@ DB Siam can't import the files with the same identifiers.</value>
   <data name="Thermometer" xml:space="preserve">
     <value>thermometer</value>
   </data>
+  <data name="DoSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="DoLoad" xml:space="preserve">
+    <value>Load</value>
+  </data>
+  <data name="DoDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DoExport" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="DoImport" xml:space="preserve">
+    <value>Import</value>
+  </data>
 </root>

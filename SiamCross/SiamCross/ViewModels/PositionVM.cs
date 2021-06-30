@@ -1,6 +1,5 @@
 ﻿using SiamCross.Models;
 using SiamCross.Services;
-using SiamCross.Services.RepositoryTables;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Xamarin.Forms.Internals;

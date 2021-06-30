@@ -62,14 +62,14 @@ namespace SiamCross.ViewModels
                 IReadOnlyList<Page> stack = App.NavigationPage.Navigation.ModalStack;
                 if (stack.Count > 0)
                 {
-                    if (stack[stack.Count - 1].GetType() != typeof(AddFieldPage))
+                    if (stack[stack.Count - 1].GetType() != typeof(EditFieldPage))
                     {
-                        await App.NavigationPage.Navigation.PushModalAsync(new AddFieldPage());
+                        await App.NavigationPage.Navigation.PushModalAsync(new EditFieldPage());
                     }
                 }
                 else
                 {
-                    await App.NavigationPage.Navigation.PushModalAsync(new AddFieldPage());
+                    await App.NavigationPage.Navigation.PushModalAsync(new EditFieldPage());
                 }
             }
             catch (Exception ex)

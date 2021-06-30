@@ -15,11 +15,11 @@ using Xamarin.Forms.Xaml;
 namespace SiamCross.Views.MenuItems.HandbookPanel
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class SoundSpeedViewPage : ContentPage
+    public partial class EditSoundSpeedPage : ContentPage
     {
-        public SoundSpeedViewPage(SoundSpeedModel soundSpeedModel)
+        public EditSoundSpeedPage(SoundSpeedModel soundSpeedModel = null)
         {
-            BindingContext = new SoundSpeedItemViewModel(soundSpeedModel);
+            BindingContext = new SoundSpeedItemVM(soundSpeedModel);
             InitializeComponent();
         }
 
@@ -27,7 +27,7 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
         {
             try
             {
-                SoundSpeedItemViewModel vm = (SoundSpeedItemViewModel)BindingContext;
+                SoundSpeedItemVM vm = (SoundSpeedItemVM)BindingContext;
                 if (null == vm.Points)
                     return;
 

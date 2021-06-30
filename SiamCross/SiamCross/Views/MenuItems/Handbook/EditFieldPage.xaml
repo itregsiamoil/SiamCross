@@ -2,11 +2,11 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-             x:Class="SiamCross.Views.AddFieldPage"
+             x:Class="SiamCross.Views.EditFieldPage"
              xmlns:local="clr-namespace:SiamCross;assembly=SiamCross" 
              xmlns:viewmodels="clr-namespace:SiamCross.ViewModels" 
-             x:DataType="viewmodels:AddFieldViewModel"
-             Title="qweqwe"
+             x:DataType="viewmodels:EditFieldVM"
+             Title="{local:Translate Editing}"
              IsVisible="true"
              >
     <ContentPage.Content>
@@ -15,7 +15,7 @@
             <ScrollView VerticalOptions="StartAndExpand">
                 <Frame Style="{StaticResource GroupingFrameStyle2}" >
                     <StackLayout>
-                        <Label Text="{local:Translate NewField}" Style="{StaticResource SectionLabel2}" />
+                        <Label Text="{local:Translate Field}" Style="{StaticResource SectionLabel2}" />
                         <StackLayout Padding="5">
                             <Label Text="{local:Translate FieldName}"></Label>
                             <Entry Text="{Binding FieldName}"/>

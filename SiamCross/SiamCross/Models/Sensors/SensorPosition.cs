@@ -56,7 +56,7 @@ namespace SiamCross.Models.Sensors
         {
             try
             {
-                await App.NavigationPage.Navigation.PushModalAsync(new Views.AddFieldPage());
+                await App.NavigationPage.Navigation.PushModalAsync(new Views.EditFieldPage());
             }
             catch (Exception ex)
             {

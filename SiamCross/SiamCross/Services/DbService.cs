@@ -36,7 +36,6 @@ namespace SiamCross.Services
         public int UserDbVersion = 18;
 
         readonly Attributes Attributes = new Attributes();
-        readonly FieldDictionaryTable FieldDictionary = new FieldDictionaryTable();
         readonly DataInt DataInt = new DataInt();
         readonly DataFloat DataFloat = new DataFloat();
         readonly DataString DataString = new DataString();
@@ -682,33 +681,6 @@ namespace SiamCross.Services
             }
         }
 
-        public async Task DelFieldAsync(long id)
-        {
-            using (var tr = BeginTransaction())
-            {
-                await FieldDictionary.DeleteAsync(tr, id);
-                tr.Commit();
-            }
-        }
-        public async Task<FieldItem> SaveFieldAsync(string title, uint id = 0)
-        {
-            using (var tr = BeginTransaction())
-            {
-                var val = await FieldDictionary.SaveAsync(tr, title, id);
-                tr.Commit();
-                return val;
-            }
-        }
-        public async Task<IEnumerable<FieldItem>> LoadFieldAsync(long id)
-        {
-            using (var tr = BeginTransaction())
-                return await FieldDictionary.LoadAsync(tr, id);
-        }
-        public async Task<IEnumerable<FieldItem>> LoadFieldAsync()
-        {
-            using (var tr = BeginTransaction())
-                return await FieldDictionary.LoadAsync(tr);
-        }
         public async Task<IEnumerable<AttributeItem>> LoadAttributesAsync()
         {
             using (var tr = BeginTransaction())

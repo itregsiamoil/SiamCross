@@ -46,8 +46,8 @@ namespace SiamCross.Models.Sensors
                 /*
                 var sc = Connection as Connection.Protocol.Siam.SiamConnection;
                 sc.Address = 127;
-                MemVarUInt16 devBtRequest = new MemVarUInt16(0x5E);
-                MemVarUInt16 devUartResponse = new MemVarUInt16(0x60);
+                MemVarUInt16 devBtRequest = new MemVarUInt16(0x66);
+                MemVarUInt16 devUartResponse = new MemVarUInt16(0x68);
                 var devTest = new MemStruct(0x5E);
                 devTest.Add(devBtRequest);
                 devTest.Add(devUartResponse);
@@ -75,7 +75,7 @@ namespace SiamCross.Models.Sensors
 
                 return true;
                 */
-                
+
                 cancelToken.ThrowIfCancellationRequested();
                 //DeviceNumber.Value = 170;
                 //MemStruct ms = new MemStruct(0x0A);

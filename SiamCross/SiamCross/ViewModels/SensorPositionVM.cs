@@ -1,7 +1,6 @@
 ﻿using SiamCross.Models;
 using SiamCross.Models.Sensors;
 using SiamCross.Services;
-using SiamCross.Services.RepositoryTables;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;

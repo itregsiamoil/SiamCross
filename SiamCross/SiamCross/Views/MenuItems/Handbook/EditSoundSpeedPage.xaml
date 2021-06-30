@@ -2,12 +2,19 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-             x:Class="SiamCross.Views.MenuItems.HandbookPanel.SoundSpeedViewPage"
-             Title="{local1:Translate Editing}"
-             xmlns:local="clr-namespace:SiamCross.Views"
-             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
              xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms" 
+             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross" 
+             xmlns:viewmodels="clr-namespace:SiamCross.ViewModels"
+             x:Class="SiamCross.Views.MenuItems.HandbookPanel.EditSoundSpeedPage"
+             x:DataType="viewmodels:SoundSpeedItemVM"
+             Title="{local:Translate Editing}"
              >
+    <ContentPage.Resources>
+        <Style TargetType="{x:Type StackLayout}">
+            <Setter Property="Spacing" Value="0" />
+        </Style>
+    </ContentPage.Resources >
+
     <ContentPage.ToolbarItems>
         <!--ToolbarItem IconImageSource ="trashcan.png" Clicked="ToolbarItem_Clicked"/-->
     </ContentPage.ToolbarItems>
@@ -19,9 +26,9 @@
                         <Label Text="Скорость звука" Style="{StaticResource SectionLabel2}" />
                         <StackLayout Padding="5">
                             
-                            <Label Text="{local1:Translate Name}"></Label>
+                            <Label Text="{local:Translate Name}"></Label>
                             <Entry Text="{Binding Name}"/>
-                            <Label Text="{local1:Translate Code}"></Label>
+                            <Label Text="{local:Translate Code}"></Label>
                             <Entry Text="{Binding Code}"
                                 Keyboard="Numeric">
                                 <Entry.Behaviors>
@@ -41,12 +48,13 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
                                 <Label Text="{Binding MaxGraphY}" Grid.Column="0" Grid.Row="0"/>
                                 <StackLayout Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
                                     <Label Text=", "/>
-                                    <Label Text="{local1:Translate MSUnits}"/>
+                                    <Label Text="{local:Translate MSUnits}"/>
                                 </StackLayout>
                                 <Label Text="{Binding MinGraphY}" Grid.Column="0" Grid.Row="1" VerticalOptions="End"/>
                                 <skia:SKCanvasView 
@@ -62,17 +70,31 @@
                                 <StackLayout Orientation="Horizontal" Grid.Column="2" Grid.Row="2" HorizontalOptions="End">
                                     <Label Text="{Binding MaxGraphX}"/>
                                     <Label Text=", "/>
-                                    <Label Text="{local1:Translate MSUnits}"/>
+                                    <Label Text="{local:Translate MSUnits}"/>
                                 </StackLayout>
                             </Grid>
                         </StackLayout>
+                        <Label Text="Текстовый файл с поправками" Margin="2"/>
+                        <Grid ColumnSpacing="0" RowSpacing="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50*" />
+                                <ColumnDefinition Width="50*" />
+                            </Grid.ColumnDefinitions>
+                            <Button Text="{local:Translate DoExport}"
+                                    Command="{Binding CmdExport}"
+                                    Grid.Column="0" HorizontalOptions="FillAndExpand"/>
+                            <Button Text="{local:Translate DoImport}" 
+                                    Command="{Binding CmdImport}"
+                                    Grid.Column="1" HorizontalOptions="FillAndExpand"/>
+
+                        </Grid>
                     </StackLayout>
                 </Frame>
             </ScrollView>
             <StackLayout Orientation="Horizontal" Spacing="0">
-                <Button Text="Сохранить" HorizontalOptions="FillAndExpand" 
+                <Button Text="{local:Translate DoSave}" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorPrimaryLight}"
-                        Command="{Binding Edit}" >
+                        Command="{Binding CmdSave}" >
                 </Button>
             </StackLayout>
         </StackLayout>

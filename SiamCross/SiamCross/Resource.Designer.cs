@@ -466,6 +466,51 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Delete.
+        /// </summary>
+        public static string DoDelete {
+            get {
+                return ResourceManager.GetString("DoDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Export.
+        /// </summary>
+        public static string DoExport {
+            get {
+                return ResourceManager.GetString("DoExport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Import.
+        /// </summary>
+        public static string DoImport {
+            get {
+                return ResourceManager.GetString("DoImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Load.
+        /// </summary>
+        public static string DoLoad {
+            get {
+                return ResourceManager.GetString("DoLoad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Save.
+        /// </summary>
+        public static string DoSave {
+            get {
+                return ResourceManager.GetString("DoSave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на downloading.
         /// </summary>
         public static string Downloading {

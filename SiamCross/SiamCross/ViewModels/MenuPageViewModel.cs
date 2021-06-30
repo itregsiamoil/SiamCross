@@ -123,13 +123,13 @@ namespace SiamCross.ViewModels
         {
             await App.NavigationPage.Navigation.PopToRootAsync(false);
             App.MenuIsPresented = false;
-            await App.NavigationPage.Navigation.PushAsync(new DirectoryPage());
+            await App.NavigationPage.Navigation.PushAsync(new DirectoryPage(() => { return new FieldsDirVM(); }));
         }
         private async Task GoSoundSpeed()
         {
             await App.NavigationPage.Navigation.PopToRootAsync(false);
             App.MenuIsPresented = false;
-            await App.NavigationPage.Navigation.PushAsync(new SoundSpeedListPage());
+            await App.NavigationPage.Navigation.PushAsync(new DirectoryPage(() => { return new SoundSpeedListVM(); }));
         }
 
         private async Task GoAbout()

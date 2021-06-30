@@ -5,9 +5,9 @@ namespace SiamCross.Models.Tools
 {
     public class SoundSpeedModel : INotifyPropertyChanged
     {
-        private int _code;
+        private uint _code;
         private string _name;
-        public int Code
+        public uint Code
         {
             get => _code;
             set
@@ -31,7 +31,7 @@ namespace SiamCross.Models.Tools
 
         public List<KeyValuePair<float, float>> LevelSpeedTable { get; set; }
 
-        public SoundSpeedModel(int code, string name, List<KeyValuePair<float, float>> table)
+        public SoundSpeedModel(uint code, string name, List<KeyValuePair<float, float>> table)
         {
             Code = code;
             Name = name;

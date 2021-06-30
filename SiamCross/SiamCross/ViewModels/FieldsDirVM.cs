@@ -1,10 +1,9 @@
 ﻿using Autofac;
 using NLog;
 using SiamCross.AppObjects;
-using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
-using SiamCross.Views.MenuItems.HandbookPanel;
+using SiamCross.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -14,23 +13,23 @@ using System.Threading.Tasks;
 
 namespace SiamCross.ViewModels
 {
-    public class SoundSpeedListVM : BaseDirectoryPageVM
+    public class FieldsDirVM : BaseDirectoryPageVM
     {
         private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
-        public SoundSpeedListVM()
-            : base(Resource.SoundSpeed)
+        public FieldsDirVM()
+            : base(Resource.Fields)
         {
         }
         public override Task InitAsync(CancellationToken ct = default)
         {
-            Repo.SoundSpeedDir.Models.CollectionChanged += Models_CollectionChanged;
+            Repo.FieldDir.FieldList.CollectionChanged += Models_CollectionChanged;
             Models_CollectionChanged(null, null);
             return Task.CompletedTask;
         }
         public override void Unsubscribe()
         {
             base.Unsubscribe();
-            Repo.SoundSpeedDir.Models.CollectionChanged -= Models_CollectionChanged;
+            Repo.FieldDir.FieldList.CollectionChanged -= Models_CollectionChanged;
         }
         private void Models_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -53,13 +52,14 @@ namespace SiamCross.ViewModels
                         list = new SortedSet<BaseDirectoryItem>(new DescTitleComparer());
                         break;
                 }
-                foreach (var item in Repo.SoundSpeedDir.Models)
-                    list.Add(new BaseDirectoryItem((uint)item.Code, item.Name));
+                foreach (var item in Repo.FieldDir.FieldList)
+                    list.Add(new BaseDirectoryItem(item.Id, item.Title));
                 Items.ReplaceRange(list);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Update method" + "\n");
+                throw;
             }
         }
         protected override async Task OnCmdEdit(object item)
@@ -68,9 +68,9 @@ namespace SiamCross.ViewModels
             {
                 if (IsMultiselectMode
                     || !(item is BaseDirectoryItem itemModel)
-                    || !Repo.SoundSpeedDir.DictById.TryGetValue(itemModel.Key, out SoundSpeedModel ssModel))
+                    || !Repo.FieldDir.DictById.TryGetValue(itemModel.Key, out FieldItem ssModel))
                     return;
-                await App.NavigationPage.Navigation.PushAsync(new EditSoundSpeedPage(ssModel));
+                await App.NavigationPage.Navigation.PushAsync(new EditFieldPage(ssModel));
             }
             catch (Exception ex)
             {
@@ -88,24 +88,25 @@ namespace SiamCross.ViewModels
                 foreach (var viewItem in SelectedItems)
                     if (viewItem is BaseDirectoryItem item)
                         list.Add(item.Key);
-                _ = await Repo.SoundSpeedDir.DeleteAsync(list);
+                _ = await Repo.FieldDir.DeleteAsync(list);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Exception {ex.Message}\n{ex.StackTrace}");
-                _logger.Error(ex, "OnCmdDel command handler" + "\n");
+                _logger.Error(ex, "RemoveField command handler" + "\n");
             }
         }
         protected override async Task OnCmdAdd()
         {
             try
             {
-                await App.NavigationPage.Navigation.PushAsync(new EditSoundSpeedPage());
+                await App.NavigationPage.Navigation.PushAsync(new EditFieldPage());
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Exception {ex.Message}\n{ex.StackTrace}");
                 _logger.Error(ex, "OpenAddFieldsPage command handler" + "\n");
+                throw;
             }
         }
     }

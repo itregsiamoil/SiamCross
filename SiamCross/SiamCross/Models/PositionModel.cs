@@ -1,5 +1,4 @@
 ﻿using SiamCross.Services;
-using SiamCross.Services.RepositoryTables;
 
 namespace SiamCross.Models
 {

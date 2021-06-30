@@ -108,5 +108,14 @@ namespace SiamCross.Services
                 , (Func<object, bool>)null, null, false, false);
         }
 
+        public static async Task<bool> ShowDeleteQuestion()
+        {
+            return await Application.Current.MainPage.DisplayAlert(
+                  Resource.Attention,
+                  Resource.DeleteQuestion,
+                  Resource.YesButton,
+                  Resource.NotButton);
+        }
+
     }
 }

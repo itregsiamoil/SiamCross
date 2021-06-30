@@ -4,12 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
     xmlns:views="clr-namespace:SiamCross.Views"
-    xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross" 
-    xmlns:viewmodels="clr-namespace:SiamCross.ViewModels" 
-    xmlns:tools="clr-namespace:SiamCross.Models.Tools"
-    Title="{local1:Translate SoundSpeed}"
-    x:Class="SiamCross.Views.MenuItems.HandbookPanel.SoundSpeedListPage"
-    x:DataType="viewmodels:SoundSpeedListVM"
+    xmlns:local="clr-namespace:SiamCross;assembly=SiamCross" 
+    xmlns:viewmodels="clr-namespace:SiamCross.ViewModels"
+    x:Class="SiamCross.Views.MenuItems.HandbookPanel.DirectoryPage"
+    x:DataType="viewmodels:BaseDirectoryPageVM"
     x:Name="ThisPage">
 
     <ContentPage.Resources>
@@ -21,41 +19,45 @@
     <NavigationPage.TitleView >
         <StackLayout Orientation="Horizontal">
             <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand">
-                <Label Text="{local1:Translate SoundSpeed}" 
+                <Label Text="{Binding Title}" 
                        FontSize="Medium" FontAttributes="Bold" 
                        LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal" VerticalOptions="Fill" IsVisible="{Binding IsLandscape}">
-                <Button Text="&#x274C;" HorizontalOptions="FillAndExpand"  
+                <Button Text="{local:Translate DoDelete}" 
+                        HorizontalOptions="FillAndExpand"
+                        IsVisible="{Binding IsMultiselectMode}"
                         BackgroundColor="{StaticResource colorAccentLight}"
                         Command="{Binding CmdDel}" />
-                
-                <Button Text="&#x271A;" HorizontalOptions="FillAndExpand" 
-                        BackgroundColor="{StaticResource colorPrimaryLight}"
-                        Command="{Binding CmdAdd}"/>
             </StackLayout>
         </StackLayout>
     </NavigationPage.TitleView>
-    <!--
+
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="&#x271A;"  Command="{Binding CmdAdd}"/>
-        <ToolbarItem Text="&#x274C;" Command="{Binding CmdDel}"/>
+        <ToolbarItem Text="&#x25BC;&#x25B3;" Command="{Binding CmdSort}"/>
+        <ToolbarItem Text="&#x271A;" Command="{Binding CmdAdd}"/>
     </ContentPage.ToolbarItems>
-    -->
+    
     <ContentPage.Content>
-        <StackLayout>
-            <CollectionView ItemsSource="{Binding SoundSpeedList}" 
-                      SelectedItem="{Binding SelectedItem}"
-                      SelectedItems="{Binding SelectedItems}"
-                      SelectionMode="{Binding SelectionMode}">
+        <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
+            <CollectionView Margin="4"
+                ItemsSource="{Binding Items, Mode=TwoWay}"
+                SelectedItems="{Binding SelectedItems}"
+                SelectionMode="{Binding SelectionMode}">
+                
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical"
+                                       ItemSpacing="4"/>
+                </CollectionView.ItemsLayout>
+                
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="tools:SoundSpeedModel">
-                        <Frame 
-                            x:Name="Frame"
-                            HeightRequest="20"
+                    <DataTemplate  x:DataType="viewmodels:BaseDirectoryItem">
+                        <Frame
+                            CornerRadius="4" Padding="4" 
+                            HeightRequest="40"
+                            HasShadow="False"
                             xct:TouchEffect.LongPressCommand="{Binding Path=BindingContext.CmdLongPress, Source={x:Reference ThisPage}}"
-                            xct:TouchEffect.NativeAnimation="True"
-                            >
+                            xct:TouchEffect.NativeAnimation="True">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer 
                                         Command="{Binding Path=BindingContext.CmdEdit
@@ -63,7 +65,6 @@
                                         CommandParameter="{Binding .}"
                                         />
                             </Frame.GestureRecognizers>
-
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Selected">
@@ -84,39 +85,26 @@
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <Grid >
+
+                            <Grid Margin="0" Padding="0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="20*"/>
                                     <ColumnDefinition Width="60*"/>
                                     <ColumnDefinition Width="30"/>
                                 </Grid.ColumnDefinitions>
-                                <Label Text="{Binding Code}" 
-                                    FontSize="Medium"
-                                    Grid.Column="0"/>
-
-                                <Label Text="{Binding Name}" 
-                                    FontSize="Medium"
-                                    Grid.Column="1"/>
-
+                                <Label Text="{Binding Key}" 
+                                       VerticalOptions="Center" LineBreakMode="TailTruncation"
+                                       FontSize="Medium"
+                                       Grid.Column="0"/>
+                                <Label Text="{Binding Value}" 
+                                       VerticalOptions="Center" LineBreakMode="TailTruncation"
+                                       FontSize="Medium"
+                                       Grid.Column="1"/>
                                 <CheckBox  
                                     x:Name="ChkBox" 
                                     IsVisible="{Binding Path=BindingContext.IsMultiselectMode
                                             , Source={x:Reference ThisPage}}"
                                     Grid.Column="2"/>
-                                <!--
-                                <Label Text="&#x270E;" 
-                                   HorizontalOptions="FillAndExpand" HorizontalTextAlignment="End"
-                                   FontSize="Medium"
-                                   Grid.Column="2">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer 
-                                        Command="{Binding Path=BindingContext.CmdEdit
-                                            , Source={x:Reference ThisPage}}"
-                                        CommandParameter="{Binding .}"
-                                        />
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                -->
                             </Grid>
                         </Frame>
                     </DataTemplate>
@@ -128,17 +116,13 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Button Text="&#x274C;" HorizontalOptions="FillAndExpand" IsEnabled="{Binding IsMultiselectMode}" 
+                <Button Text="{local:Translate DoDelete}" HorizontalOptions="FillAndExpand" 
+                        IsVisible="{Binding IsMultiselectMode}" 
                         BackgroundColor="{StaticResource colorAccentLight}"
                         Command="{Binding CmdDel}" 
                         Grid.Column="0"/>
-                <Button Text="&#x271A;" HorizontalOptions="FillAndExpand" 
-                        BackgroundColor="{StaticResource colorPrimaryLight}"
-                        Command="{Binding CmdAdd}"
-                        Grid.Column="1"/>
             </Grid>
-    
+            
         </StackLayout>
     </ContentPage.Content>
-    
 </views:BaseContentPage>

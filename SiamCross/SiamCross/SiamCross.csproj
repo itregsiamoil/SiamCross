@@ -65,6 +65,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\MenuItems\Handbook\EditFieldPage.xaml.cs">
+      <DependentUpon>EditFieldPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Dmg\Surveys\DynamogrammPage.xaml.cs">
       <DependentUpon>DynamogrammPage.xaml</DependentUpon>
     </Compile>
@@ -80,6 +83,9 @@
     <Compile Update="Views\Dua\UserConfigPage.xaml.cs">
       <DependentUpon>UserConfigPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\MenuItems\Handbook\EditSoundSpeedPage.xaml.cs">
+      <DependentUpon>EditSoundSpeedPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\SurveysCollectionPage.xaml.cs">
       <DependentUpon>SurveysCollectionPage.xaml</DependentUpon>
     </Compile>
@@ -91,11 +97,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
-    <Compile Update="Views\MenuItems\HandbookPanel\DirectoryPage.xaml.cs">
+    <Compile Update="Views\MenuItems\Handbook\DirectoryPage.xaml.cs">
       <DependentUpon>DirectoryPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\MenuItems\HandbookPanel\HandbookPage.xaml.cs">
-      <DependentUpon>HandbookPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\MenuItems\HandbookPanel\SoundSpeedListPage.xaml.cs">
       <DependentUpon>SoundSpeedListPage.xaml</DependentUpon>
@@ -131,7 +134,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\AddFieldPage.xaml">
+    <EmbeddedResource Update="Views\MenuItems\Handbook\EditFieldPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Dmg\Ddin2MeasurementDonePage.xaml">
@@ -152,13 +155,10 @@
     <EmbeddedResource Update="Views\MenuItems\ControlPanelPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\MenuItems\HandbookPanel\DirectoryPage.xaml">
+    <EmbeddedResource Update="Views\MenuItems\Handbook\DirectoryPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\MenuItems\HandbookPanel\HandbookPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\MenuItems\HandbookPanel\SoundSpeedViewPage.xaml">
+    <EmbeddedResource Update="Views\MenuItems\Handbook\EditSoundSpeedPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MenuItems\MeasurementsPageService.xaml">

@@ -1,11 +1,11 @@
 ﻿using Dapper;
 using SiamCross.Models.Tools;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Services
 {
@@ -19,7 +19,7 @@ namespace SiamCross.Services
     {
         public readonly Dictionary<string, SoundSpeedModel> DictByTitle = new Dictionary<string, SoundSpeedModel>();
         public readonly Dictionary<uint, SoundSpeedModel> DictById = new Dictionary<uint, SoundSpeedModel>();
-        public readonly ObservableCollection<SoundSpeedModel> Models = new ObservableCollection<SoundSpeedModel>();
+        public readonly ObservableRangeCollection<SoundSpeedModel> Models = new ObservableRangeCollection<SoundSpeedModel>();
 
         //readonly SoundSpeedTable SoundSpeedTable = new SoundSpeedTable(DbService.Instance.Db);
         public SoundSpeedDir()
@@ -37,8 +37,8 @@ namespace SiamCross.Services
                 var values = await tr.Connection.QueryAsync<SoundSpeedItem>(select_all);
                 foreach (var item in values)
                 {
-                    var modelData = SoundSpeedFileParcer.TryToParce(item.Value);
-                    Add(new SoundSpeedModel((int)item.Id, item.Title, modelData));
+                    var modelData = SoundSpeedParser.ToList(item.Value);
+                    Add(new SoundSpeedModel(item.Id, item.Title, modelData));
                 }
             }
             if (!DictById.TryGetValue(0, out SoundSpeedModel _))
@@ -54,8 +54,8 @@ namespace SiamCross.Services
             using (StreamReader reader = new StreamReader(stream))
             {
                 string text = await reader.ReadToEndAsync();
-                var modelData = SoundSpeedFileParcer.TryToParce(text);
-                Add(new SoundSpeedModel((int)id, title, modelData));
+                var modelData = SoundSpeedParser.ToList(text);
+                Add(new SoundSpeedModel(id, title, modelData));
             }
         }
         void Add(SoundSpeedModel model)
@@ -67,18 +67,15 @@ namespace SiamCross.Services
             DictById.Add((uint)model.Code, model);
             Models.Add(model);
         }
-        public async Task SaveAsync(SoundSpeedModel model)
+        public async Task AddAsync(SoundSpeedModel model)
         {
-            await DeleteAsync((uint)model.Code);
-            await DeleteAsync(model.Name);
-
             using (var tr = BeginTransaction())
             {
                 var item = new SoundSpeedItem()
                 {
-                    Id = (uint)model.Code,
+                    Id = model.Code,
                     Title = model.Name,
-                    Value = model.LevelSpeedTable.ToString()
+                    Value = SoundSpeedParser.ToString(model.LevelSpeedTable)
                 };
                 int affectedrow = await tr.Connection.ExecuteAsync(insert_with_user_id, item);
                 tr.Commit();
@@ -86,35 +83,56 @@ namespace SiamCross.Services
                     Add(model);
             }
         }
-        public async Task SaveAsync(string title, uint id, string text)
+        public async Task AddAsync(string title, uint id, string text)
         {
-            var data = SoundSpeedFileParcer.TryToParce(text);
+            var data = SoundSpeedParser.ToList(text);
             if (null == data)
                 return;
-            var model = new SoundSpeedModel((int)id, title, data);
-            await SaveAsync(model);
+            var model = new SoundSpeedModel(id, title, data);
+            await AddAsync(model);
         }
         public async Task<SoundSpeedModel> DeleteAsync(string title)
         {
             if (!DictByTitle.TryGetValue(title, out SoundSpeedModel val))
                 return null;
-            using (var tr = BeginTransaction())
-                await tr.Connection.ExecuteAsync(delete_by_id, new { Id = val.Code });
-            DictByTitle.Remove(title);
-            DictById.Remove((uint)val.Code);
-            Models.Remove(val);
-            return val;
+            return await DeleteAsync(val.Code);
         }
         public async Task<SoundSpeedModel> DeleteAsync(uint id)
         {
             if (!DictById.TryGetValue(id, out SoundSpeedModel val))
                 return null;
             using (var tr = BeginTransaction())
+            {
                 await tr.Connection.ExecuteAsync(delete_by_id, new { Id = id });
+                tr.Commit();
+            }
             DictByTitle.Remove(val.Name);
             DictById.Remove(id);
             Models.Remove(val);
             return val;
+        }
+        public async Task<List<SoundSpeedModel>> DeleteAsync(IEnumerable<uint> arr)
+        {
+            var list = new List<SoundSpeedModel>();
+            using (var tr = BeginTransaction())
+            {
+                foreach (var id in arr)
+                {
+                    if (DictById.TryGetValue(id, out SoundSpeedModel val))
+                    {
+                        await tr.Connection.ExecuteAsync(delete_by_id, new { Id = id });
+                        list.Add(val);
+                    }
+                }
+                tr.Commit();
+            }
+            foreach (var deletedModel in list)
+            {
+                DictByTitle.Remove(deletedModel.Name);
+                DictById.Remove(deletedModel.Code);
+            }
+            Models.RemoveRange(list);
+            return list;
         }
 
 

@@ -7,6 +7,7 @@ using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using SiamCross.Views;
+using SiamCross.Views.MenuItems.SearchPanel;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -27,6 +28,7 @@ namespace SiamCross.ViewModels
         public bool IsPreRelease => Version.ToLower().Contains("rc");
         public string Version => DependencyService.Get<IAppVersionAndBuild>().GetVersionNumber();
 
+        public ICommand CmdAdd { get; }
         public ICommand DeleteSensorCommand { get; }
         public ICommand GotoMeasurementPageCommand { get; }
         //public ICommand EnableQickInfoAllCommand => new Command(EnableQickInfoAll);
@@ -38,11 +40,18 @@ namespace SiamCross.ViewModels
 
             SensorService.Instance.SensorAdded += SensorAdded;
             SensorService.Instance.SensorDeleting += SensorDeleted;
+
+            CmdAdd = new AsyncCommand(DoCmdAdd
+                , (Func<bool>)null, null, false, false);
             DeleteSensorCommand = new AsyncCommand<Guid>(DeleteSensorHandler
                 , (Func<bool>)null, null, false, false);
             GotoMeasurementPageCommand = new AsyncCommand<Guid>(GotoMeasurementPage
                 , (Func<bool>)null, null, false, false);
 
+        }
+        private async Task DoCmdAdd()
+        {
+            await App.NavigationPage.Navigation.PushAsync(new SearchPanelPage());
         }
         private async Task DeleteSensorHandler(Guid id)
         {

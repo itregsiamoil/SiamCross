@@ -42,6 +42,10 @@
         </StackLayout>
     </NavigationPage.TitleView>
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="&#x271A;" Command="{Binding CmdAdd}"/>
+    </ContentPage.ToolbarItems>
+
 
     <ContentPage.Content>
         <CollectionView
