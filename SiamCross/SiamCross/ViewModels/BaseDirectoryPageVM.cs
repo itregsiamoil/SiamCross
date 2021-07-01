@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiamCross.Services;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -93,7 +94,7 @@ namespace SiamCross.ViewModels
 
             CmdAdd = new AsyncCommand(OnCmdAdd
                 , (Func<object, bool>)null, null, false, false);
-            CmdDel = new AsyncCommand(OnCmdDel
+            CmdDel = new AsyncCommand(OnInternalCmdDel
                 , (Func<object, bool>)null, null, false, false);
             CmdEdit = new AsyncCommand<object>(OnCmdEdit
                 , (Func<object, bool>)null, null, false, false);
@@ -127,11 +128,13 @@ namespace SiamCross.ViewModels
                 .DisplayActionSheet("Сортировка"
                 , Resource.Cancel, null, ordersArray);
 
-            if (action == "Cancel")
+            if (string.IsNullOrEmpty(action) || action == Resource.Cancel)
                 return;
             if (ordersVariant.TryGetValue(action, out SortOrder sort))
+            {
                 _SortOrder = sort;
-            await InitAsync();
+                await InitAsync();
+            }
         }
 
         public abstract Task InitAsync(CancellationToken ct = default);
@@ -139,6 +142,14 @@ namespace SiamCross.ViewModels
         protected abstract Task OnCmdEdit(object item);
         protected abstract Task OnCmdDel();
         protected abstract Task OnCmdAdd();
+
+        private async Task OnInternalCmdDel()
+        {
+            if (!await PageNavigator.ShowDeleteQuestion())
+                return;
+            SelectionMode = SelectionMode.None;
+            await OnCmdDel();
+        }
     }
 
 }

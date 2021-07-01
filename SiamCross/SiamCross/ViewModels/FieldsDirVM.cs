@@ -82,8 +82,6 @@ namespace SiamCross.ViewModels
         {
             try
             {
-                if (!await PageNavigator.ShowDeleteQuestion())
-                    return;
                 var list = new List<uint>(SelectedItems.Count);
                 foreach (var viewItem in SelectedItems)
                     if (viewItem is BaseDirectoryItem item)
