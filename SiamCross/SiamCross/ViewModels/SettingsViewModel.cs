@@ -1,4 +1,5 @@
 ﻿using SiamCross.Models.Tools;
+using SiamCross.Services;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -66,7 +67,7 @@ namespace SiamCross.ViewModels
             CmdSave = new AsyncCommand(DoSave
                 , (Func<object, bool>)null, null, false, false);
 
-            _MailSettingsData = Settings.Instance.GetData();
+            Task.Run(InitAsync);
             /*
             ChangeNotify(nameof(FromName));
             ChangeNotify(nameof(SubjectName));
@@ -78,6 +79,10 @@ namespace SiamCross.ViewModels
             ChangeNotify(nameof(Password));
             ChangeNotify(nameof(NeedAuthorization));
             */
+        }
+        public async Task InitAsync()
+        {
+            _MailSettingsData = await Repo.MailSettingsDir.ReadSettings();
         }
 
         public override void Unsubscribe()
@@ -98,10 +103,9 @@ namespace SiamCross.ViewModels
             NeedAuthorization = true;
             return Task.CompletedTask;
         }
-        private async Task DoSave()
+        private Task DoSave()
         {
-            Settings.Instance.SetData(_MailSettingsData);
-            await Settings.Instance.SaveSettings();
+            return Repo.MailSettingsDir.SaveSettings(_MailSettingsData);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace SiamCross.Droid.Services
 {
     [Preserve(AllMembers = true)]
     [Fody.ConfigureAwait(false)]
-    public class SettingsSaverAndroid : ISettingsSaver
+    public class SettingsSaverAndroid //: ISettingsSaver
     {
         private readonly SemaphoreSlim _mutex = new SemaphoreSlim(1);
         private const string _name = "settings.json";

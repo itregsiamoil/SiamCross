@@ -1,11 +1,14 @@
 ﻿using Android;
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
 using Android.Widget;
+using LocalNotifications.Droid;
 using SiamCross.Droid.Models;
 using SiamCross.Models.Connection.Protocol.Siam;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms.Platform.Android;
@@ -21,11 +24,12 @@ namespace SiamCross.Droid
     {
         public static Activity CurrentActivity;
         private TaskCompletionSource<bool> mAllPermOkExecTcs;
+
+        public object AndroidNotificationManager { get; private set; }
+
         protected override async void OnCreate(Bundle savedInstanceState)
         {
-#if DEBUG
-            Pkg.Test();
-#endif
+            await UnitTests.Start();
             SetTheme(Resource.Style.MainTheme);
             // set the layout resources first
             FormsAppCompatActivity.ToolbarResource = Resource.Layout.Toolbar;
@@ -116,6 +120,25 @@ namespace SiamCross.Droid
         {
             base.OnPause();
             BtBroadcastReceiver.Unregister();
+            System.Diagnostics.Debug.WriteLine($"OnPause");
         }
     }
+
+    [BroadcastReceiver(Enabled = true, Label = "Local Notifications Broadcast Receiver")]
+    public class AlarmHandler : BroadcastReceiver
+    {
+        public override void OnReceive(Context context, Intent intent)
+        {
+            if (intent?.Extras != null)
+            {
+                string title = intent.GetStringExtra(AndroidNotificationManager.TitleKey);
+                string message = intent.GetStringExtra(AndroidNotificationManager.MessageKey);
+
+                AndroidNotificationManager manager = AndroidNotificationManager.Instance ?? new AndroidNotificationManager();
+                manager.Show(title, message);
+            }
+        }
+    }
+
+
 }

@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AndroidLongPressedEffect.cs" />
+    <Compile Include="AndroidNotificationManager.cs" />
     <Compile Include="LocalizeAndroid.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Models\BluetoothAdapters\BtLeInterfaceDroid.cs" />

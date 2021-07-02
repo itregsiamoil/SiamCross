@@ -35,11 +35,17 @@ namespace SiamCross.Services
 
         public int UserDbVersion = 18;
 
-        readonly Attributes Attributes = new Attributes();
-        readonly DataInt DataInt = new DataInt();
-        readonly DataFloat DataFloat = new DataFloat();
-        readonly DataString DataString = new DataString();
+        readonly DataInt _DataInt = new DataInt();
+        readonly DataFloat _DataFloat = new DataFloat();
+        readonly DataString _DataString = new DataString();
         readonly DataBlob DataBlob = new DataBlob();
+
+        public DataInt DataInt => _DataInt;
+        public DataFloat DataFloat => _DataFloat;
+        public DataString DataString => _DataString;
+
+
+
         readonly MeasureTable MeasureTable = new MeasureTable();
         IDbTransaction BeginTransaction()
         {
@@ -597,9 +603,9 @@ namespace SiamCross.Services
         {
             using (var tr = BeginTransaction())
             {
-                m.Measure.DataInt = await DataInt.Load(tr, EntityKind.Survey, m.Id);
-                m.Measure.DataFloat = await DataFloat.Load(tr, EntityKind.Survey, m.Id);
-                m.Measure.DataString = await DataString.Load(tr, EntityKind.Survey, m.Id);
+                m.Measure.DataInt = await _DataInt.Load(tr, EntityKind.Survey, m.Id);
+                m.Measure.DataFloat = await _DataFloat.Load(tr, EntityKind.Survey, m.Id);
+                m.Measure.DataString = await _DataString.Load(tr, EntityKind.Survey, m.Id);
                 m.Measure.DataBlob = await DataBlob.Load(tr, EntityKind.Survey, m.Id);
                 tr.Commit();
             }
@@ -636,9 +642,9 @@ namespace SiamCross.Services
                 using (tr = BeginTransaction())
                 {
                     long measureId = await MeasureTable.Save(tr, new MeasureTableItem(survey));
-                    await DataInt.Save(tr, EntityKind.Survey, measureId, survey.Measure.DataInt);
-                    await DataFloat.Save(tr, EntityKind.Survey, measureId, survey.Measure.DataFloat);
-                    await DataString.Save(tr, EntityKind.Survey, measureId, survey.Measure.DataString);
+                    await _DataInt.Save(tr, EntityKind.Survey, measureId, survey.Measure.DataInt);
+                    await _DataFloat.Save(tr, EntityKind.Survey, measureId, survey.Measure.DataFloat);
+                    await _DataString.Save(tr, EntityKind.Survey, measureId, survey.Measure.DataString);
                     await DataBlob.Save(tr, EntityKind.Survey, measureId, survey.Measure.DataBlob);
                     tr.Commit();
                     return measureId;
@@ -663,9 +669,9 @@ namespace SiamCross.Services
                 using (tr = BeginTransaction())
                 {
                     await MeasureTable.Delete(tr, measureId);
-                    await DataInt.Delete(tr, EntityKind.Survey, measureId);
-                    await DataFloat.Delete(tr, EntityKind.Survey, measureId);
-                    await DataString.Delete(tr, EntityKind.Survey, measureId);
+                    await _DataInt.Delete(tr, EntityKind.Survey, measureId);
+                    await _DataFloat.Delete(tr, EntityKind.Survey, measureId);
+                    await _DataString.Delete(tr, EntityKind.Survey, measureId);
                     await DataBlob.Delete(tr, EntityKind.Survey, measureId);
                     tr.Commit();
                 }
@@ -679,13 +685,6 @@ namespace SiamCross.Services
                     + "\n type=" + ex.GetType()
                     + "\n stack=" + ex.StackTrace + "\n");
             }
-        }
-
-        public async Task<IEnumerable<AttributeItem>> LoadAttributesAsync()
-        {
-            using (var tr = BeginTransaction())
-                return await Attributes.LoadAsync(tr);
-
         }
     }
 }

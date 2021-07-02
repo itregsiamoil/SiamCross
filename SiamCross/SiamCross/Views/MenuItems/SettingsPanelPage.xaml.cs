@@ -9,7 +9,7 @@ namespace SiamCross.Views.MenuItems
         public SettingsPanelPage()
         {
             InitializeComponent();
-            BindingContext = new SettingsViewModel();
+            BindingContext = new SettingsViewModel(); ;
         }
     }
 }

@@ -277,13 +277,15 @@ namespace SiamCross.ViewModels
             {
                 if (0 == SelectedMeasurements.Count)
                     return;
-                if (!ValidateForEmptiness())
+                if (!await ValidateForEmptiness())
                     return;
+
+                var settings = await Repo.MailSettingsDir.ReadSettings();
 
                 foreach (MeasurementView survay in SelectedMeasurements)
                 {
                     survay.IsRunning = true;
-                    survay.LastSentRecipient = Settings.Instance.ToAddress;
+                    survay.LastSentRecipient = settings.ToAddress;
                 }
 
                 //ToastService.Instance.LongAlert($"{Resource.SendingMeasurements}...");
@@ -291,7 +293,7 @@ namespace SiamCross.ViewModels
 
 
 
-                bool is_ok = await EmailService.Instance.SendEmailWithFilesAsync(Settings.Instance.SubjectName,
+                bool is_ok = await EmailService.Instance.SendEmailWithFilesAsync(settings.SubjectName,
                     "SiamCompany Telemetry Transfer Service",
                     paths);
                 //ToastService.Instance.LongAlert($"{SelectedMeasurements.Count} {Resource.MeasurementsSentSuccesfully}");
@@ -299,7 +301,7 @@ namespace SiamCross.ViewModels
                 foreach (MeasurementView sent_sur in SelectedMeasurements)
                 {
                     sent_sur.LastSentTimestamp = DateTime.Now.ToString();
-                    sent_sur.LastSentRecipient = Settings.Instance.ToAddress;
+                    sent_sur.LastSentRecipient = settings.ToAddress;
                     sent_sur.IsRunning = false;
                 }
 
@@ -659,22 +661,23 @@ namespace SiamCross.ViewModels
         }
 
 
-        private static bool ValidateForEmptiness()
+        private async static Task<bool> ValidateForEmptiness()
         {
             List<string> errorList = new List<string>();
+            var settings = await Repo.MailSettingsDir.ReadSettings();
 
-            if (string.IsNullOrEmpty(Settings.Instance.FromAddress))
+            if (string.IsNullOrEmpty(settings.FromAddress))
                 errorList.Add($"{Resource.EnterFromAddress}");
-            if (string.IsNullOrEmpty(Settings.Instance.ToAddress))
+            if (string.IsNullOrEmpty(settings.ToAddress))
                 errorList.Add($"{Resource.EnterToAddress}");
-            if (string.IsNullOrEmpty(Settings.Instance.SmtpAddress))
+            if (string.IsNullOrEmpty(settings.SmtpAddress))
                 errorList.Add($"{Resource.EnterSmtpAddress}");
 
-            if (Settings.Instance.NeedAuthorization)
+            if (settings.NeedAuthorization)
             {
-                if (string.IsNullOrEmpty(Settings.Instance.Username))
+                if (string.IsNullOrEmpty(settings.Username))
                     errorList.Add($"{Resource.EnterUsername}");
-                if (string.IsNullOrEmpty(Settings.Instance.Password))
+                if (string.IsNullOrEmpty(settings.Password))
                     errorList.Add($"{Resource.EnterPassword}");
             }
 

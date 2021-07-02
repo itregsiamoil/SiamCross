@@ -1,6 +1,7 @@
 ﻿using SiamCross.AppObjects;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
+using SiamCross.Services.Notification;
 using SiamCross.Views;
 using SiamCross.Views.MenuItems;
 using System.Collections.Generic;
@@ -24,11 +25,9 @@ namespace SiamCross
         private async void MainInit()
         {
             var initNavigator = PageNavigator.Init();
-            var initSettings = Settings.Instance.Initialize();
             var initDbService = DbService.Instance.Init();
             var tasks = new List<Task>(5);
             tasks.Add(initNavigator);
-            tasks.Add(initSettings);
             tasks.Add(initDbService);
             await Task.WhenAll(tasks).ConfigureAwait(false);
             tasks.Clear();
@@ -68,12 +67,14 @@ namespace SiamCross
         protected override void OnStart()
         {
             // Handle when your app starts
+            //DependencyService.Get<INotificationManager>().SendNotification("testTitle", "test message");
         }
         protected override void OnSleep()
         {
             //await App.Navigation.PopToRootAsync();
             base.OnSleep();
             // Handle when your app sleeps
+            System.Diagnostics.Debug.WriteLine($"OnSleep");
         }
         protected override void OnResume()
         {

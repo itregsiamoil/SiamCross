@@ -6,7 +6,6 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms.Internals;
-using Settings = SiamCross.Models.Tools.Settings;
 
 namespace SiamCross.Services.Email
 {
@@ -22,14 +21,16 @@ namespace SiamCross.Services.Email
                 //using (SmtpClient client = new SmtpClient(new ProtocolLogger(path)))
                 using (SmtpClient client = new SmtpClient())
                 {
-                    await client.ConnectAsync(Settings.Instance.SmtpAddress, Settings.Instance.Port);
+                    var settings = await Repo.MailSettingsDir.ReadSettings();
 
-                    if (Settings.Instance.NeedAuthorization)
+                    await client.ConnectAsync(settings.SmtpAddress, settings.Port);
+
+                    if (settings.NeedAuthorization)
                     {
                         // Note: since we don't have an OAuth2 token, disable
                         // the XOAUTH2 authentication mechanism.
                         //client.AuthenticationMechanisms.Remove("XOAUTH2");
-                        await client.AuthenticateAsync(Settings.Instance.Username, Settings.Instance.Password);
+                        await client.AuthenticateAsync(settings.Username, settings.Password);
                     }
                     await client.SendAsync(msg);
                     await client.DisconnectAsync(true);
@@ -47,8 +48,10 @@ namespace SiamCross.Services.Email
         {
             MimeMessage m = new MimeMessage();
 
-            MailboxAddress sender = new MailboxAddress(Settings.Instance.FromName, Settings.Instance.FromAddress);
-            MailboxAddress receiver = new MailboxAddress(string.Empty, Settings.Instance.ToAddress);
+            var settings = await Repo.MailSettingsDir.ReadSettings();
+
+            MailboxAddress sender = new MailboxAddress(settings.FromName, settings.FromAddress);
+            MailboxAddress receiver = new MailboxAddress(string.Empty, settings.ToAddress);
             m.From.Add(sender);
             m.To.Add(receiver);
             m.Subject = subject;

@@ -33,7 +33,6 @@ namespace SiamCross.Droid
             DependencyService.Register<IBtLeInterfaceCross, BtLeInterfaceDroid>();
 
             //cb.RegisterType<ScannerLe>().As<IBluetoothScanner>();
-            cb.RegisterType<SettingsSaverAndroid>().As<ISettingsSaver>();
             cb.RegisterType<SqliteConnection>().As<IDbConnection>();
             cb.RegisterType<DatabaseCreatorAndroid>().As<IDatabaseCreator>();
             cb.RegisterType<NLogManagerAndroid>().As<ILogManager>();
