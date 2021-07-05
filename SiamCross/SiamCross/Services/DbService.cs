@@ -1,7 +1,5 @@
-﻿using Autofac;
 using Dapper;
 using NLog;
-using SiamCross.AppObjects;
 using SiamCross.DataBase;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
@@ -16,13 +14,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace SiamCross.Services
 {
     public class DbService
     {
-        private static readonly Logger _logger =
-            AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static readonly Logger _logger = DependencyService.Get<ILogManager>().GetLog();
 
         private static readonly Lazy<DbService> _instance =
             new Lazy<DbService>(() => new DbService());
@@ -33,7 +31,7 @@ namespace SiamCross.Services
         public IDbConnection Db => _Db;
 
 
-        public int UserDbVersion = 19;
+        public int UserDbVersion = 20;
 
         readonly DataInt _DataInt = new DataInt();
         readonly DataFloat _DataFloat = new DataFloat();
@@ -57,15 +55,14 @@ namespace SiamCross.Services
             return Path.Combine(
                 EnvironmentService.Instance.GetDir_Downloads(), dbFileName);
 #else
-                return Path.Combine(
-                    EnvironmentService.Instance.GetDir_LocalApplicationData(), dbFileName);
+            return Path.Combine(
+                EnvironmentService.Instance.GetDir_LocalApplicationData(), dbFileName);
 #endif        
         }
         static IDbConnection OpenDb(string dbPath)
         {
-            IDbConnection db = AppContainer.Container
-                                .Resolve<IDbConnection>(new TypedParameter(typeof(string)
-                                , $"Data Source={dbPath};Version=3;"));
+            IDbConnection db = DependencyService.Get<IDbConnection>(DependencyFetchTarget.NewInstance);
+            db.ConnectionString = $"Data Source={dbPath};Version=3;";
             db.Open();
             db.Execute("PRAGMA foreign_keys = ON");
             var sql_version = db.ExecuteScalar<string>("select sqlite_version()");
@@ -76,7 +73,7 @@ namespace SiamCross.Services
         }
         static async Task<IDbConnection> CreateDb(string dbPath, int userDbVersion)
         {
-            AppContainer.Container.Resolve<IDatabaseCreator>().CreateDatabase(dbPath);
+            DependencyService.Get<IDatabaseCreator>().CreateDatabase(dbPath);
             var db = OpenDb(dbPath);
             using (var tr = db.BeginTransaction(IsolationLevel.Serializable))
             {
@@ -127,7 +124,7 @@ namespace SiamCross.Services
             {
                 string dbPath = GetDbPath("Db.sqlite");
                 if (!File.Exists(dbPath))
-                    AppContainer.Container.Resolve<IDatabaseCreator>().CreateDatabase(dbPath);
+                    DependencyService.Get<IDatabaseCreator>().CreateDatabase(dbPath);
                 _database = OpenDb(dbPath);
                 CreateDdin2Table();
                 CreateDuTable();
@@ -538,13 +535,13 @@ namespace SiamCross.Services
                 throw;
             }
         }
-        public void RemoveDdin2Measurement(long removebleId)
+        public async Task RemoveDdin2Measurement(long removebleId)
         {
             NonQueryCheck();
 
             try
             {
-                _database.Execute("DELETE FROM Ddin2Measurement WHERE Id =" + removebleId);
+                _database.ExecuteAsync("DELETE FROM Ddin2Measurement WHERE Id =" + removebleId);
             }
             catch (Exception e)
             {
@@ -561,9 +558,10 @@ namespace SiamCross.Services
                 return _database.Query<Ddin2Measurement>(
                     "SELECT * FROM Ddin2Measurement");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                _logger.Error(e, $"Ddin2Get database error!" + "\n");
+                Debug.WriteLine($"Exception {ex.Message}\n{ex.StackTrace}");
+                _logger.Error(ex, $"Ddin2Get database error!" + "\n");
                 throw;
             }
         }

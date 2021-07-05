@@ -1,9 +1,12 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage BackgroundColor="White"
-         xmlns="http://xamarin.com/schemas/2014/forms" 
-         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-         xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
-         x:Class="SiamCross.Views.MenuPage">
+<ContentPage 
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
+    xmlns:viewmodels="clr-namespace:SiamCross.ViewModels"
+    x:Class="SiamCross.Views.MenuPage"
+    x:DataType="viewmodels:MenuPageViewModel"
+    >
 
     <ContentPage.Content>
         <StackLayout Margin="5">
@@ -27,7 +30,7 @@
                       Margin="5">
                 <!--ItemSelected="menuListView_ItemSelected"-->
                 <ListView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="viewmodels:MenuPageItem">
                         <ViewCell>
                             <Label Text="{Binding Title}" 
                                    FontSize="Medium" 

@@ -12,8 +12,8 @@ namespace SiamCross.Views
         public DuMeasurementPage(ISensor sensor)
         {
             InitializeComponent();
-            ViewModelWrap<DuMeasurementViewModel> vm = new ViewModelWrap<DuMeasurementViewModel>(sensor);
-            _vm = vm.ViewModel;
+            DuMeasurementViewModel vm = new DuMeasurementViewModel(sensor);
+            _vm = vm;
             BindingContext = _vm;
         }
 

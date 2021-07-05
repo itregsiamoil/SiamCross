@@ -52,7 +52,7 @@ namespace SiamCross
         public App(AppSetup setup)
         {
             InitializeComponent();
-            AppContainer.Container = setup.CreateContainer();
+            setup.RegisterDependencies();
 
             if (Device.RuntimePlatform == Device.Android)
             {

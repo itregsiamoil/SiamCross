@@ -1,6 +1,4 @@
-using Autofac;
 using NLog;
-using SiamCross.AppObjects;
 using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Sensors.Dmg;
 using SiamCross.Models.Tools;
@@ -9,12 +7,13 @@ using System;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace SiamCross.Models.Sensors.Du.Measurement
 {
     public class DuMeasurementManager
     {
-        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static readonly Logger _logger = DependencyService.Get<ILogManager>().GetLog();
         private readonly DuMeasurementStartParameters _measurementParameters;
         private readonly CommandGenerator _commandGenerator;
         private readonly ISensor mSensor;

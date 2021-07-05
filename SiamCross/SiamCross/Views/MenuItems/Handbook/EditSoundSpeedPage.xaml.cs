@@ -1,6 +1,4 @@
-﻿using Autofac;
 using NLog;
-using SiamCross.AppObjects;
 using SiamCross.Models.Tools;
 using SiamCross.Services.Logging;
 using SiamCross.ViewModels;
@@ -101,6 +99,6 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
             }
         }
 
-        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static readonly Logger _logger = DependencyService.Get<ILogManager>().GetLog();
     }
 }

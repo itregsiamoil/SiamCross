@@ -1,6 +1,4 @@
-﻿using Autofac;
 using NLog;
-using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Du.Measurement;
@@ -21,7 +19,8 @@ namespace SiamCross.ViewModels
     [Preserve(AllMembers = true)]
     public class DuMeasurementViewModel : BaseSensorMeasurementViewModel<DuMeasurementStartParameters>
     {
-        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static readonly Logger _logger = DependencyService.Get<ILogManager>().GetLog();
+
         public ObservableCollection<string> ResearchTypes { get; set; }
         public string SelectedResearchType { get; set; }
         public ObservableCollection<string> SoundSpeedCorrections { get; set; }

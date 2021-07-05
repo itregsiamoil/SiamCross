@@ -1,5 +1,4 @@
 ﻿using Android.Runtime;
-using Autofac;
 using Mono.Data.Sqlite;
 using SiamCross.AppObjects;
 using SiamCross.DataBase;
@@ -24,28 +23,27 @@ namespace SiamCross.Droid
     [Preserve(AllMembers = true)]
     public class Setup : AppSetup
     {
-        protected override void RegisterDependencies(ContainerBuilder cb)
+        public override void RegisterDependencies()
         {
-            //cb.RegisterType<Bt2InterfaceDroid>().As<IBt2InterfaceCross>();
-            //cb.RegisterType<BtLeInterfaceDroid>().As<IBtLeInterfaceCross>();
+            DependencyService.RegisterSingleton<ILogManager>(new NLogManagerAndroid());
+
+
             DependencyService.Register<IBt2InterfaceCross, Bt2InterfaceDroid>();
             DependencyService.Register<IBtLeInterfaceCross, BtLeInterfaceDroid>();
 
-            //cb.RegisterType<ScannerLe>().As<IBluetoothScanner>();
-            cb.RegisterType<SqliteConnection>().As<IDbConnection>();
-            cb.RegisterType<DatabaseCreatorAndroid>().As<IDatabaseCreator>();
-            cb.RegisterType<NLogManagerAndroid>().As<ILogManager>();
+            DependencyService.Register<IDbConnection, SqliteConnection>();
+            DependencyService.Register<IDatabaseCreator, DatabaseCreatorAndroid>();
+            DependencyService.Register<ILogManager, NLogManagerAndroid>();
 
-            //cb.RegisterType<ConnectionBt2>().As<IConnectionBt2>();
-            //cb.RegisterType<ConnectionBtLe>().As<IConnectionBtLe>();
-            //DependencyService.Register<IScannerBt2, ScannerBt2>();
-            //DependencyService.Register<IScannerLe, ScannerLe >();
+            //cb.RegisterType<SqliteConnection>().As<IDbConnection>();
+            //cb.RegisterType<DatabaseCreatorAndroid>().As<IDatabaseCreator>();
+            //cb.RegisterType<NLogManagerAndroid>().As<ILogManager>();
 
             DependencyService.RegisterSingleton<IMediaScanner>(new MediaScanner());
             DependencyService.RegisterSingleton<IEnvironment>(new Environment());
             DependencyService.RegisterSingleton<IFileOpenDialog>(new FileOpenDialog());
             DependencyService.RegisterSingleton<IToast>(new Toast());
-            base.RegisterDependencies(cb);
+            base.RegisterDependencies();
         }
     }
 }

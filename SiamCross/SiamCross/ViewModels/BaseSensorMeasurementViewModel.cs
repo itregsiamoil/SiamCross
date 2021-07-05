@@ -1,6 +1,4 @@
-﻿using Autofac;
-using NLog;
-using SiamCross.AppObjects;
+﻿using NLog;
 using SiamCross.Models.Sensors;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
@@ -20,7 +18,7 @@ namespace SiamCross.ViewModels
     public abstract class BaseSensorMeasurementViewModel<T> : BaseSurveyVM
         where T : class
     {
-        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static readonly Logger _logger = DependencyService.Get<ILogManager>().GetLog();
         protected List<string> _errorList;
 
         private readonly ObservableCollection<string> _Fields = new ObservableCollection<string>();

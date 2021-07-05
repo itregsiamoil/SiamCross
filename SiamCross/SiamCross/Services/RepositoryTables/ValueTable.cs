@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Threading.Tasks;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Services.RepositoryTables
 {
@@ -16,11 +17,13 @@ namespace SiamCross.Services.RepositoryTables
         MailConfig = 20
     };
 
-
+    [Preserve(AllMembers = true)]
     public class DataItem<T>
     {
         public uint AttrId { get; set; }
         public T Value { get; set; }
+        public int EntityKindId { get; set; }
+        public long EntityId { get; set; }
     }
 
     public class ValueTable<T>
@@ -39,7 +42,7 @@ namespace SiamCross.Services.RepositoryTables
                 case AttributeType.String: table = "ValString"; break;
                 case AttributeType.Blob: table = "ValBlob"; break;
             }
-            insert_sql = $"INSERT INTO {table}(EntityKindId, EntityId, AttrId, Value) VALUES(@EntityKindId, @EntityId, @AttrId, @Value)";
+            insert_sql = $"INSERT OR REPLACE INTO {table}(EntityKindId, EntityId, AttrId, Value) VALUES(@EntityKindId, @EntityId, @AttrId, @Value)";
             select_by_id_sql = $"SELECT AttrId, Value FROM {table} WHERE EntityId=@EntityId AND EntityKindId=@EntityKindId";
             delete_by_entity = $"DELETE FROM {table} WHERE EntityId=@EntityId AND EntityKindId=@EntityKindId";
 
@@ -50,7 +53,7 @@ namespace SiamCross.Services.RepositoryTables
         {
             foreach (var v in values)
             {
-                var param = new
+                var param = new DataItem<T>
                 {
                     EntityKindId = (int)entityKind,
                     EntityId = entityId,
@@ -63,9 +66,9 @@ namespace SiamCross.Services.RepositoryTables
         public virtual async Task<Dictionary<AttributeItem, T>> Load(IDbTransaction tr, EntityKind entityKind, long entityId)
         {
             //const string sql = "SELECT * FROM  WHERE MeasureId=@MeasureId";
-            var param = new
+            var param = new DataItem<T>
             {
-                EntityKindId = entityKind,
+                EntityKindId = (int)entityKind,
                 EntityId = entityId,
             };
             var values = await tr.Connection.QueryAsync<DataItem<T>>(select_by_id_sql, param, tr);
@@ -79,9 +82,9 @@ namespace SiamCross.Services.RepositoryTables
         }
         public virtual async Task<Dictionary<AttributeItem, T>> Load(IDbTransaction tr, EntityKind entityKind)
         {
-            var param = new
+            var param = new DataItem<T>
             {
-                EntityKindId = entityKind,
+                EntityKindId = (int)entityKind,
             };
             var values = await tr.Connection.QueryAsync<DataItem<T>>(select_by_entity_id_sql, param, tr);
             var dict = new Dictionary<AttributeItem, T>();
@@ -94,9 +97,9 @@ namespace SiamCross.Services.RepositoryTables
         }
         public virtual async Task Delete(IDbTransaction tr, EntityKind entityKind, long entityId)
         {
-            var param = new
+            var param = new DataItem<T>
             {
-                EntityKindId = entityKind,
+                EntityKindId = (int)entityKind,
                 EntityId = entityId,
             };
             await tr.Connection.QueryAsync(delete_by_entity, param, tr);

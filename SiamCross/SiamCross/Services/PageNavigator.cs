@@ -59,8 +59,8 @@ namespace SiamCross.Services
             var view = Get(type);
             if (null == view)
                 return null;
-
-            view.BindingContext = bindingContext;
+            if (!Equals(view.BindingContext, bindingContext))
+                view.BindingContext = bindingContext;
             return view;
         }
         public static T Get<T>(Type type, object bindingContext) where T : ContentPage
@@ -92,7 +92,7 @@ namespace SiamCross.Services
                 if (null == vm)
                     return;
                 var page = Get(vm);
-                if (null == page)
+                if (null == page || !CanOpenPage(page.GetType()))
                     return;
                 await App.NavigationPage.Navigation.PushAsync(page);
             }
@@ -115,6 +115,13 @@ namespace SiamCross.Services
                   Resource.DeleteQuestion,
                   Resource.YesButton,
                   Resource.NotButton);
+        }
+        private static bool CanOpenPage(Type type)
+        {
+            IReadOnlyList<Page> stack = App.NavigationPage.Navigation.NavigationStack;
+            if (stack[stack.Count - 1].GetType() != type)
+                return true;
+            return false;
         }
 
     }

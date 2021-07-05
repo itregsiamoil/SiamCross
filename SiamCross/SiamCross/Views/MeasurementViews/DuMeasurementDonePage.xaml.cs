@@ -1,6 +1,4 @@
-﻿using Autofac;
-using NLog;
-using SiamCross.AppObjects;
+﻿using NLog;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models.Tools;
 using SiamCross.Services.Logging;
@@ -18,8 +16,7 @@ namespace SiamCross.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DuMeasurementDonePage : ContentPage
     {
-        private static readonly Logger _logger =
-            AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static readonly Logger _logger = DependencyService.Get<ILogManager>().GetLog();
 
         private readonly double[,] _points;
         private readonly float minX;
@@ -34,14 +31,14 @@ namespace SiamCross.Views
             try
             {
                 _measurement = measurement;
-                ViewModelWrap<DuMeasurementDoneViewModel> vmWrap = new ViewModelWrap<DuMeasurementDoneViewModel>(measurement);
+                DuMeasurementDoneViewModel vm = new DuMeasurementDoneViewModel(measurement);
                 if (null != measurement.Echogram)
                 {
                     _points = EchogramConverter.GetPoints(measurement
                         , out minX, out maxX, out minY, out maxY);
-                    vmWrap.ViewModel.SetAxisLimits(minX, maxX, minY, maxY);
+                    vm.SetAxisLimits(minX, maxX, minY, maxY);
                 }
-                BindingContext = vmWrap.ViewModel;
+                BindingContext = vm;
                 InitializeComponent();
             }
             catch (Exception ex)

@@ -1,6 +1,4 @@
-﻿using Autofac;
 using NLog;
-using SiamCross.AppObjects;
 using SiamCross.Models;
 using SiamCross.Models.Adapters;
 using SiamCross.Models.Adapters.PhyInterface;
@@ -27,7 +25,7 @@ namespace SiamCross.ViewModels
     [Preserve(AllMembers = true)]
     public class ScannerViewModel : IViewModel
     {
-        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static readonly Logger _logger = DependencyService.Get<ILogManager>().GetLog();
 
         private readonly IBluetoothScanner _scanner;
 

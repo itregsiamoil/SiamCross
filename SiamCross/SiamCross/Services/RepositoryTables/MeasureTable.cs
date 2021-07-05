@@ -5,9 +5,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Services.RepositoryTables
 {
+    [Preserve(AllMembers = true)]
     public class MeasureTableItem
     {
         public MeasureData MeasureData { get; private set; }
@@ -16,7 +18,7 @@ namespace SiamCross.Services.RepositoryTables
         {
             MeasureData = new MeasureData(
                 new Position()
-                , new DeviceInfo()
+                , new Models.DeviceInfo()
                 , new CommonInfo()
                 , new MeasurementInfo()
                 , new DistributionInfo()
@@ -62,8 +64,7 @@ namespace SiamCross.Services.RepositoryTables
         }
         public Task Delete(IDbTransaction tr, long measureId)
         {
-            return tr.Connection.ExecuteAsync("DELETE FROM Measurement WHERE Id=@MeasureId "
-                , param: new { MeasureId = measureId });
+            return tr.Connection.ExecuteAsync("DELETE FROM Measurement WHERE Id=" + measureId.ToString());
         }
         public async Task<long> Save(IDbTransaction tr, MeasureTableItem item)
         {

@@ -1,6 +1,4 @@
-﻿using Autofac;
-using NLog;
-using SiamCross.AppObjects;
+﻿using NLog;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models;
 using SiamCross.Models.Sensors;
@@ -11,6 +9,7 @@ using SiamCross.Services.Email;
 using SiamCross.Services.Environment;
 using SiamCross.Services.Logging;
 using SiamCross.Services.MediaScanner;
+using SiamCross.Services.Toast;
 using SiamCross.Views;
 using System;
 using System.Collections.Generic;
@@ -45,7 +44,7 @@ namespace SiamCross.ViewModels
         //private List<MeasureData> _Measurements = new List<MeasureData>();
 
 
-        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static readonly Logger _logger = DependencyService.Get<ILogManager>().GetLog();
         private bool _selectMode = false;
 
         public bool SelectMode
@@ -152,7 +151,9 @@ namespace SiamCross.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, "GetMeasurementFromDb method" + "\n");
+                ToastService.Instance.LongAlert($"Exception GetMeasurementFromDb");
             }
+            ToastService.Instance.LongAlert($"Measurements = {Measurements.Count}");
         }
         public bool OnBackButton()
         {
@@ -374,7 +375,9 @@ namespace SiamCross.ViewModels
                             Measurements.Remove(mv);
                             switch (mv.MeasureKind)
                             {
-                                case 0: DbService.Instance.RemoveDdin2Measurement(mv.Id); break;
+                                case 0:
+                                    await DbService.Instance.RemoveDdin2Measurement(mv.Id);
+                                    break;
                                 case 1:
                                     if (0x1201 == mv.MeasureData.Device.Kind)
                                         await DbService.Instance.DelSurveyAsync(mv.Id);

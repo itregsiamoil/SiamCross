@@ -1,5 +1,4 @@
-﻿using SiamCross.Models.Connection.Protocol.Siam;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace SiamCross
 {
@@ -8,7 +7,7 @@ namespace SiamCross
         public static Task Start()
         {
 #if DEBUG
-            Pkg.Test();
+            //Pkg.Test();
 #endif
             return Task.CompletedTask;
         }

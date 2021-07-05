@@ -2,7 +2,6 @@
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using static SiamCross.ViewModels.MenuPageViewModel;
 
 namespace SiamCross.Views
 {

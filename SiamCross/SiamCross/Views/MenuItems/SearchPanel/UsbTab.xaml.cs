@@ -1,6 +1,4 @@
-﻿using Autofac;
 using NLog;
-using SiamCross.AppObjects;
 using SiamCross.Models.Scanners;
 using SiamCross.Services.Logging;
 using SiamCross.ViewModels;
@@ -13,15 +11,15 @@ namespace SiamCross.Views.MenuItems.SearchPanel
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class UsbTab : ContentPage
     {
-        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static readonly Logger _logger = DependencyService.Get<ILogManager>().GetLog();
 
         private readonly ScannerViewModel _viewModel;
         public UsbTab()
         {
             InitializeComponent();
-            ViewModelWrap<ScannerViewModel> vm = new ViewModelWrap<ScannerViewModel>();
+            ScannerViewModel vm = null;// new ScannerViewModel();
 
-            _viewModel = vm.ViewModel;
+            _viewModel = vm;
             //_viewModel.ScanTimeoutElapsed += () => ScanAnimation.IsRunning = false;
             BindingContext = _viewModel;
             usbDevicesList.RefreshCommand = new Command(() =>

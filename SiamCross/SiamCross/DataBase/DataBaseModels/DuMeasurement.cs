@@ -1,9 +1,11 @@
 ﻿using SiamCross.Models.Sensors.Du.Measurement;
 using System;
 using System.Globalization;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.DataBase.DataBaseModels
 {
+    [Preserve(AllMembers = true)]
     public class DuMeasurement
     {
         public int Id { get; set; }

@@ -1,6 +1,7 @@
 ﻿using SiamCross.Models.Tools;
 using SiamCross.Services;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
@@ -67,8 +68,10 @@ namespace SiamCross.ViewModels
             CmdSave = new AsyncCommand(DoSave
                 , (Func<object, bool>)null, null, false, false);
 
-            Task.Run(InitAsync);
-            /*
+        }
+        public async Task InitAsync(CancellationToken ct = default)
+        {
+            _MailSettingsData = await Repo.MailSettingsDir.GetData();
             ChangeNotify(nameof(FromName));
             ChangeNotify(nameof(SubjectName));
             ChangeNotify(nameof(FromAddress));
@@ -78,11 +81,6 @@ namespace SiamCross.ViewModels
             ChangeNotify(nameof(Username));
             ChangeNotify(nameof(Password));
             ChangeNotify(nameof(NeedAuthorization));
-            */
-        }
-        public async Task InitAsync()
-        {
-            _MailSettingsData = await Repo.MailSettingsDir.GetData();
         }
 
         public override void Unsubscribe()

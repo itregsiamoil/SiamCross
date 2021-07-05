@@ -1,6 +1,4 @@
-﻿using Autofac;
-using NLog;
-using SiamCross.AppObjects;
+﻿using NLog;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models.Sensors;
 using SiamCross.Models.Sensors.Dmg.Ddin2.Measurement;
@@ -21,7 +19,7 @@ namespace SiamCross.ViewModels.Dmg.Survey
     [Preserve(AllMembers = true)]
     public class DynamogrammVM : BaseSensorMeasurementViewModel<Ddin2MeasurementStartParameters>
     {
-        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static readonly Logger _logger = DependencyService.Get<ILogManager>().GetLog();
 
         public string Rod { get; set; }
 

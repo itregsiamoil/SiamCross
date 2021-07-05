@@ -1,6 +1,4 @@
-﻿using Autofac;
 using NLog;
-using SiamCross.AppObjects;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
 using SiamCross.Views;
@@ -10,12 +8,13 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
     public class FieldsDirVM : BaseDirectoryPageVM
     {
-        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static readonly Logger _logger = DependencyService.Get<ILogManager>().GetLog();
         public FieldsDirVM()
             : base(Resource.Fields)
         {

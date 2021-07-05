@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace SiamCross.Services
@@ -25,7 +27,14 @@ namespace SiamCross.Services
                 SoundSpeedDir.InitAsync(),
                 MailSettingsDir.InitAsync()
             };
-            await Task.WhenAll(t);
+            try
+            {
+                await Task.WhenAll(t);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception {ex.Message}\n{ex.StackTrace}");
+            }
         }
     }
 }

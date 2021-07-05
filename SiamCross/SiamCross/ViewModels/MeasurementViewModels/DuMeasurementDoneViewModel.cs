@@ -1,6 +1,4 @@
-﻿using Autofac;
 using NLog;
-using SiamCross.AppObjects;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
@@ -18,7 +16,7 @@ namespace SiamCross.ViewModels
     [Preserve(AllMembers = true)]
     public class DuMeasurementDoneViewModel : BaseVM
     {
-        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static readonly Logger _logger = DependencyService.Get<ILogManager>().GetLog();
 
         private readonly DuMeasurement _measurement;
 

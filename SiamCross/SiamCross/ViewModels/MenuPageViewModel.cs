@@ -1,6 +1,4 @@
-﻿using Autofac;
 using NLog;
-using SiamCross.AppObjects;
 using SiamCross.Models.Tools;
 using SiamCross.Services.Logging;
 using SiamCross.Views.MenuItems;
@@ -12,21 +10,23 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
+    public class MenuPageItem
+    {
+        public string Title { get; set; }
+        public ICommand Command { get; set; }
+    }
+
     public class MenuPageViewModel
     {
-        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static readonly Logger _logger = DependencyService.Get<ILogManager>().GetLog();
 
         private MenuPageItem _selectedItem;
 
-        public class MenuPageItem
-        {
-            public string Title { get; set; }
-
-            public ICommand Command { get; set; }
-        }
 
         public List<MenuPageItem> MenuItems { get; private set; }
 
@@ -103,42 +103,38 @@ namespace SiamCross.ViewModels
         }
         private async Task GoSearch()
         {
-            await App.NavigationPage.Navigation.PopToRootAsync(false);
             App.MenuIsPresented = false;
             await App.NavigationPage.Navigation.PushAsync(new SearchPanelPage());
         }
         private async Task GoMeasuring()
         {
-            await App.NavigationPage.Navigation.PopToRootAsync(false);
             App.MenuIsPresented = false;
             await Services.PageNavigator.ShowPageAsync(MeasurementsVMService.Instance);
         }
         private async Task GoMail()
         {
-            await App.NavigationPage.Navigation.PopToRootAsync(false);
             App.MenuIsPresented = false;
             await App.NavigationPage.Navigation.PushAsync(new SettingsPanelPage());
         }
         private async Task GoField()
         {
-            await App.NavigationPage.Navigation.PopToRootAsync(false);
             App.MenuIsPresented = false;
             await App.NavigationPage.Navigation.PushAsync(new DirectoryPage(() => { return new FieldsDirVM(); }));
         }
         private async Task GoSoundSpeed()
         {
-            await App.NavigationPage.Navigation.PopToRootAsync(false);
             App.MenuIsPresented = false;
             await App.NavigationPage.Navigation.PushAsync(new DirectoryPage(() => { return new SoundSpeedListVM(); }));
         }
 
         private async Task GoAbout()
         {
-            await App.NavigationPage.Navigation.PopToRootAsync(false);
             App.MenuIsPresented = false;
             await App.NavigationPage.Navigation.PushAsync(new AboutPanelPage());
         }
 
         public string Version => DependencyService.Get<IAppVersionAndBuild>().GetVersionNumber();
+
+
     }
 }

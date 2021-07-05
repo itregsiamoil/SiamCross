@@ -1,6 +1,4 @@
-﻿using Autofac;
 using NLog;
-using SiamCross.AppObjects;
 using SiamCross.Models.Connection;
 using SiamCross.Models.Sensors;
 using SiamCross.Models.Tools;
@@ -23,7 +21,7 @@ namespace SiamCross.ViewModels
     [Preserve(AllMembers = true)]
     public class ControlPanelPageViewModel : BasePageVM
     {
-        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static readonly Logger _logger = DependencyService.Get<ILogManager>().GetLog();
         public ObservableCollection<ISensor> Sensor { get; }
         public bool IsPreRelease => Version.ToLower().Contains("rc");
         public string Version => DependencyService.Get<IAppVersionAndBuild>().GetVersionNumber();

@@ -17,8 +17,8 @@ namespace SiamCross.Views.MenuItems
         public ControlPanelPage()
         {
             InitializeComponent();
-            ViewModelWrap<ControlPanelPageViewModel> vm = new ViewModelWrap<ControlPanelPageViewModel>();
-            _vm = vm.ViewModel;
+            ControlPanelPageViewModel vm = new ControlPanelPageViewModel();
+            _vm = vm;
             BindingContext = _vm;
         }
 

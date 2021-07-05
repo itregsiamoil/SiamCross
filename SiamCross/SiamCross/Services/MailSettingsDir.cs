@@ -5,9 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Services
 {
+    [Preserve(AllMembers = true)]
     internal class MailSettingsItem
     {
         public uint Id { get; set; }
@@ -105,6 +107,7 @@ namespace SiamCross.Services
                 await DbService.Instance.DataString.Save(tr, EntityKind.MailConfig, 0, strDir);
                 tr.Commit();
             }
+            _MailSettingsData = settings;
         }
         public Task<MailSettingsData> GetData()
         {

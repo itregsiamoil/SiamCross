@@ -1,6 +1,4 @@
-﻿using Autofac;
 using NLog;
-using SiamCross.AppObjects;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
 using SiamCross.Services.Logging;
@@ -11,12 +9,13 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace SiamCross.ViewModels
 {
     public class SoundSpeedListVM : BaseDirectoryPageVM
     {
-        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static readonly Logger _logger = DependencyService.Get<ILogManager>().GetLog();
         public SoundSpeedListVM()
             : base(Resource.SoundSpeed)
         {

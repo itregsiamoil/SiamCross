@@ -1,6 +1,8 @@
 ﻿using SiamCross.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,6 +12,9 @@ namespace SiamCross.Views.MenuItems
 
     public partial class MeasurementsPage : BaseContentPage
     {
+        private Task InitTask;
+        private CancellationTokenSource Cts;
+        //private BaseDirectoryPageVM _vm;
         private readonly MeasurementsVMService _vm = MeasurementsVMService.Instance;
         public MeasurementsPage()
         {
@@ -53,14 +58,24 @@ namespace SiamCross.Views.MenuItems
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            _vm.DoOnDisappearing();
-            _vm.OnBackButton();
+            if (null != _vm)
+            {
+                _ = Task.Run(async () =>
+                {
+                    if (null != InitTask && !InitTask.IsCompleted)
+                    {
+                        Cts?.Cancel();
+                        await InitTask;
+                    }
+                    _vm.DoOnDisappearing();
+                    _vm.OnBackButton();
+                });
+            }
         }
-
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
+            InitTask = Task.Run(async () => await _vm.ReloadMeasurementsFromDb().ConfigureAwait(false));
             base.OnAppearing();
-            await _vm.ReloadMeasurementsFromDb().ConfigureAwait(false);
         }
     }
 }

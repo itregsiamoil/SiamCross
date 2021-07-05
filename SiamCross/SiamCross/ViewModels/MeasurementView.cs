@@ -1,8 +1,10 @@
 ﻿using SiamCross.Models;
 using System;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.ViewModels
 {
+    [Preserve(AllMembers = true)]
     public class MeasurementView : BaseVM
     {
         string _PositionStringCache;

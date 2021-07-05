@@ -1,6 +1,4 @@
-﻿using Autofac;
-using NLog;
-using SiamCross.AppObjects;
+﻿using NLog;
 using SiamCross.DataBase.DataBaseModels;
 using SiamCross.Models.Tools;
 using SiamCross.Services;
@@ -19,7 +17,7 @@ namespace SiamCross.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Ddin2MeasurementDonePage : ContentPage
     {
-        private static readonly Logger _logger = AppContainer.Container.Resolve<ILogManager>().GetLog();
+        private static readonly Logger _logger = DependencyService.Get<ILogManager>().GetLog();
         private readonly double[,] _points;
         private readonly Ddin2Measurement _measurement;
 
@@ -32,8 +30,8 @@ namespace SiamCross.Views
             try
             {
                 _measurement = measurement;
-                ViewModelWrap<Ddin2MeasurementDoneViewModel> vm = new ViewModelWrap<Ddin2MeasurementDoneViewModel>(measurement);
-                BindingContext = vm.ViewModel;
+                Ddin2MeasurementDoneViewModel vm = new Ddin2MeasurementDoneViewModel(measurement);
+                BindingContext = vm;
                 InitializeComponent();
                 float minX;
                 float minY;
