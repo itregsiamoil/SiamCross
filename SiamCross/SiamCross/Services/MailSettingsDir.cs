@@ -1,15 +1,10 @@
-﻿using Dapper;
+﻿using SiamCross.Models;
 using SiamCross.Models.Tools;
+using SiamCross.Services.RepositoryTables;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
 using System.Threading.Tasks;
-using Xamarin.CommunityToolkit.ObjectModel;
-using SiamCross.Services.RepositoryTables;
-using SiamCross.Models;
 
 namespace SiamCross.Services
 {
@@ -21,98 +16,86 @@ namespace SiamCross.Services
     }
     public class MailSettingsDir
     {
-        private MailSettingsData _MailSettingsData;
-
-        readonly Dictionary<string, MailSettingsItem> DictByTitle = new Dictionary<string, MailSettingsItem>();
-        readonly Dictionary<uint, MailSettingsItem> DictById = new Dictionary<uint, MailSettingsItem>();
-        readonly ObservableRangeCollection<MailSettingsItem> Models = new ObservableRangeCollection<MailSettingsItem>();
+        private MailSettingsData _MailSettingsData = new MailSettingsData();
 
         public async Task InitAsync()
         {
-            /*
-            
-            DataInt DataInt = new DataInt();
-            DataFloat DataFloat = new DataFloat();
-            DataString DataString = new DataString();
-
-            Dictionary<AttributeItem, long> intDict;
-
-            
+            var dataInt = new Dictionary<AttributeItem, long>();
+            var dataFloat = new Dictionary<AttributeItem, double>();
+            var dataString = new Dictionary<AttributeItem, string>();
             using (var tr = BeginTransaction())
             {
-                intDict = await DbService.Instance.DataInt.Load(tr, EntityKind.MailConfig);
+                dataInt = await DbService.Instance.DataInt.Load(tr, EntityKind.MailConfig);
+                dataFloat = await DbService.Instance.DataFloat.Load(tr, EntityKind.MailConfig);
+                dataString = await DbService.Instance.DataString.Load(tr, EntityKind.MailConfig);
             }
+            MailSettings ss = new MailSettings(_MailSettingsData);
+            var propArray = ClassPropertiesConverter.GetProperties(ss);
 
-            
-
-
-
-
-
-                        MailSettings ss = new MailSettings(_MailSettingsData);
-                        var settingsArray = ClassPropertiesConverter.GetProperties(ss);
-
-                        var strDir = new Dictionary<string, string>();
-                        var intDir = new Dictionary<string, long>();
-                        var floatDir = new Dictionary<string, double>();
-
-
-                        foreach (var prop in settingsArray)
-                        {
-                            if (prop.GetValue(ss) is int || prop.GetValue(ss) is uint)
-                                intDir.Add(prop.Name, Convert.ToInt64(prop.GetValue(ss)));
-                            else if (prop.GetValue(ss) is float || prop.GetValue(ss) is double)
-                                floatDir.Add(prop.Name, Convert.ToDouble(prop.GetValue(ss)));
-                            else if (prop.GetValue(ss) is string || prop.GetValue(ss) is string)
-                                strDir.Add(prop.Name, Convert.ToString(prop.GetValue(ss)));
-                        }
-
-
-
-                        DictByTitle.Clear();
-                        DictById.Clear();
-                        Models.Clear();
-
-                        using (var tr = BeginTransaction())
-                        {
-                            var values = await tr.Connection.QueryAsync<SoundSpeedItem>(select_all);
-                            foreach (var item in values)
-                            {
-                                var modelData = SoundSpeedParser.ToList(item.Value);
-                                Add(new SoundSpeedModel(item.Id, item.Title, modelData));
-                            }
-                        }
-                        */
+            foreach (var prop in propArray)
+            {
+                Repo.AttrDir.ByTitle.TryGetValue(prop.Name, out AttributeItem attItem);
+                if (null == attItem)
+                    continue;
+                var typeCode = Type.GetTypeCode(prop.PropertyType);
+                switch (typeCode)
+                {
+                    case TypeCode.Int32:
+                        prop.SetValue(ss, (int)dataInt[attItem]); break;
+                    case TypeCode.Int64:
+                        prop.SetValue(ss, (long)dataInt[attItem]); break;
+                    case TypeCode.UInt32:
+                        prop.SetValue(ss, (uint)dataInt[attItem]); break;
+                    case TypeCode.UInt64:
+                        prop.SetValue(ss, (ulong)dataInt[attItem]); break;
+                    case TypeCode.Double:
+                        prop.SetValue(ss, (double)dataFloat[attItem]); break;
+                    case TypeCode.Single:
+                        prop.SetValue(ss, (float)dataFloat[attItem]); break;
+                    case TypeCode.String:
+                        prop.SetValue(ss, dataString[attItem]); break;
+                    default:
+                        break;
+                }
+            }
+            _MailSettingsData = ss.GetData();
         }
-
-
-        public async Task SaveSettings(MailSettingsData settings)
+        public async Task SaveAsync(MailSettingsData settings)
         {
             var strDir = new Dictionary<AttributeItem, string>();
             var intDir = new Dictionary<AttributeItem, long>();
             var floatDir = new Dictionary<AttributeItem, double>();
 
             MailSettings ss = new MailSettings(settings);
-
-            Dictionary<string, object> v1 = ClassPropertiesConverter.GetProperties2(ss);
             var propArray = ClassPropertiesConverter.GetProperties(ss);
 
             foreach (var prop in propArray)
             {
-                if (prop.GetValue(ss) is int || prop.GetValue(ss) is uint)
+                var typeCode = Type.GetTypeCode(prop.PropertyType);
+                AttributeItem attItem = null;
+                switch (typeCode)
                 {
-                    if (Repo.AttrDir.ByTitle.TryGetValue(prop.Name, out AttributeItem attItem))
+                    case TypeCode.Int32:
+                    case TypeCode.Int64:
+                    case TypeCode.UInt32:
+                    case TypeCode.UInt64:
+                        if (!Repo.AttrDir.ByTitle.TryGetValue(prop.Name, out attItem))
+                            attItem = await Repo.AttrDir.SaveAsync(prop.Name, AttributeType.Int);
                         intDir.Add(attItem, Convert.ToInt64(prop.GetValue(ss)));
-                }
-                else if (prop.GetValue(ss) is float || prop.GetValue(ss) is double)
-                {
-                    if (Repo.AttrDir.ByTitle.TryGetValue(prop.Name, out AttributeItem attItem))
+                        break;
+                    case TypeCode.Double:
+                    case TypeCode.Single:
+                        if (!Repo.AttrDir.ByTitle.TryGetValue(prop.Name, out attItem))
+                            attItem = await Repo.AttrDir.SaveAsync(prop.Name, AttributeType.Float);
                         floatDir.Add(attItem, Convert.ToDouble(prop.GetValue(ss)));
-                }
-                else if (prop.GetValue(ss) is string)
-                {
-                    if (Repo.AttrDir.ByTitle.TryGetValue(prop.Name, out AttributeItem attItem))
+                        break;
+                    case TypeCode.String:
+                        if (!Repo.AttrDir.ByTitle.TryGetValue(prop.Name, out attItem))
+                            attItem = await Repo.AttrDir.SaveAsync(prop.Name, AttributeType.String);
                         strDir.Add(attItem, Convert.ToString(prop.GetValue(ss)));
+                        break;
+                    default:
+                        break;
                 }
             }
             using (var tr = BeginTransaction())
@@ -120,25 +103,17 @@ namespace SiamCross.Services
                 await DbService.Instance.DataInt.Save(tr, EntityKind.MailConfig, 0, intDir);
                 await DbService.Instance.DataFloat.Save(tr, EntityKind.MailConfig, 0, floatDir);
                 await DbService.Instance.DataString.Save(tr, EntityKind.MailConfig, 0, strDir);
+                tr.Commit();
             }
         }
-
-        public Task<MailSettingsData> ReadSettings()
+        public Task<MailSettingsData> GetData()
         {
             return Task.FromResult(_MailSettingsData);
         }
-
-        const string table = "SoundSpeedDictionary";
-        private readonly string select_all
-            = $"SELECT * FROM {table}";
-        private readonly string insert_with_default_id
-            = $"INSERT OR REPLACE INTO {table}(Title, Value) VALUES(@Title, @Value)";
-
         private IDbTransaction BeginTransaction()
         {
             return DbService.Instance.Db.BeginTransaction(IsolationLevel.Serializable);
         }
-
 
 
     }

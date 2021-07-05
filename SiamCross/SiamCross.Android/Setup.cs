@@ -11,7 +11,6 @@ using SiamCross.Droid.Services.StdDialog;
 using SiamCross.Droid.Services.Toast;
 using SiamCross.Droid.Utils.FileSystem;
 using SiamCross.Models.Adapters.PhyInterface;
-using SiamCross.Services;
 using SiamCross.Services.Environment;
 using SiamCross.Services.Logging;
 using SiamCross.Services.MediaScanner;

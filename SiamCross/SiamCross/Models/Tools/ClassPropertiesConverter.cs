@@ -1,12 +1,7 @@
-﻿using SiamCross.Models.Tools;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Tools
 {
@@ -19,7 +14,7 @@ namespace SiamCross.Models.Tools
 
         static Dictionary<Type, Func<object, Dictionary<string, object>>> cache =
         new Dictionary<Type, Func<object, Dictionary<string, object>>>();
-        
+
         public static PropertyInfo[] GetProperties(object o)
         {
             var dict = new Dictionary<string, object>();
@@ -28,7 +23,7 @@ namespace SiamCross.Models.Tools
             propertyInfos = t.GetProperties(BindingFlags.Public | BindingFlags.Instance);
             return propertyInfos;
         }
-        
+
         public static Dictionary<string, object> GetProperties2(object o)
         {
 
@@ -81,7 +76,7 @@ namespace SiamCross.Models.Tools
 
             return getter(o);
         }
-        
+
     }
 
 }

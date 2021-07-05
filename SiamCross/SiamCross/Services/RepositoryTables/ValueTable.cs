@@ -15,13 +15,7 @@ namespace SiamCross.Services.RepositoryTables
         DeviceConnection = 11,
         MailConfig = 20
     };
-    public enum AttributeType
-    {
-        Int = 1,
-        Float = 5,
-        String = 2,
-        Blob = 3
-    };
+
 
     public class DataItem<T>
     {

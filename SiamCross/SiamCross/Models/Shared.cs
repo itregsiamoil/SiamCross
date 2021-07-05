@@ -167,8 +167,29 @@ namespace SiamCross.Models
         }
     }
 
+    public enum AttributeType
+    {
+        Int = 1,
+        Float = 5,
+        String = 2,
+        Blob = 3
+    };
     public class AttributeItem
     {
+        public static int Type2Int(AttributeType t)
+        {
+            switch (t)
+            {
+                case AttributeType.Int: return 1;
+                case AttributeType.Float: return 5;
+                case AttributeType.String: return 2;
+                case AttributeType.Blob: return 3;
+                default: break;
+            }
+            new Exception("Wrong Attribute type");
+            return 0;
+        }
+
         public uint Id { get; set; }
         public string Title { get; set; }
         public int TypeId { get; set; }

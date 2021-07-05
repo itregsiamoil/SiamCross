@@ -21,7 +21,7 @@ namespace SiamCross.Services.Email
                 //using (SmtpClient client = new SmtpClient(new ProtocolLogger(path)))
                 using (SmtpClient client = new SmtpClient())
                 {
-                    var settings = await Repo.MailSettingsDir.ReadSettings();
+                    var settings = await Repo.MailSettingsDir.GetData();
 
                     await client.ConnectAsync(settings.SmtpAddress, settings.Port);
 
@@ -48,7 +48,7 @@ namespace SiamCross.Services.Email
         {
             MimeMessage m = new MimeMessage();
 
-            var settings = await Repo.MailSettingsDir.ReadSettings();
+            var settings = await Repo.MailSettingsDir.GetData();
 
             MailboxAddress sender = new MailboxAddress(settings.FromName, settings.FromAddress);
             MailboxAddress receiver = new MailboxAddress(string.Empty, settings.ToAddress);

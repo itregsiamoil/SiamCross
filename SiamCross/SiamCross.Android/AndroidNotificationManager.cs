@@ -1,11 +1,11 @@
-﻿using System;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using AndroidX.Core.App;
 using SiamCross.Droid;
 using SiamCross.Services.Notification;
+using System;
 using Xamarin.Forms;
 using AndroidApp = Android.App.Application;
 
@@ -31,7 +31,10 @@ namespace LocalNotifications.Droid
 
         public static AndroidNotificationManager Instance { get; private set; }
 
-        public AndroidNotificationManager() => Initialize();
+        public AndroidNotificationManager()
+        {
+            Initialize();
+        }
 
         public void Initialize()
         {

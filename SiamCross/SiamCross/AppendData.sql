@@ -12,6 +12,7 @@ INSERT INTO Entitys(KindId, Title)VALUES(0, 'измерение, данные ')
 INSERT INTO Entitys(KindId, Title)VALUES(1, 'измерения, доп.данные');
 INSERT INTO Entitys(KindId, Title)VALUES(10, 'устройство, данные протокола');
 INSERT INTO Entitys(KindId, Title)VALUES(11, 'устройство, данные соединения');
+INSERT INTO Entitys(KindId, Title)VALUES(20, 'настройки почтового клиента');
 /* в таблице Attributes определены имена и типы значений */
 
 INSERT INTO Attributes(Title, TypeId)VALUES('sudcorrectiontype', 1);

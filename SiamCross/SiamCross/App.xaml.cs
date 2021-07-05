@@ -1,7 +1,5 @@
 ﻿using SiamCross.AppObjects;
-using SiamCross.Models.Tools;
 using SiamCross.Services;
-using SiamCross.Services.Notification;
 using SiamCross.Views;
 using SiamCross.Views.MenuItems;
 using System.Collections.Generic;

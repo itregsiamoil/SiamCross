@@ -33,7 +33,7 @@ namespace SiamCross.Services
         public IDbConnection Db => _Db;
 
 
-        public int UserDbVersion = 18;
+        public int UserDbVersion = 19;
 
         readonly DataInt _DataInt = new DataInt();
         readonly DataFloat _DataFloat = new DataFloat();

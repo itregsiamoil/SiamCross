@@ -280,7 +280,7 @@ namespace SiamCross.ViewModels
                 if (!await ValidateForEmptiness())
                     return;
 
-                var settings = await Repo.MailSettingsDir.ReadSettings();
+                var settings = await Repo.MailSettingsDir.GetData();
 
                 foreach (MeasurementView survay in SelectedMeasurements)
                 {
@@ -661,10 +661,10 @@ namespace SiamCross.ViewModels
         }
 
 
-        private async static Task<bool> ValidateForEmptiness()
+        private static async Task<bool> ValidateForEmptiness()
         {
             List<string> errorList = new List<string>();
-            var settings = await Repo.MailSettingsDir.ReadSettings();
+            var settings = await Repo.MailSettingsDir.GetData();
 
             if (string.IsNullOrEmpty(settings.FromAddress))
                 errorList.Add($"{Resource.EnterFromAddress}");

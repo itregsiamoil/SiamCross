@@ -7,8 +7,6 @@ using Android.Runtime;
 using Android.Widget;
 using LocalNotifications.Droid;
 using SiamCross.Droid.Models;
-using SiamCross.Models.Connection.Protocol.Siam;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms.Platform.Android;

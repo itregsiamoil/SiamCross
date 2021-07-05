@@ -82,7 +82,7 @@ namespace SiamCross.ViewModels
         }
         public async Task InitAsync()
         {
-            _MailSettingsData = await Repo.MailSettingsDir.ReadSettings();
+            _MailSettingsData = await Repo.MailSettingsDir.GetData();
         }
 
         public override void Unsubscribe()
@@ -105,7 +105,7 @@ namespace SiamCross.ViewModels
         }
         private Task DoSave()
         {
-            return Repo.MailSettingsDir.SaveSettings(_MailSettingsData);
+            return Repo.MailSettingsDir.SaveAsync(_MailSettingsData);
         }
     }
 }
