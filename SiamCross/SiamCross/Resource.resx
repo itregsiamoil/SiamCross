@@ -725,4 +725,7 @@ DB Siam can't import the files with the same identifiers.</value>
   <data name="DoImport" xml:space="preserve">
     <value>Import</value>
   </data>
+  <data name="Information" xml:space="preserve">
+    <value>Information</value>
+  </data>
 </root>
