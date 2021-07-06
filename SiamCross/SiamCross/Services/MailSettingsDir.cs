@@ -43,6 +43,7 @@ namespace SiamCross.Services
                 switch (typeCode)
                 {
                     case TypeCode.Boolean:
+                        prop.SetValue(ss, 0 != (int)dataInt[attItem]); break;
                     case TypeCode.Int32:
                         prop.SetValue(ss, (int)dataInt[attItem]); break;
                     case TypeCode.Int64:
@@ -79,6 +80,10 @@ namespace SiamCross.Services
                 switch (typeCode)
                 {
                     case TypeCode.Boolean:
+                        if (!Repo.AttrDir.ByTitle.TryGetValue(prop.Name, out attItem))
+                            attItem = await Repo.AttrDir.SaveAsync(prop.Name, AttributeType.Int);
+                        intDir.Add(attItem, Convert.ToBoolean(prop.GetValue(ss)) ? 1 : 0);
+                        break;
                     case TypeCode.Int32:
                     case TypeCode.Int64:
                     case TypeCode.UInt32:

@@ -84,6 +84,9 @@
     <Compile Update="Views\MenuItems\Handbook\EditSoundSpeedPage.xaml.cs">
       <DependentUpon>EditSoundSpeedPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\MenuItems\MailSettingsPage.xaml.cs">
+      <DependentUpon>MailSettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\SurveysCollectionPage.xaml.cs">
       <DependentUpon>SurveysCollectionPage.xaml</DependentUpon>
     </Compile>
@@ -174,7 +177,7 @@
     <EmbeddedResource Update="Views\MenuItems\SearchPanel\UsbTab.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\MenuItems\SettingsPanelPage.xaml">
+    <EmbeddedResource Update="Views\MenuItems\MailSettingsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MenuPage.xaml">

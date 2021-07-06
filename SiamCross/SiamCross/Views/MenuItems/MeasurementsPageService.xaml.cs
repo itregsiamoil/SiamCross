@@ -25,12 +25,10 @@ namespace SiamCross.Views.MenuItems
             IReadOnlyList<object> current = e.CurrentSelection;
             _vm.UpdateSelectedItems(previous, current);
         }
-
         private void OnSelectItem(object sender, SelectionChangedEventArgs e)
         {
             _vm.OnItemTapped(e.PreviousSelection.FirstOrDefault() as MeasurementView);
         }
-
         private void OnCheckBoxCheckedChanged(object sender, CheckedChangedEventArgs e)
         {
             if (!(sender is CheckBox chk))
@@ -41,7 +39,6 @@ namespace SiamCross.Views.MenuItems
             _vm.UpdateSelect(meas, e.Value);
             _vm.UpdateSelectTitle();
         }
-
         protected override bool OnBackButtonPressed()
         {
             return _vm.OnBackButton();
@@ -53,7 +50,6 @@ namespace SiamCross.Views.MenuItems
             ((ListView)sender).SelectedItem = null;
             _vm.OnItemTapped(e.Item as MeasurementView);
         }
-
         protected override void OnDisappearing()
         {
             base.OnDisappearing();

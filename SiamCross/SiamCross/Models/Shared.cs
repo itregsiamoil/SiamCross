@@ -197,7 +197,7 @@ namespace SiamCross.Models
         public string Title { get; set; }
         public int TypeId { get; set; }
     }
-    
+
     [Preserve(AllMembers = true)]
     public class MeasurementInfo
     {

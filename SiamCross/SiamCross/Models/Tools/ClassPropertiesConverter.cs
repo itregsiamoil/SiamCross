@@ -23,7 +23,7 @@ namespace SiamCross.Models.Tools
             propertyInfos = t.GetProperties(BindingFlags.Public | BindingFlags.Instance);
             return propertyInfos;
         }
-
+        /*
         public static Dictionary<string, object> GetProperties2(object o)
         {
 
@@ -76,7 +76,7 @@ namespace SiamCross.Models.Tools
 
             return getter(o);
         }
-
+        */
     }
 
 }

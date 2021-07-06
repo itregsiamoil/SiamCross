@@ -6,22 +6,28 @@ using Xamarin.Forms.Xaml;
 namespace SiamCross.Views.MenuItems
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class SettingsPanelPage : BaseContentPage
+    public partial class MailSettingsPage : BaseContentPage
     {
         private Task InitTask;
         private CancellationTokenSource Cts;
-        private SettingsViewModel _vm;
+        private MailSettingsVM _vm;
 
-        public SettingsPanelPage()
+        public MailSettingsPage()
         {
             InitializeComponent();
         }
         protected override void OnAppearing()
         {
-            if (null == _vm)
-                _vm = new SettingsViewModel();
-            if (!(BindingContext is SettingsViewModel))
+            if (BindingContext is MailSettingsVM bindVM)
+            {
+                _vm = bindVM;
+            }
+            else
+            {
+                if (null == _vm)
+                    _vm = new MailSettingsVM();
                 BindingContext = _vm;
+            }
 
             if (null == Cts || Cts.IsCancellationRequested)
                 Cts = new CancellationTokenSource();

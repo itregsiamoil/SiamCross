@@ -10,7 +10,7 @@ using Xamarin.Forms.Internals;
 namespace SiamCross.ViewModels
 {
     [Preserve(AllMembers = true)]
-    public class SettingsViewModel : BasePageVM
+    public class MailSettingsVM : BasePageVM
     {
         private MailSettingsData _MailSettingsData = new MailSettingsData();
         public ICommand CmdDefault { get; }
@@ -61,7 +61,7 @@ namespace SiamCross.ViewModels
             get => _MailSettingsData.Password;
             set => SetProperty(ref _MailSettingsData.Password, value);
         }
-        public SettingsViewModel()
+        public MailSettingsVM()
         {
             CmdDefault = new AsyncCommand(DoDefault
                , (Func<object, bool>)null, null, false, false);

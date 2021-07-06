@@ -23,10 +23,16 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
         }
         protected override void OnAppearing()
         {
-            if (null == _vm)
-                _vm = MakeDirectoryPageVM();
-            if (!(BindingContext is BaseDirectoryPageVM))
+            if (BindingContext is BaseDirectoryPageVM bindVM)
+            {
+                _vm = bindVM;
+            }
+            else
+            {
+                if (null == _vm && null!=MakeDirectoryPageVM)
+                    _vm = MakeDirectoryPageVM();
                 BindingContext = _vm;
+            }
 
             if (null == Cts || Cts.IsCancellationRequested)
                 Cts = new CancellationTokenSource();
