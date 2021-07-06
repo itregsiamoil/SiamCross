@@ -734,4 +734,7 @@
   <data name="DoImport" xml:space="preserve">
     <value>Импортировать</value>
   </data>
+  <data name="Information" xml:space="preserve">
+    <value>Информация</value>
+  </data>
 </root>

@@ -48,7 +48,7 @@
                         <Frame Style="{StaticResource GroupingFrameStyle2}" 
                                IsEnabled="{Binding Sensor.TaskManager.IsFree}">
                             <StackLayout>
-                                <Label Text="Данные" Style="{StaticResource SectionLabel2}" />
+                                <Label Text="{local1:Translate Information}" Style="{StaticResource SectionLabel2}" />
                                 <StackLayout Padding="4">
                                     <Grid RowSpacing="0" ColumnSpacing="5"  >
                                         <Grid.RowDefinitions>
@@ -171,7 +171,7 @@
             <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
 
             <StackLayout Orientation="Horizontal" IsVisible="{Binding IsPortrait}" >
-                <Button Text="Сохранить" HorizontalOptions="FillAndExpand" 
+                <Button Text="{local1:Translate DoSave}" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdSave}" 
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
