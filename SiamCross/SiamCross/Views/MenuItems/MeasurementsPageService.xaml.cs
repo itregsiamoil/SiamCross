@@ -14,7 +14,6 @@ namespace SiamCross.Views.MenuItems
     {
         private Task InitTask;
         private CancellationTokenSource Cts;
-        //private BaseDirectoryPageVM _vm;
         private readonly MeasurementsVMService _vm = MeasurementsVMService.Instance;
         public MeasurementsPage()
         {

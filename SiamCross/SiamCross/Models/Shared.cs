@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using Xamarin.Forms.Internals;
 
 namespace SiamCross.Models
 {
@@ -174,6 +175,8 @@ namespace SiamCross.Models
         String = 2,
         Blob = 3
     };
+
+    [Preserve(AllMembers = true)]
     public class AttributeItem
     {
         public static int Type2Int(AttributeType t)
@@ -194,6 +197,8 @@ namespace SiamCross.Models
         public string Title { get; set; }
         public int TypeId { get; set; }
     }
+    
+    [Preserve(AllMembers = true)]
     public class MeasurementInfo
     {
         public uint Kind;

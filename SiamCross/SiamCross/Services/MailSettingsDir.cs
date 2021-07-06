@@ -42,6 +42,7 @@ namespace SiamCross.Services
                 var typeCode = Type.GetTypeCode(prop.PropertyType);
                 switch (typeCode)
                 {
+                    case TypeCode.Boolean:
                     case TypeCode.Int32:
                         prop.SetValue(ss, (int)dataInt[attItem]); break;
                     case TypeCode.Int64:
@@ -77,6 +78,7 @@ namespace SiamCross.Services
                 AttributeItem attItem = null;
                 switch (typeCode)
                 {
+                    case TypeCode.Boolean:
                     case TypeCode.Int32:
                     case TypeCode.Int64:
                     case TypeCode.UInt32:

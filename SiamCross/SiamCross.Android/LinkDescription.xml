@@ -3,6 +3,13 @@
 	<assembly fullname="Dapper">
 		<type fullname="Dapper*"/>
 	</assembly>
+	
+	<assembly fullname="SiamCross">
+		<type fullname="SiamCross.Models*" />
+	</assembly>
+	<assembly fullname="SiamCross">
+		<type fullname="SiamCross.Services*" />
+	</assembly>
 <!--
 	<assembly fullname="SiamCross">
 		<type fullname="SiamCross*" />

@@ -541,7 +541,7 @@ namespace SiamCross.Services
 
             try
             {
-                _database.ExecuteAsync("DELETE FROM Ddin2Measurement WHERE Id =" + removebleId);
+                await _database.ExecuteAsync("DELETE FROM Ddin2Measurement WHERE Id =" + removebleId);
             }
             catch (Exception e)
             {
