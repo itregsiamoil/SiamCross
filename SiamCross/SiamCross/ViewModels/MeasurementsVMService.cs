@@ -143,17 +143,15 @@ namespace SiamCross.ViewModels
                     meas.Add(measView);
                 }
                 Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Set DU");
-
                 Measurements.ReplaceRange(meas.OrderByDescending(m => m.BeginTimestamp));
                 Debug.WriteLine($"[{perf.ElapsedMilliseconds}]Sort and set to gui");
                 perf.Stop();
+                //ToastService.Instance.LongAlert($"Measurements = {Measurements.Count}");
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "GetMeasurementFromDb method" + "\n");
-                ToastService.Instance.LongAlert($"Exception GetMeasurementFromDb");
             }
-            ToastService.Instance.LongAlert($"Measurements = {Measurements.Count}");
         }
         public bool OnBackButton()
         {

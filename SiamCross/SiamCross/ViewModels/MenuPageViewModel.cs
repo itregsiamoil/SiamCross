@@ -114,17 +114,17 @@ namespace SiamCross.ViewModels
         private async Task GoMail()
         {
             App.MenuIsPresented = false;
-            await App.NavigationPage.Navigation.PushAsync(new SettingsPanelPage());
+            await Services.PageNavigator.ShowPageAsync(new MailSettingsVM());
         }
         private async Task GoField()
         {
             App.MenuIsPresented = false;
-            await App.NavigationPage.Navigation.PushAsync(new DirectoryPage(() => { return new FieldsDirVM(); }));
+            await Services.PageNavigator.ShowPageAsync(new FieldsDirVM());
         }
         private async Task GoSoundSpeed()
         {
             App.MenuIsPresented = false;
-            await App.NavigationPage.Navigation.PushAsync(new DirectoryPage(() => { return new SoundSpeedListVM(); }));
+            await Services.PageNavigator.ShowPageAsync(new SoundSpeedListVM());
         }
 
         private async Task GoAbout()

@@ -3,6 +3,7 @@ using SiamCross.ViewModels.Dmg;
 using SiamCross.Views;
 using SiamCross.Views.DDIN2;
 using SiamCross.Views.MenuItems;
+using SiamCross.Views.MenuItems.HandbookPanel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,6 +25,11 @@ namespace SiamCross.Services
         }
         public static Task Init()
         {
+            Register(typeof(MailSettingsVM), () => new MailSettingsPage());
+            Register(typeof(FieldsDirVM), () => new DirectoryPage(() => null));
+            Register(typeof(SoundSpeedListVM), () => new DirectoryPage(() => null));
+
+
             Register(typeof(MeasurementsVMService), () => new MeasurementsPage());
 
             Register(typeof(SensorPositionVM), () => new PositionEditPage());
@@ -67,14 +73,16 @@ namespace SiamCross.Services
         {
             if (!(Get(type) is T view))
                 return null;
-
-            view.BindingContext = bindingContext;
+            if (!Equals(view.BindingContext, bindingContext))
+                view.BindingContext = bindingContext;
             return view;
         }
         public static ContentPage Get(Type type)
         {
             if (_Views.TryGetValue(type, out ContentPage view))
+            {
                 return view;
+            }
 
             if (!_Factory.TryGetValue(type, out Func<ContentPage> fn))
                 return null;
@@ -84,15 +92,38 @@ namespace SiamCross.Services
             return view;
         }
 
-
         public static async Task ShowPageAsync(IViewModel vm)
         {
             try
             {
                 if (null == vm)
                     return;
+                
+                IReadOnlyList<Page> stack = App.NavigationPage.Navigation.NavigationStack;
+                int pos;
+                for (pos = 1; pos < stack.Count; ++pos)
+                {
+                    var pg = stack[pos];
+                    if (Equals(pg.BindingContext?.GetType(), vm.GetType()))
+                        break;
+                }
+                if (pos < App.NavigationPage.Navigation.NavigationStack.Count)
+                {
+                    if (pos == stack.Count - 1)
+                        return;
+                    var samePage = stack[pos];
+                    App.NavigationPage.Navigation.RemovePage(samePage);
+                    await App.NavigationPage.Navigation.PushAsync(samePage);
+                    return;
+                    /*
+                    while (pos < App.NavigationPage.Navigation.NavigationStack.Count - 1)
+                        await App.NavigationPage.Navigation.PopAsync();
+                    return;
+                    */
+                }
+                
                 var page = Get(vm);
-                if (null == page || !CanOpenPage(page.GetType()))
+                if (null == page)
                     return;
                 await App.NavigationPage.Navigation.PushAsync(page);
             }
@@ -101,13 +132,11 @@ namespace SiamCross.Services
                 Debug.WriteLine($"EXCEPTION {ex.Message} {ex.GetType()}\n{ex.StackTrace}");
             }
         }
-
         public static AsyncCommand CreateAsyncCommand(Func<IViewModel> fnGetVM)
         {
             return new AsyncCommand(() => ShowPageAsync(fnGetVM())
                 , (Func<object, bool>)null, null, false, false);
         }
-
         public static async Task<bool> ShowDeleteQuestion()
         {
             return await Application.Current.MainPage.DisplayAlert(
@@ -116,13 +145,5 @@ namespace SiamCross.Services
                   Resource.YesButton,
                   Resource.NotButton);
         }
-        private static bool CanOpenPage(Type type)
-        {
-            IReadOnlyList<Page> stack = App.NavigationPage.Navigation.NavigationStack;
-            if (stack[stack.Count - 1].GetType() != type)
-                return true;
-            return false;
-        }
-
     }
 }

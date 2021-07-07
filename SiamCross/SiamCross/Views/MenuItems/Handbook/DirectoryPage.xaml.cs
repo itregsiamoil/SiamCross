@@ -13,7 +13,6 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
         public delegate BaseDirectoryPageVM fnMakeDirectoryPageVM();
         fnMakeDirectoryPageVM MakeDirectoryPageVM;
 
-
         public DirectoryPage(fnMakeDirectoryPageVM fn)
         {
             //ViewModelWrap<DirectoryViewModel> vm = new ViewModelWrap<DirectoryViewModel>();
@@ -23,6 +22,7 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
         }
         protected override void OnAppearing()
         {
+            IsBusy = true;
             if (BindingContext is BaseDirectoryPageVM bindVM)
             {
                 _vm = bindVM;
@@ -34,26 +34,42 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
                 BindingContext = _vm;
             }
 
-            if (null == Cts || Cts.IsCancellationRequested)
+            if (null != Cts)
+            {
+                if(Cts.IsCancellationRequested)
+                {
+                    Cts.Dispose();
+                    Cts = new CancellationTokenSource();
+                }
+            }
+            else
                 Cts = new CancellationTokenSource();
-            InitTask = Task.Run(async () => await _vm.InitAsync(Cts.Token).ConfigureAwait(false));
+                
+            InitTask = Task.Run(()=>VmInitAsync(Cts.Token));
             base.OnAppearing();
         }
         protected override void OnDisappearing()
         {
+            IsBusy = true;
             base.OnDisappearing();
-            if (null != _vm)
+            InitTask = Task.Run(() => VmDeinitAsync(Cts.Token));
+        }
+        protected async Task VmInitAsync(CancellationToken ct)
+        {
+            await _vm.InitAsync(ct).ConfigureAwait(false);
+            IsBusy = false;
+        }
+        protected async Task VmDeinitAsync(CancellationToken ct)
+        {
+            if (null == _vm)
+                return;
+            if (null != InitTask && !InitTask.IsCompleted)
             {
-                _ = Task.Run(async () =>
-                  {
-                      if (null != InitTask && !InitTask.IsCompleted)
-                      {
-                          Cts?.Cancel();
-                          await InitTask;
-                      }
-                      _vm.Unsubscribe();
-                  });
+                Cts?.Cancel();
+                await InitTask;
             }
+            _vm.Unsubscribe();
+            IsBusy = false;
         }
         protected override bool OnBackButtonPressed()
         {
