@@ -1,12 +1,11 @@
 ﻿using SiamCross.Models.Connection.Protocol;
-using SiamCross.Models.Scanners;
 using SiamCross.Models.Sensors.Dmg.Surveys;
 using SiamCross.ViewModels.Dmg;
 using SiamCross.ViewModels.Dmg.Survey;
-using System;
-using System.Diagnostics;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors.Dmg
 {
@@ -21,6 +20,16 @@ namespace SiamCross.Models.Sensors.Dmg
 
             Surveys.Add(new Dynamogramm(this));
 
+            ConnHolder.CmdUpdateStatus = new AsyncCommand(
+                UpdateStatus,
+                () => Manager.IsFree,
+                null, false, false);
+
+        }
+        async Task UpdateStatus()
+        {
+            var task = new TaskUpdateStatus(this);
+            await Manager.Execute(task);
         }
     }
 
@@ -67,143 +76,41 @@ namespace SiamCross.Models.Sensors.Dmg
         public DmgBaseSensor(SensorModel model)
             : base(model)
         {
-            _SurvayParam = new MemStruct(0x8000);
-            Rod = _SurvayParam.Add(new MemVarUInt16(nameof(Rod)));
-            DynPeriod = _SurvayParam.Add(new MemVarUInt32(nameof(DynPeriod)));
-            ApertNumber = _SurvayParam.Add(new MemVarUInt16(nameof(ApertNumber)));
-            Imtravel = _SurvayParam.Add(new MemVarUInt16(nameof(Imtravel)));
-            ModelPump = _SurvayParam.Add(new MemVarUInt16(nameof(ModelPump)));
-
-            _NonvolatileParam = new MemStruct(0x8100);
-            Nkp = _NonvolatileParam.Add(new MemVarFloat(nameof(Nkp)));
-            Rkp = _NonvolatileParam.Add(new MemVarFloat(nameof(Rkp)));
-            ZeroG = _NonvolatileParam.Add(new MemVarFloat(nameof(ZeroG)));
-            PositiveG = _NonvolatileParam.Add(new MemVarFloat(nameof(PositiveG)));
-            EnableInterval = _NonvolatileParam.Add(new MemVarUInt32(nameof(EnableInterval)));
-            ZeroOffset = _NonvolatileParam.Add(new MemVarFloat(nameof(ZeroOffset)));
-            SlopeRatio = _NonvolatileParam.Add(new MemVarFloat(nameof(SlopeRatio)));
-            NegativeG = _NonvolatileParam.Add(new MemVarFloat(nameof(NegativeG)));
-            SleepDisable = _NonvolatileParam.Add(new MemVarUInt16(nameof(SleepDisable)));
-            SleepTimeout = _NonvolatileParam.Add(new MemVarUInt16(nameof(SleepTimeout)));
-
-            _CurrentParam = new MemStruct(0x8400);
-            BatteryVoltage = _CurrentParam.Add(new MemVarUInt16(nameof(BatteryVoltage)));
-            Тemperature = _CurrentParam.Add(new MemVarInt16(nameof(Тemperature)));
-            LoadChanel = _CurrentParam.Add(new MemVarFloat(nameof(LoadChanel)));
-            AccelerationChanel = _CurrentParam.Add(new MemVarFloat(nameof(AccelerationChanel)));
-
-            _Operating = new MemStruct(0x8800);
-            CtrlReg = _Operating.Add(new MemVarUInt16(nameof(CtrlReg)));
-            StatReg = _Operating.Add(new MemVarUInt16(nameof(StatReg)));
-            ErrorReg = _Operating.Add(new MemVarUInt32(nameof(ErrorReg)));
-
-            _Report = new MemStruct(0x80000000);
-            MaxWeight = _Report.Add(new MemVarUInt16(nameof(MaxWeight)));
-            MinWeight = _Report.Add(new MemVarUInt16(nameof(MinWeight)));
-            Travel = _Report.Add(new MemVarUInt16(nameof(Travel)));
-            Period = _Report.Add(new MemVarUInt16(nameof(Period)));
-            Step = _Report.Add(new MemVarUInt16(nameof(Step)));
-            WeightDiscr = _Report.Add(new MemVarUInt16(nameof(WeightDiscr)));
-            TimeDiscr = _Report.Add(new MemVarUInt16(nameof(TimeDiscr)));
-
+            StorageVM = new DmgStorageVM(this);
 
             var dmgVM = new DynamogrammVM(this, Model.Surveys[0] as BaseSurvey);
             SurveysVM.SurveysCollection.Add(dmgVM);
-
-            StorageVM = new DmgStorageVM(this);
 
             //FactoryConfigVM = new FactoryConfigVM(this);
             //UserConfigVM = new UserConfigVM(this);
             //StateVM = new StateVM(this);
 
+            Model.ConnHolder.PropertyChanged += OnHolderChange;
+            IsNewStatus = true;
         }
-
-
-
-        public override async Task<bool> QuickReport(CancellationToken cancelToken)
+        void OnHolderChange(object sender, PropertyChangedEventArgs e)
         {
-            try
-            {
-                cancelToken.ThrowIfCancellationRequested();
-                RespResult ret = await Connection.ReadAsync(_CurrentParam);
-
-                Battery = (BatteryVoltage.Value / 10.0).ToString();
-                Temperature = (Тemperature.Value / 10.0).ToString();
-                //_reportBuilder.Load = LoadChanel.Value.ToString();
-                //_reportBuilder.Acceleration = AccelerationChanel.Value.ToString();
-                //SensorData.Status = _reportBuilder.GetReport();
-                Status = GetLoadSting() + "\n" + GetAccelerationSting();
-
-                ChangeNotify(nameof(Battery));
-                ChangeNotify(nameof(Temperature));
-                ChangeNotify(nameof(Status));
-                ScannedDeviceInfo.Device.DeviceData["Battery"] = Battery;
-                ScannedDeviceInfo.Device.DeviceData["Temperature"] = Temperature;
-                ScannedDeviceInfo.Device.DeviceData["Status"] = Status;
-                return true;
-            }
-            catch (ProtocolException)
-            {
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Exception in: "
-                    + System.Reflection.MethodBase.GetCurrentMethod().Name
-                    + "\n msg=" + ex.Message
-                    + "\n type=" + ex.GetType()
-                    + "\n stack=" + ex.StackTrace + "\n");
-            }
-            return false;
+            if (null == sender || nameof(Model.ConnHolder.IsActivated) != e.PropertyName)
+                return;
+            ChangeNotify(nameof(Activate));
         }
-        public async Task<bool> KillosParametersQuery(CancellationToken cancelToken)
+        public override void Dispose()
         {
-            RespResult ret;
-            try
-            {
-                cancelToken.ThrowIfCancellationRequested();
-                ret = await Connection.ReadAsync(_NonvolatileParam);
-                //_reportBuilder.SensitivityLoad = Rkp.Value.ToString();
-                //_reportBuilder.ZeroOffsetLoad = Nkp.Value.ToString();
-                return true;
-            }
-            catch (ProtocolException)
-            {
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Exception in: "
-                    + System.Reflection.MethodBase.GetCurrentMethod().Name
-                    + "\n msg=" + ex.Message
-                    + "\n type=" + ex.GetType()
-                    + "\n stack=" + ex.StackTrace + "\n");
-            }
-            return false;
+            Model.ConnHolder.PropertyChanged -= OnHolderChange;
+            base.Dispose();
         }
-        public override async Task<bool> PostConnectInit(CancellationToken cancelToken)
+        public override Task<bool> QuickReport(CancellationToken cancelToken)
         {
-            await Connection.Connect(cancelToken);
-            Status = Resource.ConnectedStatus;
-            return (await UpdateFirmware(cancelToken) && await KillosParametersQuery(cancelToken));
+            return Task.FromResult(true);
         }
-
-        public string GetLoadSting()
+        public override bool Activate
         {
-            float load_mv = LoadChanel.Value;
-            string ret = $"{Resource.Load}: {Math.Round(load_mv, 2)}, {Resource.MilliVoltsUnits}";
-            if (Rkp.Value != 0)
+            get => Model.ConnHolder.IsActivated;
+            set
             {
-                float load_kg = (LoadChanel.Value - Nkp.Value) / Rkp.Value;
-                ret += $" \t {Math.Round(load_kg, 2)}, {Resource.Kilograms}";
+                Model.ConnHolder.IsActivated = value;
+                ChangeNotify(nameof(Activate));
             }
-            return ret;
-        }
-        public string GetAccelerationSting()
-        {
-            float _acceleration = AccelerationChanel.Value;
-            string ret = $"{Resource.Acceleration}: {Math.Round(_acceleration, 2)}, {Resource.MilliVoltsUnits}";
-            return ret;
         }
 
     }//DmgBaseSensor

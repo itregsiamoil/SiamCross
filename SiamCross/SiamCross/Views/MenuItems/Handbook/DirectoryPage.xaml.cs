@@ -29,14 +29,14 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
             }
             else
             {
-                if (null == _vm && null!=MakeDirectoryPageVM)
+                if (null == _vm && null != MakeDirectoryPageVM)
                     _vm = MakeDirectoryPageVM();
                 BindingContext = _vm;
             }
 
             if (null != Cts)
             {
-                if(Cts.IsCancellationRequested)
+                if (Cts.IsCancellationRequested)
                 {
                     Cts.Dispose();
                     Cts = new CancellationTokenSource();
@@ -44,8 +44,8 @@ namespace SiamCross.Views.MenuItems.HandbookPanel
             }
             else
                 Cts = new CancellationTokenSource();
-                
-            InitTask = Task.Run(()=>VmInitAsync(Cts.Token));
+
+            InitTask = Task.Run(() => VmInitAsync(Cts.Token));
             base.OnAppearing();
         }
         protected override void OnDisappearing()

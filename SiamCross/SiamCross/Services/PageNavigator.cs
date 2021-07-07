@@ -98,7 +98,7 @@ namespace SiamCross.Services
             {
                 if (null == vm)
                     return;
-                
+
                 IReadOnlyList<Page> stack = App.NavigationPage.Navigation.NavigationStack;
                 int pos;
                 for (pos = 1; pos < stack.Count; ++pos)
@@ -121,7 +121,7 @@ namespace SiamCross.Services
                     return;
                     */
                 }
-                
+
                 var page = Get(vm);
                 if (null == page)
                     return;

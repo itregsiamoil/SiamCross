@@ -9,7 +9,6 @@ using SiamCross.Services.Email;
 using SiamCross.Services.Environment;
 using SiamCross.Services.Logging;
 using SiamCross.Services.MediaScanner;
-using SiamCross.Services.Toast;
 using SiamCross.Views;
 using System;
 using System.Collections.Generic;

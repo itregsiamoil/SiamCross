@@ -101,6 +101,18 @@ namespace SiamCross.Models
         [XmlIgnore]
         public Dictionary<string, object> DeviceData = new Dictionary<string, object>();
 
+        public bool TryGetData<T>(string name, out T value)
+        {
+            if (DeviceData.TryGetValue(name, out object objVal))
+                if (objVal is T val)
+                {
+                    value = val;
+                    return true;
+                }
+            value = default;
+            return false;
+        }
+
 
         [XmlArray("ProtocolData")]
         [XmlArrayItem("Item")]

@@ -37,7 +37,6 @@ namespace SiamCross.Models.Sensors
         {
             _Model = model;
             ScannedDeviceInfo = new ScannedDeviceInfo(_Model.Device);
-            Firmware = "";
             Battery = "";
             Temperature = "";
             RadioFirmware = "";
@@ -359,6 +358,8 @@ namespace SiamCross.Models.Sensors
             }
             set
             {
+                if (string.IsNullOrEmpty(value))
+                    return;
                 Model.Device.DeviceData["Firmware"] = value;
                 ChangeNotify();
             }

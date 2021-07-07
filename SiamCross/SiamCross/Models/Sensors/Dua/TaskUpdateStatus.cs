@@ -46,6 +46,7 @@ namespace SiamCross.Models.Sensors.Dua
         {
             if (!await CheckConnectionAsync(ct))
                 return false;
+            await Sensor.Connection.PhyConnection.UpdateRssi();
             bool ret = RespResult.NormalPkg == await Connection.TryReadAsync(_CurrentParam, SetProgressBytes, ct);
 
             var Battery = (BatteryVoltage.Value / 10.0).ToString();

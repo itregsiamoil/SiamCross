@@ -2,7 +2,6 @@ using NLog;
 using SiamCross.Models.Tools;
 using SiamCross.Services.Logging;
 using SiamCross.Views.MenuItems;
-using SiamCross.Views.MenuItems.HandbookPanel;
 using SiamCross.Views.MenuItems.SearchPanel;
 using System;
 using System.Collections.Generic;

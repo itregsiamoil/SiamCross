@@ -49,6 +49,7 @@ namespace SiamCross.Models.Sensors.Umt
         {
             if (!await CheckConnectionAsync(ct))
                 return false;
+            await Sensor.Connection.PhyConnection.UpdateRssi();
             bool ret = RespResult.NormalPkg == await Connection.TryReadAsync(_CurrentParam, SetProgressBytes, ct);
 
             var battery = (Acc.Value).ToString("N2");

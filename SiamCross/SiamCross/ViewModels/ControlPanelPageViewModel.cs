@@ -110,6 +110,8 @@ namespace SiamCross.ViewModels
                     case 0x1401:
                     case 0x1402:
                     case 0x1403:
+                        sensor.ShowDetailViewCommand.Execute(this);
+                        /*
                         if (!CanOpenMeasurement(sensor))
                             return;
                         if (!CanOpenPage(typeof(DynamogrammPage)))
@@ -123,7 +125,7 @@ namespace SiamCross.ViewModels
                         if (null == page)
                             return;
                         await App.NavigationPage.Navigation.PushAsync(page);
-
+                        */
                         break;
                     case 0x1101:
                         if (!CanOpenMeasurement(sensor))

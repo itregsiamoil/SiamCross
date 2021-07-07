@@ -65,6 +65,7 @@ namespace SiamCross.Models.Sensors
         }
         async Task OnConnect()
         {
+            await Manager.Execute(new TaskUpdateInfoSiam(this));
             var result = await Manager.Execute(SurveyCfg.TaskWait);
             if (JobStatus.Сomplete == result)
                 result = await Manager.Execute(Position.TaskLoad);

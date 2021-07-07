@@ -22,6 +22,7 @@ namespace SiamCross.Models.Sensors
         public ICommand CmdUpdateStatus { get; set; }
 
         const int _Heartbeat = 30;
+        const int _QickInfoPeriod = Constants.SecondDelay * 2;
         bool _IsQickInfo;
         bool _IsActivated;
 
@@ -39,7 +40,7 @@ namespace SiamCross.Models.Sensors
                     if (null != _cancellToken)
                         _cancellToken.Dispose();
                     _cancellToken = new CancellationTokenSource();
-                    _AliveTimer.Change(0, Constants.SecondDelay);
+                    _AliveTimer.Change(0, _QickInfoPeriod);
                 }
                 else
                 {
