@@ -4,7 +4,7 @@ using Xamarin.Forms;
 
 namespace SiamCross.Models.Sensors.Dua
 {
-    public class DuaStorage : BaseStorage
+    public class DuaStorage : BaseStorageModel
     {
         public readonly SensorModel SensorModel;
 

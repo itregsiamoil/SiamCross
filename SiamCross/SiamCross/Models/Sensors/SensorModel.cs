@@ -1,15 +1,12 @@
-﻿using SiamCross.Models.Connection;
-using SiamCross.Models.Connection.Protocol;
-using SiamCross.Models.Scanners;
-using SiamCross.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Threading;
+using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
+using SiamCross.Models.Connection;
+using SiamCross.Models.Connection.Protocol;
+using System.ComponentModel;
 
 namespace SiamCross.Models.Sensors
 {
@@ -18,17 +15,17 @@ namespace SiamCross.Models.Sensors
         public readonly DeviceInfo Device;
         public readonly StatusModel Status = new StatusModel();
 
-        public readonly List<ITask> OnConnectQueue = new List<ITask>();
-
         public readonly IProtocolConnection Connection;
         public readonly TaskManager Manager;
         public readonly ConnectionHolder ConnHolder;
 
         public readonly SensorPosition Position;
-        public readonly List<ISurvey> Surveys;
+        public readonly List<BaseSurveyModel> Surveys;
         public readonly CommonInfo Info;
-        public IStorage Storage { get; set; }
-        public ISurveyCfg SurveyCfg { get; set; }
+        public BaseStorageModel Storage { get; set; }
+
+        public ITask TaskWait { get; set; }
+        public readonly List<ITask> OnConnectQueue = new List<ITask>();
 
         public SensorModel(IProtocolConnection conn, DeviceInfo deviceInfo)
         {
@@ -38,7 +35,7 @@ namespace SiamCross.Models.Sensors
             ConnHolder = new ConnectionHolder(Manager, Connection);
 
             Position = new SensorPosition(this);
-            Surveys = new List<ISurvey>();
+            Surveys = new List<BaseSurveyModel>();
             Info = new CommonInfo();
 
             //OnConnectQueue.Add(SurveyCfg.TaskWait);
@@ -69,12 +66,13 @@ namespace SiamCross.Models.Sensors
         void OnDisconnect()
         {
             Position.ResetSaved();
-            SurveyCfg.ResetSaved();
+            foreach (var surveyModel in Surveys)
+                surveyModel.Config.ResetSaved();
         }
         async Task OnConnect()
         {
-            if (null != SurveyCfg && null != SurveyCfg.TaskWait)
-                await Manager.Execute(SurveyCfg.TaskWait);
+            if (null != TaskWait)
+                await Manager.Execute(TaskWait);
             var result = await Manager.Execute(new TaskQueue(OnConnectQueue));
             if (JobStatus.Сomplete == result && ConnHolder.CmdUpdateStatus is AsyncCommand asyncCmd)
                 await asyncCmd.ExecuteAsync();
@@ -91,46 +89,5 @@ namespace SiamCross.Models.Sensors
             Manager?.Dispose();
             Connection.Dispose();
         }
-    }
-
-
-    public interface ISensor : IDisposable, INotifyPropertyChanged
-    {
-        SensorModel Model { get; }
-
-        IProtocolConnection Connection { get; }
-        TaskManagerVM TaskManager { get; set; }
-        BaseStorageVM StorageVM { get; set; }
-        SurveysCollectionVM SurveysVM { get; }
-        SensorPositionVM PositionVM { get; }
-        //IViewModel FactoryConfigVM { get; set; }
-        //IViewModel UserConfigVM { get; set; }
-        //IViewModel StateVM { get; set; }
-        ICommand ShowDetailViewCommand { get; set; }
-        ICommand ShowSurveysViewCommand { get; set; }
-        ICommand ShowInfoViewCommand { get; set; }
-
-        string ConnStateStr { get; }
-        bool Activate { get; set; }
-        bool IsMeasurement { get; }
-        bool IsEnableQickInfo { get; set; }
-        float MeasureProgress { get; set; }
-        Task<bool> QuickReport(CancellationToken cancelToken);
-        Task StartMeasurement(object measurementParameters);
-        ScannedDeviceInfo ScannedDeviceInfo { get; }
-
-        string Name { get; }
-        string Type { get; }
-        string Number { get; }
-        string Label { get; }
-        string Firmware { get; }
-        string Battery { get; }
-        string Temperature { get; }
-        string RadioFirmware { get; }
-        string Status { get; set; }
-        Guid Id { get; }
-
-        bool IsNewStatus { get; }
-        bool IsOldStatus { get; }
     }
 }

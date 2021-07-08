@@ -2078,6 +2078,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Rods weight.
+        /// </summary>
+        public static string RodWeight {
+            get {
+                return ResourceManager.GetString("RodWeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Save in the device.
         /// </summary>
         public static string SaveInDevice {

@@ -2,7 +2,7 @@
 
 namespace SiamCross.Models.Sensors.Dua
 {
-    public class DuaSurveyCfg : BaseSurveyCfg
+    public class DuaSurveyCfg : BaseSurveyCfgModel
     {
         private readonly SensorModel _Sensor;
 
@@ -29,7 +29,6 @@ namespace SiamCross.Models.Sensors.Dua
 
             TaskSave = new TaskSurveyCfgSave(this, _Sensor);
             TaskLoad = new TaskSurveyCfgLoad(this, _Sensor);
-            TaskWait = new TaskSurveyWait(sensor);
 
             //CmdShow = new AsyncCommand(DoShow,
             //    (Func<bool>)null,

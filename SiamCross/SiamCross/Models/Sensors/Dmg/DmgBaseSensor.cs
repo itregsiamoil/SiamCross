@@ -1,7 +1,6 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Sensors.Dmg.Surveys;
 using SiamCross.ViewModels.Dmg;
-using SiamCross.ViewModels.Dmg.Survey;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,9 +15,8 @@ namespace SiamCross.Models.Sensors.Dmg
         {
             Storage = new DmgStorage(this);
 
-            //SurveyCfg = new DuaSurveyCfg(this);
-
-            Surveys.Add(new Dynamogramm(this));
+            //Surveys.Add(new Dynamogramm(this));
+            Surveys.Add(new DynamogrammSurvey(this));
 
             //OnConnectQueue.Insert(0, SurveyCfg.TaskWait);
             OnConnectQueue.Add(new TaskUpdateConfig(this));
@@ -81,8 +79,8 @@ namespace SiamCross.Models.Sensors.Dmg
         {
             StorageVM = new DmgStorageVM(this);
 
-            var dmgVM = new DynamogrammVM(this, Model.Surveys[0] as BaseSurvey);
-            SurveysVM.SurveysCollection.Add(dmgVM);
+            //var dmgVM = new DynamogrammVM(this, Model.Surveys[0] as BaseSurvey);
+            //SurveysVM.SurveysCollection.Add(dmgVM);
 
             //FactoryConfigVM = new FactoryConfigVM(this);
             //UserConfigVM = new UserConfigVM(this);

@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace SiamCross.Models.Sensors.Umt
 {
-    public class Storage : BaseStorage
+    public class Storage : BaseStorageModel
     {
         public readonly SensorModel SensorModel;
 

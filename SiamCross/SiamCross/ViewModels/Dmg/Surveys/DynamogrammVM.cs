@@ -78,7 +78,7 @@ namespace SiamCross.ViewModels.Dmg.Survey
         public ICommand StartMeasurementCommand { get; set; }
         public ICommand ValveTestCommand { get; set; }
 
-        public DynamogrammVM(ISensor sensor, BaseSurvey model)
+        public DynamogrammVM(ISensor sensor, BaseSurveyModel model)
             : base(sensor, model)
         {
             try

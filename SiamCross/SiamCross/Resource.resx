@@ -1090,4 +1090,7 @@ DB Siam can't import the files with the same identifiers.</value>
   <data name="DoConnect" xml:space="preserve">
     <value>Connect</value>
   </data>
+  <data name="RodWeight" xml:space="preserve">
+    <value>Rods weight</value>
+  </data>
 </root>

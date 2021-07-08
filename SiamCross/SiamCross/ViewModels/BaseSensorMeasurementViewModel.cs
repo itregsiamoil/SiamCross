@@ -38,7 +38,7 @@ namespace SiamCross.ViewModels
         public ICommand AddField { get; set; }
 
 
-        public BaseSensorMeasurementViewModel(ISensor sensor, BaseSurvey model)
+        public BaseSensorMeasurementViewModel(ISensor sensor, BaseSurveyModel model)
             : base(sensor, model)
         {
             _errorList = new List<string>();

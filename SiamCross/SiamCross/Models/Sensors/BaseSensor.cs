@@ -58,6 +58,8 @@ namespace SiamCross.Models.Sensors
             TaskManager = new TaskManagerVM(_Model.Manager);
 
             SurveysVM = new SurveysCollectionVM(this);
+            foreach (var surveyModel in Model.Surveys)
+                SurveysVM.SurveysCollection.Add(surveyModel.GetCfgVM(this));
 
             PositionVM = new SensorPositionVM(this);
 

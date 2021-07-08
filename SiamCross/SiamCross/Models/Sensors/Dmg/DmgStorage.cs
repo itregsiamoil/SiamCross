@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dmg
 {
-    public class DmgStorage : BaseStorage
+    public class DmgStorage : BaseStorageModel
     {
         private readonly SensorModel _Sensor;
         private readonly IProtocolConnection _Connection;
