@@ -1,15 +1,11 @@
-﻿using SiamCross.Models.Connection;
-using SiamCross.Models.Connection.Protocol;
+﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Scanners;
 using SiamCross.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors
 {

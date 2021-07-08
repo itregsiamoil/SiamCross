@@ -1,7 +1,9 @@
 ﻿using SiamCross.ViewModels;
 using SiamCross.ViewModels.Dmg;
+using SiamCross.ViewModels.Dmg.Surveys;
 using SiamCross.Views;
 using SiamCross.Views.DDIN2;
+using SiamCross.Views.Dmg;
 using SiamCross.Views.MenuItems;
 using SiamCross.Views.MenuItems.HandbookPanel;
 using System;
@@ -28,23 +30,24 @@ namespace SiamCross.Services
             Register(typeof(MailSettingsVM), () => new MailSettingsPage());
             Register(typeof(FieldsDirVM), () => new DirectoryPage(() => null));
             Register(typeof(SoundSpeedListVM), () => new DirectoryPage(() => null));
-
-
             Register(typeof(MeasurementsVMService), () => new MeasurementsPage());
 
             Register(typeof(SensorPositionVM), () => new PositionEditPage());
             Register(typeof(SensorDetailsVM), () => new SensorDetailsPage());
             Register(typeof(SurveysCollectionVM), () => new SurveysCollectionPage());
 
-            Register(typeof(DmgStorageVM), () => new DmgDownloadPage());
-            Register(typeof(ViewModels.Dmg.Survey.DynamogrammVM)
-                , () => new DynamogrammPage());
-
-            Register(typeof(ViewModels.Dua.Survey.SurveyVM), () => new Views.Dua.SurvayCfgPage());
-            Register(typeof(ViewModels.Dua.DuaStorageVM), () => new Views.Dua.DuaStoragePage());
             //Register(typeof(FactoryConfigVM), () => new Views.Dua.FactoryConfigPage());
             //Register(typeof(UserConfigVM), () => new Views.Dua.UserConfigPage());
             //ViewFactoryService.Register(typeof(StateVM), () => new StatePage());
+
+            Register(typeof(DmgStorageVM), () => new DmgDownloadPage());
+            //Register(typeof(ViewModels.Dmg.Survey.DynamogrammVM), () => new DynamogrammPage());
+            Register(typeof(DynamogrammSurveyCfgVM), () => new DynamogrammSurveyCfgPage());
+            Register(typeof(ValveTestSurveyCfgVM), () => new ValveTestSurveyCfgPage());
+            Register(typeof(RodsWeightSurveyCfgVM), () => new RodsWeightSurveyCfgPage());
+
+            Register(typeof(ViewModels.Dua.Survey.SurveyVM), () => new Views.Dua.SurvayCfgPage());
+            Register(typeof(ViewModels.Dua.DuaStorageVM), () => new Views.Dua.DuaStoragePage());
 
             Register(typeof(ViewModels.Umt.SurveyVM), () => new Views.Umt.SurvayCfgPage());
             Register(typeof(ViewModels.Umt.StorageVM), () => new Views.Umt.StoragePage());

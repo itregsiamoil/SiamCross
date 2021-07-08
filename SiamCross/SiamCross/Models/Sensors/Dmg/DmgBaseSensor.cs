@@ -17,6 +17,8 @@ namespace SiamCross.Models.Sensors.Dmg
 
             //Surveys.Add(new Dynamogramm(this));
             Surveys.Add(new DynamogrammSurvey(this));
+            Surveys.Add(new ValveTestSurvey(this));
+            Surveys.Add(new RodsWeightSurvey(this));
 
             //OnConnectQueue.Insert(0, SurveyCfg.TaskWait);
             OnConnectQueue.Add(new TaskUpdateConfig(this));
@@ -25,7 +27,6 @@ namespace SiamCross.Models.Sensors.Dmg
                 UpdateStatus,
                 () => Manager.IsFree,
                 null, false, false);
-
         }
         async Task UpdateStatus()
         {
@@ -33,7 +34,6 @@ namespace SiamCross.Models.Sensors.Dmg
             await Manager.Execute(task);
         }
     }
-
 
     public abstract class DmgBaseSensor : BaseSensor2
     {
