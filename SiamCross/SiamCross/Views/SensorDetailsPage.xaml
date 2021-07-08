@@ -140,8 +140,15 @@
                             <TapGestureRecognizer Command="{Binding ShowSurveysViewCommand}" />
                         </Frame.GestureRecognizers>
                         <StackLayout>
-                            <Label Text="&#x1F4C8; Исследования" Style="{StaticResource TitleLabel}"/>
-                            <Label Text="Установка праметров, запуск и остановка исследования "/>
+                            <Label Style="{StaticResource TitleLabel}" >
+                                <Label.FormattedText Margin="0">
+                                    <FormattedString >
+                                        <Span Text="&#x1F4C8; " />
+                                        <Span Text="{local:Translate Survey1}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Text="{local:Translate AboutResearches}"/>
                         </StackLayout>
                     </Frame>
                     <Frame Style="{StaticResource MenuItemStyle}" FlexLayout.Grow="1"  FlexLayout.Basis="280" HeightRequest="80">
@@ -149,8 +156,15 @@
                             <TapGestureRecognizer Command="{Binding ShowDownloadsViewCommand}" />
                         </Frame.GestureRecognizers>
                         <StackLayout>
-                            <Label Text="&#x1F4BE; Хранилище" Style="{StaticResource TitleLabel}"/>
-                            <Label Text="Получение из памяти прибора одного или нескольких измерений"/>
+                            <Label Style="{StaticResource TitleLabel}" >
+                                <Label.FormattedText Margin="0">
+                                    <FormattedString >
+                                        <Span Text="&#x1F4BE; " />
+                                        <Span Text="{local:Translate Storage}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Text="{local:Translate AboutStorage}"/>
                         </StackLayout>
                     </Frame>
 

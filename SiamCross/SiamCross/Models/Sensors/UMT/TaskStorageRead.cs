@@ -91,7 +91,7 @@ namespace SiamCross.Models.Sensors.Umt
         }
 
         public TaskStorageRead(Storage model, SensorModel sensor)
-            : base(sensor, "Чтение исследований")
+            : base(sensor, Resource.ReadingSurvey)
         {
             if (model is Storage storage)
                 _Storage = storage;
@@ -135,17 +135,17 @@ namespace SiamCross.Models.Sensors.Umt
                 return false;
             if (!await CheckConnectionAsync(ct))
                 return false;
-            InfoEx = "чтение информации о памяти";
+            InfoEx = Resource.ReadingMemoryInformation;
             await Connection.ReadAsync(_MemInfo, null, ct);
-            InfoEx = "чтение текущего состояния памяти";
+            InfoEx = Resource.ReadingMemoryStatus;
             await Connection.ReadAsync(_CurrMemInfo, null, ct);
-            InfoEx = "чтение количества исследований";
+            InfoEx = Resource.ReadingNumberSurvey;
             await Connection.ReadAsync(_CurrInfo, null, ct);
 
 
             if (0xFFFF == Adrtek.Value || 0 == Kolisl.Value)
             {
-                InfoEx = "пусто";
+                InfoEx = Resource.Empty;
                 return true;
             }
 
@@ -345,7 +345,7 @@ namespace SiamCross.Models.Sensors.Umt
                 , Sensor.Info
                 , new MeasurementInfo());
 
-            InfoEx = $"чтение {NomIslt.Value} исследования";
+            InfoEx = $"{Resource.Reading} {NomIslt.Value} {Resource.DopSurvey}";
 
             MinPress = float.MaxValue;
             MaxPress = float.MinValue;

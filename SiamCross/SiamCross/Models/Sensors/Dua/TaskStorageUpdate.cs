@@ -21,7 +21,7 @@ namespace SiamCross.Models.Sensors.Dua
         }
 
         public TaskStorageUpdate(DuaStorage model, SensorModel sensor)
-            : base(sensor, "Опрос хранилища")
+            : base(sensor, Resource.StoragePolling)
         {
             if (model is DuaStorage storage)
                 _Storage = storage;
@@ -52,7 +52,7 @@ namespace SiamCross.Models.Sensors.Dua
             bool ret = false;
             if (await CheckConnectionAsync(ct))
             {
-                InfoEx = "чтение";
+                InfoEx = Resource.Reading;
                 ret = RespResult.NormalPkg == await Connection.TryReadAsync(Aviable, SetProgressBytes, ct);
             }
 
@@ -61,7 +61,7 @@ namespace SiamCross.Models.Sensors.Dua
                 //await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 _Storage.AviableRep = Uksh.Value;
                 _Storage.AviableEcho = Ukex.Value;
-                InfoEx = "выполнено";
+                InfoEx = Resource.Complete;
             }
             else
             {

@@ -15,11 +15,11 @@
         {
             switch (enumValue)
             {
-                case Kind.LStatic: return "Статический уровень";
-                case Kind.LDynamic: return "Динамический уровень";
-                case Kind.LRC: return "КВУ";
-                case Kind.LDC: return "КПУ";
-                case Kind.PAR: return "АРД";
+                case Kind.LStatic: return Resource.StaticLevel;
+                case Kind.LDynamic: return Resource.DynamicLevel;
+                case Kind.LRC: return Resource.LRC;
+                case Kind.LDC: return Resource.LDC;
+                case Kind.PAR: return Resource.PAR;
                 default: return "UNKNOWN";
             }
         }
@@ -27,11 +27,11 @@
         {
             switch (enumValue)
             {
-                case Kind.LStatic: return "уровень жидкости в спокойном состоянии";
-                case Kind.LDynamic: return "уровень жидкости, наблюдаемый при откачке";
-                case Kind.LRC: return "кривая восстановления уровня";
-                case Kind.LDC: return "кривая падения уровня";
-                case Kind.PAR: return "автоматическая регистрация давления";
+                case Kind.LStatic: return Resource.AboutStaticLevel;
+                case Kind.LDynamic: return Resource.AboutDynamicLevel;
+                case Kind.LRC: return Resource.AboutLRC;
+                case Kind.LDC: return Resource.AboutLDC;
+                case Kind.PAR: return Resource.AboutPAR;
                 default: return "UNKNOWN";
             }
         }

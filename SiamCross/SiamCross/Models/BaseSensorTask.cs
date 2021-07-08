@@ -66,7 +66,7 @@ namespace SiamCross.Models
             if (connected && !Sensor.ConnHolder.IsActivated)
                 Sensor.ConnHolder.IsActivated = true;
             if (!connected)
-                InfoEx = "не удалось подключиться к прибору";
+                InfoEx = Resource.Failed_connect;
             return connected;
         }
     }

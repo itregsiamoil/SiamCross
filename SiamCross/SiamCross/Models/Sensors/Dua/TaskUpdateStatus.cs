@@ -21,7 +21,7 @@ namespace SiamCross.Models.Sensors.Dua
         }
 
         public TaskUpdateStatus(SensorModel sensor)
-            : base(sensor, "Чтение состояния")
+            : base(sensor, Resource.ReadingState)
         {
             BatteryVoltage = _CurrentParam.Add(new MemVarUInt16(nameof(BatteryVoltage)));
             ТempC = _CurrentParam.Add(new MemVarUInt16(nameof(ТempC)));

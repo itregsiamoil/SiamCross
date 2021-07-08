@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:dua="clr-namespace:SiamCross.ViewModels.Dua"
+             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross" 
              x:DataType="dua:FactoryConfigVM"
              x:Class="SiamCross.Views.Dua.FactoryConfigPage">
 
@@ -14,7 +15,7 @@
     <NavigationPage.TitleView >
         <StackLayout Orientation="Vertical" >
             <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
-            <Label Text="Заводские настройки" 
+            <Label Text="{local:Translate FactorySettings}" 
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
         </StackLayout>
@@ -31,7 +32,7 @@
                 <StackLayout BackgroundColor="{StaticResource colorBackground}">
                     <Frame Style="{StaticResource GroupingFrameStyle2}" >
                         <StackLayout>
-                            <Label Text="Термокоэффициены давления" 
+                            <Label Text="{local:Translate PressureThermalCompensationCoefficients}" 
                                Style="{StaticResource SectionLabel2}"/>
                             <Grid ColumnSpacing="0" RowSpacing="0">
                                 <Grid.RowDefinitions>
@@ -46,17 +47,59 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Label Text="Сопротивление 1" Grid.Column="0" Grid.Row="0"/>
+                                <Label Grid.Column="0" Grid.Row="0">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{local:Translate Resistance}"/>
+                                            <Span Text=" 1"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
                                 <Entry Text="" Grid.Column="0" Grid.Row="1"/>
-                                <Label Text="Сопротивление 2" Grid.Column="0" Grid.Row="2"/>
+                                <Label Grid.Column="0" Grid.Row="2">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{local:Translate Resistance}"/>
+                                            <Span Text=" 2"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
                                 <Entry Text="" Grid.Column="0" Grid.Row="3"/>
-                                <Label Text="Сопротивление 3" Grid.Column="0" Grid.Row="4"/>
+                                <Label Grid.Column="0" Grid.Row="4">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{local:Translate Resistance}"/>
+                                            <Span Text=" 3"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
                                 <Entry Text="" Grid.Column="0" Grid.Row="5"/>
-                                <Label Text="Давление 1" Grid.Column="1" Grid.Row="0"/>
+                                <Label Grid.Column="1" Grid.Row="0">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{local:Translate Pressure}"/>
+                                            <Span Text=" 1"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
                                 <Entry Text="" Grid.Column="1" Grid.Row="1"/>
-                                <Label Text="Давление 2" Grid.Column="1" Grid.Row="2"/>
+                                <Label Grid.Column="1" Grid.Row="2">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{local:Translate Pressure}"/>
+                                            <Span Text=" 2"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
                                 <Entry Text="" Grid.Column="1" Grid.Row="3"/>
-                                <Label Text="Давление 3" Grid.Column="1" Grid.Row="4"/>
+                                <Label Grid.Column="1" Grid.Row="4">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{local:Translate Pressure}"/>
+                                            <Span Text=" 3"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
                                 <Entry Text="" Grid.Column="1" Grid.Row="5"/>
                             </Grid>
 
@@ -64,7 +107,7 @@
                     </Frame>
                 </StackLayout>
             </ScrollView>
-            <Button Text="Сохранить в приборе" HorizontalOptions="FillAndExpand"
+            <Button Text="{local:Translate SaveInDevice}" HorizontalOptions="FillAndExpand"
                     BackgroundColor="{StaticResource colorSecondaryLight}" />
         </StackLayout>
     </ContentPage.Content>

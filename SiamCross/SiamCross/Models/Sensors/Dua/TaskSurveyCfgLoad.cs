@@ -37,7 +37,7 @@ namespace SiamCross.Models.Sensors.Dua
             Progress = ((float)_BytesProgress / _BytesTotal);
         }
         public TaskSurveyCfgLoad(DuaSurveyCfg model, SensorModel sensor)
-            : base(sensor, "Опрос параметров измерения")
+            : base(sensor, Resource.Survey_parameters)
         {
             _Model = model;
             SurvayParam.Add(Revbit);
@@ -77,7 +77,7 @@ namespace SiamCross.Models.Sensors.Dua
         async Task LoadTimestamp(CancellationToken ct)
         {
             RespResult res = RespResult.ErrorUnknown;
-            InfoEx = "чтение времени";
+            InfoEx = Resource.ReadingTime;
             res = await Connection.TryReadAsync(Timestamp, SetProgressBytes, ct);
 
             if (RespResult.NormalPkg == res)
@@ -112,11 +112,11 @@ namespace SiamCross.Models.Sensors.Dua
             bool readed = false;
             if (!_Model.Synched)
             {
-                InfoEx = "чтение параметров";
+                InfoEx = Resource.ReadingParameters;
                 readed = RespResult.NormalPkg == await Connection.TryReadAsync(SurvayParam, SetProgressBytes, ct);
             }
             else
-                InfoEx = "обновлено";
+                InfoEx = Resource.Updated;
 
             if (readed)
             {
@@ -136,7 +136,7 @@ namespace SiamCross.Models.Sensors.Dua
                 PerU.Value.CopyTo(_Model.LevelPeriodIndex, 0);
                 KolUr.Value.CopyTo(_Model.LevelQuantityIndex, 0);
 
-                InfoEx = "выполнено";
+                InfoEx = Resource.Complete;
                 _Model.Synched = readed;
             }
             else if (!_Model.Synched)

@@ -24,7 +24,7 @@ namespace SiamCross.Models.Sensors.Dua
         }
 
         public TaskPositionSave(SensorPosition pos, uint baseAddress = 0x800B)
-            : base(pos.Sensor, "Сохранение местоположения")
+            : base(pos.Sensor, Resource.SavingLocation)
         {
             _Model = pos;
 
@@ -64,7 +64,7 @@ namespace SiamCross.Models.Sensors.Dua
             PadRightCharCopy(Kust.Value, _Model.Current.Bush);
             Shop.Value = (ushort)_Model.Current.Shop;
             Operator.Value = 0;
-            InfoEx = "запись";
+            InfoEx = Resource.Recording;
             bool ret = false;
             foreach (var r in PosParam.GetVars())
             {
@@ -73,7 +73,7 @@ namespace SiamCross.Models.Sensors.Dua
                     break;
             }
             if (ret)
-                InfoEx = "выполнено";
+                InfoEx = Resource.Complete;
             return ret;
         }
 

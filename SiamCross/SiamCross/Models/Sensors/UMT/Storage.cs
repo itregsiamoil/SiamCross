@@ -56,7 +56,7 @@ namespace SiamCross.Models.Sensors.Umt
         {
             bool result = await Application.Current.MainPage.DisplayAlert(
                 string.Empty,
-                "Очистить хранилище?",
+                $"{Resource.Clear} {Resource.Storage}?",
                 Resource.YesButton,
                 Resource.NotButton);
             if (!result)

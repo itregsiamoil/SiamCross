@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:dmg="clr-namespace:SiamCross.ViewModels.Dmg"
+             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross" 
              x:DataType="dmg:DmgStorageVM"
              x:Class="SiamCross.Views.DDIN2.DmgDownloadPage">
     <ContentPage.Resources>
@@ -12,7 +13,7 @@
     <NavigationPage.TitleView >
         <StackLayout>
             <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
-            <Label Text="Считывание"
+            <Label Text="{local:Translate Downloading}"
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
         </StackLayout>
@@ -31,17 +32,19 @@
                         <Label Style="{StaticResource SectionLabel2}">
                             <Label.FormattedText>
                                 <FormattedString >
-                                    <Span Text="Измерения" />
+                                    <Span Text="{local:Translate Surveys}" />
                                     <Span Text="&#10;" />
-                                    <Span Text="не считаны: " />
-                                    <Span Text="{Binding Aviable}"  />
-                                    <Span Text=" из 1"  />
+                                    <Span Text="{local:Translate NotReading}" />
+                                    <Span Text=": " />
+                                    <Span Text="{Binding Aviable} "  />
+                                    <Span Text="{local:Translate Out} "  />
+                                    <Span Text="1"  />
                                 </FormattedString>
                             </Label.FormattedText>
                         </Label>
 
                         <Grid Padding="0,10,0,10">
-                            <Label Text="Показать считанное"/>
+                            <Label Text="{local:Translate ShowReading}"/>
                             <Switch IsToggled="{Binding OpenOnDownload}"/>
                         </Grid>
                     </StackLayout>
@@ -49,7 +52,7 @@
             </ScrollView>
 
             <StackLayout Orientation="Horizontal" >
-                <Button Text="Считать все" HorizontalOptions="FillAndExpand" 
+                <Button Text="{local:Translate ReadAll}" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorSecondaryLight}"
                         Command="{Binding CmdDownload}">
                     <Button.Triggers>

@@ -29,9 +29,9 @@
                     <FormattedString>
                         <Span Text="{Binding Sensor.Name}"/>
                         <Span Text="&#x2190;"/>
-                        <Span Text="Исследования"/>
+                        <Span Text = "{local1:Translate Survey1}" />
                     </FormattedString>
-                </Label.FormattedText>
+                    </Label.FormattedText>
             </Label>
             <Label Text="{Binding Name}"
                    FontSize="Medium" FontAttributes="Bold" 
@@ -48,7 +48,7 @@
                HorizontalOptions="FillAndExpand"
                VerticalOptions="FillAndExpand" >
             <TableRoot>
-                <TableSection Title="{local1:Translate MeasurementData}">
+                <TableSection Title="{local1:Translate SurveyData}">
                         <ViewCell>
                             <StackLayout >
                                 <Label Text="{local1:Translate Rod}"></Label>

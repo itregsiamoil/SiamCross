@@ -25,11 +25,11 @@
                        LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}">
-                <Button Text="По умолчанию" HorizontalOptions="FillAndExpand" 
+                <Button Text="{local1:Translate ByDefault}" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorBackgroundMedium}"
                         Command="{Binding CmdDefault}">
                 </Button>
-                <Button Text="Сохранить" HorizontalOptions="FillAndExpand" 
+                <Button Text="{local1:Translate DoSave}" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdSave}" >
                 </Button>
@@ -41,11 +41,11 @@
         <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
             <ScrollView VerticalOptions="FillAndExpand">
                 <StackLayout Padding="5">
-                    <Label Text="Тема"/>
+                    <Label Text="{local1:Translate Subject}"/>
                     <Entry Text="{Binding SubjectName}"/>
-                    <Label Text="Имя отправителя"/>
+                    <Label Text="{local1:Translate SenderName}"/>
                     <Entry Text="{Binding FromName}"/>
-                    <Label Text="{local1:Translate FromAddress}"/>
+                    <Label Text="{local1:Translate SenderAddress}"/>
                     <Entry Text="{Binding FromAddress}" 
                                Keyboard="Email"/>
                     <Label Text="{local1:Translate ToAddress}"/>
@@ -84,11 +84,11 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Button Text="По умолчанию"
+                <Button Text="{local1:Translate ByDefault}"
                         BackgroundColor="{StaticResource colorBackgroundMedium}"
                         Command="{Binding CmdDefault}"
                         Grid.Column="0"/>
-                <Button Text="Сохранить"
+                <Button Text="{local1:Translate DoSave}"
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdSave}"
                         Grid.Column="1"/>

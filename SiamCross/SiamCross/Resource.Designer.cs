@@ -70,6 +70,105 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на liquid level observed during pumping.
+        /// </summary>
+        public static string AboutDynamicLevel {
+            get {
+                return ResourceManager.GetString("AboutDynamicLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на single measurement.
+        /// </summary>
+        public static string AboutDynamics {
+            get {
+                return ResourceManager.GetString("AboutDynamics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на periodic measurement.
+        /// </summary>
+        public static string AboutDynamics_period {
+            get {
+                return ResourceManager.GetString("AboutDynamics_period", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на level drop curve.
+        /// </summary>
+        public static string AboutLDC {
+            get {
+                return ResourceManager.GetString("AboutLDC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на level recovery curve.
+        /// </summary>
+        public static string AboutLRC {
+            get {
+                return ResourceManager.GetString("AboutLRC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на pressure automatic recording.
+        /// </summary>
+        public static string AboutPAR {
+            get {
+                return ResourceManager.GetString("AboutPAR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Setting parameters, starting and stopping the survey.
+        /// </summary>
+        public static string AboutResearches {
+            get {
+                return ResourceManager.GetString("AboutResearches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на single measurement.
+        /// </summary>
+        public static string AboutStatic {
+            get {
+                return ResourceManager.GetString("AboutStatic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на periodic measurement.
+        /// </summary>
+        public static string AboutStatic_period {
+            get {
+                return ResourceManager.GetString("AboutStatic_period", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на liquid level in a calm state.
+        /// </summary>
+        public static string AboutStaticLevel {
+            get {
+                return ResourceManager.GetString("AboutStaticLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Getting one or more survay from the device&apos;s memory.
+        /// </summary>
+        public static string AboutStorage {
+            get {
+                return ResourceManager.GetString("AboutStorage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на About app.
         /// </summary>
         public static string AboutTitle {
@@ -88,11 +187,38 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Add a device (click to confirm).
+        /// </summary>
+        public static string AddDevice {
+            get {
+                return ResourceManager.GetString("AddDevice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Additional amplification.
         /// </summary>
         public static string AdditionalAmp {
             get {
                 return ResourceManager.GetString("AdditionalAmp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Additional gain.
+        /// </summary>
+        public static string AdditionalGain {
+            get {
+                return ResourceManager.GetString("AdditionalGain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Additionally.
+        /// </summary>
+        public static string Additionally {
+            get {
+                return ResourceManager.GetString("Additionally", resourceCulture);
             }
         }
         
@@ -169,6 +295,24 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Ascending by ID.
+        /// </summary>
+        public static string AscendingByID {
+            get {
+                return ResourceManager.GetString("AscendingByID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ascending by name.
+        /// </summary>
+        public static string AscendingByName {
+            get {
+                return ResourceManager.GetString("AscendingByName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Atm.
         /// </summary>
         public static string AtmosphereUnits {
@@ -223,11 +367,29 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Automatic valve.
+        /// </summary>
+        public static string AutomaticValve {
+            get {
+                return ResourceManager.GetString("AutomaticValve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Balancer.
         /// </summary>
         public static string BalancedModelPump {
             get {
                 return ResourceManager.GetString("BalancedModelPump", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Begin.
+        /// </summary>
+        public static string Begin {
+            get {
+                return ResourceManager.GetString("Begin", resourceCulture);
             }
         }
         
@@ -282,6 +444,15 @@ namespace SiamCross {
         public static string BushChoiceText {
             get {
                 return ResourceManager.GetString("BushChoiceText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на By default.
+        /// </summary>
+        public static string ByDefault {
+            get {
+                return ResourceManager.GetString("ByDefault", resourceCulture);
             }
         }
         
@@ -358,6 +529,24 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Clear.
+        /// </summary>
+        public static string Clear {
+            get {
+                return ResourceManager.GetString("Clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Clearing the memory.
+        /// </summary>
+        public static string ClearingMemory {
+            get {
+                return ResourceManager.GetString("ClearingMemory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Clear memory.
         /// </summary>
         public static string ClearMemory {
@@ -394,11 +583,29 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Complete.
+        /// </summary>
+        public static string Complete {
+            get {
+                return ResourceManager.GetString("Complete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Connected.
         /// </summary>
         public static string ConnectedStatus {
             get {
                 return ResourceManager.GetString("ConnectedStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Connection type.
+        /// </summary>
+        public static string ConnectionType {
+            get {
+                return ResourceManager.GetString("ConnectionType", resourceCulture);
             }
         }
         
@@ -417,6 +624,15 @@ namespace SiamCross {
         public static string Date {
             get {
                 return ResourceManager.GetString("Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на days.
+        /// </summary>
+        public static string Days {
+            get {
+                return ResourceManager.GetString("Days", resourceCulture);
             }
         }
         
@@ -448,6 +664,24 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Descending by ID.
+        /// </summary>
+        public static string DescendingByID {
+            get {
+                return ResourceManager.GetString("DescendingByID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Descending by name.
+        /// </summary>
+        public static string DescendingByName {
+            get {
+                return ResourceManager.GetString("DescendingByName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Detached.
         /// </summary>
         public static string Detached {
@@ -457,11 +691,38 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на determining time.
+        /// </summary>
+        public static string DeterminingTime {
+            get {
+                return ResourceManager.GetString("DeterminingTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Device.
         /// </summary>
         public static string Device {
             get {
                 return ResourceManager.GetString("Device", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Device time.
+        /// </summary>
+        public static string DeviceTime {
+            get {
+                return ResourceManager.GetString("DeviceTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Connect.
+        /// </summary>
+        public static string DoConnect {
+            get {
+                return ResourceManager.GetString("DoConnect", resourceCulture);
             }
         }
         
@@ -502,11 +763,29 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на survey.
+        /// </summary>
+        public static string DopSurvey {
+            get {
+                return ResourceManager.GetString("DopSurvey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Save.
         /// </summary>
         public static string DoSave {
             get {
                 return ResourceManager.GetString("DoSave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Download.
+        /// </summary>
+        public static string Download {
+            get {
+                return ResourceManager.GetString("Download", resourceCulture);
             }
         }
         
@@ -525,15 +804,6 @@ namespace SiamCross {
         public static string DownloadMeasurements {
             get {
                 return ResourceManager.GetString("DownloadMeasurements", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Measurement type.
-        /// </summary>
-        public static string DuResearchType {
-            get {
-                return ResourceManager.GetString("DuResearchType", resourceCulture);
             }
         }
         
@@ -561,6 +831,24 @@ namespace SiamCross {
         public static string DynamicPressureSingle {
             get {
                 return ResourceManager.GetString("DynamicPressureSingle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Dynamics.
+        /// </summary>
+        public static string Dynamics {
+            get {
+                return ResourceManager.GetString("Dynamics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Dynamics(period).
+        /// </summary>
+        public static string Dynamics_period {
+            get {
+                return ResourceManager.GetString("Dynamics_period", resourceCulture);
             }
         }
         
@@ -647,11 +935,29 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на empty.
+        /// </summary>
+        public static string Empty {
+            get {
+                return ResourceManager.GetString("Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Enable bluetooth?.
         /// </summary>
         public static string EnableBluetooth {
             get {
                 return ResourceManager.GetString("EnableBluetooth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на End.
+        /// </summary>
+        public static string End {
+            get {
+                return ResourceManager.GetString("End", resourceCulture);
             }
         }
         
@@ -710,11 +1016,65 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на The name is empty or such a file already exists.
+        /// </summary>
+        public static string ErrorNameFile {
+            get {
+                return ResourceManager.GetString("ErrorNameFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Execute PAR at a level less than 50 m..
+        /// </summary>
+        public static string ExecutePAR {
+            get {
+                return ResourceManager.GetString("ExecutePAR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Execution time 0.2/0.05.
+        /// </summary>
+        public static string ExecutionTime {
+            get {
+                return ResourceManager.GetString("ExecutionTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Export.
         /// </summary>
         public static string ExportStatus {
             get {
                 return ResourceManager.GetString("ExportStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на External.
+        /// </summary>
+        public static string External {
+            get {
+                return ResourceManager.GetString("External", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Factory settings.
+        /// </summary>
+        public static string FactorySettings {
+            get {
+                return ResourceManager.GetString("FactorySettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на failed to connect to the device.
+        /// </summary>
+        public static string Failed_connect {
+            get {
+                return ResourceManager.GetString("Failed_connect", resourceCulture);
             }
         }
         
@@ -728,29 +1088,20 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Field code.
-        /// </summary>
-        public static string FieldCode {
-            get {
-                return ResourceManager.GetString("FieldCode", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Field name.
-        /// </summary>
-        public static string FieldName {
-            get {
-                return ResourceManager.GetString("FieldName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Fields.
         /// </summary>
         public static string Fields {
             get {
                 return ResourceManager.GetString("Fields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The file is saved.
+        /// </summary>
+        public static string FileSaved {
+            get {
+                return ResourceManager.GetString("FileSaved", resourceCulture);
             }
         }
         
@@ -791,11 +1142,29 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Sender address.
+        ///   Ищет локализованную строку, похожую на Free memory.
         /// </summary>
-        public static string FromAddress {
+        public static string FreeMemory {
             get {
-                return ResourceManager.GetString("FromAddress", resourceCulture);
+                return ResourceManager.GetString("FreeMemory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на from.
+        /// </summary>
+        public static string From {
+            get {
+                return ResourceManager.GetString("From", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Gas direction: in / out.
+        /// </summary>
+        public static string GasDirection {
+            get {
+                return ResourceManager.GetString("GasDirection", resourceCulture);
             }
         }
         
@@ -881,11 +1250,38 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на initialization.
+        /// </summary>
+        public static string Initialization {
+            get {
+                return ResourceManager.GetString("Initialization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Initial survey.
+        /// </summary>
+        public static string InitialSurvey {
+            get {
+                return ResourceManager.GetString("InitialSurvey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Inlet.
         /// </summary>
         public static string Inlet {
             get {
                 return ResourceManager.GetString("Inlet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Internal.
+        /// </summary>
+        public static string Internal {
+            get {
+                return ResourceManager.GetString("Internal", resourceCulture);
             }
         }
         
@@ -908,7 +1304,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Введите интервал!.
+        ///   Ищет локализованную строку, похожую на Imtravel choice text.
         /// </summary>
         public static string IntervalChoiceText {
             get {
@@ -953,6 +1349,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на LDC.
+        /// </summary>
+        public static string LDC {
+            get {
+                return ResourceManager.GetString("LDC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Level gauge sensor.
         /// </summary>
         public static string LevelGaugeSensorType {
@@ -971,11 +1376,29 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Level sensor.
+        /// </summary>
+        public static string LevelSensor {
+            get {
+                return ResourceManager.GetString("LevelSensor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Load.
         /// </summary>
         public static string Load {
             get {
                 return ResourceManager.GetString("Load", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Loading location.
+        /// </summary>
+        public static string LoadingLocation {
+            get {
+                return ResourceManager.GetString("LoadingLocation", resourceCulture);
             }
         }
         
@@ -994,6 +1417,15 @@ namespace SiamCross {
         public static string LowerRodWeight {
             get {
                 return ResourceManager.GetString("LowerRodWeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на LRC.
+        /// </summary>
+        public static string LRC {
+            get {
+                return ResourceManager.GetString("LRC", resourceCulture);
             }
         }
         
@@ -1025,6 +1457,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на The maximum depth is 3000m./6000m..
+        /// </summary>
+        public static string MaximumDepth {
+            get {
+                return ResourceManager.GetString("MaximumDepth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Maximum level at a speed of sound 341m / s.
         /// </summary>
         public static string MaxLevelAt341 {
@@ -1043,11 +1484,20 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Measurement data.
+        ///   Ищет локализованную строку, похожую на Meaning.
         /// </summary>
-        public static string MeasurementData {
+        public static string Meaning {
             get {
-                return ResourceManager.GetString("MeasurementData", resourceCulture);
+                return ResourceManager.GetString("Meaning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на measurements.
+        /// </summary>
+        public static string Measurements {
+            get {
+                return ResourceManager.GetString("Measurements", resourceCulture);
             }
         }
         
@@ -1070,20 +1520,11 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Measurements.
+        ///   Ищет локализованную строку, похожую на measuring.
         /// </summary>
-        public static string MeasurementsTitle {
+        public static string Measuring {
             get {
-                return ResourceManager.GetString("MeasurementsTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Test type.
-        /// </summary>
-        public static string MeasurementType {
-            get {
-                return ResourceManager.GetString("MeasurementType", resourceCulture);
+                return ResourceManager.GetString("Measuring", resourceCulture);
             }
         }
         
@@ -1178,11 +1619,47 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на will be synchronized at startup.
+        /// </summary>
+        public static string NotificationTime {
+            get {
+                return ResourceManager.GetString("NotificationTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на not reading.
+        /// </summary>
+        public static string NotReading {
+            get {
+                return ResourceManager.GetString("NotReading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на No comment.
         /// </summary>
         public static string NoСomment {
             get {
                 return ResourceManager.GetString("NoСomment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Number.
+        /// </summary>
+        public static string Number {
+            get {
+                return ResourceManager.GetString("Number", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Number of measurements.
+        /// </summary>
+        public static string NumberOfMeasurements {
+            get {
+                return ResourceManager.GetString("NumberOfMeasurements", resourceCulture);
             }
         }
         
@@ -1214,11 +1691,56 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на PAR.
+        /// </summary>
+        public static string PAR {
+            get {
+                return ResourceManager.GetString("PAR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на the parameters are not reading, update the parameters.
+        /// </summary>
+        public static string ParametersNotReading {
+            get {
+                return ResourceManager.GetString("ParametersNotReading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Password.
         /// </summary>
         public static string Password {
             get {
                 return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Period in minunes.
+        /// </summary>
+        public static string Period_m {
+            get {
+                return ResourceManager.GetString("Period_m", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Period in seconds.
+        /// </summary>
+        public static string Period_s {
+            get {
+                return ResourceManager.GetString("Period_s", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Piezo sensor.
+        /// </summary>
+        public static string PiezoSensor {
+            get {
+                return ResourceManager.GetString("PiezoSensor", resourceCulture);
             }
         }
         
@@ -1259,6 +1781,24 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Pressure sensor.
+        /// </summary>
+        public static string PressureSensor {
+            get {
+                return ResourceManager.GetString("PressureSensor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на pressure thermal compensation coefficients.
+        /// </summary>
+        public static string PressureThermalCompensationCoefficients {
+            get {
+                return ResourceManager.GetString("PressureThermalCompensationCoefficients", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на at.
         /// </summary>
         public static string PressureUnits {
@@ -1268,11 +1808,29 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Probe temp..
+        /// </summary>
+        public static string ProbeTemperature {
+            get {
+                return ResourceManager.GetString("ProbeTemperature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Protocol.
         /// </summary>
         public static string Protocol {
             get {
                 return ResourceManager.GetString("Protocol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Protocol type.
+        /// </summary>
+        public static string ProtocolType {
+            get {
+                return ResourceManager.GetString("ProtocolType", resourceCulture);
             }
         }
         
@@ -1295,6 +1853,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Quantity.
+        /// </summary>
+        public static string Quantity {
+            get {
+                return ResourceManager.GetString("Quantity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на RadioFirmware:.
         /// </summary>
         public static string RadioFirmware {
@@ -1304,11 +1871,182 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Read all.
+        /// </summary>
+        public static string ReadAll {
+            get {
+                return ResourceManager.GetString("ReadAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Reading.
+        /// </summary>
+        public static string Reading {
+            get {
+                return ResourceManager.GetString("Reading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на reading current information.
+        /// </summary>
+        public static string ReadingCurrentInformation {
+            get {
+                return ResourceManager.GetString("ReadingCurrentInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на reading header.
         /// </summary>
         public static string ReadingHeader {
             get {
                 return ResourceManager.GetString("ReadingHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на reading information.
+        /// </summary>
+        public static string ReadingInformation {
+            get {
+                return ResourceManager.GetString("ReadingInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на reading memory information.
+        /// </summary>
+        public static string ReadingMemoryInformation {
+            get {
+                return ResourceManager.GetString("ReadingMemoryInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на reading the current memory status.
+        /// </summary>
+        public static string ReadingMemoryStatus {
+            get {
+                return ResourceManager.GetString("ReadingMemoryStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на reading the number of survey.
+        /// </summary>
+        public static string ReadingNumberSurvey {
+            get {
+                return ResourceManager.GetString("ReadingNumberSurvey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на reading parameters.
+        /// </summary>
+        public static string ReadingParameters {
+            get {
+                return ResourceManager.GetString("ReadingParameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на reading state.
+        /// </summary>
+        public static string ReadingState {
+            get {
+                return ResourceManager.GetString("ReadingState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на reading the status.
+        /// </summary>
+        public static string ReadingStatus {
+            get {
+                return ResourceManager.GetString("ReadingStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Reading survey.
+        /// </summary>
+        public static string ReadingSurvey {
+            get {
+                return ResourceManager.GetString("ReadingSurvey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на reading survey information.
+        /// </summary>
+        public static string ReadingSurveyInformation {
+            get {
+                return ResourceManager.GetString("ReadingSurveyInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на reading the type of survey.
+        /// </summary>
+        public static string ReadingSurveyType {
+            get {
+                return ResourceManager.GetString("ReadingSurveyType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на reading the time.
+        /// </summary>
+        public static string ReadingTime {
+            get {
+                return ResourceManager.GetString("ReadingTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на recording.
+        /// </summary>
+        public static string Recording {
+            get {
+                return ResourceManager.GetString("Recording", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на recording load and movement.
+        /// </summary>
+        public static string RecordingLoadAndMovement {
+            get {
+                return ResourceManager.GetString("RecordingLoadAndMovement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на recording parameters.
+        /// </summary>
+        public static string RecordingParameters {
+            get {
+                return ResourceManager.GetString("RecordingParameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Recording of survey parameters.
+        /// </summary>
+        public static string RecordingSurveyParameters {
+            get {
+                return ResourceManager.GetString("RecordingSurveyParameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Resistance.
+        /// </summary>
+        public static string Resistance {
+            get {
+                return ResourceManager.GetString("Resistance", resourceCulture);
             }
         }
         
@@ -1340,11 +2078,47 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Save in the device.
+        /// </summary>
+        public static string SaveInDevice {
+            get {
+                return ResourceManager.GetString("SaveInDevice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Saving the location.
+        /// </summary>
+        public static string SavingLocation {
+            get {
+                return ResourceManager.GetString("SavingLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Saving measurements.
         /// </summary>
         public static string SavingMeasurements {
             get {
                 return ResourceManager.GetString("SavingMeasurements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Schedule level measurement.
+        /// </summary>
+        public static string ScheduleLevelMeasurement {
+            get {
+                return ResourceManager.GetString("ScheduleLevelMeasurement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Schedule PAR.
+        /// </summary>
+        public static string SchedulePAR {
+            get {
+                return ResourceManager.GetString("SchedulePAR", resourceCulture);
             }
         }
         
@@ -1394,15 +2168,6 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Выберите тип исследования.
-        /// </summary>
-        public static string SelectedMeasurementTypeChoiceText {
-            get {
-                return ResourceManager.GetString("SelectedMeasurementTypeChoiceText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Choose drive type!.
         /// </summary>
         public static string SelectedModelPumpChoiceText {
@@ -1430,11 +2195,47 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Sender address.
+        /// </summary>
+        public static string SenderAddress {
+            get {
+                return ResourceManager.GetString("SenderAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Sender name.
+        /// </summary>
+        public static string SenderName {
+            get {
+                return ResourceManager.GetString("SenderName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Send to E-mail.
         /// </summary>
         public static string SendingMeasurements {
             get {
                 return ResourceManager.GetString("SendingMeasurements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Sensitivity.
+        /// </summary>
+        public static string Sensitivity {
+            get {
+                return ResourceManager.GetString("Sensitivity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Service mode.
+        /// </summary>
+        public static string ServiceMode {
+            get {
+                return ResourceManager.GetString("ServiceMode", resourceCulture);
             }
         }
         
@@ -1475,6 +2276,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Show the reading.
+        /// </summary>
+        public static string ShowReading {
+            get {
+                return ResourceManager.GetString("ShowReading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Site.
         /// </summary>
         public static string Site {
@@ -1489,6 +2299,15 @@ namespace SiamCross {
         public static string SmtpAddress {
             get {
                 return ResourceManager.GetString("SmtpAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Sorting.
+        /// </summary>
+        public static string Sorting {
+            get {
+                return ResourceManager.GetString("Sorting", resourceCulture);
             }
         }
         
@@ -1525,6 +2344,15 @@ namespace SiamCross {
         public static string StartMeasurement {
             get {
                 return ResourceManager.GetString("StartMeasurement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Start.
+        /// </summary>
+        public static string Startup {
+            get {
+                return ResourceManager.GetString("Startup", resourceCulture);
             }
         }
         
@@ -1637,6 +2465,24 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Static.
+        /// </summary>
+        public static string Static {
+            get {
+                return ResourceManager.GetString("Static", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Static(period).
+        /// </summary>
+        public static string Static_period {
+            get {
+                return ResourceManager.GetString("Static_period", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Static level.
         /// </summary>
         public static string StaticLevel {
@@ -1664,11 +2510,146 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Survey.
+        ///   Ищет локализованную строку, похожую на Status Update.
+        /// </summary>
+        public static string StatusUpdate {
+            get {
+                return ResourceManager.GetString("StatusUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Storage.
+        /// </summary>
+        public static string Storage {
+            get {
+                return ResourceManager.GetString("Storage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Storage polling.
+        /// </summary>
+        public static string StoragePolling {
+            get {
+                return ResourceManager.GetString("StoragePolling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Subject.
+        /// </summary>
+        public static string Subject {
+            get {
+                return ResourceManager.GetString("Subject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Successfully.
+        /// </summary>
+        public static string Successfully {
+            get {
+                return ResourceManager.GetString("Successfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на survey.
         /// </summary>
         public static string Survey {
             get {
                 return ResourceManager.GetString("Survey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Survey of measurement parameters.
+        /// </summary>
+        public static string Survey_parameters {
+            get {
+                return ResourceManager.GetString("Survey_parameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Survey.
+        /// </summary>
+        public static string Survey1 {
+            get {
+                return ResourceManager.GetString("Survey1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Data.
+        /// </summary>
+        public static string SurveyData {
+            get {
+                return ResourceManager.GetString("SurveyData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Survey quantity.
+        /// </summary>
+        public static string SurveyQuantity {
+            get {
+                return ResourceManager.GetString("SurveyQuantity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Surveys.
+        /// </summary>
+        public static string Surveys {
+            get {
+                return ResourceManager.GetString("Surveys", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Survey schedule.
+        /// </summary>
+        public static string SurveySchedule {
+            get {
+                return ResourceManager.GetString("SurveySchedule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Survey type.
+        /// </summary>
+        public static string SurveyType {
+            get {
+                return ResourceManager.GetString("SurveyType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Survey with echograms.
+        /// </summary>
+        public static string SurveyWithEchograms {
+            get {
+                return ResourceManager.GetString("SurveyWithEchograms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Survey without echograms.
+        /// </summary>
+        public static string SurveyWithoutEchograms {
+            get {
+                return ResourceManager.GetString("SurveyWithoutEchograms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Table.
+        /// </summary>
+        public static string Table {
+            get {
+                return ResourceManager.GetString("Table", resourceCulture);
             }
         }
         
@@ -1700,6 +2681,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Temperature sensors.
+        /// </summary>
+        public static string TemperatureSensors {
+            get {
+                return ResourceManager.GetString("TemperatureSensors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Software «SIAM SERVICE» is a «SIAM» software package designed for storing, transmitting, processing and interpreting data obtained during well testing via Bluetooth wireless data transmission from portable devices (dynamographs / level gauges)..
         /// </summary>
         public static string TextAboutApp {
@@ -1719,11 +2709,47 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Text file with corrections.
+        /// </summary>
+        public static string TextFileWithCorrections {
+            get {
+                return ResourceManager.GetString("TextFileWithCorrections", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на there are no pressure measurements left.
+        /// </summary>
+        public static string TherePressureMeasurementsLeft {
+            get {
+                return ResourceManager.GetString("TherePressureMeasurementsLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на thermometer.
         /// </summary>
         public static string Thermometer {
             get {
                 return ResourceManager.GetString("Thermometer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на time left.
+        /// </summary>
+        public static string TimeLeft {
+            get {
+                return ResourceManager.GetString("TimeLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на time synchronization.
+        /// </summary>
+        public static string TimeSynchronization {
+            get {
+                return ResourceManager.GetString("TimeSynchronization", resourceCulture);
             }
         }
         
@@ -1737,11 +2763,38 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Total memory:.
+        /// </summary>
+        public static string TotalMemory {
+            get {
+                return ResourceManager.GetString("TotalMemory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Trigger permission.
+        /// </summary>
+        public static string TriggerPermission {
+            get {
+                return ResourceManager.GetString("TriggerPermission", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Type.
         /// </summary>
         public static string Type {
             get {
                 return ResourceManager.GetString("Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на updated.
+        /// </summary>
+        public static string Updated {
+            get {
+                return ResourceManager.GetString("Updated", resourceCulture);
             }
         }
         
@@ -1778,6 +2831,15 @@ namespace SiamCross {
         public static string ValveTest {
             get {
                 return ResourceManager.GetString("ValveTest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Various.
+        /// </summary>
+        public static string Various {
+            get {
+                return ResourceManager.GetString("Various", resourceCulture);
             }
         }
         
@@ -1828,6 +2890,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на with an echogram.
+        /// </summary>
+        public static string WithAnEchogram {
+            get {
+                return ResourceManager.GetString("WithAnEchogram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Wrong format or content.
         /// </summary>
         public static string WrongFormatOrContent {
@@ -1842,6 +2913,24 @@ namespace SiamCross {
         public static string YesButton {
             get {
                 return ResourceManager.GetString("YesButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на zero drift.
+        /// </summary>
+        public static string ZeroDrift {
+            get {
+                return ResourceManager.GetString("ZeroDrift", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Zero drift of the gain channel.
+        /// </summary>
+        public static string ZeroDriftGainChannel {
+            get {
+                return ResourceManager.GetString("ZeroDriftGainChannel", resourceCulture);
             }
         }
         

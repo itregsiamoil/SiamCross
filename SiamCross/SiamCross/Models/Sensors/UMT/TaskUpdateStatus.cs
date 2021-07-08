@@ -22,7 +22,7 @@ namespace SiamCross.Models.Sensors.Umt
         }
 
         public TaskUpdateStatus(SensorModel sensor)
-            : base(sensor, "Чтение состояния")
+            : base(sensor, Resource.ReadingState)
         {
             _CurrentParam = new MemStruct(0x8400);
             Pressure = _CurrentParam.Add(new MemVarFloat(nameof(Pressure)));
@@ -60,7 +60,7 @@ namespace SiamCross.Models.Sensors.Umt
 
             var status =
                 $"{Resource.Pressure}: " + press_str + $" ({Resource.KGFCMUnits})"
-                + "\nТемп.зонда: " + exttemp_str + $" ({Resource.DegCentigradeUnits})";
+                + $"\n{Resource.ProbeTemperature}: " + exttemp_str + $" ({Resource.DegCentigradeUnits})";
 
 
 

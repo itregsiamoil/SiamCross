@@ -17,9 +17,9 @@
                     <StackLayout>
                         <Label Text="{local:Translate Field}" Style="{StaticResource SectionLabel2}" />
                         <StackLayout Padding="5">
-                            <Label Text="{local:Translate FieldName}"></Label>
+                            <Label Text="{local:Translate Name}"></Label>
                             <Entry Text="{Binding FieldName}"/>
-                            <Label Text="{local:Translate FieldCode}"></Label>
+                            <Label Text="{local:Translate Code}"></Label>
                             <Entry Text="{Binding FieldCode, Mode=TwoWay}"
                                 Keyboard="Numeric">
                                 <Entry.Behaviors>
@@ -34,7 +34,7 @@
                 </Frame>
             </ScrollView>
             <StackLayout Orientation="Horizontal" Spacing="0">
-                <Button Text="Сохранить" HorizontalOptions="FillAndExpand" 
+                <Button Text="{local:Translate DoSave}" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding Add}" >
                 </Button>

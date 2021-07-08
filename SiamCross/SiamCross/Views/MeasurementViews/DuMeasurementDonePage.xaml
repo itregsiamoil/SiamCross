@@ -36,7 +36,7 @@
                VerticalOptions="FillAndExpand"
                Margin="4" >
             <TableRoot >
-                <TableSection  Title="{local1:Translate MeasurementData}">
+                <TableSection  Title="{local1:Translate SurveyData}">
                     <ViewCell>
                         <Grid x:Name="graphGrid" Margin="2">
                             <Grid.ColumnDefinitions>
@@ -84,8 +84,8 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <!-- Default mode for Text is Mode=OneWay>-->
-                            
-                            <Label Text="{local1:Translate MeasurementType}"
+
+                            <Label Text="{local1:Translate SurveyType}"
                                    Grid.Column="0" Grid.Row="0" />
                             <Label Text="{Binding MeasurementType}" 
                                    Grid.Column="1" Grid.Row="0" Font="Bold" TextColor="Black" />
