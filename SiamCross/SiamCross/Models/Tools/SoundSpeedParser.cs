@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 
 namespace SiamCross.Models.Tools
 {
@@ -26,27 +27,26 @@ namespace SiamCross.Models.Tools
                 }
                 try
                 {
-                    soundSpeedsList.Add(
-                        new KeyValuePair<float, float>(
-                            float.Parse(lineValues[1].Replace(".", ",")),
-                            float.Parse(lineValues[2].Replace(".", ","))));
+                    var val1 = float.Parse(lineValues[1], NumberStyles.Float, CultureInfo.InvariantCulture);
+                    var val2 = float.Parse(lineValues[2], NumberStyles.Float, CultureInfo.InvariantCulture);
+                    soundSpeedsList.Add(new KeyValuePair<float, float>(val1, val2));
                 }
                 catch
                 {
                     return null;
                 }
-
             }
-
             return soundSpeedsList.Count != 0 ? soundSpeedsList : null;
         }
-
-
         public static string ToString(List<KeyValuePair<float, float>> values)
         {
             string str = string.Empty;
             foreach (var item in values)
-                str += $" 0 {item.Key} {item.Value} \r\n";
+                str += $" 0 "
+                    + item.Key.ToString(CultureInfo.InvariantCulture)
+                    + " "
+                    + item.Value.ToString(CultureInfo.InvariantCulture)
+                    + "\r\n";
             return str;
         }
     }
