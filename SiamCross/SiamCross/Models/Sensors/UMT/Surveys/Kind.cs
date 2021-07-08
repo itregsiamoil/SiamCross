@@ -14,10 +14,10 @@
         {
             switch (enumValue)
             {
-                case Kind.Static: return "Статика";
-                case Kind.Dynamic: return "Динамика";
-                case Kind.PeriodicStatic: return "Статика(период)";
-                case Kind.PeriodycDynamic: return "Динамика(период)";
+                case Kind.Static: return Resource.Static;
+                case Kind.Dynamic: return Resource.Dynamics;
+                case Kind.PeriodicStatic: return Resource.Static_period;
+                case Kind.PeriodycDynamic: return Resource.Dynamics_period;
                 default: return "UNKNOWN";
             }
         }
@@ -25,10 +25,10 @@
         {
             switch (enumValue)
             {
-                case Kind.Static: return "единичное измерение";
-                case Kind.Dynamic: return "единичное измерение";
-                case Kind.PeriodicStatic: return "периодическое измерение";
-                case Kind.PeriodycDynamic: return "периодическое измерение";
+                case Kind.Static: return Resource.AboutStatic;
+                case Kind.Dynamic: return Resource.AboutDynamics;
+                case Kind.PeriodicStatic: return Resource.AboutStatic_period;
+                case Kind.PeriodycDynamic: return Resource.AboutDynamics_period;
                 default: return "UNKNOWN";
             }
         }

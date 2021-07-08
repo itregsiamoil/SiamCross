@@ -19,7 +19,7 @@
         <StackLayout Orientation="Horizontal" >
             <StackLayout HorizontalOptions="StartAndExpand" >
                 <Label Text="{Binding DeviceInfo.Name}" TextColor="{StaticResource colorTextPale}" />
-                <Label Text="Исследование"
+                <Label Text="{local:Translate Survey1}"
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
             </StackLayout>
@@ -41,7 +41,7 @@
 
                 <StackLayout 
                     BackgroundColor ="{StaticResource colorBackgroundPale}">
-                    <Label Text="{local:Translate MeasurementData}" Style="{StaticResource SectionLabel2}" />
+                    <Label Text="{local:Translate SurveyData}" Style="{StaticResource SectionLabel2}" />
                     <skia:SKCanvasView x:Name="CanvasView"
                                                PaintSurface="CanvasView_PaintSurface"
                                                IgnorePixelScaling="false"
@@ -52,23 +52,23 @@
                             <ColumnDefinition Width="50*" />
                             <ColumnDefinition Width="50*" />
                         </Grid.ColumnDefinitions>
-                        <Label Text="Тип исследования"
+                        <Label Text="{local:Translate SurveyType}"
                                Grid.Column="0" Grid.Row="0" LineBreakMode="WordWrap"/>
                         <Label Text="{Binding SurveyName}"
                                Grid.Column="1" Grid.Row="0" Font="Bold" TextColor="Black" />
-                        <Label Text="Начало"
+                        <Label Text="{local:Translate Begin}"
                                Grid.Column="0" Grid.Row="1" LineBreakMode="WordWrap"/>
                         <Label Text="{Binding SurveyInfo.BeginTimestamp}"
                                Grid.Column="1" Grid.Row="1" Font="Bold" TextColor="Black" />
-                        <Label Text="Конец"
+                        <Label Text="{local:Translate End}"
                                Grid.Column="0" Grid.Row="2" LineBreakMode="WordWrap"/>
                         <Label Text="{Binding SurveyInfo.EndTimestamp}"
                                Grid.Column="1" Grid.Row="2" Font="Bold" TextColor="Black" />
-                        <Label Text="Количество замеров"
+                        <Label Text="{local:Translate NumberOfMeasurements}"
                                Grid.Column="0" Grid.Row="3" LineBreakMode="WordWrap"/>
                         <Label Text="{Binding MeasurementsCount}"
                                Grid.Column="1" Grid.Row="3" Font="Bold" TextColor="Black" />
-                        <Label Text="Интервал"
+                        <Label Text="{local:Translate Interval}"
                                Grid.Column="0" Grid.Row="4" LineBreakMode="WordWrap"/>
                         <Label Text="{Binding Interval}"
                                Grid.Column="1" Grid.Row="4" Font="Bold" TextColor="Black" />
@@ -124,11 +124,11 @@
                         <Label Text="{Binding DeviceInfo.Name}"        Grid.Column="1" Grid.Row="0" Font="Bold" TextColor="Black" />
                         <Label Text="{local:Translate Type}"    Grid.Column="0" Grid.Row="1" LineBreakMode="WordWrap"/>
                         <Label Text="{Binding DeviceInfo.Kind}"             Grid.Column="1" Grid.Row="1" Font="Bold" TextColor="Black" />
-                        <Label Text="Номер"        Grid.Column="0" Grid.Row="2" LineBreakMode="WordWrap"/>
+                        <Label Text="{local:Translate Number}"        Grid.Column="0" Grid.Row="2" LineBreakMode="WordWrap"/>
                         <Label Text="{Binding DeviceInfo.Number}"             Grid.Column="1" Grid.Row="2" Font="Bold" TextColor="Black" />
-                        <Label Text="Тип подключения"       Grid.Column="0" Grid.Row="3" LineBreakMode="WordWrap"/>
+                        <Label Text="{local:Translate ConnectionType}"       Grid.Column="0" Grid.Row="3" LineBreakMode="WordWrap"/>
                         <Label Text="{Binding DeviceInfo.Phy}"            Grid.Column="1" Grid.Row="3" Font="Bold" TextColor="Black" />
-                        <Label Text="Тип протокола"  Grid.Column="0" Grid.Row="4" LineBreakMode="WordWrap"/>
+                        <Label Text="{local:Translate ProtocolType}"  Grid.Column="0" Grid.Row="4" LineBreakMode="WordWrap"/>
                         <Label Text="{Binding DeviceInfo.Protocol}"           Grid.Column="1" Grid.Row="4" Font="Bold" TextColor="Black" />
                     </Grid>
 

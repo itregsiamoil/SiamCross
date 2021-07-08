@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:views="clr-namespace:SiamCross.Views"
+             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross" 
              xmlns:vm="clr-namespace:SiamCross.ViewModels.Umt" 
              x:DataType="vm:StorageVM"
              x:Class="SiamCross.Views.Umt.StoragePage">
@@ -17,18 +18,18 @@
         <StackLayout Orientation="Horizontal" >
             <StackLayout HorizontalOptions="StartAndExpand" >
                 <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
-                <Label Text="Хранилище"
+                <Label Text="{local:Translate Storage}"
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}" 
                          HorizontalOptions="End" VerticalOptions="Fill" >
-                <Button Text="Очистить "
+                <Button Text="{local:Translate Clear} "
                         HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
                         BackgroundColor="{StaticResource colorAccentLight}"
                         Command="{Binding CmdClearStorage}"
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" />
-                <Button Text="Считать"
+                <Button Text="{local:Translate Download}"
                         HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdDownload}"
@@ -54,12 +55,13 @@
                         <Frame Style="{StaticResource GroupingFrameStyle2}"
                                IsEnabled="{Binding Sensor.TaskManager.IsFree}">
                             <StackLayout>
-                                <Label Text="Исследования" Style="{StaticResource SectionLabel2}" />
+                                <Label Text="{local:Translate Survey1}" Style="{StaticResource SectionLabel2}" />
                                 <StackLayout Padding="4">
                                     <Label >
                                         <Label.FormattedText>
                                             <FormattedString >
-                                                <Span Text="Всего памяти: &#x2246; " />
+                                                <Span Text="{local:Translate TotalMemory}" />
+                                                <Span Text=" &#x2246; " />
                                                 <Span Text="{Binding TotalSpaceM}"/>
                                                 <Span Text="M "/>
                                                 <Span Text="{Binding TotalSpaceK}"/>
@@ -72,16 +74,18 @@
                                     <Label >
                                         <Label.FormattedText>
                                             <FormattedString >
-                                                <Span Text="Свободно памяти: &#x2246; "  />
+                                                <Span Text="{local:Translate FreeMemory}"  />
+                                                <Span Text=": &#x2246; " />
                                                 <Span Text="{Binding EmptySpaceRatio}" />
-                                                <Span Text=" %"  />
+                                                <Span Text="%"  />
                                             </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
                                     <Label>
                                         <Label.FormattedText>
                                             <FormattedString >
-                                                <Span Text="Количество исследований: &#x2246; "  />
+                                                <Span Text="{local:Translate SurveyQuantity}"  />
+                                                <Span Text=": &#x2246; " />
                                                 <Span Text="{Binding SurveyQty}"/>
                                             </FormattedString>
                                         </Label.FormattedText>
@@ -135,12 +139,12 @@
             <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
 
             <StackLayout Orientation="Horizontal" IsVisible="{Binding IsPortrait}" >
-                <Button Text="Очистить " HorizontalOptions="FillAndExpand" 
+                <Button Text="{local:Translate Clear} " HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorAccentLight}"
                         Command="{Binding CmdClearStorage}"
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >
                 </Button>
-                <Button Text="Считать" HorizontalOptions="FillAndExpand" 
+                <Button Text="{local:Translate Download}" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdDownload}"
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >

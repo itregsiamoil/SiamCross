@@ -25,7 +25,7 @@
             </StackLayout>
             <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}" 
                          HorizontalOptions="End" VerticalOptions="Fill" >
-                <Button Text="Сохранить" HorizontalOptions="FillAndExpand" 
+                <Button Text="{local1:Translate DoSave}" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdSave}" 
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}"/>

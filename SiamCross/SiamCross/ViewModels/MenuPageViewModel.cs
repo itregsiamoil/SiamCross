@@ -66,7 +66,7 @@ namespace SiamCross.ViewModels
                 },
                 new MenuPageItem()
                 {
-                    Title = Resource.MeasurementsTitle,
+                    Title = Resource.Surveys,
                     Command = GoMeasuringPanel
                 },
                 new MenuPageItem()

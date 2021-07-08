@@ -7,7 +7,7 @@ namespace SiamCross.Models.Sensors.Dmg.Surveys
         private readonly IProtocolConnection _Connection;
 
         public Dynamogramm(SensorModel sensor)
-            : base(sensor, null, "Динамограмма", "запись нагрузки и перемещения")
+            : base(sensor, null, Resource.Dynamogram, Resource.RecordingLoadAndMovement)
         {
             _Connection = sensor.Connection;
 

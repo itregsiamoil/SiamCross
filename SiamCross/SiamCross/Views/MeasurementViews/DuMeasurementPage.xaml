@@ -24,10 +24,10 @@
                HorizontalOptions="FillAndExpand"
                VerticalOptions="FillAndExpand" >
             <TableRoot>
-                <TableSection Title="{local1:Translate MeasurementData}">
+                <TableSection Title="{local1:Translate SurveyData}">
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="{local1:Translate DuResearchType}"/>
+                            <Label Text="{local1:Translate SurveyType}"/>
                             <Picker ItemsSource="{Binding ResearchTypes}"
                                     SelectedItem="{Binding SelectedResearchType}"/>
                         </StackLayout>

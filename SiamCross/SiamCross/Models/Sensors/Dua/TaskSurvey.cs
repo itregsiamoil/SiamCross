@@ -25,9 +25,9 @@ namespace SiamCross.Models.Sensors.Dua
 
             if (!await CheckConnectionAsync(ct))
                 return false;
-            InfoEx = "инициализация";
+            InfoEx = Resource.Initialization;
             await Connection.WriteAsync(Vissl, null, ct);
-            InfoEx = "запуск";
+            InfoEx = Resource.Startup;
             OpReg.Value = 1;
             await Connection.WriteAsync(OpReg, null, ct);
             return true;

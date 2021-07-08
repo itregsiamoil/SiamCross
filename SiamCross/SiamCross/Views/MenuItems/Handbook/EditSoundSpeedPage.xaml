@@ -23,7 +23,7 @@
             <ScrollView VerticalOptions="StartAndExpand">
                 <Frame Style="{StaticResource GroupingFrameStyle2}" >
                     <StackLayout>
-                        <Label Text="Скорость звука" Style="{StaticResource SectionLabel2}" />
+                        <Label Text="{local:Translate SoundSpeed}" Style="{StaticResource SectionLabel2}" />
                         <StackLayout Padding="5">
                             
                             <Label Text="{local:Translate Name}"></Label>
@@ -74,7 +74,7 @@
                                 </StackLayout>
                             </Grid>
                         </StackLayout>
-                        <Label Text="Текстовый файл с поправками" Margin="2"/>
+                        <Label Text="{local:Translate TextFileWithCorrections}" Margin="2"/>
                         <Grid ColumnSpacing="0" RowSpacing="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="50*" />

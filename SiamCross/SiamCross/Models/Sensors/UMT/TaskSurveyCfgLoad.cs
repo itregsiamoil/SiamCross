@@ -25,7 +25,7 @@ namespace SiamCross.Models.Sensors.Umt
             Progress = ((float)_BytesProgress / _BytesTotal);
         }
         public TaskSurveyCfgLoad(SurveyCfg model)
-            : base(model.Sensor, "Опрос параметров измерения")
+            : base(model.Sensor, Resource.Survey_parameters)
         {
             _Model = model;
 
@@ -56,7 +56,7 @@ namespace SiamCross.Models.Sensors.Umt
         async Task LoadTimestamp(CancellationToken ct)
         {
             RespResult res = RespResult.ErrorUnknown;
-            InfoEx = "чтение времени";
+            InfoEx = Resource.ReadingTime;
             res = await Connection.TryReadAsync(Timestamp, SetProgressBytes, ct);
 
             if (RespResult.NormalPkg == res)
@@ -90,12 +90,12 @@ namespace SiamCross.Models.Sensors.Umt
             if (_Model.Saved.HasValue)
             {
                 _Model.Current = _Model.Saved.Value;
-                InfoEx = "обновлено";
+                InfoEx = Resource.Updated;
                 return true;
             }
 
             bool readed = false;
-            InfoEx = "чтение параметров";
+            InfoEx = Resource.ReadingParameters;
             if (RespResult.NormalPkg == await Connection.TryReadAsync(SurvayParam, SetProgressBytes, ct)
                 && RespResult.NormalPkg == await Connection.TryReadAsync(ExTemp, SetProgressBytes, ct))
                 readed = true;
@@ -114,7 +114,7 @@ namespace SiamCross.Models.Sensors.Umt
             _Model.Current.Interval = Interval.Value;
             _Model.Current.IsExtetnalTemp = !(-300 == ExTemp.Value);
             _Model.UpdateSaved();
-            InfoEx = "выполнено";
+            InfoEx = Resource.Complete;
             return readed;
         }
     }

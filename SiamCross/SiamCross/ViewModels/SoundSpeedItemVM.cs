@@ -92,7 +92,7 @@ namespace SiamCross.ViewModels
 
                 if (string.IsNullOrEmpty(Name) || File.Exists(path))
                 {
-                    ToastService.Instance.LongAlert("Отсутсвует имя или такой файл уже существует");
+                    ToastService.Instance.LongAlert(Resource.ErrorNameFile);
                     return;
                 }
                 using (var fs = File.CreateText(path))
@@ -100,7 +100,7 @@ namespace SiamCross.ViewModels
                     await fs.WriteAsync(SoundSpeedParser.ToString(Points));
                     fs.Close();
                 }
-                ToastService.Instance.LongAlert($"Файл сохранён\n{path}");
+                ToastService.Instance.LongAlert($"{Resource.FileSaved}\n{path}");
             }
             catch (Exception ex)
             {

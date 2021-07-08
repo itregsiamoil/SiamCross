@@ -303,13 +303,7 @@
   <data name="Field" xml:space="preserve">
     <value>Месторождение</value>
   </data>
-  <data name="FieldCode" xml:space="preserve">
-    <value>Код месторождения</value>
-  </data>
-  <data name="FieldName" xml:space="preserve">
-    <value>Название</value>
-  </data>
-  <data name="FromAddress" xml:space="preserve">
+  <data name="SenderAddress" xml:space="preserve">
     <value>Адрес отправителя</value>
   </data>
   <data name="HandbookTitle" xml:space="preserve">
@@ -324,7 +318,7 @@
   <data name="MaxLoad" xml:space="preserve">
     <value>Максимальная нагрузка, т</value>
   </data>
-  <data name="MeasurementData" xml:space="preserve">
+  <data name="SurveyData" xml:space="preserve">
     <value>Данные измерения</value>
   </data>
   <data name="MeasurementsSavedSuccesfully" xml:space="preserve">
@@ -333,10 +327,10 @@
   <data name="MeasurementsSentSuccesfully" xml:space="preserve">
     <value>измерений успешно отправлено на почту</value>
   </data>
-  <data name="MeasurementsTitle" xml:space="preserve">
-    <value>Измерения</value>
+  <data name="Surveys" xml:space="preserve">
+    <value>Исследования</value>
   </data>
-  <data name="MeasurementType" xml:space="preserve">
+  <data name="SurveyType" xml:space="preserve">
     <value>Тип исследования</value>
   </data>
   <data name="MinLoad" xml:space="preserve">
@@ -465,10 +459,6 @@
   </data>
   <data name="Amplification" xml:space="preserve">
     <value>Усиление</value>
-  </data>
-  <data name="DuResearchType" xml:space="preserve">
-    <value>Тип исследования</value>
-    <comment>Тип исследоания</comment>
   </data>
   <data name="DynamicLevel" xml:space="preserve">
     <value>Динамический уровень</value>
@@ -632,7 +622,7 @@
     <value>Введите интервал</value>
   </data>
   <data name="SelectedMeasurementTypeChoiceText" xml:space="preserve">
-    <value>Choose a type of research!</value>
+    <value>Выберите тип исследования!</value>
   </data>
   <data name="IntervalErrorTextUmt" xml:space="preserve">
     <value>Интервал должен быть между 1 и 82800 сек!</value>
@@ -644,7 +634,7 @@
     <value>подготовка</value>
   </data>
   <data name="Downloading" xml:space="preserve">
-    <value>считывание</value>
+    <value>Cчитывание</value>
   </data>
   <data name="ReadingHeader" xml:space="preserve">
     <value>чтение заголовка</value>
@@ -736,5 +726,380 @@
   </data>
   <data name="Information" xml:space="preserve">
     <value>Информация</value>
+  </data>
+  <data name="AboutDynamicLevel" xml:space="preserve">
+    <value>уровень жидкости, наблюдаемый при откачке</value>
+  </data>
+  <data name="AboutDynamics" xml:space="preserve">
+    <value>единичное измерение</value>
+  </data>
+  <data name="AboutDynamics_period" xml:space="preserve">
+    <value>периодическое измерение</value>
+  </data>
+  <data name="AboutLDC" xml:space="preserve">
+    <value>кривая падения уровня</value>
+  </data>
+  <data name="AboutLRC" xml:space="preserve">
+    <value>кривая восстановления уровня</value>
+  </data>
+  <data name="AboutPAR" xml:space="preserve">
+    <value>автоматическая регистрация давления</value>
+  </data>
+  <data name="AboutResearches" xml:space="preserve">
+    <value>Установка праметров, запуск и остановка исследования</value>
+  </data>
+  <data name="AboutStatic" xml:space="preserve">
+    <value>единичное измерение</value>
+  </data>
+  <data name="AboutStaticLevel" xml:space="preserve">
+    <value>уровень жидкости в спокойном состоянии</value>
+  </data>
+  <data name="AboutStatic_period" xml:space="preserve">
+    <value>периодическое измерение</value>
+  </data>
+  <data name="AboutStorage" xml:space="preserve">
+    <value>Получение из памяти прибора одного или нескольких измерений</value>
+  </data>
+  <data name="AdditionalGain" xml:space="preserve">
+    <value>Дополнительное усиление</value>
+  </data>
+  <data name="Additionally" xml:space="preserve">
+    <value>Дополнительно</value>
+  </data>
+  <data name="AutomaticValve" xml:space="preserve">
+    <value>Автоматический клапан</value>
+  </data>
+  <data name="Table" xml:space="preserve">
+    <value>Таблица</value>
+  </data>
+  <data name="DeviceTime" xml:space="preserve">
+    <value>Время прибора</value>
+  </data>
+  <data name="ExecutionTime" xml:space="preserve">
+    <value>Длительность срабатывания 0,2/0,05</value>
+  </data>
+  <data name="Dynamics" xml:space="preserve">
+    <value>Динамика</value>
+  </data>
+  <data name="Dynamics_period" xml:space="preserve">
+    <value>Динамика(период)</value>
+  </data>
+  <data name="Failed_connect" xml:space="preserve">
+    <value>не удалось подключиться к прибору</value>
+  </data>
+  <data name="GasDirection" xml:space="preserve">
+    <value>Направление газа впуск/выпуск</value>
+  </data>
+  <data name="ExecutePAR" xml:space="preserve">
+    <value>Перейти к АРД при уровне менее 50м.</value>
+  </data>
+  <data name="SchedulePAR" xml:space="preserve">
+    <value>График АРД</value>
+  </data>
+  <data name="LDC" xml:space="preserve">
+    <value>КПУ</value>
+  </data>
+  <data name="LevelSensor" xml:space="preserve">
+    <value>Датчик уровня</value>
+  </data>
+  <data name="LRC" xml:space="preserve">
+    <value>КВУ</value>
+  </data>
+  <data name="MaximumDepth" xml:space="preserve">
+    <value>Максимальная глубина 3000м./6000м.</value>
+  </data>
+  <data name="Meaning" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+  <data name="ScheduleLevelMeasurement" xml:space="preserve">
+    <value>График измерения уровня</value>
+  </data>
+  <data name="SurveySchedule" xml:space="preserve">
+    <value>График измерения</value>
+  </data>
+  <data name="NotificationTime" xml:space="preserve">
+    <value>будет синхронизированно при запуске</value>
+  </data>
+  <data name="PAR" xml:space="preserve">
+    <value>АРД</value>
+  </data>
+  <data name="Period_m" xml:space="preserve">
+    <value>Период мин</value>
+  </data>
+  <data name="Period_s" xml:space="preserve">
+    <value>Период сек.</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Количество</value>
+  </data>
+  <data name="Survey1" xml:space="preserve">
+    <value>Исследования</value>
+  </data>
+  <data name="Static" xml:space="preserve">
+    <value>Статика</value>
+  </data>
+  <data name="Static_period" xml:space="preserve">
+    <value>Статика(период)</value>
+  </data>
+  <data name="Survey_parameters" xml:space="preserve">
+    <value>Опрос параметров измерения</value>
+  </data>
+  <data name="TemperatureSensors" xml:space="preserve">
+    <value>Датчики температуры</value>
+  </data>
+  <data name="TriggerPermission" xml:space="preserve">
+    <value>Разрешение срабатывания</value>
+  </data>
+  <data name="Storage" xml:space="preserve">
+    <value>Хранилище</value>
+  </data>
+  <data name="AddDevice" xml:space="preserve">
+    <value>Добавить устройство (нажмите для подтверждения)</value>
+  </data>
+  <data name="AscendingByID" xml:space="preserve">
+    <value>По возрастанию идентификатора</value>
+  </data>
+  <data name="AscendingByName" xml:space="preserve">
+    <value>По возрастанию имени</value>
+  </data>
+  <data name="ByDefault" xml:space="preserve">
+    <value>По умолчанию</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Очистить</value>
+  </data>
+  <data name="ClearingMemory" xml:space="preserve">
+    <value>Очистка памяти</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>суток</value>
+  </data>
+  <data name="DescendingByID" xml:space="preserve">
+    <value>По убыванию идентификатора</value>
+  </data>
+  <data name="DescendingByName" xml:space="preserve">
+    <value>По убыванию имени</value>
+  </data>
+  <data name="DeterminingTime" xml:space="preserve">
+    <value>определение времени</value>
+  </data>
+  <data name="Complete" xml:space="preserve">
+    <value>выполнено</value>
+  </data>
+  <data name="Measuring" xml:space="preserve">
+    <value>измерения</value>
+  </data>
+  <data name="DopSurvey" xml:space="preserve">
+    <value>иследования</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Считать</value>
+  </data>
+  <data name="Empty" xml:space="preserve">
+    <value>пусто</value>
+  </data>
+  <data name="ErrorNameFile" xml:space="preserve">
+    <value>Отсутствует имя или такой файл уже существует</value>
+  </data>
+  <data name="External" xml:space="preserve">
+    <value>Внешний</value>
+  </data>
+  <data name="FactorySettings" xml:space="preserve">
+    <value>Заводские настройки</value>
+  </data>
+  <data name="FileSaved" xml:space="preserve">
+    <value>Файл сохранён</value>
+  </data>
+  <data name="FreeMemory" xml:space="preserve">
+    <value>Свободно памяти</value>
+  </data>
+  <data name="Initialization" xml:space="preserve">
+    <value>инициализация</value>
+  </data>
+  <data name="InitialSurvey" xml:space="preserve">
+    <value>Начальное измерение</value>
+  </data>
+  <data name="Internal" xml:space="preserve">
+    <value>Внутренний</value>
+  </data>
+  <data name="Startup" xml:space="preserve">
+    <value>Запуск</value>
+  </data>
+  <data name="RecordingLoadAndMovement" xml:space="preserve">
+    <value>запись нагрузки и перемещения</value>
+  </data>
+  <data name="SurveyWithoutEchograms" xml:space="preserve">
+    <value>Измерения без эхограмм</value>
+  </data>
+  <data name="SurveyWithEchograms" xml:space="preserve">
+    <value>Измерения с эхограммами</value>
+  </data>
+  <data name="Measurements" xml:space="preserve">
+    <value>измерение</value>
+  </data>
+  <data name="NotReading" xml:space="preserve">
+    <value>не считаны</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>из</value>
+  </data>
+  <data name="ParametersNotReading" xml:space="preserve">
+    <value>параметры не считаны, обновите параметры</value>
+  </data>
+  <data name="PiezoSensor" xml:space="preserve">
+    <value>Пьезодатчик</value>
+  </data>
+  <data name="PressureSensor" xml:space="preserve">
+    <value>Датчик давления</value>
+  </data>
+  <data name="PressureThermalCompensationCoefficients" xml:space="preserve">
+    <value>коэффициенты тепловой компенсации давления</value>
+  </data>
+  <data name="ProbeTemperature" xml:space="preserve">
+    <value>Темп. зонда</value>
+  </data>
+  <data name="ReadAll" xml:space="preserve">
+    <value>Считать все</value>
+  </data>
+  <data name="ReadingCurrentInformation" xml:space="preserve">
+    <value>чтение текущей информации</value>
+  </data>
+  <data name="ReadingInformation" xml:space="preserve">
+    <value>чтение информации</value>
+  </data>
+  <data name="ReadingSurveyInformation" xml:space="preserve">
+    <value>чтение информации о измерении</value>
+  </data>
+  <data name="ReadingMemoryInformation" xml:space="preserve">
+    <value>чтение информации о памяти</value>
+  </data>
+  <data name="ReadingMemoryStatus" xml:space="preserve">
+    <value>чтение текущего состояния памяти</value>
+  </data>
+  <data name="ReadingNumberSurvey" xml:space="preserve">
+    <value>чтение количества исследований</value>
+  </data>
+  <data name="ReadingParameters" xml:space="preserve">
+    <value>чтение параметров</value>
+  </data>
+  <data name="ReadingSurvey" xml:space="preserve">
+    <value>Чтение исследований</value>
+  </data>
+  <data name="ReadingState" xml:space="preserve">
+    <value>чтение состояния</value>
+  </data>
+  <data name="ReadingStatus" xml:space="preserve">
+    <value>чтение статуса</value>
+  </data>
+  <data name="ReadingTime" xml:space="preserve">
+    <value>чтение времени</value>
+  </data>
+  <data name="ReadingSurveyType" xml:space="preserve">
+    <value>чтение вида исследования</value>
+  </data>
+  <data name="Recording" xml:space="preserve">
+    <value>запись</value>
+  </data>
+  <data name="RecordingSurveyParameters" xml:space="preserve">
+    <value>Запись параметров измерения</value>
+  </data>
+  <data name="RecordingParameters" xml:space="preserve">
+    <value>запись параметров</value>
+  </data>
+  <data name="SurveyQuantity" xml:space="preserve">
+    <value>Количество исследований</value>
+  </data>
+  <data name="Resistance" xml:space="preserve">
+    <value>Сопротивление</value>
+  </data>
+  <data name="SaveInDevice" xml:space="preserve">
+    <value>Сохранить в приборе</value>
+  </data>
+  <data name="SavingLocation" xml:space="preserve">
+    <value>Сохранение местоположения</value>
+  </data>
+  <data name="SenderName" xml:space="preserve">
+    <value>Имя отправителя</value>
+  </data>
+  <data name="Sensitivity" xml:space="preserve">
+    <value>Чувствительность</value>
+  </data>
+  <data name="ServiceMode" xml:space="preserve">
+    <value>Сервисный режим</value>
+  </data>
+  <data name="ShowReading" xml:space="preserve">
+    <value>Показать считанное</value>
+  </data>
+  <data name="Sorting" xml:space="preserve">
+    <value>Сортировка</value>
+  </data>
+  <data name="StatusUpdate" xml:space="preserve">
+    <value>Обновление статуса</value>
+  </data>
+  <data name="StoragePolling" xml:space="preserve">
+    <value>Опрос хранилища</value>
+  </data>
+  <data name="Subject" xml:space="preserve">
+    <value>Тема</value>
+  </data>
+  <data name="Successfully" xml:space="preserve">
+    <value>Успешно</value>
+  </data>
+  <data name="TextFileWithCorrections" xml:space="preserve">
+    <value>Текстовый файл с поправками</value>
+  </data>
+  <data name="TimeLeft" xml:space="preserve">
+    <value>осталось</value>
+  </data>
+  <data name="TherePressureMeasurementsLeft" xml:space="preserve">
+    <value>замеров давления осталось</value>
+  </data>
+  <data name="TimeSynchronization" xml:space="preserve">
+    <value>синхронизация времени</value>
+  </data>
+  <data name="Reading" xml:space="preserve">
+    <value>чтение</value>
+  </data>
+  <data name="TotalMemory" xml:space="preserve">
+    <value>Всего памяти:</value>
+  </data>
+  <data name="Updated" xml:space="preserve">
+    <value>обновлено</value>
+  </data>
+  <data name="LoadingLocation" xml:space="preserve">
+    <value>Загрузка местоположения</value>
+  </data>
+  <data name="Various" xml:space="preserve">
+    <value>Разное</value>
+  </data>
+  <data name="WithAnEchogram" xml:space="preserve">
+    <value>с эхограммой</value>
+  </data>
+  <data name="ZeroDrift" xml:space="preserve">
+    <value>Смещение нуля</value>
+  </data>
+  <data name="ZeroDriftGainChannel" xml:space="preserve">
+    <value>Смещение нуля канала усиления</value>
+  </data>
+  <data name="Begin" xml:space="preserve">
+    <value>Начало</value>
+  </data>
+  <data name="ConnectionType" xml:space="preserve">
+    <value>Тип подключения</value>
+  </data>
+  <data name="End" xml:space="preserve">
+    <value>Конец</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>Номер</value>
+  </data>
+  <data name="NumberOfMeasurements" xml:space="preserve">
+    <value>Количество замеров</value>
+  </data>
+  <data name="ProtocolType" xml:space="preserve">
+    <value>Тип протокола</value>
+  </data>
+  <data name="DoConnect" xml:space="preserve">
+    <value>Подключить</value>
   </data>
 </root>

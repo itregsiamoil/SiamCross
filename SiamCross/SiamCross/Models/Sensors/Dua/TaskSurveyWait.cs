@@ -75,7 +75,7 @@ namespace SiamCross.Models.Sensors.Dua
                 return false;
             if (0 == Kolt.Value)
                 return true;
-            InfoEx = "определение времени";
+            InfoEx = Resource.DeterminingTime;
             CalcSurveyTotalTime();
             CalcSurveyRemainTime();
 
@@ -111,12 +111,12 @@ namespace SiamCross.Models.Sensors.Dua
         string GetRemainString()
         {
             if (TimeSpan.MaxValue == _Total)
-                return "\u221E из \u221E";
-            string remain = $"осталось " +
-                (0 == _Remain.Days ? string.Empty : $"{_Remain.Days} суток ") +
+                return $"\u221E {Resource.From} \u221E";
+            string remain = $"{Resource.TimeLeft} " +
+                (0 == _Remain.Days ? string.Empty : $"{_Remain.Days} {Resource.Days} ") +
                 $"{_Remain.Hours}:{_Remain.Minutes}:{_Remain.Seconds}"
-                + $" из " +
-                (0 == _Total.Days ? string.Empty : $"{_Total.Days} суток ") +
+                + $" {Resource.From} " +
+                (0 == _Total.Days ? string.Empty : $"{_Total.Days} {Resource.Days} ") +
                 $"{_Total.Hours}:{_Total.Minutes}:{_Total.Seconds}";
             return remain;
         }
@@ -147,7 +147,7 @@ namespace SiamCross.Models.Sensors.Dua
                         await Task.Delay(Constants.SecondDelay, ct);
                         break;
                     case DuStatus.ValvePreparation:
-                        InfoEx = $"{remain}\n{status.Title()}, осталось { Timeawt.Value}сек.";
+                        InfoEx = $"{remain}\n{status.Title()}, {Resource.TimeLeft} { Timeawt.Value}{Resource.SecondUnits}.";
                         await UpdateValvePreparationAsync(ct);
                         break;
                 }
@@ -185,7 +185,7 @@ namespace SiamCross.Models.Sensors.Dua
             {
 
                 string remain = GetRemainString();
-                InfoEx = $"{remain}\nзамеров давления осталось: {Kolt.Value}";
+                InfoEx = $"{remain}\n{Resource.TherePressureMeasurementsLeft}: {Kolt.Value}";
                 if (Kolt.Value == 0)
                     break;
                 await Task.Delay(Constants.SecondDelay * 5, ct);
@@ -204,22 +204,22 @@ namespace SiamCross.Models.Sensors.Dua
                 Timeawt.Value = _ValveTimeSec;
                 RespResult ret = RespResult.NormalPkg;
 
-                InfoEx = "чтение статуса";
+                InfoEx = Resource.ReadingStatus;
                 //ret = await Connection.TryReadAsync(StatusReg, null, linkTsc.Token);
                 //if (RespResult.NormalPkg != ret)
                 //    return false;
                 await WaitAvailability(ct);
 
-                InfoEx = "чтение состояния";
+                InfoEx = Resource.ReadingState;
                 ret = await Connection.TryReadAsync(_CurrentParam, null, linkTsc.Token);
                 if (RespResult.NormalPkg != ret)
                     return false;
-                InfoEx = "чтение параметров 1";
+                InfoEx = $"{Resource.ReadingParameters} 1";
                 ret = await Connection.TryReadAsync(_SurvayParam1, null, linkTsc.Token);
                 if (RespResult.NormalPkg != ret)
                     return false;
 
-                InfoEx = "чтение параметров 2";
+                InfoEx = $"{Resource.ReadingParameters} 2";
                 ret = await Connection.TryReadAsync(_SurvayParam2, null, linkTsc.Token);
                 if (RespResult.NormalPkg != ret)
                     return false;

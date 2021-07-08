@@ -227,12 +227,6 @@ Pump rate is 60sec/300sec=0.2swg to 60sec/4sec=15swg!</value>
   <data name="Field" xml:space="preserve">
     <value>Field</value>
   </data>
-  <data name="FieldCode" xml:space="preserve">
-    <value>Field code</value>
-  </data>
-  <data name="FieldName" xml:space="preserve">
-    <value>Field name</value>
-  </data>
   <data name="FoundDevices" xml:space="preserve">
     <value>Discovered devices:</value>
     <comment>��������� ���� ��������� ���������</comment>
@@ -240,7 +234,7 @@ Pump rate is 60sec/300sec=0.2swg to 60sec/4sec=15swg!</value>
   <data name="Stat_Free" xml:space="preserve">
     <value>free</value>
   </data>
-  <data name="FromAddress" xml:space="preserve">
+  <data name="SenderAddress" xml:space="preserve">
     <value>Sender address</value>
   </data>
   <data name="HandbookTitle" xml:space="preserve">
@@ -273,8 +267,8 @@ Pump rate is 60sec/300sec=0.2swg to 60sec/4sec=15swg!</value>
   <data name="MaxLoad" xml:space="preserve">
     <value>Load max., t</value>
   </data>
-  <data name="MeasurementData" xml:space="preserve">
-    <value>Measurement data</value>
+  <data name="SurveyData" xml:space="preserve">
+    <value>Data</value>
   </data>
   <data name="MeasurementsSavedSuccesfully" xml:space="preserve">
     <value>measurements were successfully saved</value>
@@ -285,11 +279,11 @@ Pump rate is 60sec/300sec=0.2swg to 60sec/4sec=15swg!</value>
   <data name="Stat_Meas" xml:space="preserve">
     <value>measuring</value>
   </data>
-  <data name="MeasurementsTitle" xml:space="preserve">
-    <value>Measurements</value>
+  <data name="Surveys" xml:space="preserve">
+    <value>Surveys</value>
   </data>
-  <data name="MeasurementType" xml:space="preserve">
-    <value>Test type</value>
+  <data name="SurveyType" xml:space="preserve">
+    <value>Survey type</value>
   </data>
   <data name="MilliVoltsUnits" xml:space="preserve">
     <value>mV</value>
@@ -472,10 +466,6 @@ Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» 
   <data name="Amplification" xml:space="preserve">
     <value>Amplification</value>
   </data>
-  <data name="DuResearchType" xml:space="preserve">
-    <value>Measurement type</value>
-    <comment>��� �����������</comment>
-  </data>
   <data name="DynamicLevel" xml:space="preserve">
     <value>Dynamic level</value>
   </data>
@@ -620,10 +610,7 @@ Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» 
     <value>Temperature measurement</value>
   </data>
   <data name="IntervalChoiceText" xml:space="preserve">
-    <value>Введите интервал!</value>
-  </data>
-  <data name="SelectedMeasurementTypeChoiceText" xml:space="preserve">
-    <value>Выберите тип исследования</value>
+    <value>Imtravel choice text</value>
   </data>
   <data name="IntervalErrorTextUmt" xml:space="preserve">
     <value>Interval must be between 1 and 82800,s!</value>
@@ -632,7 +619,7 @@ Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» 
     <value>error</value>
   </data>
   <data name="Survey" xml:space="preserve">
-    <value>Survey</value>
+    <value>survey</value>
   </data>
   <data name="StatConn_Connected" xml:space="preserve">
     <value>connected</value>
@@ -727,5 +714,380 @@ DB Siam can't import the files with the same identifiers.</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Information</value>
+  </data>
+  <data name="Storage" xml:space="preserve">
+    <value>Storage</value>
+  </data>
+  <data name="AboutDynamicLevel" xml:space="preserve">
+    <value>liquid level observed during pumping</value>
+  </data>
+  <data name="AboutDynamics" xml:space="preserve">
+    <value>single measurement</value>
+  </data>
+  <data name="AboutDynamics_period" xml:space="preserve">
+    <value>periodic measurement</value>
+  </data>
+  <data name="AboutLDC" xml:space="preserve">
+    <value>level drop curve</value>
+  </data>
+  <data name="AboutLRC" xml:space="preserve">
+    <value>level recovery curve</value>
+  </data>
+  <data name="AboutPAR" xml:space="preserve">
+    <value>pressure automatic recording</value>
+  </data>
+  <data name="AboutResearches" xml:space="preserve">
+    <value>Setting parameters, starting and stopping the survey</value>
+  </data>
+  <data name="AboutStatic" xml:space="preserve">
+    <value>single measurement</value>
+  </data>
+  <data name="AboutStaticLevel" xml:space="preserve">
+    <value>liquid level in a calm state</value>
+  </data>
+  <data name="AboutStatic_period" xml:space="preserve">
+    <value>periodic measurement</value>
+  </data>
+  <data name="AboutStorage" xml:space="preserve">
+    <value>Getting one or more survay from the device's memory</value>
+  </data>
+  <data name="AdditionalGain" xml:space="preserve">
+    <value>Additional gain</value>
+  </data>
+  <data name="Additionally" xml:space="preserve">
+    <value>Additionally</value>
+  </data>
+  <data name="AutomaticValve" xml:space="preserve">
+    <value>Automatic valve</value>
+  </data>
+  <data name="Table" xml:space="preserve">
+    <value>Table</value>
+  </data>
+  <data name="DeviceTime" xml:space="preserve">
+    <value>Device time</value>
+  </data>
+  <data name="ExecutionTime" xml:space="preserve">
+    <value>Execution time 0.2/0.05</value>
+  </data>
+  <data name="Dynamics" xml:space="preserve">
+    <value>Dynamics</value>
+  </data>
+  <data name="Dynamics_period" xml:space="preserve">
+    <value>Dynamics(period)</value>
+  </data>
+  <data name="Failed_connect" xml:space="preserve">
+    <value>failed to connect to the device</value>
+  </data>
+  <data name="GasDirection" xml:space="preserve">
+    <value>Gas direction: in / out</value>
+  </data>
+  <data name="ExecutePAR" xml:space="preserve">
+    <value>Execute PAR at a level less than 50 m.</value>
+  </data>
+  <data name="SchedulePAR" xml:space="preserve">
+    <value>Schedule PAR</value>
+  </data>
+  <data name="LDC" xml:space="preserve">
+    <value>LDC</value>
+  </data>
+  <data name="LevelSensor" xml:space="preserve">
+    <value>Level sensor</value>
+  </data>
+  <data name="LRC" xml:space="preserve">
+    <value>LRC</value>
+  </data>
+  <data name="MaximumDepth" xml:space="preserve">
+    <value>The maximum depth is 3000m./6000m.</value>
+  </data>
+  <data name="Meaning" xml:space="preserve">
+    <value>Meaning</value>
+  </data>
+  <data name="ScheduleLevelMeasurement" xml:space="preserve">
+    <value>Schedule level measurement</value>
+  </data>
+  <data name="SurveySchedule" xml:space="preserve">
+    <value>Survey schedule</value>
+  </data>
+  <data name="NotificationTime" xml:space="preserve">
+    <value>will be synchronized at startup</value>
+  </data>
+  <data name="PAR" xml:space="preserve">
+    <value>PAR</value>
+  </data>
+  <data name="Period_m" xml:space="preserve">
+    <value>Period in minunes</value>
+  </data>
+  <data name="Period_s" xml:space="preserve">
+    <value>Period in seconds</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="Survey1" xml:space="preserve">
+    <value>Survey</value>
+  </data>
+  <data name="Static" xml:space="preserve">
+    <value>Static</value>
+  </data>
+  <data name="Static_period" xml:space="preserve">
+    <value>Static(period)</value>
+  </data>
+  <data name="Survey_parameters" xml:space="preserve">
+    <value>Survey of measurement parameters</value>
+  </data>
+  <data name="TemperatureSensors" xml:space="preserve">
+    <value>Temperature sensors</value>
+  </data>
+  <data name="TriggerPermission" xml:space="preserve">
+    <value>Trigger permission</value>
+  </data>
+  <data name="AddDevice" xml:space="preserve">
+    <value>Add a device (click to confirm)</value>
+  </data>
+  <data name="AscendingByID" xml:space="preserve">
+    <value>Ascending by ID</value>
+  </data>
+  <data name="AscendingByName" xml:space="preserve">
+    <value>Ascending by name</value>
+  </data>
+  <data name="ByDefault" xml:space="preserve">
+    <value>By default</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="ClearingMemory" xml:space="preserve">
+    <value>Clearing the memory</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>days</value>
+  </data>
+  <data name="DescendingByID" xml:space="preserve">
+    <value>Descending by ID</value>
+  </data>
+  <data name="DescendingByName" xml:space="preserve">
+    <value>Descending by name</value>
+  </data>
+  <data name="DeterminingTime" xml:space="preserve">
+    <value>determining time</value>
+  </data>
+  <data name="Complete" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="Measuring" xml:space="preserve">
+    <value>measuring</value>
+  </data>
+  <data name="DopSurvey" xml:space="preserve">
+    <value>survey</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="Empty" xml:space="preserve">
+    <value>empty</value>
+  </data>
+  <data name="ErrorNameFile" xml:space="preserve">
+    <value>The name is empty or such a file already exists</value>
+  </data>
+  <data name="External" xml:space="preserve">
+    <value>External</value>
+  </data>
+  <data name="FactorySettings" xml:space="preserve">
+    <value>Factory settings</value>
+  </data>
+  <data name="FileSaved" xml:space="preserve">
+    <value>The file is saved</value>
+  </data>
+  <data name="FreeMemory" xml:space="preserve">
+    <value>Free memory</value>
+  </data>
+  <data name="Initialization" xml:space="preserve">
+    <value>initialization</value>
+  </data>
+  <data name="InitialSurvey" xml:space="preserve">
+    <value>Initial survey</value>
+  </data>
+  <data name="Internal" xml:space="preserve">
+    <value>Internal</value>
+  </data>
+  <data name="Startup" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="RecordingLoadAndMovement" xml:space="preserve">
+    <value>recording load and movement</value>
+  </data>
+  <data name="SurveyWithoutEchograms" xml:space="preserve">
+    <value>Survey without echograms</value>
+  </data>
+  <data name="SurveyWithEchograms" xml:space="preserve">
+    <value>Survey with echograms</value>
+  </data>
+  <data name="Measurements" xml:space="preserve">
+    <value>measurements</value>
+  </data>
+  <data name="NotReading" xml:space="preserve">
+    <value>not reading</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>from</value>
+  </data>
+  <data name="ParametersNotReading" xml:space="preserve">
+    <value>the parameters are not reading, update the parameters</value>
+  </data>
+  <data name="PiezoSensor" xml:space="preserve">
+    <value>Piezo sensor</value>
+  </data>
+  <data name="PressureSensor" xml:space="preserve">
+    <value>Pressure sensor</value>
+  </data>
+  <data name="PressureThermalCompensationCoefficients" xml:space="preserve">
+    <value>pressure thermal compensation coefficients</value>
+  </data>
+  <data name="ProbeTemperature" xml:space="preserve">
+    <value>Probe temp.</value>
+  </data>
+  <data name="ReadAll" xml:space="preserve">
+    <value>Read all</value>
+  </data>
+  <data name="ReadingCurrentInformation" xml:space="preserve">
+    <value>reading current information</value>
+  </data>
+  <data name="ReadingInformation" xml:space="preserve">
+    <value>reading information</value>
+  </data>
+  <data name="ReadingSurveyInformation" xml:space="preserve">
+    <value>reading survey information</value>
+  </data>
+  <data name="ReadingMemoryInformation" xml:space="preserve">
+    <value>reading memory information</value>
+  </data>
+  <data name="ReadingMemoryStatus" xml:space="preserve">
+    <value>reading the current memory status</value>
+  </data>
+  <data name="ReadingNumberSurvey" xml:space="preserve">
+    <value>reading the number of survey</value>
+  </data>
+  <data name="ReadingParameters" xml:space="preserve">
+    <value>reading parameters</value>
+  </data>
+  <data name="ReadingSurvey" xml:space="preserve">
+    <value>Reading survey</value>
+  </data>
+  <data name="ReadingState" xml:space="preserve">
+    <value>reading state</value>
+  </data>
+  <data name="ReadingStatus" xml:space="preserve">
+    <value>reading the status</value>
+  </data>
+  <data name="ReadingTime" xml:space="preserve">
+    <value>reading the time</value>
+  </data>
+  <data name="ReadingSurveyType" xml:space="preserve">
+    <value>reading the type of survey</value>
+  </data>
+  <data name="Recording" xml:space="preserve">
+    <value>recording</value>
+  </data>
+  <data name="RecordingSurveyParameters" xml:space="preserve">
+    <value>Recording of survey parameters</value>
+  </data>
+  <data name="RecordingParameters" xml:space="preserve">
+    <value>recording parameters</value>
+  </data>
+  <data name="SurveyQuantity" xml:space="preserve">
+    <value>Survey quantity</value>
+  </data>
+  <data name="Resistance" xml:space="preserve">
+    <value>Resistance</value>
+  </data>
+  <data name="SaveInDevice" xml:space="preserve">
+    <value>Save in the device</value>
+  </data>
+  <data name="SavingLocation" xml:space="preserve">
+    <value>Saving the location</value>
+  </data>
+  <data name="SenderName" xml:space="preserve">
+    <value>Sender name</value>
+  </data>
+  <data name="Sensitivity" xml:space="preserve">
+    <value>Sensitivity</value>
+  </data>
+  <data name="ServiceMode" xml:space="preserve">
+    <value>Service mode</value>
+  </data>
+  <data name="ShowReading" xml:space="preserve">
+    <value>Show the reading</value>
+  </data>
+  <data name="Sorting" xml:space="preserve">
+    <value>Sorting</value>
+  </data>
+  <data name="StatusUpdate" xml:space="preserve">
+    <value>Status Update</value>
+  </data>
+  <data name="StoragePolling" xml:space="preserve">
+    <value>Storage polling</value>
+  </data>
+  <data name="Subject" xml:space="preserve">
+    <value>Subject</value>
+  </data>
+  <data name="Successfully" xml:space="preserve">
+    <value>Successfully</value>
+  </data>
+  <data name="TextFileWithCorrections" xml:space="preserve">
+    <value>Text file with corrections</value>
+  </data>
+  <data name="TimeLeft" xml:space="preserve">
+    <value>time left</value>
+  </data>
+  <data name="TherePressureMeasurementsLeft" xml:space="preserve">
+    <value>there are no pressure measurements left</value>
+  </data>
+  <data name="TimeSynchronization" xml:space="preserve">
+    <value>time synchronization</value>
+  </data>
+  <data name="Reading" xml:space="preserve">
+    <value>Reading</value>
+  </data>
+  <data name="TotalMemory" xml:space="preserve">
+    <value>Total memory:</value>
+  </data>
+  <data name="Updated" xml:space="preserve">
+    <value>updated</value>
+  </data>
+  <data name="LoadingLocation" xml:space="preserve">
+    <value>Loading location</value>
+  </data>
+  <data name="Various" xml:space="preserve">
+    <value>Various</value>
+  </data>
+  <data name="WithAnEchogram" xml:space="preserve">
+    <value>with an echogram</value>
+  </data>
+  <data name="ZeroDrift" xml:space="preserve">
+    <value>zero drift</value>
+  </data>
+  <data name="ZeroDriftGainChannel" xml:space="preserve">
+    <value>Zero drift of the gain channel</value>
+  </data>
+  <data name="Begin" xml:space="preserve">
+    <value>Begin</value>
+  </data>
+  <data name="ConnectionType" xml:space="preserve">
+    <value>Connection type</value>
+  </data>
+  <data name="End" xml:space="preserve">
+    <value>End</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>Number</value>
+  </data>
+  <data name="NumberOfMeasurements" xml:space="preserve">
+    <value>Number of measurements</value>
+  </data>
+  <data name="ProtocolType" xml:space="preserve">
+    <value>Protocol type</value>
+  </data>
+  <data name="DoConnect" xml:space="preserve">
+    <value>Connect</value>
   </data>
 </root>

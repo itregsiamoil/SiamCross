@@ -104,8 +104,7 @@
                                             </Label.FormattedText>
                                         </Label>
 
-                                        <Label Text=""
-                                                       Grid.Row="0" Grid.Column="1">
+                                        <Label Text="" Grid.Row="0" Grid.Column="1">
                                             <Label.Triggers>
                                                 <DataTrigger TargetType="Label"
                                                             Binding="{Binding BondState}" 
@@ -152,7 +151,7 @@
                                                                    Grid.RowSpan ="2" Grid.ColumnSpan="2" /> 
                                             </Grid>
 
-                                            <Button x:Name="AddSensor" Text="{local:Translate StatConn_PendingConnect}"
+                                            <Button x:Name="AddSensor" Text="{local:Translate DoConnect}"
                                                         Command="{Binding Path=BindingContext.SelectItemCommand
                                                         , Source={x:Reference ScanningTabView}}"
                                                         CommandParameter="{Binding .}" >

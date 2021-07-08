@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:views="clr-namespace:SiamCross.Views"
+             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross" 
              x:Class="SiamCross.Views.SurveysCollectionPage"
              xmlns:models="clr-namespace:SiamCross.Models.Sensors" 
              xmlns:dm="clr-namespace:SiamCross.ViewModels.MeasurementViewModels"
@@ -17,7 +18,7 @@
     <NavigationPage.TitleView >
         <StackLayout Orientation="Vertical" >
             <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
-            <Label Text="Исследования"
+            <Label Text="{local:Translate Survey1}"
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
         </StackLayout>

@@ -116,16 +116,16 @@ namespace SiamCross.ViewModels
         protected async Task OnCmdSort()
         {
             var ordersVariant = new Dictionary<string, SortOrder>();
-            ordersVariant.Add("По возрастанию идентификатора", SortOrder.AscId);
-            ordersVariant.Add("По убыванию идентификатора", SortOrder.DescId);
-            ordersVariant.Add("По возрастанию имени", SortOrder.AscTitle);
-            ordersVariant.Add("По убыванию имени", SortOrder.DescTitle);
+            ordersVariant.Add(Resource.AscendingByID, SortOrder.AscId);
+            ordersVariant.Add(Resource.DescendingByID, SortOrder.DescId);
+            ordersVariant.Add(Resource.AscendingByName, SortOrder.AscTitle);
+            ordersVariant.Add(Resource.DescendingByName, SortOrder.DescTitle);
 
             var ordersArray = new string[4];
             ordersVariant.Keys.CopyTo(ordersArray, 0);
 
             string action = await Application.Current.MainPage
-                .DisplayActionSheet("Сортировка"
+                .DisplayActionSheet(Resource.Sorting
                 , Resource.Cancel, null, ordersArray);
 
             if (string.IsNullOrEmpty(action) || action == Resource.Cancel)

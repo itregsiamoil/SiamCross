@@ -21,7 +21,7 @@ namespace SiamCross.Models.Sensors.Umt
         readonly MemVarUInt16 Koliz = new MemVarUInt16();
 
         public TaskStorageUpdate(Storage model, SensorModel sensor)
-           : base(sensor, "Опрос хранилища")
+           : base(sensor, Resource.StoragePolling)
         {
             if (model is Storage storage)
                 _Storage = storage;
@@ -61,12 +61,12 @@ namespace SiamCross.Models.Sensors.Umt
                 return false;
 
             bool ret = false;
-            InfoEx = "чтение информации";
+            InfoEx = Resource.ReadingInformation;
             ret = RespResult.NormalPkg == await Connection.TryReadAsync(_MemInfo, null, ct);
 
             if (!ret)
                 return false;
-            InfoEx = "чтение ";
+            InfoEx = Resource.Reading;
             ret = RespResult.NormalPkg == await Connection.TryReadAsync(_CurrInfo, null, ct);
 
             _Storage.TotalSpace = (ulong)(kolbl.Value) * kolstr.Value * page.Value;

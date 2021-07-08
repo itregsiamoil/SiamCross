@@ -15,7 +15,7 @@ namespace SiamCross.Models.Sensors.Umt
         readonly MemVarByteArray Timestamp = new MemVarByteArray(0x8426, new MemValueByteArray(6));
 
         public TaskSurveyCfgSave(SurveyCfg model)
-            : base(model.Sensor, "Запись параметров измерения")
+            : base(model.Sensor, Resource.RecordingSurveyParameters)
         {
             _Model = model;
 
@@ -40,7 +40,7 @@ namespace SiamCross.Models.Sensors.Umt
         {
             if (!_Model.Saved.HasValue)
             {
-                InfoEx = "параметры не считаны, обновите параметры";
+                InfoEx = Resource.ParametersNotReading;
                 return false;
             }
 
@@ -55,16 +55,16 @@ namespace SiamCross.Models.Sensors.Umt
             Timestamp.Value[1] = (byte)dt.Minute;
             Timestamp.Value[2] = (byte)dt.Second;
 
-            InfoEx = "синхронизация времени";
+            InfoEx = Resource.TimeSynchronization;
             bool ret = false;
             ret = RespResult.NormalPkg == await Connection.TryWriteAsync(Timestamp, null, ct);
             if (!ret)
                 return false;
 
-            InfoEx = "запись параметров";
+            InfoEx = Resource.RecordingParameters;
             if (_Model.Saved.Equals(_Model.Current))
             {
-                InfoEx = "обновлено";
+                InfoEx = Resource.Updated;
                 return true;
             }
             _Model.ResetSaved();
@@ -75,7 +75,7 @@ namespace SiamCross.Models.Sensors.Umt
                     return false;
             }
             _Model.UpdateSaved();
-            InfoEx = "выполнено";
+            InfoEx = Resource.Complete;
             return ret;
         }
 

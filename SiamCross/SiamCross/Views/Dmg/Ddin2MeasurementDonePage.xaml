@@ -56,7 +56,7 @@
                VerticalOptions="FillAndExpand"
                Margin="4" >
             <TableRoot>
-                <TableSection Title="{local1:Translate MeasurementData}">
+                <TableSection Title="{local1:Translate SurveyData}">
                     <ViewCell>
                         <StackLayout  Margin="0" Orientation="Vertical" BackgroundColor="White">
                             <!--<forms:ChartView x:Name="Chart1" HeightRequest="200"/>-->
@@ -154,7 +154,7 @@
                                     <RowDefinition Height="auto" />
                                     <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
-                                <Label Text="{local1:Translate MeasurementType}" Grid.Column="0" Grid.Row="0" LineBreakMode="WordWrap"/>
+                                <Label Text="{local1:Translate SurveyType}" Grid.Column="0" Grid.Row="0" LineBreakMode="WordWrap"/>
                                 <Label Text="{Binding MeasurementType}"          Grid.Column="1" Grid.Row="0" Font="Bold" TextColor="Black" />
                                 <Label Text="{local1:Translate ModelPump}"      Grid.Column="0" Grid.Row="1" LineBreakMode="WordWrap"/>
                                 <Label Text="{Binding SelectedModelPump}"       Grid.Column="1" Grid.Row="1" Font="Bold" TextColor="Black" />

@@ -106,7 +106,7 @@ namespace SiamCross.ViewModels
                 if (null == devices || 0 == devices.Count)
                     return;
                 string action = await Application.Current.MainPage
-                    .DisplayActionSheet("Добавить устройство (нажмите для подтверждения)"
+                    .DisplayActionSheet(Resource.AddDevice
                     , Resource.Cancel, null, devices.Keys.AsEnumerable().ToArray());
                 if (action == "Cancel")
                     return;

@@ -78,20 +78,20 @@ namespace SiamCross.Models.Sensors.Umt
 
             if (null == Connection)
                 return false;
-            InfoEx = "чтение статуса";
+            InfoEx = Resource.ReadingStatus;
             await Connection.ReadAsync(StatusReg, null, ct);
-            InfoEx = "чтение вида исследования";
+            InfoEx = Resource.ReadingSurveyType;
             await Connection.ReadAsync(_SurvayParam1, null, ct);
             Name = $"{Resource.Survey} {SurveyKind.Title()}";
-            InfoEx = "чтение";
+            InfoEx = Resource.Reading;
             if (0 == StatusReg.Value)
                 return true;
 
-            InfoEx = "чтение информации о памяти";
+            InfoEx = Resource.ReadingMemoryInformation;
             await Connection.ReadAsync(_MemInfo, null, ct);
-            InfoEx = "чтение информации о измерении";
+            InfoEx = Resource.ReadingSurveyInformation;
             await Connection.ReadAsync(_SurvayParam2, null, ct);
-            InfoEx = "чтение текущей информации ";
+            InfoEx = Resource.ReadingCurrentInformation;
             await Connection.ReadAsync(_CurrInfo, null, ct);
             ulong totalMem = (ulong)(kolbl.Value) * kolstr.Value * page.Value;
 
@@ -124,24 +124,24 @@ namespace SiamCross.Models.Sensors.Umt
                     Progress = 1.0f - Emem.Value / 1000f;
                     _Remain = TimeSpan.FromSeconds(_Total.TotalSeconds / (Emem.Value / 1000f));
                 }
-                InfoEx = $"{GetRemainString()}\nСвободно памяти ~{Emem.Value * 0.1f}% \n измерение...";
+                InfoEx = $"{GetRemainString()}\n{Resource.FreeMemory} ~{Emem.Value * 0.1f}% \n {Resource.Measurements}...";
                 await Task.Delay(Constants.SecondDelay * 10, ct);
-                InfoEx = "чтение текущей информации ";
+                InfoEx = Resource.ReadingCurrentInformation;
                 await Connection.ReadAsync(_CurrInfo, null, ct);
             }
         }
         string GetRemainString()
         {
             if (TimeSpan.MaxValue == _Total)
-                return "\u221E из \u221E";
+                return $"\u221E {Resource.From} \u221E";
             if (1 > _Remain.TotalSeconds)
-                return "0 из \u221E";
+                return $"0 {Resource.From} \u221E";
 
-            string remain = $"осталось " +
-                (0 == _Remain.Days ? string.Empty : $"{_Remain.Days} суток ") +
+            string remain = $"{Resource.TimeLeft} " +
+                (0 == _Remain.Days ? string.Empty : $"{_Remain.Days} {Resource.Days} ") +
                 $"{_Remain.Hours}:{_Remain.Minutes}:{_Remain.Seconds}"
-                + $" из " +
-                (0 == _Total.Days ? string.Empty : $"{_Total.Days} суток ") +
+                + $" {Resource.From} " +
+                (0 == _Total.Days ? string.Empty : $"{_Total.Days} {Resource.Days} ") +
                 $"{_Total.Hours}:{_Total.Minutes}:{_Total.Seconds}";
             return remain;
         }

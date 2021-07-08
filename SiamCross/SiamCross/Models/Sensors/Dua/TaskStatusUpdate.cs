@@ -12,7 +12,7 @@ namespace SiamCross.Models.Sensors.Dua.Surveys
         readonly MemVarInt16 Pressure = new MemVarInt16();
 
         public TaskStatusUpdate(SensorModel model)
-           : base(model, "Обновление статуса")
+           : base(model, Resource.StatusUpdate)
         {
             _CurrentParam.Add(BatteryVoltage);
             _CurrentParam.Add(ТempC);

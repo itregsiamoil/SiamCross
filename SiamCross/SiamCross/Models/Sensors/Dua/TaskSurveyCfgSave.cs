@@ -25,7 +25,7 @@ namespace SiamCross.Models.Sensors.Dua
         uint _BytesProgress;
 
         public TaskSurveyCfgSave(DuaSurveyCfg model, SensorModel sensor)
-            : base(sensor, "Запись параметров измерения")
+            : base(sensor, Resource.RecordingSurveyParameters)
         {
             _Model = model;
             Reg.Add(Revbit);
@@ -59,7 +59,7 @@ namespace SiamCross.Models.Sensors.Dua
             if (!await CheckConnectionAsync(ct))
                 return false;
 
-            InfoEx = "подготовка";
+            InfoEx = Resource.Init;
 
             await Connection.ReadAsync(Revbit, null, ct);
 
@@ -101,14 +101,14 @@ namespace SiamCross.Models.Sensors.Dua
             Timestamp.Value[1] = (byte)dt.Minute;
             Timestamp.Value[2] = (byte)dt.Second;
 
-            InfoEx = "запись";
+            InfoEx = Resource.Recording;
             _Model.Synched = false;
 
             foreach (var r in Reg)
                 await Connection.WriteAsync(r, SetProgressBytes, ct);
 
             _Model.Synched = true;
-            InfoEx = "выполнено";
+            InfoEx = Resource.Complete;
             return true;
         }
         void SetProgressBytes(uint bytes)

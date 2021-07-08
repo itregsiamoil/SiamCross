@@ -10,7 +10,7 @@ namespace SiamCross.Models.Sensors.Dua
         readonly MemVarUInt8 OpReg = new MemVarUInt8(0x8800);
 
         public TaskStorageClear(SensorModel sensor)
-            : base(sensor, "Очистка памяти")
+            : base(sensor, Resource.ClearingMemory)
         {
         }
         public override async Task<bool> DoExecuteAsync(CancellationToken ct)
@@ -20,7 +20,7 @@ namespace SiamCross.Models.Sensors.Dua
 
             if (!await CheckConnectionAsync(ct))
                 return false;
-            InfoEx = "Запуск";
+            InfoEx = Resource.Startup;
             using (var ctSrc = new CancellationTokenSource(TimeSpan.FromMilliseconds(Constants.ConnectTimeout)))
             using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
             using (var timer = CreateProgressTimer(TimeSpan.FromMilliseconds(Constants.ConnectTimeout)))
@@ -29,7 +29,7 @@ namespace SiamCross.Models.Sensors.Dua
                 await Connection.WriteAsync(OpReg, null, linkTsc.Token);
                 await Task.Delay(Constants.SecondDelay, linkTsc.Token);
                 await Connection.WriteAsync(OpReg, null, linkTsc.Token);
-                InfoEx = "Успешно";
+                InfoEx = Resource.Successfully;
                 return true;
             }
         }

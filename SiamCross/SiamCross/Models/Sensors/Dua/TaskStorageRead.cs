@@ -52,7 +52,7 @@ namespace SiamCross.Models.Sensors.Dua
         readonly MemVarByteArray Echo;
 
         public TaskStorageRead(DuaStorage model, SensorModel sensor)
-            : base(sensor, "Чтение исследований")
+            : base(sensor, Resource.ReadingSurvey)
         {
             Sensor = sensor;
 
@@ -133,7 +133,7 @@ namespace SiamCross.Models.Sensors.Dua
 
             for (UInt32 rec = 0; rec < qty; ++rec)
             {
-                InfoEx = $"чтение {rec + 1} измерения " + (echo ? "с эхограммой" : string.Empty);
+                InfoEx = $"{Resource.Reading} {rec + 1} {Resource.Measuring} " + (echo ? $"{Resource.WithAnEchogram}" : string.Empty);
 
                 ReportHeader.Address = reportBaseAddress + ReportHeader.Size * (begin + rec);
                 await Connection.ReadAsync(ReportHeader, null, ct);

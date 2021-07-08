@@ -25,7 +25,7 @@ namespace SiamCross.Models.Sensors.Dua
         }
 
         public TaskPositionLoad(SensorPosition pos, uint baseAddress = 0x800B)
-            : base(pos.Sensor, "Загрузка местоположения")
+            : base(pos.Sensor, Resource.LoadingLocation)
         {
             _Model = pos;
             PosParam = new MemStruct(baseAddress);
@@ -59,16 +59,16 @@ namespace SiamCross.Models.Sensors.Dua
             if (null != _Model.Saved)
             {
                 _Model.Current = _Model.Saved;
-                InfoEx = "обновлено";
+                InfoEx = Resource.Updated;
                 return true;
             }
 
             bool readed = false;
             if (await CheckConnectionAsync(ct))
             {
-                InfoEx = "чтение";
+                InfoEx = Resource.Reading;
                 readed = RespResult.NormalPkg == await Connection.TryReadAsync(PosParam, SetProgressBytes, ct);
-                InfoEx = "выполнено";
+                InfoEx = Resource.Complete;
             }
 
             if (readed)

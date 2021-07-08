@@ -86,7 +86,7 @@ namespace SiamCross.ViewModels
         {
             Measurements = new ObservableRangeCollection<MeasurementView>();
             SelectedMeasurements = new ObservableRangeCollection<object>();
-            Title = Resource.MeasurementsTitle;
+            Title = Resource.Surveys;
             RefreshCommand = new AsyncCommand(ReloadMeasurementsFromDb);
             SelectAllCommand = new Command(SelectAll);
             UnselectAllCommand = new Command(UnselectAll);
@@ -158,7 +158,7 @@ namespace SiamCross.ViewModels
             {
                 UnselectAll();
                 SelectMode = false;
-                Title = Resource.MeasurementsTitle;
+                Title = Resource.Surveys;
                 return true;
             }
             return false;
