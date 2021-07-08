@@ -20,6 +20,9 @@ namespace SiamCross.Models.Sensors.Dmg
 
             Surveys.Add(new Dynamogramm(this));
 
+            //OnConnectQueue.Insert(0, SurveyCfg.TaskWait);
+            OnConnectQueue.Add(new TaskUpdateConfig(this));
+
             ConnHolder.CmdUpdateStatus = new AsyncCommand(
                 UpdateStatus,
                 () => Manager.IsFree,

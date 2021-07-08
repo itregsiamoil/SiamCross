@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.Models.Sensors
 {
@@ -16,6 +17,8 @@ namespace SiamCross.Models.Sensors
     {
         public readonly DeviceInfo Device;
         public readonly StatusModel Status = new StatusModel();
+
+        public readonly List<ITask> OnConnectQueue = new List<ITask>();
 
         public readonly IProtocolConnection Connection;
         public readonly TaskManager Manager;
@@ -37,6 +40,11 @@ namespace SiamCross.Models.Sensors
             Position = new SensorPosition(this);
             Surveys = new List<ISurvey>();
             Info = new CommonInfo();
+
+            //OnConnectQueue.Add(SurveyCfg.TaskWait);
+            //OnConnectQueue.Add(Position.TaskLoad);
+            OnConnectQueue.Add(new TaskUpdateInfoSiam(this));
+
             Connection.PropertyChanged += OnConnectionChange;
         }
         async void OnConnectionChange(object sender, PropertyChangedEventArgs e)
@@ -65,12 +73,12 @@ namespace SiamCross.Models.Sensors
         }
         async Task OnConnect()
         {
-            await Manager.Execute(new TaskUpdateInfoSiam(this));
-            var result = await Manager.Execute(SurveyCfg.TaskWait);
-            if (JobStatus.Сomplete == result)
-                result = await Manager.Execute(Position.TaskLoad);
-
-            if (JobStatus.Сomplete != result)
+            if (null != SurveyCfg && null != SurveyCfg.TaskWait)
+                await Manager.Execute(SurveyCfg.TaskWait);
+            var result = await Manager.Execute(new TaskQueue(OnConnectQueue));
+            if (JobStatus.Сomplete == result && ConnHolder.CmdUpdateStatus is AsyncCommand asyncCmd)
+                await asyncCmd.ExecuteAsync();
+            else
                 await this.Connection.Disconnect();
         }
 

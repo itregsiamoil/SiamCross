@@ -28,6 +28,8 @@ namespace SiamCross.Models.Sensors.Dua
             Surveys.Add(new DuaSurvey(this, SurveyCfg, Kind.LDC));
             Surveys.Add(new DuaSurvey(this, SurveyCfg, Kind.PAR));
 
+            OnConnectQueue.Add(Position.TaskLoad);
+
             ConnHolder.CmdUpdateStatus = new AsyncCommand(
                 UpdateStatus,
                 () => Manager.IsFree,

@@ -26,6 +26,8 @@ namespace SiamCross.Models.Sensors.Umt
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.PeriodicStatic));
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.PeriodycDynamic));
 
+            OnConnectQueue.Add(Position.TaskLoad);
+
             ConnHolder.CmdUpdateStatus = new AsyncCommand(
                 UpdateStatus,
                 () => Manager.IsFree,
