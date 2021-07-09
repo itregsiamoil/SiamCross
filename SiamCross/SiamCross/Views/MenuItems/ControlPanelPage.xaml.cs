@@ -84,7 +84,7 @@ namespace SiamCross.Views.MenuItems
             options.BackgroundColor = acentColor;
 
             options.MessageOptions.Foreground = txtColor;
-            options.MessageOptions.Message = "Close app?";
+            options.MessageOptions.Message = Resource.CloseApp;
 
             options.Actions = new List<SnackBarActionOptions>
             {

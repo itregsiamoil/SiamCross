@@ -484,6 +484,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на For the changes to take effect, restart the application..
+        /// </summary>
+        public static string ChangingLanguage {
+            get {
+                return ResourceManager.GetString("ChangingLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Pressure sensor sensitivity.
         /// </summary>
         public static string Chdav {
@@ -552,6 +561,15 @@ namespace SiamCross {
         public static string ClearMemory {
             get {
                 return ResourceManager.GetString("ClearMemory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Close app?.
+        /// </summary>
+        public static string CloseApp {
+            get {
+                return ResourceManager.GetString("CloseApp", resourceCulture);
             }
         }
         
@@ -1345,6 +1363,15 @@ namespace SiamCross {
         public static string Langepas {
             get {
                 return ResourceManager.GetString("Langepas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Language.
+        /// </summary>
+        public static string Language {
+            get {
+                return ResourceManager.GetString("Language", resourceCulture);
             }
         }
         

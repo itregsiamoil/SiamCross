@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -36,6 +37,7 @@ namespace SiamCross.ViewModels
         public ICommand GoFieldDir { get; set; }
         public ICommand GoSoundSpeedDir { get; }
         public ICommand GoAboutPanel { get; set; }
+        public ICommand GoLanguagePanel { get; set; }
 
         public MenuPageItem SelectedItem
         {
@@ -51,6 +53,7 @@ namespace SiamCross.ViewModels
             GoFieldDir = CreateAsyncCommand(GoField);
             GoSoundSpeedDir = CreateAsyncCommand(GoSoundSpeed);
             GoAboutPanel = CreateAsyncCommand(GoAbout);
+            GoLanguagePanel = CreateAsyncCommand(GoLanguage);
 
             MenuItems = new List<MenuPageItem>
             {
@@ -88,6 +91,11 @@ namespace SiamCross.ViewModels
                 {
                     Title = Resource.AboutTitle,
                     Command = GoAboutPanel
+                },
+                new MenuPageItem()
+                {
+                    Title = "\u2691 "+Resource.Language,
+                    Command = GoLanguagePanel
                 }
             };
         }
@@ -130,6 +138,30 @@ namespace SiamCross.ViewModels
         {
             App.MenuIsPresented = false;
             await App.NavigationPage.Navigation.PushAsync(new AboutPanelPage());
+        }
+
+        private async Task GoLanguage()
+        {
+            App.MenuIsPresented = false;
+            var ordersArray = new string[]
+            {
+                "Auto",
+                "Russian",
+                "English"
+            };
+            string action = await Application.Current.MainPage
+                .DisplayActionSheet("Select language"
+                , Resource.Cancel, null, ordersArray);
+            if (string.IsNullOrEmpty(action) || action == Resource.Cancel)
+                return;
+            string lang = "Auto";
+
+            if ("Russian" == action)
+                lang="ru";
+            else if ("English" == action)
+                lang = "en";
+            TranslateCfg.SetCulture(lang);
+            await App.NavigationPage.DisplayToastAsync(Resource.ChangingLanguage, 5000);
         }
 
         public string Version => DependencyService.Get<IAppVersionAndBuild>().GetVersionNumber();
