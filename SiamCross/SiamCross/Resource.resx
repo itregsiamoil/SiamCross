@@ -1098,6 +1098,7 @@ DB Siam can't import the files with the same identifiers.</value>
   </data>
   <data name="CloseApp" xml:space="preserve">
     <value>Close app?</value>
+   </data>
   <data name="RodWeight" xml:space="preserve">
     <value>Rods weight</value>
   </data>
