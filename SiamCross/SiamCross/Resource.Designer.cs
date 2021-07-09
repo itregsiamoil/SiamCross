@@ -2051,7 +2051,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Rod diameter, m.
+        ///   Ищет локализованную строку, похожую на Rod diameter, mm.
         /// </summary>
         public static string Rod {
             get {
