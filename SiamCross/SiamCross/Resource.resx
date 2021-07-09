@@ -1090,4 +1090,13 @@ DB Siam can't import the files with the same identifiers.</value>
   <data name="DoConnect" xml:space="preserve">
     <value>Connect</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="ChangingLanguage" xml:space="preserve">
+    <value>For the changes to take effect, restart the application.</value>
+  </data>
+  <data name="CloseApp" xml:space="preserve">
+    <value>Close app?</value>
+  </data>
 </root>

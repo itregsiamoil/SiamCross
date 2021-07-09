@@ -1102,4 +1102,13 @@
   <data name="DoConnect" xml:space="preserve">
     <value>Подключить</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="ChangingLanguage" xml:space="preserve">
+    <value>Чтобы изменения вступили в силу, перезапустите приложение.</value>
+  </data>
+  <data name="CloseApp" xml:space="preserve">
+    <value>Закрыть приложение?</value>
+  </data>
 </root>
