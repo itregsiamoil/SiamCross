@@ -1,7 +1,6 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using SiamCross.Models.Sensors.Dua.Surveys;
 using SiamCross.ViewModels.Dua;
-using SiamCross.ViewModels.Dua.Survey;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +10,7 @@ namespace SiamCross.Models.Sensors.Dua
 {
     public class DuaSensorModel : SensorModel
     {
+        private DuaSurveyCfg SurveyCfg;
         public DuaSensorModel(IProtocolConnection conn, DeviceInfo deviceInfo)
            : base(conn, deviceInfo)
         {
@@ -21,6 +21,7 @@ namespace SiamCross.Models.Sensors.Dua
 
             Storage = new DuaStorage(this);
             SurveyCfg = new DuaSurveyCfg(this);
+            TaskWait = new TaskSurveyWait(this);
 
             Surveys.Add(new DuaSurvey(this, SurveyCfg, Kind.LStatic));
             Surveys.Add(new DuaSurvey(this, SurveyCfg, Kind.LDynamic));
@@ -49,13 +50,6 @@ namespace SiamCross.Models.Sensors.Dua
             : base(model)
         {
             StorageVM = new DuaStorageVM(this);
-
-            foreach (var surveyModel in Model.Surveys)
-            {
-                var vm = new SurveyVM(this, surveyModel as DuaSurvey);
-                SurveysVM.SurveysCollection.Add(vm);
-            }
-
 
             //FactoryConfigVM = new FactoryConfigVM(this);
             //UserConfigVM = new UserConfigVM(this);

@@ -10,6 +10,7 @@ namespace SiamCross.Models.Sensors.Umt
 {
     public class UmtSensorModel : SensorModel
     {
+        private SurveyCfg SurveyCfg;
         public UmtSensorModel(IProtocolConnection conn, DeviceInfo deviceInfo)
            : base(conn, deviceInfo)
         {
@@ -18,8 +19,9 @@ namespace SiamCross.Models.Sensors.Umt
             Position.TaskLoad = new TaskPositionLoad(Position);
             Position.TaskSave = new TaskPositionSave(Position);
 
-            SurveyCfg = new SurveyCfg(this);
             Storage = new Storage(this);
+            SurveyCfg = new SurveyCfg(this);
+            TaskWait = new TaskSurveyWait(this);
 
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.Static));
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.Dynamic));
@@ -46,12 +48,6 @@ namespace SiamCross.Models.Sensors.Umt
             : base(model)
         {
             StorageVM = new StorageVM(this);
-
-            foreach (var surveyModel in Model.Surveys)
-            {
-                var vm = new SurveyVM(this, surveyModel as UmtSurvey);
-                SurveysVM.SurveysCollection.Add(vm);
-            }
 
             Model.ConnHolder.PropertyChanged += OnHolderChange;
             IsNewStatus = true;

@@ -2,7 +2,7 @@
 
 namespace SiamCross.Models.Sensors.Dmg.Surveys
 {
-    public class Dynamogramm : BaseSurvey
+    public class Dynamogramm : BaseSurveyModel
     {
         private readonly IProtocolConnection _Connection;
 

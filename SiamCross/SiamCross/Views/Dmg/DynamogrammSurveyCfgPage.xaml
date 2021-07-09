@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage  
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+    xmlns:views="clr-namespace:SiamCross.Views"
+    xmlns:local="clr-namespace:SiamCross;assembly=SiamCross" 
+    x:Class="SiamCross.Views.Dmg.DynamogrammSurveyCfgPage">
+
+    <ContentPage.Resources>
+        <Style TargetType="{x:Type StackLayout}">
+            <Setter Property="Spacing" Value="0" />
+        </Style>
+    </ContentPage.Resources >
+
+    <NavigationPage.TitleView >
+        <StackLayout Orientation="Horizontal" >
+            <StackLayout HorizontalOptions="StartAndExpand" >
+                <Label TextColor="{StaticResource colorTextPale}" LineBreakMode="TailTruncation">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding Sensor.Name}"/>
+                            <Span Text="&#x2190;"/>
+                            <Span Text="{local:Translate Survey1}"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label Text="{Binding Name}"
+                   FontSize="Medium" FontAttributes="Bold" 
+                   LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}" 
+                         HorizontalOptions="End" VerticalOptions="Fill" >
+                <Button Text="{local:Translate Startup}" HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
+                    BackgroundColor="{StaticResource colorPrimaryLight}" 
+                    Command="{Binding CmdStart}"
+                    IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}"/>
+            </StackLayout>
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+    <ContentPage.ToolbarItems >
+        <!--ToolbarItem Text="&#x2713; " Command="{Binding CmdSaveParam}"/-->
+        <ToolbarItem Text="&#x21BA; " Command="{Binding CmdLoadParam}"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
+            <RefreshView Command="{Binding CmdLoadParam}">
+                <ScrollView VerticalOptions="StartAndExpand">
+                    <FlexLayout Padding="0" 
+                                Direction="Row"
+                                Wrap="Wrap"
+                                JustifyContent="Start"
+                                AlignItems="Start"
+                                AlignContent="Start"
+                                IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
+                        <Frame Style="{StaticResource GroupingFrameStyle2}" 
+                               IsEnabled="{Binding Sensor.TaskManager.IsFree}"
+                               FlexLayout.Grow="1"  FlexLayout.Basis="280">
+                            <StackLayout >
+                                <Label Text="{local:Translate SurveyData}" Style="{StaticResource SectionLabel2}" />
+                                <StackLayout Padding="4">
+                                    <Label Text="{local:Translate ModelPump}"/>
+
+                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.ModelPump}}"
+                                            SelectedItem="{Binding SelectedModelPump}"/>
+
+                                    <Label Text="{local:Translate Imtravel}"/>
+                                    <Entry Text="{Binding ImtravelEntry}"
+                                           Keyboard="Numeric">
+                                        <Entry.Behaviors>
+                                            <xct:NumericValidationBehavior 
+                                                    InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                                    MaximumDecimalPlaces="0" 
+                                                    MinimumValue="1"
+                                                    MaximumValue="1000"/>
+                                        </Entry.Behaviors>
+                                        <Entry.Effects>
+                                            <xct:SelectAllTextEffect/>
+                                        </Entry.Effects>
+                                    </Entry>
+
+                                    <Label Text="{local:Translate Rod}"/>
+                                    <Entry Text="{Binding Rod}"
+                                           Keyboard="Numeric">
+                                        <Entry.Behaviors>
+                                            <xct:NumericValidationBehavior 
+                                                    InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                                    MaximumDecimalPlaces="0" 
+                                                    MinimumValue="1"
+                                                    MaximumValue="1000"/>
+                                        </Entry.Behaviors>
+                                        <Entry.Effects>
+                                            <xct:SelectAllTextEffect/>
+                                        </Entry.Effects>
+                                    </Entry>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50*"/>
+                                            <ColumnDefinition Width="50*"/>
+                                            <ColumnDefinition Width="60"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Label Text="{local:Translate DynPeriod}" Grid.Column="0" Grid.Row="0"/>
+                                        <Entry x:Name="txtDynPeriod" Grid.Column="0" Grid.Row="1"
+                                               Text="{Binding DynPeriod}" 
+                                               Keyboard="Numeric">
+                                            <Entry.Behaviors>
+                                                <xct:NumericValidationBehavior Flags="ValidateOnValueChanging"
+                                                                   InvalidStyle="{StaticResource InvalidEntryStyle}"/>
+                                            </Entry.Behaviors>
+                                        </Entry>
+
+                                        <Label Text="{local:Translate PumpRate}" Grid.Column="1" Grid.Row="0"/>
+                                        <Entry x:Name="txtPumpRate"
+                                               Text="{Binding PumpRate, Mode=TwoWay }" 
+                                               Keyboard="Numeric"
+                                               Grid.Column="1" Grid.Row="1">
+                                            <Entry.Behaviors>
+                                                <xct:NumericValidationBehavior Flags="ValidateOnValueChanging"
+                                                                   InvalidStyle="{StaticResource InvalidEntryStyle}"/>
+                                            </Entry.Behaviors>
+                                        </Entry>
+                                        
+                                        <Button Text="&#x23F1;" FontSize="50"
+                                            Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"/>
+                                    </Grid>
+                                </StackLayout>
+                            </StackLayout>
+                        </Frame>
+
+                        <Frame Style="{StaticResource GroupingFrameStyle2}"
+                                   FlexLayout.Grow="1"  FlexLayout.Basis="280"
+                                   IsEnabled="{Binding Sensor.TaskManager.IsFree}">
+                            <StackLayout>
+                                <Label Text="{local:Translate Additionally}" Style="{StaticResource SectionLabel2}"/>
+                                <StackLayout Padding="4" CompressedLayout.IsHeadless="True">
+                                    <Label Text="{local:Translate ApertNumber}"/>
+                                    <Entry Text="{Binding ApertNumber}"
+                                       Keyboard="Numeric">
+                                        <Entry.Behaviors>
+                                            <xct:NumericValidationBehavior 
+                                            InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                            MaximumDecimalPlaces="0" 
+                                            MinimumValue="1"
+                                            MaximumValue="1000"/>
+                                        </Entry.Behaviors>
+                                        <Entry.Effects>
+                                            <xct:SelectAllTextEffect/>
+                                        </Entry.Effects>
+                                    </Entry>
+
+                                    <Label Text="{local:Translate BufferPressure}" />
+                                    <Entry Text="{Binding BufferPressure}"
+                                       Keyboard="Numeric">
+                                        <Entry.Behaviors>
+                                            <xct:NumericValidationBehavior 
+                                            InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                            MaximumDecimalPlaces="0" 
+                                            MinimumValue="1"
+                                            MaximumValue="1000"/>
+                                        </Entry.Behaviors>
+                                        <Entry.Effects>
+                                            <xct:SelectAllTextEffect/>
+                                        </Entry.Effects>
+                                    </Entry>
+
+                                    <Grid Padding="4,10,4,10">
+                                        <Label Text="Показать результат"/>
+                                        <Switch IsToggled="{Binding IsAutoswitchToAPR}"/>
+                                    </Grid>
+                                    <Grid Padding="4,10,4,10">
+                                        <Label Text="Сохранить в БД"/>
+                                        <Switch IsToggled="{Binding IsAutoswitchToAPR}"/>
+                                    </Grid>
+                                </StackLayout>
+                            </StackLayout>
+                        </Frame>
+                    </FlexLayout>
+                </ScrollView>
+            </RefreshView>
+            
+            <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}" />
+
+            <Button Text="{local:Translate Startup}" HorizontalOptions="FillAndExpand" 
+                    IsVisible="{Binding IsPortrait}"
+                    BackgroundColor="{StaticResource colorPrimaryLight}" 
+                    Command="{Binding CmdStart}"
+                    IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
+            </Button>
+        </StackLayout>
+    </ContentPage.Content>
+</views:BaseContentPage>

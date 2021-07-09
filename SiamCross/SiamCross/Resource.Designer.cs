@@ -2078,7 +2078,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Rod diameter, m.
+        ///   Ищет локализованную строку, похожую на Rod diameter, mm.
         /// </summary>
         public static string Rod {
             get {
@@ -2101,6 +2101,15 @@ namespace SiamCross {
         public static string RodErrorTextDdin2 {
             get {
                 return ResourceManager.GetString("RodErrorTextDdin2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Rods weight.
+        /// </summary>
+        public static string RodWeight {
+            get {
+                return ResourceManager.GetString("RodWeight", resourceCulture);
             }
         }
         

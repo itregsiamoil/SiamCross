@@ -2,27 +2,27 @@
 using SiamCross.Models.Sensors;
 using SiamCross.Services;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace SiamCross.ViewModels.MeasurementViewModels
 {
-    public class BaseSurveyVM : BasePageVM, ISurveyVM
+    public class BaseSurveyVM : BasePageVM
     {
         public string Name => Model.Name;
         public string Description => Model.Description;
 
         public ISensor Sensor { get; }
-        public ISurvey Model { get; }
-        public ISurveyCfg Config { get; }
+        public BaseSurveyModel Model { get; }
+        public BaseSurveyCfgModel Config { get; }
 
         public ICommand CmdSaveParam { get; }
         public ICommand CmdLoadParam { get; }
         public ICommand CmdShow { get; }
-        public ICommand CmdWait { get; }
-        public ICommand CmdStart { get; set; }
-        async Task<JobStatus> DoSurvey()
+        public ICommand CmdStart { get; }
+        private async Task<JobStatus> DoSurvey()
         {
             var result = await Sensor.Model.Manager.Execute(Config?.TaskSave);
             if (JobStatus.Сomplete != result)
@@ -30,22 +30,18 @@ namespace SiamCross.ViewModels.MeasurementViewModels
             result = await Sensor.Model.Manager.Execute(Model.TaskStart);
             if (JobStatus.Сomplete != result)
                 return result;
-            return await DoWaitSurvey();
+            return await Sensor.Model.Manager.Execute(Sensor.Model.TaskWait);
         }
-        async Task<JobStatus> DoWaitSurvey()
-        {
-            return await Sensor.Model.Manager.Execute(Config?.TaskWait);
-        }
-        async Task<JobStatus> DoSaveParam()
+        private async Task<JobStatus> DoSaveParam()
         {
             return await Sensor.Model.Manager.Execute(Config?.TaskSave);
         }
-        async Task<JobStatus> DoLoadParam()
+        private async Task<JobStatus> DoLoadParam()
         {
             return await Sensor.Model.Manager.Execute(Config?.TaskLoad);
         }
 
-        public BaseSurveyVM(ISensor sensor, ISurvey model)
+        public BaseSurveyVM(ISensor sensor, BaseSurveyModel model)
         {
             Sensor = sensor;
             Model = model;
@@ -63,10 +59,6 @@ namespace SiamCross.ViewModels.MeasurementViewModels
                 () => Sensor.Model.Manager.IsFree,
                     null, false, false);
 
-            CmdWait = new AsyncCommand(DoWaitSurvey,
-                () => Sensor.Model.Manager.IsFree,
-                null, false, false);
-
             CmdShow = new AsyncCommand(DoShow,
                 (Func<bool>)null,
                 null, false, false);
@@ -82,20 +74,16 @@ namespace SiamCross.ViewModels.MeasurementViewModels
             ChangeNotify(e.PropertyName);
         }
 
-        async Task DoShow()
+        private async Task DoShow()
         {
             try
             {
-                var view = PageNavigator.Get(this);
-                if (null != view)
-                {
-                    await App.NavigationPage.Navigation.PushAsync(view);
-                    CmdLoadParam?.Execute(this);
-                }
+                await PageNavigator.ShowPageAsync(this);
+                CmdLoadParam?.Execute(this);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                Debug.WriteLine($"EXCEPTION {ex.Message} {ex.GetType()}\n{ex.StackTrace}");
             }
         }
         void SetTask(object obj, ITask task)
@@ -103,7 +91,6 @@ namespace SiamCross.ViewModels.MeasurementViewModels
             RaiseCanExecuteChanged(CmdSaveParam);
             RaiseCanExecuteChanged(CmdLoadParam);
             RaiseCanExecuteChanged(CmdStart);
-            RaiseCanExecuteChanged(CmdWait);
             RaiseCanExecuteChanged(CmdShow);
         }
         public override void Unsubscribe()

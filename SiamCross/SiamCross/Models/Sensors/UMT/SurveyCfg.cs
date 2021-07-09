@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 
 namespace SiamCross.Models.Sensors.Umt
 {
-    public class SurveyCfg : BaseSurveyCfg
+    public class SurveyCfg : BaseSurveyCfgModel
     {
         public readonly SensorModel Sensor;
 
@@ -55,7 +55,6 @@ namespace SiamCross.Models.Sensors.Umt
             Sensor = sensor;
             TaskLoad = new TaskSurveyCfgLoad(this);
             TaskSave = new TaskSurveyCfgSave(this);
-            TaskWait = new TaskSurveyWait(sensor);
 
             //CmdShow = new AsyncCommand(DoShow,
             //    (Func<bool>)null,
