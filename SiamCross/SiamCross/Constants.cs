@@ -14,12 +14,18 @@
             {1,2,3,4,5,7,10,15,20,30,40,60,90,120,180,240,300,420,600,720 };
         public static readonly short[] Quantitys = new short[]
             {0,1,2,3,4,5,7,10,15,20,30,40,50,70,100,150,200,300,400,500,600,700,800,900,-1 };
-        public static readonly string[] ModelPump = new string[]
+        public static string[] ModelPump
+        {
+            get
             {
-                Resource.BalancedModelPump,
-                Resource.ChainModelPump,
-                Resource.HydraulicModelPump
-            };
+                return new string[]
+                {
+                    Resource.BalancedModelPump,
+                    Resource.ChainModelPump,
+                    Resource.HydraulicModelPump
+                };
+            }
+        }
 
         public static readonly double DefaultSoundSpeedFixed = 320;
 
@@ -62,7 +68,7 @@
 
         public const int ConnectTimeOut = 10000;
 
-        public const string DefaultModelPump = "Балансирный";
+        public static string DefaultModelPump => Resource.BalancedModelPump;
 
         public const float EhoFixedSoundSpeed = 341.33f;
 

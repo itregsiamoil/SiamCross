@@ -18,18 +18,18 @@
         <StackLayout Orientation="Horizontal" >
             <StackLayout HorizontalOptions="StartAndExpand" >
                 <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
-                <Label Text="{local:Translate Storage}"
+                <Label Text="{xct:Translate Storage}"
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}" 
                          HorizontalOptions="End" VerticalOptions="Fill" >
-                <Button Text="{local:Translate Clear} "
+                <Button Text="{xct:Translate Clear} "
                         HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
                         BackgroundColor="{StaticResource colorAccentLight}"
                         Command="{Binding CmdClearStorage}"
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" />
-                <Button Text="{local:Translate Download}"
+                <Button Text="{xct:Translate Download}"
                         HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdDownload}"
@@ -69,14 +69,14 @@
                                IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}"
                                FlexLayout.Grow="1"  FlexLayout.Basis="250" >
                             <StackLayout>
-                                <Label Text="{local:Translate SurveyWithoutEchograms}" Style="{StaticResource SectionLabel2}" />
+                                <Label Text="{xct:Translate SurveyWithoutEchograms}" Style="{StaticResource SectionLabel2}" />
                                 <StackLayout Padding="4">
                                     <Label>
                                         <Label.FormattedText>
                                             <FormattedString >
                                                 <Span Text="{Binding AviableRep}"  />
                                                 <Span Text=" "  />
-                                                <Span Text="{local:Translate From}"  />
+                                                <Span Text="{xct:Translate From}"  />
                                                 <Span Text=" 3008"  />
                                             </FormattedString>
                                         </Label.FormattedText>
@@ -88,7 +88,7 @@
                                             <ColumnDefinition Width="60*"/>
                                             <ColumnDefinition Width="40*"/>
                                         </Grid.ColumnDefinitions>
-                                        <Label Text="{local:Translate InitialSurvey}" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
+                                        <Label Text="{xct:Translate InitialSurvey}" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
                                         <Entry Text="{Binding StartRep}" Keyboard="Numeric"
                                        Grid.Column="1" Grid.Row="0">
                                             <Entry.Behaviors>
@@ -101,7 +101,7 @@
                                                 <xct:SelectAllTextEffect/>
                                             </Entry.Effects>
                                         </Entry>
-                                        <Label Text="{local:Translate Quantity}" Grid.Column="0" Grid.Row="1" VerticalTextAlignment="Center"/>
+                                        <Label Text="{xct:Translate Quantity}" Grid.Column="0" Grid.Row="1" VerticalTextAlignment="Center"/>
                                         <Entry Text="{Binding CountRep}" Keyboard="Numeric"
                                        Grid.Column="1" Grid.Row="1">
                                             <Entry.Behaviors>
@@ -124,14 +124,14 @@
                                IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}"
                                FlexLayout.Grow="1" FlexLayout.Basis="250">
                             <StackLayout>
-                                <Label Text="{local:Translate SurveyWithEchograms}" Style="{StaticResource SectionLabel2}" />
+                                <Label Text="{xct:Translate SurveyWithEchograms}" Style="{StaticResource SectionLabel2}" />
                                 <StackLayout Padding="4">
                                     <Label>
                                         <Label.FormattedText>
                                             <FormattedString >
                                                 <Span Text="{Binding AviableEcho}"  />
                                                 <Span Text=" "  />
-                                                <Span Text="{local:Translate From}"  />
+                                                <Span Text="{xct:Translate From}"  />
                                                 <Span Text=" 310"  />
                                             </FormattedString>
                                         </Label.FormattedText>
@@ -143,7 +143,7 @@
                                             <ColumnDefinition Width="60*"/>
                                             <ColumnDefinition Width="40*"/>
                                         </Grid.ColumnDefinitions>
-                                        <Label Text="{local:Translate InitialSurvey}" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
+                                        <Label Text="{xct:Translate InitialSurvey}" Grid.Column="0" Grid.Row="0" VerticalTextAlignment="Center"/>
                                         <Entry Text="{Binding StartEcho}" Keyboard="Numeric"
                                        Grid.Column="1" Grid.Row="0">
                                             <Entry.Behaviors>
@@ -156,7 +156,7 @@
                                                 <xct:SelectAllTextEffect/>
                                             </Entry.Effects>
                                         </Entry>
-                                        <Label Text="{local:Translate Quantity}" Grid.Column="0" Grid.Row="1" VerticalTextAlignment="Center"/>
+                                        <Label Text="{xct:Translate Quantity}" Grid.Column="0" Grid.Row="1" VerticalTextAlignment="Center"/>
                                         <Entry Text="{Binding CountEcho}" Keyboard="Numeric"
                                        Grid.Column="1" Grid.Row="1">
                                             <Entry.Behaviors>
@@ -180,12 +180,12 @@
             <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
 
             <StackLayout Orientation="Horizontal" IsVisible="{Binding IsPortrait}" >
-                <Button Text="{local:Translate Clear}" HorizontalOptions="FillAndExpand"
+                <Button Text="{xct:Translate Clear}" HorizontalOptions="FillAndExpand"
                         BackgroundColor="{StaticResource colorAccentLight}"
                         Command="{Binding CmdClearStorage}"
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >
                 </Button>
-                <Button Text="{local:Translate Download}" HorizontalOptions="FillAndExpand"
+                <Button Text="{xct:Translate Download}" HorizontalOptions="FillAndExpand"
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdDownload}"
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >

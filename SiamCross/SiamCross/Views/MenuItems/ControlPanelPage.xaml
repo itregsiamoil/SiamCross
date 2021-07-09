@@ -3,7 +3,6 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-    xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
     xmlns:models="clr-namespace:SiamCross.Models.Sensors"
     xmlns:views="clr-namespace:SiamCross.Views"
     xmlns:viewmodels="clr-namespace:SiamCross.ViewModels"
@@ -22,7 +21,7 @@
         <StackLayout CompressedLayout.IsHeadless="True"
             Orientation="Vertical" >
             <Label 
-                Text="{local:Translate ControlPanelTitle}"
+                Text="{xct:Translate ControlPanelTitle}"
                 FontSize="Medium" 
                 FontAttributes="Bold" LineBreakMode="TailTruncation" 
                 TextColor="{StaticResource colorTextPale}"/>
@@ -68,7 +67,7 @@
                     <SwipeView x:Name="swipeView2" Threshold="120" Padding="4">
                         <SwipeView.RightItems>
                             <SwipeItemView>
-                                <Button Text="{local:Translate Delete}" VerticalOptions="FillAndExpand" 
+                                <Button Text="{xct:Translate Delete}" VerticalOptions="FillAndExpand" 
                                         BackgroundColor="{StaticResource colorAccentLight}"
                                         ImageSource="trashcan.png"
                                         Command="{Binding Path=BindingContext.DeleteSensorCommand, 
@@ -175,7 +174,7 @@
                                                     <FormattedString >
                                                         <Span Text="&#x1F50B;" />
                                                         <Span Text="{Binding Battery}" />
-                                                        <Span Text="{local:Translate VoltsUnits}" />
+                                                        <Span Text="{xct:Translate VoltsUnits}" />
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>
@@ -186,7 +185,7 @@
                                                     <FormattedString >
                                                         <Span Text="&#x1F321;" />
                                                         <Span Text="{Binding Temperature}" />
-                                                        <Span Text="{local:Translate DegCentigradeUnits}" />
+                                                        <Span Text="{xct:Translate DegCentigradeUnits}" />
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>

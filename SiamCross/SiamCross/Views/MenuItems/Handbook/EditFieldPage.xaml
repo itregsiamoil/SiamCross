@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:SiamCross;assembly=SiamCross" 
              xmlns:viewmodels="clr-namespace:SiamCross.ViewModels" 
              x:DataType="viewmodels:EditFieldVM"
-             Title="{local:Translate Editing}"
+             Title="{xct:Translate Editing}"
              IsVisible="true"
              >
     <ContentPage.Content>
@@ -15,11 +15,11 @@
             <ScrollView VerticalOptions="StartAndExpand">
                 <Frame Style="{StaticResource GroupingFrameStyle2}" >
                     <StackLayout>
-                        <Label Text="{local:Translate Field}" Style="{StaticResource SectionLabel2}" />
+                        <Label Text="{xct:Translate Field}" Style="{StaticResource SectionLabel2}" />
                         <StackLayout Padding="5">
-                            <Label Text="{local:Translate Name}"></Label>
+                            <Label Text="{xct:Translate Name}"></Label>
                             <Entry Text="{Binding FieldName}"/>
-                            <Label Text="{local:Translate Code}"></Label>
+                            <Label Text="{xct:Translate Code}"></Label>
                             <Entry Text="{Binding FieldCode, Mode=TwoWay}"
                                 Keyboard="Numeric">
                                 <Entry.Behaviors>
@@ -34,7 +34,7 @@
                 </Frame>
             </ScrollView>
             <StackLayout Orientation="Horizontal" Spacing="0">
-                <Button Text="{local:Translate DoSave}" HorizontalOptions="FillAndExpand" 
+                <Button Text="{xct:Translate DoSave}" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding Add}" >
                 </Button>

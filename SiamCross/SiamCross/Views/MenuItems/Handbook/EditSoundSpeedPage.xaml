@@ -7,7 +7,7 @@
              xmlns:viewmodels="clr-namespace:SiamCross.ViewModels"
              x:Class="SiamCross.Views.MenuItems.HandbookPanel.EditSoundSpeedPage"
              x:DataType="viewmodels:SoundSpeedItemVM"
-             Title="{local:Translate Editing}"
+             Title="{xct:Translate Editing}"
              >
     <ContentPage.Resources>
         <Style TargetType="{x:Type StackLayout}">
@@ -23,12 +23,12 @@
             <ScrollView VerticalOptions="StartAndExpand">
                 <Frame Style="{StaticResource GroupingFrameStyle2}" >
                     <StackLayout>
-                        <Label Text="{local:Translate SoundSpeed}" Style="{StaticResource SectionLabel2}" />
+                        <Label Text="{xct:Translate SoundSpeed}" Style="{StaticResource SectionLabel2}" />
                         <StackLayout Padding="5">
                             
-                            <Label Text="{local:Translate Name}"></Label>
+                            <Label Text="{xct:Translate Name}"></Label>
                             <Entry Text="{Binding Name}"/>
-                            <Label Text="{local:Translate Code}"></Label>
+                            <Label Text="{xct:Translate Code}"></Label>
                             <Entry Text="{Binding Code}"
                                 Keyboard="Numeric">
                                 <Entry.Behaviors>
@@ -54,7 +54,7 @@
                                 <Label Text="{Binding MaxGraphY}" Grid.Column="0" Grid.Row="0"/>
                                 <StackLayout Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
                                     <Label Text=", "/>
-                                    <Label Text="{local:Translate MSUnits}"/>
+                                    <Label Text="{xct:Translate MSUnits}"/>
                                 </StackLayout>
                                 <Label Text="{Binding MinGraphY}" Grid.Column="0" Grid.Row="1" VerticalOptions="End"/>
                                 <skia:SKCanvasView 
@@ -70,20 +70,20 @@
                                 <StackLayout Orientation="Horizontal" Grid.Column="2" Grid.Row="2" HorizontalOptions="End">
                                     <Label Text="{Binding MaxGraphX}"/>
                                     <Label Text=", "/>
-                                    <Label Text="{local:Translate MSUnits}"/>
+                                    <Label Text="{xct:Translate MSUnits}"/>
                                 </StackLayout>
                             </Grid>
                         </StackLayout>
-                        <Label Text="{local:Translate TextFileWithCorrections}" Margin="2"/>
+                        <Label Text="{xct:Translate TextFileWithCorrections}" Margin="2"/>
                         <Grid ColumnSpacing="0" RowSpacing="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="50*" />
                                 <ColumnDefinition Width="50*" />
                             </Grid.ColumnDefinitions>
-                            <Button Text="{local:Translate DoExport}"
+                            <Button Text="{xct:Translate DoExport}"
                                     Command="{Binding CmdExport}"
                                     Grid.Column="0" HorizontalOptions="FillAndExpand"/>
-                            <Button Text="{local:Translate DoImport}" 
+                            <Button Text="{xct:Translate DoImport}" 
                                     Command="{Binding CmdImport}"
                                     Grid.Column="1" HorizontalOptions="FillAndExpand"/>
 
@@ -92,7 +92,7 @@
                 </Frame>
             </ScrollView>
             <StackLayout Orientation="Horizontal" Spacing="0">
-                <Button Text="{local:Translate DoSave}" HorizontalOptions="FillAndExpand" 
+                <Button Text="{xct:Translate DoSave}" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdSave}" >
                 </Button>

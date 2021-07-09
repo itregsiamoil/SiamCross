@@ -286,7 +286,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Application version:.
+        ///   Ищет локализованную строку, похожую на Application version.
         /// </summary>
         public static string AppVersion {
             get {
@@ -2204,6 +2204,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Select survey type!.
+        /// </summary>
+        public static string SelectedMeasurementTypeChoiceText {
+            get {
+                return ResourceManager.GetString("SelectedMeasurementTypeChoiceText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Choose drive type!.
         /// </summary>
         public static string SelectedModelPumpChoiceText {
@@ -2227,6 +2236,15 @@ namespace SiamCross {
         public static string SelectedSoundSpeedCorrectionChoice {
             get {
                 return ResourceManager.GetString("SelectedSoundSpeedCorrectionChoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Select language.
+        /// </summary>
+        public static string SelectLanguage {
+            get {
+                return ResourceManager.GetString("SelectLanguage", resourceCulture);
             }
         }
         
@@ -2677,6 +2695,15 @@ namespace SiamCross {
         public static string SurveyWithoutEchograms {
             get {
                 return ResourceManager.GetString("SurveyWithoutEchograms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на System.
+        /// </summary>
+        public static string System {
+            get {
+                return ResourceManager.GetString("System", resourceCulture);
             }
         }
         

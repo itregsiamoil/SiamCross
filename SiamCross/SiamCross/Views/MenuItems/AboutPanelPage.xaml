@@ -1,38 +1,38 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              x:Class="SiamCross.Views.MenuItems.AboutPanelPage"
-             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
              x:Name="AboutPanel"
-             Title="{local:Translate AboutTitle}">
+             Title="{xct:Translate AboutTitle}">
     <ContentPage.Content>
         <StackLayout Padding="5">
             <TableView Intent="Data" 
                HasUnevenRows="True" 
                HorizontalOptions="CenterAndExpand">
                 <TableRoot >
-                    <TableSection Title="{local:Translate AboutCompany}">
+                    <TableSection Title="{xct:Translate AboutCompany}">
                         <ViewCell>
                             <StackLayout>
-                                <Label Text="{local:Translate TextAboutCompany}"/>
+                                <Label Text="{xct:Translate TextAboutCompany}"/>
                             </StackLayout>
                         </ViewCell>
-                        <TextCell Text="{local:Translate Site}"
+                        <TextCell Text="{xct:Translate Site}"
                                   Detail="http://www.siamoil.ru"  />
                     </TableSection>
-                    <TableSection Title="{local:Translate AboutTitle}">
+                    <TableSection Title="{xct:Translate AboutTitle}">
                         <ViewCell>
                             <StackLayout>
-                                <Label Text="{local:Translate TextAboutApp}"/>
+                                <Label Text="{xct:Translate TextAboutApp}"/>
                             </StackLayout>
                         </ViewCell>
-                        <TextCell Text="{local:Translate AppVersion}"
+                        <TextCell Text="{xct:Translate AppVersion}"
                                   Command="{Binding CmdShowChanges}"
                                   Detail="{Binding Version}"  />
-                        <!--TextCell Text="{local:Translate AppChanges}" IsEnabled="False"/-->
+                        <!--TextCell Text="{xct:Translate AppChanges}" IsEnabled="False"/-->
                         <ViewCell>
                             <StackLayout x:Name="ChangesView" IsVisible="False">
-                                <Label Text="{local:Translate AppChanges}" 
+                                <Label Text="{xct:Translate AppChanges}" 
                                        TextColor="{StaticResource colorAccent}" 
                                        Margin="20,5,5,5"/>
                                 <Label x:Name="ChangesLabel" Text="{Binding VersionChanges}" />

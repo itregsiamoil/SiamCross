@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
             xmlns:local="clr-namespace:SiamCross.Views.MenuItems.SearchPanel"
-            xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
             x:Class="SiamCross.Views.MenuItems.SearchPanel.SearchPanelPage"
-             Title="{local1:Translate SearchTitle}">
+            Title="{xct:Translate SearchTitle}">
 
     <TabbedPage.Children>
         <local:ScanningTab />

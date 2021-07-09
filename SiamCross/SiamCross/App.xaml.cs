@@ -3,7 +3,9 @@ using SiamCross.Services;
 using SiamCross.Views;
 using SiamCross.Views.MenuItems;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
+using Xamarin.CommunityToolkit.Helpers;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -51,17 +53,22 @@ namespace SiamCross
 
         public App(AppSetup setup)
         {
+            LocalizationResourceManager.Current.PropertyChanged += Current_PropertyChanged;
+            LocalizationResourceManager.Current.Init(Resource.ResourceManager, TranslateCfg.Current);
+
             InitializeComponent();
             setup.RegisterDependencies();
 
-            if (Device.RuntimePlatform == Device.Android)
-            {
-                Resource.Culture = DependencyService.Get<ILocalize>()
-                                    .GetCurrentCultureInfo();
-            }
             CallMain();
             MainInit();
         }
+
+        private void Current_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Resource.Culture = LocalizationResourceManager.Current.CurrentCulture;
+            Models.DeviceIndex.Init();
+        }
+
         protected override void OnStart()
         {
             // Handle when your app starts

@@ -54,6 +54,11 @@ namespace SiamCross.Models
             }
             return uint.MaxValue;
         }
+        public void Clear()
+        {
+            _IdxNameId.Clear();
+            _IdxIdName.Clear();
+        }
 
         public IReadOnlyCollection<T> GetNames()
         {

@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:dua="clr-namespace:SiamCross.ViewModels.Dua"
-             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross" 
              x:DataType="dua:UserConfigVM"
              x:Class="SiamCross.Views.Dua.UserConfigPage">
 
@@ -15,7 +15,7 @@
     <NavigationPage.TitleView >
         <StackLayout Orientation="Vertical" >
             <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
-            <Label Text="{local:Translate SettingsTitle}"
+            <Label Text="{xct:Translate SettingsTitle}"
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
         </StackLayout>
@@ -32,31 +32,31 @@
                 <StackLayout >
                     <Frame Style="{StaticResource GroupingFrameStyle2}" >
                         <StackLayout>
-                            <Label Text="{local:Translate PressureSensor}" 
+                            <Label Text="{xct:Translate PressureSensor}" 
                                Style="{StaticResource SectionLabel2}"/>
-                            <Label Text="{local:Translate Sensitivity}"/>
+                            <Label Text="{xct:Translate Sensitivity}"/>
                             <Entry Text="" />
-                            <Label Text="{local:Translate ZeroDrift}"/>
+                            <Label Text="{xct:Translate ZeroDrift}"/>
                             <Entry Text="" />
 
                         </StackLayout>
                     </Frame>
                     <Frame Style="{StaticResource GroupingFrameStyle2}" >
                         <StackLayout >
-                            <Label Text="{local:Translate PiezoSensor}" 
+                            <Label Text="{xct:Translate PiezoSensor}" 
                                Style="{StaticResource SectionLabel2}"/>
-                            <Label Text="{local:Translate Sensitivity}"/>
+                            <Label Text="{xct:Translate Sensitivity}"/>
                             <Entry Text="" />
-                            <Label Text="{local:Translate ZeroDriftGainChannel}"/>
+                            <Label Text="{xct:Translate ZeroDriftGainChannel}"/>
                             <Entry Text="" />
                         </StackLayout>
                     </Frame>
                     <Frame Style="{StaticResource GroupingFrameStyle2}" >
                         <StackLayout >
-                            <Label Text="{local:Translate Various}" 
+                            <Label Text="{xct:Translate Various}" 
                                Style="{StaticResource SectionLabel2}"/>
                             <Grid Padding="0,10,0,10">
-                                <Label Text="{local:Translate ServiceMode}"/>
+                                <Label Text="{xct:Translate ServiceMode}"/>
                                 <Switch />
                             </Grid>
                         </StackLayout>
@@ -64,7 +64,7 @@
                 </StackLayout>
             </ScrollView>
             <StackLayout Orientation="Horizontal" >
-                <Button Text="{local:Translate SaveInDevice}" HorizontalOptions="FillAndExpand" 
+                <Button Text="{xct:Translate SaveInDevice}" HorizontalOptions="FillAndExpand" 
                             BackgroundColor="{StaticResource colorSecondaryLight}" />
             </StackLayout>
         </StackLayout>

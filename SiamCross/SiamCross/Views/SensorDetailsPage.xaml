@@ -67,29 +67,29 @@
                                 <Label.FormattedText Margin="0">
                                     <FormattedString >
                                         <Span Text="&#x1F310; " />
-                                        <Span Text="{local:Translate LocationInfo}" />
+                                        <Span Text="{xct:Translate LocationInfo}" />
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
                             <Label LineBreakMode="WordWrap" >
                                 <Label.FormattedText Margin="0">
                                     <FormattedString >
-                                        <Span Text="{local:Translate Field}" />
+                                        <Span Text="{xct:Translate Field}" />
                                         <Span Text=" " />
                                         <Span Text="{Binding Sensor.PositionVM.FieldName, Mode=OneWay }" Font="Bold" TextColor="Black"/>
                                         <Span Text="[" Font="Bold" TextColor="Black"/>
                                         <Span Text="{Binding Sensor.PositionVM.FieldId, Mode=OneWay }" Font="Bold" TextColor="Black"/>
                                         <Span Text="]" Font="Bold" TextColor="Black"/>
                                         <Span Text="&#10;" />
-                                        <Span Text="{local:Translate Well} " />
+                                        <Span Text="{xct:Translate Well} " />
                                         <Span Text=" " />
                                         <Span Text="{Binding Sensor.PositionVM.Well}" Font="Bold" TextColor="Black"/>
                                         <Span Text=" " />
-                                        <Span Text="{local:Translate Bush}" />
+                                        <Span Text="{xct:Translate Bush}" />
                                         <Span Text=" " />
                                         <Span Text="{Binding Sensor.PositionVM.Bush}" Font="Bold" TextColor="Black"/>
                                         <Span Text=" " />
-                                        <Span Text="{local:Translate Shop}" />
+                                        <Span Text="{xct:Translate Shop}" />
                                         <Span Text=" " />
                                         <Span Text="{Binding Sensor.PositionVM.Shop}" Font="Bold" TextColor="Black"/>
                                     </FormattedString>
@@ -144,11 +144,11 @@
                                 <Label.FormattedText Margin="0">
                                     <FormattedString >
                                         <Span Text="&#x1F4C8; " />
-                                        <Span Text="{local:Translate Survey1}" />
+                                        <Span Text="{xct:Translate Survey1}" />
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
-                            <Label Text="{local:Translate AboutResearches}"/>
+                            <Label Text="{xct:Translate AboutResearches}"/>
                         </StackLayout>
                     </Frame>
                     <Frame Style="{StaticResource MenuItemStyle}" FlexLayout.Grow="1"  FlexLayout.Basis="280" HeightRequest="80">
@@ -160,11 +160,11 @@
                                 <Label.FormattedText Margin="0">
                                     <FormattedString >
                                         <Span Text="&#x1F4BE; " />
-                                        <Span Text="{local:Translate Storage}" />
+                                        <Span Text="{xct:Translate Storage}" />
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
-                            <Label Text="{local:Translate AboutStorage}"/>
+                            <Label Text="{xct:Translate AboutStorage}"/>
                         </StackLayout>
                     </Frame>
 

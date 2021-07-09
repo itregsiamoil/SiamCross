@@ -19,13 +19,13 @@
         <StackLayout Orientation="Horizontal" >
             <StackLayout HorizontalOptions="StartAndExpand" >
                 <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
-                <Label Text="{local1:Translate LocationInfo}"
+                <Label Text="{xct:Translate LocationInfo}"
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}" 
                          HorizontalOptions="End" VerticalOptions="Fill" >
-                <Button Text="{local1:Translate DoSave}" HorizontalOptions="FillAndExpand" 
+                <Button Text="{xct:Translate DoSave}" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdSave}" 
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}"/>
@@ -48,7 +48,7 @@
                         <Frame Style="{StaticResource GroupingFrameStyle2}" 
                                IsEnabled="{Binding Sensor.TaskManager.IsFree}">
                             <StackLayout>
-                                <Label Text="{local1:Translate Information}" Style="{StaticResource SectionLabel2}" />
+                                <Label Text="{xct:Translate Information}" Style="{StaticResource SectionLabel2}" />
                                 <StackLayout Padding="4">
                                     <Grid RowSpacing="0" ColumnSpacing="5"  >
                                         <Grid.RowDefinitions>
@@ -60,7 +60,7 @@
                                             <ColumnDefinition Width="20*"></ColumnDefinition>
                                             <ColumnDefinition Width="50"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
-                                        <Label Text="{local1:Translate Field}" 
+                                        <Label Text="{xct:Translate Field}" 
                                        Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" />
 
                                         <Picker ItemsSource="{Binding Fields}" 
@@ -97,7 +97,7 @@
                                             <ColumnDefinition Width="30*"></ColumnDefinition>
                                             <ColumnDefinition Width="30*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
-                                        <Label Text="{local1:Translate Well}" 
+                                        <Label Text="{xct:Translate Well}" 
                                        Grid.Row="0" Grid.Column="0"/>
                                         <Entry Text="{Binding CurrentWell}"
                                        Grid.Row="1" Grid.Column="0"
@@ -109,7 +109,7 @@
                                                 <xct:SelectAllTextEffect/>
                                             </Entry.Effects>
                                         </Entry>
-                                        <Label Text="{local1:Translate Bush}" 
+                                        <Label Text="{xct:Translate Bush}" 
                                        Grid.Row="0" Grid.Column="1"/>
                                         <Entry Text="{Binding CurrentBush}"
                                        Grid.Row="1" Grid.Column="1"
@@ -121,7 +121,7 @@
                                                 <xct:SelectAllTextEffect/>
                                             </Entry.Effects>
                                         </Entry>
-                                        <Label Text="{local1:Translate Shop}"
+                                        <Label Text="{xct:Translate Shop}"
                                        Grid.Row="0" Grid.Column="2"/>
                                         <Entry Text="{Binding CurrentShop}"
                                        Grid.Row="1" Grid.Column="2"
@@ -171,7 +171,7 @@
             <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
 
             <StackLayout Orientation="Horizontal" IsVisible="{Binding IsPortrait}" >
-                <Button Text="{local1:Translate DoSave}" HorizontalOptions="FillAndExpand" 
+                <Button Text="{xct:Translate DoSave}" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdSave}" 
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">

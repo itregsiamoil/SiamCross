@@ -29,7 +29,7 @@
                     <FormattedString>
                         <Span Text="{Binding Sensor.Name}"/>
                         <Span Text="&#x2190;"/>
-                        <Span Text = "{local1:Translate Survey1}" />
+                        <Span Text = "{xct:Translate Survey1}" />
                     </FormattedString>
                     </Label.FormattedText>
             </Label>
@@ -48,10 +48,10 @@
                HorizontalOptions="FillAndExpand"
                VerticalOptions="FillAndExpand" >
             <TableRoot>
-                <TableSection Title="{local1:Translate SurveyData}">
+                <TableSection Title="{xct:Translate SurveyData}">
                         <ViewCell>
                             <StackLayout >
-                                <Label Text="{local1:Translate Rod}"></Label>
+                                <Label Text="{xct:Translate Rod}"></Label>
                                 <local2:CustomEntry Text="{Binding Rod}" 
                                                 Keyboard="Numeric">
                                 <local2:CustomEntry.Behaviors>
@@ -69,7 +69,7 @@
                         </ViewCell>
                         <ViewCell>
                         <StackLayout  >
-                            <Label Text="{local1:Translate Imtravel}"/>
+                            <Label Text="{xct:Translate Imtravel}"/>
                             <local2:CustomEntry x:Name="ImtravelEntry"
                                                 Text="{Binding Imtravel}"
                                                 Keyboard="Numeric">
@@ -87,7 +87,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <Label Text="{local1:Translate DynPeriod}"
+                            <Label Text="{xct:Translate DynPeriod}"
                                    Grid.Column="0" Grid.Row="0"/>
                             <Entry x:Name="txtDynPeriod" 
                                    Text="{Binding DynPeriod , Mode=TwoWay}" 
@@ -98,7 +98,7 @@
                                                                    InvalidStyle="{StaticResource InvalidEntryStyle}"/>
                                 </Entry.Behaviors>
                             </Entry>
-                            <Label Text="{local1:Translate PumpRate}"
+                            <Label Text="{xct:Translate PumpRate}"
                                    Grid.Column="1" Grid.Row="0"/>
                             <Entry x:Name="txtPumpRate" 
                                    Text="{Binding PumpRate, Mode=TwoWay }" 
@@ -116,14 +116,14 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout >
-                            <Label Text="{local1:Translate ApertNumber}"></Label>
+                            <Label Text="{xct:Translate ApertNumber}"></Label>
                             <Entry x:Name="ApertNumberEntry" Text="{Binding ApertNumber}" 
                                Keyboard="Numeric">
                                 <Entry.Behaviors>
                                     <local:IntegerNumberValidationBehavior/>
                                 </Entry.Behaviors>
                             </Entry>
-                            <Label Text="{local1:Translate ModelPump}"></Label>
+                            <Label Text="{xct:Translate ModelPump}"></Label>
                             <Picker ItemsSource="{Binding ModelPump}"
                                 SelectedItem="{Binding SelectedModelPump}"
                                 ></Picker>
@@ -131,7 +131,7 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout  >
-                            <Label Text="{local1:Translate BufferPressure}"></Label>
+                            <Label Text="{xct:Translate BufferPressure}"></Label>
                             <Entry Text="{Binding BufferPressure}" 
                                Keyboard="Numeric">
                                 <Entry.Behaviors>
@@ -141,7 +141,7 @@
                         </StackLayout>
                     </ViewCell>
                 </TableSection>
-                <TableSection Title="{local1:Translate LocationInfo}" >
+                <TableSection Title="{xct:Translate LocationInfo}" >
                     <ViewCell >
                         <Grid >
                             <Grid.RowDefinitions>
@@ -152,7 +152,7 @@
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            <Label Text="{local1:Translate Field}" Grid.Row="0" Grid.Column="0" />
+                            <Label Text="{xct:Translate Field}" Grid.Row="0" Grid.Column="0" />
                             <Picker ItemsSource="{Binding Fields}" SelectedItem="{Binding SelectedField}"
                                     Grid.Row="1" Grid.Column="0" />
                             <Button Text="&#x002B;" FontSize="50"
@@ -172,9 +172,9 @@
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            <Label Text="{local1:Translate Well}" Grid.Row="0" Grid.Column="0" />
-                            <Label Text="{local1:Translate Bush}" Grid.Row="0" Grid.Column="1" />
-                            <Label Text="{local1:Translate Shop}" Grid.Row="0" Grid.Column="2" />
+                            <Label Text="{xct:Translate Well}" Grid.Row="0" Grid.Column="0" />
+                            <Label Text="{xct:Translate Bush}" Grid.Row="0" Grid.Column="1" />
+                            <Label Text="{xct:Translate Shop}" Grid.Row="0" Grid.Column="2" />
 
                             <Entry Text="{Binding Well}" Grid.Row="1" Grid.Column="0"
                             Keyboard="Numeric">
@@ -198,7 +198,7 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout  >
-                            <Label Text="{local1:Translate Comments}"></Label>
+                            <Label Text="{xct:Translate Comments}"></Label>
                             <Editor Text="{Binding Comments}"
                                     AutoSize="TextChanges"></Editor>
                         </StackLayout>
@@ -208,7 +208,7 @@
                     <ViewCell>
                         <StackLayout>
                             <Button 
-                            Text="{local1:Translate StartMeasurement}"
+                            Text="{xct:Translate StartMeasurement}"
                             Command="{Binding StartMeasurementCommand}"
                             Margin="20"
                             HorizontalOptions="CenterAndExpand"></Button>

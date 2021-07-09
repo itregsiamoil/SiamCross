@@ -2,7 +2,7 @@
 <ContentPage 
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
     xmlns:viewmodels="clr-namespace:SiamCross.ViewModels"
     x:Class="SiamCross.Views.MenuPage"
     x:DataType="viewmodels:MenuPageViewModel"
@@ -18,7 +18,7 @@
             <Label TextColor="{StaticResource colorPrimaryDark}">
                 <Label.FormattedText>
                     <FormattedString>
-                        <Span Text="{local:Translate AppVersion}"  />
+                        <Span Text="{xct:Translate AppVersion}"  />
                         <Span Text=" "  />
                         <Span Text="{Binding Version}" />
                     </FormattedString>

@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:SiamCross.Views"
-             xmlns:local1="clr-namespace:SiamCross;assembly=SiamCross"
              xmlns:local2="clr-namespace:SiamCross.Views.ValidationBehavior"
              mc:Ignorable="d"
              x:Class="SiamCross.Views.DuMeasurementPage"
@@ -12,7 +12,7 @@
     
     <ContentPage.ToolbarItems>
         <!--
-        <ToolbarItem Text="{local1:Translate ValveTest}" Order="Secondary" Command="{Binding ValveTestCommand}"/>
+        <ToolbarItem Text="{xct:Translate ValveTest}" Order="Secondary" Command="{Binding ValveTestCommand}"/>
         -->
     </ContentPage.ToolbarItems>
 
@@ -24,37 +24,37 @@
                HorizontalOptions="FillAndExpand"
                VerticalOptions="FillAndExpand" >
             <TableRoot>
-                <TableSection Title="{local1:Translate SurveyData}">
+                <TableSection Title="{xct:Translate SurveyData}">
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="{local1:Translate SurveyType}"/>
+                            <Label Text="{xct:Translate SurveyType}"/>
                             <Picker ItemsSource="{Binding ResearchTypes}"
                                     SelectedItem="{Binding SelectedResearchType}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="{local1:Translate SoundSpeedCorrection}"/>
+                            <Label Text="{xct:Translate SoundSpeedCorrection}"/>
                             <Picker ItemsSource="{Binding SoundSpeedCorrections}"
                                     SelectedItem="{Binding SelectedSoundSpeedCorrection}"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="{local1:Translate SoundSpeed}"/>
+                            <Label Text="{xct:Translate SoundSpeed}"/>
                             <local2:CustomEntry Text="{Binding SoundSpeed}" 
                                             Keyboard="Numeric">
                             </local2:CustomEntry>
                         </StackLayout>
                     </ViewCell>
                    
-                    <SwitchCell Text="{local1:Translate Amplification}" On="{Binding Amplification}" />
-                    <SwitchCell Text="{local1:Translate Inlet}" On="{Binding Inlet}" />
-                    <SwitchCell Text="{local1:Translate MaxDepth6000}" On="{Binding Depth6000}" />
+                    <SwitchCell Text="{xct:Translate Amplification}" On="{Binding Amplification}" />
+                    <SwitchCell Text="{xct:Translate Inlet}" On="{Binding Inlet}" />
+                    <SwitchCell Text="{xct:Translate MaxDepth6000}" On="{Binding Depth6000}" />
                     
                     <ViewCell>
                         <StackLayout>
-                            <Label Text="{local1:Translate PumpDepth}"></Label>
+                            <Label Text="{xct:Translate PumpDepth}"></Label>
                             <local2:CustomEntry Text="{Binding PumpDepth}" 
                                             Keyboard="Numeric">
                             </local2:CustomEntry>
@@ -63,14 +63,14 @@
                     
                     <ViewCell>
                         <StackLayout  >
-                            <Label Text="{local1:Translate BufferPressure}"></Label>
+                            <Label Text="{xct:Translate BufferPressure}"></Label>
                             <local2:CustomEntry Text="{Binding BufferPressure}" 
                                             Keyboard="Numeric">
                             </local2:CustomEntry>
                         </StackLayout>
                     </ViewCell>
                 </TableSection>
-                <TableSection Title="{local1:Translate LocationInfo}" >
+                <TableSection Title="{xct:Translate LocationInfo}" >
                     <ViewCell >
                         <Grid >
                             <Grid.RowDefinitions>
@@ -81,7 +81,7 @@
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                                 <ColumnDefinition Width="0.2*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            <Label Text="{local1:Translate Field}" Grid.Row="0" Grid.Column="0" />
+                            <Label Text="{xct:Translate Field}" Grid.Row="0" Grid.Column="0" />
                             <Picker ItemsSource="{Binding Fields}" SelectedItem="{Binding SelectedField}"
                                     Grid.Row="1" Grid.Column="0" />
                             <Image Source="plus.png" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
@@ -104,9 +104,9 @@
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            <Label Text="{local1:Translate Well}" Grid.Row="0" Grid.Column="0" />
-                            <Label Text="{local1:Translate Bush}" Grid.Row="0" Grid.Column="1" />
-                            <Label Text="{local1:Translate Shop}" Grid.Row="0" Grid.Column="2" />
+                            <Label Text="{xct:Translate Well}" Grid.Row="0" Grid.Column="0" />
+                            <Label Text="{xct:Translate Bush}" Grid.Row="0" Grid.Column="1" />
+                            <Label Text="{xct:Translate Shop}" Grid.Row="0" Grid.Column="2" />
 
                             <Entry Text="{Binding Well}" Grid.Row="1" Grid.Column="0"
                             Keyboard="Numeric">
@@ -130,7 +130,7 @@
                     </ViewCell>
                     <ViewCell>
                         <StackLayout  >
-                            <Label Text="{local1:Translate Comments}"></Label>
+                            <Label Text="{xct:Translate Comments}"></Label>
                             <Editor Text="{Binding Comments}"
                                     AutoSize="TextChanges"></Editor>
                         </StackLayout>
@@ -140,7 +140,7 @@
                     <ViewCell>
                         <StackLayout>
                             <Button 
-                            Text="{local1:Translate StartMeasurement}"
+                            Text="{xct:Translate StartMeasurement}"
                             Command="{Binding StartMeasurementCommand}"
                             Margin="20"
                             HorizontalOptions="CenterAndExpand"></Button>

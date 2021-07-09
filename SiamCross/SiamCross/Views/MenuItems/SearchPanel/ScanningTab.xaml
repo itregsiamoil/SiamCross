@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:xct="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:dm="clr-namespace:SiamCross.Models.Scanners"
-             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross"
              x:Class="SiamCross.Views.MenuItems.SearchPanel.ScanningView"
              x:Name="ScanningTabView"
              Title="{Binding Scanner.Phy.Name , Mode=OneWay}">
@@ -132,7 +131,7 @@
                                                     <ColumnDefinition Width="50*"></ColumnDefinition>
                                                 </Grid.ColumnDefinitions>
 
-                                                <Label Text="{local:Translate Protocol}" FontSize="Micro"
+                                                <Label Text="{xct:Translate Protocol}" FontSize="Micro"
                                                        Grid.Row="0" Grid.Column="0" />
 
                                                 <Picker IsEnabled="False"
@@ -140,7 +139,7 @@
                                                         ItemsSource="{Binding ProtocolNames}"
                                                         SelectedItem ="{Binding ProtocolKindStr}" >
                                                 </Picker>
-                                                <Label Text="{local:Translate Address}" FontSize="Micro"
+                                                <Label Text="{xct:Translate Address}" FontSize="Micro"
                                                        Grid.Row="0" Grid.Column="1" />
                                                 <Entry IsEnabled="False"
                                                        Text="{Binding ProtocolAddress}" 
@@ -151,7 +150,7 @@
                                                                    Grid.RowSpan ="2" Grid.ColumnSpan="2" /> 
                                             </Grid>
 
-                                            <Button x:Name="AddSensor" Text="{local:Translate DoConnect}"
+                                            <Button x:Name="AddSensor" Text="{xct:Translate DoConnect}"
                                                         Command="{Binding Path=BindingContext.SelectItemCommand
                                                         , Source={x:Reference ScanningTabView}}"
                                                         CommandParameter="{Binding .}" >

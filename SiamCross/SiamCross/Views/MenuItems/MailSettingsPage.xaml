@@ -9,7 +9,7 @@
     xmlns:viewmodels="clr-namespace:SiamCross.ViewModels"
     x:DataType="viewmodels:MailSettingsVM"
     x:Name="ThisPage"
-    Title="{local1:Translate EmailSettings}">
+    Title="{xct:Translate EmailSettings}">
 
     <ContentPage.Resources>
         <Style TargetType="{x:Type StackLayout}">
@@ -20,16 +20,16 @@
     <NavigationPage.TitleView >
         <StackLayout Orientation="Horizontal" >
             <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand">
-                <Label Text="{local1:Translate SettingsTitle}" 
+                <Label Text="{xct:Translate SettingsTitle}" 
                        FontSize="Medium" FontAttributes="Bold" 
                        LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}">
-                <Button Text="{local1:Translate ByDefault}" HorizontalOptions="FillAndExpand" 
+                <Button Text="{xct:Translate ByDefault}" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorBackgroundMedium}"
                         Command="{Binding CmdDefault}">
                 </Button>
-                <Button Text="{local1:Translate DoSave}" HorizontalOptions="FillAndExpand" 
+                <Button Text="{xct:Translate DoSave}" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdSave}" >
                 </Button>
@@ -41,20 +41,20 @@
         <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
             <ScrollView VerticalOptions="FillAndExpand">
                 <StackLayout Padding="5">
-                    <Label Text="{local1:Translate Subject}"/>
+                    <Label Text="{xct:Translate Subject}"/>
                     <Entry Text="{Binding SubjectName}"/>
-                    <Label Text="{local1:Translate SenderName}"/>
+                    <Label Text="{xct:Translate SenderName}"/>
                     <Entry Text="{Binding FromName}"/>
-                    <Label Text="{local1:Translate SenderAddress}"/>
+                    <Label Text="{xct:Translate SenderAddress}"/>
                     <Entry Text="{Binding FromAddress}" 
                                Keyboard="Email"/>
-                    <Label Text="{local1:Translate ToAddress}"/>
+                    <Label Text="{xct:Translate ToAddress}"/>
                     <Entry Text="{Binding ToAddress}"
                                Keyboard="Email"/>
-                    <Label Text="{local1:Translate SmtpAddress}"/>
+                    <Label Text="{xct:Translate SmtpAddress}"/>
                     <Entry Text="{Binding SmtpAddress}"
                                Keyboard="Email"/>
-                    <Label Text="{local1:Translate Port}"></Label>
+                    <Label Text="{xct:Translate Port}"></Label>
                     <Entry Text="{Binding Port}" 
                                Keyboard="Numeric">
                         <Entry.Behaviors>
@@ -62,15 +62,15 @@
                         </Entry.Behaviors>
                     </Entry>
                     <Grid Padding="0,20,0,20">
-                        <Label Text="{local1:Translate Authorization}"/>
+                        <Label Text="{xct:Translate Authorization}"/>
                         <Switch x:Name="AuthCheckBox" IsToggled="{Binding NeedAuthorization}"/>
                     </Grid>
-                    <Label Text="{local1:Translate Username}"/>
+                    <Label Text="{xct:Translate Username}"/>
                     <Entry Text="{Binding Username}" 
                        IsEnabled="{Binding NeedAuthorization}"
                                Keyboard="Email" 
                                x:Name="UsernameEntry"/>
-                    <Label Text="{local1:Translate Password}"/>
+                    <Label Text="{xct:Translate Password}"/>
                     <Entry Text="{Binding Password}"
                        IsEnabled="{Binding NeedAuthorization}"
                                IsPassword="True"
@@ -84,11 +84,11 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Button Text="{local1:Translate ByDefault}"
+                <Button Text="{xct:Translate ByDefault}"
                         BackgroundColor="{StaticResource colorBackgroundMedium}"
                         Command="{Binding CmdDefault}"
                         Grid.Column="0"/>
-                <Button Text="{local1:Translate DoSave}"
+                <Button Text="{xct:Translate DoSave}"
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdSave}"
                         Grid.Column="1"/>

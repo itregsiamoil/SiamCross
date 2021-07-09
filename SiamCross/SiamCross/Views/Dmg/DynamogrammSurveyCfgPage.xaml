@@ -21,7 +21,7 @@
                         <FormattedString>
                             <Span Text="{Binding Sensor.Name}"/>
                             <Span Text="&#x2190;"/>
-                            <Span Text="{local:Translate Survey1}"/>
+                            <Span Text="{xct:Translate Survey1}"/>
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
@@ -31,7 +31,7 @@
             </StackLayout>
             <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}" 
                          HorizontalOptions="End" VerticalOptions="Fill" >
-                <Button Text="{local:Translate Startup}" HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
+                <Button Text="{xct:Translate Startup}" HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
                     BackgroundColor="{StaticResource colorPrimaryLight}" 
                     Command="{Binding CmdStart}"
                     IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}"/>
@@ -58,14 +58,14 @@
                                IsEnabled="{Binding Sensor.TaskManager.IsFree}"
                                FlexLayout.Grow="1"  FlexLayout.Basis="280">
                             <StackLayout >
-                                <Label Text="{local:Translate SurveyData}" Style="{StaticResource SectionLabel2}" />
+                                <Label Text="{xct:Translate SurveyData}" Style="{StaticResource SectionLabel2}" />
                                 <StackLayout Padding="4">
-                                    <Label Text="{local:Translate ModelPump}"/>
+                                    <Label Text="{xct:Translate ModelPump}"/>
 
                                     <Picker ItemsSource="{Binding Source={x:Static local:Constants.ModelPump}}"
                                             SelectedItem="{Binding SelectedModelPump}"/>
 
-                                    <Label Text="{local:Translate Imtravel}"/>
+                                    <Label Text="{xct:Translate Imtravel}"/>
                                     <Entry Text="{Binding ImtravelEntry}"
                                            Keyboard="Numeric">
                                         <Entry.Behaviors>
@@ -80,7 +80,7 @@
                                         </Entry.Effects>
                                     </Entry>
 
-                                    <Label Text="{local:Translate Rod}"/>
+                                    <Label Text="{xct:Translate Rod}"/>
                                     <Entry Text="{Binding Rod}"
                                            Keyboard="Numeric">
                                         <Entry.Behaviors>
@@ -107,7 +107,7 @@
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
-                                        <Label Text="{local:Translate DynPeriod}" Grid.Column="0" Grid.Row="0"/>
+                                        <Label Text="{xct:Translate DynPeriod}" Grid.Column="0" Grid.Row="0"/>
                                         <Entry x:Name="txtDynPeriod" Grid.Column="0" Grid.Row="1"
                                                Text="{Binding DynPeriod}" 
                                                Keyboard="Numeric">
@@ -117,7 +117,7 @@
                                             </Entry.Behaviors>
                                         </Entry>
 
-                                        <Label Text="{local:Translate PumpRate}" Grid.Column="1" Grid.Row="0"/>
+                                        <Label Text="{xct:Translate PumpRate}" Grid.Column="1" Grid.Row="0"/>
                                         <Entry x:Name="txtPumpRate"
                                                Text="{Binding PumpRate, Mode=TwoWay }" 
                                                Keyboard="Numeric"
@@ -139,9 +139,9 @@
                                    FlexLayout.Grow="1"  FlexLayout.Basis="280"
                                    IsEnabled="{Binding Sensor.TaskManager.IsFree}">
                             <StackLayout>
-                                <Label Text="{local:Translate Additionally}" Style="{StaticResource SectionLabel2}"/>
+                                <Label Text="{xct:Translate Additionally}" Style="{StaticResource SectionLabel2}"/>
                                 <StackLayout Padding="4" CompressedLayout.IsHeadless="True">
-                                    <Label Text="{local:Translate ApertNumber}"/>
+                                    <Label Text="{xct:Translate ApertNumber}"/>
                                     <Entry Text="{Binding ApertNumber}"
                                        Keyboard="Numeric">
                                         <Entry.Behaviors>
@@ -156,7 +156,7 @@
                                         </Entry.Effects>
                                     </Entry>
 
-                                    <Label Text="{local:Translate BufferPressure}" />
+                                    <Label Text="{xct:Translate BufferPressure}" />
                                     <Entry Text="{Binding BufferPressure}"
                                        Keyboard="Numeric">
                                         <Entry.Behaviors>
@@ -188,7 +188,7 @@
             
             <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}" />
 
-            <Button Text="{local:Translate Startup}" HorizontalOptions="FillAndExpand" 
+            <Button Text="{xct:Translate Startup}" HorizontalOptions="FillAndExpand" 
                     IsVisible="{Binding IsPortrait}"
                     BackgroundColor="{StaticResource colorPrimaryLight}" 
                     Command="{Binding CmdStart}"

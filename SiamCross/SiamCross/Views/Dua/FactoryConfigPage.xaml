@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:dua="clr-namespace:SiamCross.ViewModels.Dua"
-             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross" 
              x:DataType="dua:FactoryConfigVM"
              x:Class="SiamCross.Views.Dua.FactoryConfigPage">
 
@@ -15,7 +15,7 @@
     <NavigationPage.TitleView >
         <StackLayout Orientation="Vertical" >
             <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
-            <Label Text="{local:Translate FactorySettings}" 
+            <Label Text="{xct:Translate FactorySettings}" 
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
         </StackLayout>
@@ -32,7 +32,7 @@
                 <StackLayout BackgroundColor="{StaticResource colorBackground}">
                     <Frame Style="{StaticResource GroupingFrameStyle2}" >
                         <StackLayout>
-                            <Label Text="{local:Translate PressureThermalCompensationCoefficients}" 
+                            <Label Text="{xct:Translate PressureThermalCompensationCoefficients}" 
                                Style="{StaticResource SectionLabel2}"/>
                             <Grid ColumnSpacing="0" RowSpacing="0">
                                 <Grid.RowDefinitions>
@@ -50,7 +50,7 @@
                                 <Label Grid.Column="0" Grid.Row="0">
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="{local:Translate Resistance}"/>
+                                            <Span Text="{xct:Translate Resistance}"/>
                                             <Span Text=" 1"/>
                                         </FormattedString>
                                     </Label.FormattedText>
@@ -59,7 +59,7 @@
                                 <Label Grid.Column="0" Grid.Row="2">
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="{local:Translate Resistance}"/>
+                                            <Span Text="{xct:Translate Resistance}"/>
                                             <Span Text=" 2"/>
                                         </FormattedString>
                                     </Label.FormattedText>
@@ -68,7 +68,7 @@
                                 <Label Grid.Column="0" Grid.Row="4">
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="{local:Translate Resistance}"/>
+                                            <Span Text="{xct:Translate Resistance}"/>
                                             <Span Text=" 3"/>
                                         </FormattedString>
                                     </Label.FormattedText>
@@ -77,7 +77,7 @@
                                 <Label Grid.Column="1" Grid.Row="0">
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="{local:Translate Pressure}"/>
+                                            <Span Text="{xct:Translate Pressure}"/>
                                             <Span Text=" 1"/>
                                         </FormattedString>
                                     </Label.FormattedText>
@@ -86,7 +86,7 @@
                                 <Label Grid.Column="1" Grid.Row="2">
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="{local:Translate Pressure}"/>
+                                            <Span Text="{xct:Translate Pressure}"/>
                                             <Span Text=" 2"/>
                                         </FormattedString>
                                     </Label.FormattedText>
@@ -95,7 +95,7 @@
                                 <Label Grid.Column="1" Grid.Row="4">
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="{local:Translate Pressure}"/>
+                                            <Span Text="{xct:Translate Pressure}"/>
                                             <Span Text=" 3"/>
                                         </FormattedString>
                                     </Label.FormattedText>
@@ -107,7 +107,7 @@
                     </Frame>
                 </StackLayout>
             </ScrollView>
-            <Button Text="{local:Translate SaveInDevice}" HorizontalOptions="FillAndExpand"
+            <Button Text="{xct:Translate SaveInDevice}" HorizontalOptions="FillAndExpand"
                     BackgroundColor="{StaticResource colorSecondaryLight}" />
         </StackLayout>
     </ContentPage.Content>

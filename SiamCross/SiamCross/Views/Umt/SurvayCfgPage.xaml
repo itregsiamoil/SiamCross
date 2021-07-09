@@ -21,7 +21,7 @@
                         <FormattedString>
                             <Span Text="{Binding Sensor.Name}"/>
                             <Span Text="&#x2190;"/>
-                            <Span Text="{local:Translate Survey1}"/>
+                            <Span Text="{xct:Translate Survey1}"/>
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
@@ -31,7 +31,7 @@
             </StackLayout>
             <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}" 
                          HorizontalOptions="End" VerticalOptions="Fill" >
-                <Button Text="{local:Translate Startup}" HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
+                <Button Text="{xct:Translate Startup}" HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
                     BackgroundColor="{StaticResource colorPrimaryLight}" 
                     Command="{Binding CmdStart}"
                     IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}"/>
@@ -62,9 +62,9 @@
                                IsEnabled="{Binding Sensor.TaskManager.IsFree}"
                                IsVisible="{Binding IsSheduler}">
                             <StackLayout >
-                                <Label Text="{local:Translate SurveySchedule}" Style="{StaticResource SectionLabel2}" />
+                                <Label Text="{xct:Translate SurveySchedule}" Style="{StaticResource SectionLabel2}" />
                                 <StackLayout Padding="4">
-                                    <Label Text="{local:Translate Period_s}"/>
+                                    <Label Text="{xct:Translate Period_s}"/>
                                     <Entry Text="{Binding Source={x:Reference _stepper}, Path=Value}"
                                        Keyboard="Numeric">
                                         <Entry.Behaviors>
@@ -91,13 +91,13 @@
                                IsEnabled="{Binding Sensor.TaskManager.IsFree}"
                                FlexLayout.Grow="1"  FlexLayout.Basis="280">
                             <StackLayout >
-                                <Label Text="{local:Translate TemperatureSensors}" Style="{StaticResource SectionLabel2}"/>
+                                <Label Text="{xct:Translate TemperatureSensors}" Style="{StaticResource SectionLabel2}"/>
                                 <Grid Padding="4,10,4,10">
-                                    <Label Text="{local:Translate Internal}"/>
+                                    <Label Text="{xct:Translate Internal}"/>
                                     <Switch IsToggled="{Binding IsEnabledTempRecord}"/>
                                 </Grid>
                                 <Grid Padding="4,10,4,10">
-                                    <Label Text="{local:Translate External}"/>
+                                    <Label Text="{xct:Translate External}"/>
                                     <Switch IsToggled="{Binding IsEnabledExtTemp}" IsEnabled="False"/>
                                 </Grid>
                             </StackLayout>
@@ -106,15 +106,15 @@
                                    FlexLayout.Grow="1"  FlexLayout.Basis="280"
                                    IsEnabled="{Binding Sensor.TaskManager.IsFree}">
                             <StackLayout>
-                                <Label Text="{local:Translate Additionally}" Style="{StaticResource SectionLabel2}"/>
+                                <Label Text="{xct:Translate Additionally}" Style="{StaticResource SectionLabel2}"/>
                                 <Label Padding="4">
                                     <Label.FormattedText>
                                         <FormattedString >
-                                            <Span Text="{local:Translate DeviceTime}"  />
+                                            <Span Text="{xct:Translate DeviceTime}"  />
                                             <Span Text=":"/>
                                             <Span Text="{Binding Timestamp}"/>
                                             <Span Text="&#10;"/>
-                                            <Span Text="{local:Translate NotificationTime}" FontSize="Micro"/>
+                                            <Span Text="{xct:Translate NotificationTime}" FontSize="Micro"/>
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
@@ -126,7 +126,7 @@
 
             <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}" />
 
-            <Button Text="{local:Translate Startup}" HorizontalOptions="FillAndExpand" 
+            <Button Text="{xct:Translate Startup}" HorizontalOptions="FillAndExpand" 
                     IsVisible="{Binding IsPortrait}"
                     BackgroundColor="{StaticResource colorPrimaryLight}" 
                     Command="{Binding CmdStart}"

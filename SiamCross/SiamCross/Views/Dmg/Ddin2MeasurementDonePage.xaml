@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
@@ -56,7 +57,7 @@
                VerticalOptions="FillAndExpand"
                Margin="4" >
             <TableRoot>
-                <TableSection Title="{local1:Translate SurveyData}">
+                <TableSection Title="{xct:Translate SurveyData}">
                     <ViewCell>
                         <StackLayout  Margin="0" Orientation="Vertical" BackgroundColor="White">
                             <!--<forms:ChartView x:Name="Chart1" HeightRequest="200"/>-->
@@ -128,21 +129,21 @@
                                     <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
                                 <!-- Default mode for Text is Mode=OneWay>-->
-                                <Label Text="{local1:Translate Imtravel}"       Grid.Column="0" Grid.Row="0" LineBreakMode="WordWrap"/>
+                                <Label Text="{xct:Translate Imtravel}"       Grid.Column="0" Grid.Row="0" LineBreakMode="WordWrap"/>
                                 <Label Text="{Binding Imtravel}"                Grid.Column="1" Grid.Row="0" Font="Bold" TextColor="Black" />
-                                <Label Text="{local1:Translate PumpRate}"       Grid.Column="0" Grid.Row="1" LineBreakMode="WordWrap" />
+                                <Label Text="{xct:Translate PumpRate}"       Grid.Column="0" Grid.Row="1" LineBreakMode="WordWrap" />
                                 <Label Text="{Binding PumpRate}"                Grid.Column="1" Grid.Row="1" Font="Bold" TextColor="Black"    />
-                                <Label Text="{local1:Translate MaxLoad}"        Grid.Column="0" Grid.Row="2" LineBreakMode="WordWrap" />
+                                <Label Text="{xct:Translate MaxLoad}"        Grid.Column="0" Grid.Row="2" LineBreakMode="WordWrap" />
                                 <Label Text="{Binding MaxLoad}"                 Grid.Column="1" Grid.Row="2" Font="Bold" TextColor="Black" />
-                                <Label Text="{local1:Translate MinLoad}"        Grid.Column="0" Grid.Row="3" LineBreakMode="WordWrap" />
+                                <Label Text="{xct:Translate MinLoad}"        Grid.Column="0" Grid.Row="3" LineBreakMode="WordWrap" />
                                 <Label Text="{Binding MinLoad}"                 Grid.Column="1" Grid.Row="3" Font="Bold" TextColor="Black"    />
-                                <Label Text="{local1:Translate UpperRodWeight}" Grid.Column="0" Grid.Row="4" LineBreakMode="WordWrap" />
+                                <Label Text="{xct:Translate UpperRodWeight}" Grid.Column="0" Grid.Row="4" LineBreakMode="WordWrap" />
                                 <Label Text="{Binding UpperRodWeight}"          Grid.Column="1" Grid.Row="4" Font="Bold" TextColor="Black" />
-                                <Label Text="{local1:Translate LowerRodWeight}" Grid.Column="0" Grid.Row="5" LineBreakMode="WordWrap"/>
+                                <Label Text="{xct:Translate LowerRodWeight}" Grid.Column="0" Grid.Row="5" LineBreakMode="WordWrap"/>
                                 <Label Text="{Binding LowerRodWeight}"          Grid.Column="1" Grid.Row="5" Font="Bold" TextColor="Black" />
-                                <Label Text="{local1:Translate ApertNumber}"    Grid.Column="0" Grid.Row="6" LineBreakMode="WordWrap"/>
+                                <Label Text="{xct:Translate ApertNumber}"    Grid.Column="0" Grid.Row="6" LineBreakMode="WordWrap"/>
                                 <Label Text="{Binding ApertNumber}"             Grid.Column="1" Grid.Row="6" Font="Bold" TextColor="Black" />
-                                <Label Text="{local1:Translate BufferPressure}" Grid.Column="0" Grid.Row="7" LineBreakMode="WordWrap"/>
+                                <Label Text="{xct:Translate BufferPressure}" Grid.Column="0" Grid.Row="7" LineBreakMode="WordWrap"/>
                                 <Label Text="{Binding BufferPressure}"          Grid.Column="1" Grid.Row="7" Font="Bold" TextColor="Black" />
                             </Grid>
                             <Grid Margin="0">
@@ -154,20 +155,20 @@
                                     <RowDefinition Height="auto" />
                                     <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
-                                <Label Text="{local1:Translate SurveyType}" Grid.Column="0" Grid.Row="0" LineBreakMode="WordWrap"/>
+                                <Label Text="{xct:Translate SurveyType}" Grid.Column="0" Grid.Row="0" LineBreakMode="WordWrap"/>
                                 <Label Text="{Binding MeasurementType}"          Grid.Column="1" Grid.Row="0" Font="Bold" TextColor="Black" />
-                                <Label Text="{local1:Translate ModelPump}"      Grid.Column="0" Grid.Row="1" LineBreakMode="WordWrap"/>
+                                <Label Text="{xct:Translate ModelPump}"      Grid.Column="0" Grid.Row="1" LineBreakMode="WordWrap"/>
                                 <Label Text="{Binding SelectedModelPump}"       Grid.Column="1" Grid.Row="1" Font="Bold" TextColor="Black" />
                             </Grid>
                         </StackLayout>
                     </ViewCell>
                 </TableSection>
-                <TableSection Title="{local1:Translate LocationInfo}" >
+                <TableSection Title="{xct:Translate LocationInfo}" >
                     <!--TextColor="#FF1E96FF" 
                     BackgroundColor="#FF5EBFFF"-->
 
                     <!--TextCell 
-                        Text="{local1:Translate Field}" TextColor="Gray"
+                        Text="{xct:Translate Field}" TextColor="Gray"
                         Detail="{Binding SelectedField}" DetailColor="Black" />
                      -->
                     <ViewCell>
@@ -175,7 +176,7 @@
                             <Label LineBreakMode="WordWrap" >
                                 <Label.FormattedText Margin="0">
                                     <FormattedString >
-                                        <Span Text="{local1:Translate Field}" />
+                                        <Span Text="{xct:Translate Field}" />
                                         <Span Text=" " />
                                         <Span Text="{Binding SelectedField, Mode=OneWay }" Font="Bold" TextColor="Black"/>
                                     </FormattedString>
@@ -185,15 +186,15 @@
                             <Label LineBreakMode="WordWrap" >
                                 <Label.FormattedText Margin="0">
                                     <FormattedString >
-                                        <Span Text="{local1:Translate Well} " />
+                                        <Span Text="{xct:Translate Well} " />
                                         <Span Text=" " />
                                         <Span Text="{Binding Well}" Font="Bold" TextColor="Black"/>
                                         <Span Text=" " />
-                                        <Span Text="{local1:Translate Bush}" />
+                                        <Span Text="{xct:Translate Bush}" />
                                         <Span Text=" " />
                                         <Span Text="{Binding Bush}" Font="Bold" TextColor="Black"/>
                                         <Span Text=" " />
-                                        <Span Text="{local1:Translate Shop}" />
+                                        <Span Text="{xct:Translate Shop}" />
                                         <Span Text=" " />
                                         <Span Text="{Binding Shop}" Font="Bold" TextColor="Black"/>
                                     </FormattedString>
@@ -202,7 +203,7 @@
                             <Label LineBreakMode="WordWrap" >
                                 <Label.FormattedText Margin="0">
                                     <FormattedString >
-                                        <Span Text="{local1:Translate Comments}" />
+                                        <Span Text="{xct:Translate Comments}" />
                                         <Span Text=" " />
                                         <Span Text="{Binding Comments, Mode=OneWay }" Font="Bold" TextColor="Black"/>
                                     </FormattedString>
@@ -211,7 +212,7 @@
                         </StackLayout>
                     </ViewCell>
                 </TableSection>
-                <TableSection Title="{local1:Translate Device}" >
+                <TableSection Title="{xct:Translate Device}" >
                     <ViewCell>
                         <Grid Margin="0">
                             <Grid.ColumnDefinitions>
@@ -225,15 +226,15 @@
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
-                            <Label Text="{local1:Translate Device}"         Grid.Column="0" Grid.Row="0" LineBreakMode="WordWrap"/>
+                            <Label Text="{xct:Translate Device}"         Grid.Column="0" Grid.Row="0" LineBreakMode="WordWrap"/>
                             <Label Text="{Binding DeviceName}"              Grid.Column="1" Grid.Row="0" Font="Bold" TextColor="Black" />
-                            <Label Text="{local1:Translate Temperature}"    Grid.Column="0" Grid.Row="1" LineBreakMode="WordWrap"/>
+                            <Label Text="{xct:Translate Temperature}"    Grid.Column="0" Grid.Row="1" LineBreakMode="WordWrap"/>
                             <Label Text="{Binding Temperature}"             Grid.Column="1" Grid.Row="1" Font="Bold" TextColor="Black" />
-                            <Label Text="{local1:Translate Voltage}"        Grid.Column="0" Grid.Row="2" LineBreakMode="WordWrap"/>
+                            <Label Text="{xct:Translate Voltage}"        Grid.Column="0" Grid.Row="2" LineBreakMode="WordWrap"/>
                             <Label Text="{Binding BatteryVolt}"             Grid.Column="1" Grid.Row="2" Font="Bold" TextColor="Black" />
-                            <Label Text="{local1:Translate Firmware}"       Grid.Column="0" Grid.Row="3" LineBreakMode="WordWrap"/>
+                            <Label Text="{xct:Translate Firmware}"       Grid.Column="0" Grid.Row="3" LineBreakMode="WordWrap"/>
                             <Label Text="{Binding MainFirmware}"            Grid.Column="1" Grid.Row="3" Font="Bold" TextColor="Black" />
-                            <Label Text="{local1:Translate RadioFirmware}"  Grid.Column="0" Grid.Row="4" LineBreakMode="WordWrap"/>
+                            <Label Text="{xct:Translate RadioFirmware}"  Grid.Column="0" Grid.Row="4" LineBreakMode="WordWrap"/>
                             <Label Text="{Binding RadioFirmware}"           Grid.Column="1" Grid.Row="4" Font="Bold" TextColor="Black" />
                         </Grid>
                     </ViewCell>

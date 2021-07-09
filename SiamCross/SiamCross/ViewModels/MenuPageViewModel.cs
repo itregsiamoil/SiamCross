@@ -143,22 +143,16 @@ namespace SiamCross.ViewModels
         private async Task GoLanguage()
         {
             App.MenuIsPresented = false;
-            var ordersArray = new string[]
-            {
-                "Auto",
-                "Russian",
-                "English"
-            };
             string action = await Application.Current.MainPage
-                .DisplayActionSheet("Select language"
-                , Resource.Cancel, null, ordersArray);
+                .DisplayActionSheet(Resource.SelectLanguage
+                , Resource.Cancel, null, TranslateCfg.SupportedLanguages);
             if (string.IsNullOrEmpty(action) || action == Resource.Cancel)
                 return;
             string lang = "Auto";
 
-            if ("Russian" == action)
-                lang="ru";
-            else if ("English" == action)
+            if (TranslateCfg.SupportedLanguages[1] == action)
+                lang = "ru";
+            else if (TranslateCfg.SupportedLanguages[2] == action)
                 lang = "en";
             TranslateCfg.SetCulture(lang);
             await App.NavigationPage.DisplayToastAsync(Resource.ChangingLanguage, 5000);

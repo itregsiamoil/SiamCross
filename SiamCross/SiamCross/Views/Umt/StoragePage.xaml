@@ -18,18 +18,18 @@
         <StackLayout Orientation="Horizontal" >
             <StackLayout HorizontalOptions="StartAndExpand" >
                 <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
-                <Label Text="{local:Translate Storage}"
+                <Label Text="{xct:Translate Storage}"
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}" 
                          HorizontalOptions="End" VerticalOptions="Fill" >
-                <Button Text="{local:Translate Clear} "
+                <Button Text="{xct:Translate Clear} "
                         HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
                         BackgroundColor="{StaticResource colorAccentLight}"
                         Command="{Binding CmdClearStorage}"
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" />
-                <Button Text="{local:Translate Download}"
+                <Button Text="{xct:Translate Download}"
                         HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdDownload}"
@@ -55,12 +55,12 @@
                         <Frame Style="{StaticResource GroupingFrameStyle2}"
                                IsEnabled="{Binding Sensor.TaskManager.IsFree}">
                             <StackLayout>
-                                <Label Text="{local:Translate Survey1}" Style="{StaticResource SectionLabel2}" />
+                                <Label Text="{xct:Translate Survey1}" Style="{StaticResource SectionLabel2}" />
                                 <StackLayout Padding="4">
                                     <Label >
                                         <Label.FormattedText>
                                             <FormattedString >
-                                                <Span Text="{local:Translate TotalMemory}" />
+                                                <Span Text="{xct:Translate TotalMemory}" />
                                                 <Span Text=" &#x2246; " />
                                                 <Span Text="{Binding TotalSpaceM}"/>
                                                 <Span Text="M "/>
@@ -74,7 +74,7 @@
                                     <Label >
                                         <Label.FormattedText>
                                             <FormattedString >
-                                                <Span Text="{local:Translate FreeMemory}"  />
+                                                <Span Text="{xct:Translate FreeMemory}"  />
                                                 <Span Text=": &#x2246; " />
                                                 <Span Text="{Binding EmptySpaceRatio}" />
                                                 <Span Text="%"  />
@@ -84,7 +84,7 @@
                                     <Label>
                                         <Label.FormattedText>
                                             <FormattedString >
-                                                <Span Text="{local:Translate SurveyQuantity}"  />
+                                                <Span Text="{xct:Translate SurveyQuantity}"  />
                                                 <Span Text=": &#x2246; " />
                                                 <Span Text="{Binding SurveyQty}"/>
                                             </FormattedString>
@@ -139,12 +139,12 @@
             <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
 
             <StackLayout Orientation="Horizontal" IsVisible="{Binding IsPortrait}" >
-                <Button Text="{local:Translate Clear} " HorizontalOptions="FillAndExpand" 
+                <Button Text="{xct:Translate Clear} " HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorAccentLight}"
                         Command="{Binding CmdClearStorage}"
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >
                 </Button>
-                <Button Text="{local:Translate Download}" HorizontalOptions="FillAndExpand" 
+                <Button Text="{xct:Translate Download}" HorizontalOptions="FillAndExpand" 
                         BackgroundColor="{StaticResource colorPrimaryLight}"
                         Command="{Binding CmdDownload}"
                         IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >

@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              x:Class="SiamCross.Views.MenuItems.SearchPanel.UsbTab"
-             Title="Bluetooth 5LR"
-             xmlns:local="clr-namespace:SiamCross;assembly=SiamCross">
+             Title="Bluetooth 5LR">
 
     <ContentPage.Content>
         <StackLayout>
             <StackLayout Orientation="Horizontal">
-                <Label Text="{local:Translate USBState}"/>
+                <Label Text="{xct:Translate USBState}"/>
                 <Label Text="{Binding USBState}" x:Name="usbStateLabel"/>
             </StackLayout>
             <Grid>
@@ -16,7 +16,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Label Text="{local:Translate FoundDevices}" 
+                <Label Text="{xct:Translate FoundDevices}" 
                        FontSize="Medium" 
                        Grid.Column="0"/>
                 <ActivityIndicator x:Name="ScanAnimation"

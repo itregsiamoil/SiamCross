@@ -27,7 +27,7 @@
                         <FormattedString>
                             <Span Text="{Binding Sensor.Name}"/>
                             <Span Text="&#x2190;"/>
-                            <Span Text="{local:Translate Survey1}"/>
+                            <Span Text="{xct:Translate Survey1}"/>
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
@@ -37,7 +37,7 @@
             </StackLayout>
             <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}"
                          HorizontalOptions="End" VerticalOptions="Fill" >
-                <Button Text="{local:Translate Startup}" HorizontalOptions="FillAndExpand"
+                <Button Text="{xct:Translate Startup}" HorizontalOptions="FillAndExpand"
                     BackgroundColor="{StaticResource colorPrimaryLight}" 
                     Command="{Binding CmdStart}"
                     IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}"/>
@@ -69,7 +69,7 @@
                                    IsEnabled="{Binding Sensor.TaskManager.IsFree}"
                                    IsVisible="{Binding IsVisibleLevelSheduler}">
                                 <StackLayout >
-                                    <Label Text="{local:Translate ScheduleLevelMeasurement}" Style="{StaticResource SectionLabel2}"/>
+                                    <Label Text="{xct:Translate ScheduleLevelMeasurement}" Style="{StaticResource SectionLabel2}"/>
                                     <Grid Padding="4,0,4,0" RowSpacing="0">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
@@ -83,8 +83,8 @@
                                             <ColumnDefinition Width="50*" />
                                             <ColumnDefinition Width="50*" />
                                         </Grid.ColumnDefinitions>
-                                        <Label Text="{local:Translate Quantity}" Grid.Column="0" Grid.Row="0"/>
-                                        <Label Text="{local:Translate Period_m}" Grid.Column="1" Grid.Row="0"/>
+                                        <Label Text="{xct:Translate Quantity}" Grid.Column="0" Grid.Row="0"/>
+                                        <Label Text="{xct:Translate Period_m}" Grid.Column="1" Grid.Row="0"/>
 
                                         <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
                                         SelectedIndex="{Binding LevelQuantityIndex0}"
@@ -118,7 +118,7 @@
                                         Grid.Column="1" Grid.Row="5"/>
                                     </Grid>
                                     <Grid Padding="4,10,4,10">
-                                        <Label Text="{local:Translate ExecutePAR}"/>
+                                        <Label Text="{xct:Translate ExecutePAR}"/>
                                         <Switch IsToggled="{Binding IsAutoswitchToAPR}"/>
                                     </Grid>
                                 </StackLayout>
@@ -127,7 +127,7 @@
                                    IsEnabled="{Binding Sensor.TaskManager.IsFree}"
                                    IsVisible="{Binding IsSheduler}">
                                 <StackLayout >
-                                    <Label Text="{local:Translate SchedulePAR}" Style="{StaticResource SectionLabel2}"/>
+                                    <Label Text="{xct:Translate SchedulePAR}" Style="{StaticResource SectionLabel2}"/>
                                     <Grid Padding="4,0,4,0" RowSpacing="0">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
@@ -137,8 +137,8 @@
                                             <ColumnDefinition Width="50*" />
                                             <ColumnDefinition Width="50*" />
                                         </Grid.ColumnDefinitions>
-                                        <Label Text="{local:Translate Quantity}" Grid.Column="0" Grid.Row="0"/>
-                                        <Label Text="{local:Translate Period_m}" Grid.Column="1" Grid.Row="0"/>
+                                        <Label Text="{xct:Translate Quantity}" Grid.Column="0" Grid.Row="0"/>
+                                        <Label Text="{xct:Translate Period_m}" Grid.Column="1" Grid.Row="0"/>
 
                                         <Picker ItemsSource="{Binding Source={x:Static local:Constants.Quantitys}}"
                                         SelectedIndex="{Binding PressureQuantityIndex}"
@@ -161,15 +161,15 @@
                                    FlexLayout.Grow="1"  FlexLayout.Basis="280"
                                    IsVisible="{Binding IsLevelSurvey}">
                                 <StackLayout >
-                                    <Label Text="{local:Translate AutomaticValve}" Style="{StaticResource SectionLabel2}"/>
+                                    <Label Text="{xct:Translate AutomaticValve}" Style="{StaticResource SectionLabel2}"/>
                                     <Grid Padding="4,10,4,10" RowSpacing="20">
-                                        <Label Text="{local:Translate TriggerPermission}" Grid.Row="0"/>
+                                        <Label Text="{xct:Translate TriggerPermission}" Grid.Row="0"/>
                                         <Switch IsToggled="{Binding IsValveAutomaticEnabled}" Grid.Row="0"
                                         IsEnabled="{Binding IsVisibleLevelSheduler, Converter={StaticResource InvertedBoolConverter}}"/>
-                                        <Label Text="{local:Translate ExecutionTime}" Grid.Row="1"/>
+                                        <Label Text="{xct:Translate ExecutionTime}" Grid.Row="1"/>
                                         <Switch IsToggled="{Binding IsValveDurationShort}" Grid.Row="1" />
 
-                                        <Label Text="{local:Translate GasDirection}" Grid.Row="2"/>
+                                        <Label Text="{xct:Translate GasDirection}" Grid.Row="2"/>
                                         <Switch IsToggled="{Binding IsValveDirectionInput}" Grid.Row="2"/>
                                     </Grid>
                                 </StackLayout>
@@ -179,11 +179,11 @@
                                    IsEnabled="{Binding Sensor.TaskManager.IsFree}"
                                    IsVisible="{Binding IsLevelSurvey}">
                                 <StackLayout >
-                                    <Label Text="{local:Translate LevelSensor}" Style="{StaticResource SectionLabel2}"/>
+                                    <Label Text="{xct:Translate LevelSensor}" Style="{StaticResource SectionLabel2}"/>
                                     <Grid Padding="4,10,4,10" RowSpacing="20">
-                                        <Label Text="{local:Translate MaximumDepth}" Grid.Row="0"/>
+                                        <Label Text="{xct:Translate MaximumDepth}" Grid.Row="0"/>
                                         <Switch IsToggled="{Binding IsPiezoDepthMax}" Grid.Row="0"/>
-                                        <Label Text="{local:Translate AdditionalGain}" Grid.Row="1"/>
+                                        <Label Text="{xct:Translate AdditionalGain}" Grid.Row="1"/>
                                         <Switch IsToggled="{Binding IsPiezoAdditionalGain}" Grid.Row="1"/>
                                     </Grid>
                                 </StackLayout>
@@ -193,12 +193,12 @@
                                    IsEnabled="{Binding Sensor.TaskManager.IsFree}"
                                    IsVisible="{Binding IsLevelSurvey}">
                                 <StackLayout >
-                                    <Label Text="{local:Translate SoundSpeed}" Style="{StaticResource SectionLabel2}"/>
+                                    <Label Text="{xct:Translate SoundSpeed}" Style="{StaticResource SectionLabel2}"/>
                                     <Grid RowSpacing="0" Padding="4" >
-                                        <RadioButton Content="{local:Translate Meaning}" 
+                                        <RadioButton Content="{xct:Translate Meaning}" 
                                              IsChecked="{Binding IsSoundSpeedCustom}"
                                          Grid.Row="0" Grid.Column="0"/>
-                                        <RadioButton Content="{local:Translate Table}" 
+                                        <RadioButton Content="{xct:Translate Table}" 
                                              IsChecked="{Binding IsSoundSpeedTable}"
                                              Grid.Row="0" Grid.Column="1"/>
 
@@ -234,15 +234,15 @@
                                    FlexLayout.Grow="1"  FlexLayout.Basis="280"
                                    IsEnabled="{Binding Sensor.TaskManager.IsFree}">
                                 <StackLayout>
-                                    <Label Text="{local:Translate Additionally}" Style="{StaticResource SectionLabel2}"/>
+                                    <Label Text="{xct:Translate Additionally}" Style="{StaticResource SectionLabel2}"/>
                                     <Label Padding="4">
                                         <Label.FormattedText>
                                             <FormattedString >
-                                                <Span Text="{local:Translate DeviceTime}"  />
+                                                <Span Text="{xct:Translate DeviceTime}"  />
                                                 <Span Text=":"/>
                                                 <Span Text="{Binding Timestamp}"/>
                                                 <Span Text="&#10;"/>
-                                                <Span Text="{local:Translate NotificationTime}" FontSize="Micro"/>
+                                                <Span Text="{xct:Translate NotificationTime}" FontSize="Micro"/>
                                             </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
@@ -256,7 +256,7 @@
 
             <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}" />
 
-            <Button Text="{local:Translate Startup}" IsVisible="{Binding IsPortrait}"
+            <Button Text="{xct:Translate Startup}" IsVisible="{Binding IsPortrait}"
                     HorizontalOptions="FillAndExpand"
                     BackgroundColor="{StaticResource colorPrimaryLight}" 
                     Command="{Binding CmdStart}"

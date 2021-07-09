@@ -40,6 +40,11 @@ namespace SiamCross.Models
         public static readonly KeyKeyCollection<string> Instance = new KeyKeyCollection<string>();
         static DeviceIndex()
         {
+            Init();
+        }
+        public static void Init()
+        {
+            Instance.Clear();
             Instance.Add(0x1101, $"{Resource.Levelmeter} {Resource.Manual} v.01");
             Instance.Add(0x1201, $"{Resource.Levelmeter} {Resource.Automatic} v.01");
             Instance.Add(0x1301, $"{Resource.Dynamograph} {Resource.Overhead} v.01");
