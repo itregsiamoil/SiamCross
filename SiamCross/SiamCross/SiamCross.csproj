@@ -63,6 +63,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
     <Compile Update="Views\MenuItems\Handbook\EditFieldPage.xaml.cs">
       <DependentUpon>EditFieldPage.xaml</DependentUpon>
     </Compile>
@@ -92,11 +97,6 @@
     </Compile>
     <Compile Update="Views\SensorDetailsPage.xaml.cs">
       <DependentUpon>SensorDetailsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Resource.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
     <Compile Update="Views\MenuItems\Handbook\DirectoryPage.xaml.cs">
       <DependentUpon>DirectoryPage.xaml</DependentUpon>
