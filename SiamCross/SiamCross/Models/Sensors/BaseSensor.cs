@@ -337,15 +337,7 @@ namespace SiamCross.Models.Sensors
 
 
         public string Name => ScannedDeviceInfo.Title;
-        public string Type
-        {
-            get
-            {
-                if (DeviceIndex.Instance.TryGetName(ScannedDeviceInfo.Device.Kind, out string str))
-                    return str;
-                return string.Empty;
-            }
-        }
+        public string Type => DeviceIndex.GetName(ScannedDeviceInfo.Device.Kind);
         public string Number => Model.Device.Number.ToString();
         public string Label => Model.Device.Name;
 

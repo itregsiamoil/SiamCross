@@ -55,7 +55,7 @@
                         <Frame Style="{StaticResource GroupingFrameStyle2}"
                                IsEnabled="{Binding Sensor.TaskManager.IsFree}">
                             <StackLayout>
-                                <Label Text="{xct:Translate Survey1}" Style="{StaticResource SectionLabel2}" />
+                                <Label Text="{xct:Translate Surveys}" Style="{StaticResource SectionLabel2}" />
                                 <StackLayout Padding="4">
                                     <Label >
                                         <Label.FormattedText>

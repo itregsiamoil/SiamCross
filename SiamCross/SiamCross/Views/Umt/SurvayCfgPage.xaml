@@ -21,7 +21,7 @@
                         <FormattedString>
                             <Span Text="{Binding Sensor.Name}"/>
                             <Span Text="&#x2190;"/>
-                            <Span Text="{xct:Translate Survey1}"/>
+                            <Span Text="{xct:Translate Surveys}"/>
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>

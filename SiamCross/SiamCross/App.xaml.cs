@@ -1,5 +1,6 @@
 ﻿using SiamCross.AppObjects;
 using SiamCross.Services;
+using SiamCross.ViewModels;
 using SiamCross.Views;
 using SiamCross.Views.MenuItems;
 using System.Collections.Generic;
@@ -63,10 +64,17 @@ namespace SiamCross
             MainInit();
         }
 
-        private void Current_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private async void Current_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             Resource.Culture = LocalizationResourceManager.Current.CurrentCulture;
-            Models.DeviceIndex.Init();
+            if (null != RootPage && null != RootPage.Flyout)
+                RootPage.Flyout.BindingContext = new MenuPageViewModel();
+            if (null != NavigationPage)
+            {
+                //await PageNavigator.Init();
+                await SensorService.Instance.InitinalizeAsync();
+                await NavigationPage.PopToRootAsync();
+            }
         }
 
         protected override void OnStart()

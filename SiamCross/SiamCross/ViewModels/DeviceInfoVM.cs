@@ -21,15 +21,7 @@ namespace SiamCross.ViewModels
             base.Unsubscribe();
             _Model.PropertyChanged -= StorageModel_PropertyChanged;
         }
-        public string Kind
-        {
-            get
-            {
-                if (DeviceIndex.Instance.TryGetName(_Model.Kind, out string name))
-                    return name;
-                return string.Empty;
-            }
-        }
+        public string Kind => DeviceIndex.GetName(_Model.Kind);
         public uint Number => _Model.Number;
         public string Name => _Model.Name;
         public string Protocol

@@ -7,8 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.CommunityToolkit.ObjectModel;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 
@@ -17,8 +17,16 @@ namespace SiamCross.ViewModels
     [Preserve(AllMembers = true)]
     public class MenuPageItem
     {
-        public string Title { get; set; }
-        public ICommand Command { get; set; }
+        public delegate string FnGetTitle();
+        public FnGetTitle GetTitle;
+
+        public MenuPageItem(FnGetTitle fn, ICommand cmd)
+        {
+            GetTitle = fn;
+            Command = cmd;
+        }
+        public string Title => GetTitle();
+        public ICommand Command { get; }
     }
 
     public class MenuPageViewModel
@@ -30,14 +38,14 @@ namespace SiamCross.ViewModels
 
         public List<MenuPageItem> MenuItems { get; private set; }
 
-        public ICommand GoControlPanel { get; set; }
-        public ICommand GoSearchPanel { get; set; }
-        public ICommand GoMeasuringPanel { get; set; }
-        public ICommand GoMailSettings { get; set; }
-        public ICommand GoFieldDir { get; set; }
+        public ICommand GoControlPanel { get; }
+        public ICommand GoSearchPanel { get; }
+        public ICommand GoMeasuringPanel { get; }
+        public ICommand GoMailSettings { get; }
+        public ICommand GoFieldDir { get; }
         public ICommand GoSoundSpeedDir { get; }
-        public ICommand GoAboutPanel { get; set; }
-        public ICommand GoLanguagePanel { get; set; }
+        public ICommand GoAboutPanel { get; }
+        public ICommand GoLanguagePanel { get; }
 
         public MenuPageItem SelectedItem
         {
@@ -55,49 +63,20 @@ namespace SiamCross.ViewModels
             GoAboutPanel = CreateAsyncCommand(GoAbout);
             GoLanguagePanel = CreateAsyncCommand(GoLanguage);
 
-            MenuItems = new List<MenuPageItem>
-            {
-                new MenuPageItem()
-                {
-                    Title = Resource.ControlPanelTitle,
-                    Command = GoControlPanel
-                },
-                new MenuPageItem()
-                {
-                    Title = Resource.SearchTitle,
-                    Command = GoSearchPanel
-                },
-                new MenuPageItem()
-                {
-                    Title = Resource.Surveys,
-                    Command = GoMeasuringPanel
-                },
-                new MenuPageItem()
-                {
-                    Title = Resource.EmailSettings,
-                    Command = GoMailSettings
-                },
-                new MenuPageItem()
-                {
-                    Title = Resource.Fields,
-                    Command = GoFieldDir
-                },
-                new MenuPageItem()
-                {
-                    Title = Resource.SoundSpeed,
-                    Command = GoSoundSpeedDir
-                },
-                new MenuPageItem()
-                {
-                    Title = Resource.AboutTitle,
-                    Command = GoAboutPanel
-                },
-                new MenuPageItem()
-                {
-                    Title = "\u2691 "+Resource.Language,
-                    Command = GoLanguagePanel
-                }
-            };
+            MenuItems = new List<MenuPageItem>();
+
+            MenuItems.Add(new MenuPageItem(() => Resource.ControlPanelTitle, GoControlPanel));
+            MenuItems.Add(new MenuPageItem(() => Resource.SearchTitle, GoSearchPanel));
+            MenuItems.Add(new MenuPageItem(() => Resource.Surveys, GoMeasuringPanel));
+            MenuItems.Add(new MenuPageItem(() => Resource.EmailSettings, GoMailSettings));
+            MenuItems.Add(new MenuPageItem(() => Resource.Fields, GoFieldDir));
+            MenuItems.Add(new MenuPageItem(() => Resource.SoundSpeed, GoSoundSpeedDir));
+            MenuItems.Add(new MenuPageItem(() => Resource.AboutTitle, GoAboutPanel));
+
+            MenuItems.Add(new MenuPageItem(
+                () => $"\u2691 {Resource.Language}({Preferences.Get("LanguageKey", Resource.System)})"
+                , GoLanguagePanel));
+
         }
         AsyncCommand CreateAsyncCommand(Func<Task> t)
         {
@@ -155,7 +134,7 @@ namespace SiamCross.ViewModels
             else if (TranslateCfg.SupportedLanguages[2] == action)
                 lang = "en";
             TranslateCfg.SetCulture(lang);
-            await App.NavigationPage.DisplayToastAsync(Resource.ChangingLanguage, 5000);
+            //await App.NavigationPage.DisplayToastAsync(Resource.ChangingLanguage, 5000);
         }
 
         public string Version => DependencyService.Get<IAppVersionAndBuild>().GetVersionNumber();

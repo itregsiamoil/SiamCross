@@ -160,7 +160,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Getting one or more survay from the device&apos;s memory.
+        ///   Ищет локализованную строку, похожую на Download one or more survay from the device&apos;s memory.
         /// </summary>
         public static string AboutStorage {
             get {
@@ -1430,7 +1430,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Location information.
+        ///   Ищет локализованную строку, похожую на Location.
         /// </summary>
         public static string LocationInfo {
             get {
@@ -1754,7 +1754,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Period in seconds.
+        ///   Ищет локализованную строку, похожую на Period (seconds).
         /// </summary>
         public static string Period_s {
             get {
@@ -2618,7 +2618,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Survey of measurement parameters.
+        ///   Ищет локализованную строку, похожую на Getting survey parameters.
         /// </summary>
         public static string Survey_parameters {
             get {
@@ -2627,16 +2627,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Survey.
-        /// </summary>
-        public static string Survey1 {
-            get {
-                return ResourceManager.GetString("Survey1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Data.
+        ///   Ищет локализованную строку, похожую на Survey data.
         /// </summary>
         public static string SurveyData {
             get {
@@ -2749,6 +2740,15 @@ namespace SiamCross {
         public static string TemperatureSensors {
             get {
                 return ResourceManager.GetString("TemperatureSensors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Testing version.
+        /// </summary>
+        public static string TestingVersion {
+            get {
+                return ResourceManager.GetString("TestingVersion", resourceCulture);
             }
         }
         

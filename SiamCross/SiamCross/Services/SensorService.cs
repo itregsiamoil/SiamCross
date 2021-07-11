@@ -36,13 +36,22 @@ namespace SiamCross.Services
         public event Action<ISensor> SensorAdded;
         public event Action<ISensor> SensorDeleting;
 
+        private void Clear()
+        {
+            foreach (var s in _sensors)
+            {
+                SensorDeleting(s);
+                s?.Dispose();
+            }
+            _sensors.Clear();
+        }
         public async Task InitinalizeAsync()
         {
             using (await _lockAsync.UseWaitAsync())
             {
-                IEnumerable<ScannedDeviceInfo> savedSensors = await SensorsSaverService.Instance.ReadSavedSensorsAsync();
+                Clear();
 
-                _sensors.Clear();
+                IEnumerable<ScannedDeviceInfo> savedSensors = await SensorsSaverService.Instance.ReadSavedSensorsAsync();
 
                 if (savedSensors == null) return;
 

@@ -27,6 +27,8 @@ namespace SiamCross.Services
         }
         public static Task Init()
         {
+            _Views.Clear();
+
             Register(typeof(MailSettingsVM), () => new MailSettingsPage());
             Register(typeof(FieldsDirVM), () => new DirectoryPage(() => null));
             Register(typeof(SoundSpeedListVM), () => new DirectoryPage(() => null));

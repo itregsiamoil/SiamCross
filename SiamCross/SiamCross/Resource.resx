@@ -188,7 +188,6 @@
   </data>
   <data name="DynamographSensorType" xml:space="preserve">
     <value>Dynamograph</value>
-    
   </data>
   <data name="DynPeriod" xml:space="preserve">
     <value>Swing period, sec</value>
@@ -229,7 +228,6 @@ Pump rate is 60sec/300sec=0.2swg to 60sec/4sec=15swg!</value>
   </data>
   <data name="FoundDevices" xml:space="preserve">
     <value>Discovered devices:</value>
-    
   </data>
   <data name="Stat_Free" xml:space="preserve">
     <value>free</value>
@@ -268,7 +266,7 @@ Pump rate is 60sec/300sec=0.2swg to 60sec/4sec=15swg!</value>
     <value>Load max., t</value>
   </data>
   <data name="SurveyData" xml:space="preserve">
-    <value>Data</value>
+    <value>Survey data</value>
   </data>
   <data name="MeasurementsSavedSuccesfully" xml:space="preserve">
     <value>measurements were successfully saved</value>
@@ -278,9 +276,6 @@ Pump rate is 60sec/300sec=0.2swg to 60sec/4sec=15swg!</value>
   </data>
   <data name="Stat_Meas" xml:space="preserve">
     <value>measuring</value>
-  </data>
-  <data name="Surveys" xml:space="preserve">
-    <value>Surveys</value>
   </data>
   <data name="SurveyType" xml:space="preserve">
     <value>Survey type</value>
@@ -392,7 +387,7 @@ Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» 
     <value>V</value>
   </data>
   <data name="LocationInfo" xml:space="preserve">
-    <value>Location information</value>
+    <value>Location</value>
   </data>
   <data name="Well" xml:space="preserve">
     <value>Well</value>
@@ -441,27 +436,21 @@ Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» 
   </data>
   <data name="AdditionalAmp" xml:space="preserve">
     <value>Additional amplification</value>
-    
   </data>
   <data name="Chdav" xml:space="preserve">
     <value>Pressure sensor sensitivity</value>
-    
   </data>
   <data name="Chpiezo" xml:space="preserve">
     <value>Piezoelectric sensor sensitivity in arbitrary units from 0 to 255</value>
-    
   </data>
   <data name="GasFromWell" xml:space="preserve">
     <value>Gas discharge / inlet from a well</value>
-    
   </data>
   <data name="MaxLevelAt341" xml:space="preserve">
     <value>Maximum level at a speed of sound 341m / s</value>
-    
   </data>
   <data name="Noldav" xml:space="preserve">
     <value>Pressure sensor zero offset, 0.1 atm</value>
-    
   </data>
   <data name="Amplification" xml:space="preserve">
     <value>Amplification</value>
@@ -474,11 +463,9 @@ Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» 
   </data>
   <data name="SoundSpeed" xml:space="preserve">
     <value>Sound speed</value>
-    
   </data>
   <data name="SoundSpeedCorrection" xml:space="preserve">
     <value>Sound speed correction</value>
-    
   </data>
   <data name="StaticLevel" xml:space="preserve">
     <value>Static level</value>
@@ -749,7 +736,7 @@ DB Siam can't import the files with the same identifiers.</value>
     <value>periodic measurement</value>
   </data>
   <data name="AboutStorage" xml:space="preserve">
-    <value>Getting one or more survay from the device's memory</value>
+    <value>Download one or more survay from the device's memory</value>
   </data>
   <data name="AdditionalGain" xml:space="preserve">
     <value>Additional gain</value>
@@ -818,13 +805,10 @@ DB Siam can't import the files with the same identifiers.</value>
     <value>Period in minunes</value>
   </data>
   <data name="Period_s" xml:space="preserve">
-    <value>Period in seconds</value>
+    <value>Period (seconds)</value>
   </data>
   <data name="Quantity" xml:space="preserve">
     <value>Quantity</value>
-  </data>
-  <data name="Survey1" xml:space="preserve">
-    <value>Survey</value>
   </data>
   <data name="Static" xml:space="preserve">
     <value>Static</value>
@@ -833,7 +817,7 @@ DB Siam can't import the files with the same identifiers.</value>
     <value>Static(period)</value>
   </data>
   <data name="Survey_parameters" xml:space="preserve">
-    <value>Survey of measurement parameters</value>
+    <value>Getting survey parameters</value>
   </data>
   <data name="TemperatureSensors" xml:space="preserve">
     <value>Temperature sensors</value>
@@ -945,7 +929,6 @@ DB Siam can't import the files with the same identifiers.</value>
   </data>
   <data name="ProbeTemperature" xml:space="preserve">
     <value>Probe temp.</value>
-    
   </data>
   <data name="ReadAll" xml:space="preserve">
     <value>Read all</value>
@@ -1099,7 +1082,7 @@ DB Siam can't import the files with the same identifiers.</value>
   </data>
   <data name="CloseApp" xml:space="preserve">
     <value>Close app?</value>
-   </data>
+  </data>
   <data name="RodWeight" xml:space="preserve">
     <value>Rods weight</value>
   </data>
@@ -1111,5 +1094,11 @@ DB Siam can't import the files with the same identifiers.</value>
   </data>
   <data name="SelectLanguage" xml:space="preserve">
     <value>Select language</value>
+  </data>
+  <data name="TestingVersion" xml:space="preserve">
+    <value>Testing version</value>
+  </data>
+  <data name="Surveys" xml:space="preserve">
+    <value>Surveys</value>
   </data>
 </root>

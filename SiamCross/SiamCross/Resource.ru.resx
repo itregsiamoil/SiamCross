@@ -319,16 +319,13 @@
     <value>Максимальная нагрузка, т</value>
   </data>
   <data name="SurveyData" xml:space="preserve">
-    <value>Данные измерения</value>
+    <value>Данные исследования</value>
   </data>
   <data name="MeasurementsSavedSuccesfully" xml:space="preserve">
     <value>измерений успешно сохранены в</value>
   </data>
   <data name="MeasurementsSentSuccesfully" xml:space="preserve">
     <value>измерений успешно отправлено на почту</value>
-  </data>
-  <data name="Surveys" xml:space="preserve">
-    <value>Исследования</value>
   </data>
   <data name="SurveyType" xml:space="preserve">
     <value>Тип исследования</value>
@@ -603,9 +600,6 @@
   <data name="USBState" xml:space="preserve">
     <value>Статус USB:</value>
   </data>
-  <data name="Attached" xml:space="preserve">
-    <value>Соединено</value>
-  </data>
   <data name="Detached" xml:space="preserve">
     <value>Отсоединено</value>
   </data>
@@ -758,7 +752,7 @@
     <value>периодическое измерение</value>
   </data>
   <data name="AboutStorage" xml:space="preserve">
-    <value>Получение из памяти прибора одного или нескольких измерений</value>
+    <value>Загрузка одного или нескольких исследований из памяти прибора</value>
   </data>
   <data name="AdditionalGain" xml:space="preserve">
     <value>Дополнительное усиление</value>
@@ -827,13 +821,10 @@
     <value>Период мин</value>
   </data>
   <data name="Period_s" xml:space="preserve">
-    <value>Период сек.</value>
+    <value>Период (секунды)</value>
   </data>
   <data name="Quantity" xml:space="preserve">
     <value>Количество</value>
-  </data>
-  <data name="Survey1" xml:space="preserve">
-    <value>Исследования</value>
   </data>
   <data name="Static" xml:space="preserve">
     <value>Статика</value>
@@ -842,7 +833,7 @@
     <value>Статика(период)</value>
   </data>
   <data name="Survey_parameters" xml:space="preserve">
-    <value>Опрос параметров измерения</value>
+    <value>Получение параметров исследования</value>
   </data>
   <data name="TemperatureSensors" xml:space="preserve">
     <value>Датчики температуры</value>
@@ -929,10 +920,10 @@
     <value>запись нагрузки и перемещения</value>
   </data>
   <data name="SurveyWithoutEchograms" xml:space="preserve">
-    <value>Измерения без эхограмм</value>
+    <value>Исследования без эхограмм</value>
   </data>
   <data name="SurveyWithEchograms" xml:space="preserve">
-    <value>Измерения с эхограммами</value>
+    <value>Исследования с эхограммами</value>
   </data>
   <data name="Measurements" xml:space="preserve">
     <value>измерение</value>
@@ -1119,5 +1110,11 @@
   </data>
   <data name="SelectLanguage" xml:space="preserve">
     <value>Выберите язык</value>
+  </data>
+  <data name="TestingVersion" xml:space="preserve">
+    <value>Тестовая версия</value>
+  </data>
+  <data name="Surveys" xml:space="preserve">
+    <value>Исследования</value>
   </data>
 </root>

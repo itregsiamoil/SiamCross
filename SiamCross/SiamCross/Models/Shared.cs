@@ -37,23 +37,22 @@ namespace SiamCross.Models
     }
     public static class DeviceIndex
     {
-        public static readonly KeyKeyCollection<string> Instance = new KeyKeyCollection<string>();
-        static DeviceIndex()
+        public static string GetName(uint key)
         {
-            Init();
-        }
-        public static void Init()
-        {
-            Instance.Clear();
-            Instance.Add(0x1101, $"{Resource.Levelmeter} {Resource.Manual} v.01");
-            Instance.Add(0x1201, $"{Resource.Levelmeter} {Resource.Automatic} v.01");
-            Instance.Add(0x1301, $"{Resource.Dynamograph} {Resource.Overhead} v.01");
-            Instance.Add(0x1302, $"{Resource.Dynamograph} {Resource.Overhead} v.02");
-            Instance.Add(0x1303, $"{Resource.Dynamograph} {Resource.Overhead} v.03");
-            Instance.Add(0x1401, $"{Resource.Dynamograph} {Resource.Intertraversal} v.01");
-            Instance.Add(0x1402, $"{Resource.Dynamograph} {Resource.Intertraversal} v.02");
-            Instance.Add(0x1403, $"{Resource.Dynamograph} {Resource.Intertraversal} v.03");
-            Instance.Add(0x1700, $"{Resource.Manometr}+{Resource.Thermometer} v.00");
+            switch (key)
+            {
+                case 0x1101: return $"{Resource.Levelmeter} {Resource.Manual} v.01";
+                case 0x1201: return $"{Resource.Levelmeter} {Resource.Automatic} v.01";
+                case 0x1301: return $"{Resource.Dynamograph} {Resource.Overhead} v.01";
+                case 0x1302: return $"{Resource.Dynamograph} {Resource.Overhead} v.02";
+                case 0x1303: return $"{Resource.Dynamograph} {Resource.Overhead} v.03";
+                case 0x1401: return $"{Resource.Dynamograph} {Resource.Intertraversal} v.01";
+                case 0x1402: return $"{Resource.Dynamograph} {Resource.Intertraversal} v.02";
+                case 0x1403: return $"{Resource.Dynamograph} {Resource.Intertraversal} v.03";
+                case 0x1700: return $"{Resource.Manometr}+{Resource.Thermometer} v.00";
+                default: break;
+            }
+            return string.Empty;
         }
     }
 

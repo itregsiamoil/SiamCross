@@ -144,7 +144,7 @@
                                 <Label.FormattedText Margin="0">
                                     <FormattedString >
                                         <Span Text="&#x1F4C8; " />
-                                        <Span Text="{xct:Translate Survey1}" />
+                                        <Span Text="{xct:Translate Surveys}" />
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>

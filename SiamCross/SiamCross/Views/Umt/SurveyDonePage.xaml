@@ -19,7 +19,7 @@
         <StackLayout Orientation="Horizontal" >
             <StackLayout HorizontalOptions="StartAndExpand" >
                 <Label Text="{Binding DeviceInfo.Name}" TextColor="{StaticResource colorTextPale}" />
-                <Label Text="{xct:Translate Survey1}"
+                <Label Text="{xct:Translate Survey}"
                    FontSize="Medium" FontAttributes="Bold" 
                    LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
             </StackLayout>
