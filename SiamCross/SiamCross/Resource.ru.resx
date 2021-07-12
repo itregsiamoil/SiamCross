@@ -310,7 +310,7 @@
     <value>Справочник</value>
   </data>
   <data name="Imtravel" xml:space="preserve">
-    <value>Длина хода, м</value>
+    <value>Длина хода, мм</value>
   </data>
   <data name="LowerRodWeight" xml:space="preserve">
     <value>Вес штанг в нижнем положении, т</value>
@@ -1116,5 +1116,11 @@
   </data>
   <data name="Surveys" xml:space="preserve">
     <value>Исследования</value>
+  </data>
+  <data name="Attached" xml:space="preserve">
+    <value>Соединено</value>
+  </data>
+  <data name="CheckValueWarning" xml:space="preserve">
+    <value>Значение должно быть в диапазоне</value>
   </data>
 </root>

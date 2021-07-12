@@ -79,7 +79,8 @@ namespace SiamCross.ViewModels.MeasurementViewModels
             try
             {
                 await PageNavigator.ShowPageAsync(this);
-                CmdLoadParam?.Execute(this);
+                if (!Config.IsSync())
+                    CmdLoadParam?.Execute(this);
             }
             catch (Exception ex)
             {

@@ -242,7 +242,7 @@ Pump rate is 60sec/300sec=0.2swg to 60sec/4sec=15swg!</value>
     <value>Hydraulic</value>
   </data>
   <data name="Imtravel" xml:space="preserve">
-    <value>Stroke length, m</value>
+    <value>Stroke length, mm</value>
   </data>
   <data name="ImtravelChoiceText" xml:space="preserve">
     <value>Enter the stroke length!</value>
@@ -1100,5 +1100,8 @@ DB Siam can't import the files with the same identifiers.</value>
   </data>
   <data name="Surveys" xml:space="preserve">
     <value>Surveys</value>
+  </data>
+  <data name="CheckValueWarning" xml:space="preserve">
+    <value>The value must be in the range</value>
   </data>
 </root>

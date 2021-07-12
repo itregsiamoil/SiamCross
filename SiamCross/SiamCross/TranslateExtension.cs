@@ -53,17 +53,11 @@ namespace SiamCross
                 LocalizationResourceManager.Current.CurrentCulture = CultureInfo.GetCultureInfo(lang);
             }
         }
-        public static string[] SupportedLanguages
-        {
-            get
-            {
-                return new string[]
+        public static string[] SupportedLanguages => new string[]
                 {
                     Resource.System,
                     "Русский",
                     "English"
                 };
-            }
-        }
     }
 }

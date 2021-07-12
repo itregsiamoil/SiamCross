@@ -7,6 +7,7 @@ namespace SiamCross.Models.Sensors.Dua
         private readonly SensorModel _Sensor;
 
         public bool Synched = false;
+        public override bool IsSync() { return Synched; }
 
         public bool IsAutoswitchToAPR;
         public bool IsValveAutomaticEnabled;

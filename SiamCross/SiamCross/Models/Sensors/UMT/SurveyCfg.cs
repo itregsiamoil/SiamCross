@@ -27,7 +27,7 @@ namespace SiamCross.Models.Sensors.Umt
                 Saved = new Data();
             Saved = Current;
         }
-
+        public override bool IsSync() { return Saved.HasValue; }
 
         public UInt32 Period
         {

@@ -502,6 +502,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на The value must be in the range.
+        /// </summary>
+        public static string CheckValueWarning {
+            get {
+                return ResourceManager.GetString("CheckValueWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Select the table for adjusting the speed of sound or enter the speed of sound manually!.
         /// </summary>
         public static string ChoiceSpeedCorrectionTableOrInpunSpeed {
@@ -1214,7 +1223,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Stroke length, m.
+        ///   Ищет локализованную строку, похожую на Stroke length, mm.
         /// </summary>
         public static string Imtravel {
             get {
