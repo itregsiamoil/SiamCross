@@ -507,12 +507,6 @@
   <data name="Fields" xml:space="preserve">
     <value>Месторождения</value>
   </data>
-  <data name="Langepas" xml:space="preserve">
-    <value>Лангепас</value>
-  </data>
-  <data name="Tataria" xml:space="preserve">
-    <value>Татария</value>
-  </data>
   <data name="Editing" xml:space="preserve">
     <value>Редактирование</value>
   </data>

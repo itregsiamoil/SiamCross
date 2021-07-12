@@ -28,7 +28,7 @@ namespace SiamCross.Models.Sensors.Dmg
         }
 
         public TaskUpdateConfig(SensorModel sensor)
-            : base(sensor, "Чтение состояния")
+            : base(sensor, Resource.ReadingState)
         {
             _NonvolatileParam = new MemStruct(0x8100);
             Nkp = _NonvolatileParam.Add(new MemVarFloat(nameof(Nkp)));

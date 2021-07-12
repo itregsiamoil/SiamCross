@@ -14,7 +14,7 @@
         <Style TargetType="{x:Type StackLayout}">
             <Setter Property="Spacing" Value="0" />
         </Style>
-    </ContentPage.Resources >
+    </ContentPage.Resources>
 
     <NavigationPage.TitleView >
         <StackLayout Orientation="Horizontal">
