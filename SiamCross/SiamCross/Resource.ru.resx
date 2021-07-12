@@ -489,9 +489,6 @@
   <data name="LevelGaugeSensorType" xml:space="preserve">
     <value>Уровнемер</value>
   </data>
-  <data name="SelectedReasearchTypeChoice" xml:space="preserve">
-    <value>Выберите тип исследования!</value>
-  </data>
   <data name="SelectedSoundSpeedCorrectionChoice" xml:space="preserve">
     <value>Выберите поправку скорости звука!</value>
   </data>
@@ -709,9 +706,6 @@
   <data name="DoSave" xml:space="preserve">
     <value>Сохранить</value>
   </data>
-  <data name="DoDelete" xml:space="preserve">
-    <value>Удалить</value>
-  </data>
   <data name="DoExport" xml:space="preserve">
     <value>Экспортировать</value>
   </data>
@@ -723,12 +717,6 @@
   </data>
   <data name="AboutDynamicLevel" xml:space="preserve">
     <value>уровень жидкости, наблюдаемый при откачке</value>
-  </data>
-  <data name="AboutDynamics" xml:space="preserve">
-    <value>единичное измерение</value>
-  </data>
-  <data name="AboutDynamics_period" xml:space="preserve">
-    <value>периодическое измерение</value>
   </data>
   <data name="AboutLDC" xml:space="preserve">
     <value>кривая падения уровня</value>
@@ -742,20 +730,17 @@
   <data name="AboutResearches" xml:space="preserve">
     <value>Установка праметров, запуск и остановка исследования</value>
   </data>
-  <data name="AboutStatic" xml:space="preserve">
+  <data name="AboutStaticAndDynamics" xml:space="preserve">
     <value>единичное измерение</value>
   </data>
   <data name="AboutStaticLevel" xml:space="preserve">
     <value>уровень жидкости в спокойном состоянии</value>
   </data>
-  <data name="AboutStatic_period" xml:space="preserve">
+  <data name="AboutStatic_period_Dynamics_period" xml:space="preserve">
     <value>периодическое измерение</value>
   </data>
   <data name="AboutStorage" xml:space="preserve">
     <value>Загрузка одного или нескольких исследований из памяти прибора</value>
-  </data>
-  <data name="AdditionalGain" xml:space="preserve">
-    <value>Дополнительное усиление</value>
   </data>
   <data name="Additionally" xml:space="preserve">
     <value>Дополнительно</value>
@@ -881,7 +866,7 @@
     <value>измерения</value>
   </data>
   <data name="DopSurvey" xml:space="preserve">
-    <value>иследования</value>
+    <value>исследования</value>
   </data>
   <data name="Download" xml:space="preserve">
     <value>Считать</value>
@@ -947,7 +932,7 @@
     <value>коэффициенты тепловой компенсации давления</value>
   </data>
   <data name="ProbeTemperature" xml:space="preserve">
-    <value>Темп. зонда</value>
+    <value>Температура зонда</value>
   </data>
   <data name="ReadAll" xml:space="preserve">
     <value>Считать все</value>

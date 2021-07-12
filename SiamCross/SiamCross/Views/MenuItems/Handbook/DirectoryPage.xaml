@@ -24,7 +24,7 @@
                        LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal" VerticalOptions="Fill" IsVisible="{Binding IsLandscape}">
-                <Button Text="{xct:Translate DoDelete}" 
+                <Button Text="{xct:Translate Delete}" 
                         HorizontalOptions="FillAndExpand"
                         IsVisible="{Binding IsMultiselectMode}"
                         BackgroundColor="{StaticResource colorAccentLight}"
@@ -116,7 +116,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Button Text="{xct:Translate DoDelete}" HorizontalOptions="FillAndExpand" 
+                <Button Text="{xct:Translate Delete}" HorizontalOptions="FillAndExpand" 
                         IsVisible="{Binding IsMultiselectMode}" 
                         BackgroundColor="{StaticResource colorAccentLight}"
                         Command="{Binding CmdDel}" 

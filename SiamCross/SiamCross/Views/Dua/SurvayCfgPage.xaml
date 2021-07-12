@@ -183,7 +183,7 @@
                                     <Grid Padding="4,10,4,10" RowSpacing="20">
                                         <Label Text="{xct:Translate MaximumDepth}" Grid.Row="0"/>
                                         <Switch IsToggled="{Binding IsPiezoDepthMax}" Grid.Row="0"/>
-                                        <Label Text="{xct:Translate AdditionalGain}" Grid.Row="1"/>
+                                        <Label Text="{xct:Translate AdditionalAmp}" Grid.Row="1"/>
                                         <Switch IsToggled="{Binding IsPiezoAdditionalGain}" Grid.Row="1"/>
                                     </Grid>
                                 </StackLayout>
