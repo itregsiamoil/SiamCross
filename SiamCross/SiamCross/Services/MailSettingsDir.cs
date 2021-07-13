@@ -27,9 +27,9 @@ namespace SiamCross.Services
             var dataString = new Dictionary<AttributeItem, string>();
             using (var tr = BeginTransaction())
             {
-                dataInt = await DbService.Instance.DataInt.Load(tr, EntityKind.MailConfig);
-                dataFloat = await DbService.Instance.DataFloat.Load(tr, EntityKind.MailConfig);
-                dataString = await DbService.Instance.DataString.Load(tr, EntityKind.MailConfig);
+                dataInt = await DbService.Instance.DataInt.Load(tr, EntityKind.MailConfig, 0);
+                dataFloat = await DbService.Instance.DataFloat.Load(tr, EntityKind.MailConfig, 0);
+                dataString = await DbService.Instance.DataString.Load(tr, EntityKind.MailConfig, 0);
             }
             MailSettings ss = new MailSettings(_MailSettingsData);
             var propArray = ClassPropertiesConverter.GetProperties(ss);

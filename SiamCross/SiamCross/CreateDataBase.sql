@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS ValInt (
 	AttrId INTEGER NOT NULL,
 	
 	Value INTEGER DEFAULT NULL
-	, PRIMARY KEY(EntityId, AttrId, AttrTypeId )
+	, PRIMARY KEY(EntityId, EntityKindId, AttrId )
 	, FOREIGN KEY(AttrId,AttrTypeId) REFERENCES Attributes(Id,TypeId) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 	
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS ValFloat (
 	AttrId INTEGER NOT NULL,
 	
 	Value REAL DEFAULT NULL
-	, PRIMARY KEY(AttrId, AttrTypeId, EntityId )
+	, PRIMARY KEY(EntityId, EntityKindId, AttrId )
 	, FOREIGN KEY(AttrId,AttrTypeId) REFERENCES Attributes(Id,TypeId) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 	
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS ValString (
 	AttrTypeId INTEGER NOT NULL DEFAULT 2 CHECK (AttrTypeId = 2),
 	
 	Value TEXT DEFAULT NULL
-	, PRIMARY KEY(AttrId, AttrTypeId, EntityId )
+	, PRIMARY KEY(EntityId, EntityKindId, AttrId )
 	, FOREIGN KEY(AttrId,AttrTypeId) REFERENCES Attributes(Id,TypeId) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS ValBlob (
 	AttrTypeId INTEGER NOT NULL DEFAULT 3 CHECK (AttrTypeId = 3),
 	
 	Value TEXT DEFAULT NULL
-	, PRIMARY KEY(AttrId, AttrTypeId, EntityId )
+	, PRIMARY KEY(EntityId, EntityKindId, AttrId )
 	, FOREIGN KEY(AttrId,AttrTypeId) REFERENCES Attributes(Id,TypeId) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 

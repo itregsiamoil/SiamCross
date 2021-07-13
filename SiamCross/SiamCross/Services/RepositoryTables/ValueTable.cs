@@ -12,8 +12,10 @@ namespace SiamCross.Services.RepositoryTables
     {
         Survey = 0,
         SurveyAdditional = 1,
-        DeviceProtocol = 10,
-        DeviceConnection = 11,
+        Device = 10,
+        DevicePhy = 11,
+        DeviceProtocol = 12,
+        DeviceLocationInfo = 13,
         MailConfig = 20
     };
 
@@ -25,13 +27,19 @@ namespace SiamCross.Services.RepositoryTables
         public int EntityKindId { get; set; }
         public long EntityId { get; set; }
     }
+    internal class ResultItem<T>
+    {
+        public string Title { get; set; }
+        public T Value { get; set; }
+        public long EntityId { get; set; }
+    }
 
     public class ValueTable<T>
     {
         private readonly string insert_sql;
         private readonly string select_by_id_sql;
         private readonly string delete_by_entity;
-        private readonly string select_by_entity_id_sql;
+        private readonly string select_by_entityKind_sql;
         public ValueTable(AttributeType attrTypeId)
         {
             string table = string.Empty;
@@ -46,7 +54,9 @@ namespace SiamCross.Services.RepositoryTables
             select_by_id_sql = $"SELECT AttrId, Value FROM {table} WHERE EntityId=@EntityId AND EntityKindId=@EntityKindId";
             delete_by_entity = $"DELETE FROM {table} WHERE EntityId=@EntityId AND EntityKindId=@EntityKindId";
 
-            select_by_entity_id_sql = $"SELECT AttrId, Value FROM {table} WHERE EntityKindId=@EntityKindId";
+            select_by_entityKind_sql = $"SELECT Attributes.Title, EntityId , Value FROM {table} "
+                + " LEFT JOIN Attributes ON Attributes.Id = AttrId"
+                + " WHERE EntityKindId = @EntityKindId";
         }
 
         public virtual async Task Save(IDbTransaction tr, EntityKind entityKind, long entityId, Dictionary<AttributeItem, T> values)
@@ -80,18 +90,24 @@ namespace SiamCross.Services.RepositoryTables
             }
             return dict;
         }
-        public virtual async Task<Dictionary<AttributeItem, T>> Load(IDbTransaction tr, EntityKind entityKind)
+        public virtual async Task<Dictionary<long, Dictionary<string, T>>> Load(IDbTransaction tr, EntityKind entityKind)
         {
             var param = new DataItem<T>
             {
                 EntityKindId = (int)entityKind,
             };
-            var values = await tr.Connection.QueryAsync<DataItem<T>>(select_by_entity_id_sql, param, tr);
-            var dict = new Dictionary<AttributeItem, T>();
+            var values = await tr.Connection.QueryAsync<ResultItem<T>>(select_by_entityKind_sql, param, tr);
+
+            var dict = new Dictionary<long, Dictionary<string, T>>();
             foreach (var v in values)
             {
-                var attr = Repo.AttrDir.ById[v.AttrId];
-                dict.Add(attr, v.Value);
+                Dictionary<string, T> atts = null;
+                if (!dict.TryGetValue(v.EntityId, out atts))
+                {
+                    atts = new Dictionary<string, T>();
+                    dict.Add(v.EntityId, atts);
+                }
+                atts.Add(v.Title, v.Value);
             }
             return dict;
         }
