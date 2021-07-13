@@ -21,5 +21,12 @@ namespace SiamCross.Services.Toast
         {
             _object.ShortAlert(message);
         }
+        public static void Show(string message, bool shortDelay = false)
+        {
+            if (shortDelay)
+                Instance.LongAlert(message);
+            else
+                Instance.ShortAlert(message);
+        }
     }
 }

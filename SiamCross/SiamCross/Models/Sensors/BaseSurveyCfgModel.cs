@@ -8,5 +8,6 @@ namespace SiamCross.Models.Sensors
         public ITask TaskLoad { get; set; }
         public virtual void ResetSaved() { }
         public virtual void UpdateSaved() { }
+        public abstract bool IsSync();
     }
 }
