@@ -232,7 +232,7 @@ namespace SiamCross.ViewModels
             base.ValidateParameterForDouble(BufferPressure, Resource.BufferPressureChoiceText);
             base.ValidateParameterForDouble(_PumpDepth, Resource.BufferPressureChoiceText);
             base.ValidateParameterForEmtpiness(Comments, Resource.CommentsChoiceText);
-            base.ValidateParameterForEmtpiness(SelectedResearchType, Resource.SelectedReasearchTypeChoice);
+            base.ValidateParameterForEmtpiness(SelectedResearchType, Resource.SelectedMeasurementTypeChoiceText);
 
             if (string.IsNullOrEmpty(SoundSpeed) && string.IsNullOrEmpty(SelectedSoundSpeedCorrection))
             {

@@ -79,24 +79,6 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на single measurement.
-        /// </summary>
-        public static string AboutDynamics {
-            get {
-                return ResourceManager.GetString("AboutDynamics", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на periodic measurement.
-        /// </summary>
-        public static string AboutDynamics_period {
-            get {
-                return ResourceManager.GetString("AboutDynamics_period", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на level drop curve.
         /// </summary>
         public static string AboutLDC {
@@ -133,20 +115,20 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на single measurement.
+        ///   Ищет локализованную строку, похожую на periodic measurement.
         /// </summary>
-        public static string AboutStatic {
+        public static string AboutStatic_period_Dynamics_period {
             get {
-                return ResourceManager.GetString("AboutStatic", resourceCulture);
+                return ResourceManager.GetString("AboutStatic_period_Dynamics_period", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на periodic measurement.
+        ///   Ищет локализованную строку, похожую на single measurement.
         /// </summary>
-        public static string AboutStatic_period {
+        public static string AboutStaticAndDynamics {
             get {
-                return ResourceManager.GetString("AboutStatic_period", resourceCulture);
+                return ResourceManager.GetString("AboutStaticAndDynamics", resourceCulture);
             }
         }
         
@@ -201,15 +183,6 @@ namespace SiamCross {
         public static string AdditionalAmp {
             get {
                 return ResourceManager.GetString("AdditionalAmp", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Additional gain.
-        /// </summary>
-        public static string AdditionalGain {
-            get {
-                return ResourceManager.GetString("AdditionalGain", resourceCulture);
             }
         }
         
@@ -318,15 +291,6 @@ namespace SiamCross {
         public static string AtmosphereUnits {
             get {
                 return ResourceManager.GetString("AtmosphereUnits", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Attached.
-        /// </summary>
-        public static string Attached {
-            get {
-                return ResourceManager.GetString("Attached", resourceCulture);
             }
         }
         
@@ -556,7 +520,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Clearing the memory.
+        ///   Ищет локализованную строку, похожую на Clearing memory.
         /// </summary>
         public static string ClearingMemory {
             get {
@@ -750,15 +714,6 @@ namespace SiamCross {
         public static string DoConnect {
             get {
                 return ResourceManager.GetString("DoConnect", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Delete.
-        /// </summary>
-        public static string DoDelete {
-            get {
-                return ResourceManager.GetString("DoDelete", resourceCulture);
             }
         }
         
@@ -1367,15 +1322,6 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Langepas.
-        /// </summary>
-        public static string Langepas {
-            get {
-                return ResourceManager.GetString("Langepas", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Language.
         /// </summary>
         public static string Language {
@@ -1844,7 +1790,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Probe temp..
+        ///   Ищет локализованную строку, похожую на Probe temperature.
         /// </summary>
         public static string ProbeTemperature {
             get {
@@ -2231,15 +2177,6 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Choose research type!.
-        /// </summary>
-        public static string SelectedReasearchTypeChoice {
-            get {
-                return ResourceManager.GetString("SelectedReasearchTypeChoice", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Choose sound speed correction!.
         /// </summary>
         public static string SelectedSoundSpeedCorrectionChoice {
@@ -2443,15 +2380,6 @@ namespace SiamCross {
         public static string Stat_Complete {
             get {
                 return ResourceManager.GetString("Stat_Complete", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на error.
-        /// </summary>
-        public static string Stat_Error {
-            get {
-                return ResourceManager.GetString("Stat_Error", resourceCulture);
             }
         }
         
@@ -2713,15 +2641,6 @@ namespace SiamCross {
         public static string Table {
             get {
                 return ResourceManager.GetString("Table", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Tataria.
-        /// </summary>
-        public static string Tataria {
-            get {
-                return ResourceManager.GetString("Tataria", resourceCulture);
             }
         }
         

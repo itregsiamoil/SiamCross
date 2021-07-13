@@ -13,7 +13,7 @@ namespace SiamCross.Models.Sensors
         public readonly MemVarUInt16 ProgrammVersionSize;
 
         public TaskUpdateInfoSiam(SensorModel sensor)
-            : base(sensor, "Чтение состояния")
+            : base(sensor, Resource.ReadingState)
         {
             _Info = new MemStruct(0x1000);
             ProgrammVersionAddress = _Info.Add(new MemVarUInt32(nameof(ProgrammVersionAddress)));

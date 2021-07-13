@@ -23,7 +23,7 @@ namespace SiamCross.Models.Sensors.Dmg
         }
 
         public TaskUpdateStatus(SensorModel sensor)
-            : base(sensor, "Чтение состояния")
+            : base(sensor, Resource.ReadingState)
         {
             _CurrentParam = new MemStruct(0x8400);
             BatteryVoltage = _CurrentParam.Add(new MemVarUInt16(nameof(BatteryVoltage)));

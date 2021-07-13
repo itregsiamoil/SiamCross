@@ -470,20 +470,11 @@ Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» 
   <data name="StaticLevel" xml:space="preserve">
     <value>Static level</value>
   </data>
-  <data name="SelectedReasearchTypeChoice" xml:space="preserve">
-    <value>Choose research type!</value>
-  </data>
   <data name="SelectedSoundSpeedCorrectionChoice" xml:space="preserve">
     <value>Choose sound speed correction!</value>
   </data>
   <data name="Fields" xml:space="preserve">
     <value>Fields</value>
-  </data>
-  <data name="Langepas" xml:space="preserve">
-    <value>Langepas</value>
-  </data>
-  <data name="Tataria" xml:space="preserve">
-    <value>Tataria</value>
   </data>
   <data name="Editing" xml:space="preserve">
     <value>Editing</value>
@@ -581,9 +572,6 @@ Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» 
   <data name="USBState" xml:space="preserve">
     <value>USB state:</value>
   </data>
-  <data name="Attached" xml:space="preserve">
-    <value>Attached</value>
-  </data>
   <data name="Detached" xml:space="preserve">
     <value>Detached</value>
   </data>
@@ -601,9 +589,6 @@ Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» 
   </data>
   <data name="IntervalErrorTextUmt" xml:space="preserve">
     <value>Interval must be between 1 and 82800,s!</value>
-  </data>
-  <data name="Stat_Error" xml:space="preserve">
-    <value>error</value>
   </data>
   <data name="Survey" xml:space="preserve">
     <value>survey</value>
@@ -690,9 +675,6 @@ DB Siam can't import the files with the same identifiers.</value>
   <data name="DoLoad" xml:space="preserve">
     <value>Load</value>
   </data>
-  <data name="DoDelete" xml:space="preserve">
-    <value>Delete</value>
-  </data>
   <data name="DoExport" xml:space="preserve">
     <value>Export</value>
   </data>
@@ -708,12 +690,6 @@ DB Siam can't import the files with the same identifiers.</value>
   <data name="AboutDynamicLevel" xml:space="preserve">
     <value>liquid level observed during pumping</value>
   </data>
-  <data name="AboutDynamics" xml:space="preserve">
-    <value>single measurement</value>
-  </data>
-  <data name="AboutDynamics_period" xml:space="preserve">
-    <value>periodic measurement</value>
-  </data>
   <data name="AboutLDC" xml:space="preserve">
     <value>level drop curve</value>
   </data>
@@ -726,20 +702,17 @@ DB Siam can't import the files with the same identifiers.</value>
   <data name="AboutResearches" xml:space="preserve">
     <value>Setting parameters, starting and stopping the survey</value>
   </data>
-  <data name="AboutStatic" xml:space="preserve">
+  <data name="AboutStaticAndDynamics" xml:space="preserve">
     <value>single measurement</value>
   </data>
   <data name="AboutStaticLevel" xml:space="preserve">
     <value>liquid level in a calm state</value>
   </data>
-  <data name="AboutStatic_period" xml:space="preserve">
+  <data name="AboutStatic_period_Dynamics_period" xml:space="preserve">
     <value>periodic measurement</value>
   </data>
   <data name="AboutStorage" xml:space="preserve">
     <value>Download one or more survay from the device's memory</value>
-  </data>
-  <data name="AdditionalGain" xml:space="preserve">
-    <value>Additional gain</value>
   </data>
   <data name="Additionally" xml:space="preserve">
     <value>Additionally</value>
@@ -841,7 +814,7 @@ DB Siam can't import the files with the same identifiers.</value>
     <value>Clear</value>
   </data>
   <data name="ClearingMemory" xml:space="preserve">
-    <value>Clearing the memory</value>
+    <value>Clearing memory</value>
   </data>
   <data name="Days" xml:space="preserve">
     <value>days</value>
@@ -928,7 +901,7 @@ DB Siam can't import the files with the same identifiers.</value>
     <value>pressure thermal compensation coefficients</value>
   </data>
   <data name="ProbeTemperature" xml:space="preserve">
-    <value>Probe temp.</value>
+    <value>Probe temperature</value>
   </data>
   <data name="ReadAll" xml:space="preserve">
     <value>Read all</value>

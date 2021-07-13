@@ -25,10 +25,10 @@
         {
             switch (enumValue)
             {
-                case Kind.Static: return Resource.AboutStatic;
-                case Kind.Dynamic: return Resource.AboutDynamics;
-                case Kind.PeriodicStatic: return Resource.AboutStatic_period;
-                case Kind.PeriodycDynamic: return Resource.AboutDynamics_period;
+                case Kind.Static: return Resource.AboutStaticAndDynamics;
+                case Kind.Dynamic: return Resource.AboutStaticAndDynamics;
+                case Kind.PeriodicStatic: return Resource.AboutStatic_period_Dynamics_period;
+                case Kind.PeriodycDynamic: return Resource.AboutStatic_period_Dynamics_period;
                 default: return "UNKNOWN";
             }
         }

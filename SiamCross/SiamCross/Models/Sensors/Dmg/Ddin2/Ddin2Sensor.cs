@@ -35,7 +35,7 @@ namespace SiamCross.Models.Sensors.Dmg.Ddin2
                 if (null != report)
                 {
                     await SensorService.MeasurementHandler(report);
-                    Status = Resource.Survey + ": complete";
+                    Status = Resource.Survey + ": " + Resource.Stat_Complete;
                 }
                 else
                 {

@@ -42,9 +42,9 @@ namespace SiamCross.Services
                 }
             }
             if (!DictById.TryGetValue(0, out SoundSpeedModel _))
-                await AddLocalAsync(Resource.Langepas, 0, "SiamCross.DefaultSoundSpeedResources.langepas");
+                await AddLocalAsync("Langepas", 0, "SiamCross.DefaultSoundSpeedResources.langepas");
             if (!DictById.TryGetValue(1, out SoundSpeedModel _))
-                await AddLocalAsync(Resource.Tataria, 1, "SiamCross.DefaultSoundSpeedResources.tataria");
+                await AddLocalAsync("Tataria", 1, "SiamCross.DefaultSoundSpeedResources.tataria");
 
         }
         private async Task AddLocalAsync(string title, uint id, string file)

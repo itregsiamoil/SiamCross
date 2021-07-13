@@ -167,7 +167,7 @@ namespace SiamCross.Models.Sensors.Du
                 if (null != report)
                 {
                     await SensorService.MeasurementHandler(report);
-                    Status = Resource.Survey + ": complete";
+                    Status = Resource.Survey + ": " + Resource.Stat_Complete;
                 }
                 else
                 {
