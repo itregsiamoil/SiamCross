@@ -38,7 +38,7 @@
                     case "1": return Resource.Stat_Meas;
                     case "2": return Resource.Stat_Calc;
                     case "4": return Resource.Stat_Complete;
-                    case "5": return Resource.Stat_Error;
+                    case "5": return Resource.Error;
                 }
             }
 
@@ -54,7 +54,7 @@
                 case DmgMeasureStatus.Calc: return Resource.Stat_Calc;
                 case DmgMeasureStatus.Ready: return Resource.Stat_Complete;
                 default:
-                case DmgMeasureStatus.Error: return Resource.Stat_Error;
+                case DmgMeasureStatus.Error: return Resource.Error;
             }
         }
 

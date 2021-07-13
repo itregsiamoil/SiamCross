@@ -612,9 +612,6 @@
   <data name="IntervalErrorTextUmt" xml:space="preserve">
     <value>Интервал должен быть между 1 и 82800 сек!</value>
   </data>
-  <data name="Stat_Error" xml:space="preserve">
-    <value>ошибка</value>
-  </data>
   <data name="Init" xml:space="preserve">
     <value>подготовка</value>
   </data>

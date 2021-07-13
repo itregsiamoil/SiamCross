@@ -511,7 +511,7 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Clearing the memory.
+        ///   Ищет локализованную строку, похожую на Clearing memory.
         /// </summary>
         public static string ClearingMemory {
             get {
@@ -1309,15 +1309,6 @@ namespace SiamCross {
         public static string Kilograms {
             get {
                 return ResourceManager.GetString("Kilograms", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Langepas.
-        /// </summary>
-        public static string Langepas {
-            get {
-                return ResourceManager.GetString("Langepas", resourceCulture);
             }
         }
         
@@ -2384,15 +2375,6 @@ namespace SiamCross {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на error.
-        /// </summary>
-        public static string Stat_Error {
-            get {
-                return ResourceManager.GetString("Stat_Error", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на free.
         /// </summary>
         public static string Stat_Free {
@@ -2650,15 +2632,6 @@ namespace SiamCross {
         public static string Table {
             get {
                 return ResourceManager.GetString("Table", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Tataria.
-        /// </summary>
-        public static string Tataria {
-            get {
-                return ResourceManager.GetString("Tataria", resourceCulture);
             }
         }
         

@@ -590,9 +590,6 @@ Since 1990, the Tomsk Scientific Production and Implementation Society «SIAM» 
   <data name="IntervalErrorTextUmt" xml:space="preserve">
     <value>Interval must be between 1 and 82800,s!</value>
   </data>
-  <data name="Stat_Error" xml:space="preserve">
-    <value>error</value>
-  </data>
   <data name="Survey" xml:space="preserve">
     <value>survey</value>
   </data>
@@ -817,7 +814,7 @@ DB Siam can't import the files with the same identifiers.</value>
     <value>Clear</value>
   </data>
   <data name="ClearingMemory" xml:space="preserve">
-    <value>Clearing the memory</value>
+    <value>Clearing memory</value>
   </data>
   <data name="Days" xml:space="preserve">
     <value>days</value>
