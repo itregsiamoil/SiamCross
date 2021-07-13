@@ -66,25 +66,18 @@
                                 <Label Text="{xct:Translate SurveyData}" Style="{StaticResource SectionLabel2}" />
                                 <StackLayout Padding="4">
                                     <Label Text="{xct:Translate ModelPump}"/>
-                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.ModelPump}}"
+                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.PumpModels}}"
                                             SelectedIndex="{Binding ModelPump}"/>
 
                                     <Label Text="{xct:Translate ApertNumber}"/>
-                                    <Picker SelectedIndex="{Binding ApertNumber}">
-                                        <Picker.Items>
-                                            <x:String>1</x:String>
-                                            <x:String>2</x:String>
-                                            <x:String>3</x:String>
-                                            <x:String>4</x:String>
-                                            <x:String>5</x:String>
-                                        </Picker.Items>
-                                    </Picker>
+                                    <Picker ItemsSource="{Binding Source={x:Static local:Constants.ApertNumbers}}"
+                                        SelectedIndex="{Binding ApertNumber}"/>
 
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="50*"/>
-                                            <ColumnDefinition Width="50*"/>
                                             <ColumnDefinition Width="70"/>
+                                            <ColumnDefinition Width="50*"/>
+                                            <ColumnDefinition Width="50*"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
@@ -94,20 +87,71 @@
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
-                                        <Label Text="{xct:Translate DynPeriod}" Grid.Column="0" Grid.Row="0"/>
-                                        <Entry x:Name="txtDynPeriod" Grid.Column="0" Grid.Row="1"
-                                               Text="{Binding DynPeriod}" 
+                                        <Label Text="{xct:Translate Imtravel}" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
+                                        <dmg:SliderFloat Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" 
+                                                ThumbColor="{StaticResource colorPrimaryLight}"
+                                                MinimumTrackColor="{StaticResource colorPrimaryLight}"
+                                                MaximumTrackColor="{StaticResource colorBackgroundDark}"
+                                                Minimum="500" Maximum="9999"
+                                                Value="{Binding Imtravel, FallbackValue=500}"
+                                            />
+                                        <Entry x:Name="EntryImtravel" Text="{Binding Imtravel}" Grid.Column="0" Grid.Row="1"  
+                                           Keyboard="Numeric">
+                                            <Entry.Behaviors>
+                                                <xct:NumericValidationBehavior 
+                                                    InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                                    MaximumDecimalPlaces="0" 
+                                                    MinimumValue="500"
+                                                    MaximumValue="9999"/>
+                                            </Entry.Behaviors>
+                                            <Entry.Effects>
+                                                <xct:SelectAllTextEffect/>
+                                            </Entry.Effects>
+                                        </Entry>
+
+                                        <Label Text="{xct:Translate Rod}" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"/>
+                                        <dmg:SliderFloat Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" 
+                                                ThumbColor="{StaticResource colorPrimaryLight}"
+                                                MinimumTrackColor="{StaticResource colorPrimaryLight}"
+                                                MaximumTrackColor="{StaticResource colorBackgroundDark}"
+                                                Minimum="12" Maximum="40"
+                                                Value="{Binding Rod, FallbackValue=12}"
+                                                />
+                                        <Entry x:Name="EntryRod" Text="{Binding RodString}" Grid.Column="0" Grid.Row="3"  
+                                           Keyboard="Numeric">
+                                            <Entry.Behaviors>
+                                                <xct:NumericValidationBehavior 
+                                                    InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                                    MaximumDecimalPlaces="10" 
+                                                    MinimumValue="12"
+                                                    MaximumValue="40"/>
+                                            </Entry.Behaviors>
+                                            <Entry.Effects>
+                                                <xct:SelectAllTextEffect/>
+                                            </Entry.Effects>
+                                        </Entry>
+
+                                        <Label Text="{xct:Translate DynPeriod}" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"/>
+                                        <Entry x:Name="txtDynPeriod" Grid.Column="0" Grid.Row="5" 
+                                               Text="{Binding DynPeriodString}" 
                                                Keyboard="Numeric">
                                             <Entry.Behaviors>
                                                 <xct:NumericValidationBehavior 
                                                     Flags="ValidateOnValueChanging"
                                                     InvalidStyle="{StaticResource InvalidEntryStyle}"
-                                                    MaximumDecimalPlaces="0"
+                                                    MaximumDecimalPlaces="3"
                                                     MinimumValue="4"
                                                     MaximumValue="180"/>
                                             </Entry.Behaviors>
                                         </Entry>
-
+                                        <dmg:SliderFloat Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" 
+                                                ThumbColor="{StaticResource colorPrimaryLight}"
+                                                MinimumTrackColor="{StaticResource colorPrimaryLight}"
+                                                MaximumTrackColor="{StaticResource colorBackgroundDark}"
+                                                Minimum="4" Maximum="180"
+                                                Value="{Binding DynPeriod, FallbackValue=12}"
+                                                />
+                                        <!--
                                         <Label Text="{xct:Translate PumpRate}" Grid.Column="1" Grid.Row="0"/>
                                         <Entry x:Name="txtPumpRate"
                                                Text="{Binding PumpRate, Mode=TwoWay }" 
@@ -122,56 +166,11 @@
                                                     MaximumValue="15"/>
                                             </Entry.Behaviors>
                                         </Entry>
-                                        <Button Text="&#x23F1;" FontSize="40"
+                                        
+                                        <Button Text="&#x23F1;" 
                                                 BackgroundColor="{StaticResource colorPrimaryLight}"
-                                                Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"/>
-
-
-                                        <Label Text="{xct:Translate Imtravel}" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"/>
-                                        <dmg:SliderFloat Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" 
-                                                ThumbColor="{StaticResource colorPrimaryLight}"
-                                                MinimumTrackColor="{StaticResource colorPrimaryLight}"
-                                                MaximumTrackColor="{StaticResource colorBackgroundDark}"
-                                                Minimum="500" Maximum="9999"
-                                                Value="{Binding Imtravel, FallbackValue=500}"
-                                            />
-                                        <Entry x:Name="EntryImtravel" Text="{Binding Imtravel}" Grid.Column="2" Grid.Row="3"  
-                                           Keyboard="Numeric">
-                                            <Entry.Behaviors>
-                                                <xct:NumericValidationBehavior 
-                                                    InvalidStyle="{StaticResource InvalidEntryStyle}"
-                                                    MaximumDecimalPlaces="0" 
-                                                    MinimumValue="500"
-                                                    MaximumValue="9999"/>
-                                            </Entry.Behaviors>
-                                            <Entry.Effects>
-                                                <xct:SelectAllTextEffect/>
-                                            </Entry.Effects>
-                                        </Entry>
-
-                                        <Label Text="{xct:Translate Rod}" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"/>
-                                        <dmg:SliderFloat Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" 
-                                                ThumbColor="{StaticResource colorPrimaryLight}"
-                                                MinimumTrackColor="{StaticResource colorPrimaryLight}"
-                                                MaximumTrackColor="{StaticResource colorBackgroundDark}"
-                                                Minimum="12" Maximum="40"
-                                                Value="{Binding Rod, FallbackValue=12}"
-                                                />
-                                        <Entry x:Name="EntryRod" Text="{Binding RodString}" Grid.Column="2" Grid.Row="5"  
-                                           Keyboard="Numeric">
-                                            <Entry.Behaviors>
-                                                <xct:NumericValidationBehavior 
-                                                    InvalidStyle="{StaticResource InvalidEntryStyle}"
-                                                    MaximumDecimalPlaces="10" 
-                                                    MinimumValue="12"
-                                                    MaximumValue="40"/>
-                                            </Entry.Behaviors>
-                                            <Entry.Effects>
-                                                <xct:SelectAllTextEffect/>
-                                            </Entry.Effects>
-                                        </Entry>
-
-
+                                                Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="3"/>
+                                        -->
                                     </Grid>
                                 </StackLayout>
                             </StackLayout>

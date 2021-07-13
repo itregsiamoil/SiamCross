@@ -15,12 +15,21 @@ namespace SiamCross.ViewModels.Dmg.Surveys
             get => _ModelCfg.Rod.ToString();
             set
             {
-                if(double.TryParse(value, out double val))
-                    _ModelCfg.Rod = val;
-                else
-                    _ModelCfg.Rod = 12;
+                double.TryParse(value, out double val);
+                _ModelCfg.Rod = val;
             }
         }
+        public string DynPeriodString
+        {
+            get => _ModelCfg.DynPeriod.ToString();
+            set
+            {
+                double.TryParse(value, out double val);
+                _ModelCfg.DynPeriod = val;
+            }
+        }
+
+
         public double Rod
         {
             get
@@ -30,9 +39,13 @@ namespace SiamCross.ViewModels.Dmg.Surveys
             }
             set => _ModelCfg.Rod = value;
         }
-        public UInt32 DynPeriod
+        public double DynPeriod
         {
-            get => _ModelCfg.DynPeriod;
+            get
+            {
+                ChangeNotify(nameof(DynPeriodString));
+                return _ModelCfg.DynPeriod;
+            }
             set => _ModelCfg.DynPeriod = value;//ChangeNotify(nameof(PumpRate));
         }
         public UInt16 ApertNumber
@@ -49,12 +62,6 @@ namespace SiamCross.ViewModels.Dmg.Surveys
         {
             get => _ModelCfg.ModelPump;
             set => _ModelCfg.ModelPump = value;
-        }
-
-        public double PumpRate
-        {
-            get => _ModelCfg.PumpRate;
-            set => _ModelCfg.PumpRate = value;
         }
 
         public bool ShowResult { get; set; }

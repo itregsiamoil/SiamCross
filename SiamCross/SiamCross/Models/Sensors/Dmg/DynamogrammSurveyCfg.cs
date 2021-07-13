@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiamCross.Models.Tools;
+using System;
 
 namespace SiamCross.Models.Sensors.Dmg
 {
@@ -7,7 +8,7 @@ namespace SiamCross.Models.Sensors.Dmg
         public readonly SensorModel Sensor;
         public struct Data
         {
-            public Data(UInt16 rod, UInt32 period, UInt16 apert, UInt16  travel, UInt16 pump)
+            public Data(UInt16 rod, UInt32 period, UInt16 apert, UInt16 travel, UInt16 pump)
             {
                 Rod = rod;
                 DynPeriod = period;
@@ -24,7 +25,9 @@ namespace SiamCross.Models.Sensors.Dmg
             // параметры сохраняемые в БД
         }
         public Data? Saved { get; private set; }
-        public Data Current = new Data(120, 4000, 1, 500, 0);
+
+        private Data _Current = new Data(120, 4000, 0, 500, 0);
+        public Data Current => _Current;
 
         public override void ResetSaved()
         {
@@ -45,38 +48,32 @@ namespace SiamCross.Models.Sensors.Dmg
             ChangeNotify(nameof(Imtravel));
             ChangeNotify(nameof(ModelPump));
         }
+
         public double Rod
         {
             get => Math.Round(Current.Rod / 10.0f, 1);
-            set => SetProperty(ref Current.Rod, ((UInt16)(value * 10.0f)) );
+            set => CheckAndSetProperty<UInt16>(ref _Current.Rod, (UInt16)(value * 10.0f), 120, 400);
         }
-        public UInt32 DynPeriod
+        public double DynPeriod
         {
-            get => Current.DynPeriod / 1000;
-            set => SetProperty(ref Current.DynPeriod, value * 1000);
+            get => Math.Round(Current.DynPeriod / 1000.0f, 3);
+            set => CheckAndSetProperty<UInt32>(ref _Current.DynPeriod, (UInt32)(value * 1000), 4000, 180000);
         }
         public UInt16 ApertNumber
         {
             get => Current.ApertNumber;
-            set => SetProperty(ref Current.ApertNumber, value);
+            set => CheckAndSetProperty<UInt16>(ref _Current.ApertNumber, value, 0, 5);
         }
         public UInt16 Imtravel
         {
             get => Current.Imtravel;
-            set => SetProperty(ref Current.Imtravel, value);
+            set => CheckAndSetProperty<UInt16>(ref _Current.Imtravel, value, 500, 9999);
         }
         public UInt16 ModelPump
         {
             get => Current.ModelPump;
-            set => SetProperty(ref Current.ModelPump, value);
+            set => CheckAndSetProperty<UInt16>(ref _Current.ModelPump, value, 0, 2);
         }
-
-        public double PumpRate
-        {
-            get => Math.Round(60000.0f / Current.DynPeriod, 3);
-            set => Current.DynPeriod = (UInt32)(60000.0f / value);//ChangeNotify(nameof(DynPeriod));
-        }
-
 
         public DynamogrammSurveyCfg(SensorModel sensor)
         {

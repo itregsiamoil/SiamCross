@@ -49,7 +49,7 @@ namespace SiamCross.Models.Sensors.Dmg
                 using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
                 {
                     bool ret = await UpdateAsync(linkTsc.Token);
-                    _Model.NotyfyUpdateAll();
+                    //_Model.NotyfyUpdateAll();
                     return ret;
                 }
             }
@@ -60,12 +60,14 @@ namespace SiamCross.Models.Sensors.Dmg
             if (!await CheckConnectionAsync(ct))
                 return false;
 
+            /*
             if (_Model.Saved.HasValue)
             {
                 _Model.Current = _Model.Saved.Value;
                 InfoEx = Resource.Updated;
                 return true;
             }
+            */
 
             bool readed = false;
             InfoEx = Resource.ReadingParameters;
@@ -74,16 +76,15 @@ namespace SiamCross.Models.Sensors.Dmg
 
             if (!readed)
             {
-                _Model.Current = new DynamogrammSurveyCfg.Data();
                 _Model.ResetSaved();
                 return false;
             }
 
-            _Model.Current.Rod = CheckValue.MinMax<UInt16>(120, 400, Rod.Value);
-            _Model.Current.DynPeriod = CheckValue.MinMax<UInt32>(4000, 180000, DynPeriod.Value);
-            _Model.Current.ApertNumber = CheckValue.MinMax<UInt16>(1, 5, ApertNumber.Value);
-            _Model.Current.Imtravel = CheckValue.MinMax<UInt16>(500, 9999, Imtravel.Value);
-            _Model.Current.ModelPump = CheckValue.MinMax<UInt16>(0, 2, ModelPump.Value);
+            _Model.Rod = Rod.Value;
+            _Model.DynPeriod = DynPeriod.Value;
+            _Model.ApertNumber = ApertNumber.Value;
+            _Model.Imtravel = Imtravel.Value;
+            _Model.ModelPump = ModelPump.Value;
             _Model.UpdateSaved();
             InfoEx = Resource.Complete;
             return readed;
