@@ -1,12 +1,12 @@
 ﻿using SiamCross.Models.Connection.Protocol;
-using SiamCross.Models.Tools;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+
 namespace SiamCross.Models.Sensors.Dmg
 {
-    public class TaskSurveyCfgLoad : BaseSensorTask
+    public class TaskDynamogrammSurveyCfgSave: BaseSensorTask
     {
         private readonly DynamogrammSurveyCfg _Model;
 
@@ -24,7 +24,7 @@ namespace SiamCross.Models.Sensors.Dmg
             _BytesProgress += bytes;
             Progress = ((float)_BytesProgress / _BytesTotal);
         }
-        public TaskSurveyCfgLoad(DynamogrammSurveyCfg model)
+        public TaskDynamogrammSurveyCfgSave(DynamogrammSurveyCfg model)
             : base(model.Sensor, Resource.Survey_parameters)
         {
             _Model = model;
@@ -48,48 +48,60 @@ namespace SiamCross.Models.Sensors.Dmg
             {
                 using (var linkTsc = CancellationTokenSource.CreateLinkedTokenSource(ctSrc.Token, ct))
                 {
-                    bool ret = await UpdateAsync(linkTsc.Token);
-                    //_Model.NotyfyUpdateAll();
-                    return ret;
+                    return await DoSaveAsync(linkTsc.Token);
                 }
             }
         }
 
-        async Task<bool> UpdateAsync(CancellationToken ct)
+        async Task<bool> DoSaveAsync(CancellationToken ct)
         {
             if (!await CheckConnectionAsync(ct))
                 return false;
 
-            /*
-            if (_Model.Saved.HasValue)
+            if (!_Model.Saved.HasValue)
             {
-                _Model.Current = _Model.Saved.Value;
+                InfoEx = Resource.ParametersNotReading;
+                return false;
+            }
+
+            InfoEx = Resource.RecordingParameters;
+            /*
+            Если не записывать заново данные измерения в динамограф -оне не запустится
+            if (_Model.Saved.Equals(_Model.Current))
+            {
                 InfoEx = Resource.Updated;
                 return true;
             }
             */
+            bool ret = false;
+            _Model.ResetSaved();
 
-            bool readed = false;
-            InfoEx = Resource.ReadingParameters;
-            if (RespResult.NormalPkg == await Connection.TryReadAsync(SurvayParam, SetProgressBytes, ct))
-                readed = true;
+            Rod.Value = (UInt16)(_Model.Rod * 10.0f);
+            DynPeriod.Value = (UInt32)(_Model.DynPeriod * 1000);
+            ApertNumber.Value = _Model.ApertNumber;
+            Imtravel.Value = _Model.Imtravel;
+            ModelPump.Value = _Model.ModelPump;
 
-            if (!readed)
+            UInt16 ver = 0;
+            if(Sensor.Device.TryGetData<UInt16>("MemoryModelVersion", out ver) && 10 < ver)
             {
-                _Model.ResetSaved();
-                return false;
+                ret = RespResult.NormalPkg == await Connection.TryWriteAsync(SurvayParam, SetProgressBytes, ct);
+                if (!ret)
+                    return false;
             }
-
-            _Model.Rod = Rod.Value;
-            _Model.DynPeriod = DynPeriod.Value;
-            _Model.ApertNumber = ApertNumber.Value;
-            _Model.Imtravel = Imtravel.Value;
-            _Model.ModelPump = ModelPump.Value;
+            else
+            {
+                foreach (var r in SurvayParam.GetVars())
+                {
+                    ret = RespResult.NormalPkg == await Connection.TryWriteAsync(r, SetProgressBytes, ct);
+                    if (!ret)
+                        return false;
+                }
+            }
             _Model.UpdateSaved();
             InfoEx = Resource.Complete;
-            return readed;
+            return ret;
         }
-
 
     }
 }

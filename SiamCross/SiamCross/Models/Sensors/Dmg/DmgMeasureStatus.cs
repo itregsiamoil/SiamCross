@@ -45,6 +45,10 @@
             return Resource.Stat_Free; //stub
         }
 
+        public static string StatusToReport(int status)
+        {
+            return StatusToReport((DmgMeasureStatus)status);
+        }
         public static string StatusToReport(DmgMeasureStatus status)
         {
             switch (status)

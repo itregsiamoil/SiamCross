@@ -35,7 +35,7 @@ namespace SiamCross.ViewModels.Dmg.Surveys
             get
             {
                 ChangeNotify(nameof(RodString));
-                return _ModelCfg.Rod; 
+                return _ModelCfg.Rod;
             }
             set => _ModelCfg.Rod = value;
         }

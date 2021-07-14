@@ -1077,4 +1077,10 @@ DB Siam can't import the files with the same identifiers.</value>
   <data name="CheckValueWarning" xml:space="preserve">
     <value>The value must be in the range</value>
   </data>
+  <data name="Attached" xml:space="preserve">
+    <value>Attached</value>
+  </data>
+  <data name="InfoParametrs" xml:space="preserve">
+    <value>Information parameters</value>
+  </data>
 </root>

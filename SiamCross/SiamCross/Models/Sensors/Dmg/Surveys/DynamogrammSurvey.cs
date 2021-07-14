@@ -11,7 +11,7 @@ namespace SiamCross.Models.Sensors.Dmg.Surveys
             : base(sensor, null, Kind.Dynamogramm.Title(), Kind.Dynamogramm.Info())
         {
             Config = new DynamogrammSurveyCfg(sensor);
-            //TaskStart = new TaskSurvey(_Sensor, Name, SurveyType);
+            TaskStart = new TaskDynamogrammSurveyStart(_Sensor);
         }
         public override BaseSurveyVM GetCfgVM(ISensor sensorVM)
         {

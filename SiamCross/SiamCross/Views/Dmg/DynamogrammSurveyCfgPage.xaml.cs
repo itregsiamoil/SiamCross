@@ -1,6 +1,4 @@
-﻿using SiamCross.Models.Tools;
-using System;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace SiamCross.Views.Dmg
@@ -8,7 +6,7 @@ namespace SiamCross.Views.Dmg
     public class SliderFloat : Slider
     {
         public SliderFloat()
-            :base(float.MinValue, float.MaxValue, (double)0.0f)
+            : base(float.MinValue, float.MaxValue, (double)0.0f)
         {
         }
     }

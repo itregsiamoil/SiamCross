@@ -1099,4 +1099,7 @@
   <data name="CheckValueWarning" xml:space="preserve">
     <value>Значение должно быть в диапазоне</value>
   </data>
+  <data name="InfoParametrs" xml:space="preserve">
+    <value>Информационные параметры</value>
+  </data>
 </root>

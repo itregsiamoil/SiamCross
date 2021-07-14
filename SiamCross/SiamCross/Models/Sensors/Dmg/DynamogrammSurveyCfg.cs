@@ -78,9 +78,8 @@ namespace SiamCross.Models.Sensors.Dmg
         public DynamogrammSurveyCfg(SensorModel sensor)
         {
             Sensor = sensor;
-            TaskLoad = new TaskSurveyCfgLoad(this);
-            //TaskSave = new TaskSurveyCfgSave(this);
-            //TaskWait = new TaskSurveyWait(sensor);
+            TaskLoad = new TaskDynamogrammSurveyCfgLoad(this);
+            TaskSave = new TaskDynamogrammSurveyCfgSave(this);
         }
     }
 }

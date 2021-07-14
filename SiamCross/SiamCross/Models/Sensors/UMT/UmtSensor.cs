@@ -20,9 +20,9 @@ namespace SiamCross.Models.Sensors.Umt
             Position.TaskSave = new TaskPositionSave(Position);
 
             Storage = new Storage(this);
-            SurveyCfg = new SurveyCfg(this);
             TaskWait = new TaskSurveyWait(this);
 
+            SurveyCfg = new SurveyCfg(this);
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.Static));
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.Dynamic));
             Surveys.Add(new UmtSurvey(this, SurveyCfg, Kind.PeriodicStatic));

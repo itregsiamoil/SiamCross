@@ -74,7 +74,7 @@ namespace SiamCross.ViewModels
             MenuItems.Add(new MenuPageItem(() => Resource.AboutTitle, GoAboutPanel));
 
             MenuItems.Add(new MenuPageItem(
-                () => $"\u2691 {Resource.Language}({Preferences.Get("LanguageKey", Resource.System)})"
+                () => $"{char.ConvertFromUtf32(0x1f310)} {Resource.Language}({Preferences.Get("LanguageKey", Resource.System)})"
                 , GoLanguagePanel));
 
         }

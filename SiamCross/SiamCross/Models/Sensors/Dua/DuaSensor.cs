@@ -20,9 +20,9 @@ namespace SiamCross.Models.Sensors.Dua
             Position.TaskSave = new TaskPositionSave(Position);
 
             Storage = new DuaStorage(this);
-            SurveyCfg = new DuaSurveyCfg(this);
             TaskWait = new TaskSurveyWait(this);
 
+            SurveyCfg = new DuaSurveyCfg(this);
             Surveys.Add(new DuaSurvey(this, SurveyCfg, Kind.LStatic));
             Surveys.Add(new DuaSurvey(this, SurveyCfg, Kind.LDynamic));
             Surveys.Add(new DuaSurvey(this, SurveyCfg, Kind.LRC));

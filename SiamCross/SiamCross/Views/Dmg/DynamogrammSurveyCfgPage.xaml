@@ -45,7 +45,7 @@
     </NavigationPage.TitleView>
 
     <ContentPage.ToolbarItems >
-        <!--ToolbarItem Text="&#x2713; " Command="{Binding CmdSaveParam}"/-->
+        <ToolbarItem Text="&#x2713; " Command="{Binding CmdSaveParam}"/>
         <ToolbarItem Text="&#x21BA; " Command="{Binding CmdLoadParam}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
@@ -59,11 +59,12 @@
                                 AlignItems="Start"
                                 AlignContent="Start"
                                 IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
+                        
                         <Frame Style="{StaticResource GroupingFrameStyle2}" 
                                IsEnabled="{Binding Sensor.TaskManager.IsFree}"
                                FlexLayout.Grow="1"  FlexLayout.Basis="280">
                             <StackLayout >
-                                <Label Text="{xct:Translate SurveyData}" Style="{StaticResource SectionLabel2}" />
+                                <Label Text="{xct:Translate InfoParametrs}" Style="{StaticResource SectionLabel2}" />
                                 <StackLayout Padding="4">
                                     <Label Text="{xct:Translate ModelPump}"/>
                                     <Picker ItemsSource="{Binding Source={x:Static local:Constants.PumpModels}}"
@@ -87,28 +88,6 @@
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
-                                        <Label Text="{xct:Translate Imtravel}" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
-                                        <dmg:SliderFloat Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" 
-                                                ThumbColor="{StaticResource colorPrimaryLight}"
-                                                MinimumTrackColor="{StaticResource colorPrimaryLight}"
-                                                MaximumTrackColor="{StaticResource colorBackgroundDark}"
-                                                Minimum="500" Maximum="9999"
-                                                Value="{Binding Imtravel, FallbackValue=500}"
-                                            />
-                                        <Entry x:Name="EntryImtravel" Text="{Binding Imtravel}" Grid.Column="0" Grid.Row="1"  
-                                           Keyboard="Numeric">
-                                            <Entry.Behaviors>
-                                                <xct:NumericValidationBehavior 
-                                                    InvalidStyle="{StaticResource InvalidEntryStyle}"
-                                                    MaximumDecimalPlaces="0" 
-                                                    MinimumValue="500"
-                                                    MaximumValue="9999"/>
-                                            </Entry.Behaviors>
-                                            <Entry.Effects>
-                                                <xct:SelectAllTextEffect/>
-                                            </Entry.Effects>
-                                        </Entry>
-
                                         <Label Text="{xct:Translate Rod}" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"/>
                                         <dmg:SliderFloat Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" 
                                                 ThumbColor="{StaticResource colorPrimaryLight}"
@@ -130,49 +109,74 @@
                                                 <xct:SelectAllTextEffect/>
                                             </Entry.Effects>
                                         </Entry>
+                                    </Grid>
+                                </StackLayout>
+                            </StackLayout>
+                        </Frame>
 
-                                        <Label Text="{xct:Translate DynPeriod}" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"/>
-                                        <Entry x:Name="txtDynPeriod" Grid.Column="0" Grid.Row="5" 
+                        <Frame Style="{StaticResource GroupingFrameStyle2}" 
+                               IsEnabled="{Binding Sensor.TaskManager.IsFree}"
+                               FlexLayout.Grow="1"  FlexLayout.Basis="280">
+                            <StackLayout >
+                                <Label Text="{xct:Translate SurveyData}" Style="{StaticResource SectionLabel2}"/>
+                                <Grid Padding="4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="70"/>
+                                        <ColumnDefinition Width="50*"/>
+                                        <ColumnDefinition Width="50*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Label Text="{xct:Translate DynPeriod}" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
+                                    <Entry x:Name="txtDynPeriod" Grid.Column="0" Grid.Row="1" 
                                                Text="{Binding DynPeriodString}" 
                                                Keyboard="Numeric">
-                                            <Entry.Behaviors>
-                                                <xct:NumericValidationBehavior 
+                                        <Entry.Behaviors>
+                                            <xct:NumericValidationBehavior 
                                                     Flags="ValidateOnValueChanging"
                                                     InvalidStyle="{StaticResource InvalidEntryStyle}"
                                                     MaximumDecimalPlaces="3"
                                                     MinimumValue="4"
                                                     MaximumValue="180"/>
-                                            </Entry.Behaviors>
-                                        </Entry>
-                                        <dmg:SliderFloat Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" 
+                                        </Entry.Behaviors>
+                                    </Entry>
+                                    <dmg:SliderFloat Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" 
                                                 ThumbColor="{StaticResource colorPrimaryLight}"
                                                 MinimumTrackColor="{StaticResource colorPrimaryLight}"
                                                 MaximumTrackColor="{StaticResource colorBackgroundDark}"
                                                 Minimum="4" Maximum="180"
                                                 Value="{Binding DynPeriod, FallbackValue=12}"
                                                 />
-                                        <!--
-                                        <Label Text="{xct:Translate PumpRate}" Grid.Column="1" Grid.Row="0"/>
-                                        <Entry x:Name="txtPumpRate"
-                                               Text="{Binding PumpRate, Mode=TwoWay }" 
-                                               Keyboard="Numeric"
-                                               Grid.Column="1" Grid.Row="1">
-                                            <Entry.Behaviors>
-                                                <xct:NumericValidationBehavior 
-                                                    Flags="ValidateOnValueChanging"
+
+                                    <Label Text="{xct:Translate Imtravel}" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"/>
+                                    <dmg:SliderFloat Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" 
+                                                ThumbColor="{StaticResource colorPrimaryLight}"
+                                                MinimumTrackColor="{StaticResource colorPrimaryLight}"
+                                                MaximumTrackColor="{StaticResource colorBackgroundDark}"
+                                                Minimum="500" Maximum="9999"
+                                                Value="{Binding Imtravel, FallbackValue=500}"
+                                            />
+                                    <Entry x:Name="EntryImtravel" Text="{Binding Imtravel}" Grid.Column="0" Grid.Row="3"  
+                                           Keyboard="Numeric">
+                                        <Entry.Behaviors>
+                                            <xct:NumericValidationBehavior 
                                                     InvalidStyle="{StaticResource InvalidEntryStyle}"
-                                                    MaximumDecimalPlaces="3"
-                                                    MinimumValue="0.333"
-                                                    MaximumValue="15"/>
-                                            </Entry.Behaviors>
-                                        </Entry>
-                                        
-                                        <Button Text="&#x23F1;" 
-                                                BackgroundColor="{StaticResource colorPrimaryLight}"
-                                                Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="3"/>
-                                        -->
-                                    </Grid>
-                                </StackLayout>
+                                                    MaximumDecimalPlaces="0" 
+                                                    MinimumValue="500"
+                                                    MaximumValue="9999"/>
+                                        </Entry.Behaviors>
+                                        <Entry.Effects>
+                                            <xct:SelectAllTextEffect/>
+                                        </Entry.Effects>
+                                    </Entry>
+                                </Grid>
+
                             </StackLayout>
                         </Frame>
 
@@ -182,24 +186,6 @@
                             <StackLayout>
                                 <Label Text="{xct:Translate Additionally}" Style="{StaticResource SectionLabel2}"/>
                                 <StackLayout Padding="4" CompressedLayout.IsHeadless="True">
-
-
-                                    <Label Text="{xct:Translate BufferPressure}" />
-<!--                                    
-                                    <Entry Text="{Binding BufferPressure}"
-                                       Keyboard="Numeric">
-                                        <Entry.Behaviors>
-                                            <xct:NumericValidationBehavior 
-                                            InvalidStyle="{StaticResource InvalidEntryStyle}"
-                                            MaximumDecimalPlaces="0" 
-                                            MinimumValue="1"
-                                            MaximumValue="1000"/>
-                                        </Entry.Behaviors>
-                                        <Entry.Effects>
-                                            <xct:SelectAllTextEffect/>
-                                        </Entry.Effects>
-                                    </Entry>
--->
                                     <Grid Padding="4,10,4,10">
                                         <Label Text="Показать результат"/>
                                         <Switch IsToggled="{Binding ShowResult}"/>

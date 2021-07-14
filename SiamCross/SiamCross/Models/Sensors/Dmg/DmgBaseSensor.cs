@@ -13,14 +13,17 @@ namespace SiamCross.Models.Sensors.Dmg
         public DmgSensorModel(IProtocolConnection conn, DeviceInfo deviceInfo)
            : base(conn, deviceInfo)
         {
+            //Position.TaskLoad = new TaskPositionLoad(Position);
+            //Position.TaskSave = new TaskPositionSave(Position);
+            
             Storage = new DmgStorage(this);
+            TaskWait = new TaskSurveyWait(this);
 
             //Surveys.Add(new Dynamogramm(this));
             Surveys.Add(new DynamogrammSurvey(this));
             Surveys.Add(new ValveTestSurvey(this));
             Surveys.Add(new RodsWeightSurvey(this));
-
-            //OnConnectQueue.Insert(0, SurveyCfg.TaskWait);
+            
             OnConnectQueue.Add(new TaskUpdateConfig(this));
 
             ConnHolder.CmdUpdateStatus = new AsyncCommand(

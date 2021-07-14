@@ -295,6 +295,15 @@ namespace SiamCross {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Attached.
+        /// </summary>
+        public static string Attached {
+            get {
+                return ResourceManager.GetString("Attached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Attention.
         /// </summary>
         public static string Attention {
@@ -1210,6 +1219,15 @@ namespace SiamCross {
         public static string IncorrectDataEnteredErrorText {
             get {
                 return ResourceManager.GetString("IncorrectDataEnteredErrorText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Information parameters.
+        /// </summary>
+        public static string InfoParametrs {
+            get {
+                return ResourceManager.GetString("InfoParametrs", resourceCulture);
             }
         }
         
