@@ -16,7 +16,7 @@ namespace SiamCross.Models.Sensors.Dmg
             Position.TaskLoad = new TaskPositionLoad(Position);
             Position.TaskSave = new TaskPositionSave(Position);
 
-            Storage = new DmgStorage(this);
+            Storage = new Storage(this);
             TaskWait = new TaskSurveyWait(this);
 
             //Surveys.Add(new Dynamogramm(this));

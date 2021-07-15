@@ -38,7 +38,7 @@ namespace SiamCross
                 }
                 catch (Exception)
                 {
-                    
+
                 }
                 return new CultureInfo("en-US");
             }

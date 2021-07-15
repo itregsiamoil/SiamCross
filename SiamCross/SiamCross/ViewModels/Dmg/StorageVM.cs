@@ -6,19 +6,15 @@ namespace SiamCross.ViewModels.Dmg
 {
     public class StorageVM : BaseStorageVM
     {
-        private readonly DmgStorage _StorageModel;
+        private readonly Storage _StorageModel;
         public ISensor Sensor { get; }
-        public int Aviable => _StorageModel.Aviable();
-        public bool OpenOnDownload
-        {
-            get => _StorageModel.OpenOnDownload;
-            set => SetProperty(ref _StorageModel.OpenOnDownload, value);
-        }
+        public bool Aviable => _StorageModel.Aviable;
+
         public StorageVM(ISensor sensor)
             : base(sensor.Model.Storage)
         {
             Sensor = sensor;
-            _StorageModel = Model as DmgStorage;
+            _StorageModel = Model as Storage;
 
             _StorageModel.PropertyChanged += StorageModel_PropertyChanged;
             Sensor.Model.Manager.OnChangeTask.ProgressChanged += SetTask;
@@ -43,17 +39,8 @@ namespace SiamCross.ViewModels.Dmg
         {
             if (sender != Model)
                 return;
-            /*
-            if (nameof(TotalSpace) == e.PropertyName)
-            {
-                ChangeNotify(nameof(TotalSpaceM));
-                ChangeNotify(nameof(TotalSpaceK));
-                ChangeNotify(nameof(TotalSpaceB));
-            }
-            */
+
             ChangeNotify(e.PropertyName);
-
-
         }
     }
 }

@@ -56,6 +56,16 @@
                             <StackLayout>
                                 <Label Text="{xct:Translate Surveys}" Style="{StaticResource SectionLabel2}" />
                                 <StackLayout Padding="4">
+                                    <Label Text="Все измерения считанны" >
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" 
+                                                Binding="{Binding Aviable}"
+                                                Value="true" >
+                                                <Setter Property="Text" Value="Измерение не считанно"  />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+
+                                    </Label>
 
                                 </StackLayout>
                             </StackLayout>

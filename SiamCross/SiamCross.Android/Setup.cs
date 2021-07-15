@@ -4,7 +4,6 @@ using SiamCross.AppObjects;
 using SiamCross.DataBase;
 using SiamCross.Droid.Models;
 using SiamCross.Droid.Models.BluetoothAdapters;
-using SiamCross.Droid.Services;
 using SiamCross.Droid.Services.MediaScanner;
 using SiamCross.Droid.Services.StdDialog;
 using SiamCross.Droid.Services.Toast;
