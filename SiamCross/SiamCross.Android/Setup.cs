@@ -25,7 +25,7 @@ namespace SiamCross.Droid
     {
         public override void RegisterDependencies()
         {
-            DependencyService.RegisterSingleton<ILogManager>(new NLogManagerAndroid());
+            DependencyService.RegisterSingleton<ILogManager>(new NLogManager());
 
 
             DependencyService.Register<IBt2InterfaceCross, Bt2InterfaceDroid>();
@@ -33,7 +33,6 @@ namespace SiamCross.Droid
 
             DependencyService.Register<IDbConnection, SqliteConnection>();
             DependencyService.Register<IDatabaseCreator, DatabaseCreatorAndroid>();
-            DependencyService.Register<ILogManager, NLogManagerAndroid>();
 
             //cb.RegisterType<SqliteConnection>().As<IDbConnection>();
             //cb.RegisterType<DatabaseCreatorAndroid>().As<IDatabaseCreator>();

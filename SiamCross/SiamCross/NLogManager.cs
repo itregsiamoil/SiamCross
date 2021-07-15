@@ -1,17 +1,19 @@
-﻿using Android.Runtime;
-using NLog;
+﻿using NLog;
 using NLog.Config;
 using NLog.Targets;
 using SiamCross.Services.Logging;
 using System;
 using System.IO;
+using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
-namespace SiamCross.Droid.Services
+[assembly: Dependency(typeof(SiamCross.NLogManager))]
+namespace SiamCross
 {
     [Preserve(AllMembers = true)]
-    public class NLogManagerAndroid : ILogManager
+    public class NLogManager : ILogManager
     {
-        static NLogManagerAndroid()
+        static NLogManager()
         {
             LoggingConfiguration config = new LoggingConfiguration();
 

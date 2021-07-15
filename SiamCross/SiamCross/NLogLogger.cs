@@ -1,11 +1,11 @@
 ﻿using NLog;
 
-namespace SiamCross.Droid.Services
+namespace SiamCross
 {
-    public class NLogLoggerAndroid : SiamCross.Services.Logging.ILogger
+    public class NLogLogger : SiamCross.Services.Logging.ILogger
     {
         private readonly Logger _logger;
-        public NLogLoggerAndroid(Logger logger)
+        public NLogLogger(Logger logger)
         {
             _logger = logger;
         }

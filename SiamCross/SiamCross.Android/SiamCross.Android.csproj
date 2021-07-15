@@ -106,7 +106,6 @@
   <ItemGroup>
     <Compile Include="AndroidLongPressedEffect.cs" />
     <Compile Include="AndroidNotificationManager.cs" />
-    <Compile Include="LocalizeAndroid.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Models\BluetoothAdapters\BtLeInterfaceDroid.cs" />
     <Compile Include="Models\BluetoothAdapters\ConnectionBt2.cs" />
@@ -115,7 +114,6 @@
     <Compile Include="Models\BluetoothBroadcastReceiver.cs" />
     <Compile Include="Models\ScannerLe.cs" />
     <Compile Include="Models\ScannerBt2.cs" />
-    <Compile Include="Models\VersionAndBuild_Android.cs" />
     <Compile Include="Models\DatabaseCreatorAndroid.cs" />
     <Compile Include="Models\EventHandlerExtensions.cs" />
     <Compile Include="Services\Environment\Environment.cs" />
@@ -123,8 +121,6 @@
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\StdDialog\FileOpenDialog.cs" />
-    <Compile Include="Services\NLogLoggerAndroid.cs" />
-    <Compile Include="Services\NLogManagerAndroid.cs" />
     <Compile Include="Services\Toast\Toast.cs" />
     <Compile Include="Setup.cs" />
   </ItemGroup>
