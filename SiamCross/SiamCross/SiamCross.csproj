@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ProduceAssemblyReference>true</ProduceAssemblyReference>
+    <ApplicationIcon />
+    <Win32Resource />
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -63,10 +66,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Resource.Designer.cs">
+    <Compile Update="Resource.en-us.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Resource.resx</DependentUpon>
+      <DependentUpon>Resource.en-us.resx</DependentUpon>
     </Compile>
     <Compile Update="Views\MenuItems\Handbook\EditFieldPage.xaml.cs">
       <DependentUpon>EditFieldPage.xaml</DependentUpon>
@@ -140,9 +143,9 @@
     <EmbeddedResource Update="Views\SensorDetailsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resource.resx">
+    <EmbeddedResource Update="Resource.en-us.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+      <LastGenOutput>Resource.en-us.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MenuItems\Handbook\EditFieldPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>

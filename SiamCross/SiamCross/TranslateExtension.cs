@@ -32,12 +32,15 @@ namespace SiamCross
                 try
                 {
                     string lang = Preferences.Get("LanguageKey", "Auto");
+                    if ("Auto" == lang)
+                        return CultureInfo.CurrentCulture;
                     return CultureInfo.GetCultureInfo(lang);
                 }
                 catch (Exception)
                 {
+                    
                 }
-                return DependencyService.Get<ILocalize>().GetCurrentCultureInfo();
+                return new CultureInfo("en-US");
             }
         }
         internal static void SetCulture(string lang)
@@ -45,7 +48,7 @@ namespace SiamCross
             if ("Auto" == lang)
             {
                 Preferences.Remove("LanguageKey");
-                LocalizationResourceManager.Current.CurrentCulture = DependencyService.Get<ILocalize>().GetCurrentCultureInfo();
+                LocalizationResourceManager.Current.CurrentCulture = CultureInfo.CurrentCulture;
             }
             else
             {

@@ -1,14 +1,13 @@
-﻿using VersionAndBuildNumber.Droid.DependencyServices;
-using Xamarin.Essentials;
+﻿using Xamarin.Essentials;
 using Xamarin.Forms;
 
-[assembly: Dependency(typeof(VersionAndBuild_Android))]
-namespace VersionAndBuildNumber.Droid.DependencyServices
+[assembly: Dependency(typeof(SiamCross.VersionAndBuild))]
+namespace SiamCross
 {
-    public class VersionAndBuild_Android : SiamCross.Models.Tools.IAppVersionAndBuild
+    public class VersionAndBuild : SiamCross.Models.Tools.IAppVersionAndBuild
     {
         //PackageInfo _appInfo;
-        public VersionAndBuild_Android()
+        public VersionAndBuild()
         {
             //var context = Android.App.Application.Context;
             //_appInfo = context.PackageManager.GetPackageInfo(context.PackageName, 0);
