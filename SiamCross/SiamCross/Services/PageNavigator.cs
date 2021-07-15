@@ -2,7 +2,6 @@
 using SiamCross.ViewModels.Dmg;
 using SiamCross.ViewModels.Dmg.Surveys;
 using SiamCross.Views;
-using SiamCross.Views.DDIN2;
 using SiamCross.Views.Dmg;
 using SiamCross.Views.MenuItems;
 using SiamCross.Views.MenuItems.HandbookPanel;
@@ -42,7 +41,7 @@ namespace SiamCross.Services
             //Register(typeof(UserConfigVM), () => new Views.Dua.UserConfigPage());
             //ViewFactoryService.Register(typeof(StateVM), () => new StatePage());
 
-            Register(typeof(DmgStorageVM), () => new DmgDownloadPage());
+            Register(typeof(StorageVM), () => new StoragePage());
             //Register(typeof(ViewModels.Dmg.Survey.DynamogrammVM), () => new DynamogrammPage());
             Register(typeof(DynamogrammSurveyCfgVM), () => new DynamogrammSurveyCfgPage());
             Register(typeof(ValveTestSurveyCfgVM), () => new ValveTestSurveyCfgPage());

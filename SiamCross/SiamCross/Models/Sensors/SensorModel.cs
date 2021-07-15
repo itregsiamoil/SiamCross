@@ -64,9 +64,9 @@ namespace SiamCross.Models.Sensors
         }
         void OnDisconnect()
         {
-            Position.ResetSaved();
+            Position?.ResetSaved();
             foreach (var surveyModel in Surveys)
-                surveyModel.Config.ResetSaved();
+                surveyModel.Config?.ResetSaved();
         }
         async Task OnConnect()
         {

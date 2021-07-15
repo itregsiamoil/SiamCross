@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SiamCross.Models.Sensors.Dmg
 {
-    public class TaskDynamogrammSurveyCfgSave: BaseSensorTask
+    public class TaskDynamogrammSurveyCfgSave : BaseSensorTask
     {
         private readonly DynamogrammSurveyCfg _Model;
 
@@ -83,7 +83,7 @@ namespace SiamCross.Models.Sensors.Dmg
             ModelPump.Value = _Model.ModelPump;
 
             UInt16 ver = 0;
-            if(Sensor.Device.TryGetData<UInt16>("MemoryModelVersion", out ver) && 10 < ver)
+            if (Sensor.Device.TryGetData<UInt16>("MemoryModelVersion", out ver) && 10 < ver)
             {
                 ret = RespResult.NormalPkg == await Connection.TryWriteAsync(SurvayParam, SetProgressBytes, ct);
                 if (!ret)

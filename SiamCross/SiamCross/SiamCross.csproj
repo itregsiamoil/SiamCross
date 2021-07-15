@@ -68,6 +68,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Update="Views\Dmg\StoragePage.xaml.cs">
+      <DependentUpon>StoragePage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\MenuItems\Handbook\EditFieldPage.xaml.cs">
       <DependentUpon>EditFieldPage.xaml</DependentUpon>
     </Compile>
@@ -113,7 +116,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\Dmg\DmgDownloadPage.xaml">
+    <EmbeddedResource Update="Views\Dmg\StoragePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Dmg\DynamogrammSurveyCfgPage.xaml">

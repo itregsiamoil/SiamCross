@@ -12,7 +12,7 @@ namespace SiamCross.Models.Sensors.Dmg
         public TaskDynamogrammSurveyStart(SensorModel sensor)
             : base(sensor, Kind.Dynamogramm.Title())
         {
-            
+
         }
         public override async Task<bool> DoExecuteAsync(CancellationToken ct)
         {

@@ -1,7 +1,5 @@
 ﻿using SiamCross.Models.Connection.Protocol;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -43,7 +41,7 @@ namespace SiamCross.Models.Sensors.Dmg
 
             while (!ct.IsCancellationRequested
                 && 0 != StatReg.Value
-                && 4 != StatReg.Value 
+                && 4 != StatReg.Value
                 && 5 != StatReg.Value)
             {
                 await Task.Delay(Constants.SecondDelay, ct);

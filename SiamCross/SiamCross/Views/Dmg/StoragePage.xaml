@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:BaseContentPage  
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+    xmlns:views="clr-namespace:SiamCross.Views"
+    xmlns:vm="clr-namespace:SiamCross.ViewModels.Dmg"
+    x:DataType="vm:StorageVM"
+    x:Class="SiamCross.Views.Dmg.StoragePage">
+
+    <ContentPage.Resources>
+        <Style TargetType="{x:Type StackLayout}">
+            <Setter Property="Spacing" Value="0" />
+        </Style>
+    </ContentPage.Resources >
+
+    <NavigationPage.TitleView >
+        <StackLayout Orientation="Horizontal" >
+            <StackLayout HorizontalOptions="StartAndExpand" >
+                <Label Text="{Binding Sensor.Name}" TextColor="{StaticResource colorTextPale}" />
+                <Label Text="{xct:Translate Storage}"
+                   FontSize="Medium" FontAttributes="Bold" 
+                   LineBreakMode="TailTruncation" TextColor="{StaticResource colorTextPale}"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsLandscape}" 
+                         HorizontalOptions="End" VerticalOptions="Fill" >
+                <Button Text="{xct:Translate Clear} "
+                        HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
+                        BackgroundColor="{StaticResource colorAccentLight}"
+                        Command="{Binding CmdClearStorage}"
+                        IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" />
+                <Button Text="{xct:Translate Download}"
+                        HorizontalOptions="FillAndExpand" VerticalOptions="Fill"
+                        BackgroundColor="{StaticResource colorPrimaryLight}"
+                        Command="{Binding CmdDownload}"
+                        IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" />
+            </StackLayout>
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+    <ContentPage.ToolbarItems >
+        <ToolbarItem Text="&#x21BA; "
+                     Command="{Binding CmdUpdateStorageInfo}"/>
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="{StaticResource colorBackgroundLight}">
+            <RefreshView Command="{Binding CmdUpdateStorageInfo}">
+                <ScrollView VerticalOptions="StartAndExpand">
+                    <StackLayout 
+                    IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}">
+
+
+                        <Frame Style="{StaticResource GroupingFrameStyle2}"
+                               IsEnabled="{Binding Sensor.TaskManager.IsFree}">
+                            <StackLayout>
+                                <Label Text="{xct:Translate Surveys}" Style="{StaticResource SectionLabel2}" />
+                                <StackLayout Padding="4">
+
+                                </StackLayout>
+                            </StackLayout>
+                        </Frame>
+
+                    </StackLayout>
+                </ScrollView>
+            </RefreshView>
+
+            <views:TaskManagerView TaskManager="{Binding Sensor.TaskManager}"/>
+
+            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsPortrait}" >
+                <Button Text="{xct:Translate Clear} " HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorAccentLight}"
+                        Command="{Binding CmdClearStorage}"
+                        IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >
+                </Button>
+                <Button Text="{xct:Translate Download}" HorizontalOptions="FillAndExpand" 
+                        BackgroundColor="{StaticResource colorPrimaryLight}"
+                        Command="{Binding CmdDownload}"
+                        IsEnabled="{Binding Sensor.TaskManager.IsFree, Mode=OneWay}" >
+                </Button>
+            </StackLayout>
+
+        </StackLayout>
+    </ContentPage.Content>
+</views:BaseContentPage>

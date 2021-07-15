@@ -80,7 +80,7 @@ namespace SiamCross.Models.Sensors.Dmg
             }
 
             _Model.Rod = Math.Round(Rod.Value / 10.0f, 1);
-            _Model.DynPeriod = Math.Round(DynPeriod.Value / 1000.0f, 3);  ;
+            _Model.DynPeriod = Math.Round(DynPeriod.Value / 1000.0f, 3); ;
             _Model.ApertNumber = ApertNumber.Value;
             _Model.Imtravel = Imtravel.Value;
             _Model.ModelPump = ModelPump.Value;

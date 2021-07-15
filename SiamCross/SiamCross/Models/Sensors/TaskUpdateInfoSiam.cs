@@ -31,6 +31,7 @@ namespace SiamCross.Models.Sensors
         }
         async Task<bool> UpdateAsync(CancellationToken ct)
         {
+            InfoEx = Resource.ReadingState;
             if (!await CheckConnectionAsync(ct))
                 return false;
             RespResult ret;

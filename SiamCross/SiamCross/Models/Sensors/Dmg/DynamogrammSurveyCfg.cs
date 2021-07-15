@@ -1,5 +1,4 @@
-﻿using SiamCross.Models.Tools;
-using System;
+﻿using System;
 
 namespace SiamCross.Models.Sensors.Dmg
 {

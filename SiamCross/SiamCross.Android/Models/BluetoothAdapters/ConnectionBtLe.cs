@@ -267,7 +267,18 @@ namespace SiamCross.Droid.Models
                 IReadOnlyList<ICharacteristic> serv = await _targetService.GetCharacteristicsAsync();
                 _writeCharacteristic = await _targetService.GetCharacteristicAsync(write_guid);
                 _readCharacteristic = await _targetService.GetCharacteristicAsync(read_guid);
-                _writeCharacteristic.WriteType = CharacteristicWriteType.WithoutResponse;
+                /*
+                try 
+                {
+                    _writeCharacteristic.WriteType = CharacteristicWriteType.WithoutResponse;
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine($"_deviceInfo.PhyName {ex.Message}");
+                    _writeCharacteristic = await _targetService.GetCharacteristicAsync(write_guid);
+                    _readCharacteristic = await _targetService.GetCharacteristicAsync(read_guid);
+                }
+                */
 
                 CtRxSource = new CancellationTokenSource();
                 _readCharacteristic.ValueUpdated += OnReceiveData;
